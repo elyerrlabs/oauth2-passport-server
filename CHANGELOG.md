@@ -1,5 +1,11 @@
 # Changelog
 
+## 🛠️ Unrealized
+
+- Removed orphaned fields to improve data integrity
+
+----
+
 ## 🚀 [v3.0.3]
 - Improved Docker deployment configuration for enhanced security and consistency.
 - Fixed cache issue affecting system settings persistence.
