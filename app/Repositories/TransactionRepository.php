@@ -193,8 +193,7 @@ class TransactionRepository
             ]);
 
             //Generate transaction
-            $transaction = [
-                'tax_applied' => config('billing.taxes.enabled'),
+            $transaction = [ 
                 'subtotal' => $paymentManager->amount_subtotal,
                 'total' => $paymentManager->amount_total,
                 'currency' => $plan['price']['currency'],
@@ -257,8 +256,7 @@ class TransactionRepository
      */
     public function createStripeRecurringPayment(PaymentIntent $paymentIntent, array $data)
     {
-        return $this->model->create([
-            'tax_applied' => config('billing.taxes.enabled'),
+        return $this->model->create([ 
             'subtotal' => $paymentIntent->amount,
             'total' => $paymentIntent->amount,
             'currency' => $data['meta']['price']['currency'],
@@ -523,7 +521,6 @@ class TransactionRepository
 
         //Generate new transaction
         $this->model->create([
-            'tax_applied' => config('billing.taxes.enabled'),
             'subtotal' => $package['payment_manager']['amount_subtotal'],
             'total' => $package['payment_manager']['amount_total'],
             'currency' => $package['meta']['price']['currency'],

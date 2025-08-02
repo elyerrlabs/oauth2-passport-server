@@ -67,11 +67,6 @@ class TransactionTransformer extends TransformerAbstract
         $attributes = [
             'currency' => 'currency',
             'status' => 'status',
-            'tax_rate_id' => 'tax_rate_id',
-            'tax_percentage' => 'tax_percentage',
-            'tax_amount' => 'tax_amount',
-            'tax_inclusive' => 'tax_inclusive',
-            'tax_applied' => 'tax_applied',
             'subtotal' => 'subtotal',
             'total' => 'total',
             'payment_method' => 'payment_method',
