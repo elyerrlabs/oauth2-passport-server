@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE="elyerr/oauth2-passport-server:latest"
+IMAGE="elyerr/oauth2-passport-server:v3.0.3"
 COMPOSE_FILE="docker-compose-prod.yml"
 ENV_FILE=".env"
 

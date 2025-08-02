@@ -1,5 +1,9 @@
 # Changelog
 
+## 🚀 [v3.0.3]
+- Improved Docker deployment configuration for enhanced security and consistency.
+- Fixed cache issue affecting system settings persistence.
+
 ## 🚀 [v3.0.2]
 
 ### 🐛 Fixes
