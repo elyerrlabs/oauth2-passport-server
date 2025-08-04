@@ -4,6 +4,9 @@ IMAGE="elyerr/oauth2-passport-server:v3.0.3"
 COMPOSE_FILE="docker-compose-prod.yml"
 ENV_FILE=".env"
 
+echo "Downloading image ..."
+docker pull $IMAGE
+
 # Required environment variables
 required_keys=(
     DB_CONNECTION

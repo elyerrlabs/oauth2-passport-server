@@ -5,15 +5,13 @@ cd /var/www
 
 echo "⚙️ Running system configuration..."
 
-cp /root/.env /var/www/.env
+cp -vf /root/.env /var/www/.env
 
 chown -R www-data:www-data .
 
 find . -type d -exec chmod 750 {} \;
 find . -type f -exec chmod 640 {} \;
 
-chmod -R 770 storage
-chmod -R 770 bootstrap/cache
 chmod 400 .env
 chmod 600 secrets/oauth/*.key
 

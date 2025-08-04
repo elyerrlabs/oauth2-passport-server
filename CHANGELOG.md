@@ -3,6 +3,7 @@
 ## 🛠️ Unrealized
 
 - Removed orphaned fields to improve data integrity
+- Fixed docker deployment
 
 ----
 

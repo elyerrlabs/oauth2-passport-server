@@ -22,4 +22,5 @@ rutas.js
 sync
 points
 docker-compose-prod.yml
+docker-compose-dev.yml
 !.dockerignore

@@ -52,8 +52,8 @@ COPY docker/laravel-scripts.sh /usr/local/bin/laravel-scripts.sh
 # supervisor config to manage services
 RUN mkdir -p /etc/supervisor.d \
     && cp docker/laravel.ini /etc/supervisor.d/laravel.ini \
-    && chmod 755 /etc/nginx/http.d/default.conf \
-    && chmod 755 /usr/local/bin/laravel-scripts.sh
+    && chmod 440 /etc/nginx/http.d/default.conf \
+    && chmod 550 /usr/local/bin/laravel-scripts.sh
 
 # Install js dependencies and remove after build
 RUN apk add --no-cache --virtual .build-deps npm unzip \
