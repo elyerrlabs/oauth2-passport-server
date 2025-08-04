@@ -20,7 +20,7 @@
 # Author Contact: yerel9212@yahoo.es
 # -----------------------------------------------------------------------------
 
-IMAGE="elyerr/oauth2-passport-server:v3.0.3"
+IMAGE="elyerr/oauth2-passport-server:v3.0.4"
 COMPOSE_FILE="docker-compose-prod.yml"
 ENV_FILE=".env"
 
