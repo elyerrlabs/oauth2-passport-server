@@ -1,103 +1,102 @@
 {
-    "name": "elyerr/oauth2-passport-server",
-    "type": "project",
-    "description": "OAuth Authorization server",
-    "keywords": [
-        "oauth2",
-        "laravel",
-        "authorization server",
-        "oauth2 server"
+  "name": "elyerr/oauth2-passport-server",
+  "type": "project",
+  "description": "OAuth Authorization server",
+  "keywords": [
+    "oauth2",
+    "laravel",
+    "authorization server",
+    "oauth2 server"
+  ],
+  "license": "proprietary",
+  "support": {
+    "email": "yerel9212@yahoo.es",
+    "source": "https://gitlab.com/elyerr/oauth2-passport-server",
+    "issues": "https://gitlab.com/elyerr/oauth2-passport-server/-/issues"
+  },
+  "authors": [
+    {
+      "name": "Elvis Yerel Roman Concha",
+      "email": "yerel9212@yahoo.es",
+      "homepage": "https://gitlab.com/elyerr/oauth2-passport-server",
+      "role": "Owner"
+    }
+  ],
+  "require": {
+    "php": "^8.2.0",
+    "elyerr/api-response": "^1.0",
+    "guzzlehttp/guzzle": "^7.2",
+    "inertiajs/inertia-laravel": "^2.0",
+    "jeremy379/laravel-openid-connect": "^3.0",
+    "laravel/framework": "^12.0",
+    "laravel/passport": "13.0",
+    "laravel/tinker": "^2.7",
+    "predis/predis": "^2.2",
+    "rap2hpoutre/laravel-log-viewer": "^2.5",
+    "spatie/laravel-fractal": "^6.0",
+    "stevebauman/purify": "^6.2",
+    "stripe/stripe-php": "^17.1",
+    "symfony/http-client": "^7.0",
+    "symfony/mailgun-mailer": "^7.0"
+  },
+  "require-dev": {
+    "barryvdh/laravel-debugbar": "^3.15",
+    "fakerphp/faker": "^1.9.1",
+    "laravel/breeze": "^2.0",
+    "laravel/pint": "^1.0",
+    "laravel/sail": "^1.0.1",
+    "mockery/mockery": "^1.4.4",
+    "nunomaduro/collision": "^8.1",
+    "phpunit/phpunit": "^11.0",
+    "spatie/laravel-ignition": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Database\\Factories\\": "database/factories/",
+      "Database\\Seeders\\": "database/seeders/"
+    },
+    "files": [
+      "app/Helpers/Setting.php",
+      "app/Helpers/Payment.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover --ansi"
     ],
-    "license": "AGPL-3.0",
-    "authors": [
-        {
-            "name": "Elvis Yerel Roman Concha",
-            "email": "yerel9212@yahoo.es",
-            "homepage": "https://gitlab.com/elyerr/oauth2-passport-server",
-            "role": "Owner"
-        }
+    "post-update-cmd": [
+      "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/elyerr/laravel-openid-connect.git"
-        }
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
-    "require": {
-        "php": "^8.2.0",
-        "elyerr/api-response": "^1.0",
-        "guzzlehttp/guzzle": "^7.2",
-        "inertiajs/inertia-laravel": "^2.0",
-        "jeremy379/laravel-openid-connect": "dev-main",
-        "laravel/framework": "^12.0",
-        "laravel/passport": "13.0",
-        "laravel/tinker": "^2.7",
-        "predis/predis": "^2.2",
-        "rap2hpoutre/laravel-log-viewer": "^2.5",
-        "spatie/laravel-fractal": "^6.0",
-        "stevebauman/purify": "^6.2",
-        "stripe/stripe-php": "^17.1",
-        "symfony/http-client": "^7.0",
-        "symfony/mailgun-mailer": "^7.0"
-    },
-    "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.15",
-        "fakerphp/faker": "^1.9.1",
-        "laravel/breeze": "^2.0",
-        "laravel/pint": "^1.0",
-        "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^11.0",
-        "spatie/laravel-ignition": "^2.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
-        },
-        "files": [
-            "app/Helpers/Setting.php",
-            "app/Helpers/Payment.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
-    "scripts": {
-        "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
-        ],
-        "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
-        ],
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "@php artisan key:generate --ansi"
-        ]
-    },
-    "extra": {
-        "laravel": {
-            "dont-discover": [
-                "laravel/passport"
-            ]
-        }
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "php-http/discovery": true
-        }
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "post-create-project-cmd": [
+      "@php artisan key:generate --ansi"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "dont-discover": [
+        "laravel/passport"
+      ]
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "php-http/discovery": true
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }
