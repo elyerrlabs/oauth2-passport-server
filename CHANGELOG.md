@@ -20,10 +20,11 @@ Author Contact: yerel9212@yahoo.es
 
 # Changelog
 
-## 🛠️ Unrealized
+## ## 🚀 [v3.0.4]
 
 - Removed orphaned fields to improve data integrity
 - Fixed docker deployment
+- 🔒 Changed license to custom non-commercial license
 
 ----
 
