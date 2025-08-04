@@ -25,7 +25,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 ## 🛠️ Unrealized
 
 - Added support for module creation
-- Added Artisan command to install modules
+- Added Artisan command to install modules 
+- Added license header to source files
+- Declared SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+- Documented `/modules` license exception and third-party ownership terms in [LICENSE.md](./LICENSE.md)
+- Clarified that modules are supported but subject to individual licenses
+
 
 
 ## 🚀 [v3.0.4]
