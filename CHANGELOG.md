@@ -16,11 +16,19 @@ Combining this software with any project licensed for commercial use
 This software supports OAuth 2.0 and OpenID Connect.
 
 Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 
 # Changelog
 
-## ## 🚀 [v3.0.4]
+## 🛠️ Unrealized
+
+- Added support for module creation
+- Added Artisan command to install modules
+
+
+## 🚀 [v3.0.4]
 
 - Removed orphaned fields to improve data integrity
 - Fixed docker deployment

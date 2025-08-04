@@ -19,6 +19,8 @@ namespace App\Services\Payment;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
+ * 
+ * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use Exception;

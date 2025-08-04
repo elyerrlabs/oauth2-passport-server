@@ -16,6 +16,8 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
+ * 
+ * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";

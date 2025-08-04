@@ -16,6 +16,8 @@ Combining this software with any project licensed for commercial use
 This software supports OAuth 2.0 and OpenID Connect.
 
 Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <q-layout view="hHh Lpr lff" v-if="user.id">
