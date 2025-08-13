@@ -126,7 +126,17 @@ class StoreRequest extends FormRequest
                     }
                 }
             ],
-            'prices.*.amount' => ['required', 'integer', 'min:0'],
+            'prices.*.amount' => [
+                'required',
+                function ($attribute, $value, $fail) {
+
+                    $price = str_replace('.', '', $value);
+
+                    if (filter_var($price, FILTER_VALIDATE_INT) == false) {
+                        $fail("The value is invalid");
+                    }
+                }
+            ],
         ];
     }
 

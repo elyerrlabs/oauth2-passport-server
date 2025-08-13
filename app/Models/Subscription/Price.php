@@ -44,5 +44,11 @@ class Price extends Master
     public function priceable()
     {
         return $this->morphTo();
-    }    
+    }
+
+    public function setAmountAttribute($value)
+    {
+        $price = str_replace('.', '', $value);
+        $this->attributes['amount'] = $price;
+    }
 }

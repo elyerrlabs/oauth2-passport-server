@@ -64,7 +64,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <q-checkbox
                         v-model="form.confidential"
-                        label="Confidential client"
+                        label="Secret"
                         color="orange"
                         :error="!!errors.confidential"
                     >

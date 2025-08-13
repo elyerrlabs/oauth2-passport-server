@@ -119,7 +119,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </template>
                             </q-input>
 
-                            <!-- Trial enabled -->
+                            <!-- Trial enabled 
                             <q-item
                                 tag="label"
                                 v-ripple
@@ -139,9 +139,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         plan</q-item-label
                                     >
                                 </q-item-section>
-                            </q-item>
+                            </q-item>-->
 
-                            <!-- Trial duration -->
+                            <!-- Trial duration 
                             <q-input
                                 class="col-xs-12 col-md-4"
                                 v-model="form.trial_duration"
@@ -153,7 +153,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <template v-slot:error>
                                     <v-error :error="errors.trial_duration" />
                                 </template>
-                            </q-input>
+                            </q-input>-->
                         </div>
                     </div>
                 </q-card-section>
@@ -203,10 +203,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <q-input
                             class="col-12 col-md-3"
-                            v-model.number="price.amount"
+                            v-model="price.amount"
                             label="Amount"
-                            type="number"
-                            step="0.01"
+                            mask="#.##"
+                            fill-mask="0"
+                            reverse-fill-mask
                             :error="!!errors[`prices.${index}.amount`]"
                         >
                             <template v-slot:error>

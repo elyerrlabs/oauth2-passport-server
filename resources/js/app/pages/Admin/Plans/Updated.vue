@@ -114,7 +114,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <v-error :error="errors.bonus_duration" />
                                 </template>
                             </q-input>
-
+                            <!--
                             <q-item
                                 tag="label"
                                 v-ripple
@@ -153,7 +153,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <v-error :error="errors.trial_duration" />
                                 </template>
                             </q-input>
-                        </div>
+                        --></div>
                     </div>
                 </q-card-section>
 
@@ -208,10 +208,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <div class="col-12 col-md-3">
                             <q-input
-                                v-model.number="price.amount"
+                                v-model="price.amount"
                                 label="Amount"
-                                type="number"
-                                step="0.01"
+                                mask="#.##"
+                                fill-mask="0"
+                                reverse-fill-mask
                                 :error="!!errors[`prices.${index}.amount`]"
                             >
                                 <template v-slot:error>

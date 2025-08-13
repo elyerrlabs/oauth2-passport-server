@@ -30,7 +30,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 - Declared SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 - Documented `/modules` license exception and third-party ownership terms in [LICENSE.md](./LICENSE.md)
 - Clarified that modules are supported but subject to individual licenses
-
+- Updated price input to accept decimal format for better readability (stored internally as integer)
+- Disabled trial functionality (not yet available)
+- Renamed "Client registered" to "Secret client" for confidential clients
 
 
 ## 🚀 [v3.0.4]
