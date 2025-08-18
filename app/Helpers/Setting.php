@@ -18,7 +18,7 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -86,6 +86,18 @@ if (!function_exists('settingLoad')) {
     }
 }
 
+if (!function_exists("getCurrencySymbol")) {
+    /**
+     * Retrieve the symbol of the currency
+     * @param string $key
+     */
+    function getCurrencySymbol(string $key): ?string
+    {
+        $currencies = config('billing.currency');
+        return $currencies[$key]['symbol'] ?? null;
+    }
+}
+
 if (!function_exists('settingItem')) {
 
     /**
@@ -102,7 +114,7 @@ if (!function_exists('settingItem')) {
 
                 $cacheKey = CacheKeys::settings($key);
 
-                // Verify key and return if exists 
+                // Verify key and return if exists
                 if (Cache::has($cacheKey)) {
                     return Cache::get($cacheKey);
                 }
