@@ -20,7 +20,7 @@ namespace App\Services\Inertia;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -30,6 +30,44 @@ use App\Transformers\User\AuthTransformer;
 
 class Menu
 {
+
+    /**
+     * Append to render inertia props
+     * @param mixed $user
+     * @return array 
+     */
+    private static function appendChildMenu($user = null): array
+    {
+        $menus = [];
+
+        $config = config('menus');
+
+        foreach ($config as $menu => $items) {
+
+            foreach ($items as $item) {
+
+                $canShow = true;
+                if (isset($item['service'])) {
+                    $canShow = $user && method_exists($user, 'canAccessMenu')
+                        ? $user->canAccessMenu($item['service'])
+                        : false;
+                }
+
+                if ($canShow) {
+                    $menus[$menu][] = [
+                        'id' => $item['id'] ?? null,
+                        'name' => $item['name'] ?? null,
+                        'icon' => $item['icon'] ?? null,
+                        'route' => isset($item['route']) ? route($item['route']) : null,
+                        'show' => $canShow,
+                    ];
+                }
+            }
+        }
+
+        return $menus;
+    }
+
 
     /**
      * return the user data
@@ -62,7 +100,7 @@ class Menu
     {
         $user = auth()->user();
 
-        return [
+        $keys = [
             "captcha" => static::captcha(),
             "app_name" => config('app.name'),
             "user" => static::authenticated_user(),
@@ -94,6 +132,8 @@ class Menu
             "partner_routes" => static::partnerRoutes(),
             "allow_register" => config('routes.guest.register', true),
         ];
+
+        return array_merge($keys, static::appendChildMenu($user));
     }
 
     /**

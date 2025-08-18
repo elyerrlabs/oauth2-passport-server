@@ -37,19 +37,76 @@ return [
     'currency' => [
         'USD' => [
             'code' => 'USD',
-            'name' => 'United States',
+            'name' => 'United States Dollar',
+            'symbol' => '$',
         ],
         'EUR' => [
             'code' => 'EUR',
-            'name' => 'Eurozone',
+            'name' => 'Euro',
+            'symbol' => '€',
+        ],
+        'JPY' => [
+            'code' => 'JPY',
+            'name' => 'Japanese Yen',
+            'symbol' => '¥',
+        ],
+        'GBP' => [
+            'code' => 'GBP',
+            'name' => 'British Pound',
+            'symbol' => '£',
+        ],
+        'AUD' => [
+            'code' => 'AUD',
+            'name' => 'Australian Dollar',
+            'symbol' => 'A$',
+        ],
+        'CAD' => [
+            'code' => 'CAD',
+            'name' => 'Canadian Dollar',
+            'symbol' => 'C$',
+        ],
+        'BRL' => [
+            'code' => 'BRL',
+            'name' => 'Brazilian Real',
+            'symbol' => 'R$',
+        ],
+        'ARS' => [
+            'code' => 'ARS',
+            'name' => 'Argentine Peso',
+            'symbol' => '$',
+        ],
+        'CLP' => [
+            'code' => 'CLP',
+            'name' => 'Chilean Peso',
+            'symbol' => '$',
+        ],
+        'COP' => [
+            'code' => 'COP',
+            'name' => 'Colombian Peso',
+            'symbol' => '$',
+        ],
+        'MXN' => [
+            'code' => 'MXN',
+            'name' => 'Mexican Peso',
+            'symbol' => '$',
+        ],
+        'PEN' => [
+            'code' => 'PEN',
+            'name' => 'Peruvian Sol',
+            'symbol' => 'S/',
+        ],
+        'UYU' => [
+            'code' => 'UYU',
+            'name' => 'Uruguayan Peso',
+            'symbol' => '$U',
         ],
     ],
 
     'period' => [
-        'daily' => [
-            'interval' => 1,
-            'unit' => 'days',
-            'name' => 'daily',
+        'one_time' => [
+            'interval' => 0,
+            'unit' => null,
+            'name' => 'one_time',
         ],
         'weekly' => [
             'interval' => 1,

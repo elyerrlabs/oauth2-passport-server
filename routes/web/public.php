@@ -25,7 +25,19 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Home\HomeController;
 use App\Http\Controllers\Web\Home\PlanController;
+use Core\Ecommerce\Http\Controllers\Web\ProductController; 
 
 Route::get("/", [HomeController::class, 'homePage'])->name('home.page');
 
 Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+
+Route::group([
+    'prefix' => 'ecommerce',
+    'as' => 'ecommerce.'
+], function () {
+
+    Route::get('', [ProductController::class, 'dashboard'])->name('dashboard');
+    Route::get('/search', [ProductController::class, 'search'])->name('search');
+    Route::get('/{category}', [ProductController::class, 'category'])->name('category');
+    Route::get('/{category}/{product}', [ProductController::class, 'productDetails'])->name('products.show');
+});

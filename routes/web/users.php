@@ -25,6 +25,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Account\CodeController;
 use App\Http\Controllers\Web\Account\UserController;
+use App\Http\Controllers\Web\Admin\File\FileController;
 use App\Http\Controllers\Web\Account\HomePageController;
 use App\Http\Controllers\Web\Auth\RegisterClientController;
 use App\Http\Controllers\Web\Account\NotificationController;
@@ -63,6 +64,8 @@ Route::group([
 
     Route::put('/packages/{package_id}/recurring', [UserSubscriptionController::class, 'recurringPayment'])->name('recurring.payment');
 
+    Route::delete('/files/{id}/owner/{owner_id}', [FileController::class, 'destroy'])->name('files.delete');
+    
     Route::prefix('notifications')
         ->as('notification.')
         ->group(function () {

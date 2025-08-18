@@ -20,7 +20,7 @@ namespace App\Providers;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -97,7 +97,7 @@ class RouteServiceProvider extends ServiceProvider
                     $last_remaining = Cache::get($cacheKey . ':remaining_minutes', 1);
 
                     // Increase time to block user
-                    $new_remaining_time = $last_remaining->addMinutes($value['block_time']);
+                    $new_remaining_time = $last_remaining->addMinutes(filter_var($value['block_time'], FILTER_VALIDATE_INT));
 
                     // Clean current cache keys
                     Cache::forget($cacheKey . '::blocked');

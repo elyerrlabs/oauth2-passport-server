@@ -31,10 +31,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Transformers\Subscription\PlanPriceTransformer;
 use App\Transformers\Subscription\PlanScopeTransformer;
 
-class Plan extends Master
+class   Plan extends Master
 {
     use HasFactory;
 
+
+    public $tag = "subscription_plan";
+    
     protected $table = "plans";
 
     public $transformer = PlanTransformer::class;

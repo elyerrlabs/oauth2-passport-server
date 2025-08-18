@@ -21,45 +21,35 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div class="q-pa-md">
-        <q-select
-            filled
+        <q-btn
             dense
-            v-model="selectedTheme"
-            :options="themes"
-            label="Choose theme"
-            option-value="value"
-            option-label="label"
-            emit-value
-            map-options
-            @update:model-value="applyTheme"
-            :option-slot="true"
-            popup-content-class="theme-selector-popup"
+            class="text-white"
+            outline
+            round
+            no-caps
+            :icon="selectedIcon"
         >
-            <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps">
-                    <q-item-section avatar>
-                        <q-icon
-                            :name="scope.opt.icon"
-                            :color="scope.opt.color"
-                        />
-                    </q-item-section>
-                    <q-item-section>
-                        <q-item-label>
-                            {{ scope.opt.label }}
-                        </q-item-label>
-                    </q-item-section>
-                </q-item>
-            </template>
-
-            <template v-slot:selected>
-                <q-item-section avatar>
-                    <q-icon :name="selectedIcon" :color="selectedColor" />
-                </q-item-section>
-                <q-item-section>
-                    <q-item-label>{{ selectedLabel }}</q-item-label>
-                </q-item-section>
-            </template>
-        </q-select>
+            <q-menu fit>
+                <q-list style="min-width: 150px">
+                    <q-item
+                        v-for="theme in themes"
+                        :key="theme.value"
+                        clickable
+                        v-close-popup
+                        @click="selectTheme(theme.value)"
+                    >
+                        <q-item-section avatar>
+                            <q-icon :name="theme.icon" :color="theme.color" />
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>
+                                {{ theme.label }}
+                            </q-item-label>
+                        </q-item-section>
+                    </q-item>
+                </q-list>
+            </q-menu>
+        </q-btn>
     </div>
 </template>
 
@@ -70,19 +60,19 @@ export default {
             selectedTheme: "",
             themes: [
                 {
-                    label: "Light (Light)",
+                    label: "Light",
                     value: "light",
                     icon: "light_mode",
                     color: "primary",
                 },
                 {
-                    label: "Dark (Dark)",
+                    label: "Dark",
                     value: "dark",
                     icon: "dark_mode",
                     color: "grey-8",
                 },
                 {
-                    label: "Red (Red)",
+                    label: "Red",
                     value: "red",
                     icon: "palette",
                     color: "red",
@@ -116,6 +106,10 @@ export default {
         this.applyTheme(theme);
     },
     methods: {
+        selectTheme(theme) {
+            this.selectedTheme = theme;
+            this.applyTheme(theme);
+        },
         applyTheme(theme) {
             document.body.setAttribute("data-theme", theme);
             localStorage.setItem("theme", theme);
@@ -126,7 +120,5 @@ export default {
 </script>
 
 <style scoped>
-.theme-selector-popup {
-    max-height: 200px;
-}
+/* Puedes añadir estilos personalizados aquí si es necesario */
 </style>

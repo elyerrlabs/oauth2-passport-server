@@ -21,7 +21,7 @@
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,5 +56,6 @@ Route::group([
 
     require __DIR__ . '/web/settings.php';
     require __DIR__ . '/web/admin.php';
+    require __DIR__ . '/web/ecommerce.php';
 
 });

@@ -36,7 +36,8 @@ class User extends Auth
 {
     use SoftDeletes;
 
-
+    public $tag = "user";
+    
     /**
      * Transformer
      * @var 

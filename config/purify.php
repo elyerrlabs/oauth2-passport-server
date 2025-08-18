@@ -49,6 +49,19 @@ return [
             'AutoFormat.RemoveEmpty' => false,
         ],
 
+        'editor' => [
+            'Core.Encoding' => 'utf-8',
+            'HTML.Doctype' => 'HTML 4.01 Transitional',
+            'HTML.SafeIframe' => true,
+            'URI.SafeIframeRegexp' => '%^(https?:)?//(www\.)?(youtube\.com/embed/|player\.vimeo\.com/video/)%',
+            'HTML.ForbiddenElements' => 'script',
+            'HTML.AllowedElements' => null,
+            'HTML.AllowedAttributes' => null,
+            'CSS.AllowedProperties' => null,
+            'AutoFormat.AutoParagraph' => true,
+            'AutoFormat.RemoveEmpty' => true,
+        ],
+
         'icons' => [
             'Core.Encoding' => 'utf-8',
             'HTML.Allowed' => 'i[class]',

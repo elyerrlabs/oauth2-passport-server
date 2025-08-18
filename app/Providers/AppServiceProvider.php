@@ -65,7 +65,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         Setting::getDefaultSetting();
 
         Auth::extend('oauth2-passport-server', function ($app, $name, array $config) {
