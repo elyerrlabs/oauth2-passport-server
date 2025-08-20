@@ -21,7 +21,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div class="q-pa-md q-gutter-sm">
-        <q-btn round outline color="positive" @click="dialog = true" icon="mdi-plus-circle">
+        <q-btn
+            round
+            outline
+            color="positive"
+            @click="dialog = true"
+            icon="mdi-plus-circle"
+        >
             <q-tooltip transition-show="rotate" transition-hide="rotate">
                 Add new service
             </q-tooltip>
@@ -36,29 +42,53 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <q-separator />
 
-                    <q-card-section class="column no-wrap q-gutter-y-md card-body">
-                        <q-input v-model="form.name" label="Name" :error="!!errors.name">
+                    <q-card-section
+                        class="column no-wrap q-gutter-y-md card-body"
+                    >
+                        <q-input
+                            v-model="form.name"
+                            label="Name"
+                            :error="!!errors.name"
+                        >
                             <template v-slot:error>
                                 <v-error :error="errors.name" />
                             </template>
                         </q-input>
 
-                        <q-input v-model="form.description" label="Description" type="textarea"
-                            :error="!!errors.description">
+                        <q-input
+                            v-model="form.description"
+                            label="Description"
+                            type="textarea"
+                            :error="!!errors.description"
+                        >
                             <template v-slot:error>
                                 <v-error :error="errors.description" />
                             </template>
                         </q-input>
 
-                        <q-select v-model="form.group_id" label="Group" :options="groups" option-label="name"
-                            option-value="id" filter emit-value map-options :error="!!errors.group_id">
+                        <q-select
+                            v-model="form.group_id"
+                            label="Group"
+                            :options="groups"
+                            option-label="name"
+                            option-value="id"
+                            filter
+                            emit-value
+                            map-options
+                            :error="!!errors.group_id"
+                        >
                             <template v-slot:error>
                                 <v-error :error="errors.group_id" />
                             </template>
                         </q-select>
                         <q-item tag="label" v-ripple>
                             <q-item-section avatar>
-                                <q-checkbox v-model="form.system" val="orange" color="orange" :error="!!errors.system">
+                                <q-checkbox
+                                    v-model="form.system"
+                                    val="orange"
+                                    color="orange"
+                                    :error="!!errors.system"
+                                >
                                     <template v-slot:error>
                                         <v-error :error="errors.system" />
                                     </template>
@@ -72,16 +102,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </q-item-section>
                         </q-item>
 
-                        <q-select v-model="form.visibility" :options="visibility" label="Visibility" />
+                        <q-select
+                            v-model="form.visibility"
+                            :options="visibility"
+                            label="Visibility"
+                        />
                         <v-error :error="errors.visibility" />
                     </q-card-section>
                 </div>
 
                 <q-separator />
                 <q-card-section class="row justify-between card-footer">
-                    <q-btn outline color="positive" label="create" @click="create" />
+                    <q-btn
+                        outline
+                        color="positive"
+                        label="create"
+                        @click="create"
+                    />
 
-                    <q-btn outline color="secondary" label="Cancel" @click="close" />
+                    <q-btn
+                        outline
+                        color="secondary"
+                        label="Cancel"
+                        @click="close"
+                    />
                 </q-card-section>
             </q-card>
         </q-dialog>
@@ -127,7 +171,13 @@ export default {
         },
 
         open() {
-            this.form = {};
+            this.form.name = null;
+            this.form.description = null;
+            this.from.group_id = null;
+            this.from.group_name = null;
+            this.form.system = false;
+            this.form.visibility = null;
+
             this.errors = {};
         },
 
@@ -187,7 +237,7 @@ export default {
                 .then((res) => {
                     this.groups = res.data.data;
                 })
-                .catch((e) => { });
+                .catch((e) => {});
         },
     },
 };
@@ -231,7 +281,7 @@ export default {
     flex-shrink: 0;
 }
 
-.card-footer>.q-btn {
+.card-footer > .q-btn {
     padding: 0.4rem 2rem;
     border-radius: 0.6rem;
 }

@@ -178,8 +178,6 @@ export default {
             roles: 0,
             services: 0,
             users: 0,
-            channels: 0,
-            plans: 0,
             cards: [],
             chartSeries: [],
             chartOptions: {},
@@ -232,8 +230,6 @@ export default {
             this.roles = data["roles"];
             this.services = data["services"];
             this.users = data["users"];
-            this.channels = data["channels"];
-            this.plans = data["plans"];
 
             this.cards = [
                 { label: "Groups", value: this.groups, icon: "groups" },
@@ -244,8 +240,6 @@ export default {
                 },
                 { label: "Users", value: this.users, icon: "person" },
                 { label: "Services", value: this.services, icon: "build" },
-                { label: "Channels", value: this.channels, icon: "cast" },
-                { label: "Plans", value: this.plans, icon: "paid" },
             ];
 
             this.renderChart();

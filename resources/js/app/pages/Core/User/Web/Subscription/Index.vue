@@ -214,12 +214,9 @@ export default {
     methods: {
         async getPackages() {
             try {
-                const res = await this.$server.get(
-                    this.user.links.subscriptions,
-                    {
-                        params: this.search,
-                    }
-                );
+                const res = await this.$server.get(this.$page.props.route, {
+                    params: this.search,
+                });
 
                 if (res.status === 200) {
                     this.packages = res.data.data;

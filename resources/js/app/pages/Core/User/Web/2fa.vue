@@ -30,8 +30,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-toolbar-title class="text-grey-7">
                                     Two Factor Authentication
                                 </q-toolbar-title>
-                                <q-btn icon="mdi-check-decagram-outline" :color="user.m2fa ? 'positive' : 'negative'">
-                                    <q-tooltip transition-show="rotate" transition-hide="rotate">
+                                <q-btn
+                                    icon="mdi-check-decagram-outline"
+                                    :color="user.m2fa ? 'positive' : 'negative'"
+                                >
+                                    <q-tooltip
+                                        transition-show="rotate"
+                                        transition-hide="rotate"
+                                    >
                                         {{
                                             user.m2fa
                                                 ? "2FA Activated"
@@ -42,16 +48,33 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </q-toolbar>
                         </q-card-section>
                         <q-card-section>
-                            <q-input v-model="token" label="Insert Code ..." outlined dense />
+                            <q-input
+                                v-model="token"
+                                label="Insert Code ..."
+                                outlined
+                                dense
+                            />
                             <v-error :error="errors.token" />
                         </q-card-section>
 
                         <q-card-actions align="between">
-                            <q-btn @click="requestCode" label="Request token" color="positive" outline />
-                            <q-btn :label="user.m2fa ? 'Deactivate' : 'Activate'"
-                                :color="user.m2fa ? 'negative' : 'positive'" @click="activateFactor" outline
-                                color="negative">
-                                <q-tooltip transition-show="rotate" transition-hide="rotate">
+                            <q-btn
+                                @click="requestCode"
+                                label="Request token"
+                                color="positive"
+                                outline
+                            />
+                            <q-btn
+                                :label="user.m2fa ? 'Deactivate' : 'Activate'"
+                                :color="user.m2fa ? 'negative' : 'positive'"
+                                @click="activateFactor"
+                                outline
+                                color="negative"
+                            >
+                                <q-tooltip
+                                    transition-show="rotate"
+                                    transition-hide="rotate"
+                                >
                                     {{
                                         user.m2fa
                                             ? "2FA Activated"
@@ -91,7 +114,7 @@ export default {
         async requestCode() {
             try {
                 const res = await this.$server.post(
-                    this.user.links.f2a_authorize
+                    this.$page.props.routes['f2a_authorize']
                 );
                 if (res.status === 201) {
                     this.popup(res.data.message);
@@ -107,7 +130,7 @@ export default {
         async activateFactor() {
             try {
                 const res = await this.$server.post(
-                    this.user.links.f2a_activate,
+                    this.$page.props.routes['f2a_activate'],
                     {
                         token: this.token,
                     }
@@ -116,7 +139,7 @@ export default {
                     this.token = "";
                     this.errors = {};
                     this.popup("2FA has been activated successfully");
-                    window.location.reload()
+                    window.location.reload();
                 }
             } catch (err) {
                 if (err.response && err.response.status == 422) {
@@ -124,7 +147,6 @@ export default {
                 }
             }
         },
-
     },
 };
 </script>
