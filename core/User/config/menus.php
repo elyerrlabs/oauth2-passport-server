@@ -22,6 +22,13 @@
 
 return [
 
+    "user_dashboard" => [
+        "name" => "Account",
+        "route" => "user.dashboard",
+        "icon" => "mdi-security",
+        'show' => true,
+    ],
+
     "admin_dashboard" => [
         "name" => "Admin",
         "route" => "user.admin.dashboard",
@@ -144,7 +151,7 @@ return [
             "icon" => "mdi-account-cash-outline",
             'show' => 'administrator',
         ],
-        
+
         [
             "name" => "Terminal",
             "route" => "admin.terminals.index",
