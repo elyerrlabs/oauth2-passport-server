@@ -143,3 +143,55 @@ if (!function_exists('redirectToHome')) {
         return redirect($url);
     }
 }
+
+
+if (!function_exists('normalizeSlug')) {
+    /**
+     * Normalize slug
+     * @param string $text
+     * @return string
+     */
+    function normalizeSlug(string $text): string
+    {
+        $text = str_replace(['_', ' '], '-', $text);
+
+        $text = preg_replace('/([a-z])([A-Z])/', '$1-$2', $text);
+
+        $text = strtolower($text);
+
+        $text = preg_replace('/-+/', '-', $text);
+
+        return trim($text, '-');
+    }
+}
+
+if (!function_exists('resolveInertiaRoutes')) {
+    function resolveInertiaRoutes(array $items)
+    {
+        $menus = [];
+
+        $user = auth()->user();
+
+        foreach ($items as $key => $value) {
+            $canShow = true;
+            if (isset($value['service'])) {
+                $canShow = $user && method_exists($user, 'canAccessMenu')
+                    ? $user->canAccessMenu($value['service'])
+                    : false;
+            }
+
+            if ($canShow) {
+                $menus[$key] = [
+                    'id' => $value['id'] ?? null,
+                    'name' => $value['name'] ?? null,
+                    'icon' => $value['icon'] ?? null,
+                    'route' => isset($value['route']) ? route($value['route']) : null,
+                    'show' => $canShow,
+                ];
+            }
+        }
+
+        return $menus;
+
+    }
+}
