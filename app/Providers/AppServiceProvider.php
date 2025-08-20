@@ -87,14 +87,14 @@ class AppServiceProvider extends ServiceProvider
     public function mapMorphModel()
     {
         $morph = [
-            (new \App\Models\User\User())->tag => \App\Models\User\User::class,
+            (new  \Core\User\Model\User())->tag =>  \Core\User\Model\User::class,
             (new \App\Models\Common\Category)->tag => \App\Models\Common\Category::class,
             (new \App\Models\Common\File())->tag => \App\Models\Common\File::class,
             (new \App\Models\Common\Attribute)->tag => \App\Models\Common\Attribute::class,
             (new \App\Models\Common\Icon())->tag => \App\Models\Common\Icon::class,
             (new \App\Models\Common\Tag())->tag => \App\Models\Common\Tag::class,
             (new \App\Models\Common\Unit())->tag => \App\Models\Common\Unit::class,
-            (new \App\Models\Subscription\Plan()->tag) => \App\Models\Subscription\Plan::class
+            (new  \Core\Transaction\Model\Plan()->tag) =>  \Core\Transaction\Model\Plan::class
         ];
 
         Relation::morphMap(array_merge(
