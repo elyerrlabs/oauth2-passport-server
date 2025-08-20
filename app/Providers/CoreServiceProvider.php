@@ -25,6 +25,7 @@ namespace App\Providers;
  */
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class CoreServiceProvider extends ServiceProvider
@@ -54,9 +55,10 @@ class CoreServiceProvider extends ServiceProvider
         $modulesPath = base_path('core');
 
         foreach (File::directories($modulesPath) as $modulePath) {
+            $moduleName = basename($modulePath);
             $configPath = $modulePath . '/config';
             $migrationPath = $modulePath . '/migrations';
-
+            $routesPath = $modulePath . '/routes';
 
             if (is_dir($migrationPath)) {
                 $this->loadMigrationsFrom($migrationPath);
@@ -69,11 +71,56 @@ class CoreServiceProvider extends ServiceProvider
                     }
 
                     $key = $configFile->getFilenameWithoutExtension();
+                    $newConfig = include $configFile->getPathname();
 
-                    $this->mergeConfigFrom($configFile->getPathname(), $key);
+                    if (is_array($newConfig)) {
+                        $existing = config($key, []);
+                        $merged = $this->recursiveMerge($existing, $newConfig);
+                        config()->set($key, $merged);
+                    }
+                }
+            }
+
+            if (is_dir($routesPath)) {
+                if (file_exists($routesPath . '/admin.php')) {
+                    Route::prefix(strtolower($moduleName) . '/admin')
+                        ->as(strtolower($moduleName) . '.admin.')
+                        ->middleware('web')
+                        ->group($routesPath . '/admin.php');
+                }
+
+                if (file_exists($routesPath . '/web.php')) {
+                    Route::prefix(strtolower($moduleName))
+                        ->as(strtolower($moduleName) . '.')
+                        ->middleware('web')
+                        ->group($routesPath . '/web.php');
+                }
+
+                if (file_exists($routesPath . '/api.php')) {
+                    Route::prefix("api/" . strtolower($moduleName))
+                        ->as('api.' . strtolower($moduleName) . '.')
+                        ->middleware('api')
+                        ->group($routesPath . '/api.php');
+                }
+
+                if (file_exists($routesPath . '/public.php')) {
+                    Route:: as(strtolower($moduleName) . '.')
+                        ->group($routesPath . '/public.php');
                 }
             }
         }
+    }
+
+    private function recursiveMerge(array $base, array $merge): array
+    {
+        foreach ($merge as $key => $value) {
+            if (isset($base[$key]) && is_array($base[$key]) && is_array($value)) {
+                $base[$key] = $this->recursiveMerge($base[$key], $value);
+            } else {
+                $base[$key] = $value;
+            }
+        }
+        return $base;
     }
 
 }
