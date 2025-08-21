@@ -42,10 +42,9 @@ use App\Notifications\User\UserUpdatedEmail;
 use Elyerr\ApiResponse\Assets\JsonResponser;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\User\UserCreatedAccount;
-use App\Notifications\User\UserDisableAccount; 
+use App\Notifications\User\UserDisableAccount;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Core\User\Transformer\User\AuthTransformer;
-use Core\Partner\Repositories\PartnerRepository; 
 use Core\User\Transformer\Admin\UserTransformer;
 use App\Notifications\User\UserReactivateAccount;
 use App\Notifications\Member\MemberCreatedAccount;
@@ -80,11 +79,6 @@ class UserRepository implements Contracts
      */
     public $group;
 
-    /**
-     * Partner repository
-     * @var PartnerRepository
-     */
-    public $partnerRepository;
 
     /**
      * Oauth token repository
@@ -96,21 +90,18 @@ class UserRepository implements Contracts
      * 
      * @param \Core\User\Model\User $user
      * @param \Core\User\Model\UserScope $userScope
-     * @param \Core\User\Model\Group $group
-     * @param \Core\Partner\Repositories\PartnerRepository $partnerRepository
+     * @param \Core\User\Model\Group $group 
      * @param \App\Repositories\OAuth\Server\Grant\OAuthSessionTokenRepository $oAuthSessionTokenRepository
      */
     public function __construct(
         User $user,
         UserScope $userScope,
         Group $group,
-        PartnerRepository $partnerRepository,
         OAuthSessionTokenRepository $oAuthSessionTokenRepository
     ) {
         $this->model = $user;
         $this->userScope = $userScope;
         $this->group = $group;
-        $this->partnerRepository = $partnerRepository;
         $this->oauthSessionTokenRepository = $oAuthSessionTokenRepository;
     }
 
@@ -159,7 +150,6 @@ class UserRepository implements Contracts
             'verified_at' => $data['verify_email'] ? now() : null,
             'accept_terms' => $data['accept_terms'] ?? true,
             'accept_cookies' => $data['accept_cookies'] ?? true,
-            'partner_id' => $data['partner_id'] ?? null,
         ]);
 
         Cache::put(CacheKeys::user($user->id), $user);
@@ -185,8 +175,7 @@ class UserRepository implements Contracts
             return Cache::get($cacheKey);
         }
 
-        $model = $this->model->withTrashed()->with([
-            'partner',
+        $model = $this->model->withTrashed()->with([ 
             'userScopes',
             'groups'
         ])->find($id);
@@ -284,7 +273,7 @@ class UserRepository implements Contracts
             $model->push();
 
             Cache::put(CacheKeys::user($id), $model, now()->addDays(intval(config('cache.expires', 90))));
-        } 
+        }
 
         if ($updated_email) {
             Notification::send($model, new UserUpdatedEmail());
@@ -733,7 +722,7 @@ class UserRepository implements Contracts
                 auth()->login($user);
             }
 
-            return redirect()->route('users.verified.account')
+            return redirect()->route('user.verified.account')
                 ->with(
                     [
                         'status' =>

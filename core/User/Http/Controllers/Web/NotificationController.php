@@ -25,9 +25,9 @@ namespace Core\User\Http\Controllers\Web;
  */
 
 
-use App\Http\Controllers\WebController;
-use App\Repositories\NotificationRepository;
 use Inertia\Inertia;
+use App\Http\Controllers\WebController;
+use Core\User\Repositories\NotificationRepository;
 
 class NotificationController extends WebController
 {
@@ -40,7 +40,7 @@ class NotificationController extends WebController
 
     /**
      * Construct
-     * @param \App\Repositories\NotificationRepository $notificationRepository
+     * @param  NotificationRepository $notificationRepository
      */
     public function __construct(NotificationRepository $notificationRepository)
     {
