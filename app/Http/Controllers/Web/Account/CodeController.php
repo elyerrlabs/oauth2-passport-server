@@ -26,7 +26,7 @@ namespace App\Http\Controllers\Web\Account;
 use DateTime;
 use DateInterval;
 use Inertia\Inertia;
-use App\Models\User\User;
+use Core\User\Model\User;
 use App\Models\Setting\Code;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -131,7 +131,7 @@ class CodeController extends WebController
      */
     public function formToRequestToken()
     {
-        return Inertia::render("Account/2fa");
+        return Inertia::render("Core/User/Web/2fa");
     }
 
     /**
