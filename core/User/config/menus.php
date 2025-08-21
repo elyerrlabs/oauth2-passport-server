@@ -23,14 +23,16 @@
 return [
 
     "user_dashboard" => [
-        "name" => "Account",
+        "id" => "dashboard",
+        "name" => "Dashboard",
         "route" => "user.dashboard",
-        "icon" => "mdi-security",
+        "icon" => "mdi-home",
         'show' => true,
     ],
 
     "admin_dashboard" => [
-        "name" => "Admin",
+        "id" => "admin",
+        "name" => "Admin Dashboard",
         "route" => "user.admin.dashboard",
         "icon" => "mdi-security",
         'show' => "administrator",
@@ -39,29 +41,24 @@ return [
     "merge" => [
 
         "user_routes" => [
-            1 => [
-                'id' => 'me',
-                'name' => 'Me',
-                'route' => 'user.dashboard',
-                'icon' => 'mdi-information',
-                'show' => true,
-            ],
+
             2 => [
                 'id' => 'profile',
-                'name' => 'Profile',
+                'name' => 'Information',
                 'route' => 'user.profile',
                 'icon' => 'mdi-account-details-outline',
                 'show' => true,
             ],
             3 => [
-                'name' => 'Password',
+                'id' => 'password',
+                'name' => 'Change password',
                 'route' => 'user.password',
                 'icon' => 'mdi-lock-reset',
                 'show' => true,
             ],
             4 => [
                 'id' => '2fa',
-                'name' => '2FA',
+                'name' => 'Two Factor Authorization',
                 'route' => 'user.2fa.request',
                 'icon' => 'mdi-two-factor-authentication',
                 'show' => true,
@@ -76,25 +73,6 @@ return [
             ]
         ],
     ],
-    /*[
-        'name' => 'Developers',
-        'icon' => 'mdi-tools',
-        'show' => intval(config('routes.users.developers')) ? true : false,
-        'menu' => [
-            [
-                'name' => 'Applications',
-                'route' => intval(config('routes.users.api')) ? route('passport.clients.index') : null,
-                'icon' => 'mdi-wan',
-                'show' => intval(config('routes.users.clients')) ? true : false
-            ],
-            [
-                'name' => 'API Key',
-                'route' => intval(config('routes.users.api')) ? route('passport.personal.tokens.index') : null,
-                'icon' => 'mdi-shield-key-outline',
-                'show' => intval(config('routes.users.api')) ? true : false,
-            ],
-        ]
-    ],*/
 
     "admin_routes" => [
         [
@@ -127,37 +105,11 @@ return [
             "icon" => "mdi-account-multiple",
             'show' => 'administrator',
         ],
-        /*[
+        [
             "name" => "Clients",
-            "route" => "user.admin.clients.index",
+            "route" => "admin.clients.index",
             "icon" => "mdi-apps",
             'show' => 'administrator',
         ],
-        [
-            "name" => "Broadcasts",
-            "route" => "user.admin.broadcasts.index",
-            "icon" => "mdi-broadcast",
-            'show' => 'administrator',
-        ],
-        [
-            "name" => "Plans",
-            "route" => "user.admin.plans.index",
-            "icon" => "mdi-cash-clock",
-            'show' => 'administrator',
-        ],
-        [
-            "name" => "Transactions",
-            "route" => "user.admin.transactions.index",
-            "icon" => "mdi-account-cash-outline",
-            'show' => 'administrator',
-        ],
-
-        [
-            "name" => "Terminal",
-            "route" => "admin.terminals.index",
-            "icon" => "mdi-console",
-            'show' => 'administrator',
-        ],
-        ,*/
     ]
 ];
