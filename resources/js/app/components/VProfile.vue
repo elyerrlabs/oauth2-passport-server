@@ -124,7 +124,7 @@ export default {
         },
 
         myAccount() {
-            window.location.href = this.$page.props.user_dashboard;
+            window.location.href = this.$page.props.user_dashboard['route'];
         },
     },
 };
