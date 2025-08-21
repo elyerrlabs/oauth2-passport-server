@@ -31,7 +31,6 @@ use App\Support\CacheKeys;
 use Core\User\Model\Group;
 use Illuminate\Http\Request;
 use Core\User\Model\UserScope;
-use Core\Partner\Model\Partner;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Elyerr\ApiResponse\Assets\Asset;
@@ -175,7 +174,7 @@ class UserRepository implements Contracts
             return Cache::get($cacheKey);
         }
 
-        $model = $this->model->withTrashed()->with([ 
+        $model = $this->model->withTrashed()->with([
             'userScopes',
             'groups'
         ])->find($id);
@@ -643,18 +642,16 @@ class UserRepository implements Contracts
                 'accept_cookies' => $data['accept_cookies']
             ]);
 
-            if ($data['referral_code']) {
+            if (!empty($data['referral_code']) && class_exists(\Core\Partner\Model\Partner::class)) {
 
-                $partner = Partner::where(
-                    'code',
-                    $data['referral_code']
-                )->first();
+                $partner = \Core\Partner\Model\Partner::where('code', $data['referral_code'])->first();
 
-                if (!empty($partner)) {
+                if ($partner) {
                     $user->partner_id = $partner->id;
                     $user->push();
                 }
             }
+
 
             $user->groups()->attach($group->id);
 

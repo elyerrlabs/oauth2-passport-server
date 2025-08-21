@@ -20,20 +20,20 @@ namespace Core\User\Http\Controllers\Web;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 
-use Core\User\Repositories\UserRepository;
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
+use Core\User\Repositories\UserRepository;
 use App\Http\Requests\User\RegisterRequest;
+use Core\User\Http\Requests\UserRegisterRequest;
 use App\Notifications\Member\MemberCreatedAccount;
 
 class RegisterClientController extends WebController
 {
-
     /**
      * User repository
      * @var UserRepository
@@ -62,7 +62,7 @@ class RegisterClientController extends WebController
         if (!empty($request->input('redirect_to'))) {
             session()->put('redirect_to', $request->input('redirect_to'));
         }
-        
+
         if (request()->user()) {
             return redirect('/');
         }
@@ -71,12 +71,12 @@ class RegisterClientController extends WebController
 
     /**
      * Register new customers
-     * @param \App\Http\Requests\User\RegisterRequest $request
+     * @param  RegisterRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(RegisterRequest $request)
+    public function store(UserRegisterRequest $request)
     {
-        $this->recoveryReferralCode($request); 
+        $this->recoveryReferralCode($request);
         return $this->repository->registerCustomer($request->toArray());
     }
 
@@ -104,7 +104,7 @@ class RegisterClientController extends WebController
     }
 
     /**
-     * Send verification email to the user 
+     * Send verification email to the user
      * @return \Illuminate\Http\RedirectResponse
      */
     public function sendVerificationEmail()
@@ -152,7 +152,7 @@ class RegisterClientController extends WebController
     {
         $redirect_to = session()->get('redirect_to');
         $referral_code = null;
-         
+
         if ($redirect_to) {
             $parsedUrl = parse_url($redirect_to);
 
