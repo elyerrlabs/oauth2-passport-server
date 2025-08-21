@@ -8,7 +8,7 @@
 @section('header')
     <nav class="bg-indigo-600 text-white py-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center px-4">
-            <a href="{{ route("users.dashboard") }}" class="text-lg font-semibold">
+            <a href="{{ route("user.dashboard") }}" class="text-lg font-semibold">
                 <i class="mdi mdi-home text-2xl"></i>
                 {{ __('Dashboard') }}
             </a>

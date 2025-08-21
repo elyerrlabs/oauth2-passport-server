@@ -196,11 +196,13 @@
 
                 <div class="mt-8 pt-6 border-t border-indigo-400">
                     <p class="text-sm text-indigo-100">
+                    <div class="text-center">
                         <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
                             {{ config('app.org_name') }}
                         </a>
+                    </div>
 
-                        {{-- 
+                    {{-- 
                         {{ __('Need help?') }} <a href="#"
                         class="font-semibold hover:underline">{{ __('Contact our team') }}</a>
                         --}}

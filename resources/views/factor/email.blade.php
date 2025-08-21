@@ -13,7 +13,7 @@
                     {{ __('Please check your email address and type your code in the field below.') }}</p>
             </div>
 
-            <form action="{{ route('users.2fa.login') }}" method="post">
+            <form action="{{ route('user.2fa.login') }}" method="post">
                 @csrf
                 <div class="mb-4">
                     <label for="token"

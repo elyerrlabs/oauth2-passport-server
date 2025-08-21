@@ -7,7 +7,7 @@
 @section('header')
     <nav class="bg-indigo-600 text-white py-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center ">
-            <a href="{{ route('users.dashboard') }}" class="text-lg font-semibold">
+            <a href="{{ route('user.dashboard') }}" class="text-lg font-semibold">
                 <i class="mdi mdi-home text-2xl"></i>
                 {{ __('Dashboard') }}
             </a>
@@ -88,7 +88,7 @@
             </div>
 
             <div class="text-center mt-8">
-                <a href="{{ route('users.dashboard') }}"
+                <a href="{{ route('user.dashboard') }}"
                     class="inline-block bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
                     <span class="mdi mdi-view-dashboard-outline mr-1"></span> {{ __('Go to Dashboard') }}
                 </a>
