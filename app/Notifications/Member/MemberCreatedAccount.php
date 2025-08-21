@@ -115,6 +115,6 @@ class MemberCreatedAccount extends Notification implements ShouldQueue
             );
         });
 
-        return route('users.verify.account') . "?$query";
+        return route('user.verify.account') . "?$query";
     }
 }

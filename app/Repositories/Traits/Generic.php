@@ -22,7 +22,7 @@ namespace App\Repositories\Traits;
  * Author Contact: yerel9212@yahoo.es
  */
 
-use App\Models\Subscription\Scope;
+use Core\User\Model\Scope;
 
 
 trait Generic

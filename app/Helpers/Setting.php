@@ -139,8 +139,7 @@ if (!function_exists('redirectToHome')) {
      */
     function redirectToHome()
     {
-        $url = config('app.url') . config('system.redirect_to', '/about');
-        return redirect($url);
+        return redirect()->route('user.dashboard');
     }
 }
 

@@ -23,15 +23,15 @@ namespace App\Console\Commands\Settings;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Models\User\User;
+use Core\User\Model\User;
 use Illuminate\Support\Str;
-use App\Models\User\UserScope;
+use Core\User\Model\UserScope;
 use Illuminate\Console\Command;
-use App\Models\Subscription\Role;
-use App\Models\Subscription\Group;
-use App\Models\Subscription\Scope;
+use Core\User\Model\Role;
+use Core\User\Model\Group;
+use Core\User\Model\Scope;
 use Illuminate\Support\Facades\DB;
-use App\Models\Subscription\Service;
+use Core\User\Model\Service;
 use Illuminate\Support\Facades\Hash;
 
 class settingsUsersCreate extends Command

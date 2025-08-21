@@ -30,7 +30,7 @@ use App\Models\OAuth\Client;
 use App\Models\OAuth\AuthCode;
 use Laravel\Passport\Passport;
 use App\Models\OAuth\RefreshToken;
-use App\Models\Subscription\Scope;
+use Core\User\Model\Scope;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;

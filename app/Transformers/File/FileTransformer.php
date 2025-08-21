@@ -66,7 +66,7 @@ class FileTransformer extends TransformerAbstract
             'visibility' => $file->visibility,
             'url' => Storage::url($file->path),
             'links' => [
-                'delete' => route('users.files.delete', [
+                'delete' => route('user.files.delete', [
                     'id' => $file->id,
                     'owner_id' => $file->fileable_id
                 ])

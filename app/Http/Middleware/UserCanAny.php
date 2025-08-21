@@ -54,6 +54,6 @@ class UserCanAny
             return $next($request);
         }
 
-        return redirect()->route('users.dashboard');
+        return redirect()->route('user.dashboard');
     }
 }

@@ -26,7 +26,7 @@ namespace App\Services\Inertia;
 
 use App\Support\CacheKeys;
 use Illuminate\Support\Facades\Cache;
-use App\Transformers\User\AuthTransformer;
+use Core\User\Transformer\User\AuthTransformer; 
 
 class Menu
 {
@@ -42,31 +42,61 @@ class Menu
 
         $config = config('menus');
 
-        foreach ($config as $menu => $items) {
+        foreach ($config as $key => $value) {
 
-            foreach ($items as $item) {
+            if ($key === 'merge' && is_array($value)) {
+                foreach ($value as $groupKey => $items) {
+                    foreach ($items as $item) {
+                        $canShow = true;
 
-                $canShow = true;
-                if (isset($item['service'])) {
-                    $canShow = $user && method_exists($user, 'canAccessMenu')
-                        ? $user->canAccessMenu($item['service'])
-                        : false;
+                        if (isset($item['service'])) {
+                            $canShow = $user && method_exists($user, 'canAccessMenu')
+                                ? $user->canAccessMenu($item['service'])
+                                : false;
+                        }
+
+                        if ($canShow) {
+                            $menus[$groupKey][] = [
+                                'id' => $item['id'] ?? null,
+                                'name' => $item['name'] ?? null,
+                                'icon' => $item['icon'] ?? null,
+                                'route' => isset($item['route']) ? route($item['route']) : null,
+                                'show' => $canShow,
+                            ];
+                        }
+                    }
                 }
 
-                if ($canShow) {
-                    $menus[$menu][] = [
-                        'id' => $item['id'] ?? null,
-                        'name' => $item['name'] ?? null,
-                        'icon' => $item['icon'] ?? null,
-                        'route' => isset($item['route']) ? route($item['route']) : null,
-                        'show' => $canShow,
-                    ];
-                }
+                continue;
+            }
+
+
+            if (is_array($value) && array_is_list($value)) {
+                continue;
+            }
+
+
+            $canShow = true;
+            if (isset($value['service'])) {
+                $canShow = $user && method_exists($user, 'canAccessMenu')
+                    ? $user->canAccessMenu($value['service'])
+                    : false;
+            }
+
+            if ($canShow) {
+                $menus[$key] = [
+                    'id' => $value['id'] ?? null,
+                    'name' => $value['name'] ?? null,
+                    'icon' => $value['icon'] ?? null,
+                    'route' => isset($value['route']) ? route($value['route']) : null,
+                    'show' => $canShow,
+                ];
             }
         }
 
         return $menus;
     }
+
 
 
     /**
@@ -104,9 +134,12 @@ class Menu
             "captcha" => static::captcha(),
             "app_name" => config('app.name'),
             "user" => static::authenticated_user(),
-            "user_routes" => static::userRoutes(),
-            "user_dashboard" => route('users.dashboard'),
-            "admin_routes" => static::adminRoutes(),
+            "settings" => [
+                "name" => "Settings",
+                "route" => route("admin.settings.general"),
+                "icon" => "mdi-cogs",
+                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
+            ],
             "auth_routes" => [
                 "login" => route('login'),
                 "forgot_password" => route('forgot-password'),
@@ -115,21 +148,9 @@ class Menu
             ],
             "guest_routes" => [
                 "home_page" => url(config('system.home_page')),
-                "plans" => route('plans.index')
             ],
-            "admin_dashboard" => [
-                "name" => "Admin",
-                "route" => route("admin.dashboard"),
-                "icon" => "mdi-security",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            "partner_dashboard" => [
-                "name" => "Partner",
-                "route" => route("partners.dashboard"),
-                "icon" => "mdi-account-cash",
-                'show' => empty($user) ? false : $user->canAccessMenu('reseller'),
-            ],
-            "partner_routes" => static::partnerRoutes(),
+
+
             "allow_register" => config('routes.guest.register', true),
         ];
 
@@ -151,31 +172,31 @@ class Menu
                     'menu' => [
                         [
                             'name' => 'Me',
-                            'route' => route('users.dashboard'),
+                            'route' => route('user.dashboard'),
                             'icon' => 'mdi-information',
                             'show' => true,
                         ],
                         [
                             'name' => 'profile',
-                            'route' => route('users.profile'),
+                            'route' => route('user.profile'),
                             'icon' => 'mdi-account-details-outline',
                             'show' => true,
                         ],
                         [
                             'name' => 'Password',
-                            'route' => route('users.password'),
+                            'route' => route('user.password'),
                             'icon' => 'mdi-lock-reset',
                             'show' => true,
                         ],
                         [
                             'name' => '2FA',
-                            'route' => route('users.2fa.request'),
+                            'route' => route('user.2fa.request'),
                             'icon' => 'mdi-two-factor-authentication',
                             'show' => true,
                         ],
                         [
                             'name' => 'Subscriptions',
-                            'route' => route('users.subscriptions.index'),
+                            'route' => route('user.subscriptions.index'),
                             'icon' => 'mdi-gift-outline',
                             'show' => true,
                         ],
@@ -187,7 +208,7 @@ class Menu
                         ],
                         [
                             'name' => 'Notifications',
-                            'route' => route('users.notification.index'),
+                            'route' => route('user.notification.index'),
                             'icon' => 'mdi-bell-badge-outline',
                             'show' => true,
                             'count' => request()->user() ? request()->user()->unreadNotifications()->count() : 0

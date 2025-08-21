@@ -25,7 +25,7 @@ namespace App\Http\Middleware;
  */
 
 use Closure;
-use App\Models\User\User;
+use Core\User\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\Member\MemberReactivateAccount;
