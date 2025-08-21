@@ -1,28 +1,8 @@
-<!--
-Copyright (c) 2025 Elvis Yerel Roman Concha
-
-This file is part of an open source project licensed under the
-"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
-
-You may use, study, modify, and redistribute this file for personal,
-educational, or non-commercial research purposes only.
-
-Commercial use is strictly prohibited without prior written consent
-from the author.
-
-Combining this software with any project licensed for commercial use
-(such as AGPL) is not permitted without explicit authorization.
-
-This software supports OAuth 2.0 and OpenID Connect.
-
-Author Contact: yerel9212@yahoo.es
-
-SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
--->
 <template>
     <v-user-layout>
         <q-page padding>
             <div class="q-pa-md">
+                <!-- Header de bienvenida -->
                 <div class="row items-center q-col-gutter-md">
                     <div class="col-auto">
                         <q-icon
@@ -44,6 +24,42 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                     </div>
                 </div>
+
+                <q-card flat bordered class="q-mt-lg q-mb-md">
+                    <q-card-section>
+                        <div
+                            class="text-h6 text-primary text-weight-medium q-mb-md"
+                        >
+                            ⚙️ Account Options
+                        </div>
+                        <q-list bordered separator>
+                            <q-item
+                                v-for="(item, index) in userRoutes"
+                                :key="index"
+                                clickable
+                                v-ripple
+                                @click="open(item)"
+                            >
+                                <q-item-section avatar>
+                                    <q-icon
+                                        class="text-primary"
+                                        :name="item.icon"
+                                    />
+                                </q-item-section>
+
+                                <q-item-section>
+                                    {{ item.name }}
+                                </q-item-section>
+
+                                <q-item-section side v-if="item.count">
+                                    <q-badge color="primary" align="top">
+                                        {{ item.count }}
+                                    </q-badge>
+                                </q-item-section>
+                            </q-item>
+                        </q-list>
+                    </q-card-section>
+                </q-card>
 
                 <q-card flat bordered class="q-mt-lg q-mb-md">
                     <q-card-section>
@@ -76,6 +92,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </q-card-section>
                 </q-card>
 
+                <!-- Lista de próximas funciones -->
                 <q-card flat bordered class="q-mt-lg q-mb-md">
                     <q-card-section>
                         <div class="text-h6">🔧 What's coming soon?</div>
@@ -168,12 +185,16 @@ export default {
             return this.$page.props.user;
         },
         userRoutes() {
-            return this.$page.props.user_routes;
+            return Object.values(this.$page.props.user_routes).sort((a, b) =>
+                a.name.localeCompare(b.name)
+            );
         },
     },
-    mounted() {},
-    data() {
-        return {};
+
+    methods: {
+        open(item) {
+            window.location.href = item.route;
+        },
     },
 };
 </script>
