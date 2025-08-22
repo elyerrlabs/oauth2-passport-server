@@ -20,7 +20,7 @@ namespace Core\User\Http\Controllers\Web;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -31,9 +31,8 @@ use Core\User\Repositories\NotificationRepository;
 
 class NotificationController extends WebController
 {
-
     /**
-     * 
+     *
      * @var NotificationRepository
      */
     public $repository;
@@ -44,9 +43,11 @@ class NotificationController extends WebController
      */
     public function __construct(NotificationRepository $notificationRepository)
     {
+        parent::__construct();
         $this->repository = $notificationRepository;
         $this->middleware('wants.json')->except('listAllNotifications');
     }
+
 
     public function listAllNotifications()
     {

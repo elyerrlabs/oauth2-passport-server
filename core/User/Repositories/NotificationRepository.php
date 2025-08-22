@@ -23,10 +23,10 @@ namespace Core\User\Repositories;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use App\Transformers\Notification\NotificationTransformer;
+ 
 use Elyerr\ApiResponse\Assets\JsonResponser;
 use Elyerr\ApiResponse\Exceptions\ReportError;
+use Core\User\Transformer\User\NotificationTransformer;
 
 
 class NotificationRepository

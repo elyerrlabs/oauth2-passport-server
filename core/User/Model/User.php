@@ -27,8 +27,7 @@ use App\Models\Auth;
 use Core\Partner\Model\Partner;
 use Illuminate\Http\Request;
 use App\Models\Setting\Terminal;
-use Illuminate\Support\Facades\Hash;
-use App\Models\Subscription\PaymentProvider;
+use Illuminate\Support\Facades\Hash; 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Auth
@@ -120,10 +119,5 @@ class User extends Auth
     public function partner()
     {
         return $this->hasOne(Partner::class, 'id', 'partner_id');
-    }
-
-    public function paymentProviders()
-    {
-        return $this->hasMany(PaymentProvider::class, 'user_id');
     }
 }
