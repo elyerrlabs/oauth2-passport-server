@@ -24,10 +24,9 @@ namespace Core\User\Model;
  */
 
 use App\Models\Auth;
-use Core\Partner\Model\Partner;
 use Illuminate\Http\Request;
 use App\Models\Setting\Terminal;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Auth
@@ -110,14 +109,5 @@ class User extends Auth
     public function terminals()
     {
         return $this->hasMany(Terminal::class);
-    }
-
-    /**
-     * Has one
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function partner()
-    {
-        return $this->hasOne(Partner::class, 'id', 'partner_id');
     }
 }
