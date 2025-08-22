@@ -105,6 +105,7 @@ class CoreServiceProvider extends ServiceProvider
 
                 if (file_exists($routesPath . '/public.php')) {
                     Route:: as(strtolower($moduleName) . '.')
+                        ->middleware('web')
                         ->group($routesPath . '/public.php');
                 }
             }
