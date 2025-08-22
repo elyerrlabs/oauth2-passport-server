@@ -22,14 +22,12 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Public\PaymentController;
-use App\Http\Controllers\Api\Public\CountriesController;
-use Core\Ecommerce\Http\Controllers\Web\CategoryController;
+use Illuminate\Support\Facades\Route; 
+use App\Http\Controllers\Api\Public\CountriesController; 
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use App\Http\Controllers\Api\OAuth\PassportConnectController;
 
-Route::as('api.')->group(function () {
+Route:: as('api.')->group(function () {
 
     /**
      * Gateways to grant access
@@ -71,11 +69,6 @@ Route::as('api.')->group(function () {
         'middleware' => ['throttle:default']
     ], function () {
         Route::resource('/countries', CountriesController::class)->only('index');
-        Route::get('/payments/billing-period', [PaymentController::class, 'billingPeriod'])->name('payments.billing-period');
-        Route::get('/payments/currencies', [PaymentController::class, 'currencies'])->name('payments.currencies');
-        Route::get('/payments/methods', [PaymentController::class, 'methods'])->name('payments.methods');
-        Route::get('/services/list', [PaymentController::class, 'services'])->name('services.services');
 
-        Route::get('/ecommerce/categories', [CategoryController::class, 'index'])->name('ecommerce.categories.index');
     });
 });

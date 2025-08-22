@@ -22,9 +22,9 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\User\Http\Controllers\Web\RegisterClientController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\Auth\NewPasswordController;
-use App\Http\Controllers\Web\Auth\RegisterClientController;
+use App\Http\Controllers\Web\Auth\NewPasswordController; 
 use App\Http\Controllers\Web\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Web\Auth\AuthenticatedSessionController;
 
