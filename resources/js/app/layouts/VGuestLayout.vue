@@ -35,11 +35,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     {{ $page.props.app_name }}
                 </q-toolbar-title>
                 <v-theme />
-                <q-btn
-                    flat
-                    label="Plans"
-                    @click="open($page.props.guest_routes['plans'])"
-                />
+                <q-btn flat :label="plan?.name" @click="open(plan?.route)" />
 
                 <q-btn
                     v-if="!$page.props.user?.id"
@@ -81,16 +77,33 @@ export default {
     data() {
         return {
             guest: false,
+            transactions: [],
+            plans: {},
         };
+    },
+
+    created() {
+        this.transactions = this.$page.props.transactions;
+        this.plan = this.transactions.find((item) => item.id == "plans");
     },
     methods: {
         open(url) {
             const currentUrl = window.location.href;
-            const redirectUrl = new URL(url);
 
-            redirectUrl.searchParams.set("redirect_to", currentUrl); 
+            const path = url.startsWith("/")
+                ? url
+                : new URL(url, window.location.origin).pathname;
 
-            window.location.href = redirectUrl.toString();
+            if (
+                path.startsWith("/auth/login") ||
+                path.startsWith("/auth/register")
+            ) {
+                const redirectUrl = new URL(url, window.location.origin);
+                redirectUrl.searchParams.set("redirect_to", currentUrl);
+                window.location.href = redirectUrl.toString();
+            } else {
+                window.location.href = url;
+            }
         },
 
         isActive(item) {
