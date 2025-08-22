@@ -88,9 +88,9 @@
             </div>
 
             <div class="text-center mt-8">
-                <a href="{{ route('user.dashboard') }}"
+                <a href="{{ route('transaction.subscriptions.show', ['transaction_code' => $transaction['code']]) }}"
                     class="inline-block bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
-                    <span class="mdi mdi-view-dashboard-outline mr-1"></span> {{ __('Go to Dashboard') }}
+                    <span class="mdi mdi-view-dashboard-outline mr-1"></span> {{ __('View package detail') }}
                 </a>
             </div>
         </div>

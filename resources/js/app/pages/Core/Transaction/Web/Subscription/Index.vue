@@ -45,7 +45,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             {{ props.row.meta.name }}
                         </div>
                         <div class="text-caption text-grey">
-                            {{ props.row.transaction.billing_period }} plan
+                            {{ props.row.transaction.billing_period_name }} plan
                         </div>
                     </q-td>
                 </template>
@@ -127,7 +127,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :item="props.row"
                             @success="getPackages"
                         />
-                        <v-detail :item="props.row" @reload="getPackages" />
+
+                        <q-btn
+                            clicked
+                            class="text-primary q-ma-sm"
+                            size="sm"
+                            outline
+                            icon="mdi-eye"
+                            :href="props.row.links.show"
+                        >
+                            view
+                        </q-btn>
                     </q-td>
                 </template>
             </q-table>
@@ -147,12 +157,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VDetail from "./Detail.vue";
 import VRecurringPayment from "./RecurringPayment.vue";
 
 export default {
     components: {
-        VDetail,
         VRecurringPayment,
     },
 
