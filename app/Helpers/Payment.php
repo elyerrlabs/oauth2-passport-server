@@ -125,9 +125,9 @@ if (!function_exists('billing_get_expiration_date')) {
      * Get the expiration date by adding the billing period to the current date and time.
      *
      * @param string $periodKey
-     * @return \Carbon\Carbon|null
+     * @return mixed
      */
-    function billing_get_expiration_date(string $periodKey): ?\Carbon\Carbon
+    function billing_get_expiration_date(string $periodKey)
     {
         $period = billing_get_period($periodKey);
 
