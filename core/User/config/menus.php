@@ -32,7 +32,7 @@ return [
 
     "admin_dashboard" => [
         "id" => "admin",
-        "name" => "Admin Dashboard",
+        "name" => "Admin",
         "route" => "user.admin.dashboard",
         "icon" => "mdi-security",
         'show' => "administrator",
