@@ -1,3 +1,24 @@
+<!--
+Copyright (c) 2025 Elvis Yerel Roman Concha
+
+This file is part of an open source project licensed under the
+"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+
+You may use, study, modify, and redistribute this file for personal,
+educational, or non-commercial research purposes only.
+
+Commercial use is strictly prohibited without prior written consent
+from the author.
+
+Combining this software with any project licensed for commercial use
+(such as AGPL) is not permitted without explicit authorization.
+
+This software supports OAuth 2.0 and OpenID Connect.
+
+Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+-->
 <template>
     <q-layout view="hHh Lpr lFf" class="admin-layout bg-grey-1">
         <!-- Header Mejorado -->
@@ -221,7 +242,7 @@
                         :active="isActive(menu_dashboard)"
                     >
                         <q-item-section avatar>
-                            <q-icon name="mdi-view-dashboard" />
+                            <q-icon color="primary" name="mdi-view-dashboard" />
                         </q-item-section>
                         <q-item-section>
                             {{ menu_dashboard.name }}
@@ -247,7 +268,11 @@
                             :active="isActive(menu_category)"
                         >
                             <q-item-section avatar>
-                                <q-icon name="mdi-shape-outline" size="sm" />
+                                <q-icon
+                                    color="primary"
+                                    name="mdi-shape-outline"
+                                    size="sm"
+                                />
                             </q-item-section>
                             <q-item-section>
                                 {{ menu_category.name }}
@@ -266,6 +291,7 @@
                         >
                             <q-item-section avatar>
                                 <q-icon
+                                    color="primary"
                                     name="mdi-format-list-bulleted"
                                     size="sm"
                                 />
@@ -292,6 +318,7 @@
                         >
                             <q-item-section avatar>
                                 <q-icon
+                                    color="primary"
                                     name="mdi-format-list-checks"
                                     size="sm"
                                 />
@@ -310,7 +337,11 @@
                             class="submenu-item"
                         >
                             <q-item-section avatar>
-                                <q-icon name="mdi-clock-outline" size="sm" />
+                                <q-icon
+                                    color="primary"
+                                    name="mdi-clock-outline"
+                                    size="sm"
+                                />
                             </q-item-section>
                             <q-item-section>Pending</q-item-section>
                             <q-item-section side>
@@ -328,7 +359,7 @@
                         class="menu-item"
                     >
                         <q-item-section avatar>
-                            <q-icon name="mdi-account-group" />
+                            <q-icon color="primary" name="mdi-account-group" />
                         </q-item-section>
                         <q-item-section>Customers</q-item-section>
                         <q-item-section side>
@@ -345,23 +376,9 @@
                         class="menu-item"
                     >
                         <q-item-section avatar>
-                            <q-icon name="mdi-chart-bar" />
+                            <q-icon color="primary" name="mdi-chart-bar" />
                         </q-item-section>
                         <q-item-section>Reports</q-item-section>
-                    </q-item>
-
-                    <!-- Settings -->
-                    <q-item
-                        clickable
-                        v-ripple
-                        exact
-                        to="/admin/settings"
-                        class="menu-item"
-                    >
-                        <q-item-section avatar>
-                            <q-icon name="mdi-cog" />
-                        </q-item-section>
-                        <q-item-section>Settings</q-item-section>
                     </q-item>
                 </q-list>
             </q-scroll-area>
