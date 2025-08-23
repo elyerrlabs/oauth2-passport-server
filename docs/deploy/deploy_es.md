@@ -162,3 +162,57 @@ server {
      }
 }
 ```
+
+## Notas
+
+### Regenerar llaves OAuth2
+
+Para regenerar las llaves de OAuth2, sigue estos pasos:  
+1. Accede a la terminal del panel de administración.  
+2. Ejecuta el siguiente comando:  
+
+```bash
+php artisan passport:keys --force
+```
+
+## Métodos de Pago
+
+### Stripe
+
+- **Webhook (POST):** `https://domain.com/webhook/stripe`
+- **Eventos gestionados:**
+  - `checkout.session.completed`
+  - `payment_intent.payment_failed`
+  - `checkout.session.expired`
+  - `charge.succeeded`
+
+### Pago Offline
+
+- **Offline:** Compatible con métodos de pago manuales.
+
+> **Nota:** La renovación automática está habilitada para todos los métodos de pago, excepto en pagos Offline.  
+> Configura las opciones de renovación desde el Panel de Administración en **Ajustes → Pago → Renovación**.
+ 
+## Proveedores de CAPTCHA
+
+Protege tus formularios y evita el spam con las siguientes opciones de CAPTCHA:
+
+### hCaptcha
+
+- Alternativa enfocada en la privacidad frente a reCAPTCHA.
+- Plan gratuito generoso.
+- [Obtén tu clave del sitio](https://dashboard.hcaptcha.com/signup)
+
+### Cloudflare Turnstile
+
+- Verificación de usuarios sin CAPTCHAs tradicionales.
+- Experiencia fluida y fácil de usar.
+- [Obtén tu clave del sitio](https://dash.cloudflare.com/)
+
+### Configuración
+
+Para activar el proveedor de CAPTCHA de tu preferencia:
+1. Ve a **Admin → Ajustes → Seguridad**.
+2. Selecciona tu proveedor deseado (hCaptcha o Turnstile).
+
+El sistema renderizará automáticamente el CAPTCHA elegido en los formularios del frontend.
