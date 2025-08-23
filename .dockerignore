@@ -12,6 +12,8 @@
 !artisan
 !composer.json
 !AUTHORS.md
+!LICENSE.md
+!LICENSE.txt
 !LICENSE
 !package.json
 !package-lock.json
