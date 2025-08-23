@@ -81,7 +81,6 @@ class ProductTransformer extends TransformerAbstract
                 'index' => route('ecommerce.admin.products.index'),
                 'store' => route('ecommerce.admin.products.store'),
                 'show' => route('ecommerce.admin.products.show', ['product' => $product->id]),
-                'update' => route('ecommerce.admin.products.update', ['product' => $product->id]),
                 'destroy' => route('ecommerce.admin.products.destroy', ['product' => $product->id]),
             ]
         ];

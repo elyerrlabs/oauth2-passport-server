@@ -22,14 +22,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <div>
         <q-btn
-            :color="COLORS.primary"
+            size="sm"
+            outline
+            color="positive"
             @click="open"
             icon="mdi-plus-circle"
             class="add-product-btn"
-            size="sm"
-            outline
-            rounded
-            data-test="add-product-button"
         >
             {{ title }}
         </q-btn>
@@ -44,386 +42,300 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             full-width
         >
             <q-card class="product-manager-card">
-                <q-card-section class="dialog-header">
+                <q-card-section class="dialog-header text-center">
                     <div class="header-content">
                         <q-icon
-                            :name="ICONS.edit"
-                            :color="COLORS.primary"
-                            size="md"
+                            name="mdi-pencil-outline"
+                            size="lg"
+                            color="primary"
                             class="header-icon"
                         />
-                        <div class="text-h5 dialog-title">Product Manager</div>
+                        <h6 class="dialog-title">Product Manager</h6>
                     </div>
                     <q-btn
                         flat
                         round
-                        :color="COLORS.secondary"
                         icon="mdi-close"
+                        color="grey-7"
                         @click="close"
                         class="close-btn"
-                        data-test="close-dialog-button"
                     />
                 </q-card-section>
 
                 <q-separator />
 
-                <q-card-section class="scroll dialog-content">
+                <q-card-section class="dialog-content">
                     <div class="row q-col-gutter-md">
-                        <!-- Product Selection -->
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <q-select
-                                dense
-                                outlined
-                                :model-value="form.name"
-                                use-input
-                                hide-selected
-                                fill-input
-                                input-debounce="300"
-                                :options="products"
-                                label="Product *"
-                                @filter="filterProduct"
-                                @input-value="setProduct"
-                                :error="!!errors.name"
-                                class="form-field"
-                                bg-color="white"
-                            >
-                                <template v-slot:prepend>
-                                    <q-icon
-                                        :name="ICONS.product"
-                                        :color="COLORS.primary"
-                                    />
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.name" />
-                                </template>
-                                <template v-slot:no-option>
-                                    <q-item>
-                                        <q-item-section class="text-grey">
-                                            No products found
-                                        </q-item-section>
-                                    </q-item>
-                                </template>
-                            </q-select>
-                        </div>
-
-                        <!-- Status Toggles -->
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="toggle-group">
-                                <q-toggle
-                                    v-model="form.published"
-                                    :color="COLORS.success"
-                                    label="Published"
-                                    class="form-toggle"
-                                    left-label
-                                />
-                                <q-toggle
-                                    v-model="form.featured"
-                                    :color="COLORS.accent"
-                                    label="Featured"
-                                    class="form-toggle"
-                                    left-label
-                                />
-                            </div>
-                        </div>
-
-                        <!-- Category Selection -->
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <q-select
-                                dense
-                                outlined
-                                :model-value="form.category"
-                                use-input
-                                hide-selected
-                                fill-input
-                                input-debounce="300"
-                                :options="categories"
-                                label="Category *"
-                                @filter="filterCategories"
-                                @input-value="setCategory"
-                                :error="!!errors.category"
-                                class="form-field"
-                                bg-color="white"
-                            >
-                                <template v-slot:prepend>
-                                    <q-icon
-                                        :name="ICONS.category"
-                                        :color="COLORS.primary"
-                                    />
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.category" />
-                                </template>
-                                <template v-slot:no-option>
-                                    <q-item>
-                                        <q-item-section class="text-grey">
-                                            No categories found
-                                        </q-item-section>
-                                    </q-item>
-                                </template>
-                            </q-select>
-                        </div>
-
-                        <!-- Icon Input -->
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <q-input
-                                dense
-                                outlined
-                                v-model="form.icon"
-                                label="Icon"
-                                :error="!!errors.icon"
-                                hint="Material Design icon name"
-                                bottom-slots
-                                class="form-field"
-                                bg-color="white"
-                            >
-                                <template v-slot:prepend>
-                                    <q-icon
-                                        :name="ICONS.icon"
-                                        :color="COLORS.primary"
-                                    />
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.icon" />
-                                </template>
-                                <template v-slot:append>
-                                    <q-btn
-                                        dense
-                                        flat
-                                        round
-                                        :icon="ICONS.externalLink"
-                                        :color="COLORS.primary"
-                                        @click="openIconLibrary"
-                                        :title="'View icon library'"
-                                        class="icon-library-btn"
-                                    />
-                                </template>
-                            </q-input>
-                        </div>
-
-                        <!-- Currency and Price -->
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <q-select
-                                dense
-                                outlined
-                                v-model="form.currency"
-                                :options="currencies"
-                                emit-value
-                                label="Currency *"
-                                :error="!!errors.currency"
-                                class="form-field"
-                                bg-color="white"
-                            >
-                                <template v-slot:prepend>
-                                    <q-icon
-                                        :name="ICONS.currency"
-                                        :color="COLORS.primary"
-                                    />
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.currency" />
-                                </template>
-                            </q-select>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <q-input
-                                v-model="form.price"
-                                label="Price *"
-                                dense
-                                outlined
-                                :error="!!errors.price"
-                                mask="#.##"
-                                fill-mask="0"
-                                reverse-fill-mask
-                                class="form-field"
-                                bg-color="white"
-                            >
-                                <template v-slot:prepend>
-                                    <q-icon
-                                        :name="ICONS.price"
-                                        :color="COLORS.primary"
-                                    />
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.price" />
-                                </template>
-                            </q-input>
-                        </div>
-
-                        <!-- Stock Management -->
-                        <template v-if="form?.id">
-                            <div class="col-12 col-md-4">
-                                <q-input
-                                    v-model="current_stock"
-                                    label="Current Stock"
-                                    dense
-                                    outlined
-                                    type="number"
-                                    :min="0"
-                                    :error="!!errors.stock"
-                                    disable
-                                    class="form-field"
-                                    bg-color="grey-3"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon
-                                            :name="ICONS.stock"
-                                            :color="COLORS.primary"
-                                        />
-                                    </template>
-                                    <template v-slot:error>
-                                        <v-error :error="errors.stock" />
-                                    </template>
-                                </q-input>
-                            </div>
-
-                            <div class="col-12 col-md-4">
-                                <q-input
-                                    v-model.number="update_stock"
-                                    label="Stock Adjustment"
-                                    type="number"
-                                    :min="0"
-                                    dense
-                                    outlined
-                                    class="form-field"
-                                    bg-color="white"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon
-                                            :name="ICONS.adjustment"
-                                            :color="COLORS.primary"
-                                        />
-                                    </template>
-                                </q-input>
-                            </div>
-
-                            <div class="col-12 col-md-4">
-                                <q-toggle
-                                    v-model="decrease"
-                                    :color="COLORS.danger"
-                                    label="Decrease stock"
-                                    class="form-toggle stock-toggle"
-                                    left-label
-                                />
-                            </div>
-                        </template>
-                        <template v-else>
-                            <div class="col-12 col-md-6 col-lg-4">
-                                <q-input
-                                    v-model="current_stock"
-                                    label="Initial Stock *"
-                                    dense
-                                    outlined
-                                    type="number"
-                                    :min="0"
-                                    :error="!!errors.stock"
-                                    class="form-field"
-                                    bg-color="white"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon
-                                            :name="ICONS.stock"
-                                            :color="COLORS.primary"
-                                        />
-                                    </template>
-                                    <template v-slot:error>
-                                        <v-error :error="errors.stock" />
-                                    </template>
-                                </q-input>
-                            </div>
-                        </template>
-
-                        <!-- Descriptions -->
-                        <div class="col-12">
-                            <div class="section-title">
+                        <q-select
+                            class="col-12 col-md-4 col-lg-4 col-xl-3 form-field"
+                            dense
+                            outlined
+                            :model-value="form.name"
+                            use-input
+                            hide-selected
+                            fill-input
+                            input-debounce="0"
+                            :options="products"
+                            label="Product"
+                            @filter="filterProduct"
+                            @input-value="setProduct"
+                            :error="!!errors.name"
+                        >
+                            <template v-slot:prepend>
                                 <q-icon
-                                    :name="ICONS.description"
-                                    :color="COLORS.primary"
+                                    name="mdi-package-variant"
+                                    color="primary"
                                 />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.name" />
+                            </template>
+                            <template v-slot:no-option>
+                                <q-item>
+                                    <q-item-section class="text-grey">
+                                        No results found
+                                    </q-item-section>
+                                </q-item>
+                            </template>
+                        </q-select>
+
+                        <div
+                            class="col-12 col-md-4 col-lg-4 col-xl-3 toggle-group"
+                        >
+                            <q-checkbox
+                                v-model="form.published"
+                                :val="false"
+                                label="Published"
+                                color="positive"
+                                class="form-toggle"
+                            />
+                            <q-checkbox
+                                v-model="form.featured"
+                                :val="false"
+                                label="Featured"
+                                color="teal"
+                                class="form-toggle"
+                            />
+                        </div>
+
+                        <q-select
+                            class="col-12 col-md-6 col-lg-4 col-xl-3 form-field"
+                            dense
+                            outlined
+                            :model-value="form.category"
+                            use-input
+                            hide-selected
+                            fill-input
+                            input-debounce="0"
+                            :options="categories"
+                            label="Category"
+                            @filter="filterCategories"
+                            @input-value="setCategory"
+                            :error="!!errors.category"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon
+                                    name="mdi-shape-outline"
+                                    color="primary"
+                                />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.category" />
+                            </template>
+                            <template v-slot:no-option>
+                                <q-item>
+                                    <q-item-section class="text-grey">
+                                        No results found
+                                    </q-item-section>
+                                </q-item>
+                            </template>
+                        </q-select>
+
+                        <q-input
+                            class="col-12 col-md-6 col-lg-4 col-xl-3 form-field"
+                            dense
+                            outlined
+                            v-model="form.icon"
+                            label="Icon"
+                            :error="!!errors.icon"
+                            hint="Choose a Material Design icon name"
+                            bottom-slots
+                        >
+                            <template v-slot:prepend>
+                                <q-icon
+                                    name="mdi-emoticon-outline"
+                                    color="primary"
+                                />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.icon" />
+                            </template>
+                            <template v-slot:append>
+                                <q-btn
+                                    dense
+                                    flat
+                                    round
+                                    icon="mdi-link-variant"
+                                    color="primary"
+                                    @click="openIconLibrary"
+                                    :title="'View icon library'"
+                                    class="icon-library-btn"
+                                />
+                            </template>
+                        </q-input>
+
+                        <q-select
+                            class="col-12 col-md-6 col-lg-4 col-xl-3 form-field"
+                            dense
+                            v-model="form.currency"
+                            :options="currencies"
+                            emit-value
+                            label="Currency"
+                            :error="!!errors.currency"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon
+                                    name="mdi-currency-usd"
+                                    color="primary"
+                                />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.currency" />
+                            </template>
+                        </q-select>
+
+                        <q-input
+                            class="col-12 col-md-6 col-lg-4 col-xl-3 form-field"
+                            v-model="form.price"
+                            label="Price"
+                            dense
+                            :error="!!errors.price"
+                            mask="#.##"
+                            fill-mask="0"
+                            reverse-fill-mask
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-cash" color="primary" />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.price" />
+                            </template>
+                        </q-input>
+
+                        <q-input
+                            class="col-12 col-md-4 col-lg-4 col-xl-3 form-field"
+                            v-model="current_stock"
+                            label="Stock"
+                            dense
+                            type="number"
+                            :min="0"
+                            :error="!!errors.stock"
+                            :disable="form?.id ? true : false"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-package" color="primary" />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.stock" />
+                            </template>
+                        </q-input>
+
+                        <q-input
+                            class="col-12 col-md-4 col-xl-3 form-field"
+                            v-model.number="update_stock"
+                            label="Update Stock"
+                            type="number"
+                            :min="0"
+                            dense
+                            v-if="form?.id ? true : false"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-plus-minus" color="primary" />
+                            </template>
+                        </q-input>
+
+                        <q-checkbox
+                            v-model="decrease"
+                            label="Decrease stock"
+                            class="col-12 col-md-4 col-xl-3 form-toggle"
+                            color="negative"
+                            v-if="form?.id ? true : false"
+                        />
+
+                        <div class="col-12 section-divider">
+                            <q-separator />
+                            <div class="section-title">
+                                <q-icon name="mdi-text" color="primary" />
                                 <span>Descriptions</span>
                             </div>
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-12 editor-field">
                             <v-editor
                                 v-model="form.short_description"
                                 label="Short description"
-                                class="editor-field"
                             />
                             <v-error :error="errors.short_description" />
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-12 editor-field">
                             <v-editor
                                 v-model="form.description"
                                 label="Description"
-                                class="editor-field"
                             />
                             <v-error :error="errors.description" />
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-12 editor-field">
                             <v-editor
                                 v-model="form.specification"
                                 label="Specification"
-                                class="editor-field"
                             />
                             <v-error :error="errors.specification" />
                         </div>
 
-                        <!-- Attributes & Tags -->
-                        <div class="col-12">
+                        <div class="col-12 section-divider">
+                            <q-separator />
                             <div class="section-title">
                                 <q-icon
-                                    :name="ICONS.attributes"
-                                    :color="COLORS.primary"
+                                    name="mdi-tag-multiple"
+                                    color="primary"
                                 />
                                 <span>Attributes & Tags</span>
                             </div>
                         </div>
 
-                        <div class="col-12">
-                            <v-attribute
-                                v-model="form.attributes"
-                                class="attribute-field"
-                            />
+                        <div class="col-12 attribute-field">
+                            <v-attribute v-model="form.attributes" />
                             <v-error :error="errors.attributes" />
                         </div>
 
-                        <div class="col-12">
-                            <v-tag
-                                v-model="form.tags"
-                                :max-tags="5"
-                                class="tag-field"
-                            />
+                        <div class="col-12 tag-field">
+                            <v-tag v-model="form.tags" :max-tags="5" />
                             <v-error :error="errors.tags" />
                         </div>
 
-                        <!-- Image Upload -->
-                        <div class="col-12">
+                        <div class="col-12 section-divider">
+                            <q-separator />
                             <div class="section-title">
                                 <q-icon
-                                    :name="ICONS.images"
-                                    :color="COLORS.primary"
+                                    name="mdi-image-multiple"
+                                    color="primary"
                                 />
                                 <span>Product Images</span>
                             </div>
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-12 uploader-field">
                             <v-file-uploader
                                 type="images"
                                 @uploaded="loadImages"
-                                class="uploader-field"
                             ></v-file-uploader>
                             <v-error :error="errors.images" />
                         </div>
 
-                        <div class="col-12">
-                            <v-gallery
-                                :images="images"
-                                class="gallery-field"
-                            ></v-gallery>
+                        <div class="col-12 gallery-field">
+                            <v-gallery :images="images"></v-gallery>
                         </div>
                     </div>
                 </q-card-section>
@@ -432,20 +344,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <q-card-actions align="right" class="dialog-actions">
                     <q-btn
-                        flat
-                        :color="COLORS.secondary"
-                        label="Cancel"
+                        outline
+                        color="grey-7"
+                        label="Close"
                         @click="close"
                         class="action-btn"
-                        data-test="cancel-button"
                     />
                     <q-btn
                         unelevated
-                        :color="COLORS.primary"
-                        :label="form.id ? 'Update Product' : 'Create Product'"
+                        color="positive"
+                        label="Accept"
                         @click="create"
                         class="action-btn submit-btn"
-                        data-test="submit-button"
                     />
                 </q-card-actions>
             </q-card>
@@ -454,32 +364,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-// Color variables for theming
-const COLORS = {
-    primary: "primary",
-    secondary: "grey-7",
-    success: "positive",
-    danger: "negative",
-    accent: "teal",
-    warning: "warning",
-};
-
-// Icon constants
-const ICONS = {
-    edit: "mdi-pencil-outline",
-    product: "mdi-package-variant",
-    category: "mdi-shape-outline",
-    icon: "mdi-emoticon-outline",
-    currency: "mdi-currency-usd",
-    price: "mdi-cash",
-    stock: "mdi-package",
-    adjustment: "mdi-plus-minus",
-    description: "mdi-text",
-    attributes: "mdi-tag-multiple",
-    images: "mdi-image-multiple",
-    externalLink: "mdi-open-in-new",
-};
-
 export default {
     emits: ["created"],
 
@@ -487,7 +371,7 @@ export default {
         title: {
             required: false,
             type: String,
-            default: "Add New Product",
+            default: "Add new product",
         },
 
         searchable: {
@@ -512,7 +396,6 @@ export default {
                 images: [],
                 icon: "",
                 published: false,
-                featured: false,
                 attributes: [],
                 tags: [],
                 currency: "",
@@ -530,18 +413,28 @@ export default {
             products: [],
             filtered_products: [],
             images: [],
-            COLORS,
-            ICONS,
         };
     },
 
     watch: {
         update_stock(value) {
-            this.updateStock(value);
+            var stock = Number(this.form.stock);
+            if (this.decrease) {
+                stock -= value;
+            } else {
+                stock += value;
+            }
+            this.current_stock = stock > 0 ? stock : 0;
         },
 
         decrease(value) {
-            this.updateStock(this.update_stock, value);
+            var stock = Number(this.form.stock);
+            if (value) {
+                stock -= this.update_stock;
+            } else {
+                stock += this.update_stock;
+            }
+            this.current_stock = stock > 0 ? stock : 0;
         },
 
         "form.name"(val) {
@@ -556,25 +449,8 @@ export default {
     },
 
     methods: {
-        updateStock(value, isDecrease = this.decrease) {
-            let stock = Number(this.form.stock);
-
-            if (isDecrease) {
-                stock -= value;
-            } else {
-                stock += value;
-            }
-
-            this.current_stock = stock > 0 ? stock : 0;
-        },
-
         close() {
             this.dialog = false;
-            this.resetForm();
-            this.errors = {};
-        },
-
-        resetForm() {
             this.form = {
                 name: "",
                 short_description: "",
@@ -591,9 +467,7 @@ export default {
                 attributes: [],
                 tags: [],
             };
-            this.update_stock = 0;
-            this.current_stock = 0;
-            this.decrease = false;
+            this.errors = {};
         },
 
         getTags(item) {
@@ -610,7 +484,23 @@ export default {
 
         open() {
             this.dialog = true;
-            this.resetForm();
+            this.form = {
+                name: "",
+                short_description: "",
+                description: "",
+                specification: "",
+                category: null,
+                currency: "",
+                price: "",
+                stock: 0,
+                icon: "",
+                published: false,
+                featured: false,
+                images: [],
+                attributes: [],
+                tags: [],
+            };
+
             this.getCategories();
             this.getCurrencies();
 
@@ -631,7 +521,7 @@ export default {
             this.form.currency = product.currency;
             this.form.price = product.price;
             this.form.stock = product.stock;
-            this.form.icon = product?.icon?.icon;
+            this.form.icon = product?.icon?.icon || product?.category?.icon?.icon;
             this.form.published = product.published;
             this.form.featured = product.featured;
             this.images = product?.images ?? [];
@@ -652,9 +542,7 @@ export default {
                         value: item.code,
                     }));
                 }
-            } catch (error) {
-                console.error("Failed to fetch currencies:", error);
-            }
+            } catch (error) {}
         },
 
         loadImages(files) {
@@ -679,13 +567,13 @@ export default {
                     }));
                 }
             } catch (e) {
-                console.error("Failed to fetch categories:", e);
-                this.showNotification("Failed to load categories", "negative");
+                console.error(e?.response);
             }
         },
 
         async filterCategories(val, update, abort) {
             await this.getCategories(val);
+
             update(() => {
                 this.filtered_categories = this.categories.filter(
                     (item) => item.label == val
@@ -695,16 +583,16 @@ export default {
 
         setCategory(val) {
             this.form.category = val;
-            const category = this.categories.find((item) => item.label == val);
-            if (category && category.icon) {
-                this.form.icon = category.icon.icon;
-            }
+            this.form.icon = this.categories.find(
+                (item) => item.label == val
+            )?.icon?.icon;
         },
 
         async create() {
             const payload = new FormData();
 
-            // Simple fields
+            // Campos simples
+            payload.append("id", this.form.id);
             payload.append("name", this.form.name);
             payload.append("short_description", this.form.short_description);
             payload.append("description", this.form.description);
@@ -714,98 +602,91 @@ export default {
             payload.append("currency", this.form.currency);
             payload.append("price", this.form.price);
             payload.append("icon", this.form.icon);
-            payload.append("published", this.form.published ? 1 : 0);
-            payload.append("featured", this.form.featured ? 1 : 0);
+            payload.append("published", this.form.published);
+            payload.append("featured", this.form.featured);
 
-            // Attributes
-            if (this.form.attributes?.length > 0) {
-                this.form.attributes.forEach((attribute, index) => {
-                    payload.append(
-                        `attributes[${index}][name]`,
-                        attribute.name
-                    );
-                    payload.append(
-                        `attributes[${index}][type]`,
-                        attribute.type
-                    );
-                    payload.append(
-                        `attributes[${index}][value]`,
-                        attribute.value
-                    );
-                    payload.append(
-                        `attributes[${index}][widget]`,
-                        attribute.widget
-                    );
-                    payload.append(
-                        `attributes[${index}][multiple]`,
-                        attribute.multiple
-                    );
-                    payload.append(
-                        `attributes[${index}][stock]`,
-                        attribute.stock
-                    );
+            if (this.form?.attributes?.length > 0) {
+                this.form.attributes.forEach((tag, index) => {
+                    this.form.attributes.forEach((attribute, index) => {
+                        payload.append(
+                            `attributes[${index}][name]`,
+                            attribute.name
+                        );
+                        payload.append(
+                            `attributes[${index}][type]`,
+                            attribute.type
+                        );
+                        payload.append(
+                            `attributes[${index}][value]`,
+                            attribute.value
+                        );
+                        payload.append(
+                            `attributes[${index}][widget]`,
+                            attribute.widget
+                        );
+                        payload.append(
+                            `attributes[${index}][multiple]`,
+                            attribute.multiple
+                        );
+                        payload.append(
+                            `attributes[${index}][stock]`,
+                            attribute.stock
+                        );
+                    });
                 });
             }
 
-            // Tags
-            if (this.form.tags?.length > 0) {
+            if (this.form?.tags?.length > 0) {
                 this.form.tags.forEach((tag, index) => {
                     payload.append(`tags[${index}][name]`, tag.name);
                 });
             }
 
-            // Images
-            if (this.form.images?.length > 0) {
+            if (this.form?.images?.length > 0) {
                 this.form.images.forEach((file) => {
                     payload.append("images[]", file);
                 });
             }
 
             try {
-                const url = this.form.id
-                    ? `${this.$page.props.routes["products"]}/${this.form.id}`
-                    : this.$page.props.routes["products"];
+                const res = await this.$server.post(
+                    this.$page.props.routes["products"],
+                    payload,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
 
-                const method = this.form.id ? "put" : "post";
-
-                const res = await this.$server[method](url, payload, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                });
-
-                if (res.status === 201 || res.status === 200) {
-                    const message = this.form.id
-                        ? "Product successfully updated."
-                        : "Product successfully created.";
-
-                    this.showNotification(message, "positive");
+                if (res.status === 201) {
+                    this.$q.notify({
+                        type: "positive",
+                        message: "Product successfully created.",
+                        timeout: 3000,
+                        icon: "check_circle",
+                    });
+                    this.close();
+                    this.$emit("created", true);
+                } else if (res.status === 200) {
+                    this.$q.notify({
+                        type: "info",
+                        message: "Product inventory successfully updated.",
+                        timeout: 3000,
+                        icon: "update",
+                    });
                     this.close();
                     this.$emit("created", true);
                 }
             } catch (e) {
                 if (e.response && e.response.data.errors) {
                     this.errors = e.response.data.errors;
-                } else {
-                    this.showNotification(
-                        "An error occurred while saving the product",
-                        "negative"
-                    );
                 }
             }
         },
 
-        showNotification(message, type) {
-            this.$q.notify({
-                type,
-                message,
-                timeout: 3000,
-                icon: type === "positive" ? "check_circle" : "error",
-                position: "top-right",
-            });
-        },
-
         // ------- Product ---------//
+
         async getProducts(name = "") {
             try {
                 const res = await this.$server.get(
@@ -827,19 +708,17 @@ export default {
                             (item) => item.name == this.searchable
                         );
 
-                        if (selected_product) {
-                            this.selectProduct(selected_product);
-                        }
+                        this.selectProduct(selected_product);
                     }
                 }
             } catch (e) {
-                console.error("Failed to fetch products:", e);
-                this.showNotification("Failed to load products", "negative");
+                console.error(e?.response);
             }
         },
 
         async filterProduct(val, update, abort) {
             await this.getProducts(val);
+
             update(() => {
                 this.filtered_products = this.products.filter(
                     (item) => item.label == val
@@ -947,15 +826,22 @@ export default {
                 }
             }
 
-            .section-title {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-bottom: 16px;
-                padding-bottom: 8px;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-                font-weight: 500;
-                color: var(--text-color);
+            .section-divider {
+                margin: 24px 0 16px;
+                position: relative;
+
+                .section-title {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    position: absolute;
+                    top: -10px;
+                    left: 16px;
+                    background: white;
+                    padding: 0 8px;
+                    font-weight: 500;
+                    color: var(--text-color);
+                }
             }
 
             .icon-library-btn {
@@ -1014,11 +900,6 @@ export default {
 }
 
 @media (max-width: 599px) {
-    .add-product-btn {
-        width: 100%;
-        justify-content: center;
-    }
-
     .product-manager-dialog .product-manager-card {
         .dialog-header {
             flex-direction: column;
@@ -1034,7 +915,6 @@ export default {
         .dialog-actions {
             flex-direction: column-reverse;
             gap: 12px;
-
             .action-btn {
                 width: 100%;
             }

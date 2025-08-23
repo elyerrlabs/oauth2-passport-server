@@ -68,8 +68,7 @@ class CategoryTransformer extends TransformerAbstract
             'links' => [
                 'index' => route('ecommerce.admin.categories.index'),
                 'store' => route('ecommerce.admin.categories.store'),
-                'show' => route('ecommerce.admin.categories.show', ['category' => $category->id]),
-                'update' => route('ecommerce.admin.categories.update', ['category' => $category->id]),
+                'show' => route('ecommerce.admin.categories.show', ['category' => $category->id]), 
                 'destroy' => route('ecommerce.admin.categories.destroy', ['category' => $category->id]),
             ]
         ];

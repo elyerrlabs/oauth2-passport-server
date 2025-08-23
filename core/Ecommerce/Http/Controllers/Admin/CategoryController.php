@@ -96,13 +96,13 @@ class CategoryController extends WebController
             'description' => Purify::clean($request->description),
         ]);
 
-        if (!empty($request->filled('id'))) {
+        if (!empty($request->filled('id')) && $this->repository->find($request->id)) {
             $model = $this->repository->update($request->id, $request->toArray());
             return $this->showOne($model, $this->repository->transformer);
         }
 
         $request->merge([
-            'slug' => normalizeSlug($request->name, '-'),
+            'slug' => normalizeSlug($request->name),
             'tag' => $this->product_repository->getTag(),
             'description' => Purify::clean($request->description),
         ]);

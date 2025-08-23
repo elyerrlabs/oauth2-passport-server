@@ -8,7 +8,7 @@ use Core\Ecommerce\Http\Controllers\Admin\ProductAttributeController;
 
 Route::get("/", [DashboardController::class, 'dashboard'])->name('dashboard');
 
-Route::resource('categories', CategoryController::class)->except('edit', 'create');
-Route::resource('products', ProductController::class)->except('edit', 'create');
+Route::resource('categories', CategoryController::class)->except('edit', 'create','update');
+Route::resource('products', ProductController::class)->except('edit', 'create','update');
 Route::resource('products.tags', ProductTagController::class)->only('destroy');
 Route::resource('products.attributes', ProductAttributeController::class)->only('destroy');

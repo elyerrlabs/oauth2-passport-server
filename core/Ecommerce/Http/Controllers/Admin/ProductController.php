@@ -77,7 +77,7 @@ final class ProductController extends WebController
                 'routes' => [
                     'products' => route('ecommerce.admin.products.index'),
                     'categories' => route('ecommerce.admin.categories.index'),
-                    'currencies' => route('api.transaction.payments.billing-period')
+                    'currencies' => route('api.transaction.payments.currencies')
                 ],
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
@@ -91,8 +91,6 @@ final class ProductController extends WebController
      */
     public function store(StoreRequest $request)
     {
-        // Search or create product
-        $product = $this->repository->findByName($request->name);
 
         $data = [
             'name' => $request->input('name'),
@@ -112,15 +110,14 @@ final class ProductController extends WebController
             'tags' => $request->input('tags') ?? [],
         ];
 
-        if (empty($product)) {
-            $product = $this->repository->create($data);
-            return $this->showOne($product, $this->repository->transformer, 201);
+        if (!empty($request->filled('id')) && $this->repository->find($request->id)) {
+
+            $product = $this->repository->update($request->id, $data);
+            return $this->showOne($product, $this->repository->transformer, 200);
         }
 
-        // Update  if it the product exists
-        $product = $this->repository->update($product->id, $data);
-
-        return $this->showOne($product, $this->repository->transformer, 200);
+        $product = $this->repository->create($data);
+        return $this->showOne($product, $this->repository->transformer, 201);
     }
 
     /**

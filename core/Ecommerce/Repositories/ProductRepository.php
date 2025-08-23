@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\Contracts\Contracts;
 use Elyerr\ApiResponse\Assets\JsonResponser;
-use Core\Ecommerce\Transformer\Admin\ProductTransformer; 
+use Core\Ecommerce\Transformer\Admin\ProductTransformer;
 
 final class ProductRepository implements Contracts
 {
