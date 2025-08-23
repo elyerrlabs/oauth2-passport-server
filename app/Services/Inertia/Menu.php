@@ -30,11 +30,10 @@ use Core\User\Transformer\User\AuthTransformer;
 
 class Menu
 {
-
     /**
      * Append to render inertia props
      * @param mixed $user
-     * @return array 
+     * @return array
      */
     private static function appendChildMenu($user = null): array
     {
@@ -96,7 +95,7 @@ class Menu
 
         return $menus;
     }
- 
+
     /**
      * return the user data
      */
@@ -131,7 +130,14 @@ class Menu
         $keys = [
             "captcha" => static::captcha(),
             "app_name" => config('app.name'),
+            "org_name" => config("app.org_name"),
             "user" => static::authenticated_user(),
+            "docs" => [
+                'name' => 'Documentation',
+                'route' => route('documentation.index'),
+                'icon' => 'mdi-book-cog',
+                'show' => true
+            ],
             "settings" => [
                 "name" => "Settings",
                 "route" => route("admin.settings.general"),
@@ -164,12 +170,6 @@ class Menu
                         'route' => intval(config('routes.users.api')) ? route('passport.personal.tokens.index') : null,
                         'icon' => 'mdi-xml',
                         'show' => intval(config('routes.users.api')) ? true : false,
-                    ],
-                    [
-                        'name' => 'Documentation',
-                        'route' => "https://documenter.getpostman.com/view/5625104/2sB2xBDq6o",
-                        'icon' => 'mdi-book-cog',
-                        'show' => intval(config('routes.users.api')) || intval(config('routes.users.clients')) ? true : false,
                     ],
                 ]
             ],
