@@ -71,5 +71,5 @@ For commercial inquiries, please contact the author.
 
 ## Contact
 
-For more information or assistance, join our community on [Telegram](https://t.me/elyerr).
+For more information or assistance on [Telegram](https://t.me/elyerr).
 
