@@ -622,9 +622,9 @@ class Setting
 
     public static function getRoutesSettings()
     {
-        Config::set('routes.users.developers', settingItem('routes.users.developers', false));
-        Config::set('routes.users.api', settingItem('routes.users.api', false));
-        Config::set('routes.users.clients', settingItem('routes.users.clients', false));
+        Config::set('routes.users.developers', settingItem('routes.users.developers', true));
+        Config::set('routes.users.api', settingItem('routes.users.api', true));
+        Config::set('routes.users.clients', settingItem('routes.users.clients', true));
         Config::set('routes.guest.register', settingItem('routes.guest.register', true));
     }
 
