@@ -11,7 +11,8 @@
 
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
     <link rel="stylesheet" href="{{ mix('/css/tailwind.css') }}">
-
+    <link nonce={{ $nonce }} rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
+    <script nonce={{ $nonce }} src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
     @inertiaHead
     @stack('head')
     @stack('css')
@@ -20,6 +21,8 @@
 <body>
 
     @yield('header')
+
+    @include('layouts.parts.alerts')
 
     @yield('content')
 
@@ -30,4 +33,5 @@
     @stack('js')
     @stack('modals')
 </body>
+
 </html>

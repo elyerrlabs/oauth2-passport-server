@@ -54,6 +54,6 @@ class UserCanAny
             return $next($request);
         }
 
-        return redirect()->route('user.dashboard');
+        return redirect()->route('user.dashboard')->with('error', __("You don’t have permission to perform this action"));
     }
 }
