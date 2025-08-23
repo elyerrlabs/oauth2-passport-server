@@ -94,7 +94,7 @@ final class ProductController extends WebController
 
         $data = [
             'name' => $request->input('name'),
-            'slug' => normalizeSlug($request->input('name'), '-'),
+            'slug' => normalizeSlug($request->input('name')),
             'short_description' => Purify::clean($request->input('short_description')),
             'description' => Purify::config('editor')->clean($request->input('description')),
             'specification' => Purify::config('editor')->clean($request->input('specification')),
@@ -115,6 +115,8 @@ final class ProductController extends WebController
             $product = $this->repository->update($request->id, $data);
             return $this->showOne($product, $this->repository->transformer, 200);
         }
+
+        $data['slug'] = normalizeSlug($request->input('name'));
 
         $product = $this->repository->create($data);
         return $this->showOne($product, $this->repository->transformer, 201);
