@@ -30,6 +30,15 @@ use App\Http\Controllers\WebController;
 
 final class DashboardController extends WebController
 {
+
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware('auth');
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:dashboard');
+    }
+
     /**
      * Dashboard
      * @return \Inertia\Response
@@ -44,7 +53,8 @@ final class DashboardController extends WebController
             'Core/Ecommerce/Admin/Dashboard/Index',
             [
                 'products' => $products,
-                'products_low_stock' => $low_product_stock
+                'products_low_stock' => $low_product_stock,
+                'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
         );
     }

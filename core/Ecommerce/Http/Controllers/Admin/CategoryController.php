@@ -24,7 +24,6 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Ecommerce\Http\Requests\Category\StoreRequest;
 use Inertia\Inertia;
 use App\Rules\BooleanRule;
 use Illuminate\Http\Request;
@@ -33,6 +32,7 @@ use Stevebauman\Purify\Facades\Purify;
 use App\Http\Controllers\WebController;
 use Core\Ecommerce\Repositories\ProductRepository;
 use Core\Ecommerce\Repositories\CategoryRepository;
+use Core\Ecommerce\Http\Requests\Category\StoreRequest;
 
 class CategoryController extends WebController
 {
@@ -54,6 +54,9 @@ class CategoryController extends WebController
         parent::__construct();
         $this->repository = $categoryRepository;
         $this->product_repository = $productRepository;
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:view')->only('index');
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:store')->only('store');
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
     }
 
     /**
@@ -77,7 +80,8 @@ class CategoryController extends WebController
             );
         }
         return Inertia::render('Core/Ecommerce/Admin/Category/Index', [
-            'route' => route('admin.ecommerce.categories.index'),
+            'route' => route('ecommerce.admin.categories.index'),
+            'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
         ]);
     }
 
@@ -91,14 +95,14 @@ class CategoryController extends WebController
         $request->merge([
             'description' => Purify::clean($request->description),
         ]);
-        
+
         if (!empty($request->filled('id'))) {
             $model = $this->repository->update($request->id, $request->toArray());
             return $this->showOne($model, $this->repository->transformer);
         }
 
         $request->merge([
-            'slug' => $this->slug($request->name, '-'),
+            'slug' => normalizeSlug($request->name, '-'),
             'tag' => $this->product_repository->getTag(),
             'description' => Purify::clean($request->description),
         ]);

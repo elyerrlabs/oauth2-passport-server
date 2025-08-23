@@ -78,11 +78,11 @@ class ProductTransformer extends TransformerAbstract
             'published' => $product->published ? true : false,
             'featured' => $product->featured ? true : false,
             'links' => [
-                'index' => route('admin.ecommerce.products.index'),
-                'store' => route('admin.ecommerce.products.store'),
-                'show' => route('admin.ecommerce.products.show', ['product' => $product->id]),
-                'update' => route('admin.ecommerce.products.update', ['product' => $product->id]),
-                'destroy' => route('admin.ecommerce.products.destroy', ['product' => $product->id]),
+                'index' => route('ecommerce.admin.products.index'),
+                'store' => route('ecommerce.admin.products.store'),
+                'show' => route('ecommerce.admin.products.show', ['product' => $product->id]),
+                'update' => route('ecommerce.admin.products.update', ['product' => $product->id]),
+                'destroy' => route('ecommerce.admin.products.destroy', ['product' => $product->id]),
             ]
         ];
     }

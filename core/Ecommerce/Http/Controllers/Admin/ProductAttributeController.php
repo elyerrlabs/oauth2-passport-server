@@ -39,7 +39,9 @@ final class ProductAttributeController extends WebController
 
     public function __construct(ProductRepository $productRepository)
     {
-        $this->repository = $productRepository;
+        parent::__construct();
+        $this->repository = $productRepository;        
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
     }
 
     /**

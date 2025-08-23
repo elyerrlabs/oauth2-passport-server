@@ -29,7 +29,7 @@ use App\Models\Common\Tag;
 use App\Models\Common\File;
 use App\Models\Common\Category;
 use App\Models\Common\Attribute;
-use App\Models\Subscription\Price;
+use App\Models\Common\Price;
 use App\Transformers\File\FileTransformer;
 use Illuminate\Database\Eloquent\Collection;
 use Core\Ecommerce\Transformer\Admin\ProductTagTransformer; 

@@ -58,7 +58,7 @@ class ProductController extends WebController
                 'routes' => [
                     'dashboard' => route('ecommerce.dashboard'),
                     'search' => route('ecommerce.search'),
-                    'categories' => route('api.public.ecommerce.categories.index'),
+                    'categories' => route('api.ecommerce.categories.index'),
                 ],
             ]
         );
@@ -69,7 +69,7 @@ class ProductController extends WebController
      * @param \Illuminate\Http\Request $request
      * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
      */
-    public function search(Request $request)
+    public function index(Request $request)
     {
         if ($request->wantsJson()) {
 
@@ -86,7 +86,7 @@ class ProductController extends WebController
                 'routes' => [
                     'dashboard' => route('ecommerce.dashboard'),
                     'search' => route('ecommerce.search'),
-                    'categories' => route('api.public.ecommerce.categories.index'),
+                    'categories' => route('api.ecommerce.categories.index'),
                 ],
             ]
         );
@@ -116,7 +116,7 @@ class ProductController extends WebController
                 'routes' => [
                     'dashboard' => route('ecommerce.dashboard'),
                     'search' => route('ecommerce.search'),
-                    'categories' => route('api.public.ecommerce.categories.index'),
+                    'categories' => route('api.ecommerce.categories.index'),
                 ],
             ]
         );
@@ -143,7 +143,7 @@ class ProductController extends WebController
                     'search' => route('ecommerce.search'),
                     'dashboard' => route('ecommerce.dashboard'),
                     'ecommerce' => route('ecommerce.search'),
-                    'categories' => route('api.public.ecommerce.categories.index'),
+                    'categories' => route('api.ecommerce.categories.index'),
                     'show' => route('ecommerce.products.show', [
                         'category' => $category_slug,
                         'product' => $product_slug

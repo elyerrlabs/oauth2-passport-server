@@ -66,11 +66,11 @@ class CategoryTransformer extends TransformerAbstract
             'icon' => $category->getIcon($category->icon, UserIconTransformer::class),
             'images' => $category->getImages($category->files),
             'links' => [
-                'index' => route('admin.ecommerce.categories.index'),
-                'store' => route('admin.ecommerce.categories.store'),
-                'show' => route('admin.ecommerce.categories.show', ['category' => $category->id]),
-                'update' => route('admin.ecommerce.categories.update', ['category' => $category->id]),
-                'destroy' => route('admin.ecommerce.categories.destroy', ['category' => $category->id]),
+                'index' => route('ecommerce.admin.categories.index'),
+                'store' => route('ecommerce.admin.categories.store'),
+                'show' => route('ecommerce.admin.categories.show', ['category' => $category->id]),
+                'update' => route('ecommerce.admin.categories.update', ['category' => $category->id]),
+                'destroy' => route('ecommerce.admin.categories.destroy', ['category' => $category->id]),
             ]
         ];
     }

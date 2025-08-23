@@ -53,6 +53,9 @@ final class ProductController extends WebController
     {
         parent::__construct();
         $this->repository = $productRepository;
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:view')->only('index');
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:store')->only('store');
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
     }
 
     /**
@@ -72,9 +75,11 @@ final class ProductController extends WebController
             'Core/Ecommerce/Admin/Product/Index',
             [
                 'routes' => [
-                    'products' => route('admin.ecommerce.products.index'),
-                    'categories' => route('admin.ecommerce.categories.index'),
+                    'products' => route('ecommerce.admin.products.index'),
+                    'categories' => route('ecommerce.admin.categories.index'),
+                    'currencies' => route('api.transaction.payments.billing-period')
                 ],
+                'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
         );
     }
@@ -91,7 +96,7 @@ final class ProductController extends WebController
 
         $data = [
             'name' => $request->input('name'),
-            'slug' => $this->slug($request->input('name'), '-'),
+            'slug' => normalizeSlug($request->input('name'), '-'),
             'short_description' => Purify::clean($request->input('short_description')),
             'description' => Purify::config('editor')->clean($request->input('description')),
             'specification' => Purify::config('editor')->clean($request->input('specification')),

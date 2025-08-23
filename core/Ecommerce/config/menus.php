@@ -24,25 +24,34 @@
  */
 
 return [
+
+    "ecommerce_dashboard" => [
+        "id" => "ecommerce",
+        "name" => "Ecommerce",
+        "route" => "ecommerce.admin.dashboard",
+        "icon" => "mdi-store-cog",
+        'show' => "administrator"
+    ],
+
     "ecommerce_menus" => [
         [
             "id" => 'dashboard',
             "name" => "Dashboard",
-            "route" => "admin.ecommerce.dashboard",
+            "route" => "ecommerce.admin.dashboard",
             "icon" => "mdi-view-dashboard",
             'service' => "administrator"
         ],
         [
             "id" => "categories",
             "name" => "Categories",
-            "route" => "admin.ecommerce.categories.index",
+            "route" => "ecommerce.admin.categories.index",
             "icon" => "mdi-circle-outline",
             'service' => "administrator"
         ],
         [
             "id" => "products",
             "name" => "Products",
-            "route" => "admin.ecommerce.products.index",
+            "route" => "ecommerce.admin.products.index",
             "icon" => "mdi-circle-outline",
             'service' => "administrator"
         ],

@@ -25,7 +25,7 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  */
 
 use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\ProductRepository; 
+use Core\Ecommerce\Repositories\ProductRepository;
 
 final class ProductTagController extends WebController
 {
@@ -38,7 +38,9 @@ final class ProductTagController extends WebController
 
     public function __construct(ProductRepository $productRepository)
     {
+        parent::__construct();
         $this->repository = $productRepository;
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
     }
 
     /**
