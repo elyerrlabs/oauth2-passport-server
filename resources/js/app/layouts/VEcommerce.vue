@@ -305,7 +305,7 @@
                     </div>
                     <q-separator color="grey-6" class="q-my-md" />
                     <div class="text-caption">
-                        &copy; 2023 MegaShop. All rights reserved.
+                        &copy; {{ new Date().getFullYear() }} {{ $page.props.org_name }}
                     </div>
                 </q-toolbar-title>
             </q-toolbar>

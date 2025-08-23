@@ -26,47 +26,151 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         color="negative"
         @click="dialog = true"
         icon="mdi-trash-can-outline"
+        size="sm"
+        class="q-mr-xs"
     >
-        <q-tooltip transition-show="rotate" transition-hide="rotate">
+        <q-tooltip
+            transition-show="scale"
+            transition-hide="scale"
+            class="bg-negative"
+        >
             Delete scope
         </q-tooltip>
     </q-btn>
 
-    <q-dialog v-model="dialog">
-        <q-card>
-            <q-card-section>
-                <div class="text-h6">Revoke scope</div>
-            </q-card-section>
+    <q-dialog
+        v-model="dialog"
+        persistent
+        transition-show="jump-up"
+        transition-hide="jump-down"
+    >
+        <div class="dialog-backdrop flex flex-center">
+            <q-card class="delete-dialog-card shadow-15">
+                <div class="dialog-header bg-negative text-white">
+                    <q-card-section class="text-center">
+                        <q-icon
+                            name="mdi-lock-remove"
+                            size="lg"
+                            class="q-mb-sm"
+                        />
+                        <div class="text-h6">Revoke Scope</div>
+                        <div class="text-caption">This action is permanent</div>
+                    </q-card-section>
+                </div>
 
-            <q-card-section class="q-pt-none">
-                Are you sure you want to delete this role?
-            </q-card-section>
+                <q-card-section class="q-pt-lg text-center">
+                    <div class="text-body1 q-mb-md">
+                        Are you sure you want to revoke the scope for role
+                        <span class="text-weight-bold text-blue-8"
+                            >"{{ scope.role?.name }}"</span
+                        >?
+                    </div>
 
-            <q-card-actions align="right">
-                <q-btn
-                    outline
-                    label="Confirm"
-                    color="primary"
-                    @click="destroy"
-                />
+                    <div class="flex justify-center q-gutter-sm q-mb-md">
+                        <q-chip
+                            color="blue-1"
+                            text-color="blue-8"
+                            icon="mdi-identifier"
+                            class="q-pa-sm"
+                        >
+                            Role ID: {{ scope.role?.id }}
+                        </q-chip>
+                    </div>
 
-                <q-btn
-                    outline
-                    label="Cancel"
-                    color="negative"
-                    @click="dialog = false"
-                />
-            </q-card-actions>
-        </q-card>
+                    <div
+                        class="permissions-summary bg-grey-2 rounded-borders q-pa-md"
+                    >
+                        <div class="text-caption text-weight-medium q-mb-xs">
+                            Current Permissions:
+                        </div>
+                        <div class="row justify-center q-gutter-sm">
+                            <q-badge
+                                v-if="scope.api_key"
+                                color="blue"
+                                icon="mdi-key"
+                                class="q-px-sm"
+                            >
+                                API Key Access
+                            </q-badge>
+                            <q-badge
+                                v-if="scope.active"
+                                color="green"
+                                icon="mdi-check-circle"
+                                class="q-px-sm"
+                            >
+                                Active
+                            </q-badge>
+                            <q-badge
+                                v-if="scope.public"
+                                color="orange"
+                                icon="mdi-earth"
+                                class="q-px-sm"
+                            >
+                                Public
+                            </q-badge>
+                            <q-badge
+                                v-if="
+                                    !scope.api_key &&
+                                    !scope.active &&
+                                    !scope.public
+                                "
+                                color="grey"
+                                class="q-px-sm"
+                            >
+                                No permissions set
+                            </q-badge>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-red-1 text-red-8 rounded-borders q-pa-md q-mt-md"
+                    >
+                        <div class="row items-center">
+                            <q-icon
+                                name="mdi-alert"
+                                size="sm"
+                                class="q-mr-sm"
+                            />
+                            <span class="text-caption">
+                                Warning: This will permanently remove access
+                                permissions. Users with this role will lose
+                                access to the associated service.
+                            </span>
+                        </div>
+                    </div>
+                </q-card-section>
+
+                <q-card-actions align="center" class="q-pa-md">
+                    <q-btn
+                        flat
+                        color="grey-7"
+                        label="Cancel"
+                        @click="dialog = false"
+                        class="q-mr-md"
+                        icon="mdi-close-circle"
+                        :disable="loading"
+                    />
+                    <q-btn
+                        color="negative"
+                        label="Revoke Scope"
+                        @click="destroy"
+                        icon="mdi-trash-can-outline"
+                        class="q-px-md"
+                        :loading="loading"
+                    />
+                </q-card-actions>
+            </q-card>
+        </div>
     </q-dialog>
 </template>
+
 <script>
 export default {
     emits: ["deleted"],
 
     props: {
         scope: {
-            required: false,
+            required: true,
             type: Object,
         },
     },
@@ -74,25 +178,67 @@ export default {
     data() {
         return {
             dialog: false,
+            loading: false,
         };
     },
 
     methods: {
         async destroy() {
+            this.loading = true;
             try {
                 const res = await this.$server.delete(this.scope.links.revoke);
 
                 if (res.status == 200) {
-                    this.$emit("deleted");
-                    this.dialog = false;
                     this.$q.notify({
                         type: "positive",
-                        message: "Scope has been deleted successfully",
+                        message: "Scope revoked successfully",
+                        position: "top",
+                        icon: "mdi-check-circle",
                         timeout: 3000,
                     });
+                    this.$emit("deleted");
+                    this.dialog = false;
                 }
-            } catch (error) {}
+            } catch (error) {
+                this.$q.notify({
+                    type: "negative",
+                    message:
+                        error.response?.data?.message || "Error revoking scope",
+                    position: "top",
+                    icon: "mdi-alert-circle",
+                    timeout: 3000,
+                });
+            } finally {
+                this.loading = false;
+            }
         },
     },
 };
 </script>
+
+<style scoped>
+.dialog-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.delete-dialog-card {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.dialog-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.permissions-summary {
+    border: 1px solid #e0e0e0;
+}
+
+.shadow-15 {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+</style>

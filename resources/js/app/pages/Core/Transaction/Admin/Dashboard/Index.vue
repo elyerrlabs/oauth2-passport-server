@@ -21,109 +21,160 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-transaction-layout>
-        <q-page class="q-pa-md">
-            <!-- Cards -->
-            <div class="row q-col-gutter-md q-mb-md">
+        <q-page class="q-pa-lg">
+            <!-- Header Section -->
+            <div class="row items-center q-mb-xl">
+                <div>
+                    <div class="text-h4 text-primary text-weight-bold">
+                        Dashboard Analytics
+                    </div>
+                    <div class="text-subtitle1 text-grey-7">
+                        Monitor your transaction metrics and performance
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row q-col-gutter-lg q-mb-xl">
                 <div
                     v-for="card in cards"
                     :key="card.label"
-                    class="col-xs-12 col-sm-6 col-md-3"
+                    class="col-xs-12 col-sm-6 col-md-4"
                 >
-                    <q-card
-                        class="q-pa-md flex column justify-between"
-                        flat
-                        bordered
-                    >
-                        <div
-                            class="text-caption text-weight-medium text-uppercase text-grey-7"
-                        >
-                            {{ card.label }}
-                        </div>
-                        <div class="row items-center justify-between q-mt-sm">
-                            <div class="text-h4 text-weight-bold">
-                                {{ card.value }}
+                    <q-card class="stat-card q-pa-lg shadow-3" flat bordered>
+                        <div class="column full-height justify-between">
+                            <div
+                                class="text-caption text-weight-medium text-uppercase text-grey-6 q-mb-sm"
+                            >
+                                {{ card.label }}
                             </div>
-                            <q-icon
-                                :name="card.icon"
-                                size="36px"
-                                color="primary"
-                            />
+                            <div class="row items-center justify-between">
+                                <div
+                                    class="text-h3 text-weight-bold text-primary"
+                                >
+                                    {{ card.value }}
+                                </div>
+                                <q-icon
+                                    :name="card.icon"
+                                    size="42px"
+                                    color="primary"
+                                    class="card-icon"
+                                />
+                            </div>
                         </div>
                     </q-card>
                 </div>
             </div>
 
-            <!-- Filters -->
-            <div class="q-gutter-sm row items-end q-mb-lg">
-                <q-input
-                    v-model="params.start"
-                    type="date"
-                    label="Start date"
-                    dense
-                    outlined
-                    class="col"
-                />
-                <q-input
-                    v-model="params.end"
-                    type="date"
-                    label="End date"
-                    dense
-                    outlined
-                    class="col"
-                />
-                <q-select
-                    v-model="params.status"
-                    :options="status"
-                    label="Status"
-                    dense
-                    outlined
-                    class="col"
-                />
+            <!-- Filters Section -->
+            <q-card flat bordered class="q-mb-xl filter-section">
+                <q-card-section>
+                    <div class="text-h6 text-weight-medium q-mb-md">
+                        Filter Analytics
+                    </div>
+                    <div class="row q-col-gutter-md items-end">
+                        <q-input
+                            v-model="params.start"
+                            type="date"
+                            label="Start date"
+                            outlined
+                            dense
+                            class="col-12 col-sm-6 col-md-2"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-calendar-start" size="sm" />
+                            </template>
+                        </q-input>
 
-                <q-select
-                    v-model="chartType"
-                    :options="chartTypes"
-                    label="Chart type"
-                    dense
-                    outlined
-                    class="col"
-                />
+                        <q-input
+                            v-model="params.end"
+                            type="date"
+                            label="End date"
+                            outlined
+                            dense
+                            class="col-12 col-sm-6 col-md-2"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-calendar-end" size="sm" />
+                            </template>
+                        </q-input>
 
-                <q-select
-                    v-model="params.type"
-                    :options="types"
-                    label="Date"
-                    dense
-                    outlined
-                    class="col"
-                />
-                <div class="col-auto">
-                    <q-btn
-                        label="Filter"
-                        @click="getData"
-                        color="primary"
-                        class="q-mt-sm"
-                    />
-                </div>
-            </div>
+                        <q-select
+                            v-model="params.status"
+                            :options="status"
+                            label="Status"
+                            outlined
+                            dense
+                            class="col-12 col-sm-6 col-md-2"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-status" size="sm" />
+                            </template>
+                        </q-select>
 
-            <!-- Chart and Last Users -->
-            <div class="row q-col-gutter-md">
-                <div class="col-12">
-                    <q-card flat bordered>
-                        <q-card-section>
-                            <apex-charts
-                                width="100%"
-                                height="400"
-                                type="line"
-                                :options="chartOptions"
-                                :series="chartSeries"
-                                class="q-mt-md"
+                        <q-select
+                            v-model="chartType"
+                            :options="chartTypes"
+                            label="Chart type"
+                            outlined
+                            dense
+                            class="col-12 col-sm-6 col-md-2"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-chart-bar" size="sm" />
+                            </template>
+                        </q-select>
+
+                        <q-select
+                            v-model="params.type"
+                            :options="types"
+                            label="Date grouping"
+                            outlined
+                            dense
+                            class="col-12 col-sm-6 col-md-2"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-calendar-group" size="sm" />
+                            </template>
+                        </q-select>
+
+                        <div class="col-12 col-sm-6 col-md-2">
+                            <q-btn
+                                label="Apply Filters"
+                                @click="getData"
+                                color="primary"
+                                icon="mdi-filter"
+                                unelevated
+                                class="full-width filter-btn"
                             />
-                        </q-card-section>
-                    </q-card>
-                </div>
-            </div>
+                        </div>
+                    </div>
+                </q-card-section>
+            </q-card>
+
+            <!-- Chart Section -->
+            <q-card flat bordered class="chart-card">
+                <q-card-section>
+                    <div class="row items-center justify-between q-mb-md">
+                        <div class="text-h6 text-weight-medium">
+                            Transaction Analytics
+                        </div>
+                        <q-badge color="blue" class="q-pa-sm">
+                            <q-icon name="mdi-sync" size="sm" class="q-mr-xs" />
+                            Auto-refreshing every 10 seconds
+                        </q-badge>
+                    </div>
+
+                    <apex-charts
+                        width="100%"
+                        height="400"
+                        :type="chartType"
+                        :options="chartOptions"
+                        :series="chartSeries"
+                        class="chart-container"
+                    />
+                </q-card-section>
+            </q-card>
         </q-page>
     </v-admin-transaction-layout>
 </template>
@@ -264,16 +315,34 @@ export default {
                     zoom: {
                         enabled: false,
                     },
+                    toolbar: {
+                        show: true,
+                        tools: {
+                            download: false,
+                            selection: false,
+                            zoom: false,
+                            zoomin: false,
+                            zoomout: false,
+                            pan: false,
+                            reset: false,
+                        },
+                    },
                 },
+                colors: ["#1976d2"],
                 dataLabels: {
                     enabled: true,
                 },
                 stroke: {
                     curve: "smooth",
+                    width: 3,
                 },
                 title: {
                     text: `Transactions by ${this.params.type}`,
                     align: "left",
+                    style: {
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                    },
                 },
                 grid: {
                     row: {
@@ -298,11 +367,73 @@ export default {
 </script>
 
 <style scoped>
-.q-card:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    transition: box-shadow 0.2s ease;
+.stat-card {
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
 }
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-icon {
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover .card-icon {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.filter-section {
+    border-radius: 12px;
+}
+
+.filter-btn {
+    border-radius: 8px;
+    height: 40px;
+}
+
+.chart-card {
+    border-radius: 12px;
+}
+
+.chart-container {
+    border-radius: 8px;
+}
+
+.text-h3 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+}
+
+.text-h4 {
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
 .text-h6 {
     font-weight: 600;
+}
+
+.shadow-3 {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.q-card {
+    border: 1px solid #e0e0e0;
+}
+
+.q-input,
+.q-select {
+    border-radius: 8px;
+}
+
+.q-btn {
+    text-transform: none;
+    font-weight: 500;
 }
 </style>

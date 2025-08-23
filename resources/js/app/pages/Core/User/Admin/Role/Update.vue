@@ -20,34 +20,138 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-btn round outline color="positive" @click="open(item)" icon="mdi-pencil">
-        <q-tooltip transition-show="rotate" transition-hide="rotate">
-            Update role
+    <q-btn
+        round
+        flat
+        color="primary"
+        @click="open(item)"
+        icon="mdi-pencil"
+        size="sm"
+        class="q-mr-xs"
+    >
+        <q-tooltip
+            transition-show="scale"
+            transition-hide="scale"
+            class="bg-primary"
+        >
+            Edit role
         </q-tooltip>
     </q-btn>
 
-    <q-dialog v-model="dialog" persistent transition-show="scale" transition-hide="scale">
-        <q-card class="q-pa-md full-width">
-            <q-card-section class="text-center">
-                <h6 class="text-gray-500">Update role</h6>
-            </q-card-section>
-            <q-card-section>
-                <q-input v-model="form.description" label="Description" outline :error="!!errors.redirect"
-                    type="textarea">
-                    <template v-slot:error>
-                        <v-error :error="errors.redirect"></v-error>
-                    </template>
-                </q-input>
-            </q-card-section>
+    <q-dialog
+        v-model="dialog"
+        persistent
+        transition-show="jump-up"
+        transition-hide="jump-down"
+    >
+        <div class="dialog-backdrop flex flex-center">
+            <q-card class="edit-dialog-card shadow-15">
+                <div class="dialog-header bg-primary text-white">
+                    <q-card-section class="text-center">
+                        <q-icon
+                            name="mdi-pencil-box-outline"
+                            size="lg"
+                            class="q-mb-sm"
+                        />
+                        <div class="text-h6">Update Role</div>
+                        <div class="text-caption">Modify role details</div>
+                    </q-card-section>
+                </div>
 
-            <q-card-actions align="right">
-                <q-btn outline color="primary" label="Accept" @click="updateRole" />
+                <q-card-section class="q-pt-lg">
+                    <div
+                        class="text-subtitle1 text-weight-medium q-mb-md text-grey-8"
+                    >
+                        Editing:
+                        <span class="text-blue-8">"{{ form.name }}"</span>
+                    </div>
 
-                <q-btn outline color="secondary" label="Close" @click="close" />
-            </q-card-actions>
-        </q-card>
+                    <div class="q-gutter-y-md">
+                        <q-input
+                            v-model="form.name"
+                            label="Role Name"
+                            outlined
+                            color="primary"
+                            :error="!!errors.name"
+                            class="input-field"
+                            :loading="loading"
+                            :readonly="system"
+                            :hint="
+                                system
+                                    ? 'System role name cannot be modified'
+                                    : ''
+                            "
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-tag-outline" />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.name"></v-error>
+                            </template>
+                        </q-input>
+
+                        <q-input
+                            v-model="form.description"
+                            label="Description"
+                            outlined
+                            color="primary"
+                            :error="!!errors.description"
+                            type="textarea"
+                            rows="3"
+                            class="input-field"
+                            :loading="loading"
+                            hint="Describe the purpose and permissions of this role"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-text-box-outline" />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.description" />
+                            </template>
+                        </q-input>
+
+                        <div
+                            v-if="system"
+                            class="bg-orange-1 text-orange-8 rounded-borders q-pa-md"
+                        >
+                            <div class="row items-center">
+                                <q-icon
+                                    name="mdi-shield-check"
+                                    size="sm"
+                                    class="q-mr-sm"
+                                />
+                                <span class="text-caption"
+                                    >This is a system role. Some properties
+                                    cannot be modified.</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </q-card-section>
+
+                <q-card-actions align="right" class="q-pa-md">
+                    <q-btn
+                        flat
+                        color="grey-7"
+                        label="Cancel"
+                        @click="close"
+                        class="q-mr-sm"
+                        icon="mdi-close-circle"
+                        :disable="loading"
+                    />
+                    <q-btn
+                        color="primary"
+                        label="Update Role"
+                        @click="updateRole"
+                        :loading="loading"
+                        icon="mdi-content-save"
+                    />
+                </q-card-actions>
+            </q-card>
+        </div>
     </q-dialog>
 </template>
+
 <script>
 export default {
     emits: ["updated"],
@@ -61,11 +165,10 @@ export default {
 
     data() {
         return {
-            errors: {
-                description: "",
-            },
+            errors: {},
             form: {},
             dialog: false,
+            loading: false,
             system: false,
         };
     },
@@ -75,16 +178,22 @@ export default {
             this.form = {};
             this.errors = {};
             this.dialog = false;
+            this.loading = false;
+            this.system = false;
         },
 
         open(item) {
             const { system, ...form } = item;
-            this.form = form;
+            this.form = { ...form };
+            this.system = system;
             this.errors = {};
             this.dialog = true;
         },
 
         async updateRole() {
+            this.loading = true;
+            this.errors = {};
+
             try {
                 const res = await this.$server.put(
                     this.form.links.update,
@@ -92,6 +201,13 @@ export default {
                 );
 
                 if (res.status == 200) {
+                    this.$q.notify({
+                        type: "positive",
+                        message: "Role updated successfully",
+                        position: "top",
+                        icon: "mdi-check-circle",
+                        timeout: 3000,
+                    });
                     this.$emit("updated", true);
                     this.errors = {};
                     this.dialog = false;
@@ -99,9 +215,57 @@ export default {
             } catch (e) {
                 if (e.response && e.response.status == 422) {
                     this.errors = e.response.data.errors;
+                    this.$q.notify({
+                        type: "negative",
+                        message: "Please check the form for errors",
+                        position: "top",
+                        icon: "mdi-alert-circle",
+                        timeout: 3000,
+                    });
+                } else {
+                    this.$q.notify({
+                        type: "negative",
+                        message: "Error updating role",
+                        position: "top",
+                        icon: "mdi-alert-circle",
+                        timeout: 3000,
+                    });
                 }
+            } finally {
+                this.loading = false;
             }
         },
     },
 };
 </script>
+
+<style scoped>
+.dialog-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.edit-dialog-card {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.dialog-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.input-field {
+    transition: all 0.3s ease;
+}
+
+.input-field:focus-within {
+    transform: translateY(-2px);
+}
+
+.shadow-15 {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+</style>

@@ -64,6 +64,8 @@ import {
   QBreadcrumbs,
   QLinearProgress,
   QEditor,
+  QSpinnerHourglass,
+  QToggle,
 } from "quasar";
 
 export const QComponents = [
@@ -132,4 +134,6 @@ export const QComponents = [
   QBreadcrumbs,
   QLinearProgress,
   QEditor,
+  QSpinnerHourglass,
+  QToggle,
 ];

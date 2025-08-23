@@ -23,114 +23,184 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <div class="q-pa-md q-gutter-sm">
         <q-btn
             round
-            outline
-            color="positive"
+            color="primary"
             @click="dialog = true"
             icon="mdi-plus-circle"
+            size="md"
+            class="shadow-4 pulse-animation"
         >
-            <q-tooltip transition-show="rotate" transition-hide="rotate">
+            <q-tooltip
+                transition-show="scale"
+                transition-hide="scale"
+                class="bg-primary text-white shadow-6"
+            >
                 Add new service
             </q-tooltip>
         </q-btn>
 
-        <q-dialog v-model="dialog" persistent>
-            <q-card class="card">
-                <div class="card-main">
-                    <q-card-section class="column items-center card-header">
-                        <h6>Add new service</h6>
+        <q-dialog
+            v-model="dialog"
+            persistent
+            transition-show="jump-up"
+            transition-hide="jump-down"
+            maximized
+        >
+            <div class="dialog-backdrop flex flex-center">
+                <q-card class="dialog-card shadow-15">
+                    <div class="dialog-header bg-primary text-white">
+                        <q-card-section class="text-center">
+                            <q-icon
+                                name="mdi-cog-plus"
+                                size="md"
+                                class="q-mb-sm"
+                            />
+                            <div class="text-h6">Create New Service</div>
+                            <div class="text-caption">
+                                Define a new service with specific properties
+                            </div>
+                        </q-card-section>
+                    </div>
+
+                    <q-card-section class="q-pt-lg">
+                        <div class="q-gutter-y-md">
+                            <q-input
+                                v-model="form.name"
+                                label="Service Name"
+                                outlined
+                                color="primary"
+                                :error="!!errors.name"
+                                class="input-field"
+                                :loading="loading"
+                                hint="Unique identifier for the service"
+                                :rules="[
+                                    (val) =>
+                                        !!val || 'Service name is required',
+                                ]"
+                            >
+                                <template v-slot:prepend>
+                                    <q-icon name="mdi-tag-outline" />
+                                </template>
+                                <template v-slot:error>
+                                    <v-error :error="errors.name"></v-error>
+                                </template>
+                            </q-input>
+
+                            <q-input
+                                v-model="form.description"
+                                label="Description"
+                                outlined
+                                color="primary"
+                                :error="!!errors.description"
+                                type="textarea"
+                                rows="3"
+                                class="input-field"
+                                :loading="loading"
+                                hint="Describe the purpose and functionality of this service"
+                            >
+                                <template v-slot:prepend>
+                                    <q-icon name="mdi-text-box-outline" />
+                                </template>
+                                <template v-slot:error>
+                                    <v-error :error="errors.description" />
+                                </template>
+                            </q-input>
+
+                            <q-select
+                                v-model="form.group_id"
+                                label="Group"
+                                :options="groups"
+                                option-label="name"
+                                option-value="id"
+                                outlined
+                                color="primary"
+                                filter
+                                emit-value
+                                map-options
+                                :error="!!errors.group_id"
+                                :loading="loadingGroups"
+                                hint="Select the group this service belongs to"
+                            >
+                                <template v-slot:prepend>
+                                    <q-icon name="mdi-account-group" />
+                                </template>
+                                <template v-slot:error>
+                                    <v-error :error="errors.group_id" />
+                                </template>
+                                <template v-slot:no-option>
+                                    <q-item>
+                                        <q-item-section class="text-grey">
+                                            No groups available
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
+                            </q-select>
+
+                            <q-select
+                                v-model="form.visibility"
+                                :options="visibilityOptions"
+                                label="Visibility"
+                                outlined
+                                color="primary"
+                                :error="!!errors.visibility"
+                                hint="Set the visibility level for this service"
+                            >
+                                <template v-slot:prepend>
+                                    <q-icon name="mdi-eye" />
+                                </template>
+                                <template v-slot:error>
+                                    <v-error :error="errors.visibility" />
+                                </template>
+                            </q-select>
+
+                            <q-item class="system-checkbox q-pa-none q-mt-md">
+                                <q-item-section avatar>
+                                    <q-checkbox
+                                        v-model="form.system"
+                                        color="orange"
+                                        :error="!!errors.system"
+                                        keep-color
+                                    >
+                                        <template v-slot:error>
+                                            <v-error :error="errors.system" />
+                                        </template>
+                                    </q-checkbox>
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label class="text-weight-medium"
+                                        >System Service</q-item-label
+                                    >
+                                    <q-item-label caption class="text-grey-7">
+                                        System services have special permissions
+                                        and cannot be modified or deleted.
+                                    </q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </div>
                     </q-card-section>
 
-                    <q-separator />
-
-                    <q-card-section
-                        class="column no-wrap q-gutter-y-md card-body"
-                    >
-                        <q-input
-                            v-model="form.name"
-                            label="Name"
-                            :error="!!errors.name"
-                        >
-                            <template v-slot:error>
-                                <v-error :error="errors.name" />
-                            </template>
-                        </q-input>
-
-                        <q-input
-                            v-model="form.description"
-                            label="Description"
-                            type="textarea"
-                            :error="!!errors.description"
-                        >
-                            <template v-slot:error>
-                                <v-error :error="errors.description" />
-                            </template>
-                        </q-input>
-
-                        <q-select
-                            v-model="form.group_id"
-                            label="Group"
-                            :options="groups"
-                            option-label="name"
-                            option-value="id"
-                            filter
-                            emit-value
-                            map-options
-                            :error="!!errors.group_id"
-                        >
-                            <template v-slot:error>
-                                <v-error :error="errors.group_id" />
-                            </template>
-                        </q-select>
-                        <q-item tag="label" v-ripple>
-                            <q-item-section avatar>
-                                <q-checkbox
-                                    v-model="form.system"
-                                    val="orange"
-                                    color="orange"
-                                    :error="!!errors.system"
-                                >
-                                    <template v-slot:error>
-                                        <v-error :error="errors.system" />
-                                    </template>
-                                </q-checkbox>
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label>System</q-item-label>
-                                <q-item-label caption>
-                                    This action cannot be undone.
-                                </q-item-label>
-                            </q-item-section>
-                        </q-item>
-
-                        <q-select
-                            v-model="form.visibility"
-                            :options="visibility"
-                            label="Visibility"
+                    <q-card-actions align="right" class="q-pa-md">
+                        <q-btn
+                            flat
+                            color="grey"
+                            label="Cancel"
+                            @click="close"
+                            class="q-mr-sm"
+                            :disable="loading"
                         />
-                        <v-error :error="errors.visibility" />
-                    </q-card-section>
-                </div>
-
-                <q-separator />
-                <q-card-section class="row justify-between card-footer">
-                    <q-btn
-                        outline
-                        color="positive"
-                        label="create"
-                        @click="create"
-                    />
-
-                    <q-btn
-                        outline
-                        color="secondary"
-                        label="Cancel"
-                        @click="close"
-                    />
-                </q-card-section>
-            </q-card>
+                        <q-btn
+                            color="primary"
+                            label="Create Service"
+                            @click="create"
+                            :loading="loading"
+                            icon="mdi-check-circle"
+                        />
+                    </q-card-actions>
+                </q-card>
+            </div>
         </q-dialog>
     </div>
 </template>
+
 <script>
 export default {
     emits: ["created"],
@@ -138,16 +208,13 @@ export default {
     data() {
         return {
             dialog: false,
-            visibility: ["private", "public"],
-            formGroup: {
-                name: null,
-                id: null,
-            },
+            loading: false,
+            loadingGroups: false,
+            visibilityOptions: ["private", "public"],
             form: {
                 name: null,
                 description: null,
                 group_id: null,
-                group_name: null,
                 system: false,
                 visibility: null,
             },
@@ -165,26 +232,37 @@ export default {
          * Clean the form when it is closed
          */
         close() {
-            this.services = {};
+            this.form = {
+                name: null,
+                description: null,
+                group_id: null,
+                system: false,
+                visibility: null,
+            };
             this.errors = {};
             this.dialog = false;
+            this.loading = false;
         },
 
         open() {
-            this.form.name = null;
-            this.form.description = null;
-            this.from.group_id = null;
-            this.from.group_name = null;
-            this.form.system = false;
-            this.form.visibility = null;
-
+            this.form = {
+                name: null,
+                description: null,
+                group_id: null,
+                system: false,
+                visibility: null,
+            };
             this.errors = {};
+            this.dialog = true;
         },
 
         /**
-         * Create a new client
+         * Create a new service
          */
         async create() {
+            this.loading = true;
+            this.errors = {};
+
             try {
                 const res = await this.$server.post(
                     this.$page.props.route.services,
@@ -192,15 +270,24 @@ export default {
                 );
 
                 if (res.status == 201) {
-                    this.form = {};
+                    this.$q.notify({
+                        type: "positive",
+                        message: "Service created successfully",
+                        position: "top",
+                        icon: "mdi-check-circle",
+                        timeout: 3000,
+                    });
+
+                    this.form = {
+                        name: null,
+                        description: null,
+                        group_id: null,
+                        system: false,
+                        visibility: null,
+                    };
                     this.errors = {};
                     this.$emit("created", true);
                     this.dialog = false;
-                    this.$q.notify({
-                        type: "positive",
-                        message: "A new service has been created successfully",
-                        timeout: 3000,
-                    });
                 }
             } catch (e) {
                 if (
@@ -209,80 +296,124 @@ export default {
                     e.response.data.errors
                 ) {
                     this.errors = e.response.data.errors;
-                }
-
-                if (
+                    this.$q.notify({
+                        type: "negative",
+                        message: "Please check the form for errors",
+                        position: "top",
+                        icon: "mdi-alert-circle",
+                        timeout: 3000,
+                    });
+                } else if (
                     e.response &&
-                    e.response.status != 422 &&
                     e.response.data &&
                     e.response.data.message
                 ) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
+                        position: "top",
+                        icon: "mdi-alert-circle",
+                        timeout: 3000,
+                    });
+                } else {
+                    this.$q.notify({
+                        type: "negative",
+                        message: "An unexpected error occurred",
+                        position: "top",
+                        icon: "mdi-alert-circle",
                         timeout: 3000,
                     });
                 }
+            } finally {
+                this.loading = false;
             }
         },
 
-        getGroups() {
-            this.$server
-                .get(this.$page.props.route.groups, {
-                    params: {
-                        page: 1,
-                        per_page: 1000,
-                    },
-                })
-                .then((res) => {
+        async getGroups() {
+            this.loadingGroups = true;
+            try {
+                const res = await this.$server.get(
+                    this.$page.props.route.groups,
+                    {
+                        params: {
+                            page: 1,
+                            per_page: 1000,
+                        },
+                    }
+                );
+
+                if (res.status == 200) {
                     this.groups = res.data.data;
-                })
-                .catch((e) => {});
+                }
+            } catch (e) {
+                this.$q.notify({
+                    type: "negative",
+                    message: "Failed to load groups",
+                    position: "top",
+                    icon: "mdi-alert-circle",
+                    timeout: 3000,
+                });
+            } finally {
+                this.loadingGroups = false;
+            }
         },
     },
 };
 </script>
 
 <style scoped>
-.containerDialog {
-    width: auto;
-    height: 100%;
-    padding: 0.5rem;
+.dialog-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
 }
 
-.card {
-    width: 500px;
-    max-width: 90vw;
-    height: 100%;
-    border-radius: 1rem;
-    display: flex;
-    flex-direction: column;
+.dialog-card {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-.card-main {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
+.dialog-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
-.card-header {
-    flex-shrink: 0;
-    padding: 2rem 3rem;
-    text-align: center;
+.input-field {
+    transition: all 0.3s ease;
 }
 
-.card-body {
-    padding: 2rem;
-    flex-grow: 1;
+.input-field:focus-within {
+    transform: translateY(-2px);
 }
 
-.card-footer {
-    flex-shrink: 0;
+.pulse-animation {
+    animation: pulse 2s infinite;
 }
 
-.card-footer > .q-btn {
-    padding: 0.4rem 2rem;
-    border-radius: 0.6rem;
+.system-checkbox {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 16px;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(25, 118, 210, 0.7);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(25, 118, 210, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(25, 118, 210, 0);
+    }
+}
+
+.shadow-15 {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
 }
 </style>

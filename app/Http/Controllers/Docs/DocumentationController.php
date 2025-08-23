@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Controllers\Docs;
+
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
  *
@@ -22,9 +24,17 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Http\Controllers\Docs\DocumentationController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\Home\HomeController;
+use App\Http\Controllers\Controller; 
+use Inertia\Inertia;
 
-Route::get("/", [HomeController::class, 'homePage'])->name('welcome');
-Route::get("/documentation", [DocumentationController::class, 'index'])->name('documentation.index');
+class DocumentationController extends Controller
+{
+    /**
+     *
+     * @return \Inertia\Response
+     */
+    public function index()
+    {
+        return Inertia::render("Docs/Index");
+    }
+}

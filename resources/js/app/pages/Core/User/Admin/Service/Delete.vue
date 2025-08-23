@@ -22,12 +22,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <q-btn
         round
-        outline
-        color="red"
+        flat
+        color="negative"
         @click="dialog = true"
         icon="mdi-delete-outline"
+        size="sm"
+        class="q-mr-xs"
     >
-        <q-tooltip transition-show="rotate" transition-hide="rotate">
+        <q-tooltip
+            transition-show="scale"
+            transition-hide="scale"
+            class="bg-negative"
+        >
             Delete service
         </q-tooltip>
     </q-btn>
@@ -35,37 +41,128 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <q-dialog
         v-model="dialog"
         persistent
-        transition-show="scale"
-        transition-hide="scale"
+        transition-show="jump-up"
+        transition-hide="jump-down"
     >
-        <q-card class="w-100 py-4">
-            <q-card-section class="text-center">
-                <h6 class="text-gray-500">Delete service</h6>
-            </q-card-section>
-            <q-card-section>
-                Are you share you want to remove this client with name
-                <q-chip color="blue-darken-1">{{ item.name }}</q-chip> with ID
-                <q-chip color="blue-darken-1">{{ item.id }}</q-chip> ?
-            </q-card-section>
+        <div class="dialog-backdrop flex flex-center">
+            <q-card class="delete-dialog-card shadow-15">
+                <div class="dialog-header bg-negative text-white">
+                    <q-card-section class="text-center">
+                        <q-icon
+                            name="mdi-alert-circle-outline"
+                            size="lg"
+                            class="q-mb-sm"
+                        />
+                        <div class="text-h6">Delete Service</div>
+                        <div class="text-caption">This action is permanent</div>
+                    </q-card-section>
+                </div>
 
-            <q-card-actions align="right">
-                <q-btn
-                    outline
-                    color="positive"
-                    label="Accept"
-                    @click="destroy"
-                />
+                <q-card-section class="q-pt-lg text-center">
+                    <div class="text-body1 q-mb-md">
+                        Are you sure you want to delete the service
+                        <span class="text-weight-bold text-blue-8"
+                            >"{{ item.name }}"</span
+                        >?
+                    </div>
 
-                <q-btn
-                    outline
-                    color="secondary"
-                    label="Close"
-                    @click="dialog = false"
-                />
-            </q-card-actions>
-        </q-card>
+                    <div class="flex justify-center q-gutter-sm q-mb-md">
+                        <q-chip
+                            color="blue-1"
+                            text-color="blue-8"
+                            icon="mdi-identifier"
+                            class="q-pa-sm"
+                        >
+                            ID: {{ item.id }}
+                        </q-chip>
+                        <q-chip
+                            color="green-1"
+                            text-color="green-8"
+                            icon="mdi-account-group"
+                            class="q-pa-sm"
+                        >
+                            Group: {{ item.group?.name || "N/A" }}
+                        </q-chip>
+                    </div>
+
+                    <div class="flex justify-center q-gutter-sm q-mb-md">
+                        <q-chip
+                            v-if="item.system"
+                            color="orange-1"
+                            text-color="orange-8"
+                            icon="mdi-shield-check"
+                            class="q-pa-sm"
+                        >
+                            System Service
+                        </q-chip>
+                        <q-chip
+                            color="blue-1"
+                            text-color="blue-8"
+                            icon="mdi-eye"
+                            class="q-pa-sm"
+                        >
+                            {{ item.visibility || "N/A" }}
+                        </q-chip>
+                    </div>
+
+                    <div
+                        v-if="item.system"
+                        class="bg-orange-1 text-orange-8 rounded-borders q-pa-md"
+                    >
+                        <div class="row items-center">
+                            <q-icon
+                                name="mdi-alert"
+                                size="sm"
+                                class="q-mr-sm"
+                            />
+                            <span class="text-caption"
+                                >Warning: This is a system service. Deleting it
+                                may affect application functionality.</span
+                            >
+                        </div>
+                    </div>
+                    <div
+                        v-else
+                        class="bg-red-1 text-red-8 rounded-borders q-pa-md"
+                    >
+                        <div class="row items-center">
+                            <q-icon
+                                name="mdi-alert"
+                                size="sm"
+                                class="q-mr-sm"
+                            />
+                            <span class="text-caption"
+                                >Warning: This action cannot be undone. The
+                                service will be permanently removed.</span
+                            >
+                        </div>
+                    </div>
+                </q-card-section>
+
+                <q-card-actions align="center" class="q-pa-md">
+                    <q-btn
+                        flat
+                        color="grey-7"
+                        label="Cancel"
+                        @click="dialog = false"
+                        class="q-mr-md"
+                        icon="mdi-close-circle"
+                        :disable="loading"
+                    />
+                    <q-btn
+                        color="negative"
+                        label="Delete Service"
+                        @click="destroy"
+                        icon="mdi-delete-forever"
+                        class="q-px-md"
+                        :loading="loading"
+                    />
+                </q-card-actions>
+            </q-card>
+        </div>
     </q-dialog>
 </template>
+
 <script>
 export default {
     emits: ["deleted"],
@@ -80,25 +177,63 @@ export default {
     data() {
         return {
             dialog: false,
+            loading: false,
         };
     },
 
     methods: {
         async destroy() {
+            this.loading = true;
             try {
                 const res = await this.$server.delete(this.item.links.destroy);
 
                 if (res.status == 200) {
-                    this.$emit("deleted", true);
-                    this.dialog = false;
                     this.$q.notify({
                         type: "positive",
-                        message: "Service has been deleted successfully",
+                        message: "Service deleted successfully",
+                        position: "top",
+                        icon: "mdi-check-circle",
                         timeout: 3000,
                     });
+                    this.$emit("deleted", true);
+                    this.dialog = false;
                 }
-            } catch (err) {}
+            } catch (err) {
+                this.$q.notify({
+                    type: "negative",
+                    message:
+                        err.response?.data?.message || "Error deleting service",
+                    position: "top",
+                    icon: "mdi-alert-circle",
+                    timeout: 3000,
+                });
+            } finally {
+                this.loading = false;
+            }
         },
     },
 };
 </script>
+
+<style scoped>
+.dialog-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.delete-dialog-card {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.dialog-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.shadow-15 {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+</style>

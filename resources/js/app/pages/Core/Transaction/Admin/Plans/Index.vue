@@ -20,164 +20,209 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <v-admin-transaction-layout>
-        <q-toolbar>
-            <q-toolbar-title> List of plans </q-toolbar-title>
-            <v-create @created="getPlans" />
-        </q-toolbar>
+  <v-admin-transaction-layout>
+    <!-- Header Section -->
+    <div class="header-section q-pa-lg bg-primary text-white">
+      <div class="row items-center">
+        <div class="col">
+          <div class="text-h4 text-weight-bold">Subscription Plans</div>
+          <div class="text-subtitle1 opacity-70">Manage your subscription offerings</div>
+        </div>
+        <div class="col-auto">
+          <v-create @created="getPlans" />
+        </div>
+      </div>
+    </div>
 
-        <div class="q-pa-sm">
-            <div class="row">
-                <div
-                    v-for="plan in plans"
-                    :key="plan.id"
-                    class="col-12 col-md-6 col-md-3 q-gutter-sm q-pa-sm"
-                >
-                    <q-card flat bordered>
-                        <q-card-section>
-                            <div class="text-h6 flex">
-                                {{ plan.name }}
-                                <q-space />
-                                <v-update @updated="getPlans" :item="plan" />
-                                <v-delete @deleted="getPlans" :item="plan" />
-                            </div>
-                            <div class="text-subtitle1">
-                                <span v-html="plan.description"></span>
-                            </div>
-                            <div class="q-mt-sm q-gutter-sm">
-                                <q-badge
-                                    :color="
-                                        plan.active ? 'primary' : 'secondary'
-                                    "
-                                >
-                                    Active : {{ plan.active ? "Yes" : "No" }}
-                                </q-badge>
-                                <q-badge
-                                    color="green"
-                                    v-if="plan.bonus_enabled"
-                                    class="q-ml-sm"
-                                >
-                                    Bonus: {{ plan.bonus_duration }} days
-                                </q-badge>
-                                <q-badge
-                                    color="green"
-                                    v-if="plan.trial_enabled"
-                                    class="q-ml-sm"
-                                >
-                                    Trial: {{ plan.trial_duration }} days
-                                </q-badge>
-                            </div>
-                        </q-card-section>
-                        <q-card-section>
-                            <div class="text-grey-7 text-subtitle2 q-mb-xs">
-                                <q-icon name="vpn_key" class="q-mr-sm" /> Scopes
-                            </div>
-                            <div v-if="plan.scopes.length">
-                                <q-list dense bordered padding>
-                                    <q-expansion-item
-                                        v-for="(item, index) in plan.scopes"
-                                        :key="index"
-                                        expand-icon="keyboard_arrow_down"
-                                        :label="`Service : ${item.service.name} - ${item.role.name}`"
-                                        :caption="`Group : ${item.service.group.name}`"
-                                        expand-separator
-                                        dense
-                                    >
-                                        <q-item>
-                                            <q-item-section>
-                                                <q-badge
-                                                    color="primary"
-                                                    class="q-mr-sm"
-                                                >
-                                                    Role
-                                                </q-badge>
-                                                <span>{{
-                                                    item.role.name
-                                                }}</span>
-                                                <div
-                                                    class="text-caption text-grey-7"
-                                                >
-                                                    {{ item.role.description }}
-                                                </div>
-                                                <div>
-                                                    <v-revoke-scope
-                                                        @revoked="getPlans"
-                                                        :item="item"
-                                                    />
-                                                </div>
-                                            </q-item-section>
-                                        </q-item>
-                                    </q-expansion-item>
-                                </q-list>
-                            </div>
-                            <div v-else class="text-grey">
-                                No scopes assigned
-                            </div>
-                        </q-card-section>
-
-                        <q-card-section>
-                            <div class="text-grey-7 text-subtitle2">Prices</div>
-
-                            <q-list dense bordered class="q-mt-sm">
-                                <q-item
-                                    v-for="(item, index) in plan.prices"
-                                    :key="index"
-                                    class="q-my-xs q-px-sm"
-                                >
-                                    <q-item-section side>
-                                        <q-badge color="primary" outline>
-                                            {{ item.billing_period }}
-                                        </q-badge>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                        <div>
-                                            <span class="text-weight-medium">{{
-                                                item.currency
-                                            }}</span>
-                                            <span class="q-ml-sm">{{
-                                                item.amount_format
-                                            }}</span>
-                                        </div>
-                                        <div class="text-caption text-grey">
-                                            Expiration:
-                                            {{ item.expiration || "—" }}
-                                        </div>
-                                    </q-item-section>
-
-                                    <q-item-section side>
-                                        <v-delete-price
-                                            :item="item"
-                                            @deleted="getPlans"
-                                        />
-                                    </q-item-section>
-                                </q-item>
-                            </q-list>
-                        </q-card-section>
-
-                        <q-separator />
-
-                        <q-card-section class="text-caption">
-                            Created: {{ plan.created }} <br />
-                            Updated: {{ plan.updated }}
-                        </q-card-section>
-                    </q-card>
+    <!-- Plans Grid -->
+    <div class="q-pa-lg">
+      <div class="row q-col-gutter-lg">
+        <div
+          v-for="plan in plans"
+          :key="plan.id"
+          class="col-12 col-md-6 col-lg-4"
+        >
+          <!-- Plan Card -->
+          <q-card class="plan-card shadow-5 rounded-borders" flat>
+            <!-- Card Header -->
+            <q-card-section class="plan-header" :class="plan.active ? 'bg-active' : 'bg-inactive'">
+              <div class="row items-center no-wrap">
+                <div class="col">
+                  <div class="text-h6 text-weight-bold ellipsis plan-name">
+                    {{ plan.name }}
+                  </div>
                 </div>
-            </div>
-        </div>
+                <div class="col-auto">
+                  <div class="row no-wrap q-gutter-xs">
+                    <v-update @updated="getPlans" :item="plan" />
+                    <v-delete @deleted="getPlans" :item="plan" />
+                  </div>
+                </div>
+              </div>
+            </q-card-section>
 
-        <div class="row justify-center q-my-md">
-            <q-pagination
-                v-model="search.page"
-                color="primary"
-                :max="pages.total_pages"
-                size="sm"
-                boundary-numbers
-                direction-links
-                class="q-pa-xs q-gutter-sm rounded-borders"
-            />
+            <!-- Plan Description -->
+            <q-card-section class="q-pt-md">
+              <div class="plan-description text-body2" v-html="plan.description"></div>
+            </q-card-section>
+
+            <!-- Status Indicators -->
+            <q-card-section class="q-pt-none">
+              <div class="row q-col-gutter-xs">
+                <div class="col-auto">
+                  <q-badge 
+                    :color="plan.active ? 'positive' : 'grey-5'" 
+                    :text-color="plan.active ? 'white' : 'dark'"
+                    class="status-badge"
+                  >
+                    <q-icon :name="plan.active ? 'mdi-check-circle' : 'mdi-close-circle'" size="16px" class="q-mr-xs" />
+                    {{ plan.active ? 'Active' : 'Inactive' }}
+                  </q-badge>
+                </div>
+                
+                <div class="col-auto" v-if="plan.bonus_enabled">
+                  <q-badge color="accent" class="status-badge">
+                    <q-icon name="mdi-gift" size="16px" class="q-mr-xs" />
+                    Bonus: {{ plan.bonus_duration }} days
+                  </q-badge>
+                </div>
+                
+                <div class="col-auto" v-if="plan.trial_enabled">
+                  <q-badge color="secondary" class="status-badge">
+                    <q-icon name="mdi-clock" size="16px" class="q-mr-xs" />
+                    Trial: {{ plan.trial_duration }} days
+                  </q-badge>
+                </div>
+              </div>
+            </q-card-section>
+
+            <q-separator />
+
+            <!-- Scopes Section -->
+            <q-card-section>
+              <div class="text-subtitle2 text-weight-medium section-title q-mb-sm">
+                <q-icon name="mdi-key-chain-variant" class="q-mr-sm" />
+                Access Scopes
+              </div>
+              
+              <div v-if="plan.scopes.length">
+                <q-list class="scope-list rounded-borders">
+                  <q-expansion-item
+                    v-for="(item, index) in plan.scopes"
+                    :key="index"
+                    expand-icon-toggle
+                    switch-toggle-side
+                    class="scope-item"
+                    :class="index === 0 ? 'first-item' : ''"
+                  >
+                    <template v-slot:header>
+                      <q-item-section>
+                        <div class="text-weight-medium">{{ item.service.group.name }}</div>
+                        <div class="text-caption">{{ item.service.name }} - {{ item.role.name }}</div>
+                      </q-item-section>
+                    </template>
+
+                    <q-card class="bg-section">
+                      <q-card-section class="q-pa-sm">
+                        <div class="text-caption text-grey-7 q-mb-xs">
+                          {{ item.role.description }}
+                        </div>
+                        <v-revoke-scope
+                          @revoked="getPlans"
+                          :item="item"
+                        />
+                      </q-card-section>
+                    </q-card>
+                  </q-expansion-item>
+                </q-list>
+              </div>
+              <div v-else class="empty-state text-center q-pa-md">
+                <q-icon name="mdi-key-remove" size="32px" color="grey-4" class="q-mb-sm" />
+                <div class="text-grey-6">No scopes assigned</div>
+              </div>
+            </q-card-section>
+
+            <q-separator />
+
+            <!-- Pricing Section -->
+            <q-card-section>
+              <div class="text-subtitle2 text-weight-medium section-title q-mb-sm">
+                <q-icon name="mdi-currency-usd" class="q-mr-sm" />
+                Pricing
+              </div>
+              
+              <div v-if="plan.prices.length">
+                <div 
+                  v-for="(item, index) in plan.prices" 
+                  :key="index" 
+                  class="price-item row items-center q-pa-sm rounded-borders q-mb-xs"
+                  :class="index % 2 === 0 ? 'bg-even' : 'bg-odd'"
+                >
+                  <div class="col-auto">
+                    <q-badge color="primary" class="period-badge">
+                      {{ formatBillingPeriod(item.billing_period) }}
+                    </q-badge>
+                  </div>
+                  
+                  <div class="col">
+                    <div class="row items-center">
+                      <div class="price-amount text-weight-bold">
+                        {{ item.amount_format }}
+                        <span class="text-caption text-grey-7 q-ml-xs">{{ item.currency }}</span>
+                      </div>
+                    </div>
+                    <div v-if="item.expiration" class="text-caption text-grey-7">
+                      Expires: {{ item.expiration }}
+                    </div>
+                  </div>
+                  
+                  <div class="col-auto">
+                    <v-delete-price
+                      :item="item"
+                      @deleted="getPlans"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div v-else class="empty-state text-center q-pa-md">
+                <q-icon name="mdi-cash-remove" size="32px" color="grey-4" class="q-mb-sm" />
+                <div class="text-grey-6">No prices configured</div>
+              </div>
+            </q-card-section>
+
+            <q-separator />
+
+            <!-- Timestamps -->
+            <q-card-section class="timestamp-section">
+              <div class="row items-center text-caption text-grey-6 q-mb-xs">
+                <q-icon name="mdi-calendar-plus" size="14px" class="q-mr-xs" />
+                Created: {{ plan.created }}
+              </div>
+              <div class="row items-center text-caption text-grey-6">
+                <q-icon name="mdi-calendar-edit" size="14px" class="q-mr-xs" />
+                Updated: {{ plan.updated }}
+              </div>
+            </q-card-section>
+          </q-card>
         </div>
-    </v-admin-transaction-layout>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="row justify-center q-mt-xl q-mb-lg">
+      <q-pagination
+        v-model="search.page"
+        color="primary"
+        :max="pages.total_pages"
+        :max-pages="6"
+        size="md"
+        boundary-numbers
+        direction-links
+        ellipses
+        class="pagination-control"
+      />
+    </div>
+  </v-admin-transaction-layout>
 </template>
 
 <script>
@@ -188,62 +233,230 @@ import VRevokeScope from "./RevokeScope.vue";
 import VDeletePrice from "./DeletePrice.vue";
 
 export default {
-    components: {
-        VCreate,
-        VDelete,
-        VUpdate,
-        VRevokeScope,
-        VDeletePrice,
-    },
-    data() {
-        return {
-            pages: {
-                total_pages: 0,
-            },
-            search: {
-                page: 1,
-                per_page: 15,
-            },
-            plans: [],
-        };
-    },
+  components: {
+    VCreate,
+    VDelete,
+    VUpdate,
+    VRevokeScope,
+    VDeletePrice,
+  },
+  data() {
+    return {
+      pages: {
+        total_pages: 0,
+      },
+      search: {
+        page: 1,
+        per_page: 15,
+      },
+      plans: [],
+    };
+  },
 
-    watch: {
-        "search.page"(value) {
-            this.getPlans();
-        },
-        "search.per_page"(value) {
-            if (value) {
-                this.search.per_page = value;
-                this.getPlans();
-            }
-        },
+  watch: {
+    "search.page"(value) {
+      this.getPlans();
     },
-
-    created() {
+    "search.per_page"(value) {
+      if (value) {
+        this.search.per_page = value;
         this.getPlans();
+      }
     },
+  },
 
-    methods: {
-        async getPlans(param) {
-            var params = { ...this.search, ...param };
+  created() {
+    this.getPlans();
+  },
 
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.route.plans,
-                    {
-                        params: params,
-                    }
-                );
+  methods: {
+    async getPlans(param) {
+      var params = { ...this.search, ...param };
 
-                if (res.status == 200) {
-                    this.plans = res.data.data;
-                    let meta = res.data.meta;
-                    this.pages = meta.pagination;
-                    this.search.current_page = meta.pagination.current_page;
-                }
-            } catch (error) {}
-        },
+      try {
+        const res = await this.$server.get(
+          this.$page.props.route.plans,
+          {
+            params: params,
+          }
+        );
+
+        if (res.status == 200) {
+          this.plans = res.data.data;
+          let meta = res.data.meta;
+          this.pages = meta.pagination;
+          this.search.current_page = meta.pagination.current_page;
+        }
+      } catch (error) {
+        console.error("Error fetching plans:", error);
+      }
     },
+    
+    formatBillingPeriod(period) {
+      const periodMap = {
+        'monthly': 'Monthly',
+        'yearly': 'Yearly',
+        'weekly': 'Weekly',
+        'daily': 'Daily'
+      };
+      return periodMap[period] || period;
+    }
+  },
 };
 </script>
+
+<style scoped>
+/* CSS Variables for Theme Consistency */
+:root {
+  --color-primary: #1976d2;
+  --color-secondary: #26a69a;
+  --color-accent: #ff6b35;
+  --color-positive: #21ba45;
+  --color-negative: #c10015;
+  --color-warning: #f2c037;
+  --color-dark: #1d1d1d;
+  --color-light: #f5f5f5;
+  --color-section: #f8f9fa;
+  --border-radius: 12px;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --transition-speed: 0.3s;
+}
+
+.header-section {
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  margin-bottom: 24px;
+}
+
+.plan-card {
+  border-radius: var(--border-radius);
+  transition: transform var(--transition-speed) ease, 
+              box-shadow var(--transition-speed) ease;
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--card-shadow) !important;
+}
+
+.plan-header {
+  padding: 16px;
+  color: white;
+}
+
+.plan-header.bg-active {
+  background: linear-gradient(135deg, var(--color-primary), #1565c0);
+}
+
+.plan-header.bg-inactive {
+  background: linear-gradient(135deg, #78909c, #546e7a);
+}
+
+.plan-name {
+  font-size: 1.1rem;
+}
+
+.plan-description {
+  line-height: 1.5;
+  min-height: 40px;
+}
+
+.status-badge {
+  border-radius: 16px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+}
+
+.section-title {
+  color: var(--color-primary);
+  padding-bottom: 8px;
+}
+
+.scope-list {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+}
+
+.scope-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.scope-item:last-child {
+  border-bottom: none;
+}
+
+.bg-section {
+  background-color: var(--color-section);
+}
+
+.bg-even {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.bg-odd {
+  background-color: rgba(0, 0, 0, 0.01);
+}
+
+.price-item {
+  transition: background-color var(--transition-speed) ease;
+}
+
+.price-item:hover {
+  background-color: rgba(var(--color-primary-rgb), 0.05);
+}
+
+.period-badge {
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-weight: 600;
+}
+
+.price-amount {
+  font-size: 1.1rem;
+}
+
+.empty-state {
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.timestamp-section {
+  background-color: var(--color-section);
+  padding: 12px 16px;
+}
+
+.pagination-control {
+  background: white;
+  padding: 12px 20px;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.opacity-70 {
+  opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1023px) {
+  .header-section {
+    border-radius: 0;
+    margin-bottom: 16px;
+  }
+  
+  .plan-card {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 599px) {
+  .header-section .text-h4 {
+    font-size: 1.5rem;
+  }
+  
+  .status-badge {
+    margin-bottom: 4px;
+  }
+}
+</style>

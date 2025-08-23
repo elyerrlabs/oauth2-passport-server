@@ -21,127 +21,325 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-layout>
-        <v-filter :params="params" @change="searching" />
-
-        <q-toolbar class="q-ma-sm justify-between items-center">
-            <q-toolbar-title>List of groups</q-toolbar-title>
-
-            <div class="flex items-center">
-                <v-create @created="getGroups" class="q-mr-md" />
-
-                <!-- Toggle View Mode -->
-                <q-btn-toggle
-                    v-model="viewMode"
-                    dense
-                    toggle-color="primary"
-                    :options="[
-                        { value: 'list', icon: 'list' },
-                        { value: 'grid', icon: 'grid_on' },
-                    ]"
-                    unelevated
+        <!-- Header Section -->
+        <div class="page-header">
+            <q-toolbar class="header-toolbar">
+                <q-icon
+                    name="mdi-account-group"
+                    size="32px"
+                    color="primary"
+                    class="header-icon"
                 />
+                <q-toolbar-title class="text-h4 text-weight-bold text-grey-8">
+                    Groups Management
+                </q-toolbar-title>
+                <q-space />
+                <div class="header-actions">
+                    <v-filter
+                        :params="params"
+                        @change="searching"
+                        class="q-mr-md"
+                    />
+                    <v-create @created="getGroups" class="q-mr-md" />
+                </div>
+            </q-toolbar>
+            <div class="text-subtitle1 text-grey-7 q-mt-sm">
+                Manage user groups and permissions
             </div>
-        </q-toolbar>
+        </div>
 
-        <!-- Modo GRID -->
-        <div v-if="viewMode === 'grid'" class="row q-col-gutter-md q-ma-sm">
+        <!-- Stats Overview -->
+        <div class="stats-overview row q-col-gutter-md q-mb-xl">
+            <div class="col-12 col-sm-6 col-md-3">
+                <q-card flat bordered class="stats-card">
+                    <q-card-section>
+                        <div class="row items-center">
+                            <q-avatar
+                                size="48px"
+                                color="blue-1"
+                                text-color="blue-8"
+                                icon="mdi-account-group"
+                            />
+                            <div class="q-ml-md">
+                                <div
+                                    class="text-h5 text-weight-bold text-blue-8"
+                                >
+                                    {{ groups.length }}
+                                </div>
+                                <div class="text-caption text-grey-7">
+                                    Total Groups
+                                </div>
+                            </div>
+                        </div>
+                    </q-card-section>
+                </q-card>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <q-card flat bordered class="stats-card">
+                    <q-card-section>
+                        <div class="row items-center">
+                            <q-avatar
+                                size="48px"
+                                color="green-1"
+                                text-color="green-8"
+                                icon="mdi-shield-account"
+                            />
+                            <div class="q-ml-md">
+                                <div
+                                    class="text-h5 text-weight-bold text-green-8"
+                                >
+                                    {{ systemGroupsCount }}
+                                </div>
+                                <div class="text-caption text-grey-7">
+                                    System Groups
+                                </div>
+                            </div>
+                        </div>
+                    </q-card-section>
+                </q-card>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <q-card flat bordered class="stats-card">
+                    <q-card-section>
+                        <div class="row items-center">
+                            <q-avatar
+                                size="48px"
+                                color="orange-1"
+                                text-color="orange-8"
+                                icon="mdi-account"
+                            />
+                            <div class="q-ml-md">
+                                <div
+                                    class="text-h5 text-weight-bold text-orange-8"
+                                >
+                                    {{ userGroupsCount }}
+                                </div>
+                                <div class="text-caption text-grey-7">
+                                    User Groups
+                                </div>
+                            </div>
+                        </div>
+                    </q-card-section>
+                </q-card>
+            </div>
+        </div>
+
+        <!-- Grid View -->
+        <div
+            v-if="viewMode === 'grid'"
+            class="groups-grid row q-col-gutter-xl q-mb-lg"
+        >
             <div
-                class="col-xs-12 col-sm-6 col-md-4"
+                class="col-12 col-sm-6 col-md-4 col-lg-3"
                 v-for="group in groups"
                 :key="group.id"
             >
-                <q-card flat bordered class="q-hoverable">
-                    <q-card-section class="q-pb-none">
-                        <div class="text-h6 text-primary">
-                            <q-icon name="group" class="q-mr-sm" />
+                <q-card flat bordered class="group-card">
+                    <q-card-section class="card-header">
+                        <div class="group-icon">
+                            <q-avatar
+                                size="56px"
+                                color="primary"
+                                text-color="white"
+                                icon="mdi-account-group"
+                            />
+                        </div>
+                        <div
+                            class="group-title text-h6 text-weight-bold text-primary text-center"
+                        >
                             {{ group.name }}
                         </div>
-                        <div class="text-subtitle2 text-grey-7">
+                        <div
+                            class="group-slug text-caption text-grey-7 text-center"
+                        >
                             @{{ group.slug }}
                         </div>
                     </q-card-section>
 
-                    <q-card-section>
-                        <div class="line-clamp-2">{{ group.description }}</div>
-                    </q-card-section>
+                    <q-separator />
 
-                    <q-card-section class="text-caption">
-                        <q-chip
-                            dense
-                            square
-                            :color="group.system ? 'blue-1' : 'grey-2'"
-                            :text-color="group.system ? 'blue-10' : 'grey-9'"
-                            icon="verified_user"
+                    <q-card-section class="card-content">
+                        <div
+                            class="group-description text-body2 text-grey-8 q-mb-md"
                         >
-                            {{ group.system ? "System Group" : "User Group" }}
-                        </q-chip>
+                            {{ group.description || "No description provided" }}
+                        </div>
+
+                        <div class="group-meta">
+                            <q-badge
+                                :color="group.system ? 'blue' : 'grey'"
+                                :text-color="group.system ? 'white' : 'dark'"
+                                class="group-type-badge"
+                            >
+                                <q-icon
+                                    :name="
+                                        group.system
+                                            ? 'mdi-shield-check'
+                                            : 'mdi-account'
+                                    "
+                                    size="14px"
+                                    class="q-mr-xs"
+                                />
+                                {{
+                                    group.system ? "System Group" : "User Group"
+                                }}
+                            </q-badge>
+
+                            <div class="text-caption text-grey-6 q-mt-xs">
+                                <q-icon
+                                    name="mdi-calendar"
+                                    size="14px"
+                                    class="q-mr-xs"
+                                />
+                                Created {{ formatDate(group.created_at) }}
+                            </div>
+                        </div>
                     </q-card-section>
 
                     <q-separator />
 
-                    <q-card-actions align="right">
-                        <v-update @updated="getGroups" :item="group" />
+                    <q-card-actions align="center" class="card-actions">
+                        <v-update
+                            @updated="getGroups"
+                            :item="group"
+                            class="action-btn"
+                        />
                         <v-delete
                             v-if="!group.system"
                             @deleted="getGroups"
                             :item="group"
+                            class="action-btn"
                         />
                     </q-card-actions>
                 </q-card>
             </div>
         </div>
 
-        <!-- Modo LIST -->
-        <div v-else class="q-ma-sm">
-            <q-list bordered separator>
-                <q-item v-for="group in groups" :key="group.id" class="q-py-sm">
-                    <q-item-section>
-                        <div class="row items-center q-gutter-sm">
-                            <q-icon name="group" />
-                            <q-item-label class="text-h6 text-primary">{{
-                                group.name
-                            }}</q-item-label>
-                        </div>
-                        <q-item-label caption>@{{ group.slug }}</q-item-label>
-                        <q-item-label>{{ group.description }}</q-item-label>
-                        <q-item-label caption class="q-mt-sm">
-                            <q-chip
-                                dense
-                                square
-                                :color="group.system ? 'blue-1' : 'grey-2'"
-                                :text-color="
-                                    group.system ? 'blue-10' : 'grey-9'
-                                "
-                                icon="verified_user"
-                            >
-                                {{
-                                    group.system ? "System Group" : "User Group"
-                                }}
-                            </q-chip>
-                        </q-item-label>
-                    </q-item-section>
+        <!-- List View -->
+        <div v-else class="groups-list q-mb-lg">
+            <q-card flat bordered>
+                <q-table
+                    :rows="groups"
+                    :columns="columns"
+                    row-key="id"
+                    flat
+                    bordered
+                    hide-bottom
+                    :rows-per-page-options="[search.per_page]"
+                    :loading="loading"
+                    class="groups-table"
+                >
+                    <!-- Loading State -->
+                    <template v-slot:loading>
+                        <q-inner-loading showing color="primary" />
+                    </template>
 
-                    <q-item-section side class="q-gutter-sm">
-                        <v-update @updated="getGroups" :item="group" />
-                        <v-delete
-                            v-if="!group.system"
-                            @deleted="getGroups"
-                            :item="group"
-                        />
-                    </q-item-section>
-                </q-item>
-            </q-list>
+                    <!-- Name Column -->
+                    <template v-slot:body-cell-name="props">
+                        <q-td class="name-cell">
+                            <div
+                                class="group-name text-weight-bold text-primary"
+                            >
+                                <q-icon
+                                    name="mdi-account-group"
+                                    size="18px"
+                                    class="q-mr-sm"
+                                />
+                                {{ props.row.name }}
+                            </div>
+                            <div class="group-slug text-caption text-grey-6">
+                                @{{ props.row.slug }}
+                            </div>
+                        </q-td>
+                    </template>
+
+                    <!-- Description Column -->
+                    <template v-slot:body-cell-description="props">
+                        <q-td class="description-cell">
+                            <div class="text-body2 line-clamp-2">
+                                {{ props.row.description || "No description" }}
+                            </div>
+                        </q-td>
+                    </template>
+
+                    <!-- System Column -->
+                    <template v-slot:body-cell-system="props">
+                        <q-td class="system-cell">
+                            <q-badge
+                                :color="props.row.system ? 'blue-1' : 'grey-3'"
+                                :text-color="
+                                    props.row.system ? 'blue-8' : 'grey-8'
+                                "
+                                class="system-badge"
+                            >
+                                <q-icon
+                                    :name="
+                                        props.row.system
+                                            ? 'mdi-shield-check'
+                                            : 'mdi-account'
+                                    "
+                                    size="14px"
+                                    class="q-mr-xs"
+                                />
+                                {{ props.row.system ? "System" : "User" }}
+                            </q-badge>
+                        </q-td>
+                    </template>
+
+                    <!-- Actions Column -->
+                    <template v-slot:body-cell-actions="props">
+                        <q-td class="actions-cell">
+                            <div class="action-buttons">
+                                <v-update
+                                    @updated="getGroups"
+                                    :item="props.row"
+                                    class="q-mr-xs"
+                                />
+                                <v-delete
+                                    v-if="!props.row.system"
+                                    @deleted="getGroups"
+                                    :item="props.row"
+                                    class="q-mr-xs"
+                                />
+                            </div>
+                        </q-td>
+                    </template>
+
+                    <!-- Empty State -->
+                    <template v-slot:no-data>
+                        <div class="empty-state text-center q-pa-xl">
+                            <q-icon
+                                name="mdi-account-group-off"
+                                size="64px"
+                                color="grey-4"
+                                class="empty-icon"
+                            />
+                            <div
+                                class="empty-title text-h6 text-grey-7 q-mt-md"
+                            >
+                                No groups found
+                            </div>
+                            <div class="empty-subtitle text-grey-5">
+                                Create your first group to get started
+                            </div>
+                        </div>
+                    </template>
+                </q-table>
+            </q-card>
         </div>
 
-        <div class="row justify-center q-my-md">
+        <!-- Pagination -->
+        <div class="pagination-section row justify-center q-mb-xl">
             <q-pagination
                 v-model="search.page"
                 color="primary"
                 :max="pages.total_pages"
-                size="sm"
-                boundary-numbers
+                :max-pages="6"
+                size="md"
                 direction-links
-                class="q-pa-xs q-gutter-sm rounded-borders"
+                boundary-numbers
+                unelevated
+                class="custom-pagination"
             />
         </div>
     </v-admin-layout>
@@ -163,6 +361,7 @@ export default {
         return {
             groups: [],
             viewMode: "list",
+            loading: false,
             params: [{ key: "Name", value: "name" }],
             pages: {
                 total_pages: 0,
@@ -172,27 +371,51 @@ export default {
                 per_page: 15,
             },
             columns: [
-                { name: "name", label: "Name", field: "name", align: "left" },
-                { name: "slug", label: "Slug", field: "slug", align: "left" },
+                {
+                    name: "name",
+                    label: "Group Name",
+                    field: "name",
+                    align: "left",
+                    sortable: true,
+                },
+                {
+                    name: "slug",
+                    label: "Slug",
+                    field: "slug",
+                    align: "left",
+                    sortable: true,
+                },
                 {
                     name: "description",
                     label: "Description",
                     field: "description",
                     align: "left",
+                    sortable: false,
                 },
                 {
                     name: "system",
-                    label: "System",
-                    field: (row) => (row.system ? "Yes" : "No"),
+                    label: "Type",
+                    field: (row) => (row.system ? "System" : "User"),
                     align: "center",
+                    sortable: true,
                 },
                 {
                     name: "actions",
                     label: "Actions",
-                    align: "right",
+                    align: "center",
+                    sortable: false,
                 },
             ],
         };
+    },
+
+    computed: {
+        systemGroupsCount() {
+            return this.groups.filter((group) => group.system).length;
+        },
+        userGroupsCount() {
+            return this.groups.filter((group) => !group.system).length;
+        },
     },
 
     created() {
@@ -221,6 +444,7 @@ export default {
         },
 
         getGroups(param = null) {
+            this.loading = true;
             var params = { ...this.search, ...param };
 
             this.$server
@@ -233,17 +457,283 @@ export default {
                     this.pages = meta.pagination;
                     this.search.current_page = meta.pagination.current_page;
                 })
-                .catch((e) => {});
+                .catch((e) => {
+                    console.error("Failed to load groups:", e);
+                    this.$q.notify({
+                        message: "Failed to load groups",
+                        color: "negative",
+                        icon: "error",
+                        position: "top",
+                    });
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+
+        formatDate(dateString) {
+            if (!dateString) return "N/A";
+            return new Date(dateString).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+            });
         },
     },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.page-header {
+    margin-bottom: 32px;
+
+    .header-toolbar {
+        padding: 0;
+
+        .header-icon {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 12px;
+            border-radius: 50%;
+            margin-right: 16px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .view-toggle {
+                border-radius: 8px;
+            }
+        }
+    }
+}
+
+.stats-overview {
+    .stats-card {
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .q-card__section {
+            padding: 20px;
+        }
+    }
+}
+
+.groups-grid {
+    .group-card {
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            text-align: center;
+            padding: 24px 20px 16px;
+
+            .group-icon {
+                margin-bottom: 16px;
+            }
+
+            .group-title {
+                margin-bottom: 4px;
+            }
+        }
+
+        .card-content {
+            padding: 20px;
+
+            .group-description {
+                line-height: 1.5;
+                min-height: 60px;
+            }
+
+            .group-meta {
+                .group-type-badge {
+                    padding: 6px 10px;
+                    border-radius: 16px;
+                    font-weight: 500;
+                }
+            }
+        }
+
+        .card-actions {
+            padding: 16px 20px;
+
+            .action-btn {
+                margin: 0 4px;
+            }
+        }
+    }
+}
+
+.groups-list {
+    .groups-table {
+        border-radius: 16px;
+        overflow: hidden;
+
+        ::v-deep .q-table__top {
+            padding: 20px 24px;
+            background: rgba(0, 0, 0, 0.02);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        ::v-deep .q-table thead tr {
+            background: rgba(0, 0, 0, 0.02);
+
+            th {
+                font-weight: 600;
+                font-size: 0.9rem;
+                color: #374151;
+                padding: 16px 12px;
+            }
+        }
+
+        .name-cell {
+            .group-name {
+                display: flex;
+                align-items: center;
+            }
+
+            .group-slug {
+                font-size: 0.75rem;
+            }
+        }
+
+        .description-cell {
+            max-width: 300px;
+        }
+
+        .system-cell {
+            .system-badge {
+                padding: 6px 10px;
+                border-radius: 16px;
+                font-weight: 500;
+            }
+        }
+
+        .actions-cell {
+            .action-buttons {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+        }
+    }
+}
+
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.empty-state {
+    .empty-icon {
+        opacity: 0.5;
+    }
+
+    .empty-title {
+        font-weight: 500;
+    }
+
+    .empty-subtitle {
+        font-size: 0.9rem;
+    }
+}
+
+.pagination-section {
+    .custom-pagination {
+        ::v-deep .q-btn {
+            border-radius: 8px;
+            margin: 0 4px;
+
+            &.q-btn--active {
+                background: var(--q-primary);
+                color: white;
+            }
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 1023px) {
+    .page-header {
+        .header-toolbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    }
+
+    .groups-grid {
+        .group-card {
+            .card-header {
+                padding: 20px 16px 12px;
+            }
+
+            .card-content {
+                padding: 16px;
+            }
+        }
+    }
+}
+
+@media (max-width: 599px) {
+    .stats-overview {
+        .stats-card {
+            .q-card__section {
+                padding: 16px;
+            }
+        }
+    }
+
+    .groups-table {
+        ::v-deep .q-table thead {
+            display: none;
+        }
+
+        ::v-deep .q-table tbody tr {
+            display: block;
+            margin-bottom: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        ::v-deep .q-table tbody td {
+            display: block;
+            text-align: left !important;
+            border: none;
+            padding: 8px 0;
+
+            &:before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #374151;
+                display: block;
+                margin-bottom: 4px;
+                font-size: 0.8rem;
+            }
+        }
+    }
 }
 </style>

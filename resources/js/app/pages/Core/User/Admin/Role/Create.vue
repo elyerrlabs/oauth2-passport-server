@@ -21,57 +21,138 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div class="q-pa-md q-gutter-sm">
-        <q-btn round outline color="positive" @click="open" icon="mdi-plus-circle">
-            <q-tooltip transition-show="rotate" transition-hide="rotate">
+        <q-btn
+            round
+            color="primary"
+            @click="open"
+            icon="mdi-plus-circle"
+            size="md"
+            class="shadow-4 pulse-animation"
+        >
+            <q-tooltip
+                transition-show="scale"
+                transition-hide="scale"
+                class="bg-primary text-white shadow-6"
+            >
                 Add new role
             </q-tooltip>
         </q-btn>
 
-        <q-dialog v-model="dialog" persistent transition-show="scale" transition-hide="scale">
-            <q-card class="q-pa-md full-width">
-                <q-card-section class="text-center">
-                    <h6 class="text-gray-500">Add new role</h6>
-                </q-card-section>
-                <q-card-section>
-                    <q-input v-model="form.name" label="Name" outline :error="!!errors.name">
-                        <template v-slot:error>
-                            <v-error :error="errors.name"></v-error>
-                        </template>
-                    </q-input>
+        <q-dialog
+            v-model="dialog"
+            persistent
+            transition-show="jump-up"
+            transition-hide="jump-down"
+            maximized
+        >
+            <div class="dialog-backdrop flex flex-center">
+                <q-card class="dialog-card shadow-15">
+                    <div class="dialog-header bg-primary text-white">
+                        <q-card-section class="text-center">
+                            <q-icon
+                                name="mdi-account-key"
+                                size="md"
+                                class="q-mb-sm"
+                            />
+                            <div class="text-h6">Create New Role</div>
+                            <div class="text-caption">
+                                Define a new role with specific permissions
+                            </div>
+                        </q-card-section>
+                    </div>
 
-                    <q-input v-model="form.description" label="Description" outline :error="!!errors.description"
-                        type="textarea">
-                        <template v-slot:error>
-                            <v-error :error="errors.description" />
-                        </template>
-                    </q-input>
-
-                    <q-item tag="label" v-ripple>
-                        <q-item-section avatar>
-                            <q-checkbox v-model="form.system" val="orange" color="orange" :error="!!errors.system">
-                                <template v-slot:error>
-                                    <v-error :error="errors.system" />
+                    <q-card-section class="q-pt-lg">
+                        <div class="q-gutter-y-md">
+                            <q-input
+                                v-model="form.name"
+                                label="Role Name"
+                                outlined
+                                color="primary"
+                                :error="!!errors.name"
+                                class="input-field"
+                                :loading="loading"
+                                hint="Unique identifier for the role"
+                                :rules="[
+                                    (val) => !!val || 'Role name is required',
+                                ]"
+                            >
+                                <template v-slot:prepend>
+                                    <q-icon name="mdi-tag-outline" />
                                 </template>
-                            </q-checkbox>
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label>System</q-item-label>
-                            <q-item-label caption>
-                                This action cannot be undone.
-                            </q-item-label>
-                        </q-item-section>
-                    </q-item>
-                </q-card-section>
+                                <template v-slot:error>
+                                    <v-error :error="errors.name"></v-error>
+                                </template>
+                            </q-input>
 
-                <q-card-actions align="right">
-                    <q-btn outline color="positive" label="Accept" @click="create" />
+                            <q-input
+                                v-model="form.description"
+                                label="Description"
+                                outlined
+                                color="primary"
+                                :error="!!errors.description"
+                                type="textarea"
+                                rows="3"
+                                class="input-field"
+                                :loading="loading"
+                                hint="Describe the purpose and permissions of this role"
+                            >
+                                <template v-slot:prepend>
+                                    <q-icon name="mdi-text-box-outline" />
+                                </template>
+                                <template v-slot:error>
+                                    <v-error :error="errors.description" />
+                                </template>
+                            </q-input>
 
-                    <q-btn outline color="secondary" label="Close" @click="close" />
-                </q-card-actions>
-            </q-card>
+                            <q-item class="system-checkbox q-pa-none q-mt-md">
+                                <q-item-section avatar>
+                                    <q-checkbox
+                                        v-model="form.system"
+                                        color="orange"
+                                        :error="!!errors.system"
+                                        keep-color
+                                    >
+                                        <template v-slot:error>
+                                            <v-error :error="errors.system" />
+                                        </template>
+                                    </q-checkbox>
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label class="text-weight-medium"
+                                        >System Role</q-item-label
+                                    >
+                                    <q-item-label caption class="text-grey-7">
+                                        System roles have special permissions
+                                        and cannot be modified or deleted.
+                                    </q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </div>
+                    </q-card-section>
+
+                    <q-card-actions align="right" class="q-pa-md">
+                        <q-btn
+                            flat
+                            color="grey"
+                            label="Cancel"
+                            @click="close"
+                            class="q-mr-sm"
+                            :disable="loading"
+                        />
+                        <q-btn
+                            color="primary"
+                            label="Create Role"
+                            @click="create"
+                            :loading="loading"
+                            icon="mdi-check-circle"
+                        />
+                    </q-card-actions>
+                </q-card>
+            </div>
         </q-dialog>
     </div>
 </template>
+
 <script>
 export default {
     emits: ["created"],
@@ -79,7 +160,12 @@ export default {
     data() {
         return {
             dialog: false,
-            form: {},
+            loading: false,
+            form: {
+                name: null,
+                description: null,
+                system: false,
+            },
             errors: {},
         };
     },
@@ -89,23 +175,33 @@ export default {
          * Clean the form when it is closed
          */
         close() {
-            this.roles = {};
+            this.form = {
+                name: null,
+                description: null,
+                system: false,
+            };
             this.errors = {};
             this.dialog = false;
+            this.loading = false;
         },
 
         open() {
-            this.form.name = null;
-            this.form.description = null;
-            this.form.system = false;
+            this.form = {
+                name: null,
+                description: null,
+                system: false,
+            };
             this.errors = {};
             this.dialog = true;
         },
 
         /**
-         * Create a new client
+         * Create a new role
          */
         async create() {
+            this.loading = true;
+            this.errors = {};
+
             try {
                 const res = await this.$server.post(
                     this.$page.props.route,
@@ -113,7 +209,19 @@ export default {
                 );
 
                 if (res.status == 201) {
-                    this.form = {};
+                    this.$q.notify({
+                        type: "positive",
+                        message: "Role created successfully",
+                        position: "top",
+                        icon: "mdi-check-circle",
+                        timeout: 3000,
+                    });
+
+                    this.form = {
+                        name: null,
+                        description: null,
+                        system: false,
+                    };
                     this.errors = {};
                     this.$emit("created", true);
                     this.dialog = false;
@@ -121,9 +229,83 @@ export default {
             } catch (e) {
                 if (e.response && e.response.data.errors) {
                     this.errors = e.response.data.errors;
+                    this.$q.notify({
+                        type: "negative",
+                        message: "Please check the form for errors",
+                        position: "top",
+                        icon: "mdi-alert-circle",
+                        timeout: 3000,
+                    });
+                } else {
+                    this.$q.notify({
+                        type: "negative",
+                        message: "An unexpected error occurred",
+                        position: "top",
+                        icon: "mdi-alert-circle",
+                        timeout: 3000,
+                    });
                 }
+            } finally {
+                this.loading = false;
             }
         },
     },
 };
 </script>
+
+<style scoped>
+.dialog-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.dialog-card {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.dialog-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.input-field {
+    transition: all 0.3s ease;
+}
+
+.input-field:focus-within {
+    transform: translateY(-2px);
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+.system-checkbox {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 16px;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(25, 118, 210, 0.7);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(25, 118, 210, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(25, 118, 210, 0);
+    }
+}
+
+.shadow-15 {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+</style>

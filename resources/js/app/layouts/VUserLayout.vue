@@ -20,9 +20,9 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-layout view="hHh Lpr lff" >
-        <!-- Header -->
-        <q-header elevated class="header bg-primary">
+    <q-layout view="hHh Lpr lff" class="modern-layout">
+        <!-- Enhanced Header -->
+        <q-header elevated class="modern-header bg-primary">
             <q-toolbar class="header-content">
                 <q-btn
                     flat
@@ -32,8 +32,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="toggle-sidebar"
                     @click="toggleMenu"
                 />
-                <q-toolbar-title>
-                    {{ app_name }}
+                <q-toolbar-title class="app-title">
+                    <div class="row items-center">
+                        <q-avatar
+                            size="32px"
+                            class="q-mr-sm app-logo"
+                            text-color="white"
+                        >
+                            <q-icon name="dashboard" size="18px" />
+                        </q-avatar>
+                        {{ app_name }}
+                    </div>
                 </q-toolbar-title>
                 <q-space />
 
@@ -42,138 +51,238 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </q-toolbar>
         </q-header>
 
-        <!-- Sidebar -->
+        <!-- Enhanced Sidebar -->
         <q-drawer
             v-model="isSidebarOpen"
             show-if-above
             bordered
-            class="sidebar"
+            class="modern-sidebar"
         >
-            <q-list class="sidebar-menu q-ma-sm">
-                <!-- Account -->
-                <q-item-label header class="menu-section-title">
-                    Account
-                </q-item-label>
+            <q-scroll-area class="fit">
+                <q-list class="sidebar-menu q-ma-sm">
+                    <!-- User Profile Section -->
+                    <q-item
+                        class="user-profile-section"
+                        v-if="$page.props.user"
+                    >
+                        <q-item-section avatar>
+                            <q-avatar
+                                size="48px"
+                                color="primary"
+                                text-color="white"
+                            >
+                                {{ userInitials }}
+                            </q-avatar>
+                        </q-item-section>
 
-                <q-item
-                    clickable
-                    v-ripple
-                    @click="open($page.props.user_dashboard)"
-                    v-if="$page.props.user_dashboard.show"
-                    class="menu-item"
-                >
-                    <q-item-section avatar>
-                        <q-avatar
-                            class="text-primary"
-                            :icon="$page.props.user_dashboard.icon"
-                        />
-                    </q-item-section>
-                    <q-item-section>
-                        {{ $page.props.user_dashboard.name }}
-                    </q-item-section>
-                </q-item>
+                        <q-item-section>
+                            <q-item-label class="text-weight-bold user-name">{{
+                                user.name
+                            }}</q-item-label>
+                            <q-item-label caption class="user-email">{{
+                                user.email
+                            }}</q-item-label>
+                        </q-item-section>
+                    </q-item>
 
-                <!-- Developers -->
-                <q-item-label
-                    header
-                    class="menu-section-title"
-                    v-if="developers.show"
-                >
-                    {{ developers.name }}
-                </q-item-label>
+                    <q-separator class="q-my-md" />
 
-                <q-item
-                    clickable
-                    class="menu-item"
-                    v-for="(item, index) in developers.menu"
-                    :key="index"
-                    @click="open(item)"
-                >
-                    <q-item-section avatar>
-                        <q-avatar
-                            size="xl"
-                            class="text-primary"
-                            :icon="item.icon"
-                        />
-                    </q-item-section>
-                    <q-item-section>{{ item.name }}</q-item-section>
-                </q-item>
+                    <!-- Account -->
+                    <q-item-label header class="menu-section-title">
+                        Account
+                    </q-item-label>
 
-                <!-- Dashboards -->
-                <q-item-label header class="menu-section-title">
-                    Dashboards
-                </q-item-label>
+                    <q-item
+                        clickable
+                        v-ripple
+                        @click="open($page.props.user_dashboard)"
+                        v-if="$page.props.user_dashboard.show"
+                        class="modern-menu-item"
+                    >
+                        <q-item-section avatar>
+                            <q-avatar
+                                size="sm"
+                                color="primary"
+                                text-color="white"
+                                :icon="$page.props.user_dashboard.icon"
+                            />
+                        </q-item-section>
+                        <q-item-section>
+                            {{ $page.props.user_dashboard.name }}
+                        </q-item-section>
+                    </q-item>
 
-                <q-item
-                    clickable
-                    v-ripple
-                    @click="open(admin_dashboard)"
-                    v-if="admin_dashboard.show"
-                >
-                    <q-item-section avatar>
-                        <q-avatar
-                            class="text-primary"
-                            :icon="admin_dashboard.icon"
-                        />
-                    </q-item-section>
-                    <q-item-section>
-                        {{ admin_dashboard.name }}
-                    </q-item-section>
-                </q-item>
+                    <!-- Developers -->
+                    <template v-if="developers.show">
+                        <q-separator class="q-my-md" />
 
-                <q-item
-                    clickable
-                    v-ripple
-                    @click="open(transaction_dashboard)"
-                    v-if="transaction_dashboard.show"
-                >
-                    <q-item-section avatar>
-                        <q-avatar
-                            class="text-primary"
-                            :icon="transaction_dashboard.icon"
-                        />
-                    </q-item-section>
-                    <q-item-section>
-                        {{ transaction_dashboard.name }}
-                    </q-item-section>
-                </q-item>
+                        <q-item-label header class="menu-section-title">
+                            {{ developers.name }}
+                        </q-item-label>
 
-                <q-item
-                    clickable
-                    v-ripple
-                    @click="open(partner_dashboard)"
-                    v-if="partner_dashboard.show"
-                >
-                    <q-item-section avatar>
-                        <q-avatar
-                            class="text-primary"
-                            :icon="partner_dashboard.icon"
-                        />
-                    </q-item-section>
-                    <q-item-section>
-                        {{ partner_dashboard.name }}
-                    </q-item-section>
-                </q-item>
-                <q-item
-                    clickable
-                    v-ripple
-                    @click="open(settings)"
-                    v-if="settings.show"
-                >
-                    <q-item-section avatar>
-                        <q-avatar  class="text-primary" :icon="settings.icon" />
-                    </q-item-section>
-                    <q-item-section>
-                        {{ settings.name }}
-                    </q-item-section>
-                </q-item>
-            </q-list>
+                        <q-item
+                            clickable
+                            class="modern-menu-item"
+                            v-for="(item, index) in developers.menu"
+                            :key="index"
+                            @click="open(item)"
+                        >
+                            <q-item-section avatar>
+                                <q-avatar
+                                    size="sm"
+                                    color="blue"
+                                    text-color="white"
+                                    :icon="item.icon"
+                                />
+                            </q-item-section>
+                            <q-item-section>{{ item.name }}</q-item-section>
+                        </q-item>
+                    </template>
+
+                    <!-- Dashboards -->
+                    <q-separator class="q-my-md" />
+
+                    <q-item-label header class="menu-section-title">
+                        Dashboards
+                    </q-item-label>
+
+                    <q-item
+                        clickable
+                        v-ripple
+                        @click="open(admin_dashboard)"
+                        v-if="admin_dashboard.show"
+                        class="modern-menu-item"
+                    >
+                        <q-item-section avatar>
+                            <q-avatar
+                                size="sm"
+                                color="green"
+                                text-color="white"
+                                :icon="admin_dashboard.icon"
+                            />
+                        </q-item-section>
+                        <q-item-section>
+                            {{ admin_dashboard.name }}
+                        </q-item-section>
+                    </q-item>
+
+                    <q-item
+                        clickable
+                        v-ripple
+                        @click="open(transaction_dashboard)"
+                        v-if="transaction_dashboard.show"
+                        class="modern-menu-item"
+                    >
+                        <q-item-section avatar>
+                            <q-avatar
+                                size="sm"
+                                color="orange"
+                                text-color="white"
+                                :icon="transaction_dashboard.icon"
+                            />
+                        </q-item-section>
+                        <q-item-section>
+                            {{ transaction_dashboard.name }}
+                        </q-item-section>
+                    </q-item>
+
+                    <q-item
+                        clickable
+                        v-ripple
+                        @click="open(partner_dashboard)"
+                        v-if="partner_dashboard.show"
+                        class="modern-menu-item"
+                    >
+                        <q-item-section avatar>
+                            <q-avatar
+                                size="sm"
+                                color="purple"
+                                text-color="white"
+                                :icon="partner_dashboard.icon"
+                            />
+                        </q-item-section>
+                        <q-item-section>
+                            {{ partner_dashboard.name }}
+                        </q-item-section>
+                    </q-item>
+
+                    <q-item
+                        clickable
+                        v-ripple
+                        @click="open(ecommerce_dashboard)"
+                        v-if="ecommerce_dashboard.show"
+                        class="modern-menu-item"
+                    >
+                        <q-item-section avatar>
+                            <q-avatar
+                                size="sm"
+                                color="amber"
+                                text-color="white"
+                                :icon="ecommerce_dashboard.icon"
+                            />
+                        </q-item-section>
+                        <q-item-section>
+                            {{ ecommerce_dashboard.name }}
+                        </q-item-section>
+                    </q-item>
+
+                    <q-item
+                        clickable
+                        v-ripple
+                        @click="open(settings)"
+                        v-if="settings.show"
+                        class="modern-menu-item"
+                    >
+                        <q-item-section avatar>
+                            <q-avatar
+                                size="sm"
+                                color="grey"
+                                text-color="white"
+                                :icon="settings.icon"
+                            />
+                        </q-item-section>
+                        <q-item-section>
+                            {{ settings.name }}
+                        </q-item-section>
+                    </q-item>
+                </q-list>
+            </q-scroll-area>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <q-list class="sidebar-menu q-ma-sm">
+                    <q-item
+                        clickable
+                        v-ripple
+                        @click="open($page.props.docs)"
+                        v-if="$page.props.docs.show"
+                        class="modern-menu-item"
+                    >
+                        <q-item-section avatar>
+                            <q-avatar
+                                size="sm"
+                                color="grey"
+                                text-color="white"
+                                :icon="$page.props.docs.icon"
+                            />
+                        </q-item-section>
+                        <q-item-section>
+                            {{ $page.props.docs.name }}
+                        </q-item-section>
+                    </q-item>
+                </q-list>
+                <div class="text-caption text-center q-pa-sm text-grey-6">
+                    &copy; {{ new Date().getFullYear() }} {{ $page.props.org_name }}
+                </div>
+            </div>
         </q-drawer>
 
         <!-- Main Content -->
         <q-page-container>
-            <q-page>
-                <slot />
+            <q-page class="modern-page-content">
+                <div class="page-container">
+                    <slot />
+                </div>
             </q-page>
         </q-page-container>
     </q-layout>
@@ -181,7 +290,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 export default {
-    name: "AdminLayout",
     data() {
         return {
             isSidebarOpen: false,
@@ -193,7 +301,19 @@ export default {
             partner_dashboard: [],
             settings: {},
             developers: [],
+            ecommerce_dashboard: [],
         };
+    },
+
+    computed: {
+        userInitials() {
+            if (!this.user || !this.user.name) return "U";
+            return this.user.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase();
+        },
     },
 
     created() {
@@ -205,15 +325,11 @@ export default {
         this.partner_dashboard = this.$page.props.partner_dashboard;
         this.settings = this.$page.props.settings;
         this.developers = this.$page.props.developers;
+        this.ecommerce_dashboard = this.$page.props.ecommerce_dashboard;
     },
 
     mounted() {
         this.setupEventListeners();
-
-        // Simular estado de carga inicial
-        setTimeout(() => {
-            this.isLoading = false;
-        }, 1500);
     },
 
     methods: {
@@ -223,23 +339,18 @@ export default {
 
         toggleMenu() {
             this.isSidebarOpen = !this.isSidebarOpen;
-
-            // Bloquear el scroll del body cuando el menú está abierto
-            if (this.isSidebarOpen) {
-                document.body.style.overflow = "hidden";
-            } else {
-                document.body.style.overflow = "auto";
-            }
         },
+
         handleResize() {
             if (window.innerWidth >= 992) {
                 this.isSidebarOpen = false;
                 document.body.style.overflow = "auto";
             }
         },
+
         setupEventListeners() {
-            // Cerrar sidebar al hacer clic en un elemento del menú (solo en móviles)
-            const menuItems = document.querySelectorAll(".menu-item");
+            // Close sidebar when clicking on a menu item (mobile only)
+            const menuItems = document.querySelectorAll(".modern-menu-item");
             menuItems.forEach((item) => {
                 item.addEventListener("click", () => {
                     if (window.innerWidth < 992) {
@@ -248,388 +359,194 @@ export default {
                 });
             });
 
-            // Cerrar menú al redimensionar la ventana si pasa al modo escritorio
+            // Close menu when resizing to desktop mode
             window.addEventListener("resize", this.handleResize);
         },
     },
+
     beforeUnmount() {
-        // Limpiar event listeners
+        // Clean up event listeners
         window.removeEventListener("resize", this.handleResize);
     },
 };
 </script>
 
-<style lang="css" scoped>
-/*:root {
-    --primary: #4361ee;
-    --secondary: #3a0ca3;
-    --success: #4cc9f0;
-    --light: #f8f9fa;
-    --dark: #212529;
-    --gray: #6c757d;
-    --light-gray: #e9ecef;
-    --sidebar-width: 280px;
-    --header-height: 70px;
-    --border-radius: 12px;
-    --transition: all 0.3s ease;
+<style lang="scss" scoped>
+// Modern layout styling
+.modern-layout {
+    // background: #f8fafc;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+// Enhanced Header
+.modern-header {
+    background: linear-gradient(145deg, var(--q-primary), #3a7bd5) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    height: 64px;
+
+    .header-content {
+        padding: 0 20px;
+    }
+
+    .app-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .app-logo {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .toggle-sidebar {
+        background: rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+    }
 }
 
-body {
-    background-color: #f5f7fb;
-    color: var(--dark);
-    overflow-x: hidden;
-}*/
-
-/* Layout principal */
-.layout-container {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* Header */
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: var(--header-height);
-    background: linear-gradient(120deg, var(--primary), var(--secondary));
-    color: white;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    transition: var(--transition);
-}
-
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
-.toggle-sidebar {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    transition: var(--transition);
-}
-
-.toggle-sidebar:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: rotate(90deg);
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-}
-
-.logo img {
-    width: 40px;
-    height: 40px;
-    margin-right: 12px;
-    border-radius: 10px;
-    object-fit: cover;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.logo span {
-    font-weight: 600;
-    font-size: 1.4rem;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.profile-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-}
-
-/* Sidebar */
-.sidebar {
-    position: fixed;
-    top: var(--header-height);
-    left: 0;
-    height: calc(100vh - var(--header-height));
-    width: var(--sidebar-width);
+// Enhanced Sidebar
+.modern-sidebar {
     background: white;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    overflow-y: auto;
-    transition: var(--transition);
-    z-index: 900;
-    padding: 20px 0;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.08);
+    border-right: none !important;
+
+    .user-profile-section {
+        padding: 20px 16px;
+
+        .user-name {
+            font-size: 1.1rem;
+            color: #2d3748;
+        }
+
+        .user-email {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+    }
+
+    .menu-section-title {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #718096;
+        padding: 0 20px;
+        margin-bottom: 12px;
+        font-weight: 700;
+    }
 }
 
-.sidebar.collapsed {
-    transform: translateX(-100%);
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0 15px;
-}
-
-.menu-section {
-    margin-bottom: 25px;
-}
-
-.menu-section-title {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--gray);
-    padding: 0 20px;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.menu-item {
+// Modern Menu Items
+.modern-menu-item {
     display: flex;
     align-items: center;
-    padding: 12px 20px;
-    border-radius: var(--border-radius);
-    margin-bottom: 8px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin: 4px 8px;
     cursor: pointer;
-    transition: var(--transition);
-    color: var(--dark);
+    transition: all 0.3s ease;
+    color: #2d3748;
     text-decoration: none;
     position: relative;
+
+    &:hover {
+        background-color: rgba(67, 97, 238, 0.08);
+        transform: translateX(4px);
+    }
+
+    &.q-item--active {
+        background-color: rgba(67, 97, 238, 0.12);
+        color: var(--q-primary);
+        font-weight: 500;
+
+        .q-icon {
+            color: var(--q-primary);
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--q-primary);
+            border-radius: 0 10px 10px 0;
+        }
+    }
 }
 
-.menu-item:hover {
-    background-color: rgba(67, 97, 238, 0.1);
-    color: var(--primary);
+// Sidebar Footer
+.sidebar-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    background: rgba(0, 0, 0, 0.02);
 }
 
-.menu-item.active {
-    background-color: rgba(67, 97, 238, 0.15);
-    color: var(--primary);
-    font-weight: 500;
-}
-
-.menu-item.active::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background-color: var(--primary);
-    border-radius: 0 var(--border-radius) var(--border-radius) 0;
-}
-
-.menu-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.menu-text {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.badge {
-    background-color: #ff4757;
-    color: white;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-/* Contenido principal */
-.main-content {
-    flex: 1;
-    margin-left: var(--sidebar-width);
-    padding: 30px;
-    margin-top: var(--header-height);
-    transition: var(--transition);
-}
-
-.main-content.expanded {
-    margin-left: 0;
+// Main Content Area
+.modern-page-content {
+    //  background: #f8fafc;
+    padding: 24px;
 }
 
 .page-container {
-    background: white;
-    border-radius: var(--border-radius);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    padding: 25px;
-    min-height: calc(100vh - var(--header-height) - 60px);
+    //  background: white;
+    border-radius: 12px;
+    padding: 24px;
+    //min-height: calc(100vh - 112px);
 }
 
-/* Estado de carga */
-.loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #f5f7fb 0%, #e4e8f0 100%);
-}
-
-.spinner {
-    width: 60px;
-    height: 60px;
-    border: 5px solid rgba(67, 97, 238, 0.2);
-    border-radius: 50%;
-    border-top-color: var(--primary);
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.loading-text {
-    font-size: 1.2rem;
-    color: var(--gray);
-    font-weight: 500;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 0.6;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0.6;
-    }
-}
-
-/* Overlay para móviles */
-.overlay {
+// Mobile Overlay
+/*.mobile-overlay {
     position: fixed;
-    top: var(--header-height);
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     z-index: 899;
-    display: none;
-    transition: var(--transition);
-}
+    transition: all 0.3s ease;
+}*/
 
-.overlay.active {
-    display: block;
-}
-
-/* Responsive */
+// Responsive Design
 @media (max-width: 992px) {
-    .sidebar {
+    .modern-sidebar {
+        width: 280px !important;
         transform: translateX(-100%);
-        width: 280px;
     }
 
-    .sidebar.mobile-open {
+    .modern-sidebar.mobile-open {
         transform: translateX(0);
         box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
     }
 
-    .main-content {
-        margin-left: 0;
+    .modern-page-content {
         padding: 20px;
     }
 
-    .logo span {
-        font-size: 1.2rem;
+    .page-container {
+        padding: 20px;
+        min-height: calc(100vh - 96px);
     }
 }
 
 @media (max-width: 576px) {
-    .header {
+    .modern-header {
         padding: 0 15px;
+
+        .app-title {
+            font-size: 1.2rem;
+        }
     }
 
-    .logo span {
-        font-size: 1.1rem;
+    .modern-page-content {
+        padding: 16px;
     }
 
     .page-container {
-        padding: 20px 15px;
+        padding: 16px;
     }
-
-    .main-content {
-        padding: 15px;
-    }
-}
-
-/* Tarjetas de ejemplo para el contenido */
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.card {
-    background: white;
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    padding: 20px;
-    transition: var(--transition);
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-}
-
-.card-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: var(--primary);
-}
-
-.card-content {
-    color: var(--gray);
-    font-size: 0.9rem;
 }
 </style>

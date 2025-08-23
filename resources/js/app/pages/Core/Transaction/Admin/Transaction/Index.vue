@@ -21,136 +21,292 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-transaction-layout>
-        <v-filter :params="params" @change="searching" />
-        <q-toolbar>
-            <q-toolbar-title>
-                <q-icon name="list_alt" class="q-mr-sm" />
-                List of transactions
-            </q-toolbar-title>
+        <!-- Header Section -->
+        <div class="bg-white q-pa-md shadow-2 rounded-borders">
+            <div class="row items-center justify-between q-mb-md">
+                <div>
+                    <div class="text-h4 text-primary text-weight-bold">
+                        Transactions Management
+                    </div>
+                    <div class="text-subtitle1 text-grey-7">
+                        Monitor and manage all transaction records
+                    </div>
+                </div>
 
-            <!-- Toggle View Mode -->
-            <q-btn-toggle
-                v-model="viewMode"
-                dense
-                toggle-color="primary"
-                :options="[
-                    { value: 'list', icon: 'list' },
-                    { value: 'grid', icon: 'grid_on' },
-                ]"
-                unelevated
-            />
-        </q-toolbar>
+                <!-- Toggle View Mode -->
+                <q-btn-toggle
+                    v-model="viewMode"
+                    dense
+                    toggle-color="primary"
+                    :options="[
+                        {
+                            value: 'list',
+                            icon: 'mdi-format-list-bulleted',
+                            label: 'List',
+                        },
+                        {
+                            value: 'grid',
+                            icon: 'mdi-view-grid-outline',
+                            label: 'Grid',
+                        },
+                    ]"
+                    unelevated
+                    class="view-toggle"
+                />
+            </div>
 
-        <div class="q-pa-md">
+            <!-- Filter Component -->
+            <v-filter :params="params" @change="searching" class="q-mb-sm" />
+        </div>
+
+        <!-- Statistics Overview -->
+        <div
+            class="row q-col-gutter-md q-mb-md q-mt-sm"
+            v-if="transactions.length > 0"
+        >
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <q-card flat class="bg-blue-1 text-blue-8">
+                    <q-card-section class="text-center">
+                        <div class="text-h6">
+                            {{ transactions.length }} Transaction{{
+                                transactions.length !== 1 ? "s" : ""
+                            }}
+                        </div>
+                        <q-icon name="mdi-receipt" size="md" />
+                    </q-card-section>
+                </q-card>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <q-card flat class="bg-green-1 text-green-8">
+                    <q-card-section class="text-center">
+                        <div class="text-h6">
+                            {{ successfulCount }} Successful
+                        </div>
+                        <q-icon name="mdi-check-circle" size="md" />
+                    </q-card-section>
+                </q-card>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <q-card flat class="bg-orange-1 text-orange-8">
+                    <q-card-section class="text-center">
+                        <div class="text-h6">{{ pendingCount }} Pending</div>
+                        <q-icon name="mdi-clock-outline" size="md" />
+                    </q-card-section>
+                </q-card>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <q-card flat class="bg-red-1 text-red-8">
+                    <q-card-section class="text-center">
+                        <div class="text-h6">{{ failedCount }} Failed</div>
+                        <q-icon name="mdi-close-circle" size="md" />
+                    </q-card-section>
+                </q-card>
+            </div>
+        </div>
+
+        <!-- Grid View -->
+        <div
+            v-if="viewMode === 'grid' && transactions.length > 0"
+            class="row q-col-gutter-lg q-pa-md"
+        >
             <div
-                v-if="viewMode === 'grid'"
-                class="row q-col-gutter-md q-row-gutter-md"
+                v-for="(item, index) in transactions"
+                :key="index"
+                class="col-12 col-sm-6 col-md-4 col-lg-3"
             >
-                <div
-                    v-for="(item, index) in transactions"
-                    :key="index"
-                    class="col-12 col-sm-6 col-md-4 col-lg-3"
-                >
-                    <q-card bordered class="shadow-2">
-                        <q-card-section
-                            class="flex align-center justify-content-between"
-                        >
-                            <div class="text-h6 text-primary">
+                <q-card bordered class="transaction-card shadow-3">
+                    <q-card-section class="card-header bg-grey-2">
+                        <div class="row items-center justify-between">
+                            <div class="text-h6 text-primary text-weight-bold">
                                 {{ item.billing_period }} plan
                             </div>
-                            <q-space />
-                            <v-activate
-                                @updated="getTransactions"
-                                v-if="check(item)"
-                                :item="item"
-                            />
-                            <q-space />
-                            <v-detail :item="item" />
-                        </q-card-section>
-
-                        <q-separator />
-
-                        <q-card-section class="q-pt-none">
-                            <div class="q-mb-sm">
-                                <q-icon name="event" class="q-mr-xs" />
-                                <strong>code:</strong> {{ item.code }}
-                            </div>
-                            <div class="q-mb-sm">
-                                <q-icon name="payments" class="q-mr-xs" />
-                                <strong>Price:</strong> {{ item.total }}
-                                {{ item.currency }}
-                            </div>
-                            <div class="q-mb-sm">
-                                <q-icon name="event" class="q-mr-xs" />
-                                <strong>Created:</strong> {{ item.created }}
-                            </div>
-                            <div class="q-mb-sm">
-                                <q-icon
-                                    name="event_available"
-                                    class="q-mr-xs"
+                            <div class="row items-center q-gutter-xs">
+                                <v-activate
+                                    @updated="getTransactions"
+                                    v-if="check(item)"
+                                    :item="item"
                                 />
-                                <strong>Updated:</strong> {{ item.updated }}
+                                <v-detail :item="item" />
                             </div>
-                            <div class="q-mb-sm">
-                                <q-icon name="credit_card" class="q-mr-xs" />
-                                <strong>Method:</strong>
-                                {{ item.payment_method }}
+                        </div>
+                    </q-card-section>
+
+                    <q-separator />
+
+                    <q-card-section class="q-pt-md">
+                        <div class="transaction-details">
+                            <div class="detail-item">
+                                <q-icon
+                                    name="mdi-receipt"
+                                    color="blue"
+                                    size="sm"
+                                />
+                                <span class="q-ml-sm"
+                                    ><strong>Code:</strong>
+                                    {{ item.code }}</span
+                                >
                             </div>
-                            <div class="q-mb-sm">
-                                <q-icon name="check_circle" class="q-mr-xs" />
-                                <strong>Status:</strong>
+
+                            <div class="detail-item">
+                                <q-icon
+                                    name="mdi-currency-usd"
+                                    color="green"
+                                    size="sm"
+                                />
+                                <span class="q-ml-sm"
+                                    ><strong>Price:</strong> {{ item.total }}
+                                    {{ item.currency }}</span
+                                >
+                            </div>
+
+                            <div class="detail-item">
+                                <q-icon
+                                    name="mdi-calendar"
+                                    color="purple"
+                                    size="sm"
+                                />
+                                <span class="q-ml-sm"
+                                    ><strong>Created:</strong>
+                                    {{ item.created }}</span
+                                >
+                            </div>
+
+                            <div class="detail-item">
+                                <q-icon
+                                    name="mdi-update"
+                                    color="orange"
+                                    size="sm"
+                                />
+                                <span class="q-ml-sm"
+                                    ><strong>Updated:</strong>
+                                    {{ item.updated }}</span
+                                >
+                            </div>
+
+                            <div class="detail-item">
+                                <q-icon
+                                    name="mdi-credit-card"
+                                    color="teal"
+                                    size="sm"
+                                />
+                                <span class="q-ml-sm"
+                                    ><strong>Method:</strong>
+                                    {{ item.payment_method }}</span
+                                >
+                            </div>
+
+                            <div class="detail-item">
+                                <q-icon
+                                    name="mdi-check-circle"
+                                    color="green"
+                                    size="sm"
+                                />
+                                <span class="q-ml-sm"
+                                    ><strong>Status:</strong></span
+                                >
                                 <q-badge
-                                    :color="
-                                        item.status === 'successful'
-                                            ? 'green'
-                                            : 'orange'
-                                    "
-                                    text-color="white"
+                                    :color="getStatusColor(item.status)"
+                                    class="q-ml-sm status-badge"
                                 >
                                     {{ item.status }}
                                 </q-badge>
                             </div>
-                            <div class="q-mb-sm">
-                                <q-icon name="event" class="q-mr-xs" />
-                                <strong>Activated :</strong>
-                                {{ item.activated }}
-                            </div>
-                        </q-card-section>
-                    </q-card>
-                </div>
-            </div>
 
-            <!-- LIST VIEW -->
-            <q-table
-                v-else
-                :rows="transactions"
-                :columns="columns"
-                row-key="code"
-                flat
-                bordered
-                dense
-                separator="horizontal"
-                hide-bottom
-                :rows-per-page-options="[search.per_page]"
-            >
-                <template v-slot:body-cell-status="props">
-                    <q-td :props="props">
+                            <div class="detail-item">
+                                <q-icon
+                                    name="mdi-calendar-check"
+                                    color="blue"
+                                    size="sm"
+                                />
+                                <span class="q-ml-sm"
+                                    ><strong>Activated:</strong>
+                                    {{ item.activated }}</span
+                                >
+                            </div>
+                        </div>
+                    </q-card-section>
+                </q-card>
+            </div>
+        </div>
+
+        <!-- Empty State for Grid View -->
+        <div
+            v-else-if="viewMode === 'grid' && transactions.length === 0"
+            class="text-center q-pa-xl"
+        >
+            <q-icon name="mdi-receipt-off" size="xl" color="grey-4" />
+            <div class="text-h6 text-grey-6 q-mt-md">No transactions found</div>
+            <div class="text-grey-5">Try adjusting your search filters</div>
+        </div>
+
+        <!-- List View -->
+        <q-table
+            v-else
+            :rows="transactions"
+            :columns="columns"
+            row-key="code"
+            flat
+            bordered
+            :loading="loading"
+            :pagination="pagination"
+            hide-pagination
+            class="shadow-1 rounded-borders q-mt-md"
+        >
+            <template v-slot:body="props">
+                <q-tr :props="props" class="q-hoverable">
+                    <q-td key="code" :props="props">
+                        <div class="text-weight-medium text-primary">
+                            {{ props.row.code }}
+                        </div>
+                    </q-td>
+
+                    <q-td key="price" :props="props">
+                        <div class="text-weight-medium">
+                            {{ props.row.total }} {{ props.row.currency }}
+                        </div>
+                    </q-td>
+
+                    <q-td key="billing_period" :props="props">
+                        <div class="text-caption">
+                            {{ props.row.billing_period }} plan
+                        </div>
+                    </q-td>
+
+                    <q-td key="created" :props="props">
+                        <div class="text-caption">
+                            {{ props.row.created }}
+                        </div>
+                    </q-td>
+
+                    <q-td key="updated" :props="props">
+                        <div class="text-caption">
+                            {{ props.row.updated }}
+                        </div>
+                    </q-td>
+
+                    <q-td key="payment_method" :props="props">
+                        <div class="text-caption">
+                            {{ props.row.payment_method }}
+                        </div>
+                    </q-td>
+
+                    <q-td key="status" :props="props">
                         <q-badge
-                            :color="
-                                props.row.status === 'successful'
-                                    ? 'green'
-                                    : 'orange'
-                            "
-                            text-color="white"
+                            :color="getStatusColor(props.row.status)"
+                            class="status-badge"
                         >
                             {{ props.row.status }}
                         </q-badge>
                     </q-td>
-                </template>
 
-                <template v-slot:body-cell-actions="props">
-                    <q-td :props="props">
-                        <div class="row items-center q-gutter-sm">
+                    <q-td key="activated" :props="props">
+                        <div class="text-caption">
+                            {{ props.row.activated }}
+                        </div>
+                    </q-td>
+
+                    <q-td key="actions" :props="props" auto-width>
+                        <div class="flex justify-between">
                             <v-activate
                                 @updated="getTransactions"
                                 v-if="check(props.row)"
@@ -159,19 +315,48 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <v-detail :item="props.row" />
                         </div>
                     </q-td>
-                </template>
-            </q-table>
-        </div>
+                </q-tr>
+            </template>
 
-        <div class="row justify-center q-mt-md">
+            <template v-slot:no-data>
+                <div class="full-width row flex-center text-grey-6 q-pa-xl">
+                    <q-icon name="mdi-receipt-off" size="xl" />
+                    <div class="q-ml-sm">No transactions available</div>
+                </div>
+            </template>
+
+            <template v-slot:loading>
+                <q-inner-loading showing color="primary" />
+            </template>
+        </q-table>
+
+        <!-- Pagination -->
+        <div class="row justify-center q-my-lg" v-if="pages.total_pages > 1">
             <q-pagination
                 v-model="search.page"
                 color="primary"
                 :max="pages.total_pages"
-                size="md"
-                direction-links
+                :max-pages="6"
                 boundary-numbers
+                direction-links
+                ellipses
+                class="q-pa-sm bg-white rounded-borders shadow-1"
             />
+
+            <q-select
+                v-model="search.per_page"
+                :options="[10, 15, 25, 50]"
+                label="Items per page"
+                dense
+                outlined
+                class="q-ml-md"
+                style="min-width: 140px"
+                @update:model-value="getTransactions"
+            >
+                <template v-slot:prepend>
+                    <q-icon name="mdi-format-list-numbered" />
+                </template>
+            </q-select>
         </div>
     </v-admin-transaction-layout>
 </template>
@@ -189,6 +374,7 @@ export default {
     data() {
         return {
             viewMode: "list",
+            loading: false,
             params: [
                 { key: "Code", value: "code" },
                 { key: "Session", value: "session_id" },
@@ -204,58 +390,86 @@ export default {
                 page: 1,
                 per_page: 15,
             },
+            pagination: {
+                sortBy: "created",
+                descending: true,
+                page: 1,
+                rowsPerPage: 15,
+            },
             columns: [
-                { name: "code", label: "Code", field: "code", align: "left" },
+                {
+                    name: "code",
+                    label: "Transaction Code",
+                    field: "code",
+                    align: "left",
+                    sortable: true,
+                },
                 {
                     name: "price",
-                    label: "Price",
+                    label: "Amount",
                     field: (row) => `${row.total} ${row.currency}`,
                     align: "left",
+                    sortable: true,
                 },
                 {
                     name: "billing_period",
-                    label: "Plan",
+                    label: "Plan Type",
                     field: "billing_period",
                     align: "left",
+                    sortable: true,
                 },
                 {
                     name: "created",
-                    label: "Created",
+                    label: "Created Date",
                     field: "created",
                     align: "left",
-                },
-                {
-                    name: "updated",
-                    label: "Updated",
-                    field: "updated",
-                    align: "left",
+                    sortable: true,
                 },
                 {
                     name: "payment_method",
-                    label: "Method",
+                    label: "Payment Method",
                     field: "payment_method",
                     align: "left",
+                    sortable: true,
                 },
                 {
                     name: "status",
                     label: "Status",
                     field: "status",
-                    align: "left",
+                    align: "center",
+                    sortable: true,
                 },
                 {
                     name: "activated",
-                    label: "Activated",
+                    label: "Activation Date",
                     field: "activated",
                     align: "left",
+                    sortable: true,
                 },
                 {
                     name: "actions",
                     label: "Actions",
                     field: "actions",
-                    align: "center",
+                    align: "right",
+                    sortable: false,
                 },
             ],
         };
+    },
+
+    computed: {
+        successfulCount() {
+            return this.transactions.filter((t) => t.status === "successful")
+                .length;
+        },
+        pendingCount() {
+            return this.transactions.filter((t) => t.status === "pending")
+                .length;
+        },
+        failedCount() {
+            return this.transactions.filter((t) => t.status === "failed")
+                .length;
+        },
     },
 
     watch: {
@@ -275,6 +489,19 @@ export default {
     },
 
     methods: {
+        getStatusColor(status) {
+            switch (status) {
+                case "successful":
+                    return "green";
+                case "pending":
+                    return "orange";
+                case "failed":
+                    return "red";
+                default:
+                    return "grey";
+            }
+        },
+
         changePage(event) {
             this.search.page = event;
         },
@@ -284,6 +511,7 @@ export default {
         },
 
         async getTransactions(param = null) {
+            this.loading = true;
             var params = { ...this.search, ...param };
 
             try {
@@ -292,9 +520,13 @@ export default {
                 });
                 if (res.status == 200) {
                     this.transactions = res.data.data;
-                    this.pages = res.data.meta.pagination
+                    this.pages = res.data.meta.pagination;
                 }
-            } catch (error) {}
+            } catch (error) {
+                console.error("Error fetching transactions:", error);
+            } finally {
+                this.loading = false;
+            }
         },
 
         check(item) {
@@ -307,3 +539,49 @@ export default {
     },
 };
 </script>
+
+<style lang="css" scoped>
+.transaction-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+}
+
+.transaction-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.transaction-details {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+}
+
+.status-badge {
+    font-size: 0.75em;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.view-toggle {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.shadow-3 {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+</style>

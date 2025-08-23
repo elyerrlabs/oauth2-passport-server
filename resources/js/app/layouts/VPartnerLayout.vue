@@ -109,7 +109,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div
                     class="absolute-bottom q-pa-md text-center text-caption text-grey-6"
                 >
-                    {{ app_name }} &copy; {{ new Date().getFullYear() }}
+                   &copy; {{ new Date().getFullYear() }} {{ $page.props.org_name }}
                 </div>
             </q-scroll-area>
         </q-drawer>

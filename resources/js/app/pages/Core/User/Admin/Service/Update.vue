@@ -20,49 +20,177 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-btn round outline color="primary" @click="open(item)" icon="mdi-pencil">
-        <q-tooltip transition-show="rotate" transition-hide="rotate">
-            Update service
+    <q-btn
+        round
+        flat
+        color="primary"
+        @click="open(item)"
+        icon="mdi-pencil"
+        size="sm"
+        class="q-mr-xs"
+    >
+        <q-tooltip
+            transition-show="scale"
+            transition-hide="scale"
+            class="bg-primary"
+        >
+            Edit service
         </q-tooltip>
     </q-btn>
 
-    <q-dialog v-model="dialog" persistent>
-        <q-card class="card">
-            <div class="card-main">
-                <q-card-section class="column items-center card-header">
-                    <h6>Detail of service</h6>
+    <q-dialog
+        v-model="dialog"
+        persistent
+        transition-show="jump-up"
+        transition-hide="jump-down"
+    >
+        <div class="dialog-backdrop flex flex-center">
+            <q-card class="edit-dialog-card shadow-15">
+                <div class="dialog-header bg-primary text-white">
+                    <q-card-section class="text-center">
+                        <q-icon name="mdi-cog-edit" size="lg" class="q-mb-sm" />
+                        <div class="text-h6">Update Service</div>
+                        <div class="text-caption">Modify service details</div>
+                    </q-card-section>
+                </div>
+
+                <q-card-section class="q-pt-lg">
+                    <div
+                        class="text-subtitle1 text-weight-medium q-mb-md text-grey-8"
+                    >
+                        Editing:
+                        <span class="text-blue-8">"{{ form.name }}"</span>
+                    </div>
+
+                    <div class="q-gutter-y-md">
+                        <q-input
+                            v-model="form.name"
+                            label="Service Name"
+                            outlined
+                            color="primary"
+                            :error="!!errors.name"
+                            class="input-field"
+                            :loading="loading"
+                            :readonly="system"
+                            :hint="
+                                system
+                                    ? 'System service name cannot be modified'
+                                    : 'Unique identifier for the service'
+                            "
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-tag-outline" />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.name"></v-error>
+                            </template>
+                        </q-input>
+
+                        <q-input
+                            v-model="form.description"
+                            label="Description"
+                            outlined
+                            color="primary"
+                            :error="!!errors.description"
+                            type="textarea"
+                            rows="3"
+                            class="input-field"
+                            :loading="loading"
+                            hint="Describe the purpose and functionality of this service"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-text-box-outline" />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.description" />
+                            </template>
+                        </q-input>
+
+                        <q-select
+                            v-model="form.visibility"
+                            :options="visibilityOptions"
+                            label="Visibility"
+                            outlined
+                            color="primary"
+                            :error="!!errors.visibility"
+                            hint="Set the visibility level for this service"
+                        >
+                            <template v-slot:prepend>
+                                <q-icon name="mdi-eye" />
+                            </template>
+                            <template v-slot:error>
+                                <v-error :error="errors.visibility" />
+                            </template>
+                        </q-select>
+
+                        <div class="row items-center q-gutter-sm q-mt-md">
+                            <q-icon
+                                name="mdi-account-group"
+                                color="blue"
+                                size="sm"
+                            />
+                            <span class="text-caption text-grey-7">
+                                Group:
+                                <strong>{{ form.group?.name || "N/A" }}</strong>
+                            </span>
+                        </div>
+
+                        <div class="row items-center q-gutter-sm">
+                            <q-icon
+                                :name="system ? 'mdi-shield-check' : 'mdi-cog'"
+                                :color="system ? 'orange' : 'green'"
+                                size="sm"
+                            />
+                            <span class="text-caption text-grey-7">
+                                Type:
+                                <strong>{{
+                                    system ? "System Service" : "Custom Service"
+                                }}</strong>
+                            </span>
+                        </div>
+
+                        <div
+                            v-if="system"
+                            class="bg-orange-1 text-orange-8 rounded-borders q-pa-md"
+                        >
+                            <div class="row items-center">
+                                <q-icon
+                                    name="mdi-alert"
+                                    size="sm"
+                                    class="q-mr-sm"
+                                />
+                                <span class="text-caption"
+                                    >This is a system service. Some properties
+                                    cannot be modified.</span
+                                >
+                            </div>
+                        </div>
+                    </div>
                 </q-card-section>
 
-                <q-separator />
-
-                <q-card-section class="column no-wrap q-gutter-y-md card-body">
-                    <q-input v-model="form.name" label="Name" :error="!!errors.name">
-                        <template v-slot:error>
-                            <v-error :error="errors.name" />
-                        </template>
-                    </q-input>
-
-                    <q-input v-model="form.description" label="Description" type="textarea"
-                        :error="!!errors.description">
-                        <template v-slot:error>
-                            <v-error :error="errors.description" />
-                        </template>
-                    </q-input>
-
-                    <q-select v-model="form.visibility" :options="visibility" label="Visibility" />
-                    <v-error :error="errors.visibility" />
-                </q-card-section>
-            </div>
-
-            <q-separator />
-            <q-card-section class="flex justify-between card-footer">
-                <q-btn outline color="positive" label="Update" @click="updateService" />
-
-                <q-btn outline color="secondary" label="Cancel" @click="close" />
-            </q-card-section>
-        </q-card>
+                <q-card-actions align="right" class="q-pa-md">
+                    <q-btn
+                        flat
+                        color="grey-7"
+                        label="Cancel"
+                        @click="close"
+                        class="q-mr-sm"
+                        icon="mdi-close-circle"
+                        :disable="loading"
+                    />
+                    <q-btn
+                        color="primary"
+                        label="Update Service"
+                        @click="updateService"
+                        :loading="loading"
+                        icon="mdi-content-save"
+                    />
+                </q-card-actions>
+            </q-card>
+        </div>
     </q-dialog>
 </template>
+
 <script>
 export default {
     emits: ["updated"],
@@ -76,13 +204,12 @@ export default {
 
     data() {
         return {
-            visibility: ["private", "public"],
-            errors: {
-                name: "",
-                description: "",
-            },
+            visibilityOptions: ["private", "public"],
+            errors: {},
             form: {},
             dialog: false,
+            loading: false,
+            system: false,
         };
     },
 
@@ -91,24 +218,36 @@ export default {
             this.form = {};
             this.errors = {};
             this.dialog = false;
+            this.loading = false;
+            this.system = false;
         },
 
         open(item) {
             const { system, ...form } = item;
-            this.form = form;
+            this.form = { ...form };
+            this.system = system;
             this.errors = {};
             this.dialog = true;
         },
 
         async updateService() {
+            this.loading = true;
+            this.errors = {};
+
             try {
                 const res = await this.$server.put(
                     this.form.links.update,
-                    this.form,
+                    this.form
                 );
 
-                
                 if (res.status == 200) {
+                    this.$q.notify({
+                        type: "positive",
+                        message: "Service updated successfully",
+                        position: "top",
+                        icon: "mdi-check-circle",
+                        timeout: 3000,
+                    });
                     this.$emit("updated", true);
                     this.errors = {};
                     this.dialog = false;
@@ -116,7 +255,24 @@ export default {
             } catch (e) {
                 if (e.response && e.response.status == 422) {
                     this.errors = e.response.data.errors;
+                    this.$q.notify({
+                        type: "negative",
+                        message: "Please check the form for errors",
+                        position: "top",
+                        icon: "mdi-alert-circle",
+                        timeout: 3000,
+                    });
+                } else {
+                    this.$q.notify({
+                        type: "negative",
+                        message: "Error updating service",
+                        position: "top",
+                        icon: "mdi-alert-circle",
+                        timeout: 3000,
+                    });
                 }
+            } finally {
+                this.loading = false;
             }
         },
     },
@@ -124,45 +280,32 @@ export default {
 </script>
 
 <style scoped>
-.containerDialog {
-    width: auto;
-    height: 100%;
-    padding: 0.5rem;
+.dialog-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
 }
 
-.card {
-    width: 500px;
-    max-width: 90vw;
-    height: 100%;
-    border-radius: 1rem;
-    display: flex;
-    flex-direction: column;
+.edit-dialog-card {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-.card-main {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
+.dialog-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
-.card-header {
-    flex-shrink: 0;
-    padding: 2rem 3rem;
-    text-align: center;
+.input-field {
+    transition: all 0.3s ease;
 }
 
-.card-body {
-    padding: 2rem;
-    flex-grow: 1;
+.input-field:focus-within {
+    transform: translateY(-2px);
 }
 
-.card-footer {
-    flex-shrink: 0;
-}
-
-.card-footer>.q-btn {
-    padding: 0.4rem 2rem;
-    border-radius: 0.6rem;
+.shadow-15 {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
 }
 </style>

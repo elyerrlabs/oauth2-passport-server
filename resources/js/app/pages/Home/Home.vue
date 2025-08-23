@@ -40,21 +40,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             color="white"
                             icon="mdi-book-open-page-variant"
                             label="Docs"
-                            @click="go('/docs')"
+                            @click="go('/documentation')"
                         />
                         <q-btn
                             outline
                             color="white"
                             icon="mdi-api"
                             label="API"
-                            @click="go('/api')"
+                            @click="go('/oauth/api-keys')"
                         />
                         <q-btn
                             outline
                             color="white"
                             icon="mdi-shield-key"
                             label="OAuth2 Keys"
-                            @click="go('/admin/oauth/clients')"
+                            @click="go('/oauth/clients')"
                         />
                     </div>
                 </div>

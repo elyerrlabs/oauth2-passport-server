@@ -21,112 +21,258 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-layout>
-        <!-- Filters and Create Button -->
-        <v-filter :params="params" @change="searching" />
-
-        <q-toolbar class="q-ma-sm flex items-center justify-between">
-            <q-toolbar-title>List of Users</q-toolbar-title>
-
-            <div class="row items-center q-pa-md">
-                <!-- Create Button -->
-                <div class="q-mr-sm">
-                    <v-create @created="getUsers" />
+        <!-- Header Section -->
+        <div class="bg-white q-pa-md shadow-2 rounded-borders">
+            <div class="row items-center justify-between q-mb-md">
+                <div>
+                    <div class="text-h4 text-primary text-weight-bold">
+                        User Management
+                    </div>
+                    <div class="text-subtitle1 text-grey-7">
+                        Manage system users and their permissions
+                    </div>
                 </div>
 
-                <!-- Toggle View Mode -->
-                <q-btn-toggle
-                    v-model="viewMode"
-                    dense
-                    toggle-color="primary"
-                    :options="[
-                        { value: 'list', icon: 'list' },
-                        { value: 'grid', icon: 'grid_on' },
-                    ]"
-                    unelevated
-                />
-            </div>
-        </q-toolbar>
+                <div class="row items-center q-gutter-sm">
+                    <!-- Create Button -->
+                    <v-create @created="getUsers" />
 
-        <!-- Grid View (Cards) -->
-        <div v-if="viewMode === 'grid'" class="row q-col-gutter-md q-ma-sm">
+                    <!-- View Toggle -->
+                    <q-btn-toggle
+                        v-model="viewMode"
+                        dense
+                        toggle-color="primary"
+                        :options="[
+                            {
+                                value: 'list',
+                                icon: 'mdi-format-list-bulleted',
+                                label: 'List',
+                            },
+                            {
+                                value: 'grid',
+                                icon: 'mdi-view-grid-outline',
+                                label: 'Grid',
+                            },
+                        ]"
+                        unelevated
+                        class="view-toggle"
+                    />
+                </div>
+            </div>
+
+            <!-- Filter Component -->
+            <v-filter :params="params" @change="searching" class="q-mb-sm" />
+        </div>
+
+        <!-- Stats Overview -->
+        <div
+            class="row q-col-gutter-md q-mb-md q-mt-sm"
+            v-if="users.length > 0"
+        >
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <q-card flat class="bg-blue-1 text-blue-8">
+                    <q-card-section class="text-center">
+                        <div class="text-h6">
+                            {{ users.length }} User{{
+                                users.length !== 1 ? "s" : ""
+                            }}
+                        </div>
+                        <q-icon name="mdi-account-group" size="md" />
+                    </q-card-section>
+                </q-card>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <q-card flat class="bg-green-1 text-green-8">
+                    <q-card-section class="text-center">
+                        <div class="text-h6">{{ activeUsersCount }} Active</div>
+                        <q-icon name="mdi-account-check" size="md" />
+                    </q-card-section>
+                </q-card>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <q-card flat class="bg-orange-1 text-orange-8">
+                    <q-card-section class="text-center">
+                        <div class="text-h6">
+                            {{ inactiveUsersCount }} Inactive
+                        </div>
+                        <q-icon name="mdi-account-off" size="md" />
+                    </q-card-section>
+                </q-card>
+            </div>
+        </div>
+
+        <!-- Grid View -->
+        <div
+            v-if="viewMode === 'grid' && users.length > 0"
+            class="row q-col-gutter-md q-pa-sm"
+        >
             <div
-                class="col-xs-12 col-sm-6 col-md-4"
+                class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
                 v-for="user in users"
                 :key="user.id"
             >
-                <q-card flat bordered class="shadow-2">
-                    <q-card-section class="q-pb-none">
-                        <div class="text-h6 text-grey-7">
+                <q-card bordered class="user-card shadow-3">
+                    <q-card-section class="bg-primary text-white">
+                        <div class="text-h6 text-weight-bold text-truncate">
                             {{ user.name }} {{ user.last_name }}
                         </div>
-                        <div class="text-subtitle2 text-grey-7">
+                        <div class="text-caption opacity-80">
                             {{ user.email }}
+                        </div>
+                    </q-card-section>
+
+                    <q-card-section class="q-pt-md">
+                        <div class="row q-gutter-sm q-mb-sm">
+                            <q-badge
+                                :color="user.disabled ? 'orange' : 'green'"
+                                :icon="
+                                    user.disabled
+                                        ? 'mdi-account-off'
+                                        : 'mdi-account-check'
+                                "
+                            >
+                                {{ user.disabled ? "Inactive" : "Active" }}
+                            </q-badge>
                         </div>
                     </q-card-section>
 
                     <q-separator />
 
-                    <q-card-actions align="around">
+                    <q-card-actions
+                        align="center"
+                        class="q-pa-sm flex justify-between"
+                    >
                         <v-update
                             v-if="!user.disabled"
                             @updated="getUsers"
                             :item="user"
                         />
-                        <v-scopes v-if="!user.disabled" :item="user" />
-                        <v-revoke v-if="!user.disabled" :item="user" />
-                        <v-status :item="user" @updated="getUsers" />
+                        <v-scopes
+                            v-if="!user.disabled"
+                            :item="user"
+                            class="q-mx-xs"
+                        />
+                        <v-revoke
+                            v-if="!user.disabled"
+                            :item="user"
+                            class="q-mx-xs"
+                        />
+                        <v-status
+                            :item="user"
+                            @updated="getUsers"
+                            class="q-mx-xs"
+                        />
                     </q-card-actions>
                 </q-card>
             </div>
         </div>
 
-        <!-- List View (Table) -->
-        <div v-if="viewMode === 'list'" class="q-pa-md">
-            <q-table
-                :rows="users"
-                :columns="columns"
-                row-key="id"
-                class="shadow-1"
-                flat
-                bordered
-                hide-bottom
-                :rows-per-page-options="[search.per_page]"
-            >
-                <template v-slot:body-cell-actions="props">
-                    <q-td align="right">
-                        <v-update
-                            ref="update_{{ props.row.id }}"
-                            :item="props.row"
-                            @updated="getUsers"
-                        />
-                        <v-scopes
-                            ref="scopes_{{ props.row.id }}"
-                            :item="props.row"
-                        />
-                        <v-revoke
-                            ref="revoke_{{ props.row.id }}"
-                            :item="props.row"
-                        />
-                        <v-status
-                            ref="status_{{ props.row.id }}"
-                            :item="props.row"
-                            @updated="getUsers"
-                        />
-                    </q-td>
-                </template>
-            </q-table>
+        <!-- Empty State for Grid View -->
+        <div
+            v-else-if="viewMode === 'grid' && users.length === 0"
+            class="text-center q-pa-xl"
+        >
+            <q-icon name="mdi-account-off-outline" size="xl" color="grey-4" />
+            <div class="text-h6 text-grey-6 q-mt-md">No users found</div>
+            <div class="text-grey-5">Create your first user to get started</div>
         </div>
 
-        <div class="row justify-center q-my-md">
+        <!-- List View -->
+        <q-table
+            v-else
+            :rows="users"
+            :columns="columns"
+            row-key="id"
+            flat
+            bordered
+            :loading="loading"
+            :pagination="pagination"
+            hide-pagination
+            class="shadow-1 rounded-borders"
+        >
+            <template v-slot:body="props">
+                <q-tr :props="props" class="q-hoverable">
+                    <q-td key="name" :props="props">
+                        <div class="text-weight-bold text-primary">
+                            {{ props.row.name }} {{ props.row.last_name }}
+                        </div>
+                    </q-td>
+
+                    <q-td key="email" :props="props">
+                        <div class="text-body1">
+                            {{ props.row.email }}
+                        </div>
+                    </q-td>
+
+                    <q-td key="status" :props="props">
+                        <q-badge
+                            :color="props.row.disabled ? 'orange' : 'green'"
+                            :icon="
+                                props.row.disabled
+                                    ? 'mdi-account-off'
+                                    : 'mdi-account-check'
+                            "
+                        >
+                            {{ props.row.disabled ? "Inactive" : "Active" }}
+                        </q-badge>
+                    </q-td>
+
+                    <q-td key="actions" :props="props" width="250">
+                        <div class="row q-gutter-xs flex justify-between">
+                            <v-update
+                                v-if="!props.row.disabled"
+                                :item="props.row"
+                                @updated="getUsers"
+                            />
+                            <v-scopes
+                                v-if="!props.row.disabled"
+                                :item="props.row"
+                            />
+                            <v-revoke
+                                v-if="!props.row.disabled"
+                                :item="props.row"
+                            />
+                            <v-status :item="props.row" @updated="getUsers" />
+                        </div>
+                    </q-td>
+                </q-tr>
+            </template>
+
+            <template v-slot:no-data>
+                <div class="full-width row flex-center text-grey-6 q-pa-xl">
+                    <q-icon name="mdi-account-off-outline" size="xl" />
+                    <div class="q-ml-sm">No users available</div>
+                </div>
+            </template>
+        </q-table>
+
+        <!-- Pagination -->
+        <div class="row justify-center q-my-lg" v-if="pages.total_pages > 1">
             <q-pagination
                 v-model="search.page"
                 color="primary"
                 :max="pages.total_pages"
-                size="sm"
+                :max-pages="6"
                 boundary-numbers
                 direction-links
-                class="q-pa-xs q-gutter-sm rounded-borders"
+                ellipses
+                class="q-pa-sm bg-white rounded-borders shadow-1"
             />
+
+            <q-select
+                v-model="search.per_page"
+                :options="[10, 15, 25, 50]"
+                label="Items per page"
+                dense
+                outlined
+                class="q-ml-md"
+                style="min-width: 140px"
+                @update:model-value="getUsers"
+            >
+                <template v-slot:prepend>
+                    <q-icon name="mdi-format-list-numbered" />
+                </template>
+            </q-select>
         </div>
     </v-admin-layout>
 </template>
@@ -137,6 +283,7 @@ import VUpdate from "./Update.vue";
 import VScopes from "./Scopes.vue";
 import VStatus from "./Status.vue";
 import VRevoke from "./Revoke.vue";
+
 export default {
     components: {
         VCreate,
@@ -149,6 +296,7 @@ export default {
     data() {
         return {
             viewMode: "list",
+            loading: false,
             columns: [
                 {
                     name: "name",
@@ -165,11 +313,19 @@ export default {
                     align: "left",
                 },
                 {
+                    name: "status",
+                    label: "Status",
+                    field: "disabled",
+                    sortable: true,
+                    align: "center",
+                    format: (val) => (val ? "Inactive" : "Active"),
+                },
+                {
                     name: "actions",
                     label: "Actions",
                     field: "actions",
                     sortable: false,
-                    align: "center",
+                    align: "right",
                 },
             ],
             params: [
@@ -187,7 +343,22 @@ export default {
                 page: 1,
                 per_page: 15,
             },
+            pagination: {
+                sortBy: "name",
+                descending: false,
+                page: 1,
+                rowsPerPage: 15,
+            },
         };
+    },
+
+    computed: {
+        activeUsersCount() {
+            return this.users.filter((user) => !user.disabled).length;
+        },
+        inactiveUsersCount() {
+            return this.users.filter((user) => user.disabled).length;
+        },
     },
 
     created() {
@@ -215,11 +386,8 @@ export default {
             this.getUsers(event);
         },
 
-        /**
-         * Get the all users
-         */
         async getUsers(param = null) {
-            // Setting search params
+            this.loading = true;
             var params = { ...this.search, ...param };
 
             try {
@@ -227,14 +395,39 @@ export default {
                     params: params,
                 });
 
-                if (res.status == 200 && res.data.data.length) {
+                if (res.status == 200) {
                     this.users = res.data.data;
                     let meta = res.data.meta;
                     this.pages = meta.pagination;
                     this.search.current_page = meta.pagination.current_page;
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error("Error fetching users:", e);
+            } finally {
+                this.loading = false;
+            }
         },
     },
 };
 </script>
+
+<style lang="css" scoped>
+.user-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 12px;
+}
+
+.user-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.15) !important;
+}
+
+.view-toggle {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.opacity-80 {
+    opacity: 0.8;
+}
+</style>
