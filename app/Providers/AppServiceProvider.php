@@ -34,8 +34,7 @@ use League\OAuth2\Server\ResourceServer;
 use Laravel\Passport\PassportUserProvider;
 use App\Models\OAuth\Bridge\AuthCodeRepository;
 use App\Models\OAuth\Bridge\AccessTokenRepository;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use App\Http\Controllers\Web\OAuth\OpenId\DiscoveryController;
+use Illuminate\Database\Eloquent\Relations\Relation; 
 use Laravel\Passport\Bridge\AuthCodeRepository as LaravelAuthCodeRepository;
 use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository;
 
@@ -53,9 +52,6 @@ class AppServiceProvider extends ServiceProvider
         //Override AuthCodeRepository  and AccessTokenRepository
         $this->app->bind(LaravelAuthCodeRepository::class, AuthCodeRepository::class);
         $this->app->bind(LaravelAccessTokenRepository::class, AccessTokenRepository::class);
-
-        //openID
-        $this->app->bind(\OpenIDConnect\Laravel\DiscoveryController::class, DiscoveryController::class);
     }
 
     /**

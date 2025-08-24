@@ -302,17 +302,15 @@ class Setting
         settingLoad('routes.users.clients', false);
         settingLoad('routes.guest.register', true);
 
-        // Setting por rate limit
-        settingLoad('rate_limit.general.api.limit', 60);
-        settingLoad('rate_limit.general.api.block_time', 60);
-        settingLoad('rate_limit.general.gateway.limit', 300);
-        settingLoad('rate_limit.general.gateway.block_time', 60);
-        settingLoad('rate_limit.general.passport-token.limit', 30);
-        settingLoad('rate_limit.general.passport-token.block_time', 60);
-        settingLoad('rate_limit.general.default.limit', 60);
-        settingLoad('rate_limit.general.default.block_time', 60);
-        settingLoad('rate_limit.general.broadcast.limit', 500);
-        settingLoad('rate_limit.general.broadcast.block_time', 60);
+        // Setting por rate limit 
+        $rateLimits = config('rate_limit');
+
+        foreach ($rateLimits as $module => $items) {
+            foreach ($items as $key => $value) {
+                settingLoad("rate_limit.{$module}.{$key}.limit", 60);
+                settingLoad("rate_limit.{$module}.{$key}.block_time", 60);
+            }
+        }
     }
 
     /**
@@ -631,15 +629,14 @@ class Setting
 
     public static function getRateLimitSettings()
     {
-        Config::set('rate_limit.general.api.limit', settingItem('rate_limit.general.api.limit', 60));
-        Config::set('rate_limit.general.api.block_time', settingItem('rate_limit.general.api.block_time', 60));
-        Config::set('rate_limit.general.gateway.limit', settingItem('rate_limit.general.gateway.limit', 300));
-        Config::set('rate_limit.general.gateway.block_time', settingItem('rate_limit.general.gateway.block_time', 60));
-        Config::set('rate_limit.general.passport-token.limit', settingItem('rate_limit.general.passport-token.limit', 30));
-        Config::set('rate_limit.general.passport-token.block_time', settingItem('rate_limit.general.passport-token.block_time', 60));
-        Config::set('rate_limit.general.default.limit', settingItem('rate_limit.general.default.limit', 60));
-        Config::set('rate_limit.general.default.block_time', settingItem('rate_limit.general.default.block_time', 60));
-        Config::set('rate_limit.general.broadcast.limit', settingItem('rate_limit.general.broadcast.limit', 500));
-        Config::set('rate_limit.general.broadcast.block_time', settingItem('rate_limit.general.broadcast.block_time', 60));
+        $rateLimits = config('rate_limit') ?? [];
+
+        foreach ($rateLimits as $module => $items) {
+            foreach ($items as $key => $value) {
+                Config::set("rate_limit.$module.$key.limit", settingItem("rate_limit.$module.$key.limit", 300));
+                Config::set("rate_limit.$module.$key.block_time", settingItem("rate_limit.$module.$key.block_time", 120));
+            }
+        }
+
     }
 }

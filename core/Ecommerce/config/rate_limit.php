@@ -18,14 +18,28 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- *
- * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Ecommerce\Http\Controllers\Web\CategoryController;
+return [
 
-Route::middleware(['throttle:ecommerce:api'])->group(function () {
-
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-
-});
+    /**
+     * Global settings
+     */
+    'ecommerce' => [
+        'admin' => [
+            'limit' => 300,
+            'block_time' => 120,
+            'name' => 'Rate Limit for Admin routes'
+        ],
+        'web' => [
+            'limit' => 300,
+            'block_time' => 120,
+            'name' => 'Rate Limit for Web routes'
+        ],
+        'api' => [
+            'limit' => 300,
+            'block_time' => 120,
+            'name' => 'Rate Limit for API routes'
+        ],
+    ],
+];

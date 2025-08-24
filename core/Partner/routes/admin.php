@@ -24,6 +24,9 @@
 
 use Core\Partner\Http\Controllers\Admin\PartnerController;
 
+Route::middleware(['throttle:partner:admin'])->group(function () {
 
-Route::get('users', [PartnerController::class, 'index'])->name('partner.index');
-Route::put('users/{user}', [PartnerController::class, 'update'])->name('partner.update');
+
+    Route::get('users', [PartnerController::class, 'index'])->name('partner.index');
+    Route::put('users/{user}', [PartnerController::class, 'update'])->name('partner.update');
+});

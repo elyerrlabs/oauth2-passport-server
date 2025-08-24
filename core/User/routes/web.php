@@ -32,6 +32,7 @@ use Core\User\Http\Controllers\Web\RegisterClientController;
 
 Route::group([
     'prefix' => 'account',
+    'middleware' => ['throttle:user:admin']
 ], function () {
 
     Route::get("/", [HomePageController::class, 'dashboard'])->name('dashboard');

@@ -32,30 +32,31 @@ use Core\User\Http\Controllers\Admin\UserGroupController;
 use Core\User\Http\Controllers\Admin\UserScopeController;
 use Core\User\Http\Controllers\Admin\ServiceScopeController;
 
+Route::middleware(['throttle:user:admin'])->group(function () {
+
+    Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
+    Route::resource('groups', GroupController::class)->except('edit', 'create');
+    Route::resource('roles', RoleController::class)->except('create', 'edit');
+
+    Route::resource('services', ServiceController::class)->except('create', 'edit');
+    Route::get('services/{service}/scopes', [ServiceScopeController::class, 'index'])->name('service.scopes.index');
+    Route::post('services/{service}/scopes', [ServiceScopeController::class, 'assign'])->name('service.scopes.assign');
+    Route::delete('services/{service}/scopes/{scope}', [ServiceScopeController::class, 'revoke'])->name('services.scopes.revoke');
+
+    Route::resource('scopes', ScopeController::class)->only('index');
 
 
-Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users/{user}/scopes/history', [UserScopeController::class, 'history'])->name('users.scopes.history');
+    Route::get('/users/{user}/scopes', [UserScopeController::class, 'index'])->name('users.scopes.index');
+    Route::post('/users/{user}/scopes', [UserScopeController::class, 'assign'])->name('users.scopes.assign');
+    Route::put('/users/{user}/scopes/{scope}', [UserScopeController::class, 'revoke'])->name('users.scopes.revoke');
 
-Route::resource('groups', GroupController::class)->except('edit', 'create');
-Route::resource('roles', RoleController::class)->except('create', 'edit');
+    Route::get('/users/{user}/groups', [UserGroupController::class, 'index'])->name('users.groups.index');
+    Route::post('/users/{user}/groups', [UserGroupController::class, 'assign'])->name('users.groups.assign');
+    Route::delete('/users/{user}/groups/{group}', [UserGroupController::class, 'revoke'])->name('users.groups.revoke');
 
-Route::resource('services', ServiceController::class)->except('create', 'edit');
-Route::get('services/{service}/scopes', [ServiceScopeController::class, 'index'])->name('service.scopes.index');
-Route::post('services/{service}/scopes', [ServiceScopeController::class, 'assign'])->name('service.scopes.assign');
-Route::delete('services/{service}/scopes/{scope}', [ServiceScopeController::class, 'revoke'])->name('services.scopes.revoke');
-
-Route::resource('scopes', ScopeController::class)->only('index');
-
-
-Route::get('/users/{user}/scopes/history', [UserScopeController::class, 'history'])->name('users.scopes.history');
-Route::get('/users/{user}/scopes', [UserScopeController::class, 'index'])->name('users.scopes.index');
-Route::post('/users/{user}/scopes', [UserScopeController::class, 'assign'])->name('users.scopes.assign');
-Route::put('/users/{user}/scopes/{scope}', [UserScopeController::class, 'revoke'])->name('users.scopes.revoke');
-
-Route::get('/users/{user}/groups', [UserGroupController::class, 'index'])->name('users.groups.index');
-Route::post('/users/{user}/groups', [UserGroupController::class, 'assign'])->name('users.groups.assign');
-Route::delete('/users/{user}/groups/{group}', [UserGroupController::class, 'revoke'])->name('users.groups.revoke');
-
-Route::delete('users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
-Route::get('users/{id}/enable', [UserController::class, 'enable'])->name('users.enable');
-Route::resource('users', UserController::class)->except('edit', 'create');
+    Route::delete('users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
+    Route::get('users/{id}/enable', [UserController::class, 'enable'])->name('users.enable');
+    Route::resource('users', UserController::class)->except('edit', 'create');
+});

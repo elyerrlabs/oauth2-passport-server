@@ -38,12 +38,14 @@
 use Core\Transaction\Http\Controllers\Web\PlanController;
 use Core\Transaction\Services\Payment\Webhook\StripeWebhookController;
 
-Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
-
+Route::get('/plans', [PlanController::class, 'index'])
+    ->name('plans.index')
+    ->middleware(['throttle:transaction:public']);
 
 Route::group([
     'prefix' => 'webhook',
-    'as' => 'webhook.'
+    'as' => 'webhook.',
+    'middleware' => ['throttle:transaction:webhook']
 ], function () {
 
     Route::post('/stripe', [StripeWebhookController::class, 'handle']);

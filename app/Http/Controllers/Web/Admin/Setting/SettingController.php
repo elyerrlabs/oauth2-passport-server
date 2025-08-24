@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Web\Admin\Setting;
 
 /**
@@ -19,7 +20,7 @@ namespace App\Http\Controllers\Web\Admin\Setting;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -32,7 +33,6 @@ use App\Http\Controllers\WebController;
 
 class SettingController extends WebController
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -52,7 +52,7 @@ class SettingController extends WebController
     /**
      * Update settings
      * @param \Illuminate\Http\Request $request
-     * @return 
+     * @return
      */
     public function update(Request $request)
     {
@@ -100,11 +100,11 @@ class SettingController extends WebController
         $settings = $setting::all();
 
         foreach ($settings as $setting) {
-            
+
             $cache_key = CacheKeys::settings($setting->key);
-            
+
             Cache::forget($cache_key);
-            
+
             Cache::put(
                 $cache_key,
                 $setting->value,
@@ -134,7 +134,7 @@ class SettingController extends WebController
     }
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function routes()
@@ -143,7 +143,7 @@ class SettingController extends WebController
     }
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function redis()
@@ -152,7 +152,7 @@ class SettingController extends WebController
     }
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function queues()
@@ -171,7 +171,7 @@ class SettingController extends WebController
 
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function filesystem()
@@ -181,7 +181,7 @@ class SettingController extends WebController
 
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function payment()
@@ -190,7 +190,7 @@ class SettingController extends WebController
     }
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function session()
@@ -205,5 +205,14 @@ class SettingController extends WebController
     public function security()
     {
         return view('settings.section.security');
+    }
+
+    /**
+     * Summary of security
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function rateLimit()
+    {
+        return view('settings.section.rate_limit');
     }
 }

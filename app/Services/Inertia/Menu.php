@@ -26,6 +26,7 @@ namespace App\Services\Inertia;
 
 use App\Support\CacheKeys;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 use Core\User\Transformer\User\AuthTransformer;
 
 class Menu
@@ -147,7 +148,7 @@ class Menu
             "auth_routes" => [
                 "login" => route('login'),
                 "forgot_password" => route('forgot-password'),
-                "register" => route('register'),
+                "register" => Route::has('register') ? route('register') : '',
                 "logout" => route('logout'),
             ],
             "guest_routes" => [

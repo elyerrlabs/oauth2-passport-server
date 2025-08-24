@@ -23,16 +23,18 @@
  */
 
 use Illuminate\Support\Facades\Route;
+use OpenIDConnect\Laravel\JwksController;
 use App\Http\Controllers\Web\OAuth\ClientController;
 use Laravel\Passport\Http\Controllers\ScopeController;
 use App\Http\Controllers\Web\OAuth\AuthorizationController;
 use Laravel\Passport\Http\Controllers\DeviceCodeController;
+use App\Http\Controllers\Web\OAuth\OpenId\DiscoveryController;
 use Laravel\Passport\Http\Controllers\DeviceUserCodeController;
 use Laravel\Passport\Http\Controllers\TransientTokenController;
 use App\Http\Controllers\Web\OAuth\PersonalAccessTokenController;
 use Laravel\Passport\Http\Controllers\DenyAuthorizationController;
-use Laravel\Passport\Http\Controllers\ApproveAuthorizationController;
 use Laravel\Passport\Http\Controllers\DeviceAuthorizationController;
+use Laravel\Passport\Http\Controllers\ApproveAuthorizationController;
 use Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController;
 use Laravel\Passport\Http\Controllers\DenyDeviceAuthorizationController;
 use Laravel\Passport\Http\Controllers\ApproveDeviceAuthorizationController;
@@ -40,6 +42,7 @@ use Laravel\Passport\Http\Controllers\ApproveDeviceAuthorizationController;
 Route::group([
     'as' => 'passport.',
     'prefix' => config('passport.path', 'oauth'),
+    'middleware' => ['throttle:general:passport']
 ], function () {
 
     Route::get(
@@ -158,4 +161,17 @@ Route::group([
             }
 
         });
+});
+
+
+Route::group([
+    'middleware' => ['throttle:general:token']
+], function () {
+
+    if (config('openid.routes.jwks', true)) {
+        Route::get(config('openid.routes.jwks_url', '/oauth/jwks'), JwksController::class)->name('openid.jwks');
+    }
+    if (config('openid.routes.discovery', true)) {
+        Route::get('/.well-known/openid-configuration', DiscoveryController::class)->name('openid.discovery');
+    }
 });

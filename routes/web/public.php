@@ -26,5 +26,9 @@ use App\Http\Controllers\Docs\DocumentationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Home\HomeController;
 
-Route::get("/", [HomeController::class, 'homePage'])->name('welcome');
-Route::get("/documentation", [DocumentationController::class, 'index'])->name('documentation.index');
+Route::middleware(['throttle:general:public'])->group(function () {
+
+    Route::get("/", [HomeController::class, 'homePage'])->name('welcome');
+    Route::get("/documentation", [DocumentationController::class, 'index'])->name('documentation.index');
+
+});

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Web\Home;
 
 /**
@@ -19,7 +20,7 @@ namespace App\Http\Controllers\Web\Home;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -27,21 +28,19 @@ namespace App\Http\Controllers\Web\Home;
 use App\Http\Controllers\WebController;
 use Inertia\Inertia;
 
-
 class HomeController extends WebController
 {
-
     public function __construct()
     {
 
     }
 
     /**
-     * Summary of home_page
-     * @return \Inertia\Response
+     * Summary of homePage
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function homePage()
     {
-        return Inertia::render('Home/Home');
+        return view("landing.home");
     }
 }

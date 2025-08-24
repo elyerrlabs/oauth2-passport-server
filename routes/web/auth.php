@@ -24,13 +24,14 @@
 
 use Core\User\Http\Controllers\Web\RegisterClientController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\Auth\NewPasswordController; 
+use App\Http\Controllers\Web\Auth\NewPasswordController;
 use App\Http\Controllers\Web\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Web\Auth\AuthenticatedSessionController;
 
 
 Route::group([
     'prefix' => "auth",
+    'middleware' => ['throttle:general:auth']
 ], function () {
 
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

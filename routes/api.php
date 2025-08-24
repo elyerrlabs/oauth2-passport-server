@@ -36,7 +36,7 @@ Route:: as('api.')->group(function () {
         [
             'prefix' => 'gateway',
             'as' => 'gateway.',
-            'middleware' => ['throttle:gateway']
+            'middleware' => ['throttle:general:gateway']
         ],
         function () {
 
@@ -57,7 +57,7 @@ Route:: as('api.')->group(function () {
     Route::group([
         'prefix' => 'oauth',
         'as' => 'oauth.',
-        'middleware' => ['throttle:passport-token']
+        'middleware' => ['throttle:general:token']
     ], function () {
         Route::post('/token', [AccessTokenController::class, 'issueToken'])
             ->name('passport.token');
@@ -66,7 +66,7 @@ Route:: as('api.')->group(function () {
     Route::group([
         'prefix' => 'public',
         'as' => 'public.',
-        'middleware' => ['throttle:default']
+        'middleware' => ['throttle:general:api']
     ], function () {
         Route::resource('/countries', CountriesController::class)->only('index');
 
