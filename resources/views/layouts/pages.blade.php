@@ -18,7 +18,7 @@
     @stack('css')
 </head>
 
-<body class="bg-gray-100 text-gray-800 flex flex-col justify-around min-h-screen">
+<body>
 
     @yield('header')
 
@@ -26,7 +26,7 @@
 
     @yield('content')
 
-    @yield('footer')
+    @include('layouts.parts.footer')
 
     <script src="{{ mix('/js/pages.js') }}"></script>
     @stack('js')
