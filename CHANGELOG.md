@@ -24,15 +24,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 ## 🛠️ Unrealized
 
-- Added support for module creation
-- Added Artisan command to install modules 
-- Added license header to source files
-- Declared SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
-- Documented `/modules` license exception and third-party ownership terms in [LICENSE.md](./LICENSE.md)
-- Clarified that modules are supported but subject to individual licenses
-- Updated price input to accept decimal format for better readability (stored internally as integer)
-- Disabled trial functionality (not yet available)
-- Renamed "Client registered" to "Secret client" for confidential clients
+- Added support for module creation  
+- Introduced Artisan command for module installation  
+- Added license headers to source files  
+- Declared `SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project`  
+- Documented `/modules` license exception and third-party ownership terms in [LICENSE.md](./LICENSE.md)  
+- Clarified that modules are supported but remain subject to their individual licenses  
+- Improved price input: now accepts decimal format for readability (still stored internally as integer)  
+- Disabled trial functionality (feature not yet available)  
+- Renamed **"Client registered"** to **"Secret client"** for confidential client handling  
+- Added core modules  
+- Added enhanced user interface improvements  
+- Introduced e-commerce module  
 
 
 ## 🚀 [v3.0.4]
