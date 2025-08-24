@@ -1,641 +1,671 @@
 [
-    {
-        "name": "administrator",
-        "description": "Administrators who have full access to the system and can manage users, settings, and overall functionality.",
-        "services": [
-            {
-                "name": "admin",
-                "description": "Top level service for admin users",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "dashboard",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "group",
-                "description": "Service to manage resource of groups",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "show",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "disable",
-                        "public": 0,
-                        "active": 0,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "enable",
-                        "public": 0,
-                        "active": 0,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "broadcast",
-                "description": "Service to manage resource of broadcast",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "Service",
-                "description": "Service to manage resource of services",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "show",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "disable",
-                        "public": 0,
-                        "active": 0,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "enable",
-                        "public": 0,
-                        "active": 0,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "assign",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "revoke",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "user",
-                "description": "Service to manage resource of the users",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "disable",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "enable",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "assign",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "revoke",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "history",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "role",
-                "description": "Service to manage resource of the roles",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "show",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "Scope",
-                "description": "Service to manage resource of the scopes",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "application",
-                "description": "Service to manage third-party applications",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "show",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "plan",
-                "description": "Service to manage resource of the plans",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "revoke",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "history",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "Terminal",
-                "description": "Service for executing and managing system commands securely.",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "execute",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "settings",
-                "description": "Service to manage application settings",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "vpn",
-                "description": "Service to manage and configure VPN access and connections",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 1
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 1
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 1
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 1
-                    },
-                    {
-                        "name": "show",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 1
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 1
-                    }
-                ]
-            },
-            {
-                "name": "transactions",
-                "description": "Service to manage transaction into the admin manager",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "Logs",
-                "description": "Service to manage logs",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            }
+  {
+    "name": "administrator",
+    "description": "Administrators who have full access to the system and can manage users, settings, and overall functionality.",
+    "services": [
+      {
+        "name": "admin",
+        "description": "Top level service for admin users",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "dashboard",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
         ]
-    },
-    {
-        "name": "developer",
-        "description": "Environment for developers to build, test, and deploy applications.",
-        "services": [
-            {
-                "name": "client",
-                "description": "Service to manage applications oauth2 server",
-                "actions": [
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            },
-            {
-                "name": "api",
-                "description": "Service to manage API Tokens",
-                "actions": [
-                    {
-                        "name": "view",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "create",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "update",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    },
-                    {
-                        "name": "destroy",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            }
+      },
+      {
+        "name": "group",
+        "description": "Service to manage resource of groups",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "show",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "disable",
+            "public": 0,
+            "active": 0,
+            "api_key": 0
+          },
+          {
+            "name": "enable",
+            "public": 0,
+            "active": 0,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
         ]
-    },
-    {
-        "name": "member",
-        "description": "Default user with the lowest level of access who signs up"
-    },
-    {
-        "name": "commerce",
-        "description": "Collection of paid services including cloud computing, VPN, and other premium infrastructure solutions.",
-        "services": [
-            {
-                "name": "vpn",
-                "description": "Service to manage, configure, and process payments for VPN access and subscriptions",
-                "visibility": "public",
-                "actions": [
-                    {
-                        "name": "basic",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 1
-                    },
-                    {
-                        "name": "intermediate",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 1
-                    },
-                    {
-                        "name": "advanced",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 1
-                    }
-                ]
-            }
+      },
+      {
+        "name": "ecommerce",
+        "description": "Service to manage resource of groups",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
         ]
-    },
-    {
-        "name": "enterprise",
-        "description": "Exclusive services designed for businesses, providing advanced cloud solutions, dedicated infrastructure, and enterprise-grade security."
-    },
-    {
-        "name": "reseller",
-        "description": "Tailored for businesses and individuals looking to resell services, this plan offers full white-label capabilities, scalable resources",
-        "services": [
-            {
-                "name": "partner",
-                "description": "Designed to build trust and mutual growth, this program allows users to earn by sharing referral links.",
-                "actions": [
-                    {
-                        "name": "full",
-                        "public": 0,
-                        "active": 1,
-                        "api_key": 0
-                    }
-                ]
-            }
+      },
+      {
+        "name": "broadcast",
+        "description": "Service to manage resource of broadcast",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
         ]
-    }
+      },
+      {
+        "name": "Service",
+        "description": "Service to manage resource of services",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "show",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "disable",
+            "public": 0,
+            "active": 0,
+            "api_key": 0
+          },
+          {
+            "name": "enable",
+            "public": 0,
+            "active": 0,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "assign",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "revoke",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "user",
+        "description": "Service to manage resource of the users",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "disable",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "enable",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "assign",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "revoke",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "history",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "role",
+        "description": "Service to manage resource of the roles",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "show",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "Scope",
+        "description": "Service to manage resource of the scopes",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "application",
+        "description": "Service to manage third-party applications",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "show",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "plan",
+        "description": "Service to manage resource of the plans",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "revoke",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "history",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "Terminal",
+        "description": "Service for executing and managing system commands securely.",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "execute",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "settings",
+        "description": "Service to manage application settings",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "vpn",
+        "description": "Service to manage and configure VPN access and connections",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          },
+          {
+            "name": "show",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          }
+        ]
+      },
+      {
+        "name": "transactions",
+        "description": "Service to manage transaction into the admin manager",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "Logs",
+        "description": "Service to manage logs",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "developer",
+    "description": "Environment for developers to build, test, and deploy applications.",
+    "services": [
+      {
+        "name": "client",
+        "description": "Service to manage applications oauth2 server",
+        "actions": [
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "api",
+        "description": "Service to manage API Tokens",
+        "actions": [
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "destroy",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "member",
+    "description": "Default user with the lowest level of access who signs up"
+  },
+  {
+    "name": "commerce",
+    "description": "Collection of paid services including cloud computing, VPN, and other premium infrastructure solutions.",
+    "services": [
+      {
+        "name": "vpn",
+        "description": "Service to manage, configure, and process payments for VPN access and subscriptions",
+        "visibility": "public",
+        "actions": [
+          {
+            "name": "basic",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          },
+          {
+            "name": "intermediate",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          },
+          {
+            "name": "advanced",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "enterprise",
+    "description": "Exclusive services designed for businesses, providing advanced cloud solutions, dedicated infrastructure, and enterprise-grade security."
+  },
+  {
+    "name": "reseller",
+    "description": "Tailored for businesses and individuals looking to resell services, this plan offers full white-label capabilities, scalable resources",
+    "services": [
+      {
+        "name": "partner",
+        "description": "Designed to build trust and mutual growth, this program allows users to earn by sharing referral links.",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      }
+    ]
+  }
 ]
