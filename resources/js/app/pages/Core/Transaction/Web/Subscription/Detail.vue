@@ -412,7 +412,6 @@
                                     <v-cancel
                                         v-if="tx.status === 'pending'"
                                         :item="tx"
-                                        @success="emitEvent"
                                     />
                                     <q-btn
                                         v-if="

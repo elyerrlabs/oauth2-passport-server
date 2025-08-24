@@ -20,8 +20,14 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="text-center">
-        <q-btn no-caps dense outline round icon="mdi-dots-vertical-circle-outline">
+    <div class="text-center q-ma-sm">
+        <q-btn
+            no-caps
+            dense
+            outline
+            round
+            icon="mdi-dots-vertical-circle-outline"
+        >
             <q-menu fit anchor="bottom right" self="top right">
                 <q-card style="min-width: 240px" class="q-pa-sm">
                     <!-- User Info -->
@@ -70,9 +76,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </q-item-section>
                         </q-item>
 
-                        <q-separator class="q-my-sm" v-if="user?.id" />
+                        <q-separator class="q-my-sm" />
 
                         <q-item
+                            v-if="!user?.id"
                             clickable
                             v-close-popup
                             @click="goTo($page.props.auth_routes['login'])"
@@ -124,7 +131,7 @@ export default {
         },
 
         myAccount() {
-            window.location.href = this.$page.props.user_dashboard['route'];
+            window.location.href = this.$page.props.user_dashboard["route"];
         },
     },
 };

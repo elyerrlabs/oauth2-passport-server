@@ -20,7 +20,7 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="q-pa-md">
+    <div class="q-ma-sm">
         <q-btn
             dense
             class="text-white"
@@ -119,6 +119,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Puedes añadir estilos personalizados aquí si es necesario */
-</style>
+<style scoped></style>

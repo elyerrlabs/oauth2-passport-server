@@ -47,6 +47,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-space />
 
                 <v-theme />
+                <v-notification />
                 <v-profile />
             </q-toolbar>
         </q-header>
@@ -272,7 +273,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </q-item>
                 </q-list>
                 <div class="text-caption text-center q-pa-sm text-grey-6">
-                    &copy; {{ new Date().getFullYear() }} {{ $page.props.org_name }}
+                    &copy; {{ new Date().getFullYear() }}
+                    {{ $page.props.org_name }}
                 </div>
             </div>
         </q-drawer>

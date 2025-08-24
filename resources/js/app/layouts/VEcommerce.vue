@@ -241,16 +241,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Right Icons -->
                 <div class="row items-center q-gutter-sm">
                     <v-theme />
-                    <!--
-                        <q-btn flat round dense icon="favorite_border">
-                            <q-badge color="red" floating transparent>3</q-badge>
-                            <q-tooltip>Wishlist</q-tooltip>
-                        </q-btn>
-                        <q-btn flat round dense icon="shopping_cart">
-                            <q-badge color="orange" floating>5</q-badge>
-                            <q-tooltip>Cart</q-tooltip>
-                        </q-btn>
-                        -->
+                    <v-notification />
                     <v-profile />
                 </div>
             </q-toolbar>
@@ -326,7 +317,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                     <q-separator color="grey-6" class="q-my-md" />
                     <div class="text-caption">
-                        &copy; {{ new Date().getFullYear() }} {{ $page.props.org_name }}
+                        &copy; {{ new Date().getFullYear() }}
+                        {{ $page.props.org_name }}
                     </div>
                 </q-toolbar-title>
             </q-toolbar>

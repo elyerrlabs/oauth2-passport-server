@@ -30,6 +30,22 @@ return [
         'show' => true,
     ],
 
+    "notification" => [
+        "id" => "notification",
+        "name" => "Notification",
+        "route" => "user.notification.unread",
+        "icon" => "mdi-bell",
+        'show' => true,
+    ],
+
+    "notification_mark_as_read" => [
+        "id" => "notification_mark_as_read",
+        "name" => "Unread Notification",
+        "route" => "user.notification.mark-all-as-read",
+        "icon" => "mdi-bell",
+        'show' => true,
+    ],
+
     "admin_dashboard" => [
         "id" => "admin",
         "name" => "Admin",

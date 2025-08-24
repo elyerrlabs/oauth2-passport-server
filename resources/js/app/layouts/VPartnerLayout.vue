@@ -50,8 +50,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <div class="row items-center q-gutter-sm">
                     <v-theme />
-                    <q-separator vertical spaced inset class="bg-white-20" />
-                    <v-profile></v-profile>
+                    <v-notification />
+                    <v-profile />
                 </div>
             </q-toolbar>
         </q-header>

@@ -42,6 +42,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <div class="row items-center q-gutter-sm">
                     <v-theme />
+                    <v-notification />
                     <v-profile />
                 </div>
             </q-toolbar>
