@@ -58,28 +58,28 @@ return [
 
         "user_routes" => [
 
-            2 => [
+            "profile" => [
                 'id' => 'profile',
                 'name' => 'Information',
                 'route' => 'user.profile',
                 'icon' => 'mdi-account-details-outline',
                 'show' => true,
             ],
-            3 => [
+            "password" => [
                 'id' => 'password',
                 'name' => 'Change password',
                 'route' => 'user.password',
                 'icon' => 'mdi-lock-reset',
                 'show' => true,
             ],
-            4 => [
+            '2fa' => [
                 'id' => '2fa',
                 'name' => 'Two Factor Authorization',
                 'route' => 'user.2fa.request',
                 'icon' => 'mdi-two-factor-authentication',
                 'show' => true,
             ],
-            5 => [
+            "notifications" => [
                 'id' => 'notifications',
                 'name' => 'Notifications',
                 'route' => 'user.notification.index',

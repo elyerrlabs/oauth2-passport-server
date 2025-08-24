@@ -33,6 +33,19 @@ return [
         'show' => "administrator"
     ],
 
+    "merge" => [
+
+        "user_routes" => [
+            "ecommerce" => [
+                "id" => "ecommerce",
+                "name" => "Ecommerce",
+                "route" => "ecommerce.dashboard",
+                "icon" => "mdi-store-cog",
+                'show' => "administrator"
+            ]
+        ]
+    ],
+
     "ecommerce_menus" => [
         [
             "id" => 'dashboard',

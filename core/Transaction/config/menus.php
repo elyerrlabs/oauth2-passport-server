@@ -38,14 +38,14 @@ return [
 
         "user_routes" => [
 
-            12 => [
+            'subscription' => [
                 'id' => 'subscriptions',
                 'name' => 'Subscriptions',
                 'route' => 'transaction.subscriptions.index',
                 'icon' => 'mdi-gift-outline',
                 'show' => true,
             ],
-            13 => [
+            'store' => [
                 'id' => 'store',
                 'name' => 'Buy subscription',
                 'route' => 'transaction.plans.index',
@@ -55,7 +55,7 @@ return [
         ],
 
         "transactions" => [
-            1 => [
+            'plans' => [
                 "id" => "plans",
                 "name" => "Subscriptions",
                 "route" => "transaction.plans.index",
