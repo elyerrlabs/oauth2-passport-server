@@ -18,7 +18,7 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -86,6 +86,18 @@ if (!function_exists('settingLoad')) {
     }
 }
 
+if (!function_exists("getCurrencySymbol")) {
+    /**
+     * Retrieve the symbol of the currency
+     * @param string $key
+     */
+    function getCurrencySymbol(string $key): ?string
+    {
+        $currencies = config('billing.currency');
+        return $currencies[$key]['symbol'] ?? null;
+    }
+}
+
 if (!function_exists('settingItem')) {
 
     /**
@@ -102,7 +114,7 @@ if (!function_exists('settingItem')) {
 
                 $cacheKey = CacheKeys::settings($key);
 
-                // Verify key and return if exists 
+                // Verify key and return if exists
                 if (Cache::has($cacheKey)) {
                     return Cache::get($cacheKey);
                 }
@@ -127,7 +139,58 @@ if (!function_exists('redirectToHome')) {
      */
     function redirectToHome()
     {
-        $url = config('app.url') . config('system.redirect_to', '/about');
-        return redirect($url);
+        return redirect()->route('user.dashboard');
+    }
+}
+
+
+if (!function_exists('normalizeSlug')) {
+    /**
+     * Normalize slug
+     * @param string $text
+     * @return string
+     */
+    function normalizeSlug(string $text): string
+    {
+        $text = str_replace(['_', ' '], '-', $text);
+
+        $text = preg_replace('/([a-z])([A-Z])/', '$1-$2', $text);
+
+        $text = strtolower($text);
+
+        $text = preg_replace('/-+/', '-', $text);
+
+        return trim($text, '-');
+    }
+}
+
+if (!function_exists('resolveInertiaRoutes')) {
+    function resolveInertiaRoutes(array $items)
+    {
+        $menus = [];
+
+        $user = auth()->user();
+
+        foreach ($items as $key => $value) {
+            $canShow = true;
+            if (isset($value['service'])) {
+                $canShow = $user && method_exists($user, 'canAccessMenu')
+                    ? $user->canAccessMenu($value['service'])
+                    : false;
+            }
+
+            if ($canShow) {
+                $menus[$key] = [
+                    'id' => $value['id'] ?? null,
+                    'name' => $value['name'] ?? null,
+                    'icon' => $value['icon'] ?? null,
+                    'route' => isset($value['route']) ? route($value['route']) : null,
+                    'show' => $canShow,
+                ];
+            }
+        }
+
+        return $menus;
+
     }
 }

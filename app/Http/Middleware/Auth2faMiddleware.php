@@ -25,7 +25,7 @@ namespace App\Http\Middleware;
  */
 
 use Closure;
-use App\Models\User\User;
+use Core\User\Model\User;
 use App\Models\Setting\Code;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -48,7 +48,7 @@ class Auth2faMiddleware
 
             session(['email' => $request->email]);
 
-            return redirect()->route('users.2fa.send-code');
+            return redirect()->route('user.2fa.send-code');
         }
 
         return $next($request);

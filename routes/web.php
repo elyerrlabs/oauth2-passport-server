@@ -21,7 +21,7 @@
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,11 +37,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['throttle:default'])
     ->group(function () {
         require __DIR__ . '/web/public.php';
-        require __DIR__ . '/web/users.php';
         require __DIR__ . '/web/auth.php';
-        require __DIR__ . '/web/oauth.php';
-        require __DIR__ . '/web/webhook.php';
-        require __DIR__ . '/web/partner.php';
+        require __DIR__ . '/web/oauth.php'; 
     });
 
 /**

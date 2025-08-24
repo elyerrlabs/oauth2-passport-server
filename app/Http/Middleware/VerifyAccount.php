@@ -51,7 +51,7 @@ class VerifyAccount
                 return response()->json(['message' => __("Your Account is unverified")]);
             }
 
-            return redirect()->route('users.check.account');
+            return redirect()->route('user.check.account');
         }
 
         return $next($request);

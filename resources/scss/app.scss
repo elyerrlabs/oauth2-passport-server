@@ -80,3 +80,18 @@
 .text-ucfirst::first-letter {
     text-transform: uppercase;
 }
+
+.required::after {
+  content: "!";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  font-size: 12px;
+  font-weight: bold;
+  color: red;
+  border: 1px solid red;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 14px;
+  padding: 1px;
+}

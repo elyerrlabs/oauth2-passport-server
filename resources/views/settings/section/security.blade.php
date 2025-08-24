@@ -20,8 +20,7 @@
                     <option value="{{ false }}" {{ config('system.csp_enabled') == false ? 'selected' : '' }}>
                         {{ __('No') }}</option>
                 </select>
-                <small
-                    class="block mt-1 text-gray-600">{{ __('This option is used to activate the csp policies') }}</small>
+                <small class="block mt-1 text-gray-600">{{ __('This option is used to activate the csp policies') }}</small>
             </div>
 
             <div class="mb-4 px-2 py-2 border-gray-300   rounded-lg p-4 bg-white shadow-sm">
@@ -40,6 +39,39 @@
                 <small class="block mt-1 text-gray-600">
                     {{ __('This option disables the ability to create users through a command') }}
                 </small>
+            </div>
+
+
+            <div class="border-gray-300   rounded-lg p-4 bg-white shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2 border-b pb-2">{{ __('User age registration') }}
+                </h3>
+                <label for="user_date_input" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ __('Enable or disable date input') }}
+                </label>
+                <div class="mb-2">
+                    <select id="user_date_input" name="system[birthday][active]"
+                        class="block w-full px-2 py-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="1" {{ config('system.birthday.active') == 1 ? 'selected' : '' }}>
+                            {{ __('Yes') }}
+                        </option>
+                        <option value="0" {{ config('system.birthday.active') == 0 ? 'selected' : '' }}>
+                            {{ __('No') }}
+                        </option>
+                    </select>
+                    <small class="block mt-1 text-gray-600">
+                        {{ __('This option enable the function to add input date in users registration') }}
+                    </small>
+                </div>
+
+                <div class="mb-2">
+                    <label class="block text-sm font-medium text-gray-700">Age Limit</label>
+                    <input type="number" name="system[birthday][limit]"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-300"
+                        value="{{ config('system.birthday.limit') }}">
+                    <small class="block mt-1 text-gray-600">
+                        {{ __('This option set de minimum age to register user') }}
+                    </small>
+                </div>
             </div>
 
             <div class="border-gray-300 rounded-lg p-4 bg-white shadow-sm">

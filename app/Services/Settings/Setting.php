@@ -23,22 +23,22 @@ namespace App\Services\Settings;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
 use App\Models\OAuth\Token;
 use Illuminate\Support\Str;
 use App\Models\OAuth\Client;
 use App\Models\OAuth\AuthCode;
 use Laravel\Passport\Passport;
 use App\Models\OAuth\RefreshToken;
-use App\Models\Subscription\Scope;
+use Core\User\Model\Scope;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\QueryException;
 
-class Setting  
+class Setting
 {
-    
+
     /**
      * Set default values 
      * @return void
@@ -58,7 +58,7 @@ class Setting
         Setting::getRoutesSettings();
         Setting::getRateLimitSettings();
 
-        if (config('system.schema_mode', 'https') == 'https') { 
+        if (config('system.schema_mode', 'https') == 'https') {
             URL::forceScheme('https');
         }
 
@@ -280,6 +280,8 @@ class Setting
         settingLoad('system.privacy_url', null);
         settingLoad('system.terms_url', null);
         settingLoad('system.policy_cookies', null);
+        settingLoad('system.birthday.active', false);
+        settingLoad('system.birthday.limit', 18);
 
         //Session settings
         //settingLoad('session.driver', 'database');
@@ -554,7 +556,7 @@ class Setting
      * @return void
      */
     public static function getSystemSetting()
-    { 
+    {
         Config::set('system.home_page', settingItem('system.home_page', "/"));
         Config::set('system.cookie_name', settingItem('system.cookie_name', null));
         Config::set('system.passport_token_services', settingItem('system.passport_token_services', null));
@@ -567,6 +569,8 @@ class Setting
         Config::set('system.privacy_url', settingItem('system.privacy_url', null));
         Config::set('system.terms_url', settingItem('system.terms_url', null));
         Config::set('system.policy_cookies', settingItem('system.policy_cookies', null));
+        Config::set('system.birthday.active', settingItem('system.birthday.active', false));
+        Config::set('system.birthday.limit', settingItem('system.birthday.limit', 18));
 
     }
 
@@ -618,9 +622,9 @@ class Setting
 
     public static function getRoutesSettings()
     {
-        Config::set('routes.users.developers', settingItem('routes.users.developers', false));
-        Config::set('routes.users.api', settingItem('routes.users.api', false));
-        Config::set('routes.users.clients', settingItem('routes.users.clients', false));
+        Config::set('routes.users.developers', settingItem('routes.users.developers', true));
+        Config::set('routes.users.api', settingItem('routes.users.api', true));
+        Config::set('routes.users.clients', settingItem('routes.users.clients', true));
         Config::set('routes.guest.register', settingItem('routes.guest.register', true));
     }
 

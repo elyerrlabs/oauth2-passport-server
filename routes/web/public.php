@@ -18,14 +18,13 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Http\Controllers\Docs\DocumentationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Home\HomeController;
-use App\Http\Controllers\Web\Home\PlanController;
 
-Route::get("/", [HomeController::class, 'homePage'])->name('home.page');
-
-Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+Route::get("/", [HomeController::class, 'homePage'])->name('welcome');
+Route::get("/documentation", [DocumentationController::class, 'index'])->name('documentation.index');

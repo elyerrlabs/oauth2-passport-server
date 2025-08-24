@@ -37,54 +37,125 @@ return [
     'currency' => [
         'USD' => [
             'code' => 'USD',
-            'name' => 'United States',
+            'name' => 'United States Dollar',
+            'symbol' => '$',
         ],
         'EUR' => [
             'code' => 'EUR',
-            'name' => 'Eurozone',
+            'name' => 'Euro',
+            'symbol' => '€',
+        ],
+        'JPY' => [
+            'code' => 'JPY',
+            'name' => 'Japanese Yen',
+            'symbol' => '¥',
+        ],
+        'GBP' => [
+            'code' => 'GBP',
+            'name' => 'British Pound',
+            'symbol' => '£',
+        ],
+        'AUD' => [
+            'code' => 'AUD',
+            'name' => 'Australian Dollar',
+            'symbol' => 'A$',
+        ],
+        'CAD' => [
+            'code' => 'CAD',
+            'name' => 'Canadian Dollar',
+            'symbol' => 'C$',
+        ],
+        'BRL' => [
+            'code' => 'BRL',
+            'name' => 'Brazilian Real',
+            'symbol' => 'R$',
+        ],
+        'ARS' => [
+            'code' => 'ARS',
+            'name' => 'Argentine Peso',
+            'symbol' => '$',
+        ],
+        'CLP' => [
+            'code' => 'CLP',
+            'name' => 'Chilean Peso',
+            'symbol' => '$',
+        ],
+        'COP' => [
+            'code' => 'COP',
+            'name' => 'Colombian Peso',
+            'symbol' => '$',
+        ],
+        'MXN' => [
+            'code' => 'MXN',
+            'name' => 'Mexican Peso',
+            'symbol' => '$',
+        ],
+        'PEN' => [
+            'code' => 'PEN',
+            'name' => 'Peruvian Sol',
+            'symbol' => 'S/',
+        ],
+        'UYU' => [
+            'code' => 'UYU',
+            'name' => 'Uruguayan Peso',
+            'symbol' => '$U',
         ],
     ],
 
     'period' => [
+        'one_time' => [
+            'interval' => 0,
+            'unit' => null,
+            'name' => 'one_time',
+            'id' => 'One time',
+        ],
         'daily' => [
             'interval' => 1,
             'unit' => 'days',
             'name' => 'daily',
+            'id' => 'Daily',
         ],
         'weekly' => [
             'interval' => 1,
             'unit' => 'weeks',
             'name' => 'weekly',
+            'id' => 'Weekly',
         ],
         'biweekly' => [
             'interval' => 2,
             'unit' => 'weeks',
             'name' => 'biweekly',
+            'id' => 'Biweekly',
         ],
         'monthly' => [
             'interval' => 1,
             'unit' => 'months',
             'name' => 'monthly',
+            'id' => 'Monthly',
         ],
         'quarterly' => [
             'interval' => 3,
             'unit' => 'months',
             'name' => 'quarterly',
+            'id' => 'Quarterly',
         ],
         'semiannual' => [
             'interval' => 6,
             'unit' => 'months',
             'name' => 'semiannual',
+            'id' => 'Semiannual',
         ],
         'annual' => [
             'interval' => 1,
             'unit' => 'years',
             'name' => 'annual',
+            'id' => 'Annual',
         ],
         'biannual' => [
             'interval' => 2,
             'unit' => 'years',
-            'name' => 'Biannual',
+            'name' => 'biannual',
+            'id' => 'Biannual',
         ],
     ],
 

@@ -20,16 +20,81 @@ namespace App\Services\Inertia;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use App\Support\CacheKeys;
 use Illuminate\Support\Facades\Cache;
-use App\Transformers\User\AuthTransformer;
+use Core\User\Transformer\User\AuthTransformer;
 
 class Menu
 {
+    /**
+     * Append to render inertia props
+     * @param mixed $user
+     * @return array
+     */
+    private static function appendChildMenu($user = null): array
+    {
+        $menus = [];
+
+        $config = config('menus');
+
+        foreach ($config as $key => $value) {
+
+            if ($key === 'merge' && is_array($value)) {
+                foreach ($value as $groupKey => $items) {
+                    foreach ($items as $item) {
+                        $canShow = true;
+
+                        if (isset($item['service'])) {
+                            $canShow = $user && method_exists($user, 'canAccessMenu')
+                                ? $user->canAccessMenu($item['service'])
+                                : false;
+                        }
+
+                        if ($canShow) {
+                            $menus[$groupKey][] = [
+                                'id' => $item['id'] ?? null,
+                                'name' => $item['name'] ?? null,
+                                'icon' => $item['icon'] ?? null,
+                                'route' => isset($item['route']) ? route($item['route']) : null,
+                                'show' => $canShow,
+                            ];
+                        }
+                    }
+                }
+
+                continue;
+            }
+
+
+            if (is_array($value) && array_is_list($value)) {
+                continue;
+            }
+
+
+            $canShow = true;
+            if (isset($value['service'])) {
+                $canShow = $user && method_exists($user, 'canAccessMenu')
+                    ? $user->canAccessMenu($value['service'])
+                    : false;
+            }
+
+            if ($canShow) {
+                $menus[$key] = [
+                    'id' => $value['id'] ?? null,
+                    'name' => $value['name'] ?? null,
+                    'icon' => $value['icon'] ?? null,
+                    'route' => isset($value['route']) ? route($value['route']) : null,
+                    'show' => $canShow,
+                ];
+            }
+        }
+
+        return $menus;
+    }
 
     /**
      * return the user data
@@ -62,13 +127,23 @@ class Menu
     {
         $user = auth()->user();
 
-        return [
+        $keys = [
             "captcha" => static::captcha(),
             "app_name" => config('app.name'),
+            "org_name" => config("app.org_name"),
             "user" => static::authenticated_user(),
-            "user_routes" => static::userRoutes(),
-            "user_dashboard" => route('users.dashboard'),
-            "admin_routes" => static::adminRoutes(),
+            "docs" => [
+                'name' => 'Documentation',
+                'route' => route('documentation.index'),
+                'icon' => 'mdi-book-cog',
+                'show' => true
+            ],
+            "settings" => [
+                "name" => "Settings",
+                "route" => route("admin.settings.general"),
+                "icon" => "mdi-cogs",
+                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
+            ],
             "auth_routes" => [
                 "login" => route('login'),
                 "forgot_password" => route('forgot-password'),
@@ -77,212 +152,37 @@ class Menu
             ],
             "guest_routes" => [
                 "home_page" => url(config('system.home_page')),
-                "plans" => route('plans.index')
             ],
-            "admin_dashboard" => [
-                "name" => "Admin",
-                "route" => route("admin.dashboard"),
-                "icon" => "mdi-security",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
+            "developers" => [
+                'id' => 'dev',
+                'name' => 'Developers',
+                'icon' => 'mdi-tools',
+                'show' => intval(config('routes.users.developers')) ? true : false,
+                'menu' => [
+                    [
+                        'name' => 'Applications',
+                        'route' => intval(config('routes.users.api')) ? route('passport.clients.index') : null,
+                        'icon' => 'mdi-connection',
+                        'show' => intval(config('routes.users.clients')) ? true : false
+                    ],
+                    [
+                        'name' => 'API Key',
+                        'route' => intval(config('routes.users.api')) ? route('passport.personal.tokens.index') : null,
+                        'icon' => 'mdi-xml',
+                        'show' => intval(config('routes.users.api')) ? true : false,
+                    ],
+                ]
             ],
-            "partner_dashboard" => [
-                "name" => "Partner",
-                "route" => route("partners.dashboard"),
-                "icon" => "mdi-account-cash",
-                'show' => empty($user) ? false : $user->canAccessMenu('reseller'),
-            ],
-            "partner_routes" => static::partnerRoutes(),
             "allow_register" => config('routes.guest.register', true),
         ];
+
+        return array_merge($keys, static::appendChildMenu($user));
     }
 
     /**
-     * Set the user routes
-     * @return array[]
+     * Captcha
+     * @return array{provider: mixed, providers: array, siteKey: mixed, status: bool}
      */
-    public static function userRoutes()
-    {
-        return
-            [
-                [
-                    'name' => 'Account',
-                    'icon' => 'mdi-account-star',
-                    'show' => true,
-                    'menu' => [
-                        [
-                            'name' => 'Me',
-                            'route' => route('users.dashboard'),
-                            'icon' => 'mdi-information',
-                            'show' => true,
-                        ],
-                        [
-                            'name' => 'profile',
-                            'route' => route('users.profile'),
-                            'icon' => 'mdi-account-details-outline',
-                            'show' => true,
-                        ],
-                        [
-                            'name' => 'Password',
-                            'route' => route('users.password'),
-                            'icon' => 'mdi-lock-reset',
-                            'show' => true,
-                        ],
-                        [
-                            'name' => '2FA',
-                            'route' => route('users.2fa.request'),
-                            'icon' => 'mdi-two-factor-authentication',
-                            'show' => true,
-                        ],
-                        [
-                            'name' => 'Subscriptions',
-                            'route' => route('users.subscriptions.index'),
-                            'icon' => 'mdi-gift-outline',
-                            'show' => true,
-                        ],
-                        [
-                            'name' => 'Store',
-                            'route' => route('plans.index'),
-                            'icon' => 'mdi-store-search',
-                            'show' => true,
-                        ],
-                        [
-                            'name' => 'Notifications',
-                            'route' => route('users.notification.index'),
-                            'icon' => 'mdi-bell-badge-outline',
-                            'show' => true,
-                            'count' => request()->user() ? request()->user()->unreadNotifications()->count() : 0
-                        ]
-                    ]
-                ],
-                [
-                    'name' => 'Developers',
-                    'icon' => 'mdi-tools',
-                    'show' => intval(config('routes.users.developers')) ? true : false,
-                    'menu' => [
-                        [
-                            'name' => 'Applications',
-                            'route' => intval(config('routes.users.api')) ? route('passport.clients.index') : null,
-                            'icon' => 'mdi-wan',
-                            'show' => intval(config('routes.users.clients')) ? true : false
-                        ],
-                        [
-                            'name' => 'API Key',
-                            'route' => intval(config('routes.users.api')) ? route('passport.personal.tokens.index') : null,
-                            'icon' => 'mdi-shield-key-outline',
-                            'show' => intval(config('routes.users.api')) ? true : false,
-                        ],
-                    ]
-                ],
-            ];
-    }
-
-
-    /**
-     * Set the admin routes
-     * @return array{icon: string, name: string, route: string[]}
-     */
-    public static function adminRoutes()
-    {
-        $user = auth()->user();
-
-        return [
-            [
-                "name" => "Dashboard",
-                "route" => route("admin.dashboard"),
-                "icon" => "mdi-view-dashboard",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Groups",
-                "route" => route("admin.groups.index"),
-                "icon" => "mdi-account-group",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Roles",
-                "route" => route("admin.roles.index"),
-                "icon" => "mdi-format-list-group",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Services",
-                "route" => route("admin.services.index"),
-                "icon" => "mdi-text-box-check",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Users",
-                "route" => route("admin.users.index"),
-                "icon" => "mdi-account-multiple",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Clients",
-                "route" => route("admin.clients.index"),
-                "icon" => "mdi-apps",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Broadcasts",
-                "route" => route("admin.broadcasts.index"),
-                "icon" => "mdi-broadcast",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Plans",
-                "route" => route("admin.plans.index"),
-                "icon" => "mdi-cash-clock",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Transactions",
-                "route" => route("admin.transactions.index"),
-                "icon" => "mdi-account-cash-outline",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Terminal",
-                "route" => route("admin.terminals.index"),
-                "icon" => "mdi-console",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-            [
-                "name" => "Settings",
-                "route" => route("admin.settings.general"),
-                "icon" => "mdi-cogs",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
-            ],
-        ];
-    }
-
-    /**
-     * Partner routes
-     * @return array{icon: string, name: string, route: string[]}
-     */
-    public static function partnerRoutes()
-    {
-        return [
-            [
-                "name" => "Dashboard",
-                "route" => route("partners.dashboard"),
-                "icon" => "mdi-account-cash",
-                'show' => true,
-            ],
-            [
-                "name" => "Referral Link",
-                "route" => route("partners.generate"),
-                "icon" => "mdi-reload",
-                'show' => true,
-            ],
-            [
-                "name" => "Sales",
-                "route" => route("partners.sales"),
-                "icon" => "mdi-cash-multiple",
-                'show' => true,
-            ],
-        ];
-    }
-
     public static function captcha()
     {
         $provider = config("services.captcha.driver");

@@ -16,7 +16,7 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 import { createApp, h } from "vue";
@@ -36,47 +36,49 @@ import { QComponents } from "./app/config/quasar.js";
 //Vue date picker
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import iconSet from "quasar/icon-set/material-icons.js";
 
 //icons https://pictogrammers.com/library/mdi/
 import "@mdi/font/css/materialdesignicons.css";
 
 createInertiaApp({
-    resolve: (name) => {
-        const pages = require.context("./app/pages", true, /\.vue$/);
-        return pages(`./${name}.vue`).default;
-    },
-    setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) });
+  resolve: (name) => {
+    const pages = require.context("./app/pages", true, /\.vue$/);
+    return pages(`./${name}.vue`).default;
+  },
+  setup({ el, App, props, plugin }) {
+    const app = createApp({ render: () => h(App, props) });
 
-        customComponents.forEach((index) => {
-            app.component(index[0], index[1]);
-        });
+    customComponents.forEach((index) => {
+      app.component(index[0], index[1]);
+    });
 
-        layouts.forEach((index) => {
-            app.component(index[0], index[1]);
-        });
+    layouts.forEach((index) => {
+      app.component(index[0], index[1]);
+    });
 
-        app.use(Quasar, {
-            plugins: {
-                Notify,
-                Dialog,
-                Loading,
-            },
-            directives: {
-                Ripple,
-                ClosePopup,
-            },
-        });
+    app.use(Quasar, {
+      plugins: {
+        Notify,
+        Dialog,
+        Loading,
+      },
+      directives: {
+        Ripple,
+        ClosePopup,
+      },
+      iconSet: iconSet,
+    });
 
-        QComponents.forEach((item) => {
-            app.component(item.name, item);
-        });
+    QComponents.forEach((item) => {
+      app.component(item.name, item);
+    });
 
-       // app.config.globalProperties.$echo = $echo; 
-        app.config.globalProperties.$server = $server;
+    // app.config.globalProperties.$echo = $echo;
+    app.config.globalProperties.$server = $server;
 
-        app.component("VueDatePicker", VueDatePicker);
-        app.use(plugin);
-        app.mount(el);
-    },
+    app.component("VueDatePicker", VueDatePicker);
+    app.use(plugin);
+    app.mount(el);
+  },
 });

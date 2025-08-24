@@ -25,7 +25,7 @@ namespace App\Models\Setting;
  */
 
 use App\Models\Master;
-use App\Models\User\User;
+use Core\User\Model\User;
 use App\Transformers\Setting\TerminalTransformer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

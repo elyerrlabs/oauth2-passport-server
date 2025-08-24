@@ -20,14 +20,24 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="text-center">
-        <q-btn flat round dense icon="mdi-dots-vertical-circle-outline">
+    <div class="text-center q-ma-sm">
+        <q-btn
+            no-caps
+            dense
+            outline
+            round
+            icon="mdi-dots-vertical-circle-outline"
+        >
             <q-menu fit anchor="bottom right" self="top right">
                 <q-card style="min-width: 240px" class="q-pa-sm">
                     <!-- User Info -->
                     <div v-if="user?.id" class="q-pa-sm flex items-center">
                         <q-avatar size="40px" class="q-mr-sm">
-                            <q-icon color="primary" name="mdi-account-circle" size="28px" />
+                            <q-icon
+                                color="primary"
+                                name="mdi-account-circle"
+                                size="28px"
+                            />
                         </q-avatar>
                         <div>
                             <div class="text-weight-medium">
@@ -66,13 +76,26 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </q-item-section>
                         </q-item>
 
-                        <q-separator class="q-my-sm" v-if="user?.id" />
+                        <q-separator class="q-my-sm" />
 
+                        <q-item
+                            v-if="!user?.id"
+                            clickable
+                            v-close-popup
+                            @click="goTo($page.props.auth_routes['login'])"
+                        >
+                            <q-item-section avatar>
+                                <q-icon color="primary" name="mdi-login" />
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label> Login </q-item-label>
+                            </q-item-section>
+                        </q-item>
                         <q-item
                             v-if="user?.id"
                             clickable
                             v-close-popup
-                            @click="logout"
+                            @click="goTo($page.props.auth_routes['logout'])"
                         >
                             <q-item-section avatar>
                                 <q-icon color="negative" name="mdi-logout" />
@@ -99,18 +122,8 @@ export default {
     },
 
     methods: {
-        async logout() {
-            try {
-                const res = await this.$server.post(
-                    this.$page.props.auth_routes["logout"]
-                );
-                if (res.status === 200) {
-                    window.location.href =
-                        this.$page.props.auth_routes["login"];
-                }
-            } catch (error) {
-                console.error("Error logging out:", error);
-            }
+        async goTo(url) {
+            window.location.href = url;
         },
 
         homePage() {
@@ -118,7 +131,7 @@ export default {
         },
 
         myAccount() {
-            window.location.href = this.$page.props.user_dashboard;
+            window.location.href = this.$page.props.user_dashboard["route"];
         },
     },
 };

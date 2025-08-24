@@ -59,4 +59,9 @@ return [
     "terms_url" => null,
     "privacy_url" => null,
     "policy_cookies" => null,
+
+    "birthday" => [
+        "active" => false, // Activate birthday
+        "limit" => 18, // Limit of year to allow register users
+    ],
 ];

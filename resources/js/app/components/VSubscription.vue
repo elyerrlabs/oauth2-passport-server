@@ -74,9 +74,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 class="full-width"
             />
         </div>
-        <!-- Guest Login Modal 
-        <v-login :guest="guest" @close="guest = false" />
-        -->
     </div>
 </template>
 
@@ -117,7 +114,7 @@ export default {
     },
 
     created() {
-        this.getBillingPeriod();
+        this.getPaymentMethods();
         this.user = this.$page.props.user;
     },
 
@@ -164,10 +161,11 @@ export default {
 
         async continuePayment() {
             this.disabled = true;
-
+            console.log(this.$page.props.routes['subscription']);
+            
             try {
                 const res = await this.$server.post(
-                    this.user.links.subscriptions_buy,
+                    this.$page.props.routes['subscription'],
                     {
                         plan: this.plan.id,
                         billing_period: this.period.billing_period,
@@ -181,6 +179,7 @@ export default {
                 }
             } catch (error) {
                 this.disabled = false;
+                console.log(error);
             }
         },
 
@@ -189,7 +188,7 @@ export default {
 
             try {
                 const res = await this.$server.post(
-                    this.user.links.subscriptions_renew,
+                    this.$page.props.routes.renew_package,
                     {
                         package: this.package.id,
                         billing_period: this.period.billing_period,
@@ -203,19 +202,22 @@ export default {
                 }
             } catch (error) {
                 this.disabled = false;
+                console.log(error);
             }
         },
 
-        async getBillingPeriod() {
+        async getPaymentMethods() {
             try {
                 const res = await this.$server.get(
-                    "/api/public/payments/methods"
+                    this.$page.props.routes["methods"]
                 );
-
+                                
                 if (res.status == 200) {
                     this.methods = res.data.data;
                 }
-            } catch (error) {}
+            } catch (error) {
+                console.log(error);
+            }
         },
     },
 };

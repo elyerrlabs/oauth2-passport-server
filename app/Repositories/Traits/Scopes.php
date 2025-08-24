@@ -23,10 +23,10 @@ namespace App\Repositories\Traits;
 
 use App\Support\CacheKeys;
 use Laravel\Passport\Scope;
-use App\Models\User\UserScope;
+use Core\User\Model\UserScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Subscription\Scope as ModelScope;
+use Core\User\Model\Scope as ModelScope;
 
 trait Scopes
 {

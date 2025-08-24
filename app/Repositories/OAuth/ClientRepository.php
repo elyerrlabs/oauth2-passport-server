@@ -234,9 +234,10 @@ class ClientRepository extends  \Laravel\Passport\ClientRepository
      */
     public function searchClientsForAdmin(Request $request)
     {
-        // Retrieve params of the request
+        // Retrieve
+        // params of the request
         $params = $this->filter_transform($this->model->transformer);
-
+ 
         // Prepare query
         $data = $this->model->query();
 
@@ -248,7 +249,7 @@ class ClientRepository extends  \Laravel\Passport\ClientRepository
 
         // Order by
         $data = $this->orderByBuilder($data, $this->model->transformer);
-
+        
         return $this->showAllByBuilder($data, $this->model->transformer);
     }
 

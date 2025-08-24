@@ -20,23 +20,24 @@ namespace App\Providers;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use App\Guard\TokenGuard;
-use Laravel\Passport\Passport; 
+use Laravel\Passport\Passport;
 use App\Services\Settings\Setting;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\ClientRepository;
 use Illuminate\Support\ServiceProvider;
 use League\OAuth2\Server\ResourceServer;
-use Laravel\Passport\PassportUserProvider; 
+use Laravel\Passport\PassportUserProvider;
 use App\Models\OAuth\Bridge\AuthCodeRepository;
 use App\Models\OAuth\Bridge\AccessTokenRepository;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use App\Http\Controllers\Web\OAuth\OpenId\DiscoveryController;
 use Laravel\Passport\Bridge\AuthCodeRepository as LaravelAuthCodeRepository;
-use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository; 
+use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -75,5 +76,30 @@ class AppServiceProvider extends ServiceProvider
                 $this->app->make('request')
             );
         });
+
+        $this->mapMorphModel();
+    }
+
+    /**
+     * Map morph models
+     * @return void
+     */
+    public function mapMorphModel()
+    {
+        $morph = [
+            (new  \Core\User\Model\User())->tag =>  \Core\User\Model\User::class,
+            (new \App\Models\Common\Category)->tag => \App\Models\Common\Category::class,
+            (new \App\Models\Common\File())->tag => \App\Models\Common\File::class,
+            (new \App\Models\Common\Attribute)->tag => \App\Models\Common\Attribute::class,
+            (new \App\Models\Common\Icon())->tag => \App\Models\Common\Icon::class,
+            (new \App\Models\Common\Tag())->tag => \App\Models\Common\Tag::class,
+            (new \App\Models\Common\Unit())->tag => \App\Models\Common\Unit::class,
+            (new  \Core\Transaction\Model\Plan()->tag) =>  \Core\Transaction\Model\Plan::class
+        ];
+
+        Relation::morphMap(array_merge(
+            config('morph'),
+            $morph
+        ));
     }
 }

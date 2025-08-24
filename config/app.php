@@ -197,7 +197,9 @@ return [
 
         /*
          * Application Service Providers...
-         */
+        */
+        App\Providers\CoreServiceProvider::class,
+        App\Providers\ModulesServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,

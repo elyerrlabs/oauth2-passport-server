@@ -26,11 +26,11 @@ namespace App\Console\Commands\Settings;
 
 
 use Illuminate\Console\Command;
-use App\Models\Subscription\Role;
-use App\Models\Subscription\Group;
-use App\Models\Subscription\Scope;
+use Core\User\Model\Role;
+use Core\User\Model\Group;
+use Core\User\Model\Scope;
 use Elyerr\ApiResponse\Assets\Asset;
-use App\Models\Subscription\Service;
+use Core\User\Model\Service;
 
 class settingsRolesUpload extends Command
 {

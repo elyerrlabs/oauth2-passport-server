@@ -38,9 +38,9 @@ return [
     ],
 
     'users' => [
-        'developers' => false,
-        'api' => false,
-        'clients' => false
+        'developers' => true,
+        'api' => true,
+        'clients' => true
     ],
 
     'guest' => [
