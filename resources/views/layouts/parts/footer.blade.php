@@ -1,5 +1,5 @@
 <footer id="footer"
-    class="bg-gradient-to-r {{ $hide ? 'hidden' : '' }} from-[var(--color-primary)] to-[var(--color-secondary)] text-white py-8 mt-0">
+    class="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white py-8 mt-0">
     <div class="container mx-auto px-4">
         <!-- Main information -->
         <div class="flex flex-col md:flex-row justify-between items-center mb-8">
