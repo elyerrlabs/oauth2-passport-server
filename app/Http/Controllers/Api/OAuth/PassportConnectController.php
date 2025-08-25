@@ -26,7 +26,7 @@ namespace App\Http\Controllers\Api\OAuth;
 use Illuminate\Http\Request;
 use App\Repositories\Traits\Scopes;
 use App\Http\Controllers\ApiController;
-use App\Transformers\User\OpenIDTransformer;
+use Core\User\Transformer\User\OpenIDTransformer; 
 use App\Repositories\OAuth\Server\Grant\OAuthSessionTokenRepository;
 
 class PassportConnectController extends ApiController
