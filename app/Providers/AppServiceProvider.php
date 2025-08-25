@@ -89,8 +89,7 @@ class AppServiceProvider extends ServiceProvider
             (new \App\Models\Common\Attribute)->tag => \App\Models\Common\Attribute::class,
             (new \App\Models\Common\Icon())->tag => \App\Models\Common\Icon::class,
             (new \App\Models\Common\Tag())->tag => \App\Models\Common\Tag::class,
-            (new \App\Models\Common\Unit())->tag => \App\Models\Common\Unit::class,
-            (new  \Core\Transaction\Model\Plan()->tag) =>  \Core\Transaction\Model\Plan::class
+            (new \App\Models\Common\Unit())->tag => \App\Models\Common\Unit::class            
         ];
 
         Relation::morphMap(array_merge(
