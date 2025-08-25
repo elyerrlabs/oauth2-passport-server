@@ -28,17 +28,18 @@ cd /var/www
 
 echo "⚙️ Running system configuration..."
 
-cp -vf /root/.env /var/www/.env
-
-chown -R www-data:www-data .
+cp -vf /root/.env /var/www/.env 
 
 find . -type d -exec chmod 750 {} \;
 find . -type f -exec chmod 640 {} \;
 
 chmod 400 .env
-chmod 600 secrets/oauth/*.key
 
 php artisan settings:system-start
+
+chmod 600 secrets/oauth/*.key
+
+chown -R www-data:www-data .
 
 echo "🚀 Starting PHP-FPM..."
 php-fpm83 -D
