@@ -485,15 +485,20 @@
                             <i class="mdi mdi-book-open-page-variant mr-2"></i>
                             {{ __('Documentation') }}
                         </a>
-                        <a href="{{ route('passport.clients.index') }}" class="btn-outline inline-flex items-center">
-                            <i class="mdi mdi-shield-key mr-2"></i>
-                            {{ __('OAuth2 Clients') }}
-                        </a>
-                        
-                        <a href="route('passport.personal.tokens.index')" class="btn-outline inline-flex items-center">
-                            <i class="mdi mdi-api mr-2"></i>
-                            {{ __('API Keys') }}
-                        </a>
+                        @if (Route::has('passport.clients.index'))
+                            <a href="{{ route('passport.clients.index') }}" class="btn-outline inline-flex items-center">
+                                <i class="mdi mdi-shield-key mr-2"></i>
+                                {{ __('OAuth2 Clients') }}
+                            </a>
+                        @endif
+                        @if (Route::has('passport.personal.tokens.index'))
+                            <a href="{{ route('passport.personal.tokens.index') }}"
+                                class="btn-outline inline-flex items-center">
+                                <i class="mdi mdi-api mr-2"></i>
+                                {{ __('API Keys') }}
+                            </a>
+                        @endif
+
                     </div>
                 </div>
             </div>
@@ -504,7 +509,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="orbital-system" id="orbital-system">
                     <!-- Particle effects -->
-                    <div class="particles" id="particles"></div> 
+                    <div class="particles" id="particles"></div>
                     <!-- Orbits with gradient -->
                     <div class="orbit orbit-1 orbit-gradient"></div>
                     <div class="orbit orbit-2 orbit-gradient"></div>
@@ -701,16 +706,20 @@
                                 <i class="mdi mdi-clipboard-text-outline mr-2"></i>
                                 <span class="text-sm">{{ __('Audit Logs') }}</span>
                             </a>
-                            <a href="{{ route('passport.personal.tokens.index') }}"
-                                class="flex items-center text-[var(--color-text-secondary)] hover:text-[var(--color-warning)] transition-colors">
-                                <i class="mdi mdi-key-variant mr-2"></i>
-                                <span class="text-sm">{{ __('Issued Tokens') }}</span>
-                            </a>
-                            <a href="{{ route('passport.clients.index') }}"
-                                class="flex items-center text-[var(--color-text-secondary)] hover:text-[var(--color-warning)] transition-colors">
-                                <i class="mdi mdi-connection mr-2"></i>
-                                <span class="text-sm">{{ __('Oauth2 Clients') }}</span>
-                            </a>
+                            @if (Route::has('passport.personal.tokens.index'))
+                                <a href="{{ route('passport.personal.tokens.index') }}"
+                                    class="flex items-center text-[var(--color-text-secondary)] hover:text-[var(--color-warning)] transition-colors">
+                                    <i class="mdi mdi-key-variant mr-2"></i>
+                                    <span class="text-sm">{{ __('Issued Tokens') }}</span>
+                                </a>
+                            @endif
+                            @if (Route::has('passport.clients.index'))
+                                <a href="{{ route('passport.clients.index') }}"
+                                    class="flex items-center text-[var(--color-text-secondary)] hover:text-[var(--color-warning)] transition-colors">
+                                    <i class="mdi mdi-connection mr-2"></i>
+                                    <span class="text-sm">{{ __('Oauth2 Clients') }}</span>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
