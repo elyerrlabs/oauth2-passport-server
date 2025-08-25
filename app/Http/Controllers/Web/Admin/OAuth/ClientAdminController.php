@@ -65,7 +65,7 @@ class ClientAdminController extends WebController
         }
 
         return Inertia::render("Admin/Clients/Index", [
-            "route" => [
+            "routes" => [
                 'clients' => route("admin.clients.index"),
                 'personal' => route("admin.clients.personal.store")
             ],

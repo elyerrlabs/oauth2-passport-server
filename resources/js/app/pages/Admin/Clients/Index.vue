@@ -349,7 +349,7 @@ export default {
             const params = { ...this.search, ...param };
 
             this.$server
-                .get(this.$page.props.route["clients"], {
+                .get(this.$page.props.routes.clients, {
                     params: params,
                 })
                 .then((res) => {

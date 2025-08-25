@@ -342,7 +342,7 @@ export default {
 
             try {
                 const res = await this.$server.post(
-                    this.$page.props.route,
+                    this.$page.props.routes.clients,
                     this.form
                 );
 
