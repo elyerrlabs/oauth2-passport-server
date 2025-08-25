@@ -6,23 +6,30 @@
                 @if (!auth()->check())
                     <li>
                         <a href="{{ route('login') }}" class="hover:underline">
-                            <i class="mdi mdi-login"></i> {{ __('Login') }}
+                            <i class="mdi mdi-login text-2xl"></i> {{ __('Login') }}
                         </a>
                     </li>
                     @if (config('system.enable_register_member', true))
                         <li>
                             <a href="{{ route('register') }}" class="hover:underline">
-                                <i class="mdi mdi-account-edit-outline"></i> {{ __('Register') }}
+                                <i class="mdi mdi-account-edit-outline text-2xl"></i> {{ __('Register') }}
                             </a>
                         </li>
                     @endif
                     @if (Route::has('transaction.plans.index'))
                         <li>
                             <a href="{{ route('transaction.plans.index') }}" class="hover:underline">
-                                <i class="mdi mdi-cash-check"></i> {{ __('Subscriptions') }}
+                                <i class="mdi mdi-cash-check text-2xl"></i> {{ __('Subscriptions') }}
                             </a>
                         </li>
                     @endif
+                @endif
+                @if (auth()->check() && Route::has('user.dashboard'))
+                    <li>
+                        <a href="{{ route('user.dashboard') }}" class="hover:underline">
+                            <i class="mdi mdi-home-outline text-2xl"></i> {{ __('Dashboard') }}
+                        </a>
+                    </li>
                 @endif
             </ul>
         </nav>

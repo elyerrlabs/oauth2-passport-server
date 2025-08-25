@@ -1,24 +1,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description"
-    content="Manage user access securely with our OAuth2 Server. A robust solution for authentication and authorization using modern protocols.">
-<meta name="keywords" content="OAuth2, Laravel, API, Authentication, elyerr, Secure Access, Authorization Server">
+ 
+<meta name="title" content="Elyerr OAuth2 Server – Secure Authentication & Authorization">
+<meta name="description" content="A modern OAuth2 and OpenID Connect server built with Laravel. Secure, scalable, and easy to integrate for authentication and authorization in your applications.">
+<meta name="keywords" content="OAuth2, OpenID Connect, Laravel, API Security, Authentication, Elyerr, Authorization Server, Secure Access">
 <meta name="author" content="Elyerr">
 <meta name="robots" content="index, follow">
 
-<!-- Open Graph Meta Tags -->
-{{-- 
-<meta property="og:title" content="{{ config('app.name', 'Laravel OAuth2 Server') }}">
-<meta property="og:description" content="Secure and scalable authentication solution with OAuth2 protocols.">
-<meta property="og:url" content="{{ config('app.url') }}">
+<meta property="og:title" content="Elyerr OAuth2 Server – Secure Authentication & Authorization">
+<meta property="og:description" content="Easily manage user access and authentication with our Laravel OAuth2 Server. Modern, secure, and developer-friendly.">
+<meta property="og:url" content="https://gitlab.com/elyerr/oauth2-passport-server">
 <meta property="og:type" content="website">
-<meta property="og:image" content="{{ config('app.url') }}/images/social-preview.png">
-- --}}
-<!-- Twitter Cards -->
-{{-- 
-<meta name="telegram:card" content="summary_large_image">
-<meta name="telegram:title" content="{{ config('app.name', 'Laravel OAuth2 Server') }}">
-<meta name="telegram:description" content="Securely manage user access with our powerful OAuth2 Server.">
-<meta name="telegram:image" content="{{ config('app.url') }}/images/social-preview.png">
-<meta name="telegram:site" content="@YourTwitterHandle"> 
---}}
