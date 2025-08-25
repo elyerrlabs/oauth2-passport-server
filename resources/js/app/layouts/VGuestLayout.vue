@@ -38,7 +38,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-btn flat :label="plan?.name" @click="open(plan?.route)" />
 
                 <q-btn
-                    v-if="!$page.props.user?.id"
+                    v-if="!$page.props.user?.id && $page.props.allow_register"
                     flat
                     label="Register"
                     @click="open($page.props.auth_routes['register'])"

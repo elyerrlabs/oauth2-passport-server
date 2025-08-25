@@ -132,12 +132,14 @@
                         {{ __('Sign In') }}
                     </button>
 
-                    <div class="text-center text-sm text-gray-600">
-                        {{ __("Don't have an account?") }}
-                        <a href="{{ route('register') }}" class="text-indigo-600 hover:underline">
-                            {{ __('Sign up') }}
-                        </a>
-                    </div>
+                    @if (Route::has('register'))
+                        <div class="text-center text-sm text-gray-600">
+                            {{ __("Don't have an account?") }}
+                            <a href="{{ route('register') }}" class="text-indigo-600 hover:underline">
+                                {{ __('Sign up') }}
+                            </a>
+                        </div>
+                    @endif
                 </form>
             </div>
 

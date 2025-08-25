@@ -174,7 +174,7 @@ class Menu
                     ],
                 ]
             ],
-            "allow_register" => config('routes.guest.register', true),
+            "allow_register" => Route::has('register'),
         ];
 
         return array_merge($keys, static::appendChildMenu($user));

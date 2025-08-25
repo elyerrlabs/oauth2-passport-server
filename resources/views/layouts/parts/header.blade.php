@@ -9,7 +9,8 @@
                             <i class="mdi mdi-login text-2xl"></i> {{ __('Login') }}
                         </a>
                     </li>
-                    @if (config('system.enable_register_member', true))
+
+                    @if (Route::has('register'))
                         <li>
                             <a href="{{ route('register') }}" class="hover:underline">
                                 <i class="mdi mdi-account-edit-outline text-2xl"></i> {{ __('Register') }}
