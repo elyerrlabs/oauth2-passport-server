@@ -499,6 +499,11 @@
                             </a>
                         @endif
 
+                        <a href="https://www.youtube.com/@elyerr" target="_blank"
+                            class="btn-outline inline-flex items-center">
+                            <i class="mdi mdi-school-outline mr-2 2xl"></i>
+                            {{ __('Tutorials') }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -528,7 +533,8 @@
                     </div>
 
                     <!-- App Nodes with real URLs -->
-                    <a href="https://cloud.elyerr.org" class="app-node node-cloud" title="Cloud Platform - OpenID Connect">
+                    <a href="https://github.com/elyerr/elyerr-cloud" class="app-node node-cloud"
+                        title="Cloud Platform - OpenID Connect">
                         <i class="mdi mdi-cloud-outline text-[var(--color-primary)] text-lg md:text-xl"></i>
                         <span class="text-xs mt-1">{{ __('Cloud') }}</span>
                         <div class="pulse-dot" style="top: 5px; right: 5px;"></div>
@@ -661,7 +667,7 @@
                         <h3 class="text-lg font-semibold text-[var(--color-text-primary)] mb-3">{{ __('Integrations') }}
                         </h3>
                         <div class="space-y-2">
-                            <a href="https://cloud.elyerr.org"
+                            <a href="https://github.com/elyerr/elyerr-cloud"
                                 class="flex items-center justify-between text-[var(--color-text-secondary)] hover:text-[var(--color-secondary)] transition-colors group">
                                 <div class="flex items-center">
                                     <i class="mdi mdi-cloud-outline mr-2"></i>
