@@ -67,7 +67,7 @@ class TransactionTransformer extends TransformerAbstract
             'renew' => $transaction->renew,
             'session_id' => $transaction->session_id,
             'payment_intent_id' => $transaction->payment_intent_id,
-            'payment_url' => $transaction->package->isCancelled() ? null : $transaction->payment_url,
+            'payment_url' => $transaction->transactionable->isCancelled() ? null : $transaction->payment_url,
             'response' => $transaction->response,
             'meta' => $transaction->meta,
             'code' => $transaction->code,

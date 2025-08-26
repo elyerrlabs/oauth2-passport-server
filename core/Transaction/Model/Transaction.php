@@ -25,9 +25,9 @@ namespace Core\Transaction\Model;
 
 use App\Models\Master;
 use Core\User\Model\User;
-use Core\Partner\Model\Partner; 
+use Core\Partner\Model\Partner;
 use Core\Transaction\Model\Package;
-use Illuminate\Database\Eloquent\Factories\HasFactory; 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Core\Transaction\Transformer\Admin\TransactionTransformer;
 
 class Transaction extends Master
@@ -51,9 +51,8 @@ class Transaction extends Master
         'payment_url',
         'response', //save response
         'meta', //save package
-        'code',
-        'package_id',
-        'partner_id',
+        'code', // unique code
+        'partner_id', // if of the partner
         'partner_commission_rate',
         'payment_method_id'
     ];
@@ -74,12 +73,11 @@ class Transaction extends Master
     }
 
     /**
-     * Plan
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Summary of morph
      */
-    public function package()
+    public function transactionable()
     {
-        return $this->belongsTo(Package::class);
+        return $this->morphTo();
     }
 
     /**

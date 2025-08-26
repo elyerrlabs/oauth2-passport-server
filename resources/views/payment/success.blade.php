@@ -31,10 +31,10 @@
                 <!-- User Info -->
                 <div>
                     <h2 class="text-lg font-semibold mb-2 border-b pb-1">👤 User Info</h2>
-                    <p><span class="font-medium">Name:</span> {{ $transaction['package']['user']['name'] }}
-                        {{ $transaction['package']['user']['last_name'] }}</p>
-                    <p><span class="font-medium">Email:</span> {{ $transaction['package']['user']['email'] }}</p>
-                    <p><span class="font-medium">Verified At:</span> {{ $transaction['package']['user']['verified_at'] }}
+                    <p><span class="font-medium">Name:</span> {{ $transaction['transactionable']['user']['name'] }}
+                        {{ $transaction['transactionable']['user']['last_name'] }}</p>
+                    <p><span class="font-medium">Email:</span> {{ $transaction['transactionable']['user']['email'] }}</p>
+                    <p><span class="font-medium">Verified At:</span> {{ $transaction['transactionable']['user']['verified_at'] }}
                     </p>
                 </div>
 
@@ -74,16 +74,16 @@
                 <!-- Package Info -->
                 <div class="md:col-span-2">
                     <h2 class="text-lg font-semibold mb-2 border-b pb-1">📦 Package Info</h2>
-                    <p><span class="font-medium">Name:</span> {{ $transaction['package']['meta']['name'] }}</p>
-                    <p><span class="font-medium">Description:</span> {!! $transaction['package']['meta']['description'] !!}</p>
+                    <p><span class="font-medium">Name:</span> {{ $transaction['transactionable']['meta']['name'] }}</p>
+                    <p><span class="font-medium">Description:</span> {!! $transaction['transactionable']['meta']['description'] !!}</p>
                     <p><span class="font-medium">Start At:</span>
-                        {{ \Carbon\Carbon::parse($transaction['package']['start_at'])->toDayDateTimeString() }}</p>
+                        {{ \Carbon\Carbon::parse($transaction['transactionable']['start_at'])->toDayDateTimeString() }}</p>
                     <p><span class="font-medium">End At:</span>
-                        {{ \Carbon\Carbon::parse($transaction['package']['end_at'])->toDayDateTimeString() }}</p>
+                        {{ \Carbon\Carbon::parse($transaction['transactionable']['end_at'])->toDayDateTimeString() }}</p>
                     <p><span class="font-medium">Recurring:</span>
-                        {{ $transaction['package']['is_recurring'] ? 'Yes' : 'No' }}</p>
+                        {{ $transaction['transactionable']['is_recurring'] ? 'Yes' : 'No' }}</p>
                     <p><span class="font-medium">Price:</span>
-                        ${{ $transaction['package']['meta']['price']['amount_format'] }}</p>
+                        ${{ $transaction['transactionable']['meta']['price']['amount_format'] }}</p>
                 </div>
             </div>
 

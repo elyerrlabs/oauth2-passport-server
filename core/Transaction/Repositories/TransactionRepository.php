@@ -111,7 +111,7 @@ class TransactionRepository
         $data = $this->model->query();
 
         // Eager loading
-        $data->with(['user', 'package', 'partner']);
+        $data->with(['user', 'transactionable', 'partner']);
 
 
         // Search
@@ -216,7 +216,7 @@ class TransactionRepository
                 'meta' => $plan, // add plan to the metadata
             ]);
 
-            //Generate transaction
+            //Generate transaction 
             $transaction = [
                 'subtotal' => $paymentManager->amount_subtotal,
                 'total' => $paymentManager->amount_total,
@@ -227,7 +227,6 @@ class TransactionRepository
                 'renew' => false,
                 'code' => $plan['transaction_code'],
                 'response' => $paymentManager->toArray(),// save payment manager response
-                'package_id' => $package->id,
             ];
 
             /**
@@ -258,7 +257,7 @@ class TransactionRepository
                 }
             }
 
-            $this->model->create($transaction);
+            $package->transactions()->create($transaction);
         });
 
         // Send request notification
@@ -323,12 +322,10 @@ class TransactionRepository
      */
     public function retrieveTransactionForUser(string $code)
     {
-        $transaction = $this->model->with([
-            'package',
-            'package.user'
-        ])->where("code", $code)
-            ->whereHas('package.user', function ($query) {
-                $query->where('id', auth()->user()->id);
+        $transaction = $this->model->where("code", $code)
+            ->with(['transactionable', 'transactionable.user'])
+            ->whereHas('transactionable', function ($query) {
+                $query->where('user_id', auth()->user()->id);
             })->first();
 
         if (empty($transaction)) {
@@ -411,7 +408,7 @@ class TransactionRepository
                 if ($transaction->renew) {
 
                     $this->packageRepository->RenewSuccessfully(
-                        $transaction->package,
+                        $transaction->transactionable,
                         $transaction->code
                     );
 
@@ -419,14 +416,14 @@ class TransactionRepository
                     $customer->notify(new RenewSuccessfully($redirect_to));
 
                 } else {// Dispatch only buy packages
-                    $this->packageRepository->paymentSuccessfully($transaction->package);
+                    $this->packageRepository->paymentSuccessfully($transaction->transactionable);
 
                     //Dispatch notification
                     $customer->notify(new PaymentSuccessfully($redirect_to));
                 }
 
                 //Set the package metadata
-                $package_meta = $transaction->package->meta();
+                $package_meta = $transaction->transactionable->meta();
                 unset($package_meta['transactions']);
                 unset($package_meta['transaction']);
                 unset($package_meta['user']);
@@ -465,7 +462,7 @@ class TransactionRepository
         $transaction->payment_url = $meta['session']['url'];
 
         //Set the package metadata
-        $package_meta = $transaction->package->meta();
+        $package_meta = $transaction->transactionable->meta();
         unset($package_meta['transactions']);
         unset($package_meta['transaction']);
         unset($package_meta['user']);
@@ -485,7 +482,7 @@ class TransactionRepository
     {
         $transaction->status = config('billing.status.cancelled.name');
         //Set the package metadata
-        $package_meta = $transaction->package->meta();
+        $package_meta = $transaction->transactionable->meta();
         unset($package_meta['transactions']);
         unset($package_meta['transaction']);
         unset($package_meta['user']);
@@ -493,7 +490,7 @@ class TransactionRepository
         $transaction->meta = $package_meta;
         $transaction->push();
 
-        $this->packageRepository->paymentCancelled($transaction->package);
+        $this->packageRepository->paymentCancelled($transaction->transactionable);
     }
 
     /**
@@ -515,15 +512,16 @@ class TransactionRepository
         $transaction->response = $meta;
 
         // Set expiration status for the package
-        $this->packageRepository->paymentExpired($transaction->package);
+        $this->packageRepository->paymentExpired($transaction->transactionable);
 
-        $transaction->meta = $transaction->package->meta();
+        $transaction->meta = $transaction->transactionable->meta();
         $transaction->push();
     }
 
     /**
      * Renew package by user
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @param \Illuminate\Http\Request $request
+     * @return \Elyerr\ApiResponse\Assets\Json
      */
     public function renewByUser(Request $request)
     {
@@ -545,7 +543,7 @@ class TransactionRepository
         $package['payment_manager'] = $paymentManager->toArray();
 
         //Generate new transaction
-        $this->model->create([
+        $current_package->transactions()->create([
             'subtotal' => $package['payment_manager']['amount_subtotal'],
             'total' => $package['payment_manager']['amount_total'],
             'currency' => $package['meta']['price']['currency'],
@@ -558,7 +556,6 @@ class TransactionRepository
             'renew' => true,
             'code' => $code,
             'response' => $package['payment_manager'],
-            'package_id' => $package['id'],
         ]);
 
         // Send request notification

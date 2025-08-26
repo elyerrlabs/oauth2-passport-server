@@ -71,7 +71,11 @@ class PackageRepository implements Contracts
 
     }
 
-
+    /**
+     * search for user
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function searchForUser(Request $request)
     {
         // Prepare query
@@ -89,7 +93,6 @@ class PackageRepository implements Contracts
         $params = $this->filter_transform(UserPackageTransformer::class);
 
         $this->searchByBuilder($data, $params);
-
 
         return $this->showAllByBuilder($data, UserPackageTransformer::class);
     }
@@ -327,7 +330,8 @@ class PackageRepository implements Contracts
     /**
      * Enable or disable recurring payment by package
      * @param string $package_id
-     * @return JsonResponser
+     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
+     * @return \Elyerr\ApiResponse\Assets\Json
      */
     public function recurringPaymentEnableOrDisable(string $package_id)
     {
@@ -341,6 +345,6 @@ class PackageRepository implements Contracts
 
         $package->push();
 
-        return $this->message(__('Recurring payment for this package has been updated successfully'));
+        return $this->message(__('Recurring payment for this package has been updated successfully'),);
     }
 }

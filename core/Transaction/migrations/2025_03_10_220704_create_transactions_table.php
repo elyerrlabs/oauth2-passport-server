@@ -50,11 +50,9 @@ return new class () extends Migration {
             $table->json('response')->nullable(); //save response
             $table->json('meta')->nullable(); //save package
             $table->string('code');
-            $table->uuid('package_id');
-            $table->uuid('user_id')->nullable();
+            $table->uuidMorphs('transactionable');
+            $table->uuid('user_id')->nullable(); // Package activator if it si fail
             $table->timestamps();
-
-            $table->foreign('package_id')->references('id')->on('packages')->onDelete('RESTRICT');
         });
 
     }

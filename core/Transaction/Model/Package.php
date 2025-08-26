@@ -25,8 +25,8 @@ namespace Core\Transaction\Model;
  */
 
 use App\Models\Master;
-use Core\Transaction\Model\User; 
-use Core\Transaction\Model\Transaction; 
+use Core\Transaction\Model\User;
+use Core\Transaction\Model\Transaction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Core\Transaction\Transformer\Admin\PackageTransformer;
 
@@ -34,11 +34,13 @@ class Package extends Master
 {
     use HasFactory;
 
+    public $tag = "packages";
+
     /**
      * table name
      * @var string
      */
-    public $table = "packages";
+    protected $table = "packages";
 
     /**
      * Transformer 
@@ -91,12 +93,12 @@ class Package extends Master
     }
 
     /**
-     * transactions
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Transactions
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function transactions()
     {
-        return $this->hasMany(Transaction::class);
+        return $this->morphMany(Transaction::class, 'transactionable');
     }
 
     /**
