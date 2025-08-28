@@ -20,7 +20,7 @@ namespace Core\User\Http\Requests;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -52,7 +52,7 @@ class UserRegisterRequest extends FormRequest
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'confirmed', 'min:8', 'max:60'],
             'birthday' => [
-                Rule::requiredIf(fn() => filter_var(config('system.birthday.active', false), FILTER_VALIDATE_BOOL)),
+                Rule::requiredIf(fn () => filter_var(config('system.birthday.active', false), FILTER_VALIDATE_BOOL)),
                 'date_format:Y-m-d',
                 function ($attribute, $value, $fail) {
                     $activated = filter_var(config('system.birthday.active', false), FILTER_VALIDATE_BOOL);
@@ -67,7 +67,7 @@ class UserRegisterRequest extends FormRequest
                 },
             ],
             'accept_terms' => ['required', 'boolean'],
-            'accept_cookies' => ['nullable', 'boolean'],
+            'accept_cookies' => ['required', 'boolean'],
             'referral_code' => ['nullable'],
         ];
     }
