@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\User\Repositories;
 
 /**
@@ -19,7 +20,7 @@ namespace Core\User\Repositories;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -51,8 +52,8 @@ use App\Repositories\OAuth\Server\Grant\OAuthSessionTokenRepository;
 
 class UserRepository implements Contracts
 {
-
-    use JsonResponser, Asset;
+    use JsonResponser;
+    use Asset;
 
     /**
      * User model
@@ -62,7 +63,7 @@ class UserRepository implements Contracts
 
     /**
      * Transformer
-     * @var 
+     * @var
      */
     public $transformer = UserTransformer::class;
 
@@ -86,10 +87,10 @@ class UserRepository implements Contracts
     public $oauthSessionTokenRepository;
 
     /**
-     * 
+     *
      * @param \Core\User\Model\User $user
      * @param \Core\User\Model\UserScope $userScope
-     * @param \Core\User\Model\Group $group 
+     * @param \Core\User\Model\Group $group
      * @param \App\Repositories\OAuth\Server\Grant\OAuthSessionTokenRepository $oAuthSessionTokenRepository
      */
     public function __construct(
@@ -283,7 +284,7 @@ class UserRepository implements Contracts
 
     /**
      * Delete specific resource
-     * @param string $id 
+     * @param string $id
      * @return void
      */
     public function delete(string $id)
@@ -637,7 +638,7 @@ class UserRepository implements Contracts
                 'last_name' => $data['last_name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'birthday' => $data['birthday'],
+                'birthday' => $data['birthday'] ?? null,
                 'accept_terms' => $data['accept_terms'],
                 'accept_cookies' => $data['accept_cookies']
             ]);
@@ -674,7 +675,7 @@ class UserRepository implements Contracts
         try {
             // Verify the auth user and incoming use are the same
             if (auth()->check() && auth()->user()->email !== $data['email']) {
-                // Destroy token 
+                // Destroy token
                 DB::table('password_resets')->where('email', '=', $data['email'])->delete();
                 // Logout user
                 auth()->logout();
