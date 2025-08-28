@@ -230,7 +230,7 @@ class Setting
         //---------Setting services ---------------
         settingLoad('services.mailgun.domain', null);
         settingLoad('services.mailgun.secret', null);
-        settingLoad('services.mailgun.endpoint', null);
+        settingLoad('services.mailgun.endpoint', 'api.mailgun.net');
         settingLoad('services.mailgun.scheme', 'https');
 
         settingLoad('services.passport.token', null);
