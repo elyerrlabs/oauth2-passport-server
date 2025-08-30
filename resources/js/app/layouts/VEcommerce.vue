@@ -241,6 +241,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Right Icons -->
                 <div class="row items-center q-gutter-sm">
                     <v-theme />
+                    <v-cart />
                     <v-notification />
                     <v-profile />
                 </div>
@@ -253,76 +254,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <slot />
             </q-page>
         </q-page-container>
-
-        <!-- Footer -->
-        <q-footer elevated>
-            <q-toolbar>
-                <q-toolbar-title class="text-center">
-                    <div class="row justify-center q-gutter-xl">
-                        <div class="col-auto">
-                            <div class="text-h6 q-mb-sm">Customer Service</div>
-                            <div class="text-caption">
-                                <div>Contact Us</div>
-                                <div>FAQs</div>
-                                <div>Shipping Policy</div>
-                                <div>Returns & Refunds</div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <div class="text-h6 q-mb-sm">About Us</div>
-                            <div class="text-caption">
-                                <div>Our Story</div>
-                                <div>Careers</div>
-                                <div>Privacy Policy</div>
-                                <div>Terms & Conditions</div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <div class="text-h6 q-mb-sm">Connect With Us</div>
-                            <div class="row q-gutter-sm">
-                                <q-btn
-                                    round
-                                    dense
-                                    flat
-                                    icon="facebook"
-                                    color="blue"
-                                />
-                                <q-btn
-                                    round
-                                    dense
-                                    flat
-                                    icon="twitter"
-                                    color="light-blue"
-                                />
-                                <q-btn
-                                    round
-                                    dense
-                                    flat
-                                    icon="instagram"
-                                    color="purple"
-                                />
-                                <q-btn
-                                    round
-                                    dense
-                                    flat
-                                    icon="youtube"
-                                    color="red"
-                                />
-                            </div>
-                            <div class="q-mt-sm text-caption">
-                                <div>Phone: +1 (123) 456-7890</div>
-                                <div>Email: info@megashop.com</div>
-                            </div>
-                        </div>
-                    </div>
-                    <q-separator color="grey-6" class="q-my-md" />
-                    <div class="text-caption">
-                        &copy; {{ new Date().getFullYear() }}
-                        {{ $page.props.org_name }}
-                    </div>
-                </q-toolbar-title>
-            </q-toolbar>
-        </q-footer>
     </q-layout>
 </template>
 

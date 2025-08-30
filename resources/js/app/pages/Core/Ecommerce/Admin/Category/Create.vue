@@ -24,15 +24,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Create/Update Button -->
         <q-btn
             color="primary"
+            outline
             @click="open"
             :icon="item ? 'mdi-pencil' : 'mdi-plus'"
             :label="title"
             class="action-btn shadow-3"
-            unelevated
+            :class="{ 'text-white': !item?.id }"
+            size="sm"
         >
-            <q-tooltip class="bg-primary">{{
-                item ? "Edit Category" : "Create New Category"
-            }}</q-tooltip>
         </q-btn>
 
         <!-- Category Form Dialog -->
@@ -358,16 +357,15 @@ export default {
             }
 
             try {
-                const url = this.form.id
-                    ? `${this.$page.props.route}/${this.form.id}`
-                    : this.$page.props.route;
-                const method = this.form.id ? "put" : "post";
-
-                const res = await this.$server[method](url, payload, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                });
+                const res = await this.$server.post(
+                    this.$page.props.route,
+                    payload,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
 
                 if (res.status === 200 || res.status === 201) {
                     this.close();
@@ -430,7 +428,7 @@ export default {
 
 .category-form-dialog {
     border-radius: var(--border-radius);
-    overflow: hidden; 
+    overflow: hidden;
     width: 100%;
     max-height: 90vh;
 }

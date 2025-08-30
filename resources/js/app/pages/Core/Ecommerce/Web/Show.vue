@@ -32,7 +32,7 @@
                             :name="index"
                         >
                             <q-img
-                                :src="optimizeImage(image.url)"
+                                :src="image.url"
                                 loading="lazy"
                                 style="height: 100%; width: 100%"
                                 class="rounded-borders"
@@ -151,10 +151,7 @@
                         <div class="text-subtitle2 q-mb-xs">
                             {{ attribute.name }}:
                             <span class="text-weight-medium">
-                                {{
-                                    selectedAttributes[attribute.slug] ||
-                                    "Select"
-                                }}
+                                {{ form.attrs[attribute.slug] || "Select" }}
                             </span>
                         </div>
                         <div class="row q-gutter-xs">
@@ -164,17 +161,16 @@
                                 :label="value"
                                 outline
                                 :color="
-                                    selectedAttributes[attribute.slug] === value
+                                    form.attrs[attribute.slug] === value
                                         ? 'primary'
                                         : 'grey-7'
                                 "
                                 size="sm"
-                                @click="
-                                    selectedAttributes[attribute.slug] = value
-                                "
+                                @click="form.attrs[attribute.slug] = value"
                                 class="text-capitalize"
                             />
                         </div>
+                        <v-error :error="errors.attrs" />
                     </div>
 
                     <!-- Quantity - Stack on mobile -->
@@ -186,7 +182,7 @@
                         </div>
                         <div class="col-auto">
                             <q-input
-                                v-model="quantity"
+                                v-model="form.quantity"
                                 type="number"
                                 outlined
                                 dense
@@ -213,7 +209,8 @@
                             @click="addToCart"
                             :disable="!product?.stock"
                         />
-                        <q-btn
+                        <!--
+                            <q-btn
                             color="orange"
                             icon="flash_on"
                             label="Buy Now"
@@ -221,44 +218,19 @@
                             size="lg"
                             @click="buyNow"
                             :disable="!product?.stock"
-                        />
+                            />
                         <q-btn
                             flat
                             round
                             color="red"
                             :icon="
-                                isInWishlist ? 'favorite' : 'favorite_border'
+                            isInWishlist ? 'favorite' : 'favorite_border'
                             "
                             size="lg"
                             @click="toggleWishlist"
                             class="col-auto"
-                        />
-                    </div>
-
-                    <!-- Delivery Info - Hidden on mobile -->
-                    <div class="q-mb-lg" v-if="$q.screen.gt.xs">
-                        <!--
-                            <div class="row items-center q-gutter-sm">
-                                <q-icon
-                                name="local_shipping"
-                                size="sm"
-                                color="grey-7"
-                                />
-                                <div class="text-caption text-grey-8">
-                                    Free delivery on orders over $50
-                                </div>
-                            </div>
-                            -->
-                        <div class="row items-center q-gutter-sm">
-                            <q-icon
-                                name="assignment_return"
-                                size="sm"
-                                color="grey-7"
                             />
-                            <div class="text-caption text-grey-8">
-                                30-day free returns
-                            </div>
-                        </div>
+                            -->
                     </div>
 
                     <!-- Tags - Wrap on mobile -->
@@ -314,78 +286,6 @@
             <!-- Related Products - Smaller cards on mobile -->
             <v-products title="Related Products" :products="related_products" />
         </div>
-
-        <!-- Review Dialog -->
-        <q-dialog v-model="showReviewDialog">
-            <q-card style="width: 100%; max-width: 500px">
-                <q-card-section>
-                    <div class="text-h6">Write a Review</div>
-                </q-card-section>
-
-                <q-card-section class="q-pt-none">
-                    <div class="q-mb-md">
-                        <div class="text-subtitle2 q-mb-sm">Rating</div>
-                        <q-rating
-                            v-model="newReview.rating"
-                            size="2em"
-                            color="orange"
-                        />
-                    </div>
-
-                    <q-input
-                        v-model="newReview.title"
-                        label="Review Title"
-                        class="q-mb-md"
-                        outlined
-                    />
-
-                    <q-input
-                        v-model="newReview.comment"
-                        label="Your Review"
-                        type="textarea"
-                        outlined
-                        rows="5"
-                    />
-                </q-card-section>
-
-                <q-card-actions align="right">
-                    <q-btn flat label="Cancel" color="primary" v-close-popup />
-                    <q-btn
-                        label="Submit"
-                        color="primary"
-                        @click="submitReview"
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
-
-        <!-- Question Dialog -->
-        <q-dialog v-model="showQuestionDialog">
-            <q-card style="width: 100%; max-width: 500px">
-                <q-card-section>
-                    <div class="text-h6">Ask a Question</div>
-                </q-card-section>
-
-                <q-card-section class="q-pt-none">
-                    <q-input
-                        v-model="newQuestion.text"
-                        label="Your Question"
-                        type="textarea"
-                        outlined
-                        rows="5"
-                    />
-                </q-card-section>
-
-                <q-card-actions align="right">
-                    <q-btn flat label="Cancel" color="primary" v-close-popup />
-                    <q-btn
-                        label="Submit"
-                        color="primary"
-                        @click="submitQuestion"
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
     </v-ecommerce>
 </template>
 
@@ -393,20 +293,25 @@
 export default {
     data() {
         return {
-            product: null,
+            form: {
+                product_id: "",
+                attrs: {},
+                quantity: 1,
+            },
+            errors: {},
+
+            product: {},
             related_products: [],
-            q: null,
 
             // UI State
             productImageSlide: 0,
             productDetailTab: "description",
             selectedAttributes: {},
-            quantity: 1,
-            qaSearch: "",
+
             showReviewDialog: false,
             showQuestionDialog: false,
             isInWishlist: false,
-            rating: 4.5, // Default rating, should come from API
+            rating: 3,
             tags: [],
             // Form Data
             newReview: {
@@ -424,19 +329,16 @@ export default {
     },
 
     created() {
-        this.fetchProductData();
+        this.getProduct();
     },
 
     methods: {
         goTo(tag) {
-            console.log(tag);
-
             window.location.href = `${this.product?.links?.search}?q=${tag}`;
         },
 
-        async fetchProductData() {
+        async getProduct() {
             try {
-                // Fetch main product data
                 const res = await this.$server.get(
                     this.$page.props.routes["show"]
                 );
@@ -444,10 +346,9 @@ export default {
                 if (res.status === 200) {
                     this.product = res.data.data;
 
-                    this.fetchRelatedProducts(this.product);
+                    this.getRelatedProducts(this.product);
                 }
             } catch (error) {
-                console.error("Error fetching product data:", error);
                 this.$q.notify({
                     message: "Failed to load product details",
                     color: "negative",
@@ -455,7 +356,7 @@ export default {
             }
         },
 
-        async fetchRelatedProducts(item) {
+        async getRelatedProducts(item) {
             try {
                 const response = await this.$server.get(item.links.search, {
                     params: {
@@ -483,39 +384,27 @@ export default {
             }
         },
 
-        optimizeImage(url) {
-            if (!url) return "";
-
-            if (url.includes("cloudinary.com")) {
-                return url.replace(
-                    "/upload/",
-                    "/upload/w_500,h_250,c_fill,q_auto,f_auto/"
+        async addToCart() {
+            this.form.product_id = this.product.id;
+            try {
+                const res = await this.$server.post(
+                    this.$page.props.routes.orders,
+                    this.form
                 );
+                if (res.status == 201) {
+                    this.errors = {};
+                    this.$q.notify({
+                        message: `${this.product.name} added to cart`,
+                        color: "positive",
+                        icon: "shopping_cart",
+                        position: "top-right",
+                    });
+                }
+            } catch (error) {
+                if (error?.response?.status == 422) {
+                    this.errors = error.response.data.errors;
+                }
             }
-
-            if (url.includes("imgix.net")) {
-                return `${url}?w=500&h=250&fit=crop&auto=format,compress`;
-            }
-
-            return url;
-        },
-
-        addToCart() {
-            const item = {
-                product: this.product,
-                quantity: this.quantity,
-                selectedAttributes: this.selectedAttributes,
-            };
-
-            // In a real app, this would call your API
-            console.log("Adding to cart:", item);
-
-            this.$q.notify({
-                message: `${this.product.name} added to cart`,
-                color: "positive",
-                icon: "shopping_cart",
-                position: "top-right",
-            });
         },
 
         buyNow() {

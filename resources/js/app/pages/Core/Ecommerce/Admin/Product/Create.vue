@@ -23,11 +23,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <div>
         <q-btn
             size="sm"
+            rounded
             outline
             color="positive"
             @click="open"
             icon="mdi-plus-circle"
-            class="add-product-btn"
+            :class="{ 'text-white': !searchable }"
         >
             {{ title }}
         </q-btn>
@@ -386,13 +387,14 @@ export default {
             dialog: false,
             uploaderRef: null,
             form: {
+                id: "",
                 name: "",
                 short_description: "",
                 description: "",
                 specification: "",
                 category: null,
                 price: "",
-                stock: "",
+                stock: 0,
                 images: [],
                 icon: "",
                 published: false,
@@ -485,6 +487,7 @@ export default {
         open() {
             this.dialog = true;
             this.form = {
+                id: "",
                 name: "",
                 short_description: "",
                 description: "",
@@ -521,7 +524,8 @@ export default {
             this.form.currency = product.currency;
             this.form.price = product.price;
             this.form.stock = product.stock;
-            this.form.icon = product?.icon?.icon || product?.category?.icon?.icon;
+            this.form.icon =
+                product?.icon?.icon || product?.category?.icon?.icon;
             this.form.published = product.published;
             this.form.featured = product.featured;
             this.images = product?.images ?? [];
@@ -765,7 +769,6 @@ export default {
 .product-manager-dialog {
     .product-manager-card {
         border-radius: var(--border-radius);
-        overflow: hidden;
 
         .dialog-header {
             padding: 16px 24px;
@@ -800,7 +803,6 @@ export default {
 
         .dialog-content {
             padding: 24px;
-            max-height: calc(100vh - 200px);
 
             .form-field,
             .editor-field,

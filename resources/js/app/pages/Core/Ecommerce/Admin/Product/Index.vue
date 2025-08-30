@@ -416,11 +416,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <v-create
                                     :item="props.row"
                                     @created="getProducts"
-                                    title="Edit Product"
+                                    title="Edit"
                                     class="action-btn"
                                     :searchable="props.row.name"
                                     color="primary"
                                     icon="edit"
+                                    size="sm"
                                 />
                                 <v-delete
                                     :item="props.row"
@@ -514,8 +515,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         @created="getProducts"
                                         title="Edit"
                                         color="primary"
-                                        icon="mdi-pencil"
-                                        size="sm"
+                                        icon="mdi-pencil" 
                                     />
                                     <v-delete
                                         :item="props.row"
