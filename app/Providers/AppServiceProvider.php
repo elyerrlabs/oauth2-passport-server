@@ -34,7 +34,7 @@ use League\OAuth2\Server\ResourceServer;
 use Laravel\Passport\PassportUserProvider;
 use App\Models\OAuth\Bridge\AuthCodeRepository;
 use App\Models\OAuth\Bridge\AccessTokenRepository;
-use Illuminate\Database\Eloquent\Relations\Relation; 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Laravel\Passport\Bridge\AuthCodeRepository as LaravelAuthCodeRepository;
 use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository;
 
@@ -83,13 +83,14 @@ class AppServiceProvider extends ServiceProvider
     public function mapMorphModel()
     {
         $morph = [
-            (new  \Core\User\Model\User())->tag =>  \Core\User\Model\User::class,
+            (new \Core\User\Model\User())->tag => \Core\User\Model\User::class,
             (new \App\Models\Common\Category)->tag => \App\Models\Common\Category::class,
             (new \App\Models\Common\File())->tag => \App\Models\Common\File::class,
             (new \App\Models\Common\Attribute)->tag => \App\Models\Common\Attribute::class,
             (new \App\Models\Common\Icon())->tag => \App\Models\Common\Icon::class,
             (new \App\Models\Common\Tag())->tag => \App\Models\Common\Tag::class,
-            (new \App\Models\Common\Unit())->tag => \App\Models\Common\Unit::class            
+            (new \App\Models\Common\Unit())->tag => \App\Models\Common\Unit::class,
+            (new \App\Models\Common\Order())->tag => \App\Models\Common\Order::class,
         ];
 
         Relation::morphMap(array_merge(
