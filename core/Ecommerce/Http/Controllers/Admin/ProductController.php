@@ -91,8 +91,9 @@ final class ProductController extends WebController
      */
     public function store(StoreRequest $request)
     {
-
+        
         $data = [
+            'id' => $request->input('id'),
             'name' => $request->input('name'),
             'slug' => normalizeSlug($request->input('name')),
             'short_description' => Purify::clean($request->input('short_description')),

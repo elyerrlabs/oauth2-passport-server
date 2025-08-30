@@ -147,7 +147,8 @@ class ProductController extends WebController
                     'show' => route('ecommerce.products.show', [
                         'category' => $category_slug,
                         'product' => $product_slug
-                    ])
+                    ]),
+                    'orders' => route('ecommerce.orders.index')
                 ],
             ]
         );

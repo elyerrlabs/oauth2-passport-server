@@ -28,6 +28,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Core\Ecommerce\Model\Product;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\Contracts\Contracts;
 use Elyerr\ApiResponse\Assets\JsonResponser;
@@ -86,7 +87,13 @@ final class ProductRepository implements Contracts
     {
         $query = $this->model->query();
 
-        $query->with('files', 'tags', 'attributes', 'price');
+        $query->with([
+            'category',
+            'files',
+            'tags',
+            'attributes',
+            'price'
+        ]);
 
         if ($request->filled('category')) {
             $query->whereHas(
@@ -241,11 +248,13 @@ final class ProductRepository implements Contracts
     public function findProductByCategory(string $category, string $product)
     {
         return $this->model->with(
-            'files',
-            'tags',
-            'attributes',
-            'price',
-            'category'
+            [
+                'category',
+                'files',
+                'tags',
+                'attributes',
+                'price'
+            ]
         )->whereHas(
                 'category',
                 function ($query) use ($category) {
@@ -320,11 +329,27 @@ final class ProductRepository implements Contracts
     /**
      * Search specific resource
      * @param string $id
-     * @return Product
+     * @return Product|null
      */
     public function find(string $id)
     {
-        return $this->model->with('category', )->find($id);
+        try {
+            return $this->model->with([
+                'category',
+                'files',
+                'tags',
+                'attributes',
+                'price'
+            ])->findOrFail($id);
+
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage(), [
+                'code' => $th->getCode(),
+                'trace' => $th->getTrace()
+            ]);
+        }
+
+        return null;
     }
 
     /**
@@ -379,11 +404,19 @@ final class ProductRepository implements Contracts
      */
     public function CreateOrUpdatePrice(Product $product, array $data)
     {
-        $product->price()->updateOrCreate([
+        $price = [
             'billing_period' => config('billing.period.one_time.name'),
             'currency' => $data['currency'],
             'amount' => $data['price'],
-        ]);
+        ];
+
+        if ($product->has('price')) {
+            $product->price()->updateOrCreate([
+                'id' => $product->price->id
+            ], $price);
+        }
+
+        $product->price()->updateOrCreate($price);
     }
 
     /**

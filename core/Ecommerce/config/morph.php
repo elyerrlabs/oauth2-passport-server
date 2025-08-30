@@ -23,5 +23,5 @@
  */
 
 return [
-    (new \Core\Ecommerce\Model\Product())->tag => \Core\Ecommerce\Model\Product::class,
+    (new \Core\Ecommerce\Model\Product())->tag => \Core\Ecommerce\Model\Product::class,    
 ];

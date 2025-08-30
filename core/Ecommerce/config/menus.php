@@ -33,6 +33,14 @@ return [
         'show' => "administrator"
     ],
 
+    "ecommerce_orders" => [
+        "id" => "orders",
+        "name" => "My cart",
+        "route" => "ecommerce.orders.index",
+        "icon" => "mdi-store-cog",
+        'show' => "administrator"
+    ],
+
     "merge" => [
 
         "user_routes" => [

@@ -21,14 +21,22 @@
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
+use Core\Ecommerce\Http\Controllers\Web\OrderController;
 use Core\Ecommerce\Http\Controllers\Web\ProductController;
 
-Route::middleware(['throttle:ecommerce:web'])->group(function () {
+Route::middleware(['throttle:ecommerce:web'])
+    ->group(function () {
 
-    Route::get('', [ProductController::class, 'dashboard'])->name('dashboard');
-    Route::get('/search', [ProductController::class, 'index'])->name('search');
-    Route::get('/{category}', [ProductController::class, 'category'])->name('category');
-    Route::get('/{category}/{product}', [ProductController::class, 'productDetails'])->name('products.show');
+        Route::group([
+            'prefix' => 'shopping'
+        ], function () {
 
-});
+            Route::resource('orders', OrderController::class)->only('index', 'store', 'destroy');
+        });
+
+        Route::get('', [ProductController::class, 'dashboard'])->name('dashboard');
+        Route::get('/search', [ProductController::class, 'index'])->name('search');
+        Route::get('/{category}', [ProductController::class, 'category'])->name('category');
+        Route::get('/{category}/{product}', [ProductController::class, 'productDetails'])->name('products.show');
+    });

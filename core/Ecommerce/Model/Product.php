@@ -27,12 +27,13 @@ namespace Core\Ecommerce\Model;
 use App\Models\Master;
 use App\Models\Common\Tag;
 use App\Models\Common\File;
+use App\Models\Common\Order;
+use App\Models\Common\Price;
 use App\Models\Common\Category;
 use App\Models\Common\Attribute;
-use App\Models\Common\Price;
 use App\Transformers\File\FileTransformer;
 use Illuminate\Database\Eloquent\Collection;
-use Core\Ecommerce\Transformer\Admin\ProductTagTransformer; 
+use Core\Ecommerce\Transformer\Admin\ProductTagTransformer;
 use Core\Ecommerce\Transformer\Admin\ProductAttributeTransformer;
 
 class Product extends Master
@@ -149,6 +150,15 @@ class Product extends Master
     }
 
     /**
+     * Orders
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function orders()
+    {
+        return $this->morphMany(Order::class, 'orderable');
+    }
+
+    /**
      * Retrieve the tags
      * @param \Illuminate\Database\Eloquent\Collection $collection
      * @param mixed $transformer
@@ -178,6 +188,7 @@ class Product extends Master
     public function getAttrCollection(Collection $collection, $transformer = ProductAttributeTransformer::class)
     {
         $result = $collection
+            ->where('pivot.stock', '>', 0)
             ->groupBy('name')
             ->map(function ($items, $key) {
                 return [
