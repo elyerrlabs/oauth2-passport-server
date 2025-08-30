@@ -24,20 +24,24 @@ namespace Core\Ecommerce\Http\Controllers\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Http\Controllers\WebController;
 use Core\Ecommerce\Transformer\User\UserOrderTransformer;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Core\Ecommerce\Repositories\OrderRepository;
 use Core\Ecommerce\Http\Requests\Order\StoreRequest;
 
-class OrderController extends Controller
+class OrderController extends WebController
 {
-
+    /**
+     * Repository
+     * @var 
+     */
     private $repository;
 
     public function __construct(OrderRepository $orderRepository)
     {
+        parent::__construct();
         $this->repository = $orderRepository;
     }
 
@@ -48,7 +52,6 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-
         if ($request->wantsJson()) {
             $query = $this->repository->searchForUser($request);
 
