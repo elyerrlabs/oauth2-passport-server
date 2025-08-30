@@ -27,7 +27,8 @@
     @yield('content')
 
     @include('layouts.parts.footer')
-
+    
+    <x-privacy />
     <script src="{{ mix('/js/pages.js') }}"></script>
     @stack('js')
     @stack('modals')
