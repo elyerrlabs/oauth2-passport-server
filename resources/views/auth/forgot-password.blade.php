@@ -96,7 +96,7 @@
             <!-- Recovery Form -->
             <div class="w-full md:w-1/2 bg-white p-8">
                 <!-- Back Button -->
-                <a href="#"
+                <a href="{{ route('welcome') }}"
                     class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 mb-6 back-button">
                     <span class="mdi mdi-arrow-left mr-1"></span> {{ __('Back to Login') }}
                 </a>
@@ -113,7 +113,7 @@
                     </h2>
                     <p class="text-sm text-gray-600 mt-2 max-w-md mx-auto">
                         {{ __("Forgot your password? No problem. Just enter your email address below and we'll send you a secure
-                                                                                                                                                                                                                                                                                                link to reset your password.") }}
+                                                                                                                                                                                                                                                                                                                        link to reset your password.") }}
                     </p>
                 </div>
 
@@ -133,8 +133,7 @@
                     </div>
 
                     <!-- CAPTCHA Placeholder -->
-                    <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
-                        <p class="text-sm text-gray-600 text-center">{{ __('Security verification will appear here') }}</p>
+                    <div class="flex flex-col">
                         <x-captcha />
                     </div>
 
@@ -153,7 +152,7 @@
                             <h3 class="text-sm font-semibold text-blue-800">{{ "Can't access your email?" }}</h3>
                             <p class="text-xs text-blue-600 mt-1">
                                 {{ __("If you're having trouble receiving the reset email, please
-                                                                                                                                                                                                                                                                contact our support team for assistance.") }}
+                                                                                                                                                                                                                                                                                                contact our support team for assistance.") }}
                             </p>
                         </div>
                     </div>
@@ -175,7 +174,7 @@
                             <h3 class="font-semibold">{{ __('Encrypted Reset Links') }}</h3>
                             <p class="text-sm mt-1 text-indigo-100">
                                 {{ __("Our password reset links are encrypted and
-                                                                                                                                                                                                time-sensitive for maximum security.") }}
+                                                                                                                                                                                                                                time-sensitive for maximum security.") }}
                             </p>
                         </div>
                     </div>
@@ -186,7 +185,7 @@
                             <h3 class="font-semibold">{{ __('Instant Delivery') }}</h3>
                             <p class="text-sm mt-1 text-indigo-100">
                                 {{ __("Reset instructions are sent immediately to your email
-                                                                                                                                                                inbox.") }}
+                                                                                                                                                                                                inbox.") }}
                             </p>
                         </div>
                     </div>
@@ -197,7 +196,7 @@
                             <h3 class="font-semibold">{{ __('One-Click Process') }}</h3>
                             <p class="text-sm mt-1 text-indigo-100">
                                 {{ __("Simply click the link in the email to create a new
-                                                                                                                                password.") }}
+                                                                                                                                                                password.") }}
                             </p>
                         </div>
                     </div>

@@ -117,13 +117,13 @@
                         @endif
                     </div>
 
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <x-captcha />
+                    <div class="flex flex-col items-start justify-between">
+                        <x-captcha />
+                        <div class="flex items-end">
+                            <a href="{{ route('forgot-password') }}" class="text-sm text-indigo-600 hover:underline">
+                                {{ __('Forgot your password') }}
+                            </a>
                         </div>
-                        <a href="{{ route('forgot-password') }}" class="text-sm text-indigo-600 hover:underline">
-                            {{ __('Forgot your password') }}
-                        </a>
                     </div>
 
                     <button type="submit"
