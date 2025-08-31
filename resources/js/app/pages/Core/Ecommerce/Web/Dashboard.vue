@@ -27,7 +27,7 @@
                     <div class="absolute-bottom custom-caption">
                         <div class="text-h2">{{ banner.name }}</div>
                         <div class="text-subtitle1">
-                            {{ banner.description }}
+                            <small v-html="banner.description"></small>
                         </div>
                         <q-btn
                             color="primary"
