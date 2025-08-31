@@ -48,6 +48,7 @@ services:
         volumes:
             - .env:/root/.env
             - app-secrets:/var/www/secrets
+            - files:/var/www/storage/app
         command: sh -c "/usr/local/bin/laravel-scripts.sh"
         networks:
             - internal-net
@@ -56,6 +57,7 @@ services:
 volumes:
     pg-data:
     app-secrets:
+    files:
 
 networks:
     internal-net:

@@ -41,6 +41,8 @@ chmod 600 secrets/oauth/*.key
 
 chown -R www-data:www-data .
 
+php artisan storage:link
+
 echo "🚀 Starting PHP-FPM..."
 php-fpm83 -D
 
