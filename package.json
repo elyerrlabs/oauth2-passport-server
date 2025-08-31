@@ -3,12 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "test": "echo \"No tests defined\" && exit 0"
+    "build": "vite build"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.7.1",
-    "@commitlint/config-conventional": "^19.7.1",
     "@tailwindcss/forms": "^0.5.9",
     "@types/uuid": "^9.0.7",
     "@vitejs/plugin-vue": "^6.0.1",
