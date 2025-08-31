@@ -60,7 +60,7 @@ RUN apk add --no-cache --virtual .build-deps npm unzip \
     && composer install --no-dev --optimize-autoloader \
     && composer clear-cache \
     && npm install \
-    && npm run production \
+    && npm run build \
     && rm -rf node_modules \
     && npm cache clean --force \
     && apk del .build-deps \
