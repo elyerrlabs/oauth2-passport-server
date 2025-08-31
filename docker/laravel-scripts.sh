@@ -41,6 +41,8 @@ chmod 600 secrets/oauth/*.key
 
 chown -R www-data:www-data .
 
+chown -R www-data:www-data /var/lib/nginx
+
 php artisan storage:link
 
 echo "🚀 Starting PHP-FPM..."
