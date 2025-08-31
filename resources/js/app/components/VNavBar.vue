@@ -148,13 +148,13 @@ export default {
 
 .fade.left {
     left: 0;
-    //background: linear-gradient(to right, rgba(51, 51, 51, 1), rgba(51, 51, 51, 0));
+    /*background: linear-gradient(to right, rgba(51, 51, 51, 1), rgba(51, 51, 51, 0));*/
     background-color: white;
 }
 
 .fade.right {
     right: 0;
-    //background: linear-gradient(to left, rgba(51, 51, 51, 1), rgba(51, 51, 51, 0));
+    /*background: linear-gradient(to left, rgba(51, 51, 51, 1), rgba(51, 51, 51, 0));*/
     background-color: white;
 }
 

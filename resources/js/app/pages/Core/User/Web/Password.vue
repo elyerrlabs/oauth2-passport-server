@@ -458,12 +458,12 @@ export default {
     }
 
     .password-input {
-        ::v-deep .q-field__control {
+        :deep(.q-field__control) {
             border-radius: 10px;
             height: 52px;
         }
 
-        ::v-deep .q-field__native {
+        :deep(.q-field__native) {
             padding-top: 8px;
             padding-bottom: 8px;
         }

@@ -572,12 +572,12 @@ export default {
     border-left: 4px solid #4caf50;
 }
 
-::v-deep .apexcharts-tooltip {
+:deep(.apexcharts-tooltip) {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
     border-radius: 8px !important;
 }
 
-::v-deep .apexcharts-menu-item {
+:deep(.apexcharts-menu-item) {
     padding: 8px 16px !important;
 }
 

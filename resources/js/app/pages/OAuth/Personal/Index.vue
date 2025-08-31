@@ -397,13 +397,13 @@ export default {
 }
 
 .api-keys-table {
-    ::v-deep .q-table__top {
+    :deep(.q-table__top) {
         padding: 20px 24px;
         background: rgba(0, 0, 0, 0.02);
         border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
 
-    ::v-deep .q-table thead tr {
+    :deep(.q-table thead tr) {
         background: rgba(0, 0, 0, 0.02);
 
         th {
@@ -418,12 +418,12 @@ export default {
         }
     }
 
-    ::v-deep .q-table tbody td {
+    :deep(.q-table tbody td) {
         padding: 16px 12px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     }
 
-    ::v-deep .q-table tbody tr:hover {
+    :deep(.q-table tbody tr:hover) {
         background: rgba(0, 123, 255, 0.03) !important;
     }
 }
@@ -494,7 +494,7 @@ export default {
 
 .pagination-section {
     .custom-pagination {
-        ::v-deep .q-btn {
+        :deep(.q-btn) {
             border-radius: 8px;
             margin: 0 4px;
 

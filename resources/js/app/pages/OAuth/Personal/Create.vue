@@ -182,9 +182,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </q-item-section>
                                 <q-item-section side>
                                     <q-badge color="primary" rounded>
-                                        {{
-                                            getGroupScopeCount(services)
-                                        }}
+                                        {{ getGroupScopeCount(services) }}
                                         permissions
                                     </q-badge>
                                 </q-item-section>
@@ -443,7 +441,7 @@ export default {
 
     .form-section {
         .name-input {
-            ::v-deep .q-field__control {
+            :deep(.q-field__control) {
                 border-radius: 8px;
             }
         }
@@ -507,7 +505,7 @@ export default {
                 background: rgba(0, 0, 0, 0.02);
                 border-radius: 8px;
 
-                ::v-deep .q-item__section--side {
+                :deep(.q-item__section--side) {
                     display: flex;
                     align-items: center;
                 }

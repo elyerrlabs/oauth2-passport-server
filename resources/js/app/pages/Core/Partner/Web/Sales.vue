@@ -467,27 +467,27 @@ export default {
     font-weight: 500;
 }
 
-::v-deep .q-table__top {
+:deep(.q-table__top) {
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
 }
 
-::v-deep .q-table thead tr {
+:deep(.q-table thead tr) {
     height: 50px;
 }
 
-::v-deep .q-table thead th {
+:deep(.q-table thead th) {
     font-size: 0.9rem;
     font-weight: 600;
     background-color: #f8f9fa;
 }
 
-::v-deep .q-table tbody td {
+:deep(.q-table tbody td) {
     font-size: 0.9rem;
     height: 60px;
 }
 
-::v-deep .q-pagination .q-btn {
+:deep(.q-pagination .q-btn) {
     border-radius: 8px;
     margin: 0 2px;
 }
@@ -505,11 +505,11 @@ export default {
         font-size: 1.1rem;
     }
 
-    ::v-deep .q-table thead th {
+    :deep(.q-table thead th) {
         font-size: 0.8rem;
     }
 
-    ::v-deep .q-table tbody td {
+    :deep(.q-table tbody td) {
         font-size: 0.8rem;
         padding: 8px 4px;
     }

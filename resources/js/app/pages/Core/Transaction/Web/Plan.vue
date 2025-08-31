@@ -494,7 +494,7 @@ export default {
 
 .pagination-section {
     .custom-pagination {
-        ::v-deep .q-btn {
+        :deep(.q-btn) {
             border-radius: 8px;
             margin: 0 4px;
 

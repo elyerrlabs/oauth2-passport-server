@@ -460,12 +460,12 @@ export default {
 .auth-card {
     .token-section {
         .token-input {
-            ::v-deep .q-field__control {
+            :deep(.q-field__control) {
                 border-radius: 10px;
                 height: 52px;
             }
 
-            ::v-deep .q-field__native {
+            :deep(.q-field__native) {
                 padding-top: 8px;
                 padding-bottom: 8px;
                 font-size: 1.1rem;
@@ -562,7 +562,7 @@ export default {
 }
 
 // Enhanced focus states
-.token-input ::v-deep .q-field__control:focus-within {
+.token-input :deep(.q-field__control:focus-within) {
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
 </style>

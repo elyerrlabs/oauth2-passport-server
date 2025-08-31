@@ -26,8 +26,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Header Section -->
                 <div class="page-header">
                     <div class="header-content">
-                        <q-icon name="mdi-account-circle" size="36px" color="primary" class="header-icon" />
-                        <q-toolbar-title class="text-h4 text-weight-bold text-grey-8">
+                        <q-icon
+                            name="mdi-account-circle"
+                            size="36px"
+                            color="primary"
+                            class="header-icon"
+                        />
+                        <q-toolbar-title
+                            class="text-h4 text-weight-bold text-grey-8"
+                        >
                             Account Information
                         </q-toolbar-title>
                     </div>
@@ -39,8 +46,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Account Form Card -->
                 <q-card class="account-form-card" flat bordered>
                     <q-card-section>
-                        <div class="text-h6 text-weight-medium text-primary q-mb-md section-title">
-                            <q-icon name="mdi-account-details" class="q-mr-sm" />
+                        <div
+                            class="text-h6 text-weight-medium text-primary q-mb-md section-title"
+                        >
+                            <q-icon
+                                name="mdi-account-details"
+                                class="q-mr-sm"
+                            />
                             Personal Details
                         </div>
 
@@ -48,22 +60,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- First Name -->
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
-                                    <div class="input-label">First Name <span class="text-red">*</span></div>
-                                    <q-input 
-                                        filled 
+                                    <div class="input-label">
+                                        First Name
+                                        <span class="text-red">*</span>
+                                    </div>
+                                    <q-input
+                                        filled
                                         dense
-                                        v-model="form.name" 
+                                        v-model="form.name"
                                         placeholder="Enter your first name"
-                                        counter 
+                                        counter
                                         maxlength="100"
                                         :error="!!errors.name"
                                         class="custom-input"
                                     >
                                         <template v-slot:append>
-                                            <q-icon name="mdi-account" color="grey-5" />
+                                            <q-icon
+                                                name="mdi-account"
+                                                color="grey-5"
+                                            />
                                         </template>
                                     </q-input>
-                                    <div class="input-hint">Maximum 100 characters</div>
+                                    <div class="input-hint">
+                                        Maximum 100 characters
+                                    </div>
                                     <v-error :error="errors.name" />
                                 </div>
                             </div>
@@ -71,22 +91,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Last Name -->
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
-                                    <div class="input-label">Last Name <span class="text-red">*</span></div>
-                                    <q-input 
-                                        filled 
+                                    <div class="input-label">
+                                        Last Name
+                                        <span class="text-red">*</span>
+                                    </div>
+                                    <q-input
+                                        filled
                                         dense
-                                        v-model="form.last_name" 
+                                        v-model="form.last_name"
                                         placeholder="Enter your last name"
-                                        counter 
+                                        counter
                                         maxlength="100"
                                         :error="!!errors.last_name"
                                         class="custom-input"
                                     >
                                         <template v-slot:append>
-                                            <q-icon name="mdi-account" color="grey-5" />
+                                            <q-icon
+                                                name="mdi-account"
+                                                color="grey-5"
+                                            />
                                         </template>
                                     </q-input>
-                                    <div class="input-hint">Maximum 100 characters</div>
+                                    <div class="input-hint">
+                                        Maximum 100 characters
+                                    </div>
                                     <v-error :error="errors.last_name" />
                                 </div>
                             </div>
@@ -94,11 +122,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Email -->
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
-                                    <div class="input-label">Email <span class="text-red">*</span></div>
-                                    <q-input 
-                                        filled 
+                                    <div class="input-label">
+                                        Email <span class="text-red">*</span>
+                                    </div>
+                                    <q-input
+                                        filled
                                         dense
-                                        v-model="form.email" 
+                                        v-model="form.email"
                                         type="email"
                                         placeholder="Enter your email address"
                                         maxlength="100"
@@ -106,10 +136,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="custom-input"
                                     >
                                         <template v-slot:append>
-                                            <q-icon name="mdi-email" color="grey-5" />
+                                            <q-icon
+                                                name="mdi-email"
+                                                color="grey-5"
+                                            />
                                         </template>
                                     </q-input>
-                                    <div class="input-hint">Must be unique and valid. Max 100 characters</div>
+                                    <div class="input-hint">
+                                        Must be unique and valid. Max 100
+                                        characters
+                                    </div>
                                     <v-error :error="errors.email" />
                                 </div>
                             </div>
@@ -118,11 +154,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
                                     <div class="input-label">Country</div>
-                                    <q-select 
-                                        v-model="form.country" 
+                                    <q-select
+                                        v-model="form.country"
                                         dense
-                                        emit-value 
-                                        map-options 
+                                        emit-value
+                                        map-options
                                         :options="countryOptions"
                                         label="Select your country"
                                         outlined
@@ -134,25 +170,50 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         behavior="menu"
                                     >
                                         <template v-slot:selected>
-                                            <div v-if="form.country" class="selected-option">
-                                                <span class="option-emoji">{{ getCountryEmoji(form.country) }}</span>
+                                            <div
+                                                v-if="form.country"
+                                                class="selected-option"
+                                            >
+                                                <span class="option-emoji">{{
+                                                    getCountryEmoji(
+                                                        form.country
+                                                    )
+                                                }}</span>
                                                 {{ form.country }}
                                             </div>
-                                            <div v-else class="text-grey-6">Select your country</div>
+                                            <div v-else class="text-grey-6">
+                                                Select your country
+                                            </div>
                                         </template>
                                         <template v-slot:option="scope">
                                             <q-item v-bind="scope.itemProps">
                                                 <q-item-section avatar>
-                                                    <span class="option-emoji">{{ scope.opt.label.split(' ')[0] }}</span>
+                                                    <span
+                                                        class="option-emoji"
+                                                        >{{
+                                                            scope.opt.label.split(
+                                                                " "
+                                                            )[0]
+                                                        }}</span
+                                                    >
                                                 </q-item-section>
                                                 <q-item-section>
-                                                    <q-item-label>{{ scope.opt.label.replace(scope.opt.label.split(' ')[0] + ' ', '') }}</q-item-label>
+                                                    <q-item-label>{{
+                                                        scope.opt.label.replace(
+                                                            scope.opt.label.split(
+                                                                " "
+                                                            )[0] + " ",
+                                                            ""
+                                                        )
+                                                    }}</q-item-label>
                                                 </q-item-section>
                                             </q-item>
                                         </template>
                                         <template v-slot:no-option>
                                             <q-item>
-                                                <q-item-section class="text-grey">
+                                                <q-item-section
+                                                    class="text-grey"
+                                                >
                                                     No countries found
                                                 </q-item-section>
                                             </q-item>
@@ -166,20 +227,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
                                     <div class="input-label">City</div>
-                                    <q-input 
-                                        filled 
+                                    <q-input
+                                        filled
                                         dense
-                                        v-model="form.city" 
+                                        v-model="form.city"
                                         placeholder="Enter your city"
                                         maxlength="100"
                                         :error="!!errors.city"
                                         class="custom-input"
                                     >
                                         <template v-slot:append>
-                                            <q-icon name="mdi-city" color="grey-5" />
+                                            <q-icon
+                                                name="mdi-city"
+                                                color="grey-5"
+                                            />
                                         </template>
                                     </q-input>
-                                    <div class="input-hint">Optional. Max 100 characters</div>
+                                    <div class="input-hint">
+                                        Optional. Max 100 characters
+                                    </div>
                                     <v-error :error="errors.city" />
                                 </div>
                             </div>
@@ -188,20 +254,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
                                     <div class="input-label">Address</div>
-                                    <q-input 
-                                        filled 
+                                    <q-input
+                                        filled
                                         dense
-                                        v-model="form.address" 
+                                        v-model="form.address"
                                         placeholder="Enter your full address"
                                         maxlength="150"
                                         :error="!!errors.address"
                                         class="custom-input"
                                     >
                                         <template v-slot:append>
-                                            <q-icon name="mdi-home" color="grey-5" />
+                                            <q-icon
+                                                name="mdi-home"
+                                                color="grey-5"
+                                            />
                                         </template>
                                     </q-input>
-                                    <div class="input-hint">Optional. Max 150 characters</div>
+                                    <div class="input-hint">
+                                        Optional. Max 150 characters
+                                    </div>
                                     <v-error :error="errors.address" />
                                 </div>
                             </div>
@@ -210,11 +281,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
                                     <div class="input-label">Dial Code</div>
-                                    <q-select 
-                                        v-model="form.dial_code" 
+                                    <q-select
+                                        v-model="form.dial_code"
                                         dense
-                                        emit-value 
-                                        map-options 
+                                        emit-value
+                                        map-options
                                         :options="dialCodeOptions"
                                         label="Select dial code"
                                         outlined
@@ -226,21 +297,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         behavior="menu"
                                     >
                                         <template v-slot:selected>
-                                            <div v-if="form.dial_code" class="selected-option">
+                                            <div
+                                                v-if="form.dial_code"
+                                                class="selected-option"
+                                            >
                                                 {{ form.dial_code }}
                                             </div>
-                                            <div v-else class="text-grey-6">Select dial code</div>
+                                            <div v-else class="text-grey-6">
+                                                Select dial code
+                                            </div>
                                         </template>
                                         <template v-slot:option="scope">
                                             <q-item v-bind="scope.itemProps">
                                                 <q-item-section>
-                                                    <q-item-label>{{ scope.opt.label }}</q-item-label>
+                                                    <q-item-label>{{
+                                                        scope.opt.label
+                                                    }}</q-item-label>
                                                 </q-item-section>
                                             </q-item>
                                         </template>
                                         <template v-slot:no-option>
                                             <q-item>
-                                                <q-item-section class="text-grey">
+                                                <q-item-section
+                                                    class="text-grey"
+                                                >
                                                     No dial codes found
                                                 </q-item-section>
                                             </q-item>
@@ -254,20 +334,26 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
                                     <div class="input-label">Phone Number</div>
-                                    <q-input 
-                                        filled 
+                                    <q-input
+                                        filled
                                         dense
-                                        v-model="form.phone" 
+                                        v-model="form.phone"
                                         placeholder="Enter your phone number"
                                         maxlength="25"
                                         :error="!!errors.phone"
                                         class="custom-input"
                                     >
                                         <template v-slot:append>
-                                            <q-icon name="mdi-phone" color="grey-5" />
+                                            <q-icon
+                                                name="mdi-phone"
+                                                color="grey-5"
+                                            />
                                         </template>
                                     </q-input>
-                                    <div class="input-hint">Required if dial code is filled. Must be unique. Max 25 characters</div>
+                                    <div class="input-hint">
+                                        Required if dial code is filled. Must be
+                                        unique. Max 25 characters
+                                    </div>
                                     <v-error :error="errors.phone" />
                                 </div>
                             </div>
@@ -277,18 +363,28 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="input-section">
                                     <div class="input-label">Birthday</div>
                                     <div class="date-picker-container">
-                                        <VueDatePicker 
-                                            v-model="form.birthday" 
-                                            :enable-time-picker="false" 
+                                        <VueDatePicker
+                                            v-model="form.birthday"
+                                            :enable-time-picker="false"
                                             :max-date="new Date()"
-                                            format="yyyy-MM-dd" 
-                                            model-type="format" 
+                                            format="yyyy-MM-dd"
+                                            model-type="format"
                                             placeholder="Select your birthday"
-                                            :class="{'error-border': !!errors.birthday}"
+                                            :class="{
+                                                'error-border':
+                                                    !!errors.birthday,
+                                            }"
                                         />
-                                        <q-icon name="mdi-calendar" color="grey-5" class="date-picker-icon" />
+                                        <q-icon
+                                            name="mdi-calendar"
+                                            color="grey-5"
+                                            class="date-picker-icon"
+                                        />
                                     </div>
-                                    <div class="input-hint">Optional. Format: YYYY-MM-DD. Must be a past date</div>
+                                    <div class="input-hint">
+                                        Optional. Format: YYYY-MM-DD. Must be a
+                                        past date
+                                    </div>
                                     <v-error :error="errors.birthday" />
                                 </div>
                             </div>
@@ -297,11 +393,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Submit Button -->
                     <q-card-actions class="q-px-md q-pb-md">
-                        <q-btn 
-                            label="Update Information" 
-                            color="primary" 
-                            unelevated 
-                            no-caps 
+                        <q-btn
+                            label="Update Information"
+                            color="primary"
+                            unelevated
+                            no-caps
                             @click="update"
                             class="submit-button"
                             :loading="loading"
@@ -337,23 +433,27 @@ export default {
             filteredCountryOptions: [],
             filteredDialCodeOptions: [],
             errors: {},
-            loading: false
+            loading: false,
         };
     },
 
     computed: {
         countryOptions() {
-            return this.filteredCountryOptions.length > 0 ? this.filteredCountryOptions : this.countries.map((c) => ({
-                label: `${c.emoji} ${c.name_en}`,
-                value: c.name_en,
-            }));
+            return this.filteredCountryOptions.length > 0
+                ? this.filteredCountryOptions
+                : this.countries.map((c) => ({
+                      label: `${c.emoji} ${c.name_en}`,
+                      value: c.name_en,
+                  }));
         },
         dialCodeOptions() {
-            return this.filteredDialCodeOptions.length > 0 ? this.filteredDialCodeOptions : this.countries.map((c) => ({
-                label: `${c.emoji} ${c.name_en} (${c.dial_code})`,
-                value: c.dial_code,
-            }));
-        }
+            return this.filteredDialCodeOptions.length > 0
+                ? this.filteredDialCodeOptions
+                : this.countries.map((c) => ({
+                      label: `${c.emoji} ${c.name_en} (${c.dial_code})`,
+                      value: c.dial_code,
+                  }));
+        },
     },
 
     created() {
@@ -370,36 +470,36 @@ export default {
         async update() {
             this.loading = true;
             this.errors = {};
-            
+
             try {
                 const res = await this.$server.put(
                     this.form.links.update,
                     this.form
                 );
-                
+
                 if (res.status === 200) {
                     this.form = res.data.data;
-                    
+
                     this.$q.notify({
                         type: "positive",
                         message: "Information has been updated successfully",
                         timeout: 3000,
                         position: "top-right",
                         icon: "mdi-check-circle",
-                        progress: true
+                        progress: true,
                     });
                 }
             } catch (e) {
                 if (e.response && e.response.status == 422) {
                     this.errors = e.response.data.errors;
-                    
+
                     this.$q.notify({
                         type: "negative",
                         message: "Please fix the errors in the form",
                         timeout: 3000,
                         position: "top-right",
                         icon: "mdi-alert-circle",
-                        progress: true
+                        progress: true,
                     });
                 }
             } finally {
@@ -423,18 +523,20 @@ export default {
                         value: c.dial_code,
                     }));
                 }
-            } catch (e) { 
+            } catch (e) {
                 console.error("Failed to load countries", e);
             }
         },
 
         getCountryEmoji(countryName) {
-            const country = this.countries.find(c => c.name_en === countryName);
-            return country ? country.emoji : '';
+            const country = this.countries.find(
+                (c) => c.name_en === countryName
+            );
+            return country ? country.emoji : "";
         },
 
         filterCountryOptions(val, update) {
-            if (val === '') {
+            if (val === "") {
                 update(() => {
                     this.filteredCountryOptions = this.countries.map((c) => ({
                         label: `${c.emoji} ${c.name_en}`,
@@ -447,8 +549,8 @@ export default {
             update(() => {
                 const needle = val.toLowerCase();
                 this.filteredCountryOptions = this.countries
-                    .filter(c => c.name_en.toLowerCase().includes(needle))
-                    .map(c => ({
+                    .filter((c) => c.name_en.toLowerCase().includes(needle))
+                    .map((c) => ({
                         label: `${c.emoji} ${c.name_en}`,
                         value: c.name_en,
                     }));
@@ -456,7 +558,7 @@ export default {
         },
 
         filterDialCodeOptions(val, update) {
-            if (val === '') {
+            if (val === "") {
                 update(() => {
                     this.filteredDialCodeOptions = this.countries.map((c) => ({
                         label: `${c.emoji} ${c.name_en} (${c.dial_code})`,
@@ -469,13 +571,17 @@ export default {
             update(() => {
                 const needle = val.toLowerCase();
                 this.filteredDialCodeOptions = this.countries
-                    .filter(c => c.name_en.toLowerCase().includes(needle) || c.dial_code.includes(needle))
-                    .map(c => ({
+                    .filter(
+                        (c) =>
+                            c.name_en.toLowerCase().includes(needle) ||
+                            c.dial_code.includes(needle)
+                    )
+                    .map((c) => ({
                         label: `${c.emoji} ${c.name_en} (${c.dial_code})`,
                         value: c.dial_code,
                     }));
             });
-        }
+        },
     },
 };
 </script>
@@ -498,7 +604,7 @@ export default {
 .page-header {
     text-align: center;
     margin-bottom: 32px;
-    
+
     .header-content {
         display: flex;
         align-items: center;
@@ -506,7 +612,7 @@ export default {
         gap: 16px;
         margin-bottom: 8px;
     }
-    
+
     .header-icon {
         background: rgba(0, 0, 0, 0.05);
         padding: 16px;
@@ -518,11 +624,11 @@ export default {
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    
+
     .q-card__section {
         padding: 32px;
     }
-    
+
     .section-title {
         padding-bottom: 16px;
         border-bottom: 2px solid rgba(0, 0, 0, 0.06);
@@ -531,66 +637,66 @@ export default {
 
 .input-section {
     margin-bottom: 24px;
-    
+
     .input-label {
         font-weight: 600;
         margin-bottom: 8px;
         color: #2d3748;
         font-size: 0.95rem;
     }
-    
+
     .input-hint {
         font-size: 0.75rem;
         color: #718096;
         margin-top: 4px;
     }
-    
+
     .custom-input {
-        ::v-deep .q-field__control {
+        :deep(.q-field__control) {
             border-radius: 10px;
             height: 48px;
         }
-        
-        ::v-deep .q-field__native {
+
+        :deep(.q-field__native) {
             padding-top: 6px;
             padding-bottom: 6px;
         }
     }
-    
+
     .custom-select {
-        ::v-deep .q-field__control {
+        :deep(.q-field__control) {
             border-radius: 10px;
             height: 48px;
         }
-        
-        ::v-deep .q-field__native {
+
+        :deep(.q-field__native) {
             min-height: 48px;
         }
     }
-    
+
     .date-picker-container {
         position: relative;
-        
+
         .vue-date-picker {
             width: 100%;
-            
-            ::v-deep .dp__input {
+
+            :deep(.dp__input) {
                 border: 1px solid #cbd5e0;
                 border-radius: 10px;
                 padding: 12px 16px;
                 height: 48px;
                 font-size: 1rem;
-                
+
                 &:focus {
                     border-color: var(--q-primary);
                 }
             }
-            
-            &.error-border ::v-deep .dp__input {
+
+            &.error-border :deep(.dp__input) {
                 border-color: #f56565;
             }
         }
-        
+
         .date-picker-icon {
             position: absolute;
             right: 12px;
@@ -622,19 +728,19 @@ export default {
 }
 
 // Enhanced select dropdown styling
-::v-deep .q-menu {
+:deep(.q-menu) {
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-    
+
     .q-item {
         padding: 12px 16px;
         border-radius: 6px;
         margin: 4px;
-        
+
         &:hover {
             background: rgba(0, 0, 0, 0.04);
         }
-        
+
         &.q-item--active {
             background: rgba(0, 0, 0, 0.08);
             color: var(--q-primary);
@@ -647,16 +753,16 @@ export default {
     .account-info-page {
         padding: 16px;
     }
-    
+
     .account-form-card .q-card__section {
         padding: 24px;
     }
-    
+
     .page-header {
         .text-h4 {
             font-size: 1.75rem;
         }
-        
+
         .header-icon {
             padding: 12px;
             font-size: 28px;
@@ -668,22 +774,22 @@ export default {
     .account-info-page {
         padding: 12px;
     }
-    
+
     .account-form-card .q-card__section {
         padding: 20px;
     }
-    
+
     .page-header {
         .text-h4 {
             font-size: 1.5rem;
         }
-        
+
         .header-content {
             flex-direction: column;
             gap: 12px;
         }
     }
-    
+
     .submit-button {
         width: 100%;
     }

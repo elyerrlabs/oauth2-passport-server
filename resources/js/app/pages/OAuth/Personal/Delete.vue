@@ -241,7 +241,7 @@ export default {
                     font-size: 1rem;
                     padding: 8px 16px;
 
-                    ::v-deep .q-chip__icon {
+                    :deep(.q-chip__icon) {
                         font-size: 18px;
                     }
                 }

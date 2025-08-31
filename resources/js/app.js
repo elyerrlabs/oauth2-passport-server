@@ -19,8 +19,10 @@
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
+
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 
 import { customComponents } from "./app/config/customComponents.js";
 //import { $echo } from "./app/config/echo.js";
@@ -42,10 +44,11 @@ import iconSet from "quasar/icon-set/material-icons.js";
 import "@mdi/font/css/materialdesignicons.css";
 
 createInertiaApp({
-  resolve: (name) => {
-    const pages = require.context("./app/pages", true, /\.vue$/);
-    return pages(`./${name}.vue`).default;
-  },
+  resolve: (name) =>
+    resolvePageComponent(
+      `./app/pages/${name}.vue`,
+      import.meta.glob("./app/pages/**/*.vue")
+    ),
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) });
 

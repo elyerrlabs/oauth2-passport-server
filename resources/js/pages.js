@@ -16,31 +16,31 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
 import flatpickr from "flatpickr";
+import "../css/app.css";
 
 flatpickr(".date", {
-    dateFormat: "Y-m-d",
-    locale: "en",
-    maxDate: "today",
+  dateFormat: "Y-m-d",
+  locale: "en",
+  maxDate: "today",
 });
 
 flatpickr(".datetime", {
-    enableTime: true,
-    dateFormat: "Y-m-d H:i",
-    locale: "en",
-    maxDate: "today",
-    minuteIncrement: 1,
+  enableTime: true,
+  dateFormat: "Y-m-d H:i",
+  locale: "en",
+  maxDate: "today",
+  minuteIncrement: 1,
 });
 
 flatpickr(".range", {
-    mode: "range",
-    enableTime: true,
-    dateFormat: "Y-m-d H:i",
-    locale: "en",
-    maxDate: "today",
-    minuteIncrement: 1,
+  mode: "range",
+  enableTime: true,
+  dateFormat: "Y-m-d H:i",
+  locale: "en",
+  maxDate: "today",
+  minuteIncrement: 1,
 });

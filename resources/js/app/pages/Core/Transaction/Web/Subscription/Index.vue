@@ -26,16 +26,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Header Section -->
             <div class="page-header">
                 <q-toolbar class="header-toolbar">
-                    <q-icon name="mdi-package-variant" size="32px" color="primary" class="header-icon" />
-                    <q-toolbar-title class="text-h4 text-weight-bold text-grey-8">
+                    <q-icon
+                        name="mdi-package-variant"
+                        size="32px"
+                        color="primary"
+                        class="header-icon"
+                    />
+                    <q-toolbar-title
+                        class="text-h4 text-weight-bold text-grey-8"
+                    >
                         Subscription Packages
                     </q-toolbar-title>
                     <q-space />
-                    <q-btn 
-                        color="primary" 
-                        icon="mdi-refresh" 
-                        label="Refresh" 
-                        outline 
+                    <q-btn
+                        color="primary"
+                        icon="mdi-refresh"
+                        label="Refresh"
+                        outline
                         @click="getPackages"
                         :loading="loading"
                     />
@@ -67,12 +74,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Name Column -->
                         <template v-slot:body-cell-name="props">
                             <q-td class="name-cell">
-                                <div class="package-name text-weight-bold text-primary">
+                                <div
+                                    class="package-name text-weight-bold text-primary"
+                                >
                                     {{ props.row.meta.name }}
                                 </div>
-                                <div class="package-period text-caption text-grey-6">
-                                    <q-icon name="mdi-calendar" size="14px" class="q-mr-xs" />
-                                    {{ props.row.transaction.billing_period_name }} plan
+                                <div
+                                    class="package-period text-caption text-grey-6"
+                                >
+                                    <q-icon
+                                        name="mdi-calendar"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    {{
+                                        props.row.transaction
+                                            .billing_period_name
+                                    }}
+                                    plan
                                 </div>
                             </q-td>
                         </template>
@@ -81,9 +100,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <template v-slot:body-cell-price="props">
                             <q-td class="price-cell">
                                 <div class="price-amount text-weight-bold">
-                                    {{ props.row.transaction.currency }} {{ props.row.transaction.total }}
+                                    {{ props.row.transaction.currency }}
+                                    {{ props.row.transaction.total }}
                                 </div>
-                                <div class="price-frequency text-caption text-grey-6">
+                                <div
+                                    class="price-frequency text-caption text-grey-6"
+                                >
                                     One-time payment
                                 </div>
                             </q-td>
@@ -92,10 +114,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Bonus Column -->
                         <template v-slot:body-cell-bonus="props">
                             <q-td class="bonus-cell">
-                                <div v-if="props.row.meta.bonus_enabled" class="bonus-badge">
-                                    <q-icon name="mdi-gift" color="orange" size="18px" class="q-mr-xs" />
-                                    <span class="text-orange text-weight-medium">
-                                        +{{ props.row.meta.bonus_duration }} days free
+                                <div
+                                    v-if="props.row.meta.bonus_enabled"
+                                    class="bonus-badge"
+                                >
+                                    <q-icon
+                                        name="mdi-gift"
+                                        color="orange"
+                                        size="18px"
+                                        class="q-mr-xs"
+                                    />
+                                    <span
+                                        class="text-orange text-weight-medium"
+                                    >
+                                        +{{ props.row.meta.bonus_duration }}
+                                        days free
                                     </span>
                                 </div>
                                 <div v-else class="text-grey-5">—</div>
@@ -114,7 +147,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <template v-slot:body-cell-end="props">
                             <q-td class="date-cell">
                                 <div class="date-label">Expires</div>
-                                <div class="date-value text-weight-medium" :class="{'text-positive': isDateFuture(props.row.end_at), 'text-negative': !isDateFuture(props.row.end_at)}">
+                                <div
+                                    class="date-value text-weight-medium"
+                                    :class="{
+                                        'text-positive': isDateFuture(
+                                            props.row.end_at
+                                        ),
+                                        'text-negative': !isDateFuture(
+                                            props.row.end_at
+                                        ),
+                                    }"
+                                >
                                     {{ formatDate(props.row.end_at) }}
                                 </div>
                             </q-td>
@@ -123,8 +166,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Payment Method Column -->
                         <template v-slot:body-cell-method="props">
                             <q-td class="method-cell">
-                                <q-badge color="blue-1" text-color="blue-8" class="method-badge">
-                                    <q-icon :name="getPaymentMethodIcon(props.row.transaction.payment_method)" size="14px" class="q-mr-xs" />
+                                <q-badge
+                                    color="blue-1"
+                                    text-color="blue-8"
+                                    class="method-badge"
+                                >
+                                    <q-icon
+                                        :name="
+                                            getPaymentMethodIcon(
+                                                props.row.transaction
+                                                    .payment_method
+                                            )
+                                        "
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
                                     {{ props.row.transaction.payment_method }}
                                 </q-badge>
                             </q-td>
@@ -134,17 +190,33 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <template v-slot:body-cell-recurring="props">
                             <q-td class="recurring-cell">
                                 <q-badge
-                                    :color="props.row.is_recurring ? 'green-1' : 'grey-3'"
-                                    :text-color="props.row.is_recurring ? 'green-8' : 'grey-7'"
+                                    :color="
+                                        props.row.is_recurring
+                                            ? 'green-1'
+                                            : 'grey-3'
+                                    "
+                                    :text-color="
+                                        props.row.is_recurring
+                                            ? 'green-8'
+                                            : 'grey-7'
+                                    "
                                     class="recurring-badge"
                                     outline
                                 >
                                     <q-icon
-                                        :name="props.row.is_recurring ? 'mdi-autorenew' : 'mdi-cancel'"
+                                        :name="
+                                            props.row.is_recurring
+                                                ? 'mdi-autorenew'
+                                                : 'mdi-cancel'
+                                        "
                                         class="q-mr-xs"
                                         size="16px"
                                     />
-                                    {{ props.row.is_recurring ? "Active" : "Inactive" }}
+                                    {{
+                                        props.row.is_recurring
+                                            ? "Active"
+                                            : "Inactive"
+                                    }}
                                 </q-badge>
                             </q-td>
                         </template>
@@ -157,7 +229,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="status-badge"
                                     rounded
                                 >
-                                    <q-icon :name="getStatusIcon(props.row.status)" class="q-mr-xs" size="14px" />
+                                    <q-icon
+                                        :name="getStatusIcon(props.row.status)"
+                                        class="q-mr-xs"
+                                        size="14px"
+                                    />
                                     {{ props.row.status }}
                                 </q-badge>
                             </q-td>
@@ -188,13 +264,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Empty State -->
                         <template v-slot:no-data>
                             <div class="empty-state text-center q-pa-xl">
-                                <q-icon name="mdi-package-variant-closed" size="64px" color="grey-4" class="empty-icon" />
-                                <div class="empty-title text-h6 text-grey-7 q-mt-md">No packages found</div>
-                                <div class="empty-subtitle text-grey-5">Your subscription packages will appear here</div>
-                                <q-btn 
-                                    color="primary" 
-                                    label="Browse Plans" 
-                                    unelevated 
+                                <q-icon
+                                    name="mdi-package-variant-closed"
+                                    size="64px"
+                                    color="grey-4"
+                                    class="empty-icon"
+                                />
+                                <div
+                                    class="empty-title text-h6 text-grey-7 q-mt-md"
+                                >
+                                    No packages found
+                                </div>
+                                <div class="empty-subtitle text-grey-5">
+                                    Your subscription packages will appear here
+                                </div>
+                                <q-btn
+                                    color="primary"
+                                    label="Browse Plans"
+                                    unelevated
                                     class="q-mt-md"
                                     :href="route('plans.index')"
                                     v-if="$page.props.routes.plans"
@@ -251,33 +338,33 @@ export default {
                     align: "left",
                     sortable: true,
                 },
-                { 
-                    name: "price", 
-                    label: "Price", 
+                {
+                    name: "price",
+                    label: "Price",
                     align: "left",
                     sortable: true,
                 },
-                { 
-                    name: "bonus", 
-                    label: "Bonus", 
+                {
+                    name: "bonus",
+                    label: "Bonus",
                     align: "center",
                     sortable: false,
                 },
-                { 
-                    name: "start", 
-                    label: "Start Date", 
+                {
+                    name: "start",
+                    label: "Start Date",
                     align: "left",
                     sortable: true,
                 },
-                { 
-                    name: "end", 
-                    label: "End Date", 
+                {
+                    name: "end",
+                    label: "End Date",
                     align: "left",
                     sortable: true,
                 },
-                { 
-                    name: "method", 
-                    label: "Payment Method", 
+                {
+                    name: "method",
+                    label: "Payment Method",
                     align: "center",
                     sortable: true,
                 },
@@ -288,15 +375,15 @@ export default {
                     field: "is_recurring",
                     sortable: true,
                 },
-                { 
-                    name: "status", 
-                    label: "Status", 
+                {
+                    name: "status",
+                    label: "Status",
                     align: "center",
                     sortable: true,
                 },
-                { 
-                    name: "actions", 
-                    label: "Actions", 
+                {
+                    name: "actions",
+                    label: "Actions",
                     align: "center",
                     sortable: false,
                 },
@@ -339,7 +426,7 @@ export default {
                     message: "Failed to load packages. Please try again.",
                     color: "negative",
                     icon: "error",
-                    position: "top"
+                    position: "top",
                 });
             } finally {
                 this.loading = false;
@@ -348,10 +435,10 @@ export default {
 
         formatDate(dateString) {
             if (!dateString) return "N/A";
-            return new Date(dateString).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
+            return new Date(dateString).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
             });
         },
 
@@ -362,39 +449,39 @@ export default {
 
         getStatusColor(status) {
             const statusColors = {
-                'successful': 'positive',
-                'active': 'positive',
-                'pending': 'warning',
-                'failed': 'negative',
-                'cancelled': 'grey',
-                'expired': 'orange'
+                successful: "positive",
+                active: "positive",
+                pending: "warning",
+                failed: "negative",
+                cancelled: "grey",
+                expired: "orange",
             };
-            return statusColors[status] || 'grey';
+            return statusColors[status] || "grey";
         },
 
         getStatusIcon(status) {
             const statusIcons = {
-                'successful': 'mdi-check-circle',
-                'active': 'mdi-check-circle',
-                'pending': 'mdi-clock-outline',
-                'failed': 'mdi-close-circle',
-                'cancelled': 'mdi-cancel',
-                'expired': 'mdi-alert-circle'
+                successful: "mdi-check-circle",
+                active: "mdi-check-circle",
+                pending: "mdi-clock-outline",
+                failed: "mdi-close-circle",
+                cancelled: "mdi-cancel",
+                expired: "mdi-alert-circle",
             };
-            return statusIcons[status] || 'mdi-help-circle';
+            return statusIcons[status] || "mdi-help-circle";
         },
 
         getPaymentMethodIcon(method) {
             const methodIcons = {
-                'credit_card': 'mdi-credit-card',
-                'paypal': 'mdi-paypal',
-                'stripe': 'mdi-credit-card',
-                'bank_transfer': 'mdi-bank',
-                'crypto': 'mdi-bitcoin',
-                'default': 'mdi-cash'
+                credit_card: "mdi-credit-card",
+                paypal: "mdi-paypal",
+                stripe: "mdi-credit-card",
+                bank_transfer: "mdi-bank",
+                crypto: "mdi-bitcoin",
+                default: "mdi-cash",
             };
             return methodIcons[method?.toLowerCase()] || methodIcons.default;
-        }
+        },
     },
 };
 </script>
@@ -409,17 +496,17 @@ export default {
     background: white;
     padding: 24px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    
+
     .header-toolbar {
         padding: 0;
-        
+
         .header-icon {
             background: rgba(0, 0, 0, 0.05);
             padding: 12px;
             border-radius: 50%;
         }
     }
-    
+
     .header-subtitle {
         max-width: 800px;
     }
@@ -438,33 +525,33 @@ export default {
 }
 
 .packages-table {
-    ::v-deep .q-table__top {
+    :deep(.q-table__top) {
         padding: 20px 24px;
         background: rgba(0, 0, 0, 0.02);
         border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
-    
-    ::v-deep .q-table thead tr {
+
+    :deep(.q-table thead tr) {
         background: rgba(0, 0, 0, 0.02);
-        
+
         th {
             font-weight: 600;
             font-size: 0.9rem;
             color: #374151;
             padding: 16px 12px;
-            
+
             &.sortable:hover {
                 color: var(--q-primary);
             }
         }
     }
-    
-    ::v-deep .q-table tbody td {
+
+    :deep(.q-table tbody td) {
         padding: 16px 12px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     }
-    
-    ::v-deep .q-table tbody tr:hover {
+
+    :deep(.q-table tbody tr:hover) {
         background: rgba(0, 123, 255, 0.03) !important;
     }
 }
@@ -475,7 +562,7 @@ export default {
         font-size: 1rem;
         margin-bottom: 4px;
     }
-    
+
     .package-period {
         display: flex;
         align-items: center;
@@ -487,7 +574,7 @@ export default {
         font-size: 1.1rem;
         color: var(--q-primary);
     }
-    
+
     .price-frequency {
         font-size: 0.75rem;
     }
@@ -509,7 +596,7 @@ export default {
         color: #6b7280;
         margin-bottom: 2px;
     }
-    
+
     .date-value {
         font-size: 0.9rem;
     }
@@ -550,7 +637,7 @@ export default {
         align-items: center;
         justify-content: center;
         gap: 8px;
-        
+
         .view-btn {
             min-width: 80px;
         }
@@ -561,11 +648,11 @@ export default {
     .empty-icon {
         opacity: 0.5;
     }
-    
+
     .empty-title {
         font-weight: 500;
     }
-    
+
     .empty-subtitle {
         font-size: 0.9rem;
     }
@@ -573,10 +660,10 @@ export default {
 
 .pagination-section {
     .custom-pagination {
-        ::v-deep .q-btn {
+        :deep(.q-btn) {
             border-radius: 8px;
             margin: 0 4px;
-            
+
             &.q-btn--active {
                 background: var(--q-primary);
                 color: white;
@@ -589,20 +676,20 @@ export default {
 @media (max-width: 1023px) {
     .page-header {
         padding: 20px;
-        
+
         .text-h4 {
             font-size: 1.75rem;
         }
     }
-    
+
     .packages-container {
         padding: 16px;
     }
-    
+
     .action-buttons {
         flex-direction: column;
         gap: 8px;
-        
+
         .view-btn {
             min-width: 60px !important;
         }
@@ -612,41 +699,41 @@ export default {
 @media (max-width: 767px) {
     .page-header {
         padding: 16px;
-        
+
         .text-h4 {
             font-size: 1.5rem;
         }
-        
+
         .header-toolbar {
             flex-direction: column;
             gap: 16px;
             align-items: flex-start;
         }
     }
-    
+
     .packages-container {
         padding: 12px;
     }
-    
+
     .packages-table {
-        ::v-deep .q-table thead {
+        :deep(.q-table thead) {
             display: none;
         }
-        
-        ::v-deep .q-table tbody tr {
+
+        :deep(.q-table tbody tr) {
             display: block;
             margin-bottom: 16px;
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 12px;
             padding: 16px;
         }
-        
-        ::v-deep .q-table tbody td {
+
+        :deep(.q-table tbody td) {
             display: block;
             text-align: left !important;
             border: none;
             padding: 8px 0;
-            
+
             &:before {
                 content: attr(data-label);
                 font-weight: 600;

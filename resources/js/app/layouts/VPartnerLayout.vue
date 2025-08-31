@@ -109,7 +109,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div
                     class="absolute-bottom q-pa-md text-center text-caption text-grey-6"
                 >
-                   &copy; {{ new Date().getFullYear() }} {{ $page.props.org_name }}
+                    &copy; {{ new Date().getFullYear() }}
+                    {{ $page.props.org_name }}
                 </div>
             </q-scroll-area>
         </q-drawer>
@@ -194,11 +195,11 @@ export default {
     width: 100%;
 }
 
-::v-deep .q-drawer__content {
+:deep(.q-drawer__content) {
     scrollbar-width: thin;
 }
 
-::v-deep .q-item__section--side {
+:deep(.q-item__section--side) {
     padding-right: 12px;
 }
 
@@ -230,7 +231,7 @@ export default {
     transform: scale(0.98);
 }
 
-::v-deep .q-avatar {
+:deep(.q-avatar) {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 

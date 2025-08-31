@@ -519,30 +519,30 @@ export default {
     text-overflow: ellipsis;
 }
 
-::v-deep .q-table__top {
+:deep(.q-table__top) {
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
 }
 
-::v-deep .q-table__container {
+:deep(.q-table__container) {
     border-radius: 12px;
 }
 
-::v-deep .q-table thead tr {
+:deep(.q-table thead tr) {
     height: 60px;
 }
 
-::v-deep .q-table thead th {
+:deep(.q-table thead th) {
     font-size: 1rem;
     font-weight: 600;
 }
 
-::v-deep .q-table tbody td {
+:deep(.q-table tbody td) {
     font-size: 0.95rem;
     height: 64px;
 }
 
-::v-deep .q-pagination .q-btn {
+:deep(.q-pagination .q-btn) {
     border-radius: 8px;
 }
 </style>

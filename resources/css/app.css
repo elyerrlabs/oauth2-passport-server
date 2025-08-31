@@ -1,7 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 @import "flatpickr";
+@import 'tailwindcss';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
 
 :root {
     --color-primary: rgb(79 70 229);
@@ -35,7 +37,6 @@
     --radius-lg: 0.75rem;
     --radius-xl: 1rem;
 }
-
 
 /* Custom scrollbar */
 .custom-scrollbar::-webkit-scrollbar {

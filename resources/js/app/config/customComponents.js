@@ -16,27 +16,24 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
- * 
+ *
+ *
  */
 function importComponents() {
-    const requireComponent = require.context(
-        "../components", //directoy
-        false, //includ subdirectories
-        /V[A-Z]\w+\.(vue|js)$/ //expresion to get files name
-    );
+  const modules = import.meta.glob("../components/V[A-Z]*.{vue,js}", {
+    eager: true,
+  });
 
-    const components = requireComponent.keys().map((fileName) => {         
-        // get file name in PascalCase
-        const componentName = fileName.replace(/^\.\/(.*)\.\w+$/, "$1");
+  const components = Object.entries(modules).map(([path, module]) => {
+    const componentName = path
+      .split("/")
+      .pop()
+      .replace(/\.\w+$/, "");
 
-        // import component
-        const componentConfig = requireComponent(fileName);
+    return [componentName, module.default || module];
+  });
 
-        return [componentName, componentConfig.default || componentConfig];
-    });
-    
-    return components;
+  return components;
 }
 
 export const customComponents = importComponents();

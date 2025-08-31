@@ -9,8 +9,7 @@
 
     <title>{{ config('app.name', 'Oauth2 Server') }}</title>
 
-    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
-    <link rel="stylesheet" href="{{ mix('/css/tailwind.css') }}">
+    @vite(['resources/js/app.js', 'resources/scss/app.scss'])
     <link nonce={{ $nonce }} rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
     <script nonce={{ $nonce }} src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
     @inertiaHead
@@ -27,9 +26,7 @@
     @yield('content')
 
     <x-privacy />
-
-    <!-- Scripts -->
-    <script src="{{ mix('/js/app.js') }}"></script>
+    
     @stack('js')
     @stack('modals')
 </body>

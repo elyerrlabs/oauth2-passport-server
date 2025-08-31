@@ -583,13 +583,13 @@ export default {
         border-radius: 16px;
         overflow: hidden;
 
-        ::v-deep .q-table__top {
+        :deep(.q-table__top) {
             padding: 20px 24px;
             background: rgba(0, 0, 0, 0.02);
             border-bottom: 1px solid rgba(0, 0, 0, 0.06);
         }
 
-        ::v-deep .q-table thead tr {
+        :deep(.q-table thead tr) {
             background: rgba(0, 0, 0, 0.02);
 
             th {
@@ -657,7 +657,7 @@ export default {
 
 .pagination-section {
     .custom-pagination {
-        ::v-deep .q-btn {
+        :deep(.q-btn) {
             border-radius: 8px;
             margin: 0 4px;
 
@@ -707,11 +707,11 @@ export default {
     }
 
     .groups-table {
-        ::v-deep .q-table thead {
+        :deep(.q-table thead) {
             display: none;
         }
 
-        ::v-deep .q-table tbody tr {
+        :deep(.q-table tbody tr) {
             display: block;
             margin-bottom: 16px;
             border: 1px solid rgba(0, 0, 0, 0.1);
@@ -719,7 +719,7 @@ export default {
             padding: 16px;
         }
 
-        ::v-deep .q-table tbody td {
+        :deep(.q-table tbody td) {
             display: block;
             text-align: left !important;
             border: none;

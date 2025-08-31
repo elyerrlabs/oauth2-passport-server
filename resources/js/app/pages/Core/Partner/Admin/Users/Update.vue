@@ -402,21 +402,21 @@ export default {
     transform: translateY(-1px);
 }
 
-::v-deep .q-dialog__inner > div {
+:deep(.q-dialog__inner > div) {
     border-radius: 16px;
 }
 
-::v-deep .q-slider__track-container--h {
+:deep(.q-slider__track-container--h) {
     height: 8px;
     border-radius: 4px;
 }
 
-::v-deep .q-slider__thumb-container {
+:deep(.q-slider__thumb-container) {
     width: 24px;
     height: 24px;
 }
 
-::v-deep .q-slider__thumb {
+:deep(.q-slider__thumb) {
     width: 24px;
     height: 24px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);

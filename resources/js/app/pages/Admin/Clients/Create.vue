@@ -433,13 +433,13 @@ export default {
 
                 .name-input,
                 .redirect-input {
-                    ::v-deep .q-field__control {
+                    :deep(.q-field__control) {
                         border-radius: 8px;
                     }
                 }
 
                 .confidential-checkbox {
-                    ::v-deep .q-checkbox__inner {
+                    :deep(.q-checkbox__inner) {
                         font-size: 18px;
                     }
                 }

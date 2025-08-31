@@ -363,7 +363,7 @@ export default {
                 .name-input,
                 .redirect-input,
                 .client-id-input {
-                    ::v-deep .q-field__control {
+                    :deep(.q-field__control) {
                         border-radius: 8px;
                     }
                 }
