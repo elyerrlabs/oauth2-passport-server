@@ -61,7 +61,7 @@
                             :key="`product-thumb-${index}`"
                         >
                             <q-img
-                                :src="optimizeImage(image.url)"
+                                :src="image.url"
                                 width="80px"
                                 height="80px"
                                 class="cursor-pointer rounded-borders"
