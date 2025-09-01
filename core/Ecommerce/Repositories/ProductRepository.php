@@ -24,6 +24,7 @@ namespace Core\Ecommerce\Repositories;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Models\Common\Attribute;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Core\Ecommerce\Model\Product;
@@ -410,7 +411,7 @@ final class ProductRepository implements Contracts
             'amount' => $data['price'],
         ];
 
-        if ($product->has('price')) {
+        if (!empty($product->price)) {
             $product->price()->updateOrCreate([
                 'id' => $product->price->id
             ], $price);
@@ -440,7 +441,11 @@ final class ProductRepository implements Contracts
                     'unit_id' => $value['unit_id'] ?? null,
                 ];
 
-                $attribute = $product->attributes()->updateOrCreate($data, $data);
+                $attribute = Attribute::where('slug', strtolower($value['name']))->first();
+
+                if (empty($attribute)) {
+                    $attribute = $product->attributes()->updateOrCreate($data, $data);
+                }
 
                 $product->attributes()->syncWithoutDetaching([
                     $attribute->id => [
