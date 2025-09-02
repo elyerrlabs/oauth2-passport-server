@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 transition-hide="scale"
                 class="bg-primary text-white shadow-6"
             >
-                Add new service
+                {{ __("Add new service") }}
             </q-tooltip>
         </q-btn>
 
@@ -54,9 +54,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="md"
                                 class="q-mb-sm"
                             />
-                            <div class="text-h6">Create New Service</div>
+                            <div class="text-h6">
+                                {{ __("Create New Service") }}
+                            </div>
                             <div class="text-caption">
-                                Define a new service with specific properties
+                                {{
+                                    __(
+                                        "Define a new service with specific properties"
+                                    )
+                                }}
                             </div>
                         </q-card-section>
                     </div>
@@ -65,16 +71,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="q-gutter-y-md">
                             <q-input
                                 v-model="form.name"
-                                label="Service Name"
+                                :label="__('Service Name')"
                                 outlined
                                 color="primary"
                                 :error="!!errors.name"
                                 class="input-field"
                                 :loading="loading"
-                                hint="Unique identifier for the service"
+                                :hint="__('Unique identifier for the service')"
                                 :rules="[
                                     (val) =>
-                                        !!val || 'Service name is required',
+                                        !!val || __('Service name is required'),
                                 ]"
                             >
                                 <template v-slot:prepend>
@@ -87,7 +93,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <q-input
                                 v-model="form.description"
-                                label="Description"
+                                :label="__('Description')"
                                 outlined
                                 color="primary"
                                 :error="!!errors.description"
@@ -95,7 +101,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 rows="3"
                                 class="input-field"
                                 :loading="loading"
-                                hint="Describe the purpose and functionality of this service"
+                                :hint="
+                                    __(
+                                        'Describe the purpose and functionality of this service'
+                                    )
+                                "
                             >
                                 <template v-slot:prepend>
                                     <q-icon name="mdi-text-box-outline" />
@@ -107,7 +117,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <q-select
                                 v-model="form.group_id"
-                                label="Group"
+                                :label="__('Group')"
                                 :options="groups"
                                 option-label="name"
                                 option-value="id"
@@ -118,7 +128,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 map-options
                                 :error="!!errors.group_id"
                                 :loading="loadingGroups"
-                                hint="Select the group this service belongs to"
+                                :hint="
+                                    __(
+                                        'Select the group this service belongs to'
+                                    )
+                                "
                             >
                                 <template v-slot:prepend>
                                     <q-icon name="mdi-account-group" />
@@ -129,7 +143,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <template v-slot:no-option>
                                     <q-item>
                                         <q-item-section class="text-grey">
-                                            No groups available
+                                            {{ __("No groups available") }}
                                         </q-item-section>
                                     </q-item>
                                 </template>
@@ -138,11 +152,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-select
                                 v-model="form.visibility"
                                 :options="visibilityOptions"
-                                label="Visibility"
+                                :label="__('Visibility')"
                                 outlined
                                 color="primary"
                                 :error="!!errors.visibility"
-                                hint="Set the visibility level for this service"
+                                :hint="
+                                    __(
+                                        'Set the visibility level for this service'
+                                    )
+                                "
                             >
                                 <template v-slot:prepend>
                                     <q-icon name="mdi-eye" />
@@ -166,12 +184,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </q-checkbox>
                                 </q-item-section>
                                 <q-item-section>
-                                    <q-item-label class="text-weight-medium"
-                                        >System Service</q-item-label
-                                    >
+                                    <q-item-label class="text-weight-medium">
+                                        {{ __("System Service") }}
+                                    </q-item-label>
                                     <q-item-label caption class="text-grey-7">
-                                        System services have special permissions
-                                        and cannot be modified or deleted.
+                                        {{
+                                            __(
+                                                "System services have special permissions and cannot be modified or deleted."
+                                            )
+                                        }}
                                     </q-item-label>
                                 </q-item-section>
                             </q-item>
@@ -182,14 +203,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-btn
                             flat
                             color="grey"
-                            label="Cancel"
+                            :label="__('Cancel')"
                             @click="close"
                             class="q-mr-sm"
                             :disable="loading"
                         />
                         <q-btn
                             color="primary"
-                            label="Create Service"
+                            :label="__('Create Service')"
                             @click="create"
                             :loading="loading"
                             icon="mdi-check-circle"

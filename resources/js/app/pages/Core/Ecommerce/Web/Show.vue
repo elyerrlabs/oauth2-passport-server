@@ -3,7 +3,7 @@
         <div class="q-pa-sm q-pa-md-lg">
             <!-- Breadcrumbs - Stack on mobile -->
             <q-breadcrumbs class="q-mb-sm q-mb-md-md" active-color="primary">
-                <q-breadcrumbs-el label="Home" icon="home" to="/" />
+                <q-breadcrumbs-el :label="__('Home')" icon="home" to="/" />
                 <q-breadcrumbs-el
                     :label="product?.category?.name"
                     :to="product?.category?.links?.index"
@@ -92,7 +92,8 @@
                             />
                         </div>
                         <div class="col-auto q-ml-sm text-caption text-grey-7">
-                            ({{ product?.reviews_count || 0 }} reviews)
+                            ({{ product?.reviews_count || 0 }}
+                            {{ __("reviews") }})
                         </div>
                         <div
                             class="col-auto q-ml-sm-md text-caption"
@@ -106,8 +107,8 @@
                             />
                             {{
                                 product?.stock
-                                    ? `In Stock (${product.stock})`
-                                    : "Out of Stock"
+                                    ? __("In Stock") + `(${product.stock})`
+                                    : __("Out of Stock")
                             }}
                         </div>
                     </div>
@@ -130,7 +131,7 @@
                             class="q-ml-md"
                             v-if="product?.discount"
                         >
-                            Save {{ product?.discount }}%
+                            {{ __("Save") }} {{ product?.discount }}%
                         </q-badge>
                     </div>
 
@@ -151,7 +152,7 @@
                         <div class="text-subtitle2 q-mb-xs">
                             {{ attribute.name }}:
                             <span class="text-weight-medium">
-                                {{ form.attrs[attribute.slug] || "Select" }}
+                                {{ form.attrs[attribute.slug] || __("Select") }}
                             </span>
                         </div>
                         <div class="row q-gutter-xs">
@@ -178,7 +179,7 @@
                         <div
                             class="col-12 col-sm-auto text-subtitle2 q-mr-sm-md q-mb-xs-sm"
                         >
-                            Quantity:
+                            {{ __("Quantity:") }}
                         </div>
                         <div class="col-auto">
                             <q-input
@@ -194,7 +195,8 @@
                         <div
                             class="col-12 col-sm-auto text-caption text-grey q-ml-sm-md q-mt-xs-sm"
                         >
-                            Max {{ product?.stock || 10 }} per customer
+                            {{ __("Max") }} {{ product?.stock || 10 }}
+                            {{ __("per customer") }}
                         </div>
                     </div>
 
@@ -203,7 +205,7 @@
                         <q-btn
                             color="primary"
                             icon="shopping_cart"
-                            label="Add to Cart"
+                            :label="__('Add to Cart')"
                             class="col-sm col-12"
                             size="lg"
                             @click="addToCart"
@@ -266,9 +268,13 @@
                 <q-tab
                     name="description"
                     icon="description"
-                    label="Description"
+                    :label="__('Description')"
                 />
-                <q-tab name="specs" icon="list_alt" label="Specification" />
+                <q-tab
+                    name="specs"
+                    icon="list_alt"
+                    :label="__('Specification')"
+                />
             </q-tabs>
 
             <q-tab-panels v-model="productDetailTab" animated class="q-mb-xl">
@@ -284,7 +290,10 @@
             </q-tab-panels>
 
             <!-- Related Products - Smaller cards on mobile -->
-            <v-products title="Related Products" :products="related_products" />
+            <v-products
+                :title="__('Related Products')"
+                :products="related_products"
+            />
         </div>
     </v-ecommerce>
 </template>
@@ -305,7 +314,7 @@ export default {
 
             // UI State
             productImageSlide: 0,
-            productDetailTab: "description",
+            productDetailTab: this.__("description"),
             selectedAttributes: {},
 
             showReviewDialog: false,

@@ -35,18 +35,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     {{ $page.props.app_name }}
                 </q-toolbar-title>
                 <v-theme />
-                <q-btn flat :label="plan?.name" @click="open(plan?.route)" />
+                <q-btn
+                    flat
+                    :label="__(plan?.name)"
+                    @click="open(plan?.route)"
+                />
 
                 <q-btn
                     v-if="!$page.props.user?.id && $page.props.allow_register"
                     flat
-                    label="Register"
+                    :label="__('Register')"
                     @click="open($page.props.auth_routes['register'])"
                 />
                 <q-btn
                     v-if="!$page.props.user?.id"
                     flat
-                    label="Login"
+                    :label="__('Login')"
                     @click="open($page.props.auth_routes['login'])"
                 />
                 <v-profile />
@@ -57,18 +61,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <q-page-container>
             <slot name="body" />
         </q-page-container>
-
-        <!-- Footer 
-        <q-footer class="text-center" elevated>
-            <q-toolbar>
-                <q-toolbar-title class="text-center">
-                    © 2025 Mi Aplicación
-                </q-toolbar-title>
-            </q-toolbar>
-        </q-footer>-->
-        <!-- Guest Login Modal 
-        <v-login :guest="guest" @close="guest = false" />
-        -->
     </q-layout>
 </template>
 
@@ -110,8 +102,7 @@ export default {
             return item.route == window.location.href;
         },
         homePage() {
-            window.location.href =
-                this.$page.props.user_routes[0].menu[0]["route"];
+            window.location.href = "/";
         },
     },
 };

@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             transition-hide="scale"
             class="bg-primary text-white"
         >
-            Add new user
+            {{ __("Add new user") }}
         </q-tooltip>
     </q-btn>
 
@@ -53,9 +53,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="lg"
                             class="q-mb-sm"
                         />
-                        <div class="text-h5">Create New User</div>
+                        <div class="text-h5">{{ __("Create New User") }}</div>
                         <div class="text-caption">
-                            Add a new user to the system
+                            {{ __("Add a new user to the system") }}
                         </div>
                     </q-card-section>
                 </div>
@@ -69,9 +69,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 color="primary"
                                 class="q-mr-sm"
                             />
-                            <span class="text-subtitle1 text-primary"
-                                >Personal Information</span
-                            >
+                            <span class="text-subtitle1 text-primary">{{
+                                __("Personal Information")
+                            }}</span>
                         </div>
 
                         <div class="row q-col-gutter-md">
@@ -80,7 +80,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     outlined
                                     v-model="form.name"
                                     dense
-                                    label="First Name"
+                                    :label="__('First Name')"
                                     :error="!!errors.name"
                                     color="primary"
                                     class="input-field"
@@ -98,7 +98,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     outlined
                                     v-model="form.last_name"
                                     dense
-                                    label="Last Name"
+                                    :label="__('Last Name')"
                                     :error="!!errors.last_name"
                                     color="primary"
                                     class="input-field"
@@ -122,16 +122,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 color="primary"
                                 class="q-mr-sm"
                             />
-                            <span class="text-subtitle1 text-primary"
-                                >Contact Information</span
-                            >
+                            <span class="text-subtitle1 text-primary">{{
+                                __("Contact Information")
+                            }}</span>
                         </div>
 
                         <q-input
                             outlined
                             v-model="form.email"
                             dense
-                            label="Email Address"
+                            :label="__('Email Address')"
                             :error="!!errors.email"
                             color="primary"
                             class="input-field"
@@ -158,7 +158,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     map-options
                                     input-debounce="300"
                                     :options="filteredCountries"
-                                    label="Country"
+                                    :label="__('Country')"
                                     :error="!!errors.country"
                                     @filter="filterCountries"
                                     color="primary"
@@ -205,7 +205,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     map-options
                                     input-debounce="300"
                                     :options="filteredDialCodes"
-                                    label="Dial Code"
+                                    :label="__('Dial Code')"
                                     :error="!!errors.dial_code"
                                     @filter="filterDialCodes"
                                     color="primary"
@@ -227,7 +227,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             outlined
                             v-model="form.phone"
                             dense
-                            label="Phone Number"
+                            :label="__('Phone Number')"
                             :error="!!errors.phone"
                             color="primary"
                             class="input-field"
@@ -247,9 +247,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 color="primary"
                                 class="q-mr-sm"
                             />
-                            <span class="text-subtitle1 text-primary"
-                                >Additional Information</span
-                            >
+                            <span class="text-subtitle1 text-primary">{{
+                                __("Additional Information")
+                            }}</span>
                         </div>
 
                         <div class="birthday-field">
@@ -258,7 +258,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     name="mdi-cake-variant"
                                     class="q-mr-sm"
                                 />
-                                Birthday
+                                {{ __("Birthday") }}
                             </label>
                             <VueDatePicker
                                 v-model="form.birthday"
@@ -266,7 +266,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :max-date="new Date()"
                                 format="yyyy-MM-dd"
                                 model-type="format"
-                                placeholder="Select birthday"
+                                :placeholder="__('Select birthday')"
                                 class="date-picker"
                             />
                             <v-error :error="errors.birthday"></v-error>
@@ -274,7 +274,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <q-checkbox
                             v-model="form.verify_email"
-                            label="Mark user email as verified"
+                            :label="__('Mark user email as verified')"
                             color="primary"
                             class="verify-checkbox"
                             :error="!!errors.groups"
@@ -288,7 +288,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <q-card-actions align="right" class="q-pa-lg">
                     <q-btn
-                        label="Cancel"
+                        :label="__('Cancel')"
                         icon="mdi-close-circle"
                         color="grey-7"
                         @click="dialog = false"
@@ -296,7 +296,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="q-mr-sm"
                     />
                     <q-btn
-                        label="Create User"
+                        :label="__('Create User')"
                         icon="mdi-account-plus"
                         color="primary"
                         @click="create"

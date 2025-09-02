@@ -35,7 +35,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 transition-hide="scale"
                 class="bg-primary text-white shadow-6"
             >
-                Add new group
+                {{ __("Add new group") }}
             </q-tooltip>
         </q-btn>
 
@@ -55,9 +55,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="md"
                                 class="q-mb-sm"
                             />
-                            <div class="text-h6">Create New Group</div>
+                            <div class="text-h6">
+                                {{ __("Create New Group") }}
+                            </div>
                             <div class="text-caption">
-                                Add a new group to organize your content
+                                {{
+                                    __(
+                                        "Add a new group to organize your content"
+                                    )
+                                }}
                             </div>
                         </q-card-section>
                     </div>
@@ -66,7 +72,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="q-gutter-y-md">
                             <q-input
                                 v-model="form.name"
-                                label="Group Name"
+                                :label="__('Group Name')"
                                 dense
                                 outlined
                                 color="primary"
@@ -84,7 +90,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <q-input
                                 v-model="form.description"
-                                label="Description"
+                                :label="__('Description')"
                                 dense
                                 outlined
                                 color="primary"
@@ -116,12 +122,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </q-checkbox>
                                 </q-item-section>
                                 <q-item-section>
-                                    <q-item-label class="text-weight-medium"
-                                        >System Group</q-item-label
-                                    >
+                                    <q-item-label class="text-weight-medium">
+                                        {{ __("System Group") }}
+                                    </q-item-label>
                                     <q-item-label caption class="text-grey-7">
-                                        System groups have special permissions
-                                        and cannot be deleted.
+                                        {{
+                                            __(
+                                                "System groups have special permissions and cannot be deleted."
+                                            )
+                                        }}
                                     </q-item-label>
                                 </q-item-section>
                             </q-item>
@@ -132,14 +141,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-btn
                             flat
                             color="grey"
-                            label="Cancel"
+                            :label="__('Cancel')"
                             @click="close"
                             class="q-mr-sm"
                             :disable="loading"
                         />
                         <q-btn
                             color="primary"
-                            label="Create Group"
+                            :label="__('Create Group')"
                             @click="create"
                             :loading="loading"
                             icon="mdi-check-circle"

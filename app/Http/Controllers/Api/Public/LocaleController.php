@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Middleware;
 
+namespace App\Http\Controllers\Api\Public;
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
  *
@@ -20,32 +20,33 @@ namespace App\Http\Middleware;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
-use App\Repositories\Traits\Scopes;
-use Elyerr\ApiResponse\Exceptions\ReportError;
-use Laravel\Passport\Exceptions\MissingScopeException;
-use Laravel\Passport\Http\Middleware\CheckToken as middleware;
 
-class CheckClientCredentials extends middleware
-{
-    use Scopes;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
+class LocaleController extends Controller
+{   
     /**
-     * Validate token credentials.
-     *
-     * @param  \Laravel\Passport\Token  $token
-     * @param  array  $scopes
-     * @return void
-     *
-     * @throws \Laravel\Passport\Exceptions\MissingScopeException
+     * Retrieve the language
+     * @param \Illuminate\Http\Request $request
+     * @param string $locale
+     * @return \Illuminate\Http\JsonResponse
      */
-    protected function validateScopes($token, $scopes)
+    public function locale(Request $request, string $locale = null)
     {
-        //Disable temporarily
-        throw new ReportError(__("You do not have the necessary permissions"), 403);
-    }
+        $lang = $locale ?? substr($request->header('Accept-Language'), 0, 2);
 
+        $path = base_path('lang') . '/' . $lang . '.json';
+
+        if (!file_exists($path)) {
+            $path = base_path('lang') . '/en.json';
+        }
+
+        $translations = json_decode(file_get_contents($path));
+
+        return response()->json($translations);
+    }
 }

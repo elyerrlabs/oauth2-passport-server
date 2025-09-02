@@ -26,10 +26,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row items-center justify-between q-mb-md">
                 <div>
                     <div class="text-h4 text-primary text-weight-bold">
-                        Roles Management
+                        {{ __("Roles Management") }}
                     </div>
                     <div class="text-subtitle1 text-grey-7">
-                        Manage user roles and permissions
+                        {{ __("Manage user roles and permissions") }}
                     </div>
                 </div>
 
@@ -46,12 +46,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             {
                                 value: 'list',
                                 icon: 'mdi-format-list-bulleted',
-                                label: 'List',
+                                label: __('List'),
                             },
                             {
                                 value: 'grid',
                                 icon: 'mdi-view-grid-outline',
-                                label: 'Grid',
+                                label: __('Grid'),
                             },
                         ]"
                         unelevated
@@ -70,9 +70,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card flat class="bg-blue-1 text-blue-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ roles.length }} Role{{
-                                roles.length !== 1 ? "s" : ""
-                            }}
+                            {{ roles.length }} {{ __("Role")
+                            }}{{ roles.length !== 1 ? __("s") : "" }}
                         </div>
                         <q-icon name="mdi-account-group" size="md" />
                     </q-card-section>
@@ -85,9 +84,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card flat class="bg-orange-1 text-orange-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ systemRolesCount }} System Role{{
-                                systemRolesCount !== 1 ? "s" : ""
-                            }}
+                            {{ systemRolesCount }} {{ __("System Role")
+                            }}{{ systemRolesCount !== 1 ? "s" : "" }}
                         </div>
                         <q-icon name="mdi-shield-account" size="md" />
                     </q-card-section>
@@ -108,7 +106,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card flat bordered class="role-card shadow-3">
                     <q-card-section class="bg-primary text-white">
                         <div class="text-h6 text-weight-bold text-truncate">
-                            {{ role.name }}
+                            {{ __(role.name) }}
                         </div>
                         <div class="text-caption opacity-80">
                             {{ role.slug }}
@@ -117,7 +115,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <q-card-section class="q-pt-md">
                         <div class="text-body2 ellipsis-3-lines q-mb-sm">
-                            {{ role.description || "No description provided" }}
+                            {{
+                                role.description ||
+                                __("No description provided")
+                            }}
                         </div>
 
                         <q-badge
@@ -129,7 +130,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             "
                             class="q-mb-sm"
                         >
-                            {{ role.system ? "System Role" : "Custom Role" }}
+                            {{
+                                role.system
+                                    ? __("System Role")
+                                    : __("Custom Role")
+                            }}
                         </q-badge>
                     </q-card-section>
 
@@ -153,8 +158,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="text-center q-pa-xl"
         >
             <q-icon name="mdi-account-off-outline" size="xl" color="grey-4" />
-            <div class="text-h6 text-grey-6 q-mt-md">No roles found</div>
-            <div class="text-grey-5">Create your first role to get started</div>
+            <div class="text-h6 text-grey-6 q-mt-md">
+                {{ __("No roles found") }}
+            </div>
+            <div class="text-grey-5">
+                {{ __("Create your first role to get started") }}
+            </div>
         </div>
 
         <!-- List View -->
@@ -173,17 +182,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <template v-slot:body="props">
                 <q-tr :props="props" class="q-hoverable">
                     <q-td key="name" :props="props">
-                        <div class="text-weight-bold">{{ props.row.name }}</div>
+                        <div class="text-weight-bold">
+                            {{ __(props.row.name) }}
+                        </div>
                         <div class="text-caption text-grey-7">
-                            {{ props.row.slug }}
+                            {{ __(props.row.slug) }}
                         </div>
+                        <q-tooltip>
+                            {{ __(props.row.description) }}
+                        </q-tooltip>
                     </q-td>
-
-                    <q-td key="description" :props="props">
-                        <div class="ellipsis-2-lines">
-                            {{ props.row.description || "—" }}
-                        </div>
-                    </q-td>
+                    <!--
+                        <q-td key="description" :props="props">
+                            <div class="ellipsis-2-lines">
+                                {{ __(props.row.description) || __("—") }}
+                            </div>
+                        </q-td>
+                    -->
 
                     <q-td key="system" :props="props">
                         <q-badge
@@ -194,7 +209,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     : 'mdi-account-cog'
                             "
                         >
-                            {{ props.row.system ? "Yes" : "No" }}
+                            {{ props.row.system ? __("Yes") : __("No") }}
                         </q-badge>
                     </q-td>
 
@@ -214,7 +229,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <template v-slot:no-data>
                 <div class="full-width row flex-center text-grey-6 q-pa-xl">
                     <q-icon name="mdi-account-off-outline" size="xl" />
-                    <div class="q-ml-sm">No roles available</div>
+                    <div class="q-ml-sm">{{ __("No roles available") }}</div>
                 </div>
             </template>
         </q-table>
@@ -235,7 +250,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-select
                 v-model="search.per_page"
                 :options="[10, 15, 25, 50]"
-                label="Items per page"
+                :label="__('Items per page')"
                 dense
                 outlined
                 class="q-ml-md"
@@ -280,28 +295,28 @@ export default {
             columns: [
                 {
                     name: "name",
-                    label: "Role",
+                    label: this.__("Role"),
                     field: "name",
                     sortable: true,
                     align: "left",
                 },
-                {
+                /* {
                     name: "description",
-                    label: "Description",
+                    label: this.__("Description"),
                     field: "description",
                     sortable: false,
                     align: "left",
-                },
+                },*/
                 {
                     name: "system",
-                    label: "System Role",
+                    label: this.__("System Role"),
                     field: "system",
                     sortable: true,
                     align: "center",
                 },
                 {
                     name: "actions",
-                    label: "Actions",
+                    label: this.__("Actions"),
                     field: "actions",
                     align: "right",
                     sortable: false,

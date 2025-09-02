@@ -26,10 +26,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row items-center justify-between q-mb-md">
                 <div>
                     <div class="text-h4 text-primary text-weight-bold">
-                        Transactions Management
+                        {{ __("Transactions Management") }}
                     </div>
                     <div class="text-subtitle1 text-grey-7">
-                        Monitor and manage all transaction records
+                        {{ __("Monitor and manage all transaction records") }}
                     </div>
                 </div>
 
@@ -42,12 +42,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         {
                             value: 'list',
                             icon: 'mdi-format-list-bulleted',
-                            label: 'List',
+                            label: __('List'),
                         },
                         {
                             value: 'grid',
                             icon: 'mdi-view-grid-outline',
-                            label: 'Grid',
+                            label: __('Grid'),
                         },
                     ]"
                     unelevated
@@ -68,9 +68,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card flat class="bg-blue-1 text-blue-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ transactions.length }} Transaction{{
-                                transactions.length !== 1 ? "s" : ""
-                            }}
+                            {{ transactions.length }} {{ __("Transaction")
+                            }}{{ transactions.length !== 1 ? "s" : "" }}
                         </div>
                         <q-icon name="mdi-receipt" size="md" />
                     </q-card-section>
@@ -80,7 +79,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card flat class="bg-green-1 text-green-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ successfulCount }} Successful
+                            {{ successfulCount }} {{ __("Successful") }}
                         </div>
                         <q-icon name="mdi-check-circle" size="md" />
                     </q-card-section>
@@ -89,7 +88,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="col-xs-12 col-sm-6 col-md-3">
                 <q-card flat class="bg-orange-1 text-orange-8">
                     <q-card-section class="text-center">
-                        <div class="text-h6">{{ pendingCount }} Pending</div>
+                        <div class="text-h6">
+                            {{ pendingCount }} {{ __("Pending") }}
+                        </div>
                         <q-icon name="mdi-clock-outline" size="md" />
                     </q-card-section>
                 </q-card>
@@ -97,7 +98,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="col-xs-12 col-sm-6 col-md-3">
                 <q-card flat class="bg-red-1 text-red-8">
                     <q-card-section class="text-center">
-                        <div class="text-h6">{{ failedCount }} Failed</div>
+                        <div class="text-h6">
+                            {{ failedCount }} {{ __("Failed") }}
+                        </div>
                         <q-icon name="mdi-close-circle" size="md" />
                     </q-card-section>
                 </q-card>
@@ -118,7 +121,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-card-section class="card-header bg-grey-2">
                         <div class="row items-center justify-between">
                             <div class="text-h6 text-primary text-weight-bold">
-                                {{ item.billing_period }} plan
+                                {{ item.billing_period }} {{ __("plan") }}
                             </div>
                             <div class="row items-center q-gutter-xs">
                                 <v-activate
@@ -142,7 +145,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                 />
                                 <span class="q-ml-sm"
-                                    ><strong>Code:</strong>
+                                    ><strong>{{ __("Code:") }}</strong>
                                     {{ item.code }}</span
                                 >
                             </div>
@@ -154,8 +157,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                 />
                                 <span class="q-ml-sm"
-                                    ><strong>Price:</strong> {{ item.total }}
-                                    {{ item.currency }}</span
+                                    ><strong>{{ __("Price:") }}</strong>
+                                    {{ item.total }} {{ item.currency }}</span
                                 >
                             </div>
 
@@ -166,7 +169,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                 />
                                 <span class="q-ml-sm"
-                                    ><strong>Created:</strong>
+                                    ><strong>{{ __("Created:") }}</strong>
                                     {{ item.created }}</span
                                 >
                             </div>
@@ -178,7 +181,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                 />
                                 <span class="q-ml-sm"
-                                    ><strong>Updated:</strong>
+                                    ><strong>{{ __("Updated:") }}</strong>
                                     {{ item.updated }}</span
                                 >
                             </div>
@@ -190,7 +193,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                 />
                                 <span class="q-ml-sm"
-                                    ><strong>Method:</strong>
+                                    ><strong>{{ __("Method:") }}</strong>
                                     {{ item.payment_method }}</span
                                 >
                             </div>
@@ -202,7 +205,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                 />
                                 <span class="q-ml-sm"
-                                    ><strong>Status:</strong></span
+                                    ><strong>{{ __("Status:") }}</strong></span
                                 >
                                 <q-badge
                                     :color="getStatusColor(item.status)"
@@ -219,7 +222,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                 />
                                 <span class="q-ml-sm"
-                                    ><strong>Activated:</strong>
+                                    ><strong>{{ __("Activated:") }}</strong>
                                     {{ item.activated }}</span
                                 >
                             </div>
@@ -235,8 +238,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="text-center q-pa-xl"
         >
             <q-icon name="mdi-receipt-off" size="xl" color="grey-4" />
-            <div class="text-h6 text-grey-6 q-mt-md">No transactions found</div>
-            <div class="text-grey-5">Try adjusting your search filters</div>
+            <div class="text-h6 text-grey-6 q-mt-md">
+                {{ __("No transactions found") }}
+            </div>
+            <div class="text-grey-5">
+                {{ __("Try adjusting your search filters") }}
+            </div>
         </div>
 
         <!-- List View -->
@@ -268,7 +275,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <q-td key="billing_period" :props="props">
                         <div class="text-caption">
-                            {{ props.row.billing_period }} plan
+                            {{ props.row.billing_period }} {{ __("plan") }}
                         </div>
                     </q-td>
 
@@ -321,7 +328,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <template v-slot:no-data>
                 <div class="full-width row flex-center text-grey-6 q-pa-xl">
                     <q-icon name="mdi-receipt-off" size="xl" />
-                    <div class="q-ml-sm">No transactions available</div>
+                    <div class="q-ml-sm">
+                        {{ __("No transactions available") }}
+                    </div>
                 </div>
             </template>
 
@@ -346,7 +355,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-select
                 v-model="search.per_page"
                 :options="[10, 15, 25, 50]"
-                label="Items per page"
+                :label="__('Items per page')"
                 dense
                 outlined
                 class="q-ml-md"
@@ -376,11 +385,11 @@ export default {
             viewMode: "list",
             loading: false,
             params: [
-                { key: "Code", value: "code" },
-                { key: "Session", value: "session_id" },
-                { key: "Intent", value: "payment_intent_id" },
-                { key: "Created", value: "created" },
-                { key: "Updated", value: "updated" },
+                { key: "code", value: "code" },
+                { key: "session", value: "session_id" },
+                { key: "intent", value: "payment_intent_id" },
+                { key: "created", value: "created" },
+                { key: "updated", value: "updated" },
             ],
             transactions: [],
             pages: {
@@ -399,56 +408,56 @@ export default {
             columns: [
                 {
                     name: "code",
-                    label: "Transaction Code",
+                    label: this.__("Transaction Code"),
                     field: "code",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "price",
-                    label: "Amount",
+                    label: this.__("Amount"),
                     field: (row) => `${row.total} ${row.currency}`,
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "billing_period",
-                    label: "Plan Type",
+                    label: this.__("Plan Type"),
                     field: "billing_period",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "created",
-                    label: "Created Date",
+                    label: this.__("Created Date"),
                     field: "created",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "payment_method",
-                    label: "Payment Method",
+                    label: this.__("Payment Method"),
                     field: "payment_method",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "status",
-                    label: "Status",
+                    label: this.__("Status"),
                     field: "status",
                     align: "center",
                     sortable: true,
                 },
                 {
                     name: "activated",
-                    label: "Activation Date",
+                    label: this.__("Activation Date"),
                     field: "activated",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "actions",
-                    label: "Actions",
+                    label: this.__("Actions"),
                     field: "actions",
                     align: "right",
                     sortable: false,

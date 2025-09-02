@@ -65,12 +65,12 @@ class PaymentFailed extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Payment Failed')
-            ->greeting('Hello ' . $notifiable->name . ',')
-            ->line('Unfortunately, your recent payment attempt was not successful.')
-            ->line('Please review your payment method and try again.')
-            ->action('Go to dashboard', $this->url)
-            ->line('If you continue to have issues, contact our support team.');
+            ->subject(__('Payment Failed'))
+            ->greeting(__('Hello :nam', ['name' => $notifiable->name]))
+            ->line(__('Unfortunately, your recent payment attempt was not successful.'))
+            ->line(__('Please review your payment method and try again.'))
+            ->action(__('Go to dashboard'), $this->url)
+            ->line(__('If you continue to have issues, contact our support team.'));
     }
 
     /**

@@ -302,8 +302,7 @@
                         </div>
                         <h3 class="font-semibold text-lg">{{ __('Secure Authorization') }}</h3>
                         <p class="text-sm mt-2 text-indigo-100">
-                            {{ __("Our advanced authorization server ensures your data remains
-                                                                                                                                                                                                                                                                                        protected with industry-leading security protocols.") }}
+                            {{ __('Our advanced authorization server ensures your data remains protected with industry-leading security protocols.') }}
                         </p>
                     </div>
 
@@ -313,8 +312,7 @@
                         </div>
                         <h3 class="font-semibold text-lg">{{ __('Universal Connectivity') }}</h3>
                         <p class="text-sm mt-2 text-indigo-100">
-                            {{ __("Seamlessly connect with any external application through
-                                                                                                                                                                                                                                                            our OAuth2 and OpenID Connect implementation.") }}
+                            {{ __('Seamlessly connect with any external application through our OAuth2 and OpenID Connect implementation.') }}
                         </p>
                     </div>
 
@@ -324,8 +322,7 @@
                         </div>
                         <h3 class="font-semibold text-lg">{{ __('Service-Controlled System') }}</h3>
                         <p class="text-sm mt-2 text-indigo-100">
-                            {{ __("Our service-based architecture ensures maximum scalability,
-                                                                                                                                                                                                    reliability, and performance for all your authorization needs.") }}
+                            {{ __('Our service-based architecture ensures maximum scalability, reliability, and performance for all your authorization needs.') }}
                         </p>
                     </div>
                 </div>

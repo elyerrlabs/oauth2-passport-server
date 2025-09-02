@@ -39,13 +39,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <div class="col">
                         <div class="text-h3 text-weight-bold welcome-title">
-                            Welcome {{ user.name }} {{ user.last_name }}
+                            {{ __("Welcome") }} {{ user.name }}
+                            {{ user.last_name }}
                         </div>
                         <div class="text-subtitle1 welcome-subtitle q-mt-md">
-                            Hello, {{ user.name }}! We're glad you're here. What
-                            would you like to do today? Below are several
-                            options to manage your account and set it up as you
-                            prefer.
+                            {{ __("Hello,") }} {{ user.name }}!
+                            {{
+                                __(
+                                    "We're glad you're here. What would you like to do today? Below are several options to manage your account and set it up as you prefer."
+                                )
+                            }}
                         </div>
                     </div>
                 </div>
@@ -66,7 +69,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="text-h6 text-weight-medium card-title"
                                 >
                                     <q-icon name="mdi-cog" class="q-mr-sm" />
-                                    Account Options
+                                    {{ __("Account Options") }}
                                 </div>
                             </q-card-section>
 
@@ -131,7 +134,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         name="mdi-lightbulb-on-outline"
                                         class="q-mr-sm"
                                     />
-                                    Daily Inspiration
+                                    {{ __("Daily Inspiration") }}
                                 </div>
                                 <div class="inspiration-quote q-mt-md">
                                     <q-icon
@@ -141,19 +144,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="quote-icon"
                                     />
                                     <div class="quote-text">
-                                        Great things are done by a series of
-                                        small things brought together.
+                                        {{
+                                            __(
+                                                "Great things are done by a series of small things brought together."
+                                            )
+                                        }}
                                     </div>
                                     <div
                                         class="quote-author text-white q-mt-sm"
                                     >
-                                        — Vincent Van Gogh
+                                        — {{ __("Vincent Van Gogh") }}
                                     </div>
                                 </div>
                                 <div class="text-caption text-white q-mt-lg">
-                                    Stay productive while we improve your
-                                    experience. More tools will appear here
-                                    soon.
+                                    {{
+                                        __(
+                                            "Stay productive while we improve your experience. More tools will appear here soon."
+                                        )
+                                    }}
                                 </div>
                             </q-card-section>
                         </q-card>
@@ -172,13 +180,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         name="mdi-rocket-launch"
                                         class="q-mr-sm"
                                     />
-                                    Dashboard Upgrade
+                                    {{ __("Dashboard Upgrade") }}
                                 </div>
                                 <div class="text-body2 text-white q-mt-sm">
-                                    We're working on personalized suggestions
-                                    and insights. Soon, you'll be able to manage
-                                    your apps and track your activity from this
-                                    section.
+                                    {{
+                                        __(
+                                            "We're working on personalized suggestions and insights. Soon, you'll be able to manage your apps and track your activity from this section."
+                                        )
+                                    }}
                                 </div>
                                 <div class="upgrade-progress q-mt-md">
                                     <q-linear-progress
@@ -189,7 +198,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="q-mb-sm"
                                     />
                                     <div class="text-caption text-white">
-                                        Development progress: 65%
+                                        {{ __("Development progress:") }} 65%
                                     </div>
                                 </div>
                             </q-card-section>
@@ -206,7 +215,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-card-section>
                         <div class="text-h6 text-weight-medium card-title">
                             <q-icon name="mdi-tools" class="q-mr-sm" />
-                            What's Coming Soon?
+                            {{ __("What's Coming Soon?") }}
                         </div>
 
                         <div class="row q-col-gutter-md q-mt-md">
@@ -230,7 +239,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
 
                         <div class="text-caption text-grey q-mt-lg">
-                            We're building this for you. Stay tuned!
+                            {{ __("We're building this for you. Stay tuned!") }}
                         </div>
                     </q-card-section>
                 </q-card>
@@ -252,16 +261,28 @@ export default {
         },
         upcomingFeatures() {
             return [
-                { icon: "mdi-chart-line", name: "App usage analytics" }, 
-                { icon: "mdi-application-cog", name: "Application manager" },
-                { icon: "mdi-code-tags", name: "Developer options" },
-                { icon: "mdi-file-outline", name: "File manager" },
-                { icon: "mdi-lock-check-outline", name: "Encrypt end-to-end" },
-                { icon: "mdi-qrcode-scan", name: "TOP and QR Login" },
-                { icon: "mdi-currency-btc", name: "Cryptocurrency payment" },
+                {
+                    icon: "mdi-chart-line",
+                    name: this.__("App usage analytics"),
+                },
+                {
+                    icon: "mdi-application-cog",
+                    name: this.__("Application manager"),
+                },
+                { icon: "mdi-code-tags", name: this.__("Developer options") },
+                { icon: "mdi-file-outline", name: this.__("File manager") },
+                {
+                    icon: "mdi-lock-check-outline",
+                    name: this.__("Encrypt end-to-end"),
+                },
+                { icon: "mdi-qrcode-scan", name: this.__("TOP and QR Login") },
+                {
+                    icon: "mdi-currency-btc",
+                    name: this.__("Cryptocurrency payment"),
+                },
                 {
                     icon: "mdi-dots-horizontal-circle-outline",
-                    name: "And much more",
+                    name: this.__("And much more"),
                 },
             ];
         },

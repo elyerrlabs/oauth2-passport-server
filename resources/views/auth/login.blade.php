@@ -86,7 +86,7 @@
                 <div class="text-center mb-8">
                     <h1 class="text-3xl font-bold text-gray-800">
                         <i class="mdi mdi-lock text-indigo-600 mr-2"></i>
-                        {{ config('app.name', 'Oauth2 Server') }}
+                        {{ __(config('app.name', 'Oauth2 Server')) }}
                     </h1>
                     <p class="text-sm text-gray-500 mt-2">{{ __('Sign in to your account') }}</p>
                 </div>

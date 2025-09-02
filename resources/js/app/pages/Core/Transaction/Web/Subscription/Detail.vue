@@ -12,7 +12,7 @@
                             size="28px"
                             class="q-mr-md"
                         />
-                        <div class="text-h5">Plan Details</div>
+                        <div class="text-h5">{{ __("Plan Details") }}</div>
                         <q-space />
                         <q-badge
                             :color="
@@ -34,7 +34,7 @@
                 <!-- Información principal en grid -->
                 <q-card-section class="q-pa-lg">
                     <div class="text-h6 text-primary q-mb-md">
-                        Plan Information
+                        {{ __("Plan Information") }}
                     </div>
 
                     <div class="info-grid q-gutter-md">
@@ -47,7 +47,9 @@
                                     class="q-mr-sm"
                                 />
                                 <div class="info-content">
-                                    <div class="info-label">Plan Name</div>
+                                    <div class="info-label">
+                                        {{ __("Plan Name") }}
+                                    </div>
                                     <div class="info-value">
                                         {{ item?.meta?.name }}
                                     </div>
@@ -62,7 +64,7 @@
                                 />
                                 <div class="info-content">
                                     <div class="info-label">
-                                        Transaction Code
+                                        {{ __("Transaction Code") }}
                                     </div>
                                     <div class="info-value">
                                         {{ item?.transaction?.code }}
@@ -77,7 +79,9 @@
                                     class="q-mr-sm"
                                 />
                                 <div class="info-content">
-                                    <div class="info-label">Start Date</div>
+                                    <div class="info-label">
+                                        {{ __("Start Date") }}
+                                    </div>
                                     <div class="info-value">
                                         {{ item?.start_at }}
                                     </div>
@@ -91,7 +95,9 @@
                                     class="q-mr-sm"
                                 />
                                 <div class="info-content">
-                                    <div class="info-label">Last Renewal</div>
+                                    <div class="info-label">
+                                        {{ __("Last Renewal") }}
+                                    </div>
                                     <div class="info-value">
                                         {{ item?.last_renewal_at }}
                                     </div>
@@ -99,7 +105,6 @@
                             </div>
                         </div>
 
-                        <!-- Columna derecha -->
                         <div class="info-column">
                             <div class="info-item">
                                 <q-icon
@@ -108,7 +113,9 @@
                                     class="q-mr-sm"
                                 />
                                 <div class="info-content">
-                                    <div class="info-label">Price</div>
+                                    <div class="info-label">
+                                        {{ __("Price") }}
+                                    </div>
                                     <div class="info-value">
                                         {{ item?.transaction?.total }}
                                         {{ item?.transaction?.currency }}
@@ -123,7 +130,9 @@
                                     class="q-mr-sm"
                                 />
                                 <div class="info-content">
-                                    <div class="info-label">Billing Period</div>
+                                    <div class="info-label">
+                                        {{ __("Billing Period") }}
+                                    </div>
                                     <div class="info-value">
                                         {{ item?.transaction?.billing_period }}
                                     </div>
@@ -137,7 +146,9 @@
                                     class="q-mr-sm"
                                 />
                                 <div class="info-content">
-                                    <div class="info-label">End Date</div>
+                                    <div class="info-label">
+                                        {{ __("End Date") }}
+                                    </div>
                                     <div class="info-value">
                                         {{ item?.end_at }}
                                     </div>
@@ -151,7 +162,9 @@
                                     class="q-mr-sm"
                                 />
                                 <div class="info-content">
-                                    <div class="info-label">Cancellation</div>
+                                    <div class="info-label">
+                                        {{ __("Cancellation") }}
+                                    </div>
                                     <div class="info-value">
                                         {{ item?.cancellation_at }}
                                     </div>
@@ -160,7 +173,6 @@
                         </div>
                     </div>
 
-                    <!-- Información adicional en línea -->
                     <div class="row q-mt-lg">
                         <div class="col-xs-12 col-sm-6 q-pa-xs">
                             <q-item class="additional-info">
@@ -171,12 +183,12 @@
                                     />
                                 </q-item-section>
                                 <q-item-section>
-                                    <q-item-label caption
-                                        >Payment Method</q-item-label
-                                    >
-                                    <q-item-label class="text-weight-medium">{{
-                                        item?.transaction?.payment_method
-                                    }}</q-item-label>
+                                    <q-item-label caption>
+                                        {{ __("Payment Method") }}
+                                    </q-item-label>
+                                    <q-item-label class="text-weight-medium">
+                                        {{ item?.transaction?.payment_method }}
+                                    </q-item-label>
                                 </q-item-section>
                             </q-item>
                         </div>
@@ -197,11 +209,15 @@
                                     />
                                 </q-item-section>
                                 <q-item-section>
-                                    <q-item-label caption
-                                        >Recurring</q-item-label
-                                    >
+                                    <q-item-label caption>
+                                        {{ __("Recurring") }}
+                                    </q-item-label>
                                     <q-item-label class="text-weight-medium">
-                                        {{ item?.is_recurring ? "Yes" : "No" }}
+                                        {{
+                                            item?.is_recurring
+                                                ? __("Yes")
+                                                : __("No")
+                                        }}
                                     </q-item-label>
                                 </q-item-section>
                             </q-item>
@@ -214,7 +230,7 @@
                 <!-- Servicios incluidos -->
                 <q-card-section class="q-pa-lg">
                     <div class="text-h6 text-primary q-mb-md">
-                        Included Services
+                        {{ __("Included Services") }}
                     </div>
                     <div class="services-grid">
                         <q-card
@@ -253,7 +269,9 @@
 
                 <!-- Transacciones -->
                 <q-card-section class="q-pa-lg">
-                    <div class="text-h6 text-primary q-mb-md">Transactions</div>
+                    <div class="text-h6 text-primary q-mb-md">
+                        {{ __("Transactions") }}
+                    </div>
 
                     <div class="transactions-container">
                         <q-card
@@ -293,7 +311,8 @@
                                             />
                                             <div>
                                                 <div class="text-weight-bold">
-                                                    Transaction #{{ tx.code }}
+                                                    {{ __("Transaction #")
+                                                    }}{{ tx.code }}
                                                 </div>
                                                 <div
                                                     class="text-caption text-grey"
@@ -324,7 +343,7 @@
                                 <div class="row q-col-gutter-md">
                                     <div class="col-xs-12 col-sm-6">
                                         <div class="text-caption text-grey">
-                                            Subtotal
+                                            {{ __("Subtotal") }}
                                         </div>
                                         <div class="text-weight-medium">
                                             {{ tx.subtotal }} {{ tx.currency }}
@@ -332,7 +351,7 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-6">
                                         <div class="text-caption text-grey">
-                                            Total
+                                            {{ __("Total") }}
                                         </div>
                                         <div class="text-weight-medium">
                                             {{ tx.total }} {{ tx.currency }}
@@ -340,7 +359,7 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-6">
                                         <div class="text-caption text-grey">
-                                            Payment Method
+                                            {{ __("Payment Method") }}
                                         </div>
                                         <div class="text-weight-medium">
                                             {{ tx.payment_method }}
@@ -348,10 +367,10 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-6">
                                         <div class="text-caption text-grey">
-                                            Billing Period
+                                            {{ __("Billing Period") }}
                                         </div>
                                         <div class="text-weight-medium">
-                                            {{ tx.billing_period || "N/A" }}
+                                            {{ tx.billing_period || __("N/A") }}
                                         </div>
                                     </div>
                                 </div>
@@ -362,7 +381,7 @@
                                 >
                                     <div class="col-12">
                                         <q-expansion-item
-                                            label="Technical Details"
+                                            :label="__('Technical Details')"
                                             header-class="text-primary"
                                             expand-icon-class="text-primary"
                                         >
@@ -376,7 +395,11 @@
                                                     >
                                                         <span
                                                             class="text-caption text-grey"
-                                                            >Session ID:</span
+                                                            >{{
+                                                                __(
+                                                                    "Session ID:"
+                                                                )
+                                                            }}</span
                                                         >
                                                         <div
                                                             class="text-copyable"
@@ -391,8 +414,11 @@
                                                     >
                                                         <span
                                                             class="text-caption text-grey"
-                                                            >Payment
-                                                            Intent:</span
+                                                            >{{
+                                                                __(
+                                                                    "Payment Intent:"
+                                                                )
+                                                            }}</span
                                                         >
                                                         <div
                                                             class="text-copyable"
@@ -420,7 +446,7 @@
                                         "
                                         :href="tx.payment_url"
                                         target="_blank"
-                                        label="View Invoice"
+                                        :label="__('View Invoice')"
                                         icon="mdi-receipt"
                                         size="sm"
                                         color="primary"
@@ -438,7 +464,7 @@
                     <v-subscription
                         :period="item?.meta?.price"
                         :plan="item"
-                        label="Extend or renew package"
+                        :label="__('Extend or renew package')"
                         :buy="false"
                         :package="item"
                         class="full-width"

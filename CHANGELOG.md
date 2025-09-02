@@ -38,6 +38,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -   Enhanced rate limit implementation
 -   Improved polymorphism support
 -   Introduced e-commerce module
+-   Migrate to Vite js from Laravel mix
+-   Change Transaction to polymorphic table
+-   Add Tags support for polymorphic relation instead of the model location
+-   Support for Spanish language has been added
 
 ## 🚀 [v3.0.4]
 

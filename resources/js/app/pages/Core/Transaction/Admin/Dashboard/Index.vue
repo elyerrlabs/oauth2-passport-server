@@ -26,10 +26,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row items-center q-mb-xl">
                 <div>
                     <div class="text-h4 text-primary text-weight-bold">
-                        Dashboard Analytics
+                        {{ __("Dashboard Analytics") }}
                     </div>
                     <div class="text-subtitle1 text-grey-7">
-                        Monitor your transaction metrics and performance
+                        {{
+                            __(
+                                "Monitor your transaction metrics and performance"
+                            )
+                        }}
                     </div>
                 </div>
             </div>
@@ -70,13 +74,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-card flat bordered class="q-mb-xl filter-section">
                 <q-card-section>
                     <div class="text-h6 text-weight-medium q-mb-md">
-                        Filter Analytics
+                        {{ __("Filter Analytics") }}
                     </div>
                     <div class="row q-col-gutter-md items-end">
                         <q-input
                             v-model="params.start"
                             type="date"
-                            label="Start date"
+                            :label="__('Start date')"
                             outlined
                             dense
                             class="col-12 col-sm-6 col-md-2"
@@ -89,7 +93,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-input
                             v-model="params.end"
                             type="date"
-                            label="End date"
+                            :label="__('End date')"
                             outlined
                             dense
                             class="col-12 col-sm-6 col-md-2"
@@ -102,7 +106,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-select
                             v-model="params.status"
                             :options="status"
-                            label="Status"
+                            :label="__('Status')"
                             outlined
                             dense
                             class="col-12 col-sm-6 col-md-2"
@@ -115,7 +119,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-select
                             v-model="chartType"
                             :options="chartTypes"
-                            label="Chart type"
+                            :label="__('Chart type')"
                             outlined
                             dense
                             class="col-12 col-sm-6 col-md-2"
@@ -128,7 +132,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-select
                             v-model="params.type"
                             :options="types"
-                            label="Date grouping"
+                            :label="__('Date grouping')"
                             outlined
                             dense
                             class="col-12 col-sm-6 col-md-2"
@@ -140,7 +144,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <div class="col-12 col-sm-6 col-md-2">
                             <q-btn
-                                label="Apply Filters"
+                                :label="__('Apply Filters')"
                                 @click="getData"
                                 color="primary"
                                 icon="mdi-filter"
@@ -157,11 +161,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card-section>
                     <div class="row items-center justify-between q-mb-md">
                         <div class="text-h6 text-weight-medium">
-                            Transaction Analytics
+                            {{ __("Transaction Analytics") }}
                         </div>
                         <q-badge color="blue" class="q-pa-sm">
                             <q-icon name="mdi-sync" size="sm" class="q-mr-xs" />
-                            Auto-refreshing every 10 seconds
+                            {{ __("Auto-refreshing every 10 seconds") }}
                         </q-badge>
                     </div>
 
@@ -255,17 +259,17 @@ export default {
 
             this.cards = [
                 {
-                    label: "Packages",
+                    label: this.__("Packages"),
                     value: data["packages"],
                     icon: "mdi-package-variant",
                 },
                 {
-                    label: "Plans",
+                    label: this.__("Plans"),
                     value: data["plans"],
                     icon: "inventory_2",
                 },
                 {
-                    label: "Total Transactions",
+                    label: this.__("Total Transactions"),
                     value: data["transactions"],
                     icon: "bar_chart",
                 },
@@ -303,7 +307,7 @@ export default {
         renderChart() {
             this.chartSeries = [
                 {
-                    name: "Transactions",
+                    name: this.__("Transactions"),
                     data: this.transactions_by_month.map((item) => item.total),
                 },
             ];
@@ -337,7 +341,9 @@ export default {
                     width: 3,
                 },
                 title: {
-                    text: `Transactions by ${this.params.type}`,
+                    text: this.__("Transactions by :type", {
+                        ":type": this.__(this.params.type),
+                    }),
                     align: "left",
                     style: {
                         fontSize: "16px",

@@ -24,7 +24,7 @@ return [
 
     "user_dashboard" => [
         "id" => "dashboard",
-        "name" => "Dashboard",
+        "name" => __("Dashboard"),
         "route" => "user.dashboard",
         "icon" => "mdi-home",
         'show' => true,
@@ -32,7 +32,7 @@ return [
 
     "notification" => [
         "id" => "notification",
-        "name" => "Notification",
+        "name" => __("Notification"),
         "route" => "user.notification.unread",
         "icon" => "mdi-bell",
         'show' => true,
@@ -40,7 +40,7 @@ return [
 
     "notification_mark_as_read" => [
         "id" => "notification_mark_as_read",
-        "name" => "Unread Notification",
+        "name" => __("Unread Notification"),
         "route" => "user.notification.mark-all-as-read",
         "icon" => "mdi-bell",
         'show' => true,
@@ -48,7 +48,7 @@ return [
 
     "admin_dashboard" => [
         "id" => "admin",
-        "name" => "Admin",
+        "name" => __("Admin"),
         "route" => "user.admin.dashboard",
         "icon" => "mdi-security",
         'show' => "administrator",
@@ -60,28 +60,28 @@ return [
 
             "profile" => [
                 'id' => 'profile',
-                'name' => 'Information',
+                'name' => __('Information'),
                 'route' => 'user.profile',
                 'icon' => 'mdi-account-details-outline',
                 'show' => true,
             ],
             "password" => [
                 'id' => 'password',
-                'name' => 'Change password',
+                'name' => __('Change password'),
                 'route' => 'user.password',
                 'icon' => 'mdi-lock-reset',
                 'show' => true,
             ],
             '2fa' => [
                 'id' => '2fa',
-                'name' => 'Two Factor Authorization',
+                'name' => __('Two Factor Authorization'),
                 'route' => 'user.2fa.request',
                 'icon' => 'mdi-two-factor-authentication',
                 'show' => true,
             ],
             "notifications" => [
                 'id' => 'notifications',
-                'name' => 'Notifications',
+                'name' => __('Notifications'),
                 'route' => 'user.notification.index',
                 'icon' => 'mdi-bell-badge-outline',
                 'show' => true,
@@ -92,37 +92,43 @@ return [
 
     "admin_routes" => [
         [
-            "name" => "Dashboard",
+            "id" => "dashboard",
+            "name" => __("Dashboard"),
             "route" => "user.admin.dashboard",
             "icon" => "mdi-view-dashboard",
             'show' => 'administrator',
         ],
         [
-            "name" => "Groups",
+            "id" => "groups",
+            "name" => __("Groups"),
             "route" => "user.admin.groups.index",
             "icon" => "mdi-account-group",
             'show' => 'administrator',
         ],
         [
-            "name" => "Roles",
+            "id" => "roles",
+            "name" => __("Roles"),
             "route" => "user.admin.roles.index",
             "icon" => "mdi-format-list-group",
             'show' => 'administrator',
         ],
         [
-            "name" => "Services",
+            "id" => "services",
+            "name" => __("Services"),
             "route" => "user.admin.services.index",
             "icon" => "mdi-text-box-check",
             'show' => 'administrator',
         ],
         [
-            "name" => "Users",
+            "id" => "users",
+            "name" => __("Users"),
             "route" => "user.admin.users.index",
             "icon" => "mdi-account-multiple",
             'show' => 'administrator',
         ],
         [
-            "name" => "Clients",
+            "id" => "clients",
+            "name" => __("Clients"),
             "route" => "admin.clients.index",
             "icon" => "mdi-apps",
             'show' => 'administrator',

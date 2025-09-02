@@ -35,11 +35,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-toolbar-title
                             class="text-h4 text-weight-bold text-grey-8"
                         >
-                            Account Information
+                            {{ __("Account Information") }}
                         </q-toolbar-title>
                     </div>
                     <div class="text-subtitle1 text-grey-7 q-mt-sm">
-                        Manage your personal information and contact details
+                        {{
+                            __(
+                                "Manage your personal information and contact details"
+                            )
+                        }}
                     </div>
                 </div>
 
@@ -53,7 +57,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 name="mdi-account-details"
                                 class="q-mr-sm"
                             />
-                            Personal Details
+                            {{ __("Personal Details") }}
                         </div>
 
                         <div class="row q-col-gutter-lg">
@@ -61,14 +65,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
                                     <div class="input-label">
-                                        First Name
+                                        {{ __("First Name") }}
                                         <span class="text-red">*</span>
                                     </div>
                                     <q-input
                                         filled
                                         dense
                                         v-model="form.name"
-                                        placeholder="Enter your first name"
+                                        :placeholder="
+                                            __('Enter your first name')
+                                        "
                                         counter
                                         maxlength="100"
                                         :error="!!errors.name"
@@ -82,7 +88,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </template>
                                     </q-input>
                                     <div class="input-hint">
-                                        Maximum 100 characters
+                                        {{ __("Maximum 100 characters") }}
                                     </div>
                                     <v-error :error="errors.name" />
                                 </div>
@@ -92,14 +98,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
                                     <div class="input-label">
-                                        Last Name
+                                        {{ __("Last Name") }}
                                         <span class="text-red">*</span>
                                     </div>
                                     <q-input
                                         filled
                                         dense
                                         v-model="form.last_name"
-                                        placeholder="Enter your last name"
+                                        :placeholder="
+                                            __('Enter your last name')
+                                        "
                                         counter
                                         maxlength="100"
                                         :error="!!errors.last_name"
@@ -113,7 +121,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </template>
                                     </q-input>
                                     <div class="input-hint">
-                                        Maximum 100 characters
+                                        {{ __("Maximum 100 characters") }}
                                     </div>
                                     <v-error :error="errors.last_name" />
                                 </div>
@@ -123,14 +131,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
                                     <div class="input-label">
-                                        Email <span class="text-red">*</span>
+                                        {{ __("Email") }}
+                                        <span class="text-red">*</span>
                                     </div>
                                     <q-input
                                         filled
                                         dense
                                         v-model="form.email"
                                         type="email"
-                                        placeholder="Enter your email address"
+                                        :placeholder="
+                                            __('Enter your email address')
+                                        "
                                         maxlength="100"
                                         :error="!!errors.email"
                                         class="custom-input"
@@ -143,8 +154,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </template>
                                     </q-input>
                                     <div class="input-hint">
-                                        Must be unique and valid. Max 100
-                                        characters
+                                        {{
+                                            __(
+                                                "Must be unique and valid. Max 100 characters"
+                                            )
+                                        }}
                                     </div>
                                     <v-error :error="errors.email" />
                                 </div>
@@ -153,14 +167,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Country -->
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
-                                    <div class="input-label">Country</div>
+                                    <div class="input-label">
+                                        {{ __("Country") }}
+                                    </div>
                                     <q-select
                                         v-model="form.country"
                                         dense
                                         emit-value
                                         map-options
                                         :options="countryOptions"
-                                        label="Select your country"
+                                        :label="__('Select your country')"
                                         outlined
                                         :error="!!errors.country"
                                         class="custom-select"
@@ -182,7 +198,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 {{ form.country }}
                                             </div>
                                             <div v-else class="text-grey-6">
-                                                Select your country
+                                                {{ __("Select your country") }}
                                             </div>
                                         </template>
                                         <template v-slot:option="scope">
@@ -214,7 +230,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <q-item-section
                                                     class="text-grey"
                                                 >
-                                                    No countries found
+                                                    {{
+                                                        __("No countries found")
+                                                    }}
                                                 </q-item-section>
                                             </q-item>
                                         </template>
@@ -226,12 +244,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- City -->
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
-                                    <div class="input-label">City</div>
+                                    <div class="input-label">
+                                        {{ __("City") }}
+                                    </div>
                                     <q-input
                                         filled
                                         dense
                                         v-model="form.city"
-                                        placeholder="Enter your city"
+                                        :placeholder="__('Enter your city')"
                                         maxlength="100"
                                         :error="!!errors.city"
                                         class="custom-input"
@@ -244,7 +264,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </template>
                                     </q-input>
                                     <div class="input-hint">
-                                        Optional. Max 100 characters
+                                        {{ __("Optional. Max 100 characters") }}
                                     </div>
                                     <v-error :error="errors.city" />
                                 </div>
@@ -253,12 +273,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Address -->
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
-                                    <div class="input-label">Address</div>
+                                    <div class="input-label">
+                                        {{ __("Address") }}
+                                    </div>
                                     <q-input
                                         filled
                                         dense
                                         v-model="form.address"
-                                        placeholder="Enter your full address"
+                                        :placeholder="
+                                            __('Enter your full address')
+                                        "
                                         maxlength="150"
                                         :error="!!errors.address"
                                         class="custom-input"
@@ -271,7 +295,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </template>
                                     </q-input>
                                     <div class="input-hint">
-                                        Optional. Max 150 characters
+                                        {{ __("Optional. Max 150 characters") }}
                                     </div>
                                     <v-error :error="errors.address" />
                                 </div>
@@ -280,14 +304,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Dial Code -->
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
-                                    <div class="input-label">Dial Code</div>
+                                    <div class="input-label">
+                                        {{ __("Dial Code") }}
+                                    </div>
                                     <q-select
                                         v-model="form.dial_code"
                                         dense
                                         emit-value
                                         map-options
                                         :options="dialCodeOptions"
-                                        label="Select dial code"
+                                        :label="__('Select dial code')"
                                         outlined
                                         :error="!!errors.dial_code"
                                         class="custom-select"
@@ -304,7 +330,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 {{ form.dial_code }}
                                             </div>
                                             <div v-else class="text-grey-6">
-                                                Select dial code
+                                                {{ __("Select dial code") }}
                                             </div>
                                         </template>
                                         <template v-slot:option="scope">
@@ -321,7 +347,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <q-item-section
                                                     class="text-grey"
                                                 >
-                                                    No dial codes found
+                                                    {{
+                                                        __(
+                                                            "No dial codes found"
+                                                        )
+                                                    }}
                                                 </q-item-section>
                                             </q-item>
                                         </template>
@@ -333,12 +363,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Phone -->
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
-                                    <div class="input-label">Phone Number</div>
+                                    <div class="input-label">
+                                        {{ __("Phone Number") }}
+                                    </div>
                                     <q-input
                                         filled
                                         dense
                                         v-model="form.phone"
-                                        placeholder="Enter your phone number"
+                                        :placeholder="
+                                            __('Enter your phone number')
+                                        "
                                         maxlength="25"
                                         :error="!!errors.phone"
                                         class="custom-input"
@@ -351,8 +385,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </template>
                                     </q-input>
                                     <div class="input-hint">
-                                        Required if dial code is filled. Must be
-                                        unique. Max 25 characters
+                                        {{
+                                            __(
+                                                "Required if dial code is filled. Must be unique. Max 25 characters"
+                                            )
+                                        }}
                                     </div>
                                     <v-error :error="errors.phone" />
                                 </div>
@@ -361,7 +398,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Birthday -->
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="input-section">
-                                    <div class="input-label">Birthday</div>
+                                    <div class="input-label">
+                                        {{ __("Birthday") }}
+                                    </div>
                                     <div class="date-picker-container">
                                         <VueDatePicker
                                             v-model="form.birthday"
@@ -369,7 +408,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             :max-date="new Date()"
                                             format="yyyy-MM-dd"
                                             model-type="format"
-                                            placeholder="Select your birthday"
+                                            :placeholder="
+                                                __('Select your birthday')
+                                            "
                                             :class="{
                                                 'error-border':
                                                     !!errors.birthday,
@@ -382,8 +423,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         />
                                     </div>
                                     <div class="input-hint">
-                                        Optional. Format: YYYY-MM-DD. Must be a
-                                        past date
+                                        {{
+                                            __(
+                                                "Optional. Format: YYYY-MM-DD. Must be a past date"
+                                            )
+                                        }}
                                     </div>
                                     <v-error :error="errors.birthday" />
                                 </div>
@@ -394,7 +438,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Submit Button -->
                     <q-card-actions class="q-px-md q-pb-md">
                         <q-btn
-                            label="Update Information"
+                            :label="__('Update Information')"
                             color="primary"
                             unelevated
                             no-caps
@@ -404,7 +448,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         >
                             <template v-slot:loading>
                                 <q-spinner-hourglass class="on-left" />
-                                Updating...
+                                {{ __("Updating...") }}
                             </template>
                         </q-btn>
                     </q-card-actions>

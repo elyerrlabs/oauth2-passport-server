@@ -4,10 +4,10 @@
             <div class="row items-center">
                 <div class="col">
                     <div class="text-h5 text-weight-bold">
-                        Partner Management
+                        {{ __("Partner Management") }}
                     </div>
                     <div class="text-subtitle1">
-                        Manage your partners and their commissions
+                        {{ __("Manage your partners and their commissions") }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -19,11 +19,11 @@
         <q-card flat class="q-mb-md q-mx-md">
             <q-card-section>
                 <div class="row items-center justify-between">
-                    <div class="text-h6 text-primary">Filters</div>
+                    <div class="text-h6 text-primary">{{ __("Filters") }}</div>
                     <div class="row items-center q-gutter-sm">
                         <q-toggle
                             v-model="showFilters"
-                            label="Show Filters"
+                            :label="__('Show Filters')"
                             color="primary"
                         />
                         <q-btn
@@ -33,7 +33,7 @@
                             round
                             @click="resetFilters"
                         >
-                            <q-tooltip>Reset filters</q-tooltip>
+                            <q-tooltip>{{ __("Reset filters") }}</q-tooltip>
                         </q-btn>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                                 v-model="search.name"
                                 dense
                                 outlined
-                                label="Name"
+                                :label="__('Name')"
                                 debounce="500"
                                 @update:model-value="getPartners"
                                 clearable
@@ -62,7 +62,7 @@
                                 v-model="search.last_name"
                                 dense
                                 outlined
-                                label="Last Name"
+                                :label="__('Last Name')"
                                 debounce="500"
                                 @update:model-value="getPartners"
                                 clearable
@@ -77,7 +77,7 @@
                                 v-model="search.email"
                                 dense
                                 outlined
-                                label="Email"
+                                :label="__('Email')"
                                 debounce="500"
                                 @update:model-value="getPartners"
                                 clearable
@@ -92,7 +92,7 @@
                                 v-model="search.code"
                                 dense
                                 outlined
-                                label="Code"
+                                :label="__('Code')"
                                 debounce="500"
                                 @update:model-value="getPartners"
                                 clearable
@@ -113,8 +113,8 @@
                     <template v-slot:avatar>
                         <q-icon name="info" color="primary" />
                     </template>
-                    Showing {{ users.length }} of
-                    {{ pages.total_count || 0 }} partners
+                    {{ __("Showing") }} {{ users.length }} {{ __("of") }}
+                    {{ pages.total_count || 0 }} {{ __("partners") }}
                 </q-banner>
             </div>
 
@@ -124,7 +124,7 @@
                 <q-select
                     v-model="search.per_page"
                     :options="[10, 15, 25, 50, 100]"
-                    label="Items per page"
+                    :label="__('Items per page')"
                     dense
                     outlined
                     style="min-width: 140px"
@@ -135,8 +135,8 @@
                     v-model="viewMode"
                     toggle-color="primary"
                     :options="[
-                        { value: 'list', icon: 'list', label: 'List' },
-                        { value: 'grid', icon: 'grid_on', label: 'Grid' },
+                        { value: 'list', icon: 'list', label: __('List') },
+                        { value: 'grid', icon: 'grid_on', label: __('Grid') },
                     ]"
                     spread
                     unelevated
@@ -185,7 +185,7 @@
                                     size="16px"
                                     class="q-mr-xs"
                                 />
-                                <span>ID: {{ user.id }}</span>
+                                <span>{{ __("ID:") }} {{ user.id }}</span>
                             </div>
                             <div class="detail-item">
                                 <q-icon
@@ -193,7 +193,7 @@
                                     size="16px"
                                     class="q-mr-xs"
                                 />
-                                <span>Code: {{ user.code }}</span>
+                                <span>{{ __("Code:") }} {{ user.code }}</span>
                             </div>
                             <div class="detail-item" v-if="user.country">
                                 <q-icon
@@ -201,7 +201,10 @@
                                     size="16px"
                                     class="q-mr-xs"
                                 />
-                                <span>Country: {{ user.country }}</span>
+                                <span
+                                    >{{ __("Country:") }}
+                                    {{ user.country }}</span
+                                >
                             </div>
                             <div class="detail-item" v-if="user.phone">
                                 <q-icon
@@ -209,7 +212,7 @@
                                     size="16px"
                                     class="q-mr-xs"
                                 />
-                                <span>Phone: {{ user.phone }}</span>
+                                <span>{{ __("Phone:") }} {{ user.phone }}</span>
                             </div>
                             <div class="detail-item">
                                 <q-icon
@@ -218,7 +221,7 @@
                                     class="q-mr-xs"
                                 />
                                 <span
-                                    >Commission:
+                                    >{{ __("Commission:") }}
                                     {{ user.commission_rate }}%</span
                                 >
                             </div>
@@ -250,12 +253,12 @@
                 <template v-slot:avatar>
                     <q-icon name="search_off" color="grey" size="32px" />
                 </template>
-                No partners found matching your criteria
+                {{ __("No partners found matching your criteria") }}
                 <template v-slot:action>
                     <q-btn
                         flat
                         color="primary"
-                        label="Clear Filters"
+                        :label="__('Clear Filters')"
                         @click="resetFilters"
                     />
                 </template>
@@ -322,11 +325,11 @@
                         class="full-width row flex-center text-grey q-gutter-sm q-pa-lg"
                     >
                         <q-icon name="search_off" size="2em" />
-                        <span>No partners found</span>
+                        <span>{{ __("No partners found") }}</span>
                         <q-btn
                             flat
                             color="primary"
-                            label="Clear Filters"
+                            :label="__('Clear Filters')"
                             @click="resetFilters"
                         />
                     </div>
@@ -339,8 +342,9 @@
             v-if="pages.total_pages > 1"
         >
             <div class="text-caption text-grey-7">
-                Page {{ search.page }} of {{ pages.total_pages }} •
-                {{ pages.total_count }} total partners
+                {{ __("Page") }} {{ search.page }} {{ __("of") }}
+                {{ pages.total_pages }} • {{ pages.total_count }}
+                {{ __("total partners") }}
             </div>
 
             <q-pagination

@@ -12,6 +12,7 @@
     @vite(['resources/js/app.js', 'resources/scss/app.scss'])
     <link nonce={{ $nonce }} rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
     <script nonce={{ $nonce }} src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
+    @include('layouts.parts.translation')
     @inertiaHead
     @stack('head')
     @stack('css')
@@ -26,7 +27,10 @@
     @yield('content')
 
     <x-privacy />
-    
+    <script nonce="{{ $nonce }}">
+        window.translation = @json(setLanguage()->getData())
+        console.log(window.translation);
+    </script>
     @stack('js')
     @stack('modals')
 </body>

@@ -62,7 +62,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="text-body1 q-mb-md">
                         Are you sure you want to revoke the scope for role
                         <span class="text-weight-bold text-blue-8"
-                            >"{{ scope.role?.name }}"</span
+                            >"{{ __(scope.role?.name) }}"</span
                         >?
                     </div>
 

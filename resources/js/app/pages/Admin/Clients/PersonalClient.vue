@@ -28,13 +28,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         class="personal-client-btn"
         unelevated
     >
-        Create Personal Access Client
+        {{ __("Create Personal Access Client") }}
         <q-tooltip
             transition-show="scale"
             transition-hide="scale"
             class="bg-primary text-white"
         >
-            Create a personal access client for API authentication
+            {{ __("Create a personal access client for API authentication") }}
         </q-tooltip>
     </q-btn>
 
@@ -53,9 +53,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="lg"
                             class="q-mb-sm"
                         />
-                        <div class="text-h5">Create Personal Access Client</div>
+                        <div class="text-h5">
+                            {{ __("Create Personal Access Client") }}
+                        </div>
                         <div class="text-caption">
-                            Generate API keys for secure authentication
+                            {{
+                                __(
+                                    "Generate API keys for secure authentication"
+                                )
+                            }}
                         </div>
                     </q-card-section>
                 </div>
@@ -72,21 +78,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="q-mr-sm"
                                 />
                                 <div class="text-caption">
-                                    Personal access clients allow your
-                                    applications to authenticate with the API
-                                    using generated tokens.
+                                    {{
+                                        __(
+                                            "Personal access clients allow your applications to authenticate with the API using generated tokens."
+                                        )
+                                    }}
                                 </div>
                             </div>
                         </div>
 
                         <q-input
                             v-model="form.name"
-                            label="Client Name"
+                            :label="__('Client Name')"
                             outlined
                             color="primary"
                             :error="!!errors.name"
                             autofocus
-                            hint="Enter a descriptive name for your personal access client"
+                            :hint="
+                                __(
+                                    'Enter a descriptive name for your personal access client'
+                                )
+                            "
                             class="input-field"
                         >
                             <template v-slot:prepend>
@@ -107,10 +119,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="q-mr-sm"
                                 />
                                 <div class="text-caption">
-                                    <strong>Security Note:</strong> This client
-                                    will be used to generate API tokens. Keep
-                                    your tokens secure and never share them
-                                    publicly.
+                                    <strong>{{ __("Security Note:") }}</strong>
+                                    {{
+                                        __(
+                                            "This client will be used to generate API tokens. Keep your tokens secure and never share them publicly."
+                                        )
+                                    }}
                                 </div>
                             </div>
                         </div>
@@ -119,7 +133,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <q-card-actions align="right" class="q-pa-lg">
                     <q-btn
-                        label="Cancel"
+                        :label="__('Cancel')"
                         color="grey-7"
                         @click="dialog = false"
                         flat
@@ -127,7 +141,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-close-circle"
                     />
                     <q-btn
-                        label="Create Client"
+                        :label="__('Create Client')"
                         color="primary"
                         @click="createPersonalAccessClient"
                         unelevated

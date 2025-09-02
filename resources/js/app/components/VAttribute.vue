@@ -3,7 +3,7 @@
         <q-card-section class="q-pa-none q-mb-md">
             <div class="row items-center q-gutter-sm">
                 <q-icon name="mdi-pencil-plus" color="primary" size="md" />
-                <div class="text-h6 text-primary">Attributes</div>
+                <div class="text-h6 text-primary">{{ __("Attributes") }}</div>
             </div>
         </q-card-section>
 
@@ -18,7 +18,7 @@
                 class="attribute-item"
                 filled
                 v-model="attr.name"
-                label="Name"
+                :label="__('Name')"
                 dense
                 @update:model-value="emitUpdate"
             />
@@ -29,7 +29,7 @@
                 filled
                 v-model="attr.type"
                 :options="typeOptions"
-                label="Type"
+                :label="__('Type')"
                 dense
                 @update:model-value="emitUpdate"
             />
@@ -39,7 +39,7 @@
                 class="attribute-item"
                 filled
                 v-model="attr.value"
-                label="Value"
+                :label="__('Value')"
                 dense
                 @update:model-value="emitUpdate"
             />
@@ -50,7 +50,7 @@
                 filled
                 type="number"
                 v-model="attr.stock"
-                label="Stock"
+                :label="__('Stock')"
                 dense
                 @update:model-value="emitUpdate"
             />
@@ -61,7 +61,7 @@
                 filled
                 v-model="attr.widget"
                 :options="widgetOptions"
-                label="Widget"
+                :label="__('Widget')"
                 dense
                 @update:model-value="emitUpdate"
             />
@@ -70,7 +70,7 @@
             <div class="attribute-item checkbox-container">
                 <q-checkbox
                     v-model="attr.multiple"
-                    label="Multiple"
+                    :label="__('Multiple')"
                     dense
                     @update:model-value="emitUpdate"
                 />
@@ -94,7 +94,7 @@
             size="sm"
             outline
             icon="add"
-            label="Add attribute"
+            :label="__('Add attribute')"
             @click="addAttribute"
         />
     </div>

@@ -34,26 +34,26 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <q-dialog v-model="dialog">
             <q-card>
                 <q-card-section class="row items-center q-pb-none">
-                    <div class="text-h6">{{ dialogTitle }}</div>
+                    <div class="text-h6">{{ __(dialogTitle) }}</div>
                     <q-space />
                     <q-btn icon="close" flat round dense v-close-popup />
                 </q-card-section>
 
                 <q-card-section>
-                    {{ dialogMessage }}
+                    {{ __(dialogMessage) }}
                 </q-card-section>
 
                 <q-card-actions class="flex">
                     <q-btn
                         outline
-                        label="Accept"
+                        :label="__(Accept)"
                         color="positive"
                         @click="recurringPayment"
                     />
                     <q-space />
                     <q-btn
                         outline
-                        label="Cancel"
+                        :label="__(Cancel)"
                         color="negative"
                         @click="dialog = false"
                     />

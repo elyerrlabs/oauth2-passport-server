@@ -62,7 +62,7 @@ class UserReactivateAccount extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject(__('Welcome Back! Your Account is Active'))
-            ->greeting(__('Hello ') . $notifiable->name . ',')
+            ->greeting(__('Hello :name', ['name' => $notifiable->name]))
             ->line(__('We are delighted to inform you that your account has been successfully reactivated.'))
             ->line(__('You can now access your account and enjoy all the features available to you.'))
             ->action(__('Access Your Account'), url(env('FRONTEND_URL')))

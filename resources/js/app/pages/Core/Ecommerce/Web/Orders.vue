@@ -9,7 +9,7 @@
                     color="primary"
                 />
                 <div class="text-h5 text-weight-bold header-title">
-                    Shopping Orders
+                    {{ __("Shopping Orders") }}
                 </div>
                 <q-badge
                     v-if="orders.length"
@@ -18,11 +18,11 @@
                     rounded
                 >
                     {{ orders.length }}
-                    {{ orders.length === 1 ? "item" : "items" }}
+                    {{ orders.length === 1 ? __("item") : __("items") }}
                 </q-badge>
                 <q-space />
                 <q-btn
-                    label="Continue Shopping"
+                    :label="__('Continue Shopping')"
                     color="secondary"
                     outline
                     no-caps
@@ -47,13 +47,13 @@
                         />
                     </div>
                     <div class="text-h6 empty-title q-mt-lg">
-                        Your order is empty
+                        {{ __("Your order is empty") }}
                     </div>
                     <div class="text-body2 empty-subtitle q-mb-xl text-center">
-                        Add products to your cart to get started
+                        {{ __("Add products to your cart to get started") }}
                     </div>
                     <q-btn
-                        label="Browse Products"
+                        :label="__('Browse Products')"
                         color="primary"
                         unelevated
                         no-caps
@@ -73,7 +73,7 @@
                             <q-checkbox
                                 v-model="selectAll"
                                 indeterminate-value="some"
-                                label="Select all items"
+                                :label="__('Select all items')"
                                 color="primary"
                                 class="select-all-checkbox"
                                 dense
@@ -83,8 +83,8 @@
                             <div
                                 class="text-caption selected-count text-weight-medium"
                             >
-                                {{ selected_products.length }} of
-                                {{ orders.length }} selected
+                                {{ selected_products.length }} {{ __("of") }}
+                                {{ orders.length }} {{ __("selected") }}
                             </div>
                         </div>
 
@@ -146,17 +146,20 @@
                                             color="positive"
                                             class="q-mr-xs stock-badge"
                                         >
-                                            In Stock ({{ product.stock }})
+                                            {{ __("In Stock") }} ({{
+                                                product.stock
+                                            }})
                                         </q-badge>
                                         <q-badge
                                             v-else
                                             color="negative"
                                             class="q-mr-xs stock-badge"
                                         >
-                                            Out of Stock
+                                            {{ __("Out of Stock") }}
                                         </q-badge>
                                         <q-badge color="info" class="q-mr-xs">
-                                            Qty: {{ product.quantity }}
+                                            {{ __("Qty:") }}
+                                            {{ product.quantity }}
                                         </q-badge>
                                         <q-badge
                                             :color="
@@ -174,7 +177,7 @@
                                             class="q-ma-sm"
                                             @click="goTo(product?.links.show)"
                                         >
-                                            View product
+                                            {{ __("View product") }}
                                         </q-btn>
                                     </div>
                                 </q-item-section>
@@ -197,7 +200,7 @@
                                         <div
                                             class="text-caption text-weight-medium q-mb-xs"
                                         >
-                                            Quantity
+                                            {{ __("Quantity") }}
                                         </div>
                                         <div class="row items-center no-wrap">
                                             <q-btn
@@ -263,7 +266,7 @@
                                             class="action-btn"
                                         >
                                             <q-tooltip>
-                                                Save for later
+                                                {{ __("Save for later") }}
                                             </q-tooltip>
                                         </q-btn>
                                         <q-btn
@@ -277,7 +280,9 @@
                                                 deleteItem(product.deleteUrl)
                                             "
                                         >
-                                            <q-tooltip>Remove item</q-tooltip>
+                                            <q-tooltip>{{
+                                                __("Remove item")
+                                            }}</q-tooltip>
                                         </q-btn>
                                     </div>
                                 </q-item-section>
@@ -292,7 +297,7 @@
                         <div class="row justify-between items-start full-width">
                             <div class="col-12 col-md-7 order-summary">
                                 <div class="text-h6 text-weight-bold q-mb-md">
-                                    Order Summary
+                                    {{ __("Order Summary") }}
                                 </div>
 
                                 <div class="summary-details q-pa-md">
@@ -300,7 +305,7 @@
                                         class="row justify-between items-center q-mb-sm"
                                     >
                                         <div class="text-body1">
-                                            Total items ({{
+                                            {{ __("Total items") }} ({{
                                                 selected_products.length
                                             }}
                                             )
@@ -309,7 +314,8 @@
                                             class="text-body1 text-weight-medium"
                                         >
                                             <div class="text-body1">
-                                                Quantities ( {{ totalItem }})
+                                                {{ __("Quantities") }} (
+                                                {{ totalItem }})
                                             </div>
                                         </div>
                                     </div>
@@ -320,7 +326,7 @@
                                         v-if="estimatedTax > 0"
                                         >
                                         <div class="text-body1">
-                                            Estimated Tax
+                                            {{__('Estimated Tax')}}
                                         </div>
                                         <div
                                             class="text-body1 text-weight-medium"
@@ -336,7 +342,9 @@
                                     <div
                                         class="summary-total row justify-between items-center"
                                     >
-                                        <div class="text-h6">Total</div>
+                                        <div class="text-h6">
+                                            {{ __("Total") }}
+                                        </div>
                                         <div
                                             class="text-h4 text-weight-bold text-primary"
                                         >
@@ -348,8 +356,12 @@
                                     <div
                                         class="text-caption text-secondary q-mt-sm"
                                     >
-                                        * Total will be finalized during
-                                        checkout
+                                        *
+                                        {{
+                                            __(
+                                                "Total will be finalized during checkout"
+                                            )
+                                        }}
                                     </div>
                                 </div>
                             </div>
@@ -359,7 +371,7 @@
                                     <div
                                         class="text-h6 q-mb-md text-weight-medium"
                                     >
-                                        Complete Purchase
+                                        {{ __("Complete Purchase") }}
                                     </div>
 
                                     <div class="pricing-breakdown q-mb-lg">
@@ -367,7 +379,7 @@
                                             class="row justify-between items-center"
                                         >
                                             <div class="text-body2">
-                                                Order Total
+                                                {{ __("Order Total") }}
                                             </div>
                                             <div
                                                 class="text-body2 text-weight-medium"
@@ -380,7 +392,7 @@
                                     </div>
 
                                     <q-btn
-                                        label="Proceed to Checkout"
+                                        :label="__('Proceed to Checkout')"
                                         color="primary"
                                         unelevated
                                         no-caps
@@ -407,7 +419,7 @@
                                         <div
                                             class="text-caption text-weight-medium"
                                         >
-                                            Secure checkout
+                                            {{ __("Secure checkout") }}
                                         </div>
                                     </div>
                                 </div>

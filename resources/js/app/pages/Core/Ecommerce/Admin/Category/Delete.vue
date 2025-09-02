@@ -30,8 +30,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="delete-btn shadow-3"
             unelevated
         >
-            Delete
-            <q-tooltip class="bg-negative">Delete Category</q-tooltip>
+            {{ __("Delete") }}
+            <q-tooltip class="bg-negative">{{
+                __("Delete Category")
+            }}</q-tooltip>
         </q-btn>
 
         <!-- Delete Confirmation Dialog -->
@@ -51,7 +53,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mr-sm"
                         />
                         <div class="text-h5 text-weight-bold">
-                            Delete Category
+                            {{ __("Delete Category") }}
                         </div>
                         <q-space />
                         <q-btn
@@ -76,15 +78,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mr-md"
                         />
                         <div class="text-h6 text-weight-medium">
-                            Confirm Deletion
+                            {{ __("Confirm Deletion") }}
                         </div>
                     </div>
 
                     <div class="text-body1 q-mb-lg">
-                        You are about to delete the category
+                        {{ __("You are about to delete the category") }}
                         <strong class="text-negative">"{{ item.name }}"</strong
-                        >. This action cannot be undone and will remove all
-                        associated data.
+                        >.
+                        {{
+                            __(
+                                "This action cannot be undone and will remove all associated data."
+                            )
+                        }}
                     </div>
 
                     <!-- Category Details -->
@@ -95,7 +101,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         <q-card-section>
                             <div class="text-subtitle2 text-grey-8 q-mb-sm">
-                                Category Details
+                                {{ __("Category Details") }}
                             </div>
 
                             <div class="row items-center q-mb-xs">
@@ -104,7 +110,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="16px"
                                     class="q-mr-sm text-grey-6"
                                 />
-                                <span class="text-weight-medium">Name:</span>
+                                <span class="text-weight-medium">{{
+                                    __("Name:")
+                                }}</span>
                                 <span class="q-ml-sm">{{ item.name }}</span>
                             </div>
 
@@ -117,7 +125,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="16px"
                                     class="q-mr-sm text-grey-6"
                                 />
-                                <span class="text-weight-medium">Icon:</span>
+                                <span class="text-weight-medium">{{
+                                    __("Icon:")
+                                }}</span>
                                 <span class="q-ml-sm">
                                     <q-icon
                                         :name="item.icon.icon"
@@ -137,9 +147,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     "
                                     class="q-mr-sm"
                                 />
-                                <span class="text-weight-medium">Status:</span>
+                                <span class="text-weight-medium">{{
+                                    __("Status:")
+                                }}</span>
                                 <span class="q-ml-sm">{{
-                                    item.published ? "Published" : "Hidden"
+                                    item.published
+                                        ? __("Published")
+                                        : __("Hidden")
                                 }}</span>
                             </div>
 
@@ -150,11 +164,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :color="item.featured ? 'accent' : 'grey-5'"
                                     class="q-mr-sm"
                                 />
-                                <span class="text-weight-medium"
-                                    >Featured:</span
-                                >
+                                <span class="text-weight-medium">{{
+                                    __("Featured:")
+                                }}</span>
                                 <span class="q-ml-sm">{{
-                                    item.featured ? "Yes" : "No"
+                                    item.featured ? __("Yes") : __("No")
                                 }}</span>
                             </div>
                         </q-card-section>
@@ -162,15 +176,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <div class="text-caption text-negative q-mt-md">
                         <q-icon name="mdi-alert" size="16px" class="q-mr-xs" />
-                        Warning: This will permanently delete the category and
-                        cannot be recovered.
+                        {{
+                            __(
+                                "Warning: This will permanently delete the category and cannot be recovered."
+                            )
+                        }}
                     </div>
                 </q-card-section>
 
                 <!-- Dialog Actions -->
                 <q-card-actions align="right" class="dialog-actions q-pa-md">
                     <q-btn
-                        label="Cancel"
+                        :label="__('Cancel')"
                         color="grey"
                         @click="dialog = false"
                         outline
@@ -178,7 +195,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-close"
                     />
                     <q-btn
-                        label="Delete Category"
+                        :label="__('Delete Category')"
                         color="negative"
                         @click="destroy"
                         class="action-btn"

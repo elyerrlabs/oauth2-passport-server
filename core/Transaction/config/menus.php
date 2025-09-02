@@ -25,7 +25,7 @@
 return [
     "transaction_dashboard" => [
         "id" => "transaction",
-        "name" => "Transaction",
+        "name" => __("Transaction"),
         "route" => "transaction.admin.dashboard",
         "icon" => "mdi-swap-vertical",
         'show' => "administrator"
@@ -40,14 +40,14 @@ return [
 
             'subscription' => [
                 'id' => 'subscriptions',
-                'name' => 'Subscriptions',
+                'name' => __('Subscriptions'),
                 'route' => 'transaction.subscriptions.index',
                 'icon' => 'mdi-gift-outline',
                 'show' => true,
             ],
             'store' => [
                 'id' => 'store',
-                'name' => 'Buy subscription',
+                'name' => __('Buy subscription'),
                 'route' => 'transaction.plans.index',
                 'icon' => 'mdi-currency-usd',
                 'show' => true,
@@ -57,7 +57,7 @@ return [
         "transactions" => [
             'plans' => [
                 "id" => "plans",
-                "name" => "Subscriptions",
+                "name" => __("Subscriptions"),
                 "route" => "transaction.plans.index",
                 "icon" => "mdi-cash-clock",
                 'show' => true,
@@ -67,20 +67,22 @@ return [
 
     "transaction_routes" => [
         [
-            "name" => "Dashboard",
+            "id" => "dashboard",
+            "name" => __("Dashboard"),
             "route" => "transaction.admin.dashboard",
             "icon" => "mdi-view-dashboard",
             'show' => 'administrator',
         ],
         [
             'id' => 'transaction',
-            'name' => 'Transactions',
+            'name' => __('Transactions'),
             'route' => 'transaction.admin.transactions.index',
             'icon' => 'mdi-cash',
             'show' => true,
         ],
         [
-            "name" => "Plans",
+            "id" => "plans",
+            "name" => __("Plans"),
             "route" => "transaction.admin.plans.index",
             "icon" => "mdi-cash-clock",
             'show' => 'administrator',

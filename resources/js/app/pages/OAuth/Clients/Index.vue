@@ -34,13 +34,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-toolbar-title
                         class="text-h4 text-weight-bold text-grey-8"
                     >
-                        OAuth Clients
+                        {{ __("OAuth Clients") }}
                     </q-toolbar-title>
                     <q-space />
                     <v-create @created="getClients()" class="create-btn" />
                 </q-toolbar>
                 <div class="text-subtitle1 text-grey-7 q-mt-sm header-subtitle">
-                    Manage your OAuth 2.0 clients and applications
+                    {{ __("Manage your OAuth 2.0 clients and applications") }}
                 </div>
             </div>
 
@@ -80,7 +80,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="client-id text-caption text-grey-6"
                                     v-if="props.row.id"
                                 >
-                                    ID: {{ props.row.id }}
+                                    {{ __("ID:") }} {{ props.row.id }}
                                 </div>
                             </q-td>
                         </template>
@@ -88,7 +88,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Created Date Column -->
                         <template v-slot:body-cell-created_at="props">
                             <q-td class="date-cell">
-                                <div class="date-label">Created</div>
+                                <div class="date-label">
+                                    {{ __("Created") }}
+                                </div>
                                 <div class="date-value text-weight-medium">
                                     <q-icon
                                         name="mdi-calendar"
@@ -123,13 +125,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         size="14px"
                                         class="q-mr-xs"
                                     />
-                                    {{ props.row.confidential ? "Yes" : "No" }}
+                                    {{
+                                        props.row.confidential
+                                            ? __("Yes")
+                                            : __("No")
+                                    }}
                                 </q-badge>
                                 <div class="text-caption text-grey-6 q-mt-xs">
                                     {{
                                         props.row.confidential
-                                            ? "Confidential client"
-                                            : "Public client"
+                                            ? __("Confidential client")
+                                            : __("Public client")
                                     }}
                                 </div>
                             </q-td>
@@ -190,11 +196,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="empty-title text-h6 text-grey-7 q-mt-md"
                                 >
-                                    No OAuth Clients
+                                    {{ __("No OAuth Clients") }}
                                 </div>
                                 <div class="empty-subtitle text-grey-5">
-                                    Create your first OAuth client to get
-                                    started
+                                    {{
+                                        __(
+                                            "Create your first OAuth client to get started"
+                                        )
+                                    }}
                                 </div>
                             </div>
                         </template>
@@ -247,35 +256,35 @@ export default {
                 {
                     name: "name",
                     required: true,
-                    label: "Client Name",
+                    label: this.__("Client Name"),
                     align: "left",
                     field: (row) => row.name,
                     sortable: true,
                 },
                 {
                     name: "created_at",
-                    label: "Created Date",
+                    label: this.__("Created Date"),
                     align: "left",
                     field: (row) => row.created_at,
                     sortable: true,
                 },
                 {
                     name: "confidential",
-                    label: "Client Type",
+                    label: this.__("Client Type"),
                     align: "center",
                     field: (row) => row.confidential,
                     sortable: true,
                 },
                 {
                     name: "grant_types",
-                    label: "Grant Types",
+                    label: this.__("Grant Types"),
                     align: "left",
                     field: (row) => row.grant_types,
                     sortable: true,
                 },
                 {
                     name: "actions",
-                    label: "Actions",
+                    label: this.__("Actions"),
                     align: "right",
                     field: (row) => row.id,
                 },

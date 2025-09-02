@@ -37,16 +37,14 @@ Author Contact: yerel9212@yahoo.es
                 {{ unread_notification.length }}
             </q-badge>
 
-            <!-- Menú desplegable -->
             <q-menu fit anchor="bottom right" self="top right">
                 <q-card style="min-width: 320px; max-width: 400px">
                     <q-card-section>
-                        <div class="text-h6">Notificaciones</div>
+                        <div class="text-h6">{{ __("Notifications") }}</div>
                     </q-card-section>
 
                     <q-separator />
 
-                    <!-- Lista de notificaciones -->
                     <q-list separator v-if="unread_notification.length">
                         <q-item
                             v-for="n in unread_notification"
@@ -83,14 +81,15 @@ Author Contact: yerel9212@yahoo.es
                         </q-item>
                     </q-list>
 
-                    <!-- Estado vacío -->
                     <div v-else class="text-center q-pa-md">
                         <q-icon
                             name="mdi-email-check"
                             size="40px"
                             color="green"
                         />
-                        <div class="text-subtitle2 q-mt-sm">¡Todo al día!</div>
+                        <div class="text-subtitle2 q-mt-sm">
+                            {{ __("All caught up!") }}
+                        </div>
                     </div>
 
                     <q-separator />
@@ -101,7 +100,7 @@ Author Contact: yerel9212@yahoo.es
                             flat
                             color="primary"
                             icon="mdi-check-all"
-                            label="Marcar todo leído"
+                            :label="__('Mark as read')"
                             :disable="!unread_notification.length"
                             @click="markAllAsRead"
                         />
@@ -131,9 +130,7 @@ export default {
                 if (res.status === 200) {
                     this.unread_notification = res.data.data;
                 }
-            } catch (error) {
-                console.error("Error cargando notificaciones", error);
-            }
+            } catch (error) {}
         },
 
         async markAsRead(notification) {
@@ -147,15 +144,13 @@ export default {
                         window.open(notification.link, "_blank");
                     }
                     this.$q.notify({
-                        message: "Notificación marcada como leída",
+                        message: this.__("Notification marked as read"),
                         color: "positive",
                         icon: "mdi-check",
                         position: "top-right",
                     });
                 }
-            } catch (error) {
-                console.error("Error al marcar notificación", error);
-            }
+            } catch (error) {}
         },
 
         async markAllAsRead() {
@@ -167,14 +162,12 @@ export default {
                 }
                 this.getUnreadNotifications();
                 this.$q.notify({
-                    message: "Todas las notificaciones marcadas como leídas",
+                    message: this.__("All notification mark as read"),
                     color: "positive",
                     icon: "mdi-check-all",
                     position: "top-right",
                 });
-            } catch (error) {
-                console.error("Error al marcar todas como leídas", error);
-            }
+            } catch (error) {}
         },
     },
 };

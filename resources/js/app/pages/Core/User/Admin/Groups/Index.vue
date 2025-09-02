@@ -31,7 +31,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="header-icon"
                 />
                 <q-toolbar-title class="text-h4 text-weight-bold text-grey-8">
-                    Groups Management
+                    {{ __("Groups Management") }}
                 </q-toolbar-title>
                 <q-space />
                 <div class="header-actions">
@@ -44,7 +44,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
             </q-toolbar>
             <div class="text-subtitle1 text-grey-7 q-mt-sm">
-                Manage user groups and permissions
+                {{ __("Manage user groups and permissions") }}
             </div>
         </div>
 
@@ -67,13 +67,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     {{ groups.length }}
                                 </div>
                                 <div class="text-caption text-grey-7">
-                                    Total Groups
+                                    {{ __("Total Groups") }}
                                 </div>
                             </div>
                         </div>
                     </q-card-section>
                 </q-card>
             </div>
+
             <div class="col-12 col-sm-6 col-md-3">
                 <q-card flat bordered class="stats-card">
                     <q-card-section>
@@ -91,13 +92,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     {{ systemGroupsCount }}
                                 </div>
                                 <div class="text-caption text-grey-7">
-                                    System Groups
+                                    {{ __("System Groups") }}
                                 </div>
                             </div>
                         </div>
                     </q-card-section>
                 </q-card>
             </div>
+
             <div class="col-12 col-sm-6 col-md-3">
                 <q-card flat bordered class="stats-card">
                     <q-card-section>
@@ -115,7 +117,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     {{ userGroupsCount }}
                                 </div>
                                 <div class="text-caption text-grey-7">
-                                    User Groups
+                                    {{ __("User Groups") }}
                                 </div>
                             </div>
                         </div>
@@ -124,15 +126,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
         </div>
 
-        <!-- Grid View -->
+        <!-- Grid & List Views -->
         <div
             v-if="viewMode === 'grid'"
             class="groups-grid row q-col-gutter-xl q-mb-lg"
         >
             <div
-                class="col-12 col-sm-6 col-md-4 col-lg-3"
                 v-for="group in groups"
                 :key="group.id"
+                class="col-12 col-sm-6 col-md-4 col-lg-3"
             >
                 <q-card flat bordered class="group-card">
                     <q-card-section class="card-header">
@@ -162,7 +164,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             class="group-description text-body2 text-grey-8 q-mb-md"
                         >
-                            {{ group.description || "No description provided" }}
+                            {{
+                                group.description ||
+                                __("No description provided")
+                            }}
                         </div>
 
                         <div class="group-meta">
@@ -181,7 +186,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="q-mr-xs"
                                 />
                                 {{
-                                    group.system ? "System Group" : "User Group"
+                                    group.system
+                                        ? __("System Group")
+                                        : __("User Group")
                                 }}
                             </q-badge>
 
@@ -191,7 +198,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="14px"
                                     class="q-mr-xs"
                                 />
-                                Created {{ formatDate(group.created_at) }}
+                                {{ __("Created") }}
+                                {{ formatDate(group.created_at) }}
                             </div>
                         </div>
                     </q-card-section>
@@ -215,7 +223,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
         </div>
 
-        <!-- List View -->
         <div v-else class="groups-list q-mb-lg">
             <q-card flat bordered>
                 <q-table
@@ -229,40 +236,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     :loading="loading"
                     class="groups-table"
                 >
-                    <!-- Loading State -->
                     <template v-slot:loading>
                         <q-inner-loading showing color="primary" />
                     </template>
 
-                    <!-- Name Column -->
-                    <template v-slot:body-cell-name="props">
-                        <q-td class="name-cell">
-                            <div
-                                class="group-name text-weight-bold text-primary"
-                            >
-                                <q-icon
-                                    name="mdi-account-group"
-                                    size="18px"
-                                    class="q-mr-sm"
-                                />
-                                {{ props.row.name }}
-                            </div>
-                            <div class="group-slug text-caption text-grey-6">
-                                @{{ props.row.slug }}
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <!-- Description Column -->
                     <template v-slot:body-cell-description="props">
                         <q-td class="description-cell">
                             <div class="text-body2 line-clamp-2">
-                                {{ props.row.description || "No description" }}
+                                {{
+                                    props.row.description ||
+                                    __("No description")
+                                }}
                             </div>
                         </q-td>
                     </template>
 
-                    <!-- System Column -->
                     <template v-slot:body-cell-system="props">
                         <q-td class="system-cell">
                             <q-badge
@@ -281,31 +269,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="14px"
                                     class="q-mr-xs"
                                 />
-                                {{ props.row.system ? "System" : "User" }}
+                                {{
+                                    props.row.system ? __("System") : __("User")
+                                }}
                             </q-badge>
                         </q-td>
                     </template>
 
-                    <!-- Actions Column -->
-                    <template v-slot:body-cell-actions="props">
-                        <q-td class="actions-cell">
-                            <div class="action-buttons">
-                                <v-update
-                                    @updated="getGroups"
-                                    :item="props.row"
-                                    class="q-mr-xs"
-                                />
-                                <v-delete
-                                    v-if="!props.row.system"
-                                    @deleted="getGroups"
-                                    :item="props.row"
-                                    class="q-mr-xs"
-                                />
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <!-- Empty State -->
                     <template v-slot:no-data>
                         <div class="empty-state text-center q-pa-xl">
                             <q-icon
@@ -317,10 +287,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 class="empty-title text-h6 text-grey-7 q-mt-md"
                             >
-                                No groups found
+                                {{ __("No groups found") }}
                             </div>
                             <div class="empty-subtitle text-grey-5">
-                                Create your first group to get started
+                                {{
+                                    __("Create your first group to get started")
+                                }}
                             </div>
                         </div>
                     </template>
@@ -373,35 +345,35 @@ export default {
             columns: [
                 {
                     name: "name",
-                    label: "Group Name",
+                    label: this.__("Group Name"),
                     field: "name",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "slug",
-                    label: "Slug",
+                    label: this.__("Slug"),
                     field: "slug",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "description",
-                    label: "Description",
+                    label: this.__("Description"),
                     field: "description",
                     align: "left",
                     sortable: false,
                 },
                 {
                     name: "system",
-                    label: "Type",
+                    label: this.__("Type"),
                     field: (row) => (row.system ? "System" : "User"),
                     align: "center",
                     sortable: true,
                 },
                 {
                     name: "actions",
-                    label: "Actions",
+                    label: this.__("Actions"),
                     align: "center",
                     sortable: false,
                 },
@@ -458,9 +430,8 @@ export default {
                     this.search.current_page = meta.pagination.current_page;
                 })
                 .catch((e) => {
-                    console.error("Failed to load groups:", e);
                     this.$q.notify({
-                        message: "Failed to load groups",
+                        message: this.__("Failed to load groups"),
                         color: "negative",
                         icon: "error",
                         position: "top",

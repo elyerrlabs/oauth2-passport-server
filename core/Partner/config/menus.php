@@ -24,7 +24,8 @@
 
 return [
     "partner_dashboard" => [
-        "name" => "Partner",
+        "id" => "partner",
+        "name" => __("Partner"),
         "route" => "partner.dashboard",
         "icon" => "mdi-account-cash",
         'show' => 'reseller',
@@ -33,28 +34,28 @@ return [
     "partner_routes" => [
         [
             "id" => "dashboard",
-            "name" => "Dashboard",
+            "name" => __("Dashboard"),
             "route" => "partner.dashboard",
             "icon" => "mdi-account-cash",
             'service' => 'reseller',
         ],
         [
             "id" => "referral_link",
-            "name" => "Referral Link",
+            "name" => __("Referral Link"),
             "route" => "partner.generate",
             "icon" => "mdi-reload",
             'service' => 'reseller',
         ],
         [
             "id" => "sales",
-            "name" => "Sales",
+            "name" => __("Sales"),
             "route" => "partner.sales",
             "icon" => "mdi-cash-multiple",
             'service' => 'reseller',
         ],
         [
             "id" => "list",
-            "name" => "Partners",
+            "name" => __("Partners"),
             "route" => "partner.admin.partner.index",
             "icon" => "mdi-handshake-outline",
             'service' => 'reseller',

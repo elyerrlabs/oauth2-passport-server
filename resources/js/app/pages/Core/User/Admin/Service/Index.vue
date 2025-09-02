@@ -26,10 +26,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row items-center justify-between q-mb-md">
                 <div>
                     <div class="text-h4 text-primary text-weight-bold">
-                        Services Management
+                        {{ __("Services Management") }}
                     </div>
                     <div class="text-subtitle1 text-grey-7">
-                        Manage and organize your application services
+                        {{
+                            __("Manage and organize your application services")
+                        }}
                     </div>
                 </div>
 
@@ -39,12 +41,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         filled
                         dense
                         clearable
-                        label="Filter by Group"
+                        :label="__('Filter by Group')"
                         v-model="group"
                         use-input
                         input-debounce="300"
                         :options="groups"
-                        option-label="name"
+                        :option-label="(opt) => __(opt.name)"
                         option-value="slug"
                         @update:model-value="filterByGroup"
                         style="min-width: 200px"
@@ -67,12 +69,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             {
                                 value: 'list',
                                 icon: 'mdi-format-list-bulleted',
-                                label: 'List',
+                                label: __('List'),
                             },
                             {
                                 value: 'grid',
                                 icon: 'mdi-view-grid-outline',
-                                label: 'Grid',
+                                label: __('Grid'),
                             },
                         ]"
                         unelevated
@@ -94,9 +96,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card flat class="bg-blue-1 text-blue-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ services.length }} Service{{
-                                services.length !== 1 ? "s" : ""
-                            }}
+                            {{ services.length }} {{ __("Service")
+                            }}{{ services.length !== 1 ? "s" : "" }}
                         </div>
                         <q-icon name="mdi-cog" size="md" />
                     </q-card-section>
@@ -106,9 +107,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card flat class="bg-green-1 text-green-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ systemServicesCount }} System Service{{
-                                systemServicesCount !== 1 ? "s" : ""
-                            }}
+                            {{ systemServicesCount }} {{ __("System Service")
+                            }}{{ systemServicesCount !== 1 ? "s" : "" }}
                         </div>
                         <q-icon name="mdi-shield-cog" size="md" />
                     </q-card-section>
@@ -133,10 +133,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-h6 text-weight-bold text-truncate"
                                 >
-                                    {{ service.name }}
+                                    {{ __(service.name) }}
                                 </div>
                                 <div class="text-caption opacity-80">
-                                    {{ service.group.name }}
+                                    {{ __(service.group.name) }}
                                 </div>
                             </div>
                             <v-detail :service="service" />
@@ -146,7 +146,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-card-section class="q-pt-md">
                         <div class="text-body2 ellipsis-3-lines q-mb-sm">
                             {{
-                                service.description || "No description provided"
+                                __(service.description) ||
+                                __("No description provided")
                             }}
                         </div>
 
@@ -159,11 +160,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         : 'mdi-cog'
                                 "
                             >
-                                {{ service.system ? "System" : "Custom" }}
+                                {{
+                                    service.system ? __("System") : __("Custom")
+                                }}
                             </q-badge>
 
                             <q-badge color="blue" icon="mdi-eye">
-                                {{ service.visibility }}
+                                {{ __(service.visibility) }}
                             </q-badge>
                         </div>
                     </q-card-section>
@@ -188,12 +191,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="text-center q-pa-xl"
         >
             <q-icon name="mdi-cog-off" size="xl" color="grey-4" />
-            <div class="text-h6 text-grey-6 q-mt-md">No services found</div>
+            <div class="text-h6 text-grey-6 q-mt-md">
+                {{ __("No services found") }}
+            </div>
             <div class="text-grey-5" v-if="group">
-                Try changing your group filter or
+                {{ __("Try changing your group filter or") }}
             </div>
             <div class="text-grey-5">
-                create your first service to get started
+                {{ __("create your first service to get started") }}
             </div>
         </div>
 
@@ -214,18 +219,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-tr :props="props" class="q-hoverable">
                     <q-td key="name" :props="props">
                         <div class="text-weight-bold text-primary">
-                            {{ props.row.name }}
+                            {{ __(props.row.name) }}
                         </div>
                         <div class="text-caption text-grey-7">
-                            {{ props.row.group.name }}
+                            {{ __(props.row.group.name) }}
                         </div>
+                        <q-tooltip>
+                            {{ __(props.row.description) }}
+                        </q-tooltip>
                     </q-td>
-
-                    <q-td key="description" :props="props">
-                        <div class="ellipsis-2-lines">
-                            {{ props.row.description || "—" }}
-                        </div>
+                    <!--
+                        <q-td key="description" :props="props">
+                            <div class="ellipsis-2-lines">
+                                {{ __(props.row.description) || "—" }}
+                            </div>
                     </q-td>
+                    -->
 
                     <q-td key="system" :props="props">
                         <q-badge
@@ -236,13 +245,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     : 'mdi-cog'
                             "
                         >
-                            {{ props.row.system ? "Yes" : "No" }}
+                            {{ props.row.system ? __("Yes") : __("No") }}
                         </q-badge>
                     </q-td>
 
                     <q-td key="visibility" :props="props">
                         <q-badge color="blue" icon="mdi-eye">
-                            {{ props.row.visibility }}
+                            {{ __(props.row.visibility) }}
                         </q-badge>
                     </q-td>
 
@@ -266,7 +275,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <template v-slot:no-data>
                 <div class="full-width row flex-center text-grey-6 q-pa-xl">
                     <q-icon name="mdi-cog-off" size="xl" />
-                    <div class="q-ml-sm">No services available</div>
+                    <div class="q-ml-sm">{{ __("No services available") }}</div>
                 </div>
             </template>
         </q-table>
@@ -287,7 +296,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-select
                 v-model="search.per_page"
                 :options="[10, 15, 25, 50]"
-                label="Items per page"
+                :label="__('Items per page')"
                 dense
                 outlined
                 class="q-ml-md"
@@ -346,35 +355,35 @@ export default {
             columns: [
                 {
                     name: "name",
-                    label: "Service",
+                    label: this.__("Service"),
                     field: "name",
                     sortable: true,
                     align: "left",
                 },
-                {
+                /*{
                     name: "description",
-                    label: "Description",
+                    label: this.__("Description"),
                     field: "description",
                     sortable: false,
                     align: "left",
-                },
+                },*/
                 {
                     name: "system",
-                    label: "System",
+                    label: this.__("System"),
                     field: "system",
                     sortable: true,
                     align: "center",
                 },
                 {
                     name: "visibility",
-                    label: "Visibility",
+                    label: this.__("Visibility"),
                     field: "visibility",
                     sortable: true,
                     align: "center",
                 },
                 {
                     name: "actions",
-                    label: "Actions",
+                    label: this.__("Actions"),
                     field: "actions",
                     align: "right",
                     sortable: false,

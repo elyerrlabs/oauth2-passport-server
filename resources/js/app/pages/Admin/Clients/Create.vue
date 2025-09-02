@@ -28,7 +28,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             @click="open"
             icon="mdi-plus-circle"
             size="md"
-            label="Create New OAuth Clien"
+            :label="__('Create New OAuth Client')"
             class="create-btn"
         >
         </q-btn>
@@ -52,11 +52,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="header-icon"
                         />
                         <div class="text-h5 text-weight-bold text-grey-8">
-                            Create New OAuth Client
+                            {{ __("Create New OAuth Client") }}
                         </div>
                     </div>
                     <div class="text-subtitle2 text-grey-6">
-                        Register a new OAuth 2.0 client application
+                        {{ __("Register a new OAuth 2.0 client application") }}
                     </div>
                 </q-card-section>
 
@@ -72,11 +72,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="18px"
                                 class="q-mr-sm"
                             />
-                            Client Name
+                            {{ __("Client Name") }}
                         </div>
                         <q-input
                             v-model="form.name"
-                            placeholder="Enter a descriptive name for your client application"
+                            :placeholder="
+                                __(
+                                    'Enter a descriptive name for your client application'
+                                )
+                            "
                             dense
                             outlined
                             :error="!!errors.name"
@@ -89,7 +93,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             class="input-hint text-caption text-grey-6 q-mt-xs"
                         >
-                            This will help you identify the client later
+                            {{
+                                __(
+                                    "This will help you identify the client later"
+                                )
+                            }}
                         </div>
                     </div>
 
@@ -103,7 +111,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="18px"
                                 class="q-mr-sm"
                             />
-                            Redirect URI
+                            {{ __("Redirect URI") }}
                         </div>
                         <q-input
                             v-model="form.redirect"
@@ -120,8 +128,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             class="input-hint text-caption text-grey-6 q-mt-xs"
                         >
-                            The URI where users will be redirected after
-                            authorization
+                            {{
+                                __(
+                                    "The URI where users will be redirected after authorization"
+                                )
+                            }}
                         </div>
                     </div>
 
@@ -129,7 +140,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="form-section q-mb-lg">
                         <q-checkbox
                             v-model="form.confidential"
-                            label="Confidential Client"
+                            :label="__('Confidential Client')"
                             color="primary"
                             :error="!!errors.confidential"
                             class="confidential-checkbox"
@@ -146,9 +157,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="16px"
                                 class="q-mr-xs"
                             />
-                            Confidential clients can keep secrets secure
-                            (server-side applications). Uncheck for public
-                            clients (SPA, mobile apps).
+                            {{
+                                __(
+                                    "Confidential clients can keep secrets secure (server-side applications). Uncheck for public clients (SPA, mobile apps)."
+                                )
+                            }}
                         </div>
                     </div>
                 </q-card-section>
@@ -156,7 +169,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Actions -->
                 <q-card-actions class="dialog-actions" align="right">
                     <q-btn
-                        label="Close"
+                        :label="__('Close')"
                         color="grey-6"
                         flat
                         @click="close"
@@ -164,7 +177,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         no-caps
                     />
                     <q-btn
-                        label="Create Client"
+                        :label="__('Create Client')"
                         color="primary"
                         @click="create"
                         :loading="loading"
@@ -175,7 +188,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         <template v-slot:loading>
                             <q-spinner-hourglass class="on-left" />
-                            Creating...
+                            {{ __("Creating...") }}
                         </template>
                     </q-btn>
                 </q-card-actions>
@@ -196,14 +209,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="q-mr-sm"
                             />
                             <div class="text-h6 text-negative text-weight-bold">
-                                Important Security Notice
+                                {{ __("Important Security Notice") }}
                             </div>
                         </div>
 
                         <div class="alert-content">
                             <p class="text-body2 text-negative q-mb-md">
-                                These credentials will only be shown once.
-                                Please store them securely immediately.
+                                {{
+                                    __(
+                                        "These credentials will only be shown once. Please store them securely immediately."
+                                    )
+                                }}
                             </p>
 
                             <div
@@ -214,11 +230,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         name="mdi-shield-key"
                                         class="q-mr-xs"
                                     />
-                                    Download your credentials for safe keeping
+                                    {{
+                                        __(
+                                            "Download your credentials for safe keeping"
+                                        )
+                                    }}
                                 </div>
 
                                 <q-btn
-                                    label="Download Credentials"
+                                    :label="__('Download Credentials')"
                                     color="negative"
                                     icon="mdi-download"
                                     unelevated
@@ -226,7 +246,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="download-btn"
                                     no-caps
                                 >
-                                    <q-tooltip>Download as JSON file</q-tooltip>
+                                    <q-tooltip>{{
+                                        __("Download as JSON file")
+                                    }}</q-tooltip>
                                 </q-btn>
                             </div>
                         </div>
@@ -237,23 +259,29 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             class="text-subtitle2 text-weight-medium text-grey-8 q-mb-sm"
                         >
-                            Client Details:
+                            {{ __("Client Details:") }}
                         </div>
                         <div class="detail-grid">
                             <div class="detail-item">
-                                <span class="detail-label">Client ID:</span>
+                                <span class="detail-label">{{
+                                    __("Client ID:")
+                                }}</span>
                                 <span class="detail-value">{{
                                     client.id
                                 }}</span>
                             </div>
                             <div v-if="client.secret" class="detail-item">
-                                <span class="detail-label">Client Secret:</span>
+                                <span class="detail-label">{{
+                                    __("Client Secret:")
+                                }}</span>
                                 <span class="detail-value text-red">{{
                                     client.secret
                                 }}</span>
                             </div>
                             <div class="detail-item">
-                                <span class="detail-label">Name:</span>
+                                <span class="detail-label">{{
+                                    __("Name:")
+                                }}</span>
                                 <span class="detail-value">{{
                                     client.name
                                 }}</span>

@@ -33,9 +33,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     icon="mdi-tune"
                     @click="show = !show"
                     class="q-mr-sm"
-                    aria-label="Toggle Filters"
+                    :aria-label="__('Toggle Filters')"
                 />
-                <span class="text-h6">Advanced Filters</span>
+                <span class="text-h6">{{ __("Advanced Filters") }}</span>
             </div>
 
             <q-btn
@@ -44,7 +44,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 round
                 icon="mdi-broom"
                 @click="clean"
-                aria-label="Clear Filters"
+                :aria-label="__('Clear Filters')"
                 color="white"
             />
         </q-card-section>
@@ -60,8 +60,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             outlined
                             dense
                             debounce="300"
-                            label="Search"
-                            placeholder="Type to search..."
+                            :label="__('Search')"
+                            :placeholder="__('Type to search...')"
                             clearable
                             @keyup="emitFilterChange"
                             @input="emitFilterChange"
@@ -86,7 +86,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             option-label="key"
                             outlined
                             dense
-                            label="Search By"
+                            :label="__('Search By')"
                             emit-value
                             map-options
                             clearable
@@ -102,7 +102,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             option-label="key"
                             outlined
                             dense
-                            label="Order By"
+                            :label="__('Order By')"
                             emit-value
                             map-options
                             clearable
@@ -116,7 +116,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :options="orderTypes"
                             outlined
                             dense
-                            label="Order Type"
+                            :label="__('Order Type')"
                             emit-value
                             map-options
                             clearable

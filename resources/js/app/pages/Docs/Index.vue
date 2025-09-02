@@ -11,7 +11,7 @@
                         class="q-mr-md"
                     />
                     <div class="text-h4 text-weight-bold text-primary">
-                        Documentation & Resources
+                        {{ __("Documentation & Resources") }}
                     </div>
                 </div>
 
@@ -30,7 +30,7 @@
                                         class="q-mr-sm"
                                     />
                                     <div class="text-h6 text-weight-bold">
-                                        Source Code
+                                        {{ __("Source Code") }}
                                     </div>
                                 </div>
                             </q-card-section>
@@ -57,12 +57,17 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >GitHub Repository</q-item-label
+                                                >{{
+                                                    __("GitHub Repository")
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Main code repository on
-                                                GitHub</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Main code repository on GitHub"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -92,12 +97,17 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >GitLab Repository</q-item-label
+                                                >{{
+                                                    __("GitLab Repository")
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Main code repository on
-                                                GitLab</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Main code repository on GitLab"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -127,12 +137,17 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >License</q-item-label
+                                                >{{
+                                                    __("License")
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Project license
-                                                information</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Project license information"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -162,12 +177,17 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Changelog</q-item-label
+                                                >{{
+                                                    __("Changelog")
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Project version history and
-                                                changes</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Project version history and changes"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -194,7 +214,7 @@
                                         class="q-mr-sm"
                                     />
                                     <div class="text-h6 text-weight-bold">
-                                        API Documentation
+                                        {{ __("API Documentation") }}
                                     </div>
                                 </div>
                             </q-card-section>
@@ -221,13 +241,17 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Postman
-                                                Documentation</q-item-label
+                                                >{{
+                                                    __("Postman Documentation")
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Complete API reference with
-                                                examples</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Complete API reference with examples"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -254,7 +278,7 @@
                                         class="q-mr-sm"
                                     />
                                     <div class="text-h6 text-weight-bold">
-                                        Wiki & Guides
+                                        {{ __("Wiki & Guides") }}
                                     </div>
                                 </div>
                             </q-card-section>
@@ -281,12 +305,17 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Main Wiki</q-item-label
+                                                >{{
+                                                    __("Main Wiki")
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Project overview and main
-                                                documentation</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Project overview and main documentation"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -316,12 +345,17 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Supported Prompts</q-item-label
+                                                >{{
+                                                    __("Supported Prompts")
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Available authentication
-                                                prompts</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Available authentication prompts"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -351,13 +385,17 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Connect
-                                                Applications</q-item-label
+                                                >{{
+                                                    __("Connect Applications")
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >How to integrate
-                                                applications</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "How to integrate applications"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -387,13 +425,17 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Authorization
-                                                Guide</q-item-label
+                                                >{{
+                                                    __("Authorization Guide")
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Authorization processes and
-                                                flows</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Authorization processes and flows"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -420,7 +462,7 @@
                                         class="q-mr-sm"
                                     />
                                     <div class="text-h6 text-weight-bold">
-                                        Development & Deployment
+                                        {{ __("Development & Deployment") }}
                                     </div>
                                 </div>
                             </q-card-section>
@@ -451,13 +493,19 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Developer Guide
-                                                (English)</q-item-label
+                                                >{{
+                                                    __(
+                                                        "Developer Guide (English)"
+                                                    )
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Development documentation in
-                                                English</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Development documentation in English"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -490,13 +538,19 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Deployment Guide
-                                                (English)</q-item-label
+                                                >{{
+                                                    __(
+                                                        "Deployment Guide (English)"
+                                                    )
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Deployment instructions in
-                                                English</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Deployment instructions in English"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -530,13 +584,19 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Developer Guide
-                                                (Spanish)</q-item-label
+                                                >{{
+                                                    __(
+                                                        "Developer Guide (Spanish)"
+                                                    )
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Development documentation in
-                                                Spanish</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Development documentation in Spanish"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon
@@ -569,13 +629,19 @@
                                         <q-item-section>
                                             <q-item-label
                                                 class="text-weight-medium"
-                                                >Deployment Guide
-                                                (Spanish)</q-item-label
+                                                >{{
+                                                    __(
+                                                        "Deployment Guide (Spanish)"
+                                                    )
+                                                }}</q-item-label
                                             >
-                                            <q-item-label caption
-                                                >Deployment instructions in
-                                                Spanish</q-item-label
-                                            >
+                                            <q-item-label caption>
+                                                {{
+                                                    __(
+                                                        "Deployment instructions in Spanish"
+                                                    )
+                                                }}
+                                            </q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
                                             <q-icon

@@ -28,7 +28,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         @click="openDialog"
         icon="mdi-delete-outline"
     >
-        <q-tooltip>Delete Client</q-tooltip>
+        <q-tooltip>{{ __("Delete Client") }}</q-tooltip>
     </q-btn>
 
     <!-- Confirmation Dialog -->
@@ -50,7 +50,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="header-icon"
                     />
                     <div class="text-h5 text-weight-bold text-grey-8">
-                        Delete OAuth Client
+                        {{ __("Delete OAuth Client") }}
                     </div>
                 </div>
             </q-card-section>
@@ -59,14 +59,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-card-section class="dialog-content">
                 <div class="confirmation-message">
                     <p class="text-body1 text-grey-8 q-mb-lg">
-                        Are you sure you want to permanently delete the OAuth
-                        client
+                        {{
+                            __(
+                                "Are you sure you want to permanently delete the OAuth client"
+                            )
+                        }}
                     </p>
 
                     <div class="client-details q-mb-lg">
                         <div class="detail-item q-mb-sm">
                             <div class="detail-label text-caption text-grey-6">
-                                Client Name
+                                {{ __("Client Name") }}
                             </div>
                             <div
                                 class="detail-value text-weight-bold text-primary"
@@ -82,7 +85,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <div class="detail-item">
                             <div class="detail-label text-caption text-grey-6">
-                                Client ID
+                                {{ __("Client ID") }}
                             </div>
                             <div
                                 class="detail-value text-weight-medium text-grey-8"
@@ -105,13 +108,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="20px"
                                 class="q-mr-sm"
                             />
-                            <span class="text-negative text-weight-medium"
-                                >This action cannot be undone</span
-                            >
+                            <span class="text-negative text-weight-medium">{{
+                                __("This action cannot be undone")
+                            }}</span>
                         </div>
                         <div class="text-caption text-negative">
-                            All applications using this client will immediately
-                            lose access. Any active sessions will be terminated.
+                            {{
+                                __(
+                                    "All applications using this client will immediately lose access. Any active sessions will be terminated."
+                                )
+                            }}
                         </div>
                     </div>
                 </div>
@@ -120,7 +126,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Actions -->
             <q-card-actions class="dialog-actions" align="right">
                 <q-btn
-                    label="Cancel"
+                    :label="__('Cancel')"
                     color="grey-6"
                     flat
                     @click="closeDialog"
@@ -128,7 +134,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     no-caps
                 />
                 <q-btn
-                    label="Delete Client"
+                    :label="__('Delete Client')"
                     color="negative"
                     @click="destroy"
                     :loading="loading"
@@ -139,14 +145,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <template v-slot:loading>
                         <q-spinner-hourglass class="on-left" />
-                        Deleting...
+                        {{ __("Deleting...") }}
                     </template>
                 </q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>
 </template>
-
 <script>
 export default {
     emits: ["deleted"],

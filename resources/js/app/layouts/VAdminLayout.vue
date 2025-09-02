@@ -31,7 +31,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     icon="menu"
                     @click="toggleLeftDrawer"
                     class="menu-toggle"
-                    aria-label="Toggle menu"
+                    :aria-label="__('Toggle menu')"
                 />
 
                 <q-toolbar-title class="app-title">
@@ -39,7 +39,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <img src="../../../img/favicon.png" />
                     </q-avatar>
                     <span class="app-name">{{ app_name }}</span>
-                    <q-badge color="primary" class="admin-badge">Admin</q-badge>
+                    <q-badge color="primary" class="admin-badge">{{
+                        __("Admin")
+                    }}</q-badge>
                 </q-toolbar-title>
 
                 <q-space />
@@ -83,7 +85,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </q-item-section>
 
                             <q-item-section class="menu-text">
-                                {{ item.name }}
+                                {{ __(item.name) }}
                             </q-item-section>
 
                             <q-item-section side v-if="isActive(item)">
@@ -114,12 +116,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ user.name }}
                             </div>
                             <div class="user-role text-caption text-grey-6">
-                                Administrator
+                                {{ __("Administrator") }}
                             </div>
                         </div>
                     </div>
                     <div class="text-caption text-center q-pa-sm text-grey-6">
-                        &copy; {{ new Date().getFullYear() }} {{ $page.props.org_name }}
+                        &copy; {{ new Date().getFullYear() }}
+                        {{ $page.props.org_name }}
                     </div>
                 </div>
             </q-scroll-area>
@@ -147,10 +150,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     :thickness="3"
                 />
                 <p class="text-h6 text-grey-7 loading-text">
-                    Initializing Admin Panel...
+                    {{ __("Initializing Admin Panel...") }}
                 </p>
                 <div class="text-caption text-grey-5 q-mt-sm">
-                    Please wait while we prepare your dashboard
+                    {{ __("Please wait while we prepare your dashboard") }}
                 </div>
             </div>
         </q-page>

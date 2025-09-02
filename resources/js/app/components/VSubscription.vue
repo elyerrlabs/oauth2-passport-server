@@ -49,16 +49,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
         <div class="q-mt-lg">
             <q-banner v-if="selected_method >= 0" class="q-pa-md">
-                <div class="text-h6 q-mb-sm">Summary</div>
+                <div class="text-h6 q-mb-sm">{{ __("Summary") }}</div>
                 <div class="text-body2">
-                    <strong>Plan:</strong> {{ plan?.name }} <br />
-                    <strong>Billing Period:</strong>
+                    <strong>{{ __("Plan:") }}</strong> {{ plan?.name }} <br />
+                    <strong>{{ __("Billing Period:") }}</strong>
                     {{ period?.billing_period }} <br />
-                    <strong>Amount:</strong>
+                    <strong>{{ __("Amount:") }}</strong>
                     {{ period?.currency }} {{ period?.amount_format }} <br />
-                    <strong>Expires:</strong>
+                    <strong>{{ __("Expires:") }}</strong>
                     {{ period?.expiration }} <br />
-                    <strong>Payment Method:</strong>
+                    <strong>{{ __("Payment Method:") }}</strong>
                     {{ methods[selected_method]?.name }}
                 </div>
             </q-banner>
@@ -69,7 +69,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 v-if="selected_method >= 0"
                 :disabled="disabled"
                 color="primary"
-                label="Continue to Payment"
+                :label="__('Continue to Payment')"
                 @click="payment"
                 class="full-width"
             />
@@ -161,11 +161,11 @@ export default {
 
         async continuePayment() {
             this.disabled = true;
-            console.log(this.$page.props.routes['subscription']);
-            
+            console.log(this.$page.props.routes["subscription"]);
+
             try {
                 const res = await this.$server.post(
-                    this.$page.props.routes['subscription'],
+                    this.$page.props.routes["subscription"],
                     {
                         plan: this.plan.id,
                         billing_period: this.period.billing_period,
@@ -211,7 +211,7 @@ export default {
                 const res = await this.$server.get(
                     this.$page.props.routes["methods"]
                 );
-                                
+
                 if (res.status == 200) {
                     this.methods = res.data.data;
                 }

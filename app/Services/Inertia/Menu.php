@@ -58,7 +58,7 @@ class Menu
                         if ($canShow) {
                             $menus[$groupKey][] = [
                                 'id' => $item['id'] ?? null,
-                                'name' => $item['name'] ?? null,
+                                'name' => __($item['name']) ?? null,
                                 'icon' => $item['icon'] ?? null,
                                 'route' => isset($item['route']) ? route($item['route']) : null,
                                 'show' => $canShow,
@@ -86,7 +86,7 @@ class Menu
             if ($canShow) {
                 $menus[$key] = [
                     'id' => $value['id'] ?? null,
-                    'name' => $value['name'] ?? null,
+                    'name' => __($value['name']) ?? null,
                     'icon' => $value['icon'] ?? null,
                     'route' => isset($value['route']) ? route($value['route']) : null,
                     'show' => $canShow,
@@ -134,13 +134,13 @@ class Menu
             "org_name" => config("app.org_name"),
             "user" => static::authenticated_user(),
             "docs" => [
-                'name' => 'Documentation',
+                'name' => __('Documentation'),
                 'route' => route('documentation.index'),
                 'icon' => 'mdi-book-cog',
                 'show' => true
             ],
             "settings" => [
-                "name" => "Settings",
+                "name" => __("Settings"),
                 "route" => route("admin.settings.general"),
                 "icon" => "mdi-cogs",
                 'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
@@ -156,18 +156,18 @@ class Menu
             ],
             "developers" => [
                 'id' => 'dev',
-                'name' => 'Developers',
+                'name' => __('Developers'),
                 'icon' => 'mdi-tools',
                 'show' => intval(config('routes.users.developers')) ? true : false,
                 'menu' => [
                     [
-                        'name' => 'Applications',
+                        'name' => __('Applications'),
                         'route' => intval(config('routes.users.api')) ? route('passport.clients.index') : null,
                         'icon' => 'mdi-connection',
                         'show' => intval(config('routes.users.clients')) ? true : false
                     ],
                     [
-                        'name' => 'API Key',
+                        'name' => __('API Key'),
                         'route' => intval(config('routes.users.api')) ? route('passport.personal.tokens.index') : null,
                         'icon' => 'mdi-xml',
                         'show' => intval(config('routes.users.api')) ? true : false,

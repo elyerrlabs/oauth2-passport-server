@@ -34,11 +34,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-toolbar-title
                         class="text-h4 text-weight-bold text-grey-8"
                     >
-                        Admin Dashboard
+                        {{ __("Admin Dashboard") }}
                     </q-toolbar-title>
                 </div>
                 <div class="text-subtitle1 text-grey-7 q-mt-sm">
-                    Monitor your application's performance and user activity
+                    {{
+                        __(
+                            "Monitor your application's performance and user activity"
+                        )
+                    }}
                 </div>
             </div>
 
@@ -54,7 +58,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 class="text-caption text-weight-medium text-uppercase text-grey-7 q-mb-xs"
                             >
-                                {{ card.label }}
+                                {{ __(card.label) }}
                             </div>
                             <div class="row items-center justify-between">
                                 <div
@@ -86,13 +90,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card-section>
                     <div class="text-h6 text-weight-medium text-grey-8 q-mb-md">
                         <q-icon name="mdi-filter" class="q-mr-sm" />
-                        Filter Analytics
+                        {{ __("Filter Analytics") }}
                     </div>
                     <div class="row q-col-gutter-md items-end">
                         <q-input
                             v-model="params.start"
                             type="date"
-                            label="Start Date"
+                            :label="__('Start Date')"
                             dense
                             outlined
                             class="col-12 col-sm-6 col-md-3"
@@ -105,7 +109,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-input
                             v-model="params.end"
                             type="date"
-                            label="End Date"
+                            :label="__('End Date')"
                             dense
                             outlined
                             class="col-12 col-sm-6 col-md-3"
@@ -118,7 +122,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-select
                             v-model="params.type"
                             :options="types"
-                            label="Date Range"
+                            :label="__('Date Range')"
                             dense
                             outlined
                             class="col-12 col-sm-6 col-md-2"
@@ -133,7 +137,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-select
                             v-model="chartType"
                             :options="chartTypes"
-                            label="Chart Type"
+                            :label="__('Chart Type')"
                             dense
                             outlined
                             class="col-12 col-sm-6 col-md-2"
@@ -147,7 +151,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </q-select>
                         <div class="col-12 col-sm-6 col-md-2">
                             <q-btn
-                                label="Apply Filters"
+                                :label="__('Apply Filters')"
                                 @click="getData"
                                 color="primary"
                                 icon="mdi-check"
@@ -157,7 +161,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             >
                                 <template v-slot:loading>
                                     <q-spinner-hourglass class="on-left" />
-                                    Loading...
+                                    {{ __("Loading...") }}
                                 </template>
                             </q-btn>
                         </div>
@@ -175,7 +179,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="text-h6 text-weight-medium text-grey-8 q-mb-md"
                             >
                                 <q-icon name="mdi-chart-line" class="q-mr-sm" />
-                                User Growth Analytics
+                                {{ __("User Growth Analytics") }}
                             </div>
                             <apex-charts
                                 width="100%"
@@ -199,7 +203,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     name="mdi-account-group"
                                     class="q-mr-sm"
                                 />
-                                Recent Users
+                                {{ __("Recent Users") }}
                             </div>
                             <q-list class="users-list">
                                 <q-item
@@ -259,7 +263,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     color="grey-4"
                                 />
                                 <div class="text-grey-6 q-mt-md">
-                                    No recent users
+                                    {{ __("No recent users") }}
                                 </div>
                             </div>
                         </q-card-section>
@@ -271,7 +275,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="auto-refresh-indicator fixed-bottom-right q-ma-md">
                 <q-badge color="primary" rounded transparent>
                     <q-icon name="mdi-autorenew" size="16px" class="q-mr-xs" />
-                    Auto-refresh every 10 seconds
+                    {{ __("Auto-refresh every 10 seconds") }}
                 </q-badge>
             </div>
         </q-page>

@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 transition-hide="scale"
                 class="bg-primary text-white shadow-6"
             >
-                Add new role
+                {{ __("Add new role") }}
             </q-tooltip>
         </q-btn>
 
@@ -54,9 +54,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="md"
                                 class="q-mb-sm"
                             />
-                            <div class="text-h6">Create New Role</div>
+                            <div class="text-h6">
+                                {{ __("Create New Role") }}
+                            </div>
                             <div class="text-caption">
-                                Define a new role with specific permissions
+                                {{
+                                    __(
+                                        "Define a new role with specific permissions"
+                                    )
+                                }}
                             </div>
                         </q-card-section>
                     </div>
@@ -65,15 +71,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="q-gutter-y-md">
                             <q-input
                                 v-model="form.name"
-                                label="Role Name"
+                                :label="__('Role Name')"
                                 outlined
                                 color="primary"
                                 :error="!!errors.name"
                                 class="input-field"
                                 :loading="loading"
-                                hint="Unique identifier for the role"
+                                :hint="__('Unique identifier for the role')"
                                 :rules="[
-                                    (val) => !!val || 'Role name is required',
+                                    (val) =>
+                                        !!val || __('Role name is required'),
                                 ]"
                             >
                                 <template v-slot:prepend>
@@ -86,7 +93,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <q-input
                                 v-model="form.description"
-                                label="Description"
+                                :label="__('Description')"
                                 outlined
                                 color="primary"
                                 :error="!!errors.description"
@@ -94,7 +101,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 rows="3"
                                 class="input-field"
                                 :loading="loading"
-                                hint="Describe the purpose and permissions of this role"
+                                :hint="
+                                    __(
+                                        'Describe the purpose and permissions of this role'
+                                    )
+                                "
                             >
                                 <template v-slot:prepend>
                                     <q-icon name="mdi-text-box-outline" />
@@ -118,12 +129,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </q-checkbox>
                                 </q-item-section>
                                 <q-item-section>
-                                    <q-item-label class="text-weight-medium"
-                                        >System Role</q-item-label
-                                    >
+                                    <q-item-label class="text-weight-medium">
+                                        {{ __("System Role") }}
+                                    </q-item-label>
                                     <q-item-label caption class="text-grey-7">
-                                        System roles have special permissions
-                                        and cannot be modified or deleted.
+                                        {{
+                                            __(
+                                                "System roles have special permissions and cannot be modified or deleted."
+                                            )
+                                        }}
                                     </q-item-label>
                                 </q-item-section>
                             </q-item>
@@ -134,14 +148,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-btn
                             flat
                             color="grey"
-                            label="Cancel"
+                            :label="__('Cancel')"
                             @click="close"
                             class="q-mr-sm"
                             :disable="loading"
                         />
                         <q-btn
                             color="primary"
-                            label="Create Role"
+                            :label="__('Create Role')"
                             @click="create"
                             :loading="loading"
                             icon="mdi-check-circle"

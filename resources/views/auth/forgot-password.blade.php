@@ -112,8 +112,7 @@
                         {{ __('Reset Your Password') }}
                     </h2>
                     <p class="text-sm text-gray-600 mt-2 max-w-md mx-auto">
-                        {{ __("Forgot your password? No problem. Just enter your email address below and we'll send you a secure
-                                                                                                                                                                                                                                                                                                                        link to reset your password.") }}
+                        {{ __("Forgot your password? No problem. Just enter your email address below and we'll send you a secure link to reset your password.") }}
                     </p>
                 </div>
 
@@ -149,10 +148,9 @@
                     <div class="flex">
                         <span class="mdi mdi-information-outline text-blue-500 text-xl mr-2"></span>
                         <div>
-                            <h3 class="text-sm font-semibold text-blue-800">{{ "Can't access your email?" }}</h3>
+                            <h3 class="text-sm font-semibold text-blue-800">{{ __("Can't access your email?") }}</h3>
                             <p class="text-xs text-blue-600 mt-1">
-                                {{ __("If you're having trouble receiving the reset email, please
-                                                                                                                                                                                                                                                                                                contact our support team for assistance.") }}
+                                {{ __("If you're having trouble receiving the reset email, please contact our support team for assistance.") }}
                             </p>
                         </div>
                     </div>
@@ -173,8 +171,7 @@
                         <div>
                             <h3 class="font-semibold">{{ __('Encrypted Reset Links') }}</h3>
                             <p class="text-sm mt-1 text-indigo-100">
-                                {{ __("Our password reset links are encrypted and
-                                                                                                                                                                                                                                time-sensitive for maximum security.") }}
+                                {{ __('Our password reset links are encrypted and time-sensitive for maximum security.') }}
                             </p>
                         </div>
                     </div>
@@ -184,8 +181,7 @@
                         <div>
                             <h3 class="font-semibold">{{ __('Instant Delivery') }}</h3>
                             <p class="text-sm mt-1 text-indigo-100">
-                                {{ __("Reset instructions are sent immediately to your email
-                                                                                                                                                                                                inbox.") }}
+                                {{ __('Reset instructions are sent immediately to your email inbox.') }}
                             </p>
                         </div>
                     </div>
@@ -195,8 +191,7 @@
                         <div>
                             <h3 class="font-semibold">{{ __('One-Click Process') }}</h3>
                             <p class="text-sm mt-1 text-indigo-100">
-                                {{ __("Simply click the link in the email to create a new
-                                                                                                                                                                password.") }}
+                                {{ __('Simply click the link in the email to create a new password.') }}
                             </p>
                         </div>
                     </div>

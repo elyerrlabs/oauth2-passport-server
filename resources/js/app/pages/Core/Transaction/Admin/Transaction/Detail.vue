@@ -29,7 +29,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             outline
             size="sm"
         >
-            <q-tooltip class="bg-primary">View Transaction Details</q-tooltip>
+            <q-tooltip class="bg-primary">{{
+                __("View Transaction Details")
+            }}</q-tooltip>
         </q-btn>
 
         <q-dialog v-model="dialog" persistent>
@@ -46,7 +48,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="sm"
                             class="q-mr-sm"
                         />
-                        <div class="text-h6">Transaction Details</div>
+                        <div class="text-h6">
+                            {{ __("Transaction Details") }}
+                        </div>
                         <q-space />
                         <q-btn
                             icon="close"
@@ -66,7 +70,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="text-subtitle1 text-weight-medium q-mb-sm text-primary"
                         >
                             <q-icon name="mdi-information" class="q-mr-xs" />
-                            Transaction Information
+                            {{ __("Transaction Information") }}
                         </div>
 
                         <div class="info-grid">
@@ -76,7 +80,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="info-item row q-py-xs"
                             >
                                 <div class="info-label col-4 text-grey-8">
-                                    {{ formatKey(key) }}
+                                    {{ __(formatKey(key)) }}
                                 </div>
                                 <div
                                     class="info-value col-8 text-weight-medium"
@@ -93,7 +97,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-expansion-item
                         v-if="item.response"
                         icon="mdi-code-json"
-                        label="JSON Response"
+                        :label="__('JSON Response')"
                         dense
                         expand-separator
                         header-class="text-primary expansion-header"
@@ -111,7 +115,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-expansion-item
                         v-if="item.meta"
                         icon="mdi-database-search"
-                        label="Meta Information"
+                        :label="__('Meta Information')"
                         dense
                         expand-separator
                         header-class="text-primary expansion-header"
@@ -132,7 +136,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card-actions align="right" class="q-pa-md">
                     <q-btn
                         flat
-                        label="Close"
+                        :label="__('Close')"
                         color="primary"
                         v-close-popup
                         icon="mdi-close"
@@ -162,7 +166,7 @@ export default {
             return Object.keys(this.item)
                 .filter((key) => !exclude.includes(key))
                 .reduce((acc, key) => {
-                    acc[key] = this.item[key];
+                    acc[__(key)] = this.item[key];
                     return acc;
                 }, {});
         },
@@ -175,7 +179,7 @@ export default {
         },
         formatValue(value) {
             if (value === null || value === undefined) return "N/A";
-            if (typeof value === "boolean") return value ? "Yes" : "No";
+            if (typeof value === "boolean") return value ? __("Yes") : __("No");
             if (typeof value === "object") return JSON.stringify(value);
             return value;
         },

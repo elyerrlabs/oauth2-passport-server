@@ -143,11 +143,20 @@
                         </span>
                     </div>
                 </div>
-                <a href="https://gitlab.com/elyerr/oauth2-passport-server" target="_blank"
-                    class="inline-flex items-center bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white px-4 py-2 rounded-lg transition-colors text-sm">
-                    <i class="mdi mdi-star-circle-outline mr-2"></i>
-                    {{ __('Star on GitLab') }}
-                </a>
+                <div class="mb-4 flex flex-col space-y-2">
+                    <a href="https://gitlab.com/elyerr/oauth2-passport-server" target="_blank"
+                        class="inline-flex items-center bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                        <i class="mdi mdi-star-circle-outline mr-2"></i>
+                        {{ __('Star on GitLab') }}
+                    </a>
+
+                    <a href="https://github.com/elyerr/oauth2-passport-server" target="_blank"
+                        class="inline-flex items-center bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                        <i class="mdi mdi-star-circle-outline mr-2"></i>
+                        {{ __('Star on GitHub') }}
+                    </a>
+                </div>
+
             </div>
         </div>
 

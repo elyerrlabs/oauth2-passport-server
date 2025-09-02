@@ -54,7 +54,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mr-sm"
                         />
                         <div class="text-h5 text-weight-bold">
-                            {{ title }} Category
+                            {{ title }} {{ __("Category") }}
                         </div>
                         <q-space />
                         <q-btn
@@ -79,7 +79,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     name="mdi-information"
                                     class="q-mr-sm"
                                 />
-                                Basic Information
+                                {{ __("Basic Information") }}
                             </div>
 
                             <div class="row q-col-gutter-md">
@@ -88,7 +88,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <q-input
                                         outlined
                                         v-model="form.name"
-                                        label="Category Name *"
+                                        :label="__('Category Name *')"
                                         :error="!!errors.name"
                                         color="primary"
                                         class="custom-input"
@@ -109,11 +109,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <q-input
                                         outlined
                                         v-model="form.icon"
-                                        label="Icon *"
+                                        :label="__('Icon *')"
                                         :error="!!errors.icon"
                                         color="primary"
                                         class="custom-input"
-                                        hint="Material Design icon name"
+                                        :hint="__('Material Design icon name')"
                                     >
                                         <template v-slot:prepend>
                                             <q-icon name="mdi-emoticon" />
@@ -127,10 +127,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 @click="openIconLibrary"
                                                 class="icon-library-btn"
                                             >
-                                                <q-tooltip
-                                                    >View Icon
-                                                    Library</q-tooltip
-                                                >
+                                                <q-tooltip>{{
+                                                    __("View Icon Library")
+                                                }}</q-tooltip>
                                             </q-btn>
                                         </template>
                                         <template v-slot:error>
@@ -144,16 +143,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div class="toggle-group">
                                         <q-toggle
                                             v-model="form.published"
-                                            label="Published"
+                                            :label="__('Published')"
                                             color="positive"
                                             :error="!!errors.published"
                                             icon="mdi-eye"
                                             class="custom-toggle"
                                         >
-                                            <q-tooltip
-                                                >Make category visible to
-                                                users</q-tooltip
-                                            >
+                                            <q-tooltip>{{
+                                                __(
+                                                    "Make category visible to users"
+                                                )
+                                            }}</q-tooltip>
                                         </q-toggle>
                                         <v-error :error="errors.published" />
                                     </div>
@@ -163,16 +163,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div class="toggle-group">
                                         <q-toggle
                                             v-model="form.featured"
-                                            label="Featured"
+                                            :label="__('Featured')"
                                             color="accent"
                                             :error="!!errors.featured"
                                             icon="mdi-star"
                                             class="custom-toggle"
                                         >
-                                            <q-tooltip
-                                                >Highlight this category as
-                                                featured</q-tooltip
-                                            >
+                                            <q-tooltip>{{
+                                                __(
+                                                    "Highlight this category as featured"
+                                                )
+                                            }}</q-tooltip>
                                         </q-toggle>
                                         <v-error :error="errors.featured" />
                                     </div>
@@ -184,18 +185,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="section-container">
                             <div class="section-title">
                                 <q-icon name="mdi-text" class="q-mr-sm" />
-                                Description
+                                {{ __("Description") }}
                             </div>
                             <div
                                 class="text-caption text-weight-medium q-mb-xs"
                             >
-                                Category description (supports rich text
-                                formatting)
+                                {{
+                                    __(
+                                        "Category description (supports rich text formatting)"
+                                    )
+                                }}
                             </div>
                             <v-editor
                                 class="required"
                                 v-model="form.description"
-                                label="Category Description"
+                                :label="__('Category Description')"
                             />
                             <v-error :error="errors.description" />
                         </div>
@@ -204,7 +208,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="section-container">
                             <div class="section-title">
                                 <q-icon name="mdi-image" class="q-mr-sm" />
-                                Category Images
+                                {{ __("Category Images") }}
                             </div>
 
                             <div class="q-mb-md">
@@ -224,7 +228,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-caption text-weight-medium q-mb-sm"
                                 >
-                                    Current Images
+                                    {{ __("Current Images") }}
                                 </div>
                                 <v-gallery
                                     :images="current_images"
@@ -238,7 +242,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Dialog Actions -->
                 <q-card-actions align="right" class="dialog-actions q-pa-md">
                     <q-btn
-                        label="Cancel"
+                        :label="__('Cancel')"
                         color="grey"
                         @click="close"
                         outline
@@ -246,7 +250,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-close"
                     />
                     <q-btn
-                        :label="item ? 'Update' : 'Create'"
+                        :label="item ? __('Update') : __('Create')"
                         color="primary"
                         @click="create"
                         class="action-btn"

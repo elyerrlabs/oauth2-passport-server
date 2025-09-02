@@ -30,7 +30,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             size="sm"
             class="delete-price-btn shadow-3"
         >
-            <q-tooltip class="bg-negative">Delete Price</q-tooltip>
+            <q-tooltip class="bg-negative">{{ __("Delete Price") }}</q-tooltip>
         </q-btn>
 
         <!-- Delete Confirmation Dialog -->
@@ -44,15 +44,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Dialog Header -->
                 <q-card-section class="dialog-header bg-negative text-white">
                     <div class="row items-center">
-                        <q-icon name="mdi-currency-usd-off" size="28px" class="q-mr-sm" />
-                        <div class="text-h5 text-weight-bold">Delete Price</div>
+                        <q-icon
+                            name="mdi-currency-usd-off"
+                            size="28px"
+                            class="q-mr-sm"
+                        />
+                        <div class="text-h5 text-weight-bold">
+                            {{ __("Delete Price") }}
+                        </div>
                         <q-space />
-                        <q-btn 
-                            icon="close" 
-                            flat 
-                            round 
-                            dense 
-                            v-close-popup 
+                        <q-btn
+                            icon="close"
+                            flat
+                            round
+                            dense
+                            v-close-popup
                             class="text-white"
                             @click="dialog = false"
                         />
@@ -62,50 +68,101 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Warning Content -->
                 <q-card-section class="warning-section">
                     <div class="row items-center q-mb-md">
-                        <q-icon name="mdi-alert" color="negative" size="48px" class="q-mr-md" />
-                        <div class="text-h6 text-weight-medium">Confirm Deletion</div>
+                        <q-icon
+                            name="mdi-alert"
+                            color="negative"
+                            size="48px"
+                            class="q-mr-md"
+                        />
+                        <div class="text-h6 text-weight-medium">
+                            {{ __("Confirm Deletion") }}
+                        </div>
                     </div>
-                    
+
                     <div class="text-body1 q-mb-lg">
-                        You are about to delete the following price option. This action cannot be undone.
+                        {{
+                            __(
+                                "You are about to delete the following price option. This action cannot be undone."
+                            )
+                        }}
                     </div>
 
                     <!-- Price Details -->
                     <q-card flat bordered class="bg-grey-2 price-details-card">
                         <q-card-section>
-                            <div class="text-subtitle2 text-grey-8 q-mb-sm">Price Details</div>
-                            
-                            <div class="row items-center q-mb-xs">
-                                <q-icon name="mdi-cash" size="16px" class="q-mr-sm text-grey-6" />
-                                <span class="text-weight-medium">Amount:</span>
-                                <span class="q-ml-sm text-negative text-weight-bold">{{ item.amount_format }}</span>
-                                <span class="q-ml-xs text-grey-7">({{ item.currency }})</span>
+                            <div class="text-subtitle2 text-grey-8 q-mb-sm">
+                                {{ __("Price Details") }}
                             </div>
-                            
+
                             <div class="row items-center q-mb-xs">
-                                <q-icon name="mdi-calendar-refresh" size="16px" class="q-mr-sm text-grey-6" />
-                                <span class="text-weight-medium">Billing Period:</span>
-                                <span class="q-ml-sm text-capitalize">{{ item.billing_period }}</span>
+                                <q-icon
+                                    name="mdi-cash"
+                                    size="16px"
+                                    class="q-mr-sm text-grey-6"
+                                />
+                                <span class="text-weight-medium">{{
+                                    __("Amount:")
+                                }}</span>
+                                <span
+                                    class="q-ml-sm text-negative text-weight-bold"
+                                    >{{ item.amount_format }}</span
+                                >
+                                <span class="q-ml-xs text-grey-7"
+                                    >({{ item.currency }})</span
+                                >
                             </div>
-                            
-                            <div v-if="item.expiration" class="row items-center">
-                                <q-icon name="mdi-clock-alert" size="16px" class="q-mr-sm text-grey-6" />
-                                <span class="text-weight-medium">Expiration:</span>
-                                <span class="q-ml-sm">{{ item.expiration }}</span>
+
+                            <div class="row items-center q-mb-xs">
+                                <q-icon
+                                    name="mdi-calendar-refresh"
+                                    size="16px"
+                                    class="q-mr-sm text-grey-6"
+                                />
+                                <span class="text-weight-medium">{{
+                                    __("Billing Period:")
+                                }}</span>
+                                <span class="q-ml-sm text-capitalize">{{
+                                    item.billing_period
+                                }}</span>
+                            </div>
+
+                            <div
+                                v-if="item.expiration"
+                                class="row items-center"
+                            >
+                                <q-icon
+                                    name="mdi-clock-alert"
+                                    size="16px"
+                                    class="q-mr-sm text-grey-6"
+                                />
+                                <span class="text-weight-medium">{{
+                                    __("Expiration:")
+                                }}</span>
+                                <span class="q-ml-sm">{{
+                                    item.expiration
+                                }}</span>
                             </div>
                         </q-card-section>
                     </q-card>
 
                     <div class="text-caption text-grey-7 q-mt-md">
-                        <q-icon name="mdi-information" size="16px" class="q-mr-xs" />
-                        This price will be permanently removed from the system.
+                        <q-icon
+                            name="mdi-information"
+                            size="16px"
+                            class="q-mr-xs"
+                        />
+                        {{
+                            __(
+                                "This price will be permanently removed from the system."
+                            )
+                        }}
                     </div>
                 </q-card-section>
 
                 <!-- Dialog Actions -->
                 <q-card-actions align="right" class="dialog-actions q-pa-md">
                     <q-btn
-                        label="Cancel"
+                        :label="__('Cancel')"
                         color="grey"
                         @click="dialog = false"
                         outline
@@ -113,7 +170,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-close"
                     />
                     <q-btn
-                        label="Delete Price"
+                        :label="__('Delete Price')"
                         color="negative"
                         @click="destroy"
                         class="action-btn"
@@ -155,7 +212,7 @@ export default {
                         message: "Price has been deleted successfully",
                         timeout: 3000,
                         icon: "mdi-check-circle",
-                        position: "top-right"
+                        position: "top-right",
                     });
                 }
             } catch (error) {
@@ -165,7 +222,7 @@ export default {
                     message: "Failed to delete price. Please try again.",
                     timeout: 3000,
                     icon: "mdi-alert-circle",
-                    position: "top-right"
+                    position: "top-right",
                 });
             }
         },
@@ -176,79 +233,79 @@ export default {
 <style scoped>
 /* CSS Variables for Theme Consistency */
 :root {
-  --color-primary: #1976d2;
-  --color-secondary: #26a69a;
-  --color-negative: #c10015;
-  --color-warning: #f2c037;
-  --color-dark: #1d1d1d;
-  --color-light: #f5f5f5;
-  --border-radius: 12px;
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  --transition-speed: 0.3s;
+    --color-primary: #1976d2;
+    --color-secondary: #26a69a;
+    --color-negative: #c10015;
+    --color-warning: #f2c037;
+    --color-dark: #1d1d1d;
+    --color-light: #f5f5f5;
+    --border-radius: 12px;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
 }
 
 .delete-price-btn {
-  transition: transform var(--transition-speed) ease, 
-              box-shadow var(--transition-speed) ease;
+    transition: transform var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
 }
 
 .delete-price-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
 }
 
 .delete-price-dialog {
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  max-width: 500px;
-  width: 100%;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    max-width: 500px;
+    width: 100%;
 }
 
 .dialog-header {
-  padding: 20px 24px;
+    padding: 20px 24px;
 }
 
 .warning-section {
-  padding: 24px;
+    padding: 24px;
 }
 
 .price-details-card {
-  border-left: 4px solid var(--color-negative);
+    border-left: 4px solid var(--color-negative);
 }
 
 .dialog-actions {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  background: var(--color-light);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background: var(--color-light);
 }
 
 .action-btn {
-  border-radius: 8px;
-  padding: 8px 20px;
-  font-weight: 500;
-  min-width: 120px;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: 500;
+    min-width: 120px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 599px) {
-  .delete-price-dialog {
-    max-width: 95vw;
-  }
-  
-  .dialog-header .text-h5 {
-    font-size: 1.25rem;
-  }
-  
-  .warning-section {
-    padding: 16px;
-  }
-  
-  .action-btn {
-    min-width: 100px;
-    padding: 6px 16px;
-  }
-  
-  .price-details-card {
-    margin: 0 -8px;
-  }
+    .delete-price-dialog {
+        max-width: 95vw;
+    }
+
+    .dialog-header .text-h5 {
+        font-size: 1.25rem;
+    }
+
+    .warning-section {
+        padding: 16px;
+    }
+
+    .action-btn {
+        min-width: 100px;
+        padding: 6px 16px;
+    }
+
+    .price-details-card {
+        margin: 0 -8px;
+    }
 }
 </style>

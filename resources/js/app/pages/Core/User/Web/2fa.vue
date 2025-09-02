@@ -35,11 +35,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-toolbar-title
                             class="text-h4 text-weight-bold text-grey-8"
                         >
-                            Two-Factor Authentication
+                            {{ __("Two-Factor Authentication") }}
                         </q-toolbar-title>
                     </div>
                     <div class="text-subtitle1 text-grey-7 q-mt-sm">
-                        Add an extra layer of security to your account
+                        {{
+                            __("Add an extra layer of security to your account")
+                        }}
                     </div>
                 </div>
 
@@ -54,7 +56,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <div
                                             class="text-h6 text-weight-medium text-grey-8"
                                         >
-                                            Current Status
+                                            {{ __("Current Status") }}
                                         </div>
                                     </div>
                                     <div class="col-auto">
@@ -78,8 +80,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             />
                                             {{
                                                 user.m2fa
-                                                    ? "ACTIVE"
-                                                    : "INACTIVE"
+                                                    ? __("ACTIVE")
+                                                    : __("INACTIVE")
                                             }}
                                         </q-badge>
                                     </div>
@@ -107,8 +109,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     >
                                         {{
                                             user.m2fa
-                                                ? "Your account is protected with 2FA"
-                                                : "Enable 2FA for enhanced security"
+                                                ? __(
+                                                      "Your account is protected with 2FA"
+                                                  )
+                                                : __(
+                                                      "Enable 2FA for enhanced security"
+                                                  )
                                         }}
                                     </span>
                                 </div>
@@ -125,18 +131,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         name="mdi-email-fast"
                                         class="q-mr-sm"
                                     />
-                                    Email Verification
+                                    {{ __("Email Verification") }}
                                 </div>
 
                                 <div class="text-caption text-grey-7 q-mb-lg">
-                                    We'll send a verification code to your email
-                                    address to enable two-factor authentication.
+                                    {{
+                                        __(
+                                            "We'll send a verification code to your email address to enable two-factor authentication."
+                                        )
+                                    }}
                                 </div>
 
                                 <div class="token-section">
                                     <q-input
                                         v-model="token"
-                                        label="Enter 6-digit verification code"
+                                        :label="
+                                            __(
+                                                'Enter 6-digit verification code'
+                                            )
+                                        "
                                         outlined
                                         dense
                                         class="token-input"
@@ -158,17 +171,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 class="cursor-pointer"
                                                 @click="requestCode"
                                             >
-                                                <q-tooltip
-                                                    >Request new code</q-tooltip
-                                                >
+                                                <q-tooltip>{{
+                                                    __("Request new code")
+                                                }}</q-tooltip>
                                             </q-icon>
                                         </template>
                                     </q-input>
                                     <v-error :error="errors.token" />
 
                                     <div class="input-hint q-mt-xs">
-                                        Enter the 6-digit code sent to your
-                                        email
+                                        {{
+                                            __(
+                                                "Enter the 6-digit code sent to your email"
+                                            )
+                                        }}
                                     </div>
                                 </div>
                             </q-card-section>
@@ -178,7 +194,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             >
                                 <q-btn
                                     @click="requestCode"
-                                    label="Send Verification Code"
+                                    :label="__('Send Verification Code')"
                                     color="primary"
                                     outline
                                     icon="mdi-email-send"
@@ -187,13 +203,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 >
                                     <template v-slot:loading>
                                         <q-spinner-hourglass class="on-left" />
-                                        Sending...
+                                        {{ __("Sending...") }}
                                     </template>
                                 </q-btn>
 
                                 <q-btn
                                     :label="
-                                        user.m2fa ? 'Disable 2FA' : 'Enable 2FA'
+                                        user.m2fa
+                                            ? __('Disable 2FA')
+                                            : __('Enable 2FA')
                                     "
                                     :color="user.m2fa ? 'negative' : 'positive'"
                                     @click="activateFactor"
@@ -211,8 +229,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <q-spinner-hourglass class="on-left" />
                                         {{
                                             user.m2fa
-                                                ? "Disabling..."
-                                                : "Enabling..."
+                                                ? __("Disabling...")
+                                                : __("Enabling...")
                                         }}
                                     </template>
                                 </q-btn>
@@ -233,7 +251,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         name="mdi-rocket-launch"
                                         class="q-mr-sm"
                                     />
-                                    Coming Soon
+                                    {{ __("Coming Soon") }}
                                 </div>
 
                                 <div class="features-list">
@@ -248,14 +266,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         />
                                         <div>
                                             <div class="text-weight-medium">
-                                                Authenticator App (TOTP)
+                                                {{
+                                                    __(
+                                                        "Authenticator App (TOTP)"
+                                                    )
+                                                }}
                                             </div>
                                             <div
                                                 class="text-caption text-grey-7"
                                             >
-                                                Use apps like Google
-                                                Authenticator or Authy for
-                                                verification codes
+                                                {{
+                                                    __(
+                                                        "Use apps like Google Authenticator or Authy for verification codes"
+                                                    )
+                                                }}
                                             </div>
                                         </div>
                                     </div>
@@ -269,13 +293,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         />
                                         <div>
                                             <div class="text-weight-medium">
-                                                QR Code Setup
+                                                {{ __("QR Code Setup") }}
                                             </div>
                                             <div
                                                 class="text-caption text-grey-7"
                                             >
-                                                Quick setup with QR code
-                                                scanning for authenticator apps
+                                                {{
+                                                    __(
+                                                        "Quick setup with QR code scanning for authenticator apps"
+                                                    )
+                                                }}
                                             </div>
                                         </div>
                                     </div>

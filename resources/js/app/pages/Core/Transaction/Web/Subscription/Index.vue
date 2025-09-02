@@ -19,7 +19,6 @@ Author Contact: yerel9212@yahoo.es
 
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
-
 <template>
     <v-user-layout>
         <div class="packages-page">
@@ -35,20 +34,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-toolbar-title
                         class="text-h4 text-weight-bold text-grey-8"
                     >
-                        Subscription Packages
+                        {{ __("Subscription Packages") }}
                     </q-toolbar-title>
                     <q-space />
                     <q-btn
                         color="primary"
                         icon="mdi-refresh"
-                        label="Refresh"
+                        :label="__('Refresh')"
                         outline
                         @click="getPackages"
                         :loading="loading"
                     />
                 </q-toolbar>
                 <div class="text-subtitle1 text-grey-7 q-mt-sm header-subtitle">
-                    Manage your subscription packages and billing information
+                    {{
+                        __(
+                            "Manage your subscription packages and billing information"
+                        )
+                    }}
                 </div>
             </div>
 
@@ -91,7 +94,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         props.row.transaction
                                             .billing_period_name
                                     }}
-                                    plan
+                                    {{ __("plan") }}
                                 </div>
                             </q-td>
                         </template>
@@ -106,7 +109,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="price-frequency text-caption text-grey-6"
                                 >
-                                    One-time payment
+                                    {{ __("One-time payment") }}
                                 </div>
                             </q-td>
                         </template>
@@ -128,7 +131,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="text-orange text-weight-medium"
                                     >
                                         +{{ props.row.meta.bonus_duration }}
-                                        days free
+                                        {{ __("days free") }}
                                     </span>
                                 </div>
                                 <div v-else class="text-grey-5">—</div>
@@ -138,7 +141,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Date Columns -->
                         <template v-slot:body-cell-start="props">
                             <q-td class="date-cell">
-                                <div class="date-label">Started</div>
+                                <div class="date-label">
+                                    {{ __("Started") }}
+                                </div>
                                 <div class="date-value text-weight-medium">
                                     {{ formatDate(props.row.start_at) }}
                                 </div>
@@ -146,7 +151,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </template>
                         <template v-slot:body-cell-end="props">
                             <q-td class="date-cell">
-                                <div class="date-label">Expires</div>
+                                <div class="date-label">
+                                    {{ __("Expires") }}
+                                </div>
                                 <div
                                     class="date-value text-weight-medium"
                                     :class="{
@@ -214,8 +221,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     />
                                     {{
                                         props.row.is_recurring
-                                            ? "Active"
-                                            : "Inactive"
+                                            ? __("Active")
+                                            : __("Inactive")
                                     }}
                                 </q-badge>
                             </q-td>
@@ -254,7 +261,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         outline
                                         icon="mdi-eye"
                                         :href="props.row.links.show"
-                                        label="View"
+                                        :label="__('View')"
                                         class="view-btn"
                                     />
                                 </div>
@@ -273,14 +280,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="empty-title text-h6 text-grey-7 q-mt-md"
                                 >
-                                    No packages found
+                                    {{ __("No packages found") }}
                                 </div>
                                 <div class="empty-subtitle text-grey-5">
-                                    Your subscription packages will appear here
+                                    {{
+                                        __(
+                                            "Your subscription packages will appear here"
+                                        )
+                                    }}
                                 </div>
                                 <q-btn
                                     color="primary"
-                                    label="Browse Plans"
+                                    :label="__('Browse Plans')"
                                     unelevated
                                     class="q-mt-md"
                                     :href="route('plans.index')"
@@ -333,57 +344,57 @@ export default {
             columns: [
                 {
                     name: "name",
-                    label: "Package",
+                    label: this.__("Package"),
                     field: "meta.name",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "price",
-                    label: "Price",
+                    label: this.__("Price"),
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "bonus",
-                    label: "Bonus",
+                    label: this.__("Bonus"),
                     align: "center",
                     sortable: false,
                 },
                 {
                     name: "start",
-                    label: "Start Date",
+                    label: this.__("Start Date"),
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "end",
-                    label: "End Date",
+                    label: this.__("End Date"),
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "method",
-                    label: "Payment Method",
+                    label: this.__("Payment Method"),
                     align: "center",
                     sortable: true,
                 },
                 {
                     name: "recurring",
-                    label: "Recurring",
+                    label: this.__("Recurring"),
                     align: "center",
                     field: "is_recurring",
                     sortable: true,
                 },
                 {
                     name: "status",
-                    label: "Status",
+                    label: this.__("Status"),
                     align: "center",
                     sortable: true,
                 },
                 {
                     name: "actions",
-                    label: "Actions",
+                    label: this.__("Actions"),
                     align: "center",
                     sortable: false,
                 },

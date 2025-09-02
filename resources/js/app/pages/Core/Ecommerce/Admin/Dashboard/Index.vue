@@ -29,14 +29,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="row items-center no-wrap">
                             <div class="col">
                                 <div class="text-subtitle1 text-grey-7">
-                                    Total Sales
+                                    {{ __("Total Sales") }}
                                 </div>
                                 <div class="text-h4 text-weight-bold">
                                     $24,560
                                 </div>
                                 <div class="text-caption text-green">
-                                    <q-icon name="mdi-arrow-up" /> 12% from last
-                                    month
+                                    <q-icon name="mdi-arrow-up" />
+                                    {{ __("12% from last month") }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -57,14 +57,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="row items-center no-wrap">
                             <div class="col">
                                 <div class="text-subtitle1 text-grey-7">
-                                    Today Sales
+                                    {{ __("Today Sales") }}
                                 </div>
                                 <div class="text-h4 text-weight-bold">
                                     $1,850
                                 </div>
                                 <div class="text-caption text-green">
-                                    <q-icon name="mdi-arrow-up" /> 5% from
-                                    yesterday
+                                    <q-icon name="mdi-arrow-up" />
+                                    {{ __("5% from yesterday") }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -85,14 +85,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="row items-center no-wrap">
                             <div class="col">
                                 <div class="text-subtitle1 text-grey-7">
-                                    Total Products
+                                    {{ __("Total Products") }}
                                 </div>
                                 <div class="text-h4 text-weight-bold">
                                     {{ $page.props.products }}
                                 </div>
                                 <div class="text-caption text-grey">
-                                    {{ $page.props.products_low_stock }} low in
-                                    stock
+                                    {{ $page.props.products_low_stock }}
+                                    {{ __("low in stock") }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -113,11 +113,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="row items-center no-wrap">
                             <div class="col">
                                 <div class="text-subtitle1 text-grey-7">
-                                    Pending Orders
+                                    {{ __("Pending Orders") }}
                                 </div>
                                 <div class="text-h4 text-weight-bold">18</div>
                                 <div class="text-caption text-red">
-                                    <q-icon name="mdi-alert" /> 3 high priority
+                                    <q-icon name="mdi-alert" />
+                                    {{ __("3 high priority") }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -138,7 +139,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="col-12 col-lg-8">
                 <q-card class="chart-card">
                     <q-card-section class="card-header">
-                        <div class="text-h6">Sales Overview (Last 30 Days)</div>
+                        <div class="text-h6">
+                            {{ __("Sales Overview (Last 30 Days)") }}
+                        </div>
                         <q-btn
                             flat
                             round
@@ -149,9 +152,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-menu>
                                 <q-list>
                                     <q-item clickable v-close-popup>
-                                        <q-item-section
-                                            >Export Data</q-item-section
-                                        >
+                                        <q-item-section>{{
+                                            __("Export Data")
+                                        }}</q-item-section>
                                     </q-item>
                                 </q-list>
                             </q-menu>
@@ -171,7 +174,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="col-12 col-lg-4">
                 <q-card class="chart-card">
                     <q-card-section class="card-header">
-                        <div class="text-h6">Revenue Sources</div>
+                        <div class="text-h6">{{ __("Revenue Sources") }}</div>
                     </q-card-section>
                     <q-card-section>
                         <apexchart
@@ -190,7 +193,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="col-12 col-md-6">
                 <q-card class="chart-card">
                     <q-card-section class="card-header">
-                        <div class="text-h6">Top Selling Products</div>
+                        <div class="text-h6">
+                            {{ __("Top Selling Products") }}
+                        </div>
                     </q-card-section>
                     <q-card-section>
                         <apexchart
@@ -206,7 +211,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="col-12 col-md-6">
                 <q-card class="chart-card">
                     <q-card-section class="card-header">
-                        <div class="text-h6">Today's Sales Status</div>
+                        <div class="text-h6">
+                            {{ __("Today's Sales Status") }}
+                        </div>
                     </q-card-section>
                     <q-card-section>
                         <apexchart
@@ -225,11 +232,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="col-12 col-lg-7">
                 <q-card class="data-card">
                     <q-card-section class="card-header">
-                        <div class="text-h6">Recent Orders</div>
+                        <div class="text-h6">{{ __("Recent Orders") }}</div>
                         <q-btn
                             flat
                             color="primary"
-                            label="View All"
+                            :label="__('View All')"
                             size="sm"
                         />
                     </q-card-section>
@@ -277,11 +284,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="col-12 col-lg-5">
                 <q-card class="data-card">
                     <q-card-section class="card-header">
-                        <div class="text-h6">Top Selling Products</div>
+                        <div class="text-h6">
+                            {{ __("Top Selling Products") }}
+                        </div>
                         <q-btn
                             flat
                             color="primary"
-                            label="View All"
+                            :label="__('View All')"
                             size="sm"
                         />
                     </q-card-section>
@@ -318,7 +327,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         ${{ product.price }}
                                     </div>
                                     <div class="text-caption text-grey-7">
-                                        Sold: {{ product.sold }}
+                                        {{ __("Sold:") }} {{ product.sold }}
                                     </div>
                                 </q-item-section>
                             </q-item>

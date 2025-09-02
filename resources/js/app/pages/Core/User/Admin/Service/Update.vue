@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             transition-hide="scale"
             class="bg-primary"
         >
-            Edit service
+            {{ __("Edit service") }}
         </q-tooltip>
     </q-btn>
 
@@ -49,8 +49,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="dialog-header bg-primary text-white">
                     <q-card-section class="text-center">
                         <q-icon name="mdi-cog-edit" size="lg" class="q-mb-sm" />
-                        <div class="text-h6">Update Service</div>
-                        <div class="text-caption">Modify service details</div>
+                        <div class="text-h6">{{ __("Update Service") }}</div>
+                        <div class="text-caption">
+                            {{ __("Modify service details") }}
+                        </div>
                     </q-card-section>
                 </div>
 
@@ -58,14 +60,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         class="text-subtitle1 text-weight-medium q-mb-md text-grey-8"
                     >
-                        Editing:
+                        {{ __("Editing:") }}
                         <span class="text-blue-8">"{{ form.name }}"</span>
                     </div>
 
                     <div class="q-gutter-y-md">
                         <q-input
                             v-model="form.name"
-                            label="Service Name"
+                            :label="__('Service Name')"
                             outlined
                             color="primary"
                             :error="!!errors.name"
@@ -74,8 +76,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :readonly="system"
                             :hint="
                                 system
-                                    ? 'System service name cannot be modified'
-                                    : 'Unique identifier for the service'
+                                    ? __(
+                                          'System service name cannot be modified'
+                                      )
+                                    : __('Unique identifier for the service')
                             "
                         >
                             <template v-slot:prepend>
@@ -88,7 +92,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <q-input
                             v-model="form.description"
-                            label="Description"
+                            :label="__('Description')"
                             outlined
                             color="primary"
                             :error="!!errors.description"
@@ -96,7 +100,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             rows="3"
                             class="input-field"
                             :loading="loading"
-                            hint="Describe the purpose and functionality of this service"
+                            :hint="
+                                __(
+                                    'Describe the purpose and functionality of this service'
+                                )
+                            "
                         >
                             <template v-slot:prepend>
                                 <q-icon name="mdi-text-box-outline" />
@@ -109,11 +117,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-select
                             v-model="form.visibility"
                             :options="visibilityOptions"
-                            label="Visibility"
+                            :label="__('Visibility')"
                             outlined
                             color="primary"
                             :error="!!errors.visibility"
-                            hint="Set the visibility level for this service"
+                            :hint="
+                                __('Set the visibility level for this service')
+                            "
                         >
                             <template v-slot:prepend>
                                 <q-icon name="mdi-eye" />
@@ -130,8 +140,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="sm"
                             />
                             <span class="text-caption text-grey-7">
-                                Group:
-                                <strong>{{ form.group?.name || "N/A" }}</strong>
+                                {{ __("Group:") }}
+                                <strong>{{
+                                    form.group?.name || __("N/A")
+                                }}</strong>
                             </span>
                         </div>
 
@@ -142,9 +154,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="sm"
                             />
                             <span class="text-caption text-grey-7">
-                                Type:
+                                {{ __("Type:") }}
                                 <strong>{{
-                                    system ? "System Service" : "Custom Service"
+                                    system
+                                        ? __("System Service")
+                                        : __("Custom Service")
                                 }}</strong>
                             </span>
                         </div>
@@ -159,10 +173,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                     class="q-mr-sm"
                                 />
-                                <span class="text-caption"
-                                    >This is a system service. Some properties
-                                    cannot be modified.</span
-                                >
+                                <span class="text-caption">{{
+                                    __(
+                                        "This is a system service. Some properties cannot be modified."
+                                    )
+                                }}</span>
                             </div>
                         </div>
                     </div>
@@ -172,7 +187,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-btn
                         flat
                         color="grey-7"
-                        label="Cancel"
+                        :label="__('Cancel')"
                         @click="close"
                         class="q-mr-sm"
                         icon="mdi-close-circle"
@@ -180,7 +195,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     />
                     <q-btn
                         color="primary"
-                        label="Update Service"
+                        :label="__('Update Service')"
                         @click="updateService"
                         :loading="loading"
                         icon="mdi-content-save"

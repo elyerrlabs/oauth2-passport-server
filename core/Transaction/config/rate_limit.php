@@ -29,27 +29,27 @@ return [
         'admin' => [
             'limit' => 300,
             'block_time' => 120,
-            'name' => 'Rate Limit for Admin routes'
+            'name' => __('Rate Limit for Admin routes')
         ],
         'web' => [
             'limit' => 300,
             'block_time' => 120,
-            'name' => 'Rate Limit for Web routes'
+            'name' => __('Rate Limit for Web routes')
         ],
         'webhook' => [
             'limit' => 1000,
             'block_time' => 60,
-            'name' => 'Rate Limit for Webhook routes'
+            'name' => __('Rate Limit for Webhook routes')
         ],
         'api' => [
             'limit' => 300,
             'block_time' => 120,
-            'name' => 'Rate Limit for API routes'
+            'name' => __('Rate Limit for API routes')
         ],
         'public' => [
             'limit' => 300,
             'block_time' => 120,
-            'name' => 'Rate Limit for API routes'
+            'name' => __('Rate Limit for API routes')
         ],
     ],
 ];

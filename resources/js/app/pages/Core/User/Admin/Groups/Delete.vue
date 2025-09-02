@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             transition-hide="scale"
             class="bg-negative"
         >
-            Delete group
+            {{ __("Delete group") }}
         </q-tooltip>
     </q-btn>
 
@@ -53,16 +53,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="lg"
                             class="q-mb-sm"
                         />
-                        <div class="text-h6">Confirm Deletion</div>
+                        <div class="text-h6">{{ __("Confirm Deletion") }}</div>
                         <div class="text-caption">
-                            This action cannot be undone
+                            {{ __("This action cannot be undone") }}
                         </div>
                     </q-card-section>
                 </div>
 
                 <q-card-section class="q-pt-lg text-center">
                     <div class="text-body1 q-mb-md">
-                        Are you sure you want to delete the group
+                        {{ __("Are you sure you want to delete the group") }}
                         <span class="text-weight-bold text-blue-8"
                             >"{{ item.name }}"</span
                         >?
@@ -75,7 +75,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             icon="mdi-identifier"
                             class="q-pa-sm"
                         >
-                            ID: {{ item.id }}
+                            {{ __("ID") }}: {{ item.id }}
                         </q-chip>
                     </div>
 
@@ -86,10 +86,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="sm"
                                 class="q-mr-sm"
                             />
-                            <span class="text-caption"
-                                >Warning: This will permanently remove the group
-                                and all associated data.</span
-                            >
+                            <span class="text-caption">
+                                {{
+                                    __(
+                                        "Warning: This will permanently remove the group and all associated data."
+                                    )
+                                }}
+                            </span>
                         </div>
                     </div>
                 </q-card-section>
@@ -98,14 +101,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-btn
                         flat
                         color="grey-7"
-                        label="Cancel"
+                        :label="__('Cancel')"
                         @click="dialog = false"
                         class="q-mr-md"
                         icon="mdi-close-circle"
                     />
                     <q-btn
                         color="negative"
-                        label="Delete Group"
+                        :label="__('Delete Group')"
                         @click="destroy"
                         icon="mdi-delete-forever"
                         class="q-px-md"

@@ -34,13 +34,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-toolbar-title
                         class="text-h4 text-weight-bold text-grey-8"
                     >
-                        API Keys Management
+                        {{ __("API Keys Management") }}
                     </q-toolbar-title>
                     <q-space />
                     <v-create @created="getPersonalAccessToken()" />
                 </q-toolbar>
                 <div class="text-subtitle1 text-grey-7 q-mt-sm header-subtitle">
-                    Manage your API keys for secure application integration
+                    {{
+                        __(
+                            "Manage your API keys for secure application integration"
+                        )
+                    }}
                 </div>
             </div>
 
@@ -80,7 +84,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="key-id text-caption text-grey-6"
                                     v-if="props.row.id"
                                 >
-                                    ID: {{ props.row.id }}
+                                    {{ __("ID:") }} {{ props.row.id }}
                                 </div>
                             </q-td>
                         </template>
@@ -88,7 +92,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Created Date Column -->
                         <template v-slot:body-cell-created="props">
                             <q-td class="date-cell">
-                                <div class="date-label">Created</div>
+                                <div class="date-label">
+                                    {{ __("Created") }}
+                                </div>
                                 <div class="date-value text-weight-medium">
                                     <q-icon
                                         name="mdi-calendar-plus"
@@ -103,7 +109,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Expires Date Column -->
                         <template v-slot:body-cell-expires="props">
                             <q-td class="date-cell">
-                                <div class="date-label">Expires</div>
+                                <div class="date-label">
+                                    {{ __("Expires") }}
+                                </div>
                                 <div
                                     class="date-value text-weight-medium"
                                     :class="
@@ -118,14 +126,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="q-mr-xs"
                                     />
                                     {{
-                                        formatDate(props.row.expires) || "Never"
+                                        formatDate(props.row.expires) ||
+                                        __("Never")
                                     }}
                                 </div>
                                 <div
                                     v-if="isExpiringSoon(props.row.expires)"
                                     class="expiration-warning text-caption text-warning"
                                 >
-                                    Expiring soon
+                                    {{ __("Expiring soon") }}
                                 </div>
                             </q-td>
                         </template>
@@ -150,7 +159,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         "
                                         class="copy-btn"
                                     >
-                                        <q-tooltip>Copy API Key</q-tooltip>
+                                        <q-tooltip>{{
+                                            __("Copy API Key")
+                                        }}</q-tooltip>
                                     </q-btn>
                                 </div>
                             </q-td>
@@ -168,10 +179,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="empty-title text-h6 text-grey-7 q-mt-md"
                                 >
-                                    No API Keys Found
+                                    {{ __("No API Keys Found") }}
                                 </div>
                                 <div class="empty-subtitle text-grey-5">
-                                    Create your first API key to get started
+                                    {{
+                                        __(
+                                            "Create your first API key to get started"
+                                        )
+                                    }}
                                 </div>
                             </div>
                         </template>
@@ -216,28 +231,28 @@ export default {
             columns: [
                 {
                     name: "name",
-                    label: "Key Name",
+                    label: this.__("Key Name"),
                     field: "name",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "created",
-                    label: "Created Date",
+                    label: this.__("Created Date"),
                     field: "created",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "expires",
-                    label: "Expiration Date",
+                    label: this.__("Expiration Date"),
                     field: "expires",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "actions",
-                    label: "Actions",
+                    label: this.__("Actions"),
                     field: "actions",
                     align: "right",
                 },

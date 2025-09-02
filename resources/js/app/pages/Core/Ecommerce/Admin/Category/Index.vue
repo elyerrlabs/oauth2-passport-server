@@ -26,10 +26,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row items-center justify-between">
                 <div class="col">
                     <div class="text-h4 text-weight-bold">
-                        Categories Management
+                        {{ __("Categories Management") }}
                     </div>
                     <div class="text-subtitle1 opacity-70">
-                        Manage product categories and organization
+                        {{ __("Manage product categories and organization") }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -46,7 +46,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-input
                         outlined
                         v-model="searchTerm"
-                        placeholder="Search categories..."
+                        :placeholder="__('Search categories...')"
                         clearable
                         class="search-input"
                         @update:model-value="handleSearch"
@@ -155,7 +155,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="q-mr-xs"
                                 />
                                 {{
-                                    props.row.published ? "Published" : "Hidden"
+                                    props.row.published
+                                        ? __("Published")
+                                        : __("Hidden")
                                 }}
                             </q-badge>
                         </q-td>
@@ -182,7 +184,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="q-mr-xs"
                                 />
                                 {{
-                                    props.row.featured ? "Featured" : "Standard"
+                                    props.row.featured
+                                        ? __("Featured")
+                                        : __("Standard")
                                 }}
                             </q-badge>
                         </q-td>
@@ -194,7 +198,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <v-create
                                     :item="props.row"
                                     @created="getCategories"
-                                    title="Update"
+                                    :title="__('Update')"
                                     class="action-btn"
                                 />
                                 <v-delete
@@ -216,9 +220,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="48px"
                                 class="q-mb-sm"
                             />
-                            <div class="text-h6">No categories found</div>
+                            <div class="text-h6">
+                                {{ __("No categories found") }}
+                            </div>
                             <div class="text-caption">
-                                Create your first category to get started
+                                {{
+                                    __(
+                                        "Create your first category to get started"
+                                    )
+                                }}
                             </div>
                         </div>
                     </template>
@@ -248,8 +258,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Results Count -->
             <div class="row justify-center q-mt-md">
                 <div class="text-caption text-grey-6">
-                    Showing {{ groups.length }} of
-                    {{ pages.total || 0 }} categories
+                    {{ __("Showing") }} {{ groups.length }} {{ __("of") }}
+                    {{ pages.total || 0 }} {{ __("categories") }}
                 </div>
             </div>
         </div>

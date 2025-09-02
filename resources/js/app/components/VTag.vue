@@ -2,16 +2,11 @@
     <div class="tags-container">
         <q-card-section class="q-pa-none q-mb-md">
             <div class="row items-center q-gutter-sm">
-                <q-icon
-                    name="mdi-tag-multiple"
-                    color="primary"
-                    size="md"
-                />
-                <div class="text-h6 text-primary">Tags</div>
+                <q-icon name="mdi-tag-multiple" color="primary" size="md" />
+                <div class="text-h6 text-primary">{{ __("Tags") }}</div>
             </div>
         </q-card-section>
 
-        <!-- Lista de tags -->
         <div class="tags-list q-gutter-sm q-mb-md">
             <div
                 v-for="(tag, index) in internalTags"
@@ -21,7 +16,7 @@
             >
                 <!-- Tag name (visible cuando no se está editando) -->
                 <div v-if="!tag.editing" class="tag-label">
-                    {{ tag.name || "New Tag" }}
+                    {{ tag.name || __("New Tag") }}
                 </div>
 
                 <!-- Input (visible solo al editar) -->
@@ -34,7 +29,9 @@
                     @keyup.enter="finishEditing(tag, index)"
                     @keyup.esc="cancelEditing(index)"
                     class="tag-edit-input"
-                    :rules="[(val) => !!val.trim() || 'Tag cannot be empty']"
+                    :rules="[
+                        (val) => !!val.trim() || __('Tag cannot be empty'),
+                    ]"
                 />
 
                 <!-- Controls -->
@@ -83,13 +80,12 @@
             size="sm"
             outline
             icon="add"
-            label="Add tag"
+            :label="__('Add tag')"
             @click="addTag"
             class="add-btn"
         />
     </div>
 </template>
-
 <script>
 export default {
     name: "TagsInput",

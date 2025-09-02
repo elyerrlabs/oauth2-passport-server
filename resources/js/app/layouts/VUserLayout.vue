@@ -90,7 +90,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Account -->
                     <q-item-label header class="menu-section-title">
-                        Account
+                        {{ __("Account") }}
                     </q-item-label>
 
                     <q-item
@@ -109,7 +109,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             />
                         </q-item-section>
                         <q-item-section>
-                            {{ $page.props.user_dashboard.name }}
+                            {{ __($page.props.user_dashboard.name) }}
                         </q-item-section>
                     </q-item>
 
@@ -118,7 +118,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-separator class="q-my-md" />
 
                         <q-item-label header class="menu-section-title">
-                            {{ developers.name }}
+                            {{ __(developers.name) }}
                         </q-item-label>
 
                         <q-item
@@ -136,7 +136,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :icon="item.icon"
                                 />
                             </q-item-section>
-                            <q-item-section>{{ item.name }}</q-item-section>
+                            <q-item-section>{{ __(item.name) }}</q-item-section>
                         </q-item>
                     </template>
 
@@ -144,7 +144,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-separator class="q-my-md" />
 
                     <q-item-label header class="menu-section-title">
-                        Dashboards
+                        {{ __("Dashboards") }}
                     </q-item-label>
 
                     <q-item
@@ -163,7 +163,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             />
                         </q-item-section>
                         <q-item-section>
-                            {{ admin_dashboard.name }}
+                            {{ __(admin_dashboard.name) }}
                         </q-item-section>
                     </q-item>
 
@@ -183,7 +183,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             />
                         </q-item-section>
                         <q-item-section>
-                            {{ transaction_dashboard.name }}
+                            {{ __(transaction_dashboard.name) }}
                         </q-item-section>
                     </q-item>
 
@@ -203,7 +203,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             />
                         </q-item-section>
                         <q-item-section>
-                            {{ partner_dashboard.name }}
+                            {{ __(partner_dashboard.name) }}
                         </q-item-section>
                     </q-item>
 
@@ -223,7 +223,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             />
                         </q-item-section>
                         <q-item-section>
-                            {{ ecommerce_dashboard.name }}
+                            {{ __(ecommerce_dashboard.name) }}
                         </q-item-section>
                     </q-item>
 
@@ -243,7 +243,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             />
                         </q-item-section>
                         <q-item-section>
-                            {{ settings.name }}
+                            {{ __(settings.name) }}
                         </q-item-section>
                     </q-item>
                 </q-list>
@@ -268,7 +268,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             />
                         </q-item-section>
                         <q-item-section>
-                            {{ $page.props.docs.name }}
+                            {{ __($page.props.docs.name) }}
                         </q-item-section>
                     </q-item>
                 </q-list>

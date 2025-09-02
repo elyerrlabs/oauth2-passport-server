@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             transition-hide="scale"
             class="bg-primary"
         >
-            Edit group
+            {{ __("Edit group") }}
         </q-tooltip>
     </q-btn>
 
@@ -53,8 +53,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="lg"
                             class="q-mb-sm"
                         />
-                        <div class="text-h6">Update Group</div>
-                        <div class="text-caption">Modify group details</div>
+                        <div class="text-h6">{{ __("Update Group") }}</div>
+                        <div class="text-caption">
+                            {{ __("Modify group details") }}
+                        </div>
                     </q-card-section>
                 </div>
 
@@ -62,14 +64,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         class="text-subtitle1 text-weight-medium q-mb-md text-grey-8"
                     >
-                        Editing:
+                        {{ __("Editing") }}:
                         <span class="text-blue-8">"{{ form.name }}"</span>
                     </div>
 
                     <div class="q-gutter-y-md">
                         <q-input
                             v-model="form.name"
-                            label="Group Name"
+                            :label="__('Group Name')"
                             dense
                             outlined
                             color="primary"
@@ -87,7 +89,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <q-input
                             v-model="form.description"
-                            label="Description"
+                            :label="__('Description')"
                             dense
                             outlined
                             color="primary"
@@ -111,7 +113,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-btn
                         flat
                         color="grey-7"
-                        label="Cancel"
+                        :label="__('Cancel')"
                         @click="close"
                         class="q-mr-sm"
                         icon="mdi-close-circle"
@@ -119,7 +121,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     />
                     <q-btn
                         color="primary"
-                        label="Update Group"
+                        :label="__('Update Group')"
                         @click="updateGroup"
                         :loading="loading"
                         icon="mdi-content-save"

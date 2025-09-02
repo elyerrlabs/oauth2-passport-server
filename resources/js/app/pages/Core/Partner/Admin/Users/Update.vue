@@ -31,7 +31,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         class="update-commission-btn"
     >
         <q-tooltip transition-show="scale" transition-hide="scale">
-            Update Commission Rate
+            {{ __("Update Commission Rate") }}
         </q-tooltip>
     </q-btn>
 
@@ -52,7 +52,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         size="28px"
                         class="q-mr-md"
                     />
-                    <div class="text-h6">Update Commission Rate</div>
+                    <div class="text-h6">
+                        {{ __("Update Commission Rate") }}
+                    </div>
                 </div>
                 <q-space />
                 <q-btn
@@ -74,25 +76,26 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="current-commission-section text-center q-mb-lg"
                         >
                             <div class="text-caption text-grey-7">
-                                Current Commission Rate
+                                {{ __("Current Commission Rate") }}
                             </div>
                             <div class="text-h4 text-primary text-weight-bold">
                                 {{ item.commission_rate }}%
                             </div>
                             <div class="text-caption text-grey-7 q-mt-xs">
-                                for {{ item.name }} {{ item.last_name }}
+                                {{ __("for") }} {{ item.name }}
+                                {{ item.last_name }}
                             </div>
                         </div>
 
                         <!-- Commission Input -->
                         <div class="commission-input-section">
                             <div class="text-subtitle2 q-mb-sm">
-                                New Commission Rate
+                                {{ __("New Commission Rate") }}
                             </div>
 
                             <q-input
                                 v-model="form.commission_rate"
-                                label="Commission Percentage"
+                                :label="__('Commission Percentage')"
                                 outlined
                                 dense
                                 type="number"
@@ -116,7 +119,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     >
                                 </template>
                                 <template v-slot:hint>
-                                    Enter a value between 0 and 100
+                                    {{ __("Enter a value between 0 and 100") }}
                                 </template>
                             </q-input>
 
@@ -156,7 +159,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-card-actions class="dialog-actions" align="right">
                 <q-btn
                     flat
-                    label="Cancel"
+                    :label="__('Cancel')"
                     color="grey-7"
                     @click="dialog = false"
                     class="action-btn"
@@ -164,7 +167,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 />
                 <q-btn
                     flat
-                    label="Update Commission"
+                    :label="__('Update Commission')"
                     color="primary"
                     @click="update"
                     class="action-btn"

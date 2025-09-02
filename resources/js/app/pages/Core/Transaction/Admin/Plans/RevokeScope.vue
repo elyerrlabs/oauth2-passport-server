@@ -30,7 +30,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             size="sm"
             class="revoke-scope-btn shadow-3"
         >
-            <q-tooltip class="bg-warning">Revoke Scope</q-tooltip>
+            <q-tooltip class="bg-warning">{{ __("Revoke Scope") }}</q-tooltip>
         </q-btn>
 
         <!-- Revoke Confirmation Dialog -->
@@ -50,7 +50,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mr-sm"
                         />
                         <div class="text-h5 text-weight-bold">
-                            Revoke Access Scope
+                            {{ __("Revoke Access Scope") }}
                         </div>
                         <q-space />
                         <q-btn
@@ -75,20 +75,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mr-md"
                         />
                         <div class="text-h6 text-weight-medium">
-                            Confirm Scope Revocation
+                            {{ __("Confirm Scope Revocation") }}
                         </div>
                     </div>
 
                     <div class="text-body1 q-mb-lg">
-                        You are about to revoke the following access scope. This
-                        will remove permissions from the associated plan.
+                        {{
+                            __(
+                                "You are about to revoke the following access scope. This will remove permissions from the associated plan."
+                            )
+                        }}
                     </div>
 
                     <!-- Scope Details -->
                     <q-card flat bordered class="bg-grey-2 scope-details-card">
                         <q-card-section>
                             <div class="text-subtitle2 text-grey-8 q-mb-sm">
-                                Scope Details
+                                {{ __("Scope Details") }}
                             </div>
 
                             <div class="row items-center q-mb-xs">
@@ -97,7 +100,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="16px"
                                     class="q-mr-sm text-grey-6"
                                 />
-                                <span class="text-weight-medium">Role:</span>
+                                <span class="text-weight-medium">{{
+                                    __("Role:")
+                                }}</span>
                                 <span
                                     class="q-ml-sm text-warning text-weight-bold"
                                     >{{ item.role.name }}</span
@@ -110,7 +115,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="16px"
                                     class="q-mr-sm text-grey-6"
                                 />
-                                <span class="text-weight-medium">Service:</span>
+                                <span class="text-weight-medium">{{
+                                    __("Service:")
+                                }}</span>
                                 <span class="q-ml-sm">{{
                                     item.service.name
                                 }}</span>
@@ -122,7 +129,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="16px"
                                     class="q-mr-sm text-grey-6"
                                 />
-                                <span class="text-weight-medium">Group:</span>
+                                <span class="text-weight-medium">{{
+                                    __("Group:")
+                                }}</span>
                                 <span class="q-ml-sm">{{
                                     item.service.group.name
                                 }}</span>
@@ -137,9 +146,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="16px"
                                     class="q-mr-sm text-grey-6 q-mt-xs"
                                 />
-                                <span class="text-weight-medium"
-                                    >Description:</span
-                                >
+                                <span class="text-weight-medium">{{
+                                    __("Description:")
+                                }}</span>
                                 <span class="q-ml-sm text-caption">{{
                                     item.role.description
                                 }}</span>
@@ -153,15 +162,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="16px"
                             class="q-mr-xs"
                         />
-                        Users with this plan will lose access to these
-                        permissions immediately.
+                        {{
+                            __(
+                                "Users with this plan will lose access to these permissions immediately."
+                            )
+                        }}
                     </div>
                 </q-card-section>
 
                 <!-- Dialog Actions -->
                 <q-card-actions align="right" class="dialog-actions q-pa-md">
                     <q-btn
-                        label="Cancel"
+                        :label="__('Cancel')"
                         color="grey"
                         @click="dialog = false"
                         outline
@@ -169,7 +181,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-close"
                     />
                     <q-btn
-                        label="Revoke Scope"
+                        :label="__('Revoke Scope')"
                         color="warning"
                         @click="destroy"
                         class="action-btn"

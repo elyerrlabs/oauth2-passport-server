@@ -30,7 +30,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             size="md"
             class="floating-action-btn shadow-5"
         >
-            <q-tooltip class="bg-primary">Create New Plan</q-tooltip>
+            <q-tooltip class="bg-primary">{{
+                __("Create New Plan")
+            }}</q-tooltip>
         </q-btn>
 
         <!-- Create Plan Dialog -->
@@ -45,7 +47,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mr-sm"
                         />
                         <div class="text-h5 text-weight-bold">
-                            Create New Plan
+                            {{ __("Create New Plan") }}
                         </div>
                         <q-space />
                         <q-btn
@@ -70,7 +72,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     name="mdi-information"
                                     class="q-mr-sm"
                                 />
-                                Plan Information
+                                {{ __("Plan Information") }}
                             </div>
 
                             <div class="row q-col-gutter-md">
@@ -79,7 +81,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <q-input
                                         outlined
                                         v-model="form.name"
-                                        label="Plan Name *"
+                                        :label="__('Plan Name')"
                                         :error="!!errors.name"
                                         color="primary"
                                         class="custom-input"
@@ -102,12 +104,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             name="mdi-text"
                                             class="q-mr-xs"
                                         />
-                                        Description *
+                                        {{ __("Description") }}
                                     </div>
                                     <v-editor
                                         class="required"
                                         v-model="form.description"
-                                        label="Plan Description"
+                                        :label="__('Plan Description')"
                                     />
                                     <v-error :error="errors.description" />
                                 </div>
@@ -118,7 +120,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="section-container">
                             <div class="section-title">
                                 <q-icon name="mdi-cog" class="q-mr-sm" />
-                                Plan Settings
+                                {{ __("Plan Settings") }}
                             </div>
 
                             <div class="row q-col-gutter-md">
@@ -126,16 +128,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="col-12 col-md-6">
                                     <q-toggle
                                         v-model="form.active"
-                                        label="Active Plan"
+                                        :label="__('Active Plan')"
                                         color="positive"
                                         :error="!!errors.active"
                                         icon="mdi-check-circle"
                                         class="custom-toggle"
                                     >
-                                        <q-tooltip
-                                            >Make this plan available to
-                                            users</q-tooltip
-                                        >
+                                        <q-tooltip>{{
+                                            __(
+                                                "Make this plan available to users"
+                                            )
+                                        }}</q-tooltip>
                                     </q-toggle>
                                     <v-error :error="errors.active" />
                                 </div>
@@ -144,16 +147,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="col-12 col-md-6">
                                     <q-toggle
                                         v-model="form.bonus_enabled"
-                                        label="Enable Bonus"
+                                        :label="__('Enable Bonus')"
                                         color="accent"
                                         :error="!!errors.bonus_enabled"
                                         icon="mdi-gift"
                                         class="custom-toggle"
                                     >
-                                        <q-tooltip
-                                            >Add bonus days to this
-                                            plan</q-tooltip
-                                        >
+                                        <q-tooltip>{{
+                                            __("Add bonus days to this plan")
+                                        }}</q-tooltip>
                                     </q-toggle>
                                     <v-error :error="errors.bonus_enabled" />
                                 </div>
@@ -166,7 +168,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <q-input
                                         outlined
                                         v-model="form.bonus_duration"
-                                        label="Bonus Duration (Days) *"
+                                        :label="__('Bonus Duration (Days)')"
                                         type="number"
                                         :error="!!errors.bonus_duration"
                                         color="accent"
@@ -192,7 +194,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     name="mdi-currency-usd"
                                     class="q-mr-sm"
                                 />
-                                Pricing
+                                {{ __("Pricing") }}
                             </div>
                             <v-error :error="errors.prices" />
 
@@ -209,7 +211,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :options="billing_periods"
                                         emit-value
                                         map-options
-                                        label="Billing Period *"
+                                        :label="__('Billing Period')"
                                         :error="
                                             !!errors[
                                                 `prices.${index}.billing_period`
@@ -242,7 +244,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         v-model="price.currency"
                                         :options="currencies"
                                         emit-value
-                                        label="Currency *"
+                                        :label="__('Currency')"
                                         :error="
                                             !!errors[`prices.${index}.currency`]
                                         "
@@ -269,7 +271,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <q-input
                                         outlined
                                         v-model="price.amount"
-                                        label="Amount *"
+                                        :label="__('Amount')"
                                         mask="#.##"
                                         fill-mask="0"
                                         reverse-fill-mask
@@ -306,7 +308,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         @click="form.prices.splice(index, 1)"
                                         class="delete-btn"
                                     >
-                                        <q-tooltip>Remove this price</q-tooltip>
+                                        <q-tooltip>{{
+                                            __("Remove this price")
+                                        }}</q-tooltip>
                                     </q-btn>
                                 </div>
                             </div>
@@ -315,7 +319,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-btn
                                 color="primary"
                                 icon="mdi-plus"
-                                label="Add Price Option"
+                                :label="__('Add Price Option')"
                                 @click="addPrice"
                                 class="add-price-btn"
                                 outline
@@ -326,7 +330,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="section-container">
                             <div class="section-title">
                                 <q-icon name="mdi-key-chain" class="q-mr-sm" />
-                                Access Scopes
+                                {{ __("Access Scopes") }}
                             </div>
 
                             <!-- Service Selection -->
@@ -335,7 +339,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 v-model="service"
                                 :options="services"
                                 option-label="name"
-                                label="Select Service *"
+                                :label="__('Select Service')"
                                 color="teal"
                                 clearable
                                 :error="!!errors.scopes"
@@ -398,7 +402,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-caption text-weight-medium q-mb-sm"
                                 >
-                                    Available Roles for {{ service?.name }}
+                                    {{ __("Available Roles for") }}
+                                    {{ service?.name }}
                                 </div>
                                 <q-list class="scopes-list">
                                     <q-item
@@ -458,8 +463,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <q-tooltip>
                                                     {{
                                                         hasScope(item.id)
-                                                            ? "Remove scope"
-                                                            : "Add scope"
+                                                            ? __("Remove scope")
+                                                            : __("Add scope")
                                                     }}
                                                 </q-tooltip>
                                             </q-btn>
@@ -474,14 +479,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Dialog Actions -->
                 <q-card-actions align="right" class="dialog-actions q-pa-md">
                     <q-btn
-                        label="Cancel"
+                        :label="__('Cancel')"
                         color="grey"
                         @click="close"
                         outline
                         class="action-btn"
                     />
                     <q-btn
-                        label="Create Plan"
+                        :label="__('Create Plan')"
                         color="primary"
                         @click="create"
                         icon="mdi-check"

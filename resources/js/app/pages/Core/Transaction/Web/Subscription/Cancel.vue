@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <div>
         <q-btn
             outline
-            label="Cancel payment"
+            :label="__('Cancel payment')"
             icon="mdi-cart-remove"
             color="negative"
             size="sm"
@@ -33,25 +33,29 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <q-dialog v-model="dialog">
             <q-card>
                 <q-card-section class="row items-center q-pb-none">
-                    <div class="text-h6">Cancel operation</div>
+                    <div class="text-h6">{{ __("Cancel operation") }}</div>
                     <q-space />
                     <q-btn icon="close" flat round dense v-close-popup />
                 </q-card-section>
 
                 <q-card-section>
-                    Are you sure you want to cancel the process to payment?
+                    {{
+                        __(
+                            "Are you sure you want to cancel the process to payment?"
+                        )
+                    }}
                 </q-card-section>
                 <q-card-actions class="flex">
                     <q-btn
                         outline
-                        label="Accept"
+                        :label="__('Accept')"
                         color="positive"
                         @click="cancel"
                     />
                     <q-space></q-space>
                     <q-btn
                         outline
-                        label="Cancel"
+                        :label="__('Cancel')"
                         color="negative"
                         @click="dialog = false"
                     />

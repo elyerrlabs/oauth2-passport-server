@@ -35,11 +35,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-toolbar-title
                             class="text-h5 text-weight-bold text-grey-8"
                         >
-                            Update Password
+                            {{ __("Update Password") }}
                         </q-toolbar-title>
                     </div>
                     <div class="text-subtitle1 text-grey-7 q-mt-xs">
-                        Secure your account with a new password
+                        {{ __("Secure your account with a new password") }}
                     </div>
                 </div>
 
@@ -51,12 +51,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12">
                                 <div class="input-section">
                                     <div class="input-label">
-                                        Current Password
+                                        {{ __("Current Password") }}
                                     </div>
                                     <q-input
                                         filled
                                         v-model="form.current_password"
-                                        placeholder="Enter your current password"
+                                        :placeholder="
+                                            __('Enter your current password')
+                                        "
                                         :type="
                                             showCurrentPassword
                                                 ? 'text'
@@ -87,12 +89,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- New Password -->
                             <div class="col-12">
                                 <div class="input-section">
-                                    <div class="input-label">New Password</div>
+                                    <div class="input-label">
+                                        {{ __("New Password") }}
+                                    </div>
                                     <q-input
                                         filled
                                         type="password"
                                         v-model="form.password"
-                                        placeholder="Create a strong new password"
+                                        :placeholder="
+                                            __('Create a strong new password')
+                                        "
                                         :error="!!errors.password"
                                         class="password-input"
                                     >
@@ -116,7 +122,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         v-if="form.password"
                                     >
                                         <div class="text-caption text-grey-7">
-                                            Password strength:
+                                            {{ __("Password strength:") }}
                                         </div>
                                         <q-linear-progress
                                             :value="passwordStrength"
@@ -139,13 +145,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="col-12">
                                 <div class="input-section">
                                     <div class="input-label">
-                                        Confirm Password
+                                        {{ __("Confirm Password") }}
                                     </div>
                                     <q-input
                                         filled
                                         type="password"
                                         v-model="form.password_confirmation"
-                                        placeholder="Confirm your new password"
+                                        :placeholder="
+                                            __('Confirm your new password')
+                                        "
                                         :error="!!errors.password_confirmation"
                                         class="password-input"
                                     >
@@ -194,8 +202,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         >
                                             {{
                                                 passwordsMatch
-                                                    ? "Passwords match"
-                                                    : "Passwords do not match"
+                                                    ? __("Passwords match")
+                                                    : __(
+                                                          "Passwords do not match"
+                                                      )
                                             }}
                                         </span>
                                     </div>
@@ -209,7 +219,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Submit Button -->
                         <div class="action-buttons q-mt-xl">
                             <q-btn
-                                label="Update Password"
+                                :label="__('Update Password')"
                                 color="primary"
                                 unelevated
                                 no-caps
@@ -219,7 +229,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             >
                                 <template v-slot:loading>
                                     <q-spinner-hourglass class="on-left" />
-                                    Updating...
+                                    {{ __("Updating...") }}
                                 </template>
                             </q-btn>
                         </div>
@@ -231,7 +241,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-card-section>
                         <div class="text-h6 text-weight-medium text-grey-8">
                             <q-icon name="mdi-shield-check" class="q-mr-sm" />
-                            Password Security Tips
+                            {{ __("Password Security Tips") }}
                         </div>
                         <q-list dense class="q-mt-md">
                             <q-item>
@@ -241,9 +251,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         color="positive"
                                     />
                                 </q-item-section>
-                                <q-item-section
-                                    >Use at least 8 characters</q-item-section
-                                >
+                                <q-item-section>{{
+                                    __("Use at least 8 characters")
+                                }}</q-item-section>
                             </q-item>
                             <q-item>
                                 <q-item-section avatar>
@@ -252,10 +262,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         color="positive"
                                     />
                                 </q-item-section>
-                                <q-item-section
-                                    >Include uppercase and lowercase
-                                    letters</q-item-section
-                                >
+                                <q-item-section>{{
+                                    __(
+                                        "Include uppercase and lowercase letters"
+                                    )
+                                }}</q-item-section>
                             </q-item>
                             <q-item>
                                 <q-item-section avatar>
@@ -264,10 +275,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         color="positive"
                                     />
                                 </q-item-section>
-                                <q-item-section
-                                    >Add numbers and special
-                                    characters</q-item-section
-                                >
+                                <q-item-section>{{
+                                    __("Add numbers and special characters")
+                                }}</q-item-section>
                             </q-item>
                             <q-item>
                                 <q-item-section avatar>
@@ -276,10 +286,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         color="positive"
                                     />
                                 </q-item-section>
-                                <q-item-section
-                                    >Avoid common words or personal
-                                    information</q-item-section
-                                >
+                                <q-item-section>{{
+                                    __(
+                                        "Avoid common words or personal information"
+                                    )
+                                }}</q-item-section>
                             </q-item>
                         </q-list>
                     </q-card-section>

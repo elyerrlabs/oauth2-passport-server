@@ -51,7 +51,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             color="primary"
                             class="header-icon"
                         />
-                        <h6 class="dialog-title">Product Manager</h6>
+                        <h6 class="dialog-title">
+                            {{ __("Product Manager") }}
+                        </h6>
                     </div>
                     <q-btn
                         flat
@@ -77,7 +79,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             fill-input
                             input-debounce="0"
                             :options="products"
-                            label="Product"
+                            :label="__('Product')"
                             @filter="filterProduct"
                             @input-value="setProduct"
                             :error="!!errors.name"
@@ -94,7 +96,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <template v-slot:no-option>
                                 <q-item>
                                     <q-item-section class="text-grey">
-                                        No results found
+                                        {{ __("No results found") }}
                                     </q-item-section>
                                 </q-item>
                             </template>
@@ -106,14 +108,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-checkbox
                                 v-model="form.published"
                                 :val="false"
-                                label="Published"
+                                :label="__('Published')"
                                 color="positive"
                                 class="form-toggle"
                             />
                             <q-checkbox
                                 v-model="form.featured"
                                 :val="false"
-                                label="Featured"
+                                :label="__('Featured')"
                                 color="teal"
                                 class="form-toggle"
                             />
@@ -129,7 +131,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             fill-input
                             input-debounce="0"
                             :options="categories"
-                            label="Category"
+                            :label="__('Category')"
                             @filter="filterCategories"
                             @input-value="setCategory"
                             :error="!!errors.category"
@@ -146,7 +148,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <template v-slot:no-option>
                                 <q-item>
                                     <q-item-section class="text-grey">
-                                        No results found
+                                        {{ __("No results found") }}
                                     </q-item-section>
                                 </q-item>
                             </template>
@@ -157,9 +159,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             dense
                             outlined
                             v-model="form.icon"
-                            label="Icon"
+                            :label="__('Icon')"
                             :error="!!errors.icon"
-                            hint="Choose a Material Design icon name"
+                            :hint="__('Choose a Material Design icon name')"
                             bottom-slots
                         >
                             <template v-slot:prepend>
@@ -179,7 +181,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     icon="mdi-link-variant"
                                     color="primary"
                                     @click="openIconLibrary"
-                                    :title="'View icon library'"
+                                    :title="__('View icon library')"
                                     class="icon-library-btn"
                                 />
                             </template>
@@ -191,7 +193,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             v-model="form.currency"
                             :options="currencies"
                             emit-value
-                            label="Currency"
+                            :label="__('Currency')"
                             :error="!!errors.currency"
                         >
                             <template v-slot:prepend>
@@ -208,7 +210,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-input
                             class="col-12 col-md-6 col-lg-4 col-xl-3 form-field"
                             v-model="form.price"
-                            label="Price"
+                            :label="__('Price')"
                             dense
                             :error="!!errors.price"
                             mask="#.##"
@@ -226,7 +228,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-input
                             class="col-12 col-md-4 col-lg-4 col-xl-3 form-field"
                             v-model="current_stock"
-                            label="Stock"
+                            :label="__('Stock')"
                             dense
                             type="number"
                             :min="0"
@@ -244,7 +246,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-input
                             class="col-12 col-md-4 col-xl-3 form-field"
                             v-model.number="update_stock"
-                            label="Update Stock"
+                            :label="__('Update Stock')"
                             type="number"
                             :min="0"
                             dense
@@ -257,7 +259,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <q-checkbox
                             v-model="decrease"
-                            label="Decrease stock"
+                            :label="__('Decrease stock')"
                             class="col-12 col-md-4 col-xl-3 form-toggle"
                             color="negative"
                             v-if="form?.id ? true : false"
@@ -267,14 +269,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-separator />
                             <div class="section-title">
                                 <q-icon name="mdi-text" color="primary" />
-                                <span>Descriptions</span>
+                                <span>{{ __("Descriptions") }}</span>
                             </div>
                         </div>
 
                         <div class="col-12 editor-field">
                             <v-editor
                                 v-model="form.short_description"
-                                label="Short description"
+                                :label="__('Short description')"
                             />
                             <v-error :error="errors.short_description" />
                         </div>
@@ -282,7 +284,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="col-12 editor-field">
                             <v-editor
                                 v-model="form.description"
-                                label="Description"
+                                :label="__('Description')"
                             />
                             <v-error :error="errors.description" />
                         </div>
@@ -290,7 +292,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="col-12 editor-field">
                             <v-editor
                                 v-model="form.specification"
-                                label="Specification"
+                                :label="__('Specification')"
                             />
                             <v-error :error="errors.specification" />
                         </div>
@@ -302,7 +304,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     name="mdi-tag-multiple"
                                     color="primary"
                                 />
-                                <span>Attributes & Tags</span>
+                                <span>{{ __("Attributes & Tags") }}</span>
                             </div>
                         </div>
 
@@ -323,7 +325,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     name="mdi-image-multiple"
                                     color="primary"
                                 />
-                                <span>Product Images</span>
+                                <span>{{ __("Product Images") }}</span>
                             </div>
                         </div>
 
@@ -347,14 +349,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-btn
                         outline
                         color="grey-7"
-                        label="Close"
+                        :label="__('Close')"
                         @click="close"
                         class="action-btn"
                     />
                     <q-btn
                         unelevated
                         color="positive"
-                        label="Accept"
+                        :label="__('Accept')"
                         @click="create"
                         class="action-btn submit-btn"
                     />

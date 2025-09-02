@@ -4,7 +4,9 @@
             <q-card-section class="q-pa-none q-mb-md">
                 <div class="row items-center q-gutter-sm">
                     <q-icon name="cloud_upload" color="primary" size="md" />
-                    <div class="text-h6 text-primary">Upload files</div>
+                    <div class="text-h6 text-primary">
+                        {{ __("Upload files") }}
+                    </div>
                 </div>
             </q-card-section>
 
@@ -23,7 +25,7 @@
                 <q-btn
                     color="primary"
                     icon="attach_file"
-                    label="Select files"
+                    :label="__('Select files')"
                     @click="triggerInput"
                     class="q-mb-md"
                 />
@@ -49,7 +51,7 @@
                                     <div
                                         class="absolute-full flex flex-center bg-negative text-white"
                                     >
-                                        Error loading image
+                                        {{ __("Error loading image") }}
                                     </div>
                                 </template>
                             </q-img>
@@ -64,7 +66,7 @@
                                     @click="removeFile(index)"
                                     size="sm"
                                 />
-                                <q-tooltip>Delete image</q-tooltip>
+                                <q-tooltip>{{ __("Delete image") }}</q-tooltip>
                             </q-card-actions>
                         </q-card>
                     </div>
@@ -111,7 +113,7 @@
                     class="text-center q-pa-md text-grey-6"
                 >
                     <q-icon name="folder_open" size="lg" />
-                    <div class="q-mt-sm">No files selected</div>
+                    <div class="q-mt-sm">{{ __("No files selected") }}</div>
                 </div>
             </q-card-section>
 

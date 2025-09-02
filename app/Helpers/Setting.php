@@ -194,3 +194,27 @@ if (!function_exists('resolveInertiaRoutes')) {
 
     }
 }
+
+
+if (!function_exists('setLanguage')) {
+
+    /**
+     * Set  the application lang
+     * @param string $locale
+     * @return Illuminate\Http\JsonResponse
+     */
+    function setLanguage(string $locale = null)
+    {
+        $lang = $locale ?? substr(request()->header('Accept-Language'), 0, 2);
+
+        $path = base_path('lang') . '/' . $lang . '.json';
+
+        if (!file_exists($path)) {
+            $path = base_path('lang') . '/en.json';
+        }
+
+        $translations = json_decode(file_get_contents($path));
+
+        return response()->json($translations);
+    }
+}

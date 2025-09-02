@@ -20,7 +20,7 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="row q-gutter-xs">    
+    <div class="row q-gutter-xs">
         <q-btn
             :color="item.disabled ? 'positive' : 'negative'"
             outline
@@ -34,7 +34,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 transition-hide="scale"
                 :class="item.disabled ? 'bg-positive' : 'bg-negative'"
             >
-                {{ item.disabled ? "Enable this user" : "Disable this user" }}
+                {{
+                    item.disabled
+                        ? __("Enable this user")
+                        : __("Disable this user")
+                }}
             </q-tooltip>
         </q-btn>
 
@@ -67,15 +71,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="text-h5">
                                 {{
                                     item.disabled
-                                        ? "Enable User"
-                                        : "Disable User"
+                                        ? __("Enable User")
+                                        : __("Disable User")
                                 }}
                             </div>
                             <div class="text-caption">
                                 {{
                                     item.disabled
-                                        ? "Activate user account"
-                                        : "Temporarily disable user account"
+                                        ? __("Activate user account")
+                                        : __("Temporarily disable user account")
                                 }}
                             </div>
                         </q-card-section>
@@ -122,8 +126,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <span class="text-body1">
                                     {{
                                         item.disabled
-                                            ? "This user account will be activated and granted access to the system."
-                                            : "This user account will be disabled and access will be temporarily restricted."
+                                            ? __(
+                                                  "This user account will be activated and granted access to the system."
+                                              )
+                                            : __(
+                                                  "This user account will be disabled and access will be temporarily restricted."
+                                              )
                                     }}
                                 </span>
                             </div>
@@ -140,8 +148,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="q-mr-sm"
                                 />
                                 <span class="text-caption">
-                                    The user will not be able to log in until
-                                    the account is re-enabled.
+                                    {{
+                                        __(
+                                            "The user will not be able to log in until the account is re-enabled."
+                                        )
+                                    }}
                                 </span>
                             </div>
                         </div>
@@ -149,7 +160,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <q-card-actions align="center" class="q-pa-lg">
                         <q-btn
-                            label="Cancel"
+                            :label="__('Cancel')"
                             color="grey-7"
                             @click="dialog = false"
                             flat
@@ -158,7 +169,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         />
                         <q-btn
                             :label="
-                                item.disabled ? 'Enable User' : 'Disable User'
+                                item.disabled
+                                    ? __('Enable User')
+                                    : __('Disable User')
                             "
                             :color="item.disabled ? 'positive' : 'negative'"
                             @click="action(item)"

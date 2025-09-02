@@ -30,14 +30,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         class="q-mr-xs"
         :class="{ 'text-white': !scope }"
     >
-        <span v-if="!scope">Add new scope</span>
+        <span v-if="!scope">{{ __("Add new scope") }}</span>
         <q-tooltip
             v-if="scope"
             transition-show="scale"
             transition-hide="scale"
             class="bg-primary"
         >
-            Update scope
+            {{ __("Update scope") }}
         </q-tooltip>
     </q-btn>
 
@@ -61,10 +61,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mb-sm"
                         />
                         <div class="text-h6">
-                            {{ scope ? "Update Scope" : "Add New Scope" }}
+                            {{
+                                scope ? __("Update Scope") : __("Add New Scope")
+                            }}
                         </div>
                         <div class="text-caption">
-                            Manage access permissions for this service
+                            {{
+                                __("Manage access permissions for this service")
+                            }}
                         </div>
                     </q-card-section>
                 </div>
@@ -73,7 +77,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="q-gutter-y-md">
                         <q-select
                             v-model="form.role_id"
-                            label="Role"
+                            :label="__('Role')"
                             :options="roles"
                             option-label="name"
                             option-value="id"
@@ -84,7 +88,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             map-options
                             :error="!!errors.role_id"
                             :loading="loadingRoles"
-                            hint="Select the role to assign permissions"
+                            :hint="__('Select the role to assign permissions')"
                         >
                             <template v-slot:prepend>
                                 <q-icon name="mdi-account-key" />
@@ -95,7 +99,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <template v-slot:no-option>
                                 <q-item>
                                     <q-item-section class="text-grey">
-                                        No roles available
+                                        {{ __("No roles available") }}
                                     </q-item-section>
                                 </q-item>
                             </template>
@@ -103,7 +107,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <div class="permissions-section">
                             <div class="text-subtitle2 text-grey-8 q-mb-sm">
-                                Permissions
+                                {{ __("Permissions") }}
                             </div>
 
                             <q-item class="permission-item q-pa-none q-mb-sm">
@@ -120,12 +124,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </q-checkbox>
                                 </q-item-section>
                                 <q-item-section>
-                                    <q-item-label class="text-weight-medium"
-                                        >API Key Access</q-item-label
-                                    >
+                                    <q-item-label class="text-weight-medium">
+                                        {{ __("API Key Access") }}
+                                    </q-item-label>
                                     <q-item-label caption class="text-grey-7">
-                                        Allow access via API keys for automated
-                                        systems
+                                        {{
+                                            __(
+                                                "Allow access via API keys for automated systems"
+                                            )
+                                        }}
                                     </q-item-label>
                                 </q-item-section>
                             </q-item>
@@ -144,11 +151,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </q-checkbox>
                                 </q-item-section>
                                 <q-item-section>
-                                    <q-item-label class="text-weight-medium"
-                                        >Active</q-item-label
-                                    >
+                                    <q-item-label class="text-weight-medium">
+                                        {{ __("Active") }}
+                                    </q-item-label>
                                     <q-item-label caption class="text-grey-7">
-                                        Enable this scope for immediate use
+                                        {{
+                                            __(
+                                                "Enable this scope for immediate use"
+                                            )
+                                        }}
                                     </q-item-label>
                                 </q-item-section>
                             </q-item>
@@ -167,12 +178,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </q-checkbox>
                                 </q-item-section>
                                 <q-item-section>
-                                    <q-item-label class="text-weight-medium"
-                                        >Public Access</q-item-label
-                                    >
+                                    <q-item-label class="text-weight-medium">
+                                        {{ __("Public Access") }}
+                                    </q-item-label>
                                     <q-item-label caption class="text-grey-7">
-                                        Make available to all users without
-                                        authentication
+                                        {{
+                                            __(
+                                                "Make available to all users without authentication"
+                                            )
+                                        }}
                                     </q-item-label>
                                 </q-item-section>
                             </q-item>
@@ -184,14 +198,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-btn
                         flat
                         color="grey-7"
-                        label="Cancel"
+                        :label="__('Cancel')"
                         @click="dialog = false"
                         class="q-mr-sm"
                         :disable="loading"
                     />
                     <q-btn
                         color="primary"
-                        :label="scope ? 'Update Scope' : 'Add Scope'"
+                        :label="scope ? __('Update Scope') : __('Add Scope')"
                         @click="addScopes"
                         :loading="loading"
                         :icon="scope ? 'mdi-update' : 'mdi-plus'"
@@ -273,12 +287,15 @@ export default {
                 );
 
                 if (res.status == 200) {
-                    this.roles = res.data.data;
+                    this.roles = res.data.data.map((item) => ({
+                        ...item,
+                        name: this.__(item.name),
+                    }));
                 }
             } catch (error) {
                 this.$q.notify({
                     type: "negative",
-                    message: "Failed to load roles",
+                    message: this.__("Failed to load roles"),
                     position: "top",
                     icon: "mdi-alert-circle",
                     timeout: 3000,
@@ -299,8 +316,8 @@ export default {
                     this.$q.notify({
                         type: "positive",
                         message: this.scope
-                            ? "Scope updated successfully"
-                            : "Scope added successfully",
+                            ? this.__("Scope updated successfully")
+                            : this.__("Scope added successfully"),
                         position: "top",
                         icon: "mdi-check-circle",
                         timeout: 3000,
@@ -317,7 +334,7 @@ export default {
                     this.errors = error.response.data.errors;
                     this.$q.notify({
                         type: "negative",
-                        message: "Please check the form for errors",
+                        message: this.__("Please check the form for errors"),
                         position: "top",
                         icon: "mdi-alert-circle",
                         timeout: 3000,
@@ -327,7 +344,7 @@ export default {
                         type: "negative",
                         message:
                             error.response?.data?.message ||
-                            "Error saving scope",
+                            this.__("Error saving scope"),
                         position: "top",
                         icon: "mdi-alert-circle",
                         timeout: 3000,

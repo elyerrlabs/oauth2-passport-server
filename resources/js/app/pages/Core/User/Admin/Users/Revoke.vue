@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 transition-hide="scale"
                 class="bg-primary text-white"
             >
-                View assigned scopes
+                {{ __("View assigned scopes") }}
             </q-tooltip>
         </q-btn>
 
@@ -53,10 +53,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="row items-center justify-between">
                                 <div>
                                     <div class="text-h4 text-weight-bold">
-                                        Assigned Access Scopes
+                                        {{ __("Assigned Access Scopes") }}
                                     </div>
                                     <div class="text-subtitle1">
-                                        For user:
+                                        {{ __("For user:") }}
                                         <span class="text-weight-bold"
                                             >{{ item.name }}
                                             {{ item.last_name }}</span
@@ -86,11 +86,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="text-center q-pa-xl" v-if="loading">
                             <q-spinner-gears size="xl" color="primary" />
                             <div class="text-h6 q-mt-md text-primary">
-                                Loading assigned scopes...
+                                {{ __("Loading assigned scopes...") }}
                             </div>
                             <div class="text-caption text-grey-6">
-                                Please wait while we fetch the user's
-                                permissions
+                                {{
+                                    __(
+                                        "Please wait while we fetch the user's permissions"
+                                    )
+                                }}
                             </div>
                         </div>
 
@@ -105,11 +108,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 color="grey-4"
                             />
                             <div class="text-h6 text-grey-6 q-mt-md">
-                                No scopes assigned
+                                {{ __("No scopes assigned") }}
                             </div>
                             <div class="text-grey-5">
-                                This user doesn't have any access permissions
-                                yet
+                                {{
+                                    __(
+                                        "This user doesn't have any access permissions yet"
+                                    )
+                                }}
                             </div>
                         </div>
 
@@ -192,7 +198,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     item.scope
                                                                         .role
                                                                         .description ||
-                                                                    "No description available"
+                                                                    __(
+                                                                        "No description available"
+                                                                    )
                                                                 }}
                                                             </div>
                                                         </div>
@@ -210,10 +218,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 size="sm"
                                                                 class="delete-btn"
                                                             >
-                                                                <q-tooltip
-                                                                    >Revoke this
-                                                                    permission</q-tooltip
-                                                                >
+                                                                <q-tooltip>{{
+                                                                    __(
+                                                                        "Revoke this permission"
+                                                                    )
+                                                                }}</q-tooltip>
                                                             </q-btn>
                                                         </div>
                                                     </div>
@@ -237,12 +246,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             "
                                                             class="q-pa-xs"
                                                         >
-                                                            API Key:
+                                                            {{ __("API Key:") }}
                                                             {{
                                                                 item.scope
                                                                     .api_key
-                                                                    ? "Yes"
-                                                                    : "No"
+                                                                    ? __("Yes")
+                                                                    : __("No")
                                                             }}
                                                         </q-badge>
                                                         <q-badge
@@ -260,12 +269,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             "
                                                             class="q-pa-xs"
                                                         >
-                                                            Active:
+                                                            {{ __("Active:") }}
                                                             {{
                                                                 item.scope
                                                                     .active
-                                                                    ? "Yes"
-                                                                    : "No"
+                                                                    ? __("Yes")
+                                                                    : __("No")
                                                             }}
                                                         </q-badge>
                                                         <q-badge
@@ -283,12 +292,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             "
                                                             class="q-pa-xs"
                                                         >
-                                                            Public:
+                                                            {{ __("Public:") }}
                                                             {{
                                                                 item.scope
                                                                     .public
-                                                                    ? "Yes"
-                                                                    : "No"
+                                                                    ? __("Yes")
+                                                                    : __("No")
                                                             }}
                                                         </q-badge>
                                                     </div>
@@ -304,7 +313,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Footer -->
                     <q-card-actions align="right" class="q-pa-lg">
                         <q-btn
-                            label="Close"
+                            :label="__('Close')"
                             color="primary"
                             @click="dialog = false"
                             unelevated
@@ -326,20 +335,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="lg"
                                 class="q-mb-sm"
                             />
-                            <div class="text-h6">Revoke Permission</div>
+                            <div class="text-h6">
+                                {{ __("Revoke Permission") }}
+                            </div>
                             <div class="text-caption">
-                                This action cannot be undone
+                                {{ __("This action cannot be undone") }}
                             </div>
                         </q-card-section>
                     </div>
 
                     <q-card-section class="text-center q-pt-lg">
                         <div class="text-body1 q-mb-md">
-                            Are you sure you want to revoke the
+                            {{ __("Are you sure you want to revoke the") }}
                             <span class="text-weight-bold text-primary"
                                 >"{{ selected_scope.scope?.role?.name }}"</span
                             >
-                            permission from this user?
+                            {{ __("permission from this user?") }}
                         </div>
                         <div
                             class="bg-red-1 text-red-8 rounded-borders q-pa-md"
@@ -350,17 +361,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                     class="q-mr-sm"
                                 />
-                                <span class="text-caption"
-                                    >The user will lose access to associated
-                                    resources</span
-                                >
+                                <span class="text-caption">{{
+                                    __(
+                                        "The user will lose access to associated resources"
+                                    )
+                                }}</span>
                             </div>
                         </div>
                     </q-card-section>
 
                     <q-card-actions align="center" class="q-pa-lg">
                         <q-btn
-                            label="Cancel"
+                            :label="__('Cancel')"
                             color="grey-7"
                             v-close-popup
                             flat
@@ -368,7 +380,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             icon="mdi-close-circle"
                         />
                         <q-btn
-                            label="Revoke Permission"
+                            :label="__('Revoke Permission')"
                             color="negative"
                             @click="revoke"
                             unelevated

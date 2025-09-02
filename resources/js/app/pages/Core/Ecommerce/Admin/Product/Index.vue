@@ -26,10 +26,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row items-center justify-between">
                 <div class="col">
                     <div class="text-h4 text-weight-bold">
-                        Products Management
+                        {{ __("Products Management") }}
                     </div>
                     <div class="text-subtitle1 opacity-70">
-                        Manage your product inventory and catalog
+                        {{ __("Manage your product inventory and catalog") }}
                     </div>
                 </div>
                 <div class="col-auto">
@@ -66,7 +66,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 icon="mdi-help-circle"
                                 @click.stop="showFilterHelp = true"
                             >
-                                <q-tooltip>Filter Help</q-tooltip>
+                                <q-tooltip>{{ __("Filter Help") }}</q-tooltip>
                             </q-btn>
                         </q-item-section>
                     </template>
@@ -80,7 +80,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-input
                                     filled
                                     v-model="search.name"
-                                    label="Product Name"
+                                    :label="__('Product Name')"
                                     clearable
                                     @update:model-value="getProducts"
                                     class="filter-input"
@@ -95,7 +95,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-input
                                     filled
                                     v-model="search.category"
-                                    label="Category"
+                                    :label="__('Category')"
                                     clearable
                                     @update:model-value="getProducts"
                                     class="filter-input"
@@ -110,7 +110,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-input
                                     filled
                                     v-model="search.model"
-                                    label="Model"
+                                    :label="__('Model')"
                                     clearable
                                     @update:model-value="getProducts"
                                     class="filter-input"
@@ -125,7 +125,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-input
                                     filled
                                     v-model="search.family"
-                                    label="Family"
+                                    :label="__('Family')"
                                     clearable
                                     @update:model-value="getProducts"
                                     class="filter-input"
@@ -139,7 +139,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Stock Filter -->
                             <div class="col-12 col-md-6">
                                 <div class="text-caption text-grey-7 q-pb-xs">
-                                    Stock Level
+                                    {{ __("Stock Level") }}
                                 </div>
                                 <div
                                     class="row no-wrap items-center stock-filter"
@@ -158,13 +158,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         dense
                                         v-model="search.stock"
                                         type="number"
-                                        placeholder="Quantity"
+                                        :placeholder="__('Quantity')"
                                         clearable
                                         @update:model-value="getProducts"
                                         class="flex-grow-1"
                                         :rules="[
                                             (val) =>
-                                                val >= 0 || 'Must be positive',
+                                                val >= 0 ||
+                                                __('Must be positive'),
                                         ]"
                                     >
                                         <template v-slot:prepend>
@@ -179,7 +180,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Price Filter -->
                             <div class="col-12 col-md-6">
                                 <div class="text-caption text-grey-7 q-pb-xs">
-                                    Price Range
+                                    {{ __("Price Range") }}
                                 </div>
                                 <div
                                     class="row no-wrap items-center price-filter"
@@ -197,7 +198,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         filled
                                         dense
                                         v-model="search.price"
-                                        placeholder="Amount"
+                                        :placeholder="__('Amount')"
                                         clearable
                                         @update:model-value="getProducts"
                                         class="flex-grow-1"
@@ -206,7 +207,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         reverse-fill-mask
                                         :rules="[
                                             (val) =>
-                                                val >= 0 || 'Must be positive',
+                                                val >= 0 ||
+                                                __('Must be positive'),
                                         ]"
                                     >
                                         <template v-slot:prepend>
@@ -219,7 +221,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Active Filters -->
                             <div class="col-12" v-if="activeFilterCount > 0">
                                 <div class="text-caption text-grey-7 q-pb-xs">
-                                    Active Filters
+                                    {{ __("Active Filters") }}
                                 </div>
                                 <div class="row q-gutter-sm">
                                     <q-badge
@@ -246,7 +248,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-btn
                                     color="primary"
                                     outline
-                                    label="Reset All Filters"
+                                    :label="__('Reset All Filters')"
                                     icon="mdi-refresh"
                                     @click="resetFilters"
                                     class="action-btn"
@@ -266,13 +268,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="row items-center justify-between">
                         <div class="col">
                             <div class="text-h6 text-weight-bold">
-                                Product Inventory
+                                {{ __("Product Inventory") }}
                             </div>
                             <div
                                 class="text-caption text-grey-6"
                                 v-if="!loading"
                             >
-                                Managing {{ pagination.rowsNumber }} products
+                                {{ __("Managing") }}
+                                {{ pagination.rowsNumber }} {{ __("products") }}
                             </div>
                         </div>
                         <div class="col-auto row items-center q-gutter-sm">
@@ -283,7 +286,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 filled
                                 emit-value
                                 map-options
-                                label="Items per page"
+                                :label="__('Items per page')"
                                 @update:model-value="getProducts"
                                 class="per-page-select"
                             />
@@ -295,7 +298,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 @click="getProducts"
                                 :loading="loading"
                             >
-                                <q-tooltip>Refresh Data</q-tooltip>
+                                <q-tooltip>{{ __("Refresh Data") }}</q-tooltip>
                             </q-btn>
                         </div>
                     </div>
@@ -379,7 +382,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="14px"
                                     class="q-mr-xs"
                                 />
-                                {{ props.row.published ? "Yes" : "No" }}
+                                {{ props.row.published ? __("Yes") : __("No") }}
                             </q-badge>
                         </q-td>
                     </template>
@@ -404,7 +407,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="14px"
                                     class="q-mr-xs"
                                 />
-                                {{ props.row.featured ? "Yes" : "No" }}
+                                {{ props.row.featured ? __("Yes") : __("No") }}
                             </q-badge>
                         </q-td>
                     </template>
@@ -416,7 +419,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <v-create
                                     :item="props.row"
                                     @created="getProducts"
-                                    title="Edit"
+                                    :title="__('Edit')"
                                     class="action-btn"
                                     :searchable="props.row.name"
                                     color="primary"
@@ -456,7 +459,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             "
                                             class="stock-badge-mobile"
                                         >
-                                            {{ props.row.stock }} in stock
+                                            {{ props.row.stock }}
+                                            {{ __("in stock") }}
                                         </q-badge>
                                     </div>
                                 </q-card-section>
@@ -467,7 +471,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div class="row q-col-gutter-sm">
                                         <div class="col-6">
                                             <div class="text-caption">
-                                                Price
+                                                {{ __("Price") }}
                                             </div>
                                             <div
                                                 class="text-weight-bold text-primary"
@@ -478,7 +482,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                         <div class="col-6">
                                             <div class="text-caption">
-                                                Status
+                                                {{ __("Status") }}
                                             </div>
                                             <div class="row items-center">
                                                 <q-icon
@@ -498,8 +502,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <span class="text-caption">
                                                     {{
                                                         props.row.published
-                                                            ? "Published"
-                                                            : "Hidden"
+                                                            ? __("Published")
+                                                            : __("Hidden")
                                                     }}
                                                 </span>
                                             </div>
@@ -513,9 +517,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <v-create
                                         :item="props.row"
                                         @created="getProducts"
-                                        title="Edit"
+                                        :title="__('Edit')"
                                         color="primary"
-                                        icon="mdi-pencil" 
+                                        icon="mdi-pencil"
                                     />
                                     <v-delete
                                         :item="props.row"
@@ -539,19 +543,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     color="grey-4"
                                 />
                                 <div class="text-h6 q-mt-md">
-                                    No products found
+                                    {{ __("No products found") }}
                                 </div>
                                 <div class="text-caption q-mb-md">
                                     {{
                                         activeFilterCount > 0
-                                            ? "Try adjusting your filters"
-                                            : "Get started by creating your first product"
+                                            ? __("Try adjusting your filters")
+                                            : __(
+                                                  "Get started by creating your first product"
+                                              )
                                     }}
                                 </div>
                                 <q-btn
                                     v-if="activeFilterCount > 0"
                                     color="primary"
-                                    label="Reset Filters"
+                                    :label="__('Reset Filters')"
                                     @click="resetFilters"
                                     icon="mdi-filter-remove"
                                 />
@@ -564,7 +570,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <template v-slot:loading>
                         <q-inner-loading showing color="primary">
                             <q-spinner-gears size="50px" color="primary" />
-                            <div class="q-mt-md">Loading products...</div>
+                            <div class="q-mt-md">
+                                {{ __("Loading products...") }}
+                            </div>
                         </q-inner-loading>
                     </template>
                 </q-table>
@@ -574,8 +582,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="row justify-between items-center q-px-lg q-py-md pagination-section"
                 >
                     <div class="text-caption text-grey-6">
-                        Showing {{ paginationStart }} to {{ paginationEnd }} of
-                        {{ pagination.rowsNumber }} products
+                        {{ __("Showing") }} {{ paginationStart }}
+                        {{ __("to") }} {{ paginationEnd }} {{ __("of") }}
+                        {{ pagination.rowsNumber }} {{ __("products") }}
                     </div>
                     <q-pagination
                         v-model="search.page"
@@ -595,7 +604,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-dialog v-model="showFilterHelp">
                 <q-card class="help-dialog rounded-borders">
                     <q-card-section class="dialog-header bg-primary text-white">
-                        <div class="text-h6">Filter Help Guide</div>
+                        <div class="text-h6">{{ __("Filter Help Guide") }}</div>
                     </q-card-section>
 
                     <q-card-section class="q-pt-lg">
@@ -605,38 +614,42 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="text-subtitle2 text-weight-medium q-mb-xs"
                                 >
                                     <q-icon name="mdi-filter" class="q-mr-sm" />
-                                    Filter Operators
+                                    {{ __("Filter Operators") }}
                                 </div>
                                 <div class="q-pl-md">
                                     <div class="row items-center q-mb-xs">
                                         <q-badge color="primary" class="q-mr-sm"
                                             >=</q-badge
                                         >
-                                        <span>Equal to</span>
+                                        <span>{{ __("Equal to") }}</span>
                                     </div>
                                     <div class="row items-center q-mb-xs">
                                         <q-badge color="primary" class="q-mr-sm"
                                             >></q-badge
                                         >
-                                        <span>Greater than</span>
+                                        <span>{{ __("Greater than") }}</span>
                                     </div>
                                     <div class="row items-center q-mb-xs">
                                         <q-badge color="primary" class="q-mr-sm"
                                             >>=</q-badge
                                         >
-                                        <span>Greater than or equal to</span>
+                                        <span>{{
+                                            __("Greater than or equal to")
+                                        }}</span>
                                     </div>
                                     <div class="row items-center q-mb-xs">
                                         <q-badge color="primary" class="q-mr-sm"
                                             ><</q-badge
                                         >
-                                        <span>Less than</span>
+                                        <span>{{ __("Less than") }}</span>
                                     </div>
                                     <div class="row items-center">
                                         <q-badge color="primary" class="q-mr-sm"
                                             ><=</q-badge
                                         >
-                                        <span>Less than or equal to</span>
+                                        <span>{{
+                                            __("Less than or equal to")
+                                        }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -651,18 +664,36 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         name="mdi-information"
                                         class="q-mr-sm"
                                     />
-                                    Tips & Notes
+                                    {{ __("Tips & Notes") }}
                                 </div>
                                 <ul class="q-pl-md">
-                                    <li>Text fields support partial matches</li>
-                                    <li>Empty filter fields are ignored</li>
                                     <li>
-                                        Use the reset button to clear all
-                                        filters
+                                        {{
+                                            __(
+                                                "Text fields support partial matches"
+                                            )
+                                        }}
                                     </li>
                                     <li>
-                                        Stock and price filters work with
-                                        numeric comparisons
+                                        {{
+                                            __(
+                                                "Empty filter fields are ignored"
+                                            )
+                                        }}
+                                    </li>
+                                    <li>
+                                        {{
+                                            __(
+                                                "Use the reset button to clear all filters"
+                                            )
+                                        }}
+                                    </li>
+                                    <li>
+                                        {{
+                                            __(
+                                                "Stock and price filters work with numeric comparisons"
+                                            )
+                                        }}
                                     </li>
                                 </ul>
                             </div>
@@ -671,7 +702,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <q-card-actions align="right" class="q-pa-md">
                         <q-btn
-                            label="Got It"
+                            :label="__('Got It')"
                             color="primary"
                             v-close-popup
                             unelevated
@@ -726,59 +757,59 @@ export default {
             columns: [
                 {
                     name: "name",
-                    label: "Product Name",
+                    label: this.__("Product Name"),
                     field: "name",
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "stock",
-                    label: "Stock Level",
+                    label: this.__("Stock Level"),
                     field: "stock",
                     align: "center",
                     sortable: true,
                 },
                 {
                     name: "format_price",
-                    label: "Price",
+                    label: this.__("Price"),
                     field: "format_price",
                     align: "right",
                     sortable: true,
                 },
                 {
                     name: "category",
-                    label: "Category",
+                    label: this.__("Category"),
                     field: (row) => row.category?.name,
                     align: "left",
                     sortable: true,
                 },
                 {
                     name: "published",
-                    label: "Published",
+                    label: this.__("Published"),
                     field: "published",
                     align: "center",
                     sortable: true,
                 },
                 {
                     name: "featured",
-                    label: "Featured",
+                    label: this.__("Featured"),
                     field: "featured",
                     align: "center",
                     sortable: true,
                 },
                 {
                     name: "actions",
-                    label: "Actions",
+                    label: this.__("Actions"),
                     align: "center",
                 },
             ],
             filterLabels: {
-                name: "Name",
-                category: "Category",
-                model: "Model",
-                family: "Family",
-                stock: "Stock",
-                price: "Price",
+                name: this.__("Name"),
+                category: this.__("Category"),
+                model: this.__("Model"),
+                family: this.__("Family"),
+                stock: this.__("Stock"),
+                price: this.__("Price"),
             },
         };
     },

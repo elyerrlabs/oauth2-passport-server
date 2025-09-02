@@ -70,7 +70,7 @@ class UserCreatedAccount extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject(__("Welcome to Our Platform"))
             ->line(__("We are excited to inform you that your account has been successfully created. Below are your login details:"))
-            ->line(__("**Password:** ") . $this->password)
+            ->line(__("Password :key", ['key' => $this->password]))
             ->line(__("For your security, we recommend updating your password. You can do this by following these steps:"))
             ->line(__("1. Click the button below to reset your password."))
             ->action(__('Reset Password'), route('forgot-password'))

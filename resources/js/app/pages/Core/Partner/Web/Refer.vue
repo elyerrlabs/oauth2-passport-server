@@ -33,10 +33,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 />
                 <div>
                     <div class="text-h4 text-weight-bold text-primary">
-                        Referral System
+                        {{ __("Referral System") }}
                     </div>
                     <div class="text-subtitle1 text-grey-7">
-                        Generate and share your referral links
+                        {{ __("Generate and share your referral links") }}
                     </div>
                 </div>
             </div>
@@ -45,10 +45,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-card flat class="referral-card shadow-5">
                 <q-card-section class="card-header bg-primary text-white">
                     <div class="text-h5 text-weight-bold">
-                        Generate Referral Link
+                        {{ __("Generate Referral Link") }}
                     </div>
                     <div class="text-subtitle2">
-                        Share your link and earn commissions
+                        {{ __("Share your link and earn commissions") }}
                     </div>
                 </q-card-section>
 
@@ -63,7 +63,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="q-mr-sm"
                             />
                             <div class="text-subtitle1">
-                                Your Commission Rate
+                                {{ __("Your Commission Rate") }}
                             </div>
                         </div>
                         <q-badge color="primary" class="commission-badge">
@@ -93,11 +93,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card-section class="action-section">
                     <div class="row items-center justify-between">
                         <div class="text-caption text-grey-7">
-                            Generate a unique referral link to share with your
-                            network
+                            {{
+                                __(
+                                    "Generate a unique referral link to share with your network"
+                                )
+                            }}
                         </div>
                         <q-btn
-                            label="Generate New Link"
+                            :label="__('Generate New Link')"
                             color="primary"
                             icon="mdi-link-variant-plus"
                             @click="generateReferralLink"
@@ -113,7 +116,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Generated Link Section -->
                 <q-card-section class="link-section">
                     <div class="text-subtitle2 text-weight-medium q-mb-sm">
-                        Your Referral Link
+                        {{ __("Your Referral Link") }}
                     </div>
 
                     <div v-if="partner?.referral_links" class="link-container">
@@ -138,7 +141,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     "
                                     class="copy-btn"
                                 >
-                                    <q-tooltip>Copy to clipboard</q-tooltip>
+                                    <q-tooltip>{{
+                                        __("Copy to clipboard")
+                                    }}</q-tooltip>
                                 </q-btn>
                                 <q-btn
                                     flat
@@ -147,7 +152,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     @click="shareLink(partner.referral_links)"
                                     class="share-btn"
                                 >
-                                    <q-tooltip>Share link</q-tooltip>
+                                    <q-tooltip>{{
+                                        __("Share link")
+                                    }}</q-tooltip>
                                 </q-btn>
                             </template>
                         </q-input>
@@ -161,11 +168,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mb-sm"
                         />
                         <div class="text-grey-6">
-                            No referral link generated yet
+                            {{ __("No referral link generated yet") }}
                         </div>
                         <div class="text-caption text-grey-5">
-                            Click "Generate New Link" to create your first
-                            referral link
+                            {{
+                                __(
+                                    'Click "Generate New Link" to create your first referral link'
+                                )
+                            }}
                         </div>
                     </div>
                 </q-card-section>
@@ -183,11 +193,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <template v-slot:avatar>
                             <q-icon name="mdi-check-circle" />
                         </template>
-                        Link successfully copied to clipboard!
+                        {{ __("Link successfully copied to clipboard!") }}
                         <template v-slot:action>
                             <q-btn
                                 flat
-                                label="Dismiss"
+                                :label="__('Dismiss')"
                                 @click="copied = false"
                             />
                         </template>
@@ -199,7 +209,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-card flat class="info-card q-mt-md">
                 <q-card-section>
                     <div class="text-h6 text-weight-medium q-mb-md">
-                        How It Works
+                        {{ __("How It Works") }}
                     </div>
                     <div class="row q-col-gutter-md">
                         <div class="col-12 col-md-4">
@@ -211,11 +221,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                     class="q-mr-sm"
                                 />
-                                <div class="text-subtitle2">Generate Link</div>
+                                <div class="text-subtitle2">
+                                    {{ __("Generate Link") }}
+                                </div>
                             </div>
                             <div class="text-caption text-grey-7">
-                                Create your unique referral link that tracks
-                                sign-ups from your network.
+                                {{
+                                    __(
+                                        "Create your unique referral link that tracks sign-ups from your network."
+                                    )
+                                }}
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
@@ -227,11 +242,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                     class="q-mr-sm"
                                 />
-                                <div class="text-subtitle2">Share Widely</div>
+                                <div class="text-subtitle2">
+                                    {{ __("Share Widely") }}
+                                </div>
                             </div>
                             <div class="text-caption text-grey-7">
-                                Share your link on social media, emails, or
-                                directly with contacts.
+                                {{
+                                    __(
+                                        "Share your link on social media, emails, or directly with contacts."
+                                    )
+                                }}
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
@@ -244,12 +264,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="q-mr-sm"
                                 />
                                 <div class="text-subtitle2">
-                                    Earn Commission
+                                    {{ __("Earn Commission") }}
                                 </div>
                             </div>
                             <div class="text-caption text-grey-7">
-                                Receive commissions for every successful
-                                referral through your link.
+                                {{
+                                    __(
+                                        "Receive commissions for every successful referral through your link."
+                                    )
+                                }}
                             </div>
                         </div>
                     </div>

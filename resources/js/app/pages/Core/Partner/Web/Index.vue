@@ -26,10 +26,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row items-center justify-between q-mb-lg">
                 <div>
                     <div class="text-h4 text-weight-bold text-primary">
-                        Sales Dashboard
+                        {{ __("Sales Dashboard") }}
                     </div>
                     <div class="text-subtitle1 text-grey-7">
-                        Monitor your sales performance and commissions
+                        {{
+                            __("Monitor your sales performance and commissions")
+                        }}
                     </div>
                 </div>
                 <div class="row items-center q-gutter-sm">
@@ -41,7 +43,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         @click="getSales"
                         class="q-mr-sm"
                     >
-                        <q-tooltip>Refresh data</q-tooltip>
+                        <q-tooltip>{{ __("Refresh data") }}</q-tooltip>
                     </q-btn>
                     <q-btn
                         icon="auto_awesome"
@@ -50,7 +52,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         color="primary"
                         @click="toggleDarkMode"
                     >
-                        <q-tooltip>Toggle dark mode</q-tooltip>
+                        <q-tooltip>{{ __("Toggle dark mode") }}</q-tooltip>
                     </q-btn>
                 </div>
             </div>
@@ -59,14 +61,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-card flat class="filter-card q-mb-lg">
                 <q-card-section>
                     <div class="text-h6 text-weight-medium q-mb-md">
-                        Filters
+                        {{ __("Filters") }}
                     </div>
                     <div class="row q-col-gutter-md">
                         <div class="col-12 col-sm-6 col-md-3">
                             <q-input
                                 v-model="params.start"
                                 type="date"
-                                label="Start Date"
+                                :label="__('Start Date')"
                                 outlined
                                 dense
                                 stack-label
@@ -81,7 +83,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-input
                                 v-model="params.end"
                                 type="date"
-                                label="End Date"
+                                :label="__('End Date')"
                                 outlined
                                 dense
                                 stack-label
@@ -96,7 +98,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-select
                                 v-model="chartType"
                                 :options="chartTypes"
-                                label="Chart Type"
+                                :label="__('Chart Type')"
                                 outlined
                                 dense
                                 stack-label
@@ -108,7 +110,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-select
                                 v-model="params.type"
                                 :options="types"
-                                label="Date Range"
+                                :label="__('Date Range')"
                                 outlined
                                 dense
                                 stack-label
@@ -145,7 +147,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div class="col-12 col-sm-6 col-md-2 flex items-end">
                             <q-btn
-                                label="Apply Filters"
+                                :label="__('Apply Filters')"
                                 @click="getSales"
                                 color="primary"
                                 icon="filter_alt"
@@ -171,7 +173,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 />
                                 <div>
                                     <div class="text-caption text-grey-7">
-                                        TOTAL SALES
+                                        {{ __("TOTAL SALES") }}
                                     </div>
                                     <div class="text-h4 text-weight-bold">
                                         {{ formatCurrency(total_sales) }}
@@ -199,7 +201,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 />
                                 <div>
                                     <div class="text-caption text-grey-7">
-                                        TOTAL COMMISSION
+                                        {{ __("TOTAL COMMISSION") }}
                                     </div>
                                     <div
                                         v-for="(
@@ -235,7 +237,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card-section>
                     <div class="row items-center justify-between q-mb-md">
                         <div class="text-h6 text-weight-medium">
-                            Sales Performance
+                            {{ __("Sales Performance") }}
                         </div>
                         <div class="row items-center q-gutter-xs">
                             <q-btn-toggle
@@ -261,12 +263,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row justify-end q-mt-sm">
                 <div class="text-caption text-grey-6">
                     <q-icon name="schedule" size="14px" class="q-mr-xs" />
-                    Auto-refresh in {{ refreshCountdown }}s
+                    {{ __("Auto-refresh in") }} {{ refreshCountdown }}s
                     <q-btn
                         flat
                         dense
                         size="sm"
-                        label="Disable"
+                        :label="__('Disable')"
                         @click="disableAutoRefresh"
                         class="q-ml-sm"
                     />
@@ -293,9 +295,9 @@ export default {
             },
             chartType: "line",
             chartTypes: [
-                { label: "Line", value: "line", icon: "show_chart" },
-                { label: "Bar", value: "bar", icon: "bar_chart" },
-                { label: "Area", value: "area", icon: "area_chart" },
+                { label: this.__("Line"), value: "line", icon: "show_chart" },
+                { label: this.__("Bar"), value: "bar", icon: "bar_chart" },
+                { label: this.__("Area"), value: "area", icon: "area_chart" },
             ],
             total_sales: 0,
             total_commission: [],
@@ -379,7 +381,7 @@ export default {
             },
             chartSeries: [
                 {
-                    name: "Sales",
+                    name: this.__("Sales"),
                     data: [],
                 },
                 {
@@ -388,9 +390,9 @@ export default {
                 },
             ],
             types: [
-                { label: "Daily", value: "day" },
-                { label: "Monthly", value: "month" },
-                { label: "Yearly", value: "year" },
+                { label: this.__("Daily"), value: "day" },
+                { label: this.__("Monthly"), value: "month" },
+                { label: this.__("Yearly"), value: "year" },
             ],
             refreshInterval: null,
             refreshCountdown: 10,
@@ -450,10 +452,9 @@ export default {
                     this.resetRefreshCountdown();
                 }
             } catch (error) {
-                console.error("Error fetching sales data:", error);
                 this.$q.notify({
                     type: "negative",
-                    message: "Failed to load sales data",
+                    message: this.__("Failed to load sales data"),
                     position: "top-right",
                 });
             }
@@ -462,11 +463,11 @@ export default {
         updateChart(data) {
             this.chartSeries = [
                 {
-                    name: "Sales",
+                    name: this.__("Sales"),
                     data: data.map((item) => item.total),
                 },
                 {
-                    name: "Commission",
+                    name: this.__("Commission"),
                     data: data.map((item) => item.commission),
                 },
             ];

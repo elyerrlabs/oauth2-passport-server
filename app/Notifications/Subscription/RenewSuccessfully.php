@@ -65,12 +65,12 @@ class RenewSuccessfully extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Subscription Renewed Successfully')
-            ->greeting('Hello ' . $notifiable->name . ',')
-            ->line('We’re happy to inform you that your subscription has been successfully renewed.')
-            ->line('Thank you for continuing to use our service.')
-            ->action('Go to dashboard', $this->url)
-            ->line('If you have any questions, feel free to contact our support team.');
+            ->subject(__('Subscription Renewed Successfully'))
+            ->greeting(__('Hello :name', ['name' => $notifiable->name]))
+            ->line(__('We’re happy to inform you that your subscription has been successfully renewed.'))
+            ->line(__('Thank you for continuing to use our service.'))
+            ->action(__('Go to dashboard'), $this->url)
+            ->line(__('If you have any questions, feel free to contact our support team.'));
     }
 
     /**

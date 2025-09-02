@@ -18,7 +18,7 @@
                         <div
                             class="absolute-full flex flex-center bg-negative text-white"
                         >
-                            Failed to load
+                            {{ __("Failed to load") }}
                         </div>
                     </template>
 
@@ -41,7 +41,7 @@
         <!-- Empty State Message -->
         <div v-else class="text-center text-grey q-pa-md">
             <q-icon name="image_not_supported" size="xl" />
-            <div class="q-mt-sm">No images available</div>
+            <div class="q-mt-sm">{{ __("No images available") }}</div>
         </div>
 
         <!-- Lightbox Viewer -->
@@ -93,7 +93,7 @@
                 <!-- Close Button (Bottom Center) -->
                 <q-btn
                     flat
-                    label="Close"
+                    :label="__('Close')"
                     icon="close"
                     color="white"
                     class="absolute-bottom-center q-mb-md lightbox-close-btn-bottom"
@@ -111,16 +111,21 @@
                         color="negative"
                         text-color="white"
                     />
-                    <span class="q-ml-sm"
-                        >Are you sure you want to delete this image?</span
-                    >
+                    <span class="q-ml-sm">{{
+                        __("Are you sure you want to delete this image?")
+                    }}</span>
                 </q-card-section>
 
                 <q-card-actions align="right">
-                    <q-btn flat label="Cancel" color="primary" v-close-popup />
                     <q-btn
                         flat
-                        label="Delete"
+                        :label="__('Cancel')"
+                        color="primary"
+                        v-close-popup
+                    />
+                    <q-btn
+                        flat
+                        :label="__('Delete')"
                         color="negative"
                         @click="deleteImage"
                     />

@@ -22,8 +22,9 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Illuminate\Support\Facades\Route; 
-use App\Http\Controllers\Api\Public\CountriesController; 
+use App\Http\Controllers\Api\Public\LocaleController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Public\CountriesController;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use App\Http\Controllers\Api\OAuth\PassportConnectController;
 
@@ -69,6 +70,6 @@ Route:: as('api.')->group(function () {
         'middleware' => ['throttle:general:api']
     ], function () {
         Route::resource('/countries', CountriesController::class)->only('index');
-
+        Route::get('language/{locale?}', [LocaleController::class, 'locale'])->name('locale');
     });
 });

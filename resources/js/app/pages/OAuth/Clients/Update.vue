@@ -30,7 +30,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         size="sm"
         class="edit-btn"
     >
-        <q-tooltip>Edit Client</q-tooltip>
+        <q-tooltip>{{ __("Edit Client") }}</q-tooltip>
     </q-btn>
 
     <!-- Update Dialog -->
@@ -52,11 +52,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="header-icon"
                     />
                     <div class="text-h5 text-weight-bold text-grey-8">
-                        Update OAuth Client
+                        {{ __("Update OAuth Client") }}
                     </div>
                 </div>
                 <div class="text-subtitle2 text-grey-6">
-                    Modify your OAuth 2.0 client application settings
+                    {{
+                        __("Modify your OAuth 2.0 client application settings")
+                    }}
                 </div>
             </q-card-section>
 
@@ -68,11 +70,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="input-label text-weight-medium text-grey-8 q-mb-xs"
                     >
                         <q-icon name="mdi-tag" size="18px" class="q-mr-sm" />
-                        Client Name
+                        {{ __("Client Name") }}
                     </div>
                     <q-input
                         v-model="form.name"
-                        placeholder="Enter a descriptive name for your client application"
+                        :placeholder="
+                            __(
+                                'Enter a descriptive name for your client application'
+                            )
+                        "
                         dense
                         outlined
                         :error="!!errors.name"
@@ -86,7 +92,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </template>
                     </q-input>
                     <div class="input-hint text-caption text-grey-6 q-mt-xs">
-                        This will help you identify the client later
+                        {{ __("This will help you identify the client later") }}
                     </div>
                 </div>
 
@@ -100,7 +106,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="18px"
                             class="q-mr-sm"
                         />
-                        Redirect URI
+                        {{ __("Redirect URI") }}
                     </div>
                     <q-input
                         v-model="form.redirect"
@@ -118,8 +124,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </template>
                     </q-input>
                     <div class="input-hint text-caption text-grey-6 q-mt-xs">
-                        The URI where users will be redirected after
-                        authorization
+                        {{
+                            __(
+                                "The URI where users will be redirected after authorization"
+                            )
+                        }}
                     </div>
                 </div>
 
@@ -129,11 +138,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="input-label text-weight-medium text-grey-8 q-mb-xs"
                     >
                         <q-icon name="mdi-key" size="18px" class="q-mr-sm" />
-                        Client ID
+                        {{ __("Client ID") }}
                     </div>
                     <q-input
                         :model-value="form.id"
-                        label="Client ID"
+                        :label="__('Client ID')"
                         dense
                         outlined
                         readonly
@@ -150,12 +159,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 round
                                 @click="copyToClipboard(form.id)"
                             >
-                                <q-tooltip>Copy Client ID</q-tooltip>
+                                <q-tooltip>{{
+                                    __("Copy Client ID")
+                                }}</q-tooltip>
                             </q-btn>
                         </template>
                     </q-input>
                     <div class="input-hint text-caption text-grey-6 q-mt-xs">
-                        This identifier cannot be changed
+                        {{ __("This identifier cannot be changed") }}
                     </div>
                 </div>
             </q-card-section>
@@ -163,7 +174,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Actions -->
             <q-card-actions class="dialog-actions" align="right">
                 <q-btn
-                    label="Cancel"
+                    :label="__('Cancel')"
                     color="grey-6"
                     flat
                     @click="close"
@@ -171,7 +182,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     no-caps
                 />
                 <q-btn
-                    label="Update Client"
+                    :label="__('Update Client')"
                     color="primary"
                     @click="updateClient"
                     :loading="loading"
@@ -182,14 +193,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <template v-slot:loading>
                         <q-spinner-hourglass class="on-left" />
-                        Updating...
+                        {{ __("Updating...") }}
                     </template>
                 </q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>
 </template>
-
 <script>
 export default {
     emits: ["updated"],

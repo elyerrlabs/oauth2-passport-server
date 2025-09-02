@@ -31,7 +31,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="q-px-sm delete-btn"
             data-test="delete-button"
         >
-            Delete
+            {{ __("Delete") }}
         </q-btn>
 
         <q-dialog
@@ -49,14 +49,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         size="lg"
                         class="warning-icon"
                     />
-                    <div class="text-h6 dialog-title">Delete Product</div>
+                    <div class="text-h6 dialog-title">
+                        {{ __("Delete Product") }}
+                    </div>
                 </q-card-section>
 
                 <q-card-section class="dialog-content text-center">
                     <p class="confirmation-text">
-                        Are you sure you want to delete
+                        {{ __("Are you sure you want to delete") }}
                         <span class="product-name">{{ item.name }}</span
-                        >? This action cannot be undone.
+                        >? {{ __("This action cannot be undone.") }}
                     </p>
                 </q-card-section>
 
@@ -64,7 +66,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-btn
                         flat
                         :color="COLORS.secondary"
-                        label="Cancel"
+                        :label="__('Cancel')"
                         @click="dialog = false"
                         class="action-btn cancel-btn"
                         data-test="cancel-button"
@@ -72,7 +74,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-btn
                         unelevated
                         :color="COLORS.danger"
-                        label="Delete Product"
+                        :label="__('Delete Product')"
                         @click="destroy"
                         class="action-btn delete-confirm-btn"
                         data-test="confirm-delete-button"

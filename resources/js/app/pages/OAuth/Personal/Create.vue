@@ -29,7 +29,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         class="create-btn"
         size="md"
     >
-        <q-tooltip>Create New API Key</q-tooltip>
+        <q-tooltip>{{ __("Create New API Key") }}</q-tooltip>
     </q-btn>
 
     <q-dialog
@@ -51,7 +51,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-toolbar-title
                         class="text-h5 text-weight-bold text-grey-8"
                     >
-                        Generate New API Key
+                        {{ __("Generate New API Key") }}
                     </q-toolbar-title>
                     <q-btn
                         flat
@@ -68,15 +68,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="form-section q-mb-xl">
                     <div class="text-h6 text-weight-medium text-grey-8 q-mb-md">
                         <q-icon name="mdi-form-textbox" class="q-mr-sm" />
-                        Key Details
+                        {{ __("Key Details") }}
                     </div>
 
                     <q-input
                         v-model="form.name"
-                        label="API Key Name"
+                        :label="__('API Key Name')"
                         outlined
                         :error="!!errors.name"
-                        placeholder="Enter a descriptive name for your API key"
+                        :placeholder="
+                            __('Enter a descriptive name for your API key')
+                        "
                         class="name-input"
                         dense
                     >
@@ -93,14 +95,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             @click="create"
                             color="primary"
                             icon="mdi-key-variant"
-                            label="Generate API Key"
+                            :label="__('Generate API Key')"
                             unelevated
                             :loading="loading"
                             class="generate-btn"
                         >
                             <template v-slot:loading>
                                 <q-spinner-hourglass class="on-left" />
-                                Generating...
+                                {{ __("Generating...") }}
                             </template>
                         </q-btn>
                     </div>
@@ -111,7 +113,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="text-h6 text-weight-medium text-green-8 q-mb-sm"
                         >
                             <q-icon name="mdi-key-chain" class="q-mr-sm" />
-                            API Key Generated Successfully!
+                            {{ __("API Key Generated Successfully!") }}
                         </div>
                         <div
                             class="token-alert bg-green-1 rounded-borders q-pa-md"
@@ -122,8 +124,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="18px"
                                     class="q-mr-xs"
                                 />
-                                Please copy this token and store it securely.
-                                You won't be able to see it again.
+                                {{
+                                    __(
+                                        "Please copy this token and store it securely. You won't be able to see it again."
+                                    )
+                                }}
                             </div>
                             <div
                                 class="token-value-container"
@@ -140,11 +145,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                     class="copy-btn"
                                 >
-                                    <q-tooltip>Copy to clipboard</q-tooltip>
+                                    <q-tooltip>{{
+                                        __("Copy to clipboard")
+                                    }}</q-tooltip>
                                 </q-btn>
                             </div>
                             <div class="text-caption text-green-7 q-mt-xs">
-                                Click anywhere on the token to copy it
+                                {{
+                                    __("Click anywhere on the token to copy it")
+                                }}
                             </div>
                         </div>
                     </div>
@@ -154,12 +163,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="scopes-section">
                     <div class="text-h6 text-weight-medium text-grey-8 q-mb-md">
                         <q-icon name="mdi-shield-account" class="q-mr-sm" />
-                        API Permissions
+                        {{ __("API Permissions") }}
                     </div>
                     <div class="text-caption text-grey-7 q-mb-lg">
-                        Select the permissions you want to grant to this API
-                        key. Choose only the necessary scopes for security best
-                        practices.
+                        {{
+                            __(
+                                "Select the permissions you want to grant to this API key. Choose only the necessary scopes for security best practices."
+                            )
+                        }}
                     </div>
 
                     <div
@@ -183,7 +194,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-item-section side>
                                     <q-badge color="primary" rounded>
                                         {{ getGroupScopeCount(services) }}
-                                        permissions
+                                        {{ __("permissions") }}
                                     </q-badge>
                                 </q-item-section>
                             </template>
@@ -211,7 +222,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             value: role.id,
                                             description:
                                                 role.description ||
-                                                `Access to ${role.name} functionality`,
+                                                __('Access to') +
+                                                    ' ' +
+                                                    role.name +
+                                                    ' ' +
+                                                    __('functionality'),
                                         }))
                                     "
                                     color="primary"
@@ -242,7 +257,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Footer Actions -->
             <q-card-actions class="dialog-footer" align="right">
                 <q-btn
-                    label="Cancel"
+                    :label="__('Cancel')"
                     color="grey"
                     flat
                     @click="close"
@@ -252,7 +267,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     @click="create"
                     color="primary"
                     icon="mdi-key-variant"
-                    label="Generate Key"
+                    :label="__('Generate Key')"
                     unelevated
                     :loading="loading"
                 />

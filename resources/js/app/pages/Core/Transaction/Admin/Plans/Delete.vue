@@ -30,7 +30,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             size="sm"
             class="delete-btn shadow-3"
         >
-            <q-tooltip class="bg-negative">Delete Plan</q-tooltip>
+            <q-tooltip class="bg-negative">{{ __("Delete Plan") }}</q-tooltip>
         </q-btn>
 
         <!-- Delete Confirmation Dialog -->
@@ -49,7 +49,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="28px"
                             class="q-mr-sm"
                         />
-                        <div class="text-h5 text-weight-bold">Delete Plan</div>
+                        <div class="text-h5 text-weight-bold">
+                            {{ __("Delete Plan") }}
+                        </div>
                         <q-space />
                         <q-btn
                             icon="close"
@@ -73,21 +75,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mr-md"
                         />
                         <div class="text-h6 text-weight-medium">
-                            Are you sure?
+                            {{ __("Are you sure?") }}
                         </div>
                     </div>
 
                     <div class="text-body1 q-mb-lg">
-                        You are about to delete the plan
+                        {{ __("You are about to delete the plan") }}
                         <strong class="text-negative">"{{ item.name }}"</strong
-                        >. This action cannot be undone.
+                        >.
+                        {{ __("This action cannot be undone.") }}
                     </div>
 
                     <!-- Plan Details -->
                     <q-card flat bordered class="bg-grey-2">
                         <q-card-section>
                             <div class="text-subtitle2 text-grey-8 q-mb-xs">
-                                Plan Details
+                                {{ __("Plan Details") }}
                             </div>
                             <div class="row items-center q-mb-xs">
                                 <q-icon
@@ -95,7 +98,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="16px"
                                     class="q-mr-sm text-grey-6"
                                 />
-                                <span class="text-weight-medium">Name:</span>
+                                <span class="text-weight-medium">{{
+                                    __("Name:")
+                                }}</span>
                                 <span class="q-ml-sm">{{ item.name }}</span>
                             </div>
                             <div
@@ -107,9 +112,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="16px"
                                     class="q-mr-sm text-grey-6"
                                 />
-                                <span class="text-weight-medium"
-                                    >Description:</span
-                                >
+                                <span class="text-weight-medium">{{
+                                    __("Description:")
+                                }}</span>
                                 <span
                                     class="q-ml-sm"
                                     v-html="item.description"
@@ -122,9 +127,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :color="item.active ? 'positive' : 'grey-5'"
                                     class="q-mr-sm"
                                 />
-                                <span class="text-weight-medium">Status:</span>
+                                <span class="text-weight-medium">{{
+                                    __("Status:")
+                                }}</span>
                                 <span class="q-ml-sm">{{
-                                    item.active ? "Active" : "Inactive"
+                                    item.active ? __("Active") : __("Inactive")
                                 }}</span>
                             </div>
                         </q-card-section>
@@ -136,15 +143,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="16px"
                             class="q-mr-xs"
                         />
-                        This will permanently remove the plan and all associated
-                        data.
+                        {{
+                            __(
+                                "This will permanently remove the plan and all associated data."
+                            )
+                        }}
                     </div>
                 </q-card-section>
 
                 <!-- Dialog Actions -->
                 <q-card-actions align="right" class="dialog-actions q-pa-md">
                     <q-btn
-                        label="Cancel"
+                        :label="__('Cancel')"
                         color="grey"
                         @click="dialog = false"
                         outline
@@ -152,7 +162,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-close"
                     />
                     <q-btn
-                        label="Delete Plan"
+                        :label="__('Delete Plan')"
                         color="negative"
                         @click="destroy"
                         class="action-btn"

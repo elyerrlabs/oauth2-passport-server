@@ -28,16 +28,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         class="text-h2 text-weight-bold text-primary hero-title"
                     >
-                        Choose Your Plan
+                        {{ __("Choose Your Plan") }}
                     </div>
                     <div class="text-h6 text-grey-7 hero-subtitle q-mt-md">
-                        Select the perfect plan that fits your needs and budget
+                        {{
+                            __(
+                                "Select the perfect plan that fits your needs and budget"
+                            )
+                        }}
                     </div>
                     <div
                         class="hero-description text-body1 text-grey-6 q-mt-lg"
                     >
-                        All plans include our core features with flexible
-                        pricing options
+                        {{
+                            __(
+                                "All plans include our core features with flexible pricing options"
+                            )
+                        }}
                     </div>
                 </div>
 
@@ -70,7 +77,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             text-color="dark"
                                             class="bonus-badge"
                                         >
-                                            +{{ plan.bonus_duration }} days free
+                                            +{{ plan.bonus_duration }}
+                                            {{ __("days free") }}
                                         </q-badge>
                                     </div>
                                     <div
@@ -100,7 +108,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <div
                                             class="text-subtitle1 text-center text-primary q-mb-md text-weight-medium pricing-title"
                                         >
-                                            Pricing Options
+                                            {{ __("Pricing Options") }}
                                         </div>
                                         <div class="price-options">
                                             <q-item
@@ -179,17 +187,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Plan Footer -->
                                 <q-card-actions class="plan-actions">
                                     <q-btn
-                                        label="Select Plan"
+                                        :label="__('Select Plan')"
                                         color="primary"
                                         unelevated
                                         class="select-btn full-width"
                                         @click="selectPlan(plan)"
                                         :disable="!selected_period"
                                     >
-                                        <q-tooltip v-if="!selected_period"
-                                            >Please select a pricing option
-                                            first</q-tooltip
-                                        >
+                                        <q-tooltip v-if="!selected_period">{{
+                                            __(
+                                                "Please select a pricing option first"
+                                            )
+                                        }}</q-tooltip>
                                     </q-btn>
                                 </q-card-actions>
                             </q-card>
@@ -224,7 +233,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <div class="drawer-header">
                         <div class="text-h5 text-weight-bold">
-                            Complete Subscription
+                            {{ __("Complete Subscription") }}
                         </div>
                         <q-btn
                             icon="close"
@@ -288,7 +297,7 @@ export default {
         selectPlan(plan) {
             if (!this.selected_period) {
                 this.$q.notify({
-                    message: "Please select a pricing option first",
+                    message: __("Please select a pricing option first"),
                     color: "warning",
                     icon: "warning",
                     position: "top",

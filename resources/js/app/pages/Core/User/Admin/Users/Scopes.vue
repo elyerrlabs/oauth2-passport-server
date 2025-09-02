@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 transition-hide="scale"
                 class="bg-primary text-white"
             >
-                Add access scopes
+                {{ __("Add access scopes") }}
             </q-tooltip>
         </q-btn>
 
@@ -52,10 +52,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="row items-center justify-between">
                                 <div>
                                     <div class="text-h4 text-weight-bold">
-                                        Manage Access Scopes
+                                        {{ __("Manage Access Scopes") }}
                                     </div>
                                     <div class="text-subtitle1">
-                                        Add permissions for:
+                                        {{ __("Add permissions for:") }}
                                         <span class="text-weight-bold"
                                             >{{ item.name }}
                                             {{ item.last_name }}</span
@@ -112,8 +112,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         >
                                             {{
                                                 item.disabled
-                                                    ? "Inactive"
-                                                    : "Active"
+                                                    ? __("Inactive")
+                                                    : __("Active")
                                             }}
                                         </q-badge>
                                     </div>
@@ -133,7 +133,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <q-card-actions align="right" class="q-pa-lg">
                         <q-btn
-                            label="Cancel"
+                            :label="__('Cancel')"
                             color="grey-7"
                             @click="dialog = false"
                             flat
@@ -141,7 +141,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             icon="mdi-close-circle"
                         />
                         <q-btn
-                            label="Save Permissions"
+                            :label="__('Save Permissions')"
                             color="primary"
                             @click="add"
                             :loading="loading"
@@ -154,7 +154,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </q-dialog>
     </div>
 </template>
-
 <script>
 export default {
     props: {

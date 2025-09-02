@@ -5,10 +5,10 @@
             <div class="row items-center justify-between q-mb-md">
                 <div>
                     <div class="text-h4 text-primary text-weight-bold">
-                        OAuth Clients Management
+                        {{ __("OAuth Clients Management") }}
                     </div>
                     <div class="text-subtitle1 text-grey-7">
-                        Manage your application's OAuth 2.0 clients
+                        {{ __("Manage your application's OAuth 2.0 clients") }}
                     </div>
                 </div>
 
@@ -28,9 +28,8 @@
                 <q-card flat class="bg-blue-1 text-blue-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ clients.length }} Client{{
-                                clients.length !== 1 ? "s" : ""
-                            }}
+                            {{ clients.length }} {{ __("Client")
+                            }}{{ clients.length !== 1 ? "s" : "" }}
                         </div>
                         <q-icon name="mdi-application" size="md" />
                     </q-card-section>
@@ -40,7 +39,8 @@
                 <q-card flat class="bg-green-1 text-green-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ confidentialClientsCount }} Confidential
+                            {{ confidentialClientsCount }}
+                            {{ __("Confidential") }}
                         </div>
                         <q-icon name="mdi-shield-lock" size="md" />
                     </q-card-section>
@@ -50,7 +50,7 @@
                 <q-card flat class="bg-orange-1 text-orange-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ publicClientsCount }} Public
+                            {{ publicClientsCount }} {{ __("Public") }}
                         </div>
                         <q-icon name="mdi-earth" size="md" />
                     </q-card-section>
@@ -60,7 +60,7 @@
                 <q-card flat class="bg-purple-1 text-purple-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ totalGrantTypes }} Grant Types
+                            {{ totalGrantTypes }} {{ __("Grant Types") }}
                         </div>
                         <q-icon name="mdi-key-chain" size="md" />
                     </q-card-section>
@@ -87,16 +87,9 @@
                             {{ props.row.name }}
                         </div>
                         <div class="text-caption text-grey-7">
-                            ID: {{ props.row.id }}
+                            {{ __("ID:") }} {{ props.row.id }}
                         </div>
                     </q-td>
-                    <!--
-                        <q-td key="provider" :props="props">
-                            <q-badge color="blue" class="q-pa-xs">
-                                {{ props.row.provider }}
-                            </q-badge>
-                        </q-td>
-                        -->
 
                     <q-td key="created_at" :props="props">
                         <div class="text-caption">
@@ -113,13 +106,13 @@
                                     : 'mdi-earth'
                             "
                         >
-                            {{ props.row.confidential ? "Yes" : "No" }}
+                            {{ props.row.confidential ? __("Yes") : __("No") }}
                         </q-badge>
                     </q-td>
 
                     <q-td key="created_by" :props="props">
                         <div class="text-caption">
-                            {{ props.row.created_by?.email || "System" }}
+                            {{ props.row.created_by?.email || __("System") }}
                         </div>
                     </q-td>
 
@@ -150,9 +143,11 @@
             <template v-slot:no-data>
                 <div class="full-width row flex-center text-grey-6 q-pa-xl">
                     <q-icon name="mdi-application-off" size="xl" />
-                    <div class="q-ml-sm">No clients available</div>
+                    <div class="q-ml-sm">{{ __("No clients available") }}</div>
                     <div class="text-caption text-grey-5 q-mt-sm">
-                        Create your first OAuth client to get started
+                        {{
+                            __("Create your first OAuth client to get started")
+                        }}
                     </div>
                 </div>
             </template>
@@ -178,7 +173,7 @@
             <q-select
                 v-model="search.per_page"
                 :options="[10, 15, 25, 50]"
-                label="Items per page"
+                :label="__('Items per page')"
                 dense
                 outlined
                 class="q-ml-md"
@@ -192,7 +187,6 @@
         </div>
     </v-admin-layout>
 </template>
-
 <script>
 import VCreate from "./Create.vue";
 import VUpdate from "./Update.vue";

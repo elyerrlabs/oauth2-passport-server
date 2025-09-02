@@ -33,7 +33,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 transition-hide="scale"
                 class="bg-primary text-white"
             >
-                Manage access scopes
+                {{ __("Manage access scopes") }}
             </q-tooltip>
             <q-badge
                 v-if="scopesCount > 0"
@@ -55,12 +55,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="row items-center justify-between">
                                 <div class="col-grow">
                                     <div class="text-h4 text-weight-bold">
-                                        Scope Management
+                                        {{ __("Scope Management") }}
                                     </div>
                                     <div class="text-subtitle1 q-mt-xs">
-                                        Managing permissions for:
+                                        {{ __("Managing permissions for:") }}
                                         <span class="text-weight-bold">{{
-                                            service.name
+                                            __(service.name)
                                         }}</span>
                                     </div>
                                     <div class="text-caption opacity-80">
@@ -68,10 +68,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             name="mdi-account-group"
                                             class="q-mr-xs"
                                         />
-                                        Group:
+                                        {{ __("Group:") }}
                                         {{
-                                            service.group?.name ||
-                                            "Not assigned"
+                                            __(service.group?.name) ||
+                                            __("Not assigned")
                                         }}
                                     </div>
                                 </div>
@@ -102,7 +102,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             {{ scopesCount }}
                                         </div>
                                         <div class="text-caption">
-                                            Total Scopes
+                                            {{ __("Total Scopes") }}
                                         </div>
                                         <q-icon
                                             name="mdi-lock"
@@ -121,7 +121,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <div class="text-h5 text-weight-bold">
                                             {{ activeScopesCount }}
                                         </div>
-                                        <div class="text-caption">Active</div>
+                                        <div class="text-caption">
+                                            {{ __("Active") }}
+                                        </div>
                                         <q-icon
                                             name="mdi-check-circle"
                                             size="md"
@@ -140,7 +142,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             {{ apiKeyScopesCount }}
                                         </div>
                                         <div class="text-caption">
-                                            API Key Access
+                                            {{ __("API Key Access") }}
                                         </div>
                                         <q-icon
                                             name="mdi-key"
@@ -160,7 +162,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             {{ publicScopesCount }}
                                         </div>
                                         <div class="text-caption">
-                                            Public Access
+                                            {{ __("Public Access") }}
                                         </div>
                                         <q-icon
                                             name="mdi-earth"
@@ -199,7 +201,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         name="mdi-account-key"
                                                         class="q-mr-sm"
                                                     />
-                                                    {{ item.role.name }}
+                                                    {{ __(item.role.name) }}
                                                 </div>
                                                 <div
                                                     class="text-caption text-grey-7 q-mt-xs"
@@ -209,7 +211,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         class="q-mr-xs"
                                                     />
                                                     {{
-                                                        item.service.group.name
+                                                        __(
+                                                            item.service.group
+                                                                .name
+                                                        )
                                                     }}
                                                 </div>
                                             </div>
@@ -227,10 +232,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     size="sm"
                                                     class="copy-btn"
                                                 >
-                                                    <q-tooltip
-                                                        >Copy GSR_ID to
-                                                        clipboard</q-tooltip
-                                                    >
+                                                    <q-tooltip>{{
+                                                        __(
+                                                            "Copy GSR_ID to clipboard"
+                                                        )
+                                                    }}</q-tooltip>
                                                 </q-btn>
                                             </div>
                                         </div>
@@ -245,7 +251,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <div
                                                     class="text-caption text-grey-7"
                                                 >
-                                                    GSR_ID
+                                                    {{ __("GSR_ID") }}
                                                 </div>
                                                 <div
                                                     class="text-code text-weight-medium"
@@ -269,9 +275,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         "
                                                         size="sm"
                                                     />
-                                                    <span class="q-ml-sm"
-                                                        >API Key Access</span
-                                                    >
+                                                    <span class="q-ml-sm">{{
+                                                        __("API Key Access")
+                                                    }}</span>
                                                     <q-badge
                                                         :color="
                                                             item.api_key
@@ -282,8 +288,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     >
                                                         {{
                                                             item.api_key
-                                                                ? "Enabled"
-                                                                : "Disabled"
+                                                                ? __("Enabled")
+                                                                : __("Disabled")
                                                         }}
                                                     </q-badge>
                                                 </div>
@@ -302,9 +308,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         "
                                                         size="sm"
                                                     />
-                                                    <span class="q-ml-sm"
-                                                        >Active Status</span
-                                                    >
+                                                    <span class="q-ml-sm">{{
+                                                        __("Active Status")
+                                                    }}</span>
                                                     <q-badge
                                                         :color="
                                                             item.active
@@ -315,8 +321,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     >
                                                         {{
                                                             item.active
-                                                                ? "Active"
-                                                                : "Inactive"
+                                                                ? __("Active")
+                                                                : __("Inactive")
                                                         }}
                                                     </q-badge>
                                                 </div>
@@ -335,9 +341,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         "
                                                         size="sm"
                                                     />
-                                                    <span class="q-ml-sm"
-                                                        >Public Access</span
-                                                    >
+                                                    <span class="q-ml-sm">{{
+                                                        __("Public Access")
+                                                    }}</span>
                                                     <q-badge
                                                         :color="
                                                             item.public
@@ -348,8 +354,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     >
                                                         {{
                                                             item.public
-                                                                ? "Public"
-                                                                : "Private"
+                                                                ? __("Public")
+                                                                : __("Private")
                                                         }}
                                                     </q-badge>
                                                 </div>
@@ -388,11 +394,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 color="grey-4"
                             />
                             <div class="text-h6 text-grey-7 q-mt-md">
-                                No scopes configured
+                                {{ __("No scopes configured") }}
                             </div>
                             <div class="text-caption text-grey-5 q-mb-lg">
-                                Add access permissions to control who can use
-                                this service
+                                {{
+                                    __(
+                                        "Add access permissions to control who can use this service"
+                                    )
+                                }}
                             </div>
                             <v-add-scope
                                 :link="service.links.scopes"
@@ -406,7 +415,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-card-actions align="right" class="q-pa-lg dialog-footer">
                         <q-btn
                             outline
-                            label="Close"
+                            :label="__('Close')"
                             color="primary"
                             v-close-popup
                             icon="mdi-close"
@@ -418,7 +427,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </q-dialog>
     </div>
 </template>
-
 <script>
 import VAddScope from "./AddScope.vue";
 import VDeleteScope from "./DeleteScope.vue";
@@ -470,7 +478,7 @@ export default {
             } catch (e) {
                 this.$q.notify({
                     type: "negative",
-                    message: "Failed to load scopes",
+                    message: this.__("Failed to load scopes"),
                     icon: "mdi-alert-circle",
                     timeout: 3000,
                 });
@@ -484,14 +492,14 @@ export default {
                 await navigator.clipboard.writeText(text);
                 this.$q.notify({
                     type: "positive",
-                    message: "GSR_ID copied to clipboard",
+                    message: this.__("GSR_ID copied to clipboard"),
                     icon: "mdi-check-circle",
                     timeout: 2000,
                 });
             } catch (err) {
                 this.$q.notify({
                     type: "negative",
-                    message: "Failed to copy to clipboard",
+                    message: this.__("Failed to copy to clipboard"),
                     icon: "mdi-alert-circle",
                     timeout: 2000,
                 });

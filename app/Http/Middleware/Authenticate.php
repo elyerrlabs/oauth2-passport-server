@@ -74,7 +74,7 @@ class Authenticate extends Middleware
             $uri = $_SERVER['REQUEST_URI'] ?? '';
 
             if (preg_match('#/gateway\b#', $uri)) {
-                throw new ReportError('You are not logged in.', 401);
+                throw new ReportError(__('You are not logged in.'), 401);
             }
         }
 

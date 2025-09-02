@@ -33,7 +33,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 transition-hide="scale"
                 class="bg-primary text-white"
             >
-                Edit user
+                {{ __("Edit user") }}
             </q-tooltip>
         </q-btn>
 
@@ -52,9 +52,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="lg"
                                 class="q-mb-sm"
                             />
-                            <div class="text-h5">Update User</div>
+                            <div class="text-h5">{{ __("Update User") }}</div>
                             <div class="text-caption">
-                                Edit user information and settings
+                                {{ __("Edit user information and settings") }}
                             </div>
                         </q-card-section>
                     </div>
@@ -68,16 +68,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     color="primary"
                                     class="q-mr-sm"
                                 />
-                                <span class="text-subtitle1 text-primary"
-                                    >Personal Information</span
-                                >
+                                <span class="text-subtitle1 text-primary">{{
+                                    __("Personal Information")
+                                }}</span>
                             </div>
 
                             <div class="row q-col-gutter-md">
                                 <div class="col-12 col-sm-6">
                                     <q-input
                                         v-model="form.name"
-                                        label="First Name"
+                                        :label="__('First Name')"
                                         outlined
                                         dense
                                         :error="!!errors.name"
@@ -97,7 +97,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="col-12 col-sm-6">
                                     <q-input
                                         v-model="form.last_name"
-                                        label="Last Name"
+                                        :label="__('Last Name')"
                                         outlined
                                         dense
                                         :error="!!errors.last_name"
@@ -123,14 +123,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     color="primary"
                                     class="q-mr-sm"
                                 />
-                                <span class="text-subtitle1 text-primary"
-                                    >Contact Information</span
-                                >
+                                <span class="text-subtitle1 text-primary">{{
+                                    __("Contact Information")
+                                }}</span>
                             </div>
 
                             <q-input
                                 v-model="form.email"
-                                label="Email Address"
+                                :label="__('Email Address')"
                                 type="email"
                                 outlined
                                 dense
@@ -159,7 +159,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         map-options
                                         input-debounce="300"
                                         :options="filteredCountries"
-                                        label="Country"
+                                        :label="__('Country')"
                                         :error="!!errors.country"
                                         @filter="filterCountries"
                                         color="primary"
@@ -206,7 +206,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         map-options
                                         input-debounce="300"
                                         :options="filteredDialCodes"
-                                        label="Dial Code"
+                                        :label="__('Dial Code')"
                                         :error="!!errors.dial_code"
                                         @filter="filterDialCodes"
                                         color="primary"
@@ -226,7 +226,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <q-input
                                 v-model="form.phone"
-                                label="Phone Number"
+                                :label="__('Phone Number')"
                                 outlined
                                 dense
                                 :error="!!errors.phone"
@@ -248,9 +248,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     color="primary"
                                     class="q-mr-sm"
                                 />
-                                <span class="text-subtitle1 text-primary"
-                                    >Additional Information</span
-                                >
+                                <span class="text-subtitle1 text-primary">{{
+                                    __("Additional Information")
+                                }}</span>
                             </div>
 
                             <div class="birthday-field">
@@ -259,7 +259,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         name="mdi-cake-variant"
                                         class="q-mr-sm"
                                     />
-                                    Birthday
+                                    {{ __("Birthday") }}
                                 </label>
                                 <VueDatePicker
                                     v-model="form.birthday"
@@ -267,7 +267,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :max-date="new Date()"
                                     format="yyyy-MM-dd"
                                     model-type="format"
-                                    placeholder="Select birthday"
+                                    :placeholder="__('Select birthday')"
                                     class="date-picker"
                                 />
                                 <v-error :error="errors.birthday"></v-error>
@@ -275,7 +275,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <q-checkbox
                                 v-model="form.verify_email"
-                                label="Mark email as verified"
+                                :label="__('Mark email as verified')"
                                 color="primary"
                                 class="verify-checkbox"
                                 :error="!!errors.verify_email"
@@ -292,7 +292,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <q-card-actions align="right" class="q-pa-lg">
                         <q-btn
-                            label="Cancel"
+                            :label="__('Cancel')"
                             icon="mdi-close-circle"
                             color="grey-7"
                             @click="dialog = false"
@@ -300,7 +300,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mr-sm"
                         />
                         <q-btn
-                            label="Update User"
+                            :label="__('Update User')"
                             icon="mdi-content-save"
                             color="primary"
                             @click="update"

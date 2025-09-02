@@ -26,10 +26,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row items-center justify-between q-mb-md">
                 <div>
                     <div class="text-h4 text-primary text-weight-bold">
-                        User Management
+                        {{ __("User Management") }}
                     </div>
                     <div class="text-subtitle1 text-grey-7">
-                        Manage system users and their permissions
+                        {{ __("Manage system users and their permissions") }}
                     </div>
                 </div>
 
@@ -46,12 +46,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             {
                                 value: 'list',
                                 icon: 'mdi-format-list-bulleted',
-                                label: 'List',
+                                label: __('List'),
                             },
                             {
                                 value: 'grid',
                                 icon: 'mdi-view-grid-outline',
-                                label: 'Grid',
+                                label: __('Grid'),
                             },
                         ]"
                         unelevated
@@ -73,9 +73,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card flat class="bg-blue-1 text-blue-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ users.length }} User{{
-                                users.length !== 1 ? "s" : ""
-                            }}
+                            {{ users.length }} {{ __("User")
+                            }}{{ users.length !== 1 ? "s" : "" }}
                         </div>
                         <q-icon name="mdi-account-group" size="md" />
                     </q-card-section>
@@ -84,7 +83,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="col-xs-12 col-sm-6 col-md-3">
                 <q-card flat class="bg-green-1 text-green-8">
                     <q-card-section class="text-center">
-                        <div class="text-h6">{{ activeUsersCount }} Active</div>
+                        <div class="text-h6">
+                            {{ activeUsersCount }} {{ __("Active") }}
+                        </div>
                         <q-icon name="mdi-account-check" size="md" />
                     </q-card-section>
                 </q-card>
@@ -93,7 +94,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card flat class="bg-orange-1 text-orange-8">
                     <q-card-section class="text-center">
                         <div class="text-h6">
-                            {{ inactiveUsersCount }} Inactive
+                            {{ inactiveUsersCount }} {{ __("Inactive") }}
                         </div>
                         <q-icon name="mdi-account-off" size="md" />
                     </q-card-section>
@@ -131,7 +132,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         : 'mdi-account-check'
                                 "
                             >
-                                {{ user.disabled ? "Inactive" : "Active" }}
+                                {{
+                                    user.disabled
+                                        ? __("Inactive")
+                                        : __("Active")
+                                }}
                             </q-badge>
                         </div>
                     </q-card-section>
@@ -173,8 +178,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="text-center q-pa-xl"
         >
             <q-icon name="mdi-account-off-outline" size="xl" color="grey-4" />
-            <div class="text-h6 text-grey-6 q-mt-md">No users found</div>
-            <div class="text-grey-5">Create your first user to get started</div>
+            <div class="text-h6 text-grey-6 q-mt-md">
+                {{ __("No users found") }}
+            </div>
+            <div class="text-grey-5">
+                {{ __("Create your first user to get started") }}
+            </div>
         </div>
 
         <!-- List View -->
@@ -213,7 +222,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     : 'mdi-account-check'
                             "
                         >
-                            {{ props.row.disabled ? "Inactive" : "Active" }}
+                            {{
+                                props.row.disabled
+                                    ? __("Inactive")
+                                    : __("Active")
+                            }}
                         </q-badge>
                     </q-td>
 
@@ -241,7 +254,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <template v-slot:no-data>
                 <div class="full-width row flex-center text-grey-6 q-pa-xl">
                     <q-icon name="mdi-account-off-outline" size="xl" />
-                    <div class="q-ml-sm">No users available</div>
+                    <div class="q-ml-sm">{{ __("No users available") }}</div>
                 </div>
             </template>
         </q-table>
@@ -262,7 +275,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-select
                 v-model="search.per_page"
                 :options="[10, 15, 25, 50]"
-                label="Items per page"
+                :label="__('Items per page')"
                 dense
                 outlined
                 class="q-ml-md"
@@ -300,21 +313,21 @@ export default {
             columns: [
                 {
                     name: "name",
-                    label: "Name",
+                    label: this.__("Name"),
                     field: (row) => `${row.name} ${row.last_name}`,
                     sortable: true,
                     align: "left",
                 },
                 {
                     name: "email",
-                    label: "Email",
+                    label: this.__("Email"),
                     field: "email",
                     sortable: true,
                     align: "left",
                 },
                 {
                     name: "status",
-                    label: "Status",
+                    label: this.__("Status"),
                     field: "disabled",
                     sortable: true,
                     align: "center",
@@ -322,7 +335,7 @@ export default {
                 },
                 {
                     name: "actions",
-                    label: "Actions",
+                    label: this.__("Actions"),
                     field: "actions",
                     sortable: false,
                     align: "right",

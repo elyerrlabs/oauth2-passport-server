@@ -23,6 +23,7 @@
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { setupI18n, __ } from "./app/config/locale.js";
 
 import { customComponents } from "./app/config/customComponents.js";
 //import { $echo } from "./app/config/echo.js";
@@ -42,6 +43,9 @@ import iconSet from "quasar/icon-set/material-icons.js";
 
 //icons https://pictogrammers.com/library/mdi/
 import "@mdi/font/css/materialdesignicons.css";
+
+const i18n = setupI18n();
+window.__ = __;
 
 createInertiaApp({
   resolve: (name) =>
@@ -79,9 +83,11 @@ createInertiaApp({
 
     // app.config.globalProperties.$echo = $echo;
     app.config.globalProperties.$server = $server;
+    app.config.globalProperties.__ = __;
 
     app.component("VueDatePicker", VueDatePicker);
     app.use(plugin);
+    app.use(i18n);
     app.mount(el);
   },
 });

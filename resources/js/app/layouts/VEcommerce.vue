@@ -50,7 +50,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         size="lg"
                         icon="mdi-view-grid-outline"
                     >
-                        <q-tooltip>Categories</q-tooltip>
+                        <q-tooltip>{{ __("Categories") }}</q-tooltip>
                         <q-menu
                             class="categories-menu"
                             anchor="bottom left"
@@ -58,9 +58,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         >
                             <q-card style="width: 500px; max-width: 90vw">
                                 <q-toolbar class="bg-primary text-white">
-                                    <q-toolbar-title
-                                        >Categories</q-toolbar-title
-                                    >
+                                    <q-toolbar-title>{{
+                                        __("Categories")
+                                    }}</q-toolbar-title>
                                     <q-btn
                                         flat
                                         dense
@@ -158,7 +158,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-card-actions align="right">
                                     <q-btn
                                         flat
-                                        label="View All Categories"
+                                        :label="__('View All Categories')"
                                         color="primary"
                                     />
                                 </q-card-actions>
@@ -187,7 +187,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     option-label="name"
                     behavior="dialog"
                     hide-dropdown-icon
-                    label="Search products..."
+                    :label="__('Search products...')"
                     clearable
                 >
                     <template v-slot:prepend>
@@ -199,7 +199,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <template v-slot:no-option>
                         <q-item>
                             <q-item-section class="text-grey">
-                                No products found
+                                {{ __("No products found") }}
                             </q-item-section>
                         </q-item>
                     </template>

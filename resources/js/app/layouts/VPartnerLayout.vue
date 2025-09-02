@@ -40,10 +40,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     />
                     <div>
                         <div class="text-h6 text-weight-bold">
-                            Partner System
+                            {{ __("Partner System") }}
                         </div>
                         <div class="text-caption opacity-80">
-                            Management Platform
+                            {{ __("Management Platform") }}
                         </div>
                     </div>
                 </q-toolbar-title>
@@ -67,7 +67,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-scroll-area class="fit">
                 <q-list padding class="menu-list">
                     <q-item-label header class="text-weight-bold text-grey-8">
-                        Navigation
+                        {{ __("Navigation") }}
                     </q-item-label>
 
                     <div v-for="(item, index) in menus" :key="index">
@@ -90,7 +90,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </q-item-section>
 
                             <q-item-section class="text-weight-medium">
-                                {{ item.name }}
+                                {{ __(item.name) }}
                             </q-item-section>
 
                             <q-item-section side v-if="isActive(item)">

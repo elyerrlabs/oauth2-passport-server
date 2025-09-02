@@ -58,7 +58,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-icon color="primary" name="mdi-home" />
                             </q-item-section>
                             <q-item-section>
-                                <q-item-label>Home page</q-item-label>
+                                <q-item-label>{{
+                                    __("Home page")
+                                }}</q-item-label>
                             </q-item-section>
                         </q-item>
 
@@ -72,7 +74,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 />
                             </q-item-section>
                             <q-item-section>
-                                <q-item-label>My account</q-item-label>
+                                <q-item-label>{{
+                                    __("My account")
+                                }}</q-item-label>
                             </q-item-section>
                         </q-item>
 
@@ -88,7 +92,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-icon color="primary" name="mdi-login" />
                             </q-item-section>
                             <q-item-section>
-                                <q-item-label> Login </q-item-label>
+                                <q-item-label> {{ __("Login") }} </q-item-label>
                             </q-item-section>
                         </q-item>
                         <q-item
@@ -102,7 +106,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label class="text-negative">
-                                    Logout
+                                    {{ __("Logout") }}
                                 </q-item-label>
                             </q-item-section>
                         </q-item>

@@ -35,7 +35,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <q-toolbar-title class="admin-title">
                     <q-icon name="mdi-store" size="md" class="q-mr-sm" />
-                    <span class="text-weight-bold">E-Commerce </span> Admin
+                    <span class="text-weight-bold"
+                        >{{ __("E-Commerce") }}
+                    </span>
+                    {{ __("Admin") }}
                 </q-toolbar-title>
 
                 <q-space />
@@ -56,8 +59,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         >
             <q-scroll-area class="fit">
                 <div class="sidebar-header q-pa-md">
-                    <div class="text-h6 text-weight-bold">Admin Menu</div>
-                    <div class="text-caption text-grey-7">Management Panel</div>
+                    <div class="text-h6 text-weight-bold">
+                        {{ __("Admin Menu") }}
+                    </div>
+                    <div class="text-caption text-grey-7">
+                        {{ __("Management Panel") }}
+                    </div>
                 </div>
 
                 <q-separator />
@@ -76,14 +83,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-icon color="primary" name="mdi-view-dashboard" />
                         </q-item-section>
                         <q-item-section>
-                            {{ menu_dashboard.name }}
+                            {{ __(menu_dashboard.name) }}
                         </q-item-section>
                     </q-item>
 
                     <!-- Products Section -->
                     <q-expansion-item
                         icon="mdi-package-variant"
-                        label="Products"
+                        :label="__('Products')"
                         default-opened
                         expand-icon-class="text-grey-6"
                         class="expansion-item"
@@ -106,7 +113,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 />
                             </q-item-section>
                             <q-item-section>
-                                {{ menu_category.name }}
+                                {{ __(menu_category.name) }}
                             </q-item-section>
                         </q-item>
 
@@ -128,7 +135,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 />
                             </q-item-section>
                             <q-item-section>
-                                {{ menu_products.name }}
+                                {{ __(menu_products.name) }}
                             </q-item-section>
                         </q-item>
                     </q-expansion-item>
@@ -136,7 +143,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Orders Section -->
                     <q-expansion-item
                         icon="mdi-cart-outline"
-                        label="Orders"
+                        :label="__('Orders')"
                         expand-icon-class="text-grey-6"
                         class="expansion-item"
                     >
@@ -154,7 +161,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                 />
                             </q-item-section>
-                            <q-item-section>All Orders</q-item-section>
+                            <q-item-section>{{
+                                __("All Orders")
+                            }}</q-item-section>
                             <q-item-section side>
                                 <q-badge color="blue" rounded>15</q-badge>
                             </q-item-section>
@@ -174,7 +183,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                 />
                             </q-item-section>
-                            <q-item-section>Pending</q-item-section>
+                            <q-item-section>{{ __("Pending") }}</q-item-section>
                             <q-item-section side>
                                 <q-badge color="orange" rounded>5</q-badge>
                             </q-item-section>
@@ -192,7 +201,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-item-section avatar>
                             <q-icon color="primary" name="mdi-account-group" />
                         </q-item-section>
-                        <q-item-section>Customers</q-item-section>
+                        <q-item-section>{{ __("Customers") }}</q-item-section>
                         <q-item-section side>
                             <q-badge color="green" rounded>1,245</q-badge>
                         </q-item-section>
@@ -209,7 +218,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <q-item-section avatar>
                             <q-icon color="primary" name="mdi-chart-bar" />
                         </q-item-section>
-                        <q-item-section>Reports</q-item-section>
+                        <q-item-section>{{ __("Reports") }}</q-item-section>
                     </q-item>
                 </q-list>
             </q-scroll-area>

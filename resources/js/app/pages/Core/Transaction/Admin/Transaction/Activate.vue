@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 transition-hide="scale"
                 class="bg-primary text-body2"
             >
-                Activate transaction
+                {{ __("Activate transaction") }}
             </q-tooltip>
         </q-btn>
 
@@ -46,7 +46,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         >
             <q-card class="dialog-card">
                 <q-card-section class="dialog-header bg-primary text-white">
-                    <div class="text-h6">Activate Transaction</div>
+                    <div class="text-h6">{{ __("Activate Transaction") }}</div>
                     <q-space />
                     <q-btn
                         icon="close"
@@ -67,7 +67,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="q-mr-sm"
                         />
                         <span class="text-subtitle1">
-                            Are you sure you want to activate this transaction?
+                            {{
+                                __(
+                                    "Are you sure you want to activate this transaction?"
+                                )
+                            }}
                         </span>
                     </div>
 
@@ -75,7 +79,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <div v-if="item.description" class="transaction-details">
                         <div class="text-caption text-grey-7">
-                            Transaction details:
+                            {{ __("Transaction details:") }}
                         </div>
                         <div class="text-body2">{{ item.description }}</div>
                     </div>
@@ -84,14 +88,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-card-actions class="dialog-actions">
                     <q-btn
                         flat
-                        label="Cancel"
+                        :label="__('Cancel')"
                         color="grey"
                         @click="dialog = false"
                         class="q-px-md"
                     />
                     <q-space />
                     <q-btn
-                        label="Activate"
+                        :label="__('Activate')"
                         color="positive"
                         @click="activate"
                         icon="mdi-power"

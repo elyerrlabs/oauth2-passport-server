@@ -45,7 +45,7 @@
                             dense
                             color="primary"
                             size="md"
-                            label="Buy"
+                            :label="__('Buy')"
                             @click="goTo(product?.links?.show)"
                         />
                         <q-space />

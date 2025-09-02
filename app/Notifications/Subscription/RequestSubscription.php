@@ -72,14 +72,14 @@ class RequestSubscription extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Your Subscription Request is Being Processed')
-            ->greeting('Dear User,')
-            ->line('We have received your subscription request and it is currently being processed.')
-            ->line("Transaction Code: {$this->code}")
-            ->line('You will receive a confirmation email once the process is completed.')
-            ->line('Thank you for your interest and for choosing our services.')
-            ->action('Go to dashboard', $this->url)
-            ->salutation('Best regards, The Team');
+            ->subject(__('Your Subscription Request is Being Processed'))
+            ->greeting(__('Dear User,'))
+            ->line(__('We have received your subscription request and it is currently being processed.'))
+            ->line(__("Transaction Code  :code", ['code' => $this->code]))
+            ->line(__('You will receive a confirmation email once the process is completed.'))
+            ->line(__('Thank you for your interest and for choosing our services.'))
+            ->action(__('Go to dashboard'), $this->url)
+            ->salutation(__('Best regards, The Team'));
     }
 
     /**

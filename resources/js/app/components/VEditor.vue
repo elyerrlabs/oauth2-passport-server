@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <div>
         <div class="row items-center q-gutter-sm q-mb-sm">
             <q-icon name="mdi-file-document" color="primary" size="sm" />
-            <div class="text-h6">{{ label }}</div>
+            <div class="text-h6">{{ __(label) }}</div>
         </div>
         <form
             autocorrect="on"
@@ -48,7 +48,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         size="sm"
                         icon="mdi-table"
                     >
-                        <q-tooltip>Add table</q-tooltip>
+                        <q-tooltip>{{ __("Add table") }}</q-tooltip>
                     </q-btn>
                 </template>
                 <template v-slot:table-row>
@@ -60,7 +60,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-table-row"
                         @click="insertRowBelowCursor"
                     >
-                        <q-tooltip>Add row</q-tooltip>
+                        <q-tooltip>{{ __("Add row") }}</q-tooltip>
                     </q-btn>
                 </template>
                 <template v-slot:table-col>
@@ -72,7 +72,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-table-column"
                         @click="insertColumnAfterCursor"
                     >
-                        <q-tooltip>Add column</q-tooltip>
+                        <q-tooltip>{{ __("Add column") }}</q-tooltip>
                     </q-btn>
                 </template>
                 <template v-slot:table-row-del>
@@ -84,7 +84,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-table-row-remove"
                         @click="deleteRowAtCursor"
                     >
-                        <q-tooltip>Delete row</q-tooltip>
+                        <q-tooltip>{{ __("Delete row") }}</q-tooltip>
                     </q-btn>
                 </template>
                 <template v-slot:table-col-del>
@@ -96,7 +96,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-table-column-remove"
                         @click="deleteColumnAtCursor"
                     >
-                        <q-tooltip>Delete column</q-tooltip>
+                        <q-tooltip>{{ __("Delete column") }}</q-tooltip>
                     </q-btn>
                 </template>
                 <template v-slot:table-del>
@@ -108,7 +108,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-table-large-remove"
                         @click="deleteTableAtCursor"
                     >
-                        <q-tooltip>Delete table</q-tooltip>
+                        <q-tooltip>{{ __("Delete table") }}</q-tooltip>
                     </q-btn>
                 </template>
                 <template v-slot:clear-format>
@@ -120,7 +120,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         icon="mdi-format-clear"
                         @click="clearFormat"
                     >
-                        <q-tooltip>Clear format</q-tooltip>
+                        <q-tooltip>{{ __("Clear format") }}</q-tooltip>
                     </q-btn>
                 </template>
             </q-editor>

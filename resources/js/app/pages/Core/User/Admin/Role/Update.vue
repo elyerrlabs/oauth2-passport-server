@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             transition-hide="scale"
             class="bg-primary"
         >
-            Edit role
+            {{ __("Edit role") }}
         </q-tooltip>
     </q-btn>
 
@@ -53,8 +53,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="lg"
                             class="q-mb-sm"
                         />
-                        <div class="text-h6">Update Role</div>
-                        <div class="text-caption">Modify role details</div>
+                        <div class="text-h6">{{ __("Update Role") }}</div>
+                        <div class="text-caption">
+                            {{ __("Modify role details") }}
+                        </div>
                     </q-card-section>
                 </div>
 
@@ -62,14 +64,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         class="text-subtitle1 text-weight-medium q-mb-md text-grey-8"
                     >
-                        Editing:
+                        {{ __("Editing") }}:
                         <span class="text-blue-8">"{{ form.name }}"</span>
                     </div>
 
                     <div class="q-gutter-y-md">
                         <q-input
                             v-model="form.name"
-                            label="Role Name"
+                            :label="__('Role Name')"
                             outlined
                             color="primary"
                             :error="!!errors.name"
@@ -78,7 +80,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :readonly="system"
                             :hint="
                                 system
-                                    ? 'System role name cannot be modified'
+                                    ? __('System role name cannot be modified')
                                     : ''
                             "
                         >
@@ -92,7 +94,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <q-input
                             v-model="form.description"
-                            label="Description"
+                            :label="__('Description')"
                             outlined
                             color="primary"
                             :error="!!errors.description"
@@ -100,7 +102,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             rows="3"
                             class="input-field"
                             :loading="loading"
-                            hint="Describe the purpose and permissions of this role"
+                            :hint="
+                                __(
+                                    'Describe the purpose and permissions of this role'
+                                )
+                            "
                         >
                             <template v-slot:prepend>
                                 <q-icon name="mdi-text-box-outline" />
@@ -120,10 +126,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     size="sm"
                                     class="q-mr-sm"
                                 />
-                                <span class="text-caption"
-                                    >This is a system role. Some properties
-                                    cannot be modified.</span
-                                >
+                                <span class="text-caption">
+                                    {{
+                                        __(
+                                            "This is a system role. Some properties cannot be modified."
+                                        )
+                                    }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -133,7 +142,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-btn
                         flat
                         color="grey-7"
-                        label="Cancel"
+                        :label="__('Cancel')"
                         @click="close"
                         class="q-mr-sm"
                         icon="mdi-close-circle"
@@ -141,7 +150,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     />
                     <q-btn
                         color="primary"
-                        label="Update Role"
+                        :label="__('Update Role')"
                         @click="updateRole"
                         :loading="loading"
                         icon="mdi-content-save"
@@ -203,7 +212,7 @@ export default {
                 if (res.status == 200) {
                     this.$q.notify({
                         type: "positive",
-                        message: "Role updated successfully",
+                        message: this.__("Role updated successfully"),
                         position: "top",
                         icon: "mdi-check-circle",
                         timeout: 3000,
@@ -217,7 +226,7 @@ export default {
                     this.errors = e.response.data.errors;
                     this.$q.notify({
                         type: "negative",
-                        message: "Please check the form for errors",
+                        message: this.__("Please check the form for errors"),
                         position: "top",
                         icon: "mdi-alert-circle",
                         timeout: 3000,

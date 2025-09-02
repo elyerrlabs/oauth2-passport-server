@@ -23,25 +23,28 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <q-dialog v-model="dialog" persistent>
         <q-card class="w-100">
             <q-card-section>
-                <div class="text-h6">Delete channel</div>
+                <div class="text-h6">{{ __("Delete channel") }}</div>
             </q-card-section>
 
             <q-card-section>
-                This channel will be removed. This action cannot be undone. Are
-                you sure you want to proceed?
+                {{
+                    __(
+                        "This channel will be removed. This action cannot be undone. Are you sure you want to proceed?"
+                    )
+                }}
             </q-card-section>
 
             <q-card-actions align="right">
                 <q-btn
                     outline
-                    label="Save"
+                    :label="__('Save')"
                     icon="mdi-content-save-alert"
                     color="positive"
                     @click="destroy"
                 />
                 <q-btn
                     outline
-                    label="Close"
+                    :label="__('Close')"
                     icon="mdi-close-circle"
                     color="secondary"
                     @click="dialog = false"
@@ -56,7 +59,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         icon="mdi-delete-circle-outline"
         @click="dialog = true"
     >
-        <q-tooltip>Delete channel</q-tooltip>
+        <q-tooltip>{{ __("Delete channel") }}</q-tooltip>
     </q-btn>
 </template>
 <script>

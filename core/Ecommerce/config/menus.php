@@ -27,7 +27,7 @@ return [
 
     "ecommerce_dashboard" => [
         "id" => "ecommerce",
-        "name" => "Ecommerce",
+        "name" => __("Ecommerce"),
         "route" => "ecommerce.admin.dashboard",
         "icon" => "mdi-store-cog",
         'show' => "administrator"
@@ -35,7 +35,7 @@ return [
 
     "ecommerce_orders" => [
         "id" => "orders",
-        "name" => "My cart",
+        "name" => __("My cart"),
         "route" => "ecommerce.orders.index",
         "icon" => "mdi-store-cog",
         'show' => "administrator"
@@ -46,7 +46,7 @@ return [
         "user_routes" => [
             "ecommerce" => [
                 "id" => "ecommerce",
-                "name" => "Ecommerce",
+                "name" => __("Ecommerce"),
                 "route" => "ecommerce.dashboard",
                 "icon" => "mdi-store-cog",
                 'show' => "administrator"
@@ -57,21 +57,21 @@ return [
     "ecommerce_menus" => [
         [
             "id" => 'dashboard',
-            "name" => "Dashboard",
+            "name" => __("Dashboard"),
             "route" => "ecommerce.admin.dashboard",
             "icon" => "mdi-view-dashboard",
             'service' => "administrator"
         ],
         [
             "id" => "categories",
-            "name" => "Categories",
+            "name" => __("Categories"),
             "route" => "ecommerce.admin.categories.index",
             "icon" => "mdi-circle-outline",
             'service' => "administrator"
         ],
         [
             "id" => "products",
-            "name" => "Products",
+            "name" => __("Products"),
             "route" => "ecommerce.admin.products.index",
             "icon" => "mdi-circle-outline",
             'service' => "administrator"

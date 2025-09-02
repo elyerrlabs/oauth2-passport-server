@@ -43,7 +43,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </q-item-section>
                         <q-item-section>
                             <q-item-label>
-                                {{ theme.label }}
+                                {{ __(theme.label) }}
                             </q-item-label>
                         </q-item-section>
                     </q-item>

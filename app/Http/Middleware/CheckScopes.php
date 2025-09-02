@@ -46,7 +46,7 @@ class CheckScopes extends middleware
     {
         // Retrieve token to the  request
         $token = $request->user()->token();
- 
+
         // Checking Authentication
         if (!$request->user() || !$token || empty($token->client) || $token->revoked) {
             throw new AuthenticationException;
@@ -59,7 +59,7 @@ class CheckScopes extends middleware
                 return $next($request);
             }
 
-            throw new ReportError("You do not have the necessary permissions", 403);
+            throw new ReportError(__("You do not have the necessary permissions"), 403);
         }
 
         // Verify the admin user and add top level
@@ -79,7 +79,7 @@ class CheckScopes extends middleware
             return $next($request);
         }
 
-        throw new ReportError("You do not have the necessary permissions", 403);
+        throw new ReportError(__("You do not have the necessary permissions"), 403);
 
     }
 }

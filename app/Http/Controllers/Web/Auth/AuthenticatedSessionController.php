@@ -114,7 +114,7 @@ class AuthenticatedSessionController extends WebController
     {
 
         if (!$request->isMethod('get') && !$request->isMethod('post')) {
-            throw new ReportError("Method not allowed", 405);
+            throw new ReportError(__("Method not allowed"), 405);
         }
 
         // Save the last connected

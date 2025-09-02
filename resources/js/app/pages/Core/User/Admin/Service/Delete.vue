@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             transition-hide="scale"
             class="bg-negative"
         >
-            Delete service
+            {{ __("Delete service") }}
         </q-tooltip>
     </q-btn>
 
@@ -53,14 +53,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             size="lg"
                             class="q-mb-sm"
                         />
-                        <div class="text-h6">Delete Service</div>
-                        <div class="text-caption">This action is permanent</div>
+                        <div class="text-h6">{{ __("Delete Service") }}</div>
+                        <div class="text-caption">
+                            {{ __("This action is permanent") }}
+                        </div>
                     </q-card-section>
                 </div>
 
                 <q-card-section class="q-pt-lg text-center">
                     <div class="text-body1 q-mb-md">
-                        Are you sure you want to delete the service
+                        {{ __("Are you sure you want to delete the service") }}
                         <span class="text-weight-bold text-blue-8"
                             >"{{ item.name }}"</span
                         >?
@@ -73,7 +75,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             icon="mdi-identifier"
                             class="q-pa-sm"
                         >
-                            ID: {{ item.id }}
+                            {{ __("ID") }}: {{ item.id }}
                         </q-chip>
                         <q-chip
                             color="green-1"
@@ -81,7 +83,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             icon="mdi-account-group"
                             class="q-pa-sm"
                         >
-                            Group: {{ item.group?.name || "N/A" }}
+                            {{ __("Group") }}:
+                            {{ item.group?.name || __("N/A") }}
                         </q-chip>
                     </div>
 
@@ -93,7 +96,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             icon="mdi-shield-check"
                             class="q-pa-sm"
                         >
-                            System Service
+                            {{ __("System Service") }}
                         </q-chip>
                         <q-chip
                             color="blue-1"
@@ -101,7 +104,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             icon="mdi-eye"
                             class="q-pa-sm"
                         >
-                            {{ item.visibility || "N/A" }}
+                            {{ item.visibility || __("N/A") }}
                         </q-chip>
                     </div>
 
@@ -115,10 +118,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="sm"
                                 class="q-mr-sm"
                             />
-                            <span class="text-caption"
-                                >Warning: This is a system service. Deleting it
-                                may affect application functionality.</span
-                            >
+                            <span class="text-caption">
+                                {{
+                                    __(
+                                        "Warning: This is a system service. Deleting it may affect application functionality."
+                                    )
+                                }}
+                            </span>
                         </div>
                     </div>
                     <div
@@ -131,10 +137,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="sm"
                                 class="q-mr-sm"
                             />
-                            <span class="text-caption"
-                                >Warning: This action cannot be undone. The
-                                service will be permanently removed.</span
-                            >
+                            <span class="text-caption">
+                                {{
+                                    __(
+                                        "Warning: This action cannot be undone. The service will be permanently removed."
+                                    )
+                                }}
+                            </span>
                         </div>
                     </div>
                 </q-card-section>
@@ -143,7 +152,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-btn
                         flat
                         color="grey-7"
-                        label="Cancel"
+                        :label="__('Cancel')"
                         @click="dialog = false"
                         class="q-mr-md"
                         icon="mdi-close-circle"
@@ -151,7 +160,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     />
                     <q-btn
                         color="negative"
-                        label="Delete Service"
+                        :label="__('Delete Service')"
                         @click="destroy"
                         icon="mdi-delete-forever"
                         class="q-px-md"

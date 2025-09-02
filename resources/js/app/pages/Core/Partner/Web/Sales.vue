@@ -26,10 +26,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="row items-center justify-between q-mb-lg">
                 <div>
                     <div class="text-h4 text-weight-bold text-primary">
-                        Sales Performance
+                        {{ __("Sales Performance") }}
                     </div>
                     <div class="text-subtitle1 text-grey-7">
-                        Track your commissions and sales history
+                        {{ __("Track your commissions and sales history") }}
                     </div>
                 </div>
                 <div class="row items-center q-gutter-sm">
@@ -41,12 +41,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         @click="getSales"
                         class="q-mr-sm"
                     >
-                        <q-tooltip>Refresh data</q-tooltip>
+                        <q-tooltip>{{ __("Refresh data") }}</q-tooltip>
                     </q-btn>
                     <q-select
                         v-model="search.per_page"
                         :options="[10, 15, 25, 50]"
-                        label="Rows per page"
+                        :label="__('Rows per page')"
                         dense
                         outlined
                         style="min-width: 140px"
@@ -69,7 +69,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 />
                                 <div>
                                     <div class="text-caption text-grey-7">
-                                        TOTAL SALES VALUE
+                                        {{ __("TOTAL SALES VALUE") }}
                                     </div>
                                     <div class="text-h6 text-weight-bold">
                                         {{ formatCurrency(totalSalesValue) }}
@@ -91,7 +91,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 />
                                 <div>
                                     <div class="text-caption text-grey-7">
-                                        TOTAL COMMISSIONS
+                                        {{ __("TOTAL COMMISSIONS") }}
                                     </div>
                                     <div
                                         class="text-h6 text-weight-bold text-positive"
@@ -115,7 +115,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 />
                                 <div>
                                     <div class="text-caption text-grey-7">
-                                        TOTAL TRANSACTIONS
+                                        {{ __("TOTAL TRANSACTIONS") }}
                                     </div>
                                     <div class="text-h6 text-weight-bold">
                                         {{ sales.length }}
@@ -130,7 +130,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Main Data Table -->
             <q-card flat class="data-card shadow-2">
                 <q-card-section class="card-header">
-                    <div class="text-h6 text-weight-medium">Sales History</div>
+                    <div class="text-h6 text-weight-medium">
+                        {{ __("Sales History") }}
+                    </div>
                 </q-card-section>
 
                 <q-table
@@ -182,7 +184,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     }}
                                 </div>
                                 <div class="text-caption text-grey-7">
-                                    Commission
+                                    {{ __("Commission") }}
                                 </div>
                             </div>
                         </q-td>
@@ -219,7 +221,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="2em"
                                 class="q-mr-sm"
                             />
-                            <span>No sales records found</span>
+                            <span>{{ __("No sales records found") }}</span>
                         </div>
                     </template>
                 </q-table>
@@ -230,8 +232,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     v-if="pages.total_pages > 1"
                 >
                     <div class="text-caption text-grey-7">
-                        Page {{ search.page }} of {{ pages.total_pages }} •
-                        {{ pages.total_count }} total records
+                        {{ __("Page") }} {{ search.page }} {{ __("of") }}
+                        {{ pages.total_pages }} • {{ pages.total_count }}
+                        {{ __("total records") }}
                     </div>
 
                     <q-pagination
@@ -258,7 +261,7 @@ export default {
             columns: [
                 {
                     name: "currency",
-                    label: "Currency",
+                    label: this.__("Currency"),
                     field: "currency",
                     align: "left",
                     sortable: true,
@@ -266,7 +269,7 @@ export default {
                 },
                 {
                     name: "status",
-                    label: "Status",
+                    label: this.__("Status"),
                     field: "status",
                     align: "center",
                     sortable: true,
@@ -274,7 +277,7 @@ export default {
                 },
                 {
                     name: "total",
-                    label: "Commission",
+                    label: this.__("Commission"),
                     field: "total",
                     align: "right",
                     sortable: true,
@@ -282,7 +285,7 @@ export default {
                 },
                 {
                     name: "created",
-                    label: "Created Date",
+                    label: this.__("Created Date"),
                     field: "created",
                     align: "left",
                     sortable: true,
@@ -290,7 +293,7 @@ export default {
                 },
                 {
                     name: "updated",
-                    label: "Updated Date",
+                    label: this.__("Updated Date"),
                     field: "updated",
                     align: "left",
                     sortable: true,
@@ -357,10 +360,9 @@ export default {
                         res.data.meta.pagination.total_pages;
                 }
             } catch (error) {
-                console.error("Error loading sales data:", error);
                 this.$q.notify({
                     type: "negative",
-                    message: "Failed to load sales data",
+                    message: this.__("Failed to load sales data"),
                     position: "top-right",
                 });
             } finally {

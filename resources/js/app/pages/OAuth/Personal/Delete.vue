@@ -30,7 +30,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         @click="openDialog"
         class="delete-btn"
     >
-        <q-tooltip>Delete API Key</q-tooltip>
+        <q-tooltip>{{ __("Delete API Key") }}</q-tooltip>
     </q-btn>
 
     <!-- Confirmation Dialog -->
@@ -51,7 +51,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="q-mr-md"
                     />
                     <div class="text-h6 text-weight-bold text-grey-8">
-                        Confirm Deletion
+                        {{ __("Confirm Deletion") }}
                     </div>
                 </div>
             </q-card-section>
@@ -60,8 +60,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <q-card-section class="dialog-content">
                 <div class="confirmation-message">
                     <p class="text-body1 text-grey-8 q-mb-md">
-                        Are you sure you want to permanently delete the API key
-                        with name
+                        {{
+                            __(
+                                "Are you sure you want to permanently delete the API key with name"
+                            )
+                        }}
                     </p>
                     <div class="token-display q-mb-lg">
                         <q-chip
@@ -83,13 +86,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="20px"
                                 class="q-mr-sm"
                             />
-                            <span class="text-negative text-weight-medium"
-                                >This action cannot be undone.</span
-                            >
+                            <span class="text-negative text-weight-medium">{{
+                                __("This action cannot be undone.")
+                            }}</span>
                         </div>
                         <div class="text-caption text-negative q-mt-xs">
-                            Any applications using this API key will immediately
-                            lose access.
+                            {{
+                                __(
+                                    "Any applications using this API key will immediately lose access."
+                                )
+                            }}
                         </div>
                     </div>
                 </div>
@@ -98,7 +104,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Actions -->
             <q-card-actions class="dialog-actions" align="right">
                 <q-btn
-                    label="Cancel"
+                    :label="__('Cancel')"
                     color="grey-6"
                     flat
                     @click="closeDialog"
@@ -106,7 +112,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     no-caps
                 />
                 <q-btn
-                    label="Delete API Key"
+                    :label="__('Delete API Key')"
                     color="negative"
                     @click="destroy"
                     :loading="loading"
@@ -116,7 +122,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <template v-slot:loading>
                         <q-spinner-hourglass class="on-left" />
-                        Deleting...
+                        {{ __("Deleting...") }}
                     </template>
                 </q-btn>
             </q-card-actions>

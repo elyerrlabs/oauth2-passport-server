@@ -78,7 +78,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <q-item-section>
                                 <div class="text-weight-medium">
-                                    {{ item.name }}
+                                    {{ __(item.name) }}
                                 </div>
                             </q-item-section>
 
@@ -97,7 +97,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Drawer Footer -->
                 <div class="drawer-footer text-center q-pa-md">
                     <div class="text-caption text-grey-6">
-                        {{ app_name }} Admin Panel
+                        {{ app_name }} {{ __("Admin Panel") }}
                     </div>
                     <div class="text-caption text-grey-5">
                         &copy; {{ new Date().getFullYear() }}
@@ -126,9 +126,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <q-page v-if="!user.id" class="fixed-full flex flex-center bg-grey-1">
             <div class="text-center">
                 <q-spinner-gears size="xl" color="primary" class="q-mb-md" />
-                <div class="text-h6 text-grey-7">Initializing Admin Panel</div>
+                <div class="text-h6 text-grey-7">
+                    {{ __("Initializing Admin Panel") }}
+                </div>
                 <div class="text-caption text-grey-5 q-mt-sm">
-                    Please wait while we load your dashboard...
+                    {{ __("Please wait while we load your dashboard...") }}
                 </div>
             </div>
         </q-page>

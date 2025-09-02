@@ -31,7 +31,7 @@
                         </div>
                         <q-btn
                             color="primary"
-                            label="Buy Now"
+                            :label="__('Buy Now')"
                             class="q-mt-sm"
                             @click.stop="goTo(banner?.links?.index)"
                         />
@@ -44,7 +44,7 @@
             <div class="row q-col-gutter-md q-mb-lg">
                 <div class="col-12">
                     <div class="text-h5 text-weight-bold q-mb-md">
-                        Shop by Category
+                        {{ __("Shop by Category") }}
                     </div>
                 </div>
                 <div
@@ -102,12 +102,12 @@
             <!-- Featured Products -->
             <v-products
                 :products="featured_products"
-                title="Featured products"
+                :title="__('Featured products')"
             />
 
             <q-separator />
 
-            <v-products :products="products" title="Another products" />
+            <v-products :products="products" :title="__('Another products')" />
         </div>
     </v-ecommerce>
 </template>
