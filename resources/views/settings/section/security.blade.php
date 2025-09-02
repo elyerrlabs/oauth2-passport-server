@@ -238,9 +238,9 @@
                                     {{ __('Endpoint') }}
                                 </label>
                                 <div class="relative">
-                                    <input type="text" name="services[captcha][providers][turnstile][gateway]"
+                                    <input type="text" name="services[captcha][providers][turnstile][api]"
                                         class="w-full pl-10 pr-4 py-3 rounded-lg border border-[var(--color-border)] shadow-sm focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-light)] transition-colors duration-300"
-                                        value="{{ config('services.captcha.providers.turnstile.gateway') }}"
+                                        value="{{ config('services.captcha.providers.turnstile.api') }}"
                                         placeholder="https://challenges.cloudflare.com/turnstile/v0/siteverify">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <i class="mdi mdi-web text-[var(--color-text-secondary)]"></i>
