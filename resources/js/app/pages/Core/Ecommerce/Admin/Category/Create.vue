@@ -388,6 +388,15 @@ export default {
             } catch (e) {
                 if (e?.response?.data?.errors && e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
+                    if (e.response && e.response.data.errors) {
+                        this.errors = e.response.data.errors;
+                        this.$q.notify({
+                            type: "warning",
+                            message: "Please check the input fields",
+                            timeout: 3000,
+                            icon: "update",
+                        });
+                    }
                 } else {
                     this.$q.notify({
                         type: "negative",

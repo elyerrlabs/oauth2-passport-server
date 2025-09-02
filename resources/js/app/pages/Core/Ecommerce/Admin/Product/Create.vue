@@ -30,7 +30,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             icon="mdi-plus-circle"
             :class="{ 'text-white': !searchable }"
         >
-            {{ title }}
+            {{ __(title) }}
         </q-btn>
 
         <q-dialog
@@ -112,6 +112,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 color="positive"
                                 class="form-toggle"
                             />
+                        </div>
+                        <div
+                            class="col-12 col-md-4 col-lg-4 col-xl-3 toggle-group"
+                        >
                             <q-checkbox
                                 v-model="form.featured"
                                 :val="false"
@@ -122,18 +126,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
 
                         <q-select
+                            v-model="form.category"
                             class="col-12 col-md-6 col-lg-4 col-xl-3 form-field"
                             dense
                             outlined
-                            :model-value="form.category"
                             use-input
                             hide-selected
                             fill-input
+                            emit-value
+                            map-options
                             input-debounce="0"
                             :options="categories"
                             :label="__('Category')"
                             @filter="filterCategories"
-                            @input-value="setCategory"
                             :error="!!errors.category"
                         >
                             <template v-slot:prepend>
@@ -153,39 +158,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </q-item>
                             </template>
                         </q-select>
-
-                        <q-input
-                            class="col-12 col-md-6 col-lg-4 col-xl-3 form-field"
-                            dense
-                            outlined
-                            v-model="form.icon"
-                            :label="__('Icon')"
-                            :error="!!errors.icon"
-                            :hint="__('Choose a Material Design icon name')"
-                            bottom-slots
-                        >
-                            <template v-slot:prepend>
-                                <q-icon
-                                    name="mdi-emoticon-outline"
-                                    color="primary"
-                                />
-                            </template>
-                            <template v-slot:error>
-                                <v-error :error="errors.icon" />
-                            </template>
-                            <template v-slot:append>
-                                <q-btn
-                                    dense
-                                    flat
-                                    round
-                                    icon="mdi-link-variant"
-                                    color="primary"
-                                    @click="openIconLibrary"
-                                    :title="__('View icon library')"
-                                    class="icon-library-btn"
-                                />
-                            </template>
-                        </q-input>
 
                         <q-select
                             class="col-12 col-md-6 col-lg-4 col-xl-3 form-field"
@@ -482,10 +454,6 @@ export default {
             this.form.attributes = item;
         },
 
-        openIconLibrary() {
-            window.open("https://pictogrammers.com/library/mdi/", "_blank");
-        },
-
         open() {
             this.dialog = true;
             this.form = {
@@ -498,7 +466,6 @@ export default {
                 currency: "",
                 price: "",
                 stock: 0,
-                icon: "",
                 published: false,
                 featured: false,
                 images: [],
@@ -522,12 +489,10 @@ export default {
             this.form.short_description = product.short_description;
             this.form.description = product.description;
             this.form.specification = product.specification;
-            this.form.category = product?.category?.name;
+            this.form.category = product?.category?.id;
             this.form.currency = product.currency;
             this.form.price = product.price;
             this.form.stock = product.stock;
-            this.form.icon =
-                product?.icon?.icon || product?.category?.icon?.icon;
             this.form.published = product.published;
             this.form.featured = product.featured;
             this.images = product?.images ?? [];
@@ -568,7 +533,7 @@ export default {
                 if (res.status === 200) {
                     this.categories = res.data.data.map((cat) => ({
                         label: cat.name,
-                        value: cat.name,
+                        value: cat.id,
                         ...cat,
                     }));
                 }
@@ -589,9 +554,6 @@ export default {
 
         setCategory(val) {
             this.form.category = val;
-            this.form.icon = this.categories.find(
-                (item) => item.label == val
-            )?.icon?.icon;
         },
 
         async create() {
@@ -607,7 +569,6 @@ export default {
             payload.append("category", this.form.category);
             payload.append("currency", this.form.currency);
             payload.append("price", this.form.price);
-            payload.append("icon", this.form.icon);
             payload.append("published", this.form.published);
             payload.append("featured", this.form.featured);
 
@@ -687,6 +648,12 @@ export default {
             } catch (e) {
                 if (e.response && e.response.data.errors) {
                     this.errors = e.response.data.errors;
+                    this.$q.notify({
+                        type: "warning",
+                        message: "Please check the input fields",
+                        timeout: 3000,
+                        icon: "update",
+                    });
                 }
             }
         },

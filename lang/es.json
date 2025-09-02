@@ -2261,5 +2261,6 @@
   "Error saving scope": "Error al guardar el alcance",
   "Failed to load scopes": "Error al cargar los alcances",
   "GSR_ID copied to clipboard": "GSR_ID copiado al portapapeles",
-  "Failed to copy to clipboard": "Error al copiar al portapapeles"
+  "Failed to copy to clipboard": "Error al copiar al portapapeles",
+  "Please check the input fields": "Por favor revisa el formulario"
 }

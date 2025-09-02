@@ -77,10 +77,9 @@ class StoreRequest extends FormRequest
                 },
                 new UndefinedValues()
             ],
-            'short_description' => ['required', 'min:0', 'max:1000', new UndefinedValues()],
+            'short_description' => ['required', new UndefinedValues(), 'min:0', 'max:1000',],
             'description' => ['required', new UndefinedValues()],
-            'category' => ['required', 'max:100', new UndefinedValues()],
-            'icon' => ['required', 'max:100', new UndefinedValues()],
+            'category' => ['required', new UndefinedValues(), 'exists:categories,id', 'max:100',],
             'stock' => [
                 Rule::requiredIf(function () {
                     return !$this->filled('id');
@@ -105,11 +104,11 @@ class StoreRequest extends FormRequest
             ],
             'images.*' => ['image', 'mimes:web,jpg,jpeg,bmp,png', 'max:2048'],
             'attributes' => ['required', 'array'],
-            'attributes.*.name' => ['required', 'max:100', 'min:1', new UndefinedValues()],
-            'attributes.*.type' => ['required', 'in:string,number,boolean,date', new UndefinedValues()],
-            'attributes.*.value' => ['required', 'max:100', 'min:1', new UndefinedValues()],
-            'attributes.*.widget' => ['required', 'max:100', 'min:1', new UndefinedValues()],
-            'attributes.*.multiple' => ['required', new BooleanRule(), new UndefinedValues()],
+            'attributes.*.name' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
+            'attributes.*.type' => ['required', new UndefinedValues(), 'in:string,number,boolean,date'],
+            'attributes.*.value' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
+            'attributes.*.widget' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
+            'attributes.*.multiple' => ['required', new UndefinedValues(), new BooleanRule()],
             'attributes.*.stock' => [
                 'nullable',
                 function ($attribute, $value, $fail) {

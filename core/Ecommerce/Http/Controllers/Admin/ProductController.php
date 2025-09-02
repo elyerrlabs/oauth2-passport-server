@@ -91,7 +91,7 @@ final class ProductController extends WebController
      */
     public function store(StoreRequest $request)
     {
-        
+
         $data = [
             'id' => $request->input('id'),
             'name' => $request->input('name'),
@@ -106,7 +106,6 @@ final class ProductController extends WebController
             'category' => $request->input('category'),
             'published' => $request->input('published'),
             'featured' => $request->input('featured'),
-            'icon' => $request->input('icon') ?? null,
             'attributes' => $request->input('attributes') ?? [],
             'tags' => $request->input('tags') ?? [],
         ];

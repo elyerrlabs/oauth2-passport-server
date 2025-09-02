@@ -22,9 +22,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <div v-if="hasErrors">
         <span
+            class="error"
             v-for="(item, index) in filteredErrors"
             :key="index"
-            class="text-red-500 block"
         >
             {{ item }}
         </span>

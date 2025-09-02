@@ -265,47 +265,6 @@ final class ProductRepository implements Contracts
     }
 
     /**
-     * Category Creation
-     * @param array $data
-     * @return \App\Models\Common\Category
-     */
-    public function categoryCreation(array $data)
-    {
-        /**
-         * @var CategoryRepository
-         */
-        $category = $this->category_repository->findByNameTag(
-            $data['category'] ?? null,
-            $this->model->tag
-        );
-
-        //Create first
-        if (empty($category)) {
-            $data = [
-                'name' => $data['category'],
-                'slug' => Str::slug($data['category'], '-'),
-                'tag' => $this->model->tag,
-                'icon' => $data['icon'] ?? null,
-            ];
-
-            $category = $this->category_repository->create($data);
-
-        } else {
-            // Or Update if it exists
-            $category = $this->category_repository->updateByTag(
-                $category->id,
-                $this->model->tag,
-                [
-                    'name' => $data['category'],
-                    'icon' => $data['icon']
-                ]
-            );
-        }
-
-        return $category;
-    }
-
-    /**
      * Create new resource
      * @param array $data
      * @return Product
@@ -314,7 +273,7 @@ final class ProductRepository implements Contracts
     {
         $model = DB::transaction(function () use ($data) {
 
-            $data['category_id'] = $this->categoryCreation($data)->id;
+            $data['category_id'] = $data['category'];
             $data['price'] = (int) str_replace('.', '', $data['price']);
             $model = $this->model->create($data);
             $this->CreateOrUpdatePrice($model, $data);
@@ -486,13 +445,13 @@ final class ProductRepository implements Contracts
     {
         $model = DB::transaction(function () use ($id, $data) {
 
-            $data['category_id'] = $this->categoryCreation($data)->id;
+            $data['category_id'] = $data['category'];
 
             $model = $this->find($id);
             $data['price'] = (int) str_replace('.', '', $data['price']);
             $model->update($data);
 
-            $this->CreateOrUpdatePrice($model, $data);
+            // $this->CreateOrUpdatePrice($model, $data);
             $this->createImage($model, $data);
             $this->createAttributes($model, $data);
             $this->createTags($model, $data);
