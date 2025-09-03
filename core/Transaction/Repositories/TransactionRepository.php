@@ -161,10 +161,14 @@ class TransactionRepository
     {
         $model = $this->model->find($id);
 
+        if ($model->status == config('billing.status.successful.id')) {
+            throw new ReportError("This action is not allowed for the current transaction.", 400);
+        }
+
         if (
             !in_array($model->status, [
-                config('billing.status.pending.name'),
-                config('billing.status.failed.name')
+                config('billing.status.pending.id'),
+                config('billing.status.failed.id')
             ])
         ) {
             throw new ReportError("This action is not allowed for the current transaction.", 403);
@@ -209,8 +213,8 @@ class TransactionRepository
 
             //Register package
             $package = $this->packageRepository->create([
-                'status' => config("billing.status.pending.name"),
-                'is_recurring' => config('billing.period.one_time.name') != $plan['price']['billing_period'],
+                'status' => config("billing.status.pending.id"),
+                'is_recurring' => config('billing.period.one_time.id') != $plan['price']['billing_period'],
                 'transaction_code' => $plan['transaction_code'],
                 'user_id' => $provider->user_id,
                 'meta' => $plan, // add plan to the metadata
@@ -221,7 +225,7 @@ class TransactionRepository
                 'subtotal' => $paymentManager->amount_subtotal,
                 'total' => $paymentManager->amount_total,
                 'currency' => $plan['price']['currency'],
-                'status' => config("billing.status.pending.name"),
+                'status' => config("billing.status.pending.id"),
                 'payment_method' => $data['payment_method'],
                 'billing_period' => $plan['price']['billing_period'],
                 'renew' => false,
@@ -286,7 +290,7 @@ class TransactionRepository
             'subtotal' => $paymentIntent->amount,
             'total' => $paymentIntent->amount,
             'currency' => $data['meta']['price']['currency'],
-            'status' => config("billing.status.pending.name"),
+            'status' => config("billing.status.pending.id"),
             'billing_period' => $data['meta']['price']['billing_period'],
             'session_id' => null,
             'payment_method' => $data['transaction']['payment_method'],
@@ -400,7 +404,7 @@ class TransactionRepository
                 $transaction->payment_method_id = $meta['payment_method'];
                 $transaction->payment_intent_id = $meta['payment_intent'];
                 $transaction->response = $meta;
-                $transaction->status = config('billing.status.successful.name');
+                $transaction->status = config('billing.status.successful.id');
                 $transaction->payment_url = $meta["receipt_url"];
                 $transaction->user_id = $auth_user ? $auth_user->id : null;
 
@@ -454,7 +458,7 @@ class TransactionRepository
         //Page to redirect after payment
         $redirect_to = route('transaction.subscriptions.index');
 
-        $transaction->status = config('billing.status.failed.name');
+        $transaction->status = config('billing.status.failed.id');
         $transaction->session_id = $meta['session']['id'];
         $transaction->payment_intent_id = $meta['id'];
         $transaction->payment_method_id = $meta['payment_method'];
@@ -480,7 +484,7 @@ class TransactionRepository
      */
     public function paymentCancelled(Transaction $transaction)
     {
-        $transaction->status = config('billing.status.cancelled.name');
+        $transaction->status = config('billing.status.cancelled.id');
         //Set the package metadata
         $package_meta = $transaction->transactionable->meta();
         unset($package_meta['transactions']);
@@ -489,8 +493,6 @@ class TransactionRepository
 
         $transaction->meta = $package_meta;
         $transaction->push();
-
-        $this->packageRepository->paymentCancelled($transaction->transactionable);
     }
 
     /**
@@ -505,14 +507,11 @@ class TransactionRepository
             $meta['metadata']['transaction_code']
         )->first();
 
-        $transaction->status = config('billing.status.expired.name');
+        $transaction->status = config('billing.status.expired.id');
         $transaction->session_id = $meta['id'];
         $transaction->payment_intent_id = $meta['payment_intent'];
         $transaction->payment_url = $meta['url'];
         $transaction->response = $meta;
-
-        // Set expiration status for the package
-        $this->packageRepository->paymentExpired($transaction->transactionable);
 
         $transaction->meta = $transaction->transactionable->meta();
         $transaction->push();
@@ -547,7 +546,7 @@ class TransactionRepository
             'subtotal' => $package['payment_manager']['amount_subtotal'],
             'total' => $package['payment_manager']['amount_total'],
             'currency' => $package['meta']['price']['currency'],
-            'status' => config("billing.status.pending.name"),
+            'status' => config("billing.status.pending.id"),
             'payment_method' => $request->payment_method,
             'billing_period' => $package['meta']['price']['billing_period'],
             'session_id' => $package['payment_manager']['id'],

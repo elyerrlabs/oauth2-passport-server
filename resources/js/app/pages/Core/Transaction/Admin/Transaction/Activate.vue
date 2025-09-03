@@ -24,18 +24,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <q-btn
             outline
             icon="mdi-power"
-            color="positive"
+            color="warning"
             @click="dialog = true"
             size="sm"
-            round
         >
-            <q-tooltip
-                transition-show="scale"
-                transition-hide="scale"
-                class="bg-primary text-body2"
-            >
-                {{ __("Activate transaction") }}
-            </q-tooltip>
+            {{ __("Activate transaction") }}
         </q-btn>
 
         <q-dialog
@@ -99,6 +92,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         color="positive"
                         @click="activate"
                         icon="mdi-power"
+                        :disable="disable"
                         class="q-px-lg activate-action-btn"
                     />
                 </q-card-actions>
@@ -121,11 +115,14 @@ export default {
     data() {
         return {
             dialog: false,
+            disable: false,
         };
     },
 
     methods: {
         async activate() {
+            this.disable = true;
+
             try {
                 const res = await this.$server.put(this.item.links.activate);
 
@@ -160,6 +157,7 @@ export default {
                     });
                 }
             } finally {
+                this.dialog = false;
                 this.dialog = false;
             }
         },

@@ -66,15 +66,4 @@ class TransactionManagerController extends WebController
             "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes'))
         ]);
     }
-
-    /**
-     * Activate the transaction
-     * @param \ Core\Transaction\Model\Transaction $transaction
-     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function activate(string $id)
-    {
-        return $this->repository->activate($id);
-    }
 }

@@ -61,18 +61,18 @@ class UserTransactionTransformer extends TransformerAbstract
             'code' => $transaction->code,
             'currency' => $transaction->currency,
             'status' => $transaction->status,
-            'subtotal' => $this->formatMoney($transaction->subtotal),
             'total' => $this->formatMoney($transaction->total),
             'payment_method' => $transaction->payment_method,
             'billing_period' => $transaction->billing_period,
             'renew' => $transaction->renew ? true : false,
             'session_id' => $transaction->session_id,
             'payment_intent_id' => $transaction->payment_intent_id,
-            'payment_url' => $transaction->transactionable->isCancelled() ? null : $transaction->payment_url,
+            'payment_url' => $transaction->payment_url,
             'meta' => $transaction->meta,
             'created' => $this->format_date($transaction->created_at),
             'updated' => $this->format_date($transaction->updated_at),
             'links' => [
+                'activate' => route('transaction.transactions.activate', ['transaction' => $transaction->id]),
                 'cancel' => route('transaction.subscriptions.cancel', ['transaction_id' => $transaction->id])
             ]
         ];

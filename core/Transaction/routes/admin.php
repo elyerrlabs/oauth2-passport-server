@@ -40,11 +40,6 @@ Route::middleware(['throttle:transaction:admin'])->group(function () {
         'index'
     ])->name('transactions.index');
 
-    Route::put('/transactions/{transaction}', [
-        TransactionManagerController::class,
-        'activate'
-    ])->name('transactions.activate');
-
     Route::resource('/plans', PlanController::class)->except('edit', 'create');
 
     Route::delete('/plans/{plan}/scopes/{scope}', [

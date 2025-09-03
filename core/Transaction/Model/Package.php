@@ -53,11 +53,8 @@ class Package extends Master
      * @var array
      */
     protected $fillable = [
-        'status',
         'start_at',
         'end_at',
-        'cancellation_at',
-        'last_renewal_at',
         'is_recurring',
         'transaction_code',
         'meta',
@@ -69,8 +66,6 @@ class Package extends Master
         'is_recurring' => 'boolean',
         'start_at' => 'datetime',
         'end_at' => 'datetime',
-        'cancellation_at' => 'datetime',
-        'last_renewal_at' => 'datetime',
     ];
 
     /**
@@ -99,14 +94,5 @@ class Package extends Master
     public function transactions()
     {
         return $this->morphMany(Transaction::class, 'transactionable');
-    }
-
-    /**
-     * check if it the transaction is cancelled
-     * @return bool
-     */
-    public function isCancelled()
-    {
-        return $this->cancellation_at ? true : false;
     }
 }

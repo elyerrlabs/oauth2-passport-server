@@ -109,7 +109,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="price-frequency text-caption text-grey-6"
                                 >
-                                    {{ __("One-time payment") }}
+                                    {{ __(props.row.billing_period) }}
                                 </div>
                             </q-td>
                         </template>
@@ -199,13 +199,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <q-badge
                                     :color="
                                         props.row.is_recurring
-                                            ? 'green-1'
-                                            : 'grey-3'
-                                    "
-                                    :text-color="
-                                        props.row.is_recurring
-                                            ? 'green-8'
-                                            : 'grey-7'
+                                            ? 'positive'
+                                            : 'negative'
                                     "
                                     class="recurring-badge"
                                     outline

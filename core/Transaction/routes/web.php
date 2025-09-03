@@ -39,4 +39,9 @@ Route::middleware(['throttle:transaction:web'])->group(function () {
     Route::get('/subscriptions/checkout/success', [UserSubscriptionController::class, 'success'])->name('checkout.success');
 
     Route::put('/packages/{package_id}/recurring', [UserSubscriptionController::class, 'recurringPayment'])->name('recurring.payment');
+
+    Route::put('/subscriptions/{transaction}/activate', [
+        UserSubscriptionController::class,
+        'activate'
+    ])->name('transactions.activate');
 });

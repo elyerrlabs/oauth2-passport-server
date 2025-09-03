@@ -434,11 +434,20 @@
                                     </div>
                                 </div>
 
-                                <div class="row justify-end q-mt-md">
+                                <div
+                                    class="row items-center justify-around q-mt-md"
+                                >
                                     <v-cancel
                                         v-if="tx.status === 'pending'"
                                         :item="tx"
                                     />
+
+                                    <v-activate
+                                        @updated="getPackages"
+                                        v-if="check(tx)"
+                                        :item="tx"
+                                    />
+
                                     <q-btn
                                         v-if="
                                             tx.status === 'successful' &&
@@ -477,10 +486,12 @@
 
 <script>
 import VCancel from "./Cancel.vue";
+import VActivate from "../../Admin/Transaction/Activate.vue";
 
 export default {
     components: {
         VCancel,
+        VActivate,
     },
 
     data() {
@@ -495,6 +506,9 @@ export default {
     },
 
     methods: {
+        check(item) {
+            return item.status == "pending" || item.status == "failed";
+        },
         async getPackages() {
             try {
                 const res = await this.$server.get(window.location.href);

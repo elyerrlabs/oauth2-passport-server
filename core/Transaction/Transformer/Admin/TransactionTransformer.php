@@ -26,7 +26,7 @@ namespace Core\Transaction\Transformer\Admin;
 
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
-use  Core\Transaction\Model\Transaction;
+use Core\Transaction\Model\Transaction;
 
 class TransactionTransformer extends TransformerAbstract
 {
@@ -60,14 +60,14 @@ class TransactionTransformer extends TransformerAbstract
             'id' => $transaction->id,
             'currency' => $transaction->currency,
             'status' => $transaction->status,
-            'subtotal' => $this->formatMoney($transaction->subtotal),
             'total' => $this->formatMoney($transaction->total),
             'payment_method' => $transaction->payment_method,
             'billing_period' => $transaction->billing_period,
             'renew' => $transaction->renew,
+            'cancellation_at' => $transaction->cancellation_at,
             'session_id' => $transaction->session_id,
             'payment_intent_id' => $transaction->payment_intent_id,
-            'payment_url' => $transaction->transactionable->isCancelled() ? null : $transaction->payment_url,
+            'payment_url' => $transaction->payment_url,
             'response' => $transaction->response,
             'meta' => $transaction->meta,
             'code' => $transaction->code,
@@ -77,7 +77,7 @@ class TransactionTransformer extends TransformerAbstract
             'payment_method_id' => $transaction->payment_method_id,
             'links' => [
                 'index' => route('transaction.admin.transactions.index'),
-                'activate' => route('transaction.admin.transactions.activate', ['transaction' => $transaction->id]),
+                'activate' => route('transaction.transactions.activate', ['transaction' => $transaction->id]),
                 'cancel' => route('transaction.subscriptions.cancel', ['transaction_id' => $transaction->id])
             ]
         ];

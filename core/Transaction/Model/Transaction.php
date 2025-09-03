@@ -26,7 +26,6 @@ namespace Core\Transaction\Model;
 use App\Models\Master;
 use Core\User\Model\User;
 use Core\Partner\Model\Partner;
-use Core\Transaction\Model\Package;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Core\Transaction\Transformer\Admin\TransactionTransformer;
 
@@ -41,11 +40,11 @@ class Transaction extends Master
     protected $fillable = [
         'currency',
         'status',
-        'subtotal',
         'total',
         'payment_method',
         'billing_period',
         'renew',
+        'cancellation_at',
         'session_id',
         'payment_intent_id',
         'payment_url',

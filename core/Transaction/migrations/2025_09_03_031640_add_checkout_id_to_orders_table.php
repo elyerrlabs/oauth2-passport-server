@@ -18,7 +18,7 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -26,25 +26,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::dropIfExists('packages');
-        Schema::create('packages', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('status');
-            $table->dateTime('start_at')->nullable();
-            $table->dateTime('end_at')->nullable();
-            $table->dateTime('cancellation_at')->nullable();
-            $table->dateTime('last_renewal_at')->nullable();
-            $table->boolean('is_recurring')->default(false);
-            $table->string('transaction_code')->index();
-            $table->json('meta');
-            $table->uuid('user_id');
-            $table->timestamps();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->uuid('checkout_id')->nullable();
+            $table->foreign('checkout_id')->references('id')->on('checkouts')->onDelete("RESTRICT");
         });
     }
 
@@ -53,6 +43,9 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('packages');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('checkout_id');
+            $table->dropForeign('checkout_id');
+        });
     }
 };

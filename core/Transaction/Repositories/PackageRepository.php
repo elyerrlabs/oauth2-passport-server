@@ -128,11 +128,22 @@ class PackageRepository implements Contracts
      */
     public function findByTransactionCode(string $transaction_code)
     {
-        $model = $this->model->with([
+        $query = $this->model->query();
+
+        $query->with([
             'user',
             'transactions',
             'lastTransaction'
-        ])->where('transaction_code', $transaction_code)->first();
+        ]);
+
+        $query->whereHas(
+            'transactions',
+            function ($query) use ($transaction_code) {
+                $query->Where('code', $transaction_code);
+            }
+        );
+
+        $model = $query->first();
 
         return $this->showOne($model, UserPackageTransformer::class);
     }
@@ -160,7 +171,7 @@ class PackageRepository implements Contracts
 
     /**
      * Determine if the package renewal is still possible.
-     * @param \App\Models\Subscription\Package $model
+     * @param \Core\Transaction\Model\Package $model
      * @throws  ReportError
      * @return void
      */
@@ -177,7 +188,7 @@ class PackageRepository implements Contracts
 
     /**
      * Determine the expiration date of the package
-     * @param \App\Models\Subscription\Package $package
+     * @param \Core\Transaction\Model\Package $package
      */
     public function getEndDate(Package $package)
     {
@@ -262,14 +273,13 @@ class PackageRepository implements Contracts
 
     /**
      * Set payment successfully for the package
-     * @param \App\Models\Subscription\Package $package
+     * @param \Core\Transaction\Model\Package $package
      * @return void
      */
     public function paymentSuccessfully(Package $package)
     {
         $package->start_at = now();
         $package->end_at = $this->getEndDate($package);
-        $package->status = config('billing.status.successful.name');
         $package->push();
 
         //add payments scopes
@@ -278,15 +288,13 @@ class PackageRepository implements Contracts
 
     /**
      * Set the renewal successfully for the package
-     * @param \App\Models\Subscription\Package $package
+     * @param \Core\Transaction\Model\Package $package
      * @param string $transaction_code
      * @return void
      */
     public function renewSuccessfully(Package $package, string $transaction_code)
     {
         $package->end_at = $this->getEndDate($package);
-        $package->status = config('billing.status.successful.name');
-        $package->last_renewal_at = now();
         $package->transaction_code = $transaction_code;
         $package->push();
 
@@ -294,38 +302,6 @@ class PackageRepository implements Contracts
         $this->addOrUpdatedScopeSubscription($package);
     }
 
-    /**
-     *  Set failed to the package
-     * @param \App\Models\Subscription\Package $package
-     * @return void
-     */
-    public function paymentFailed(Package $package)
-    {
-        $package->status = config('billing.status.failed.name');
-        $package->push();
-    }
-
-    /**
-     * Cancel operation
-     * @param \App\Models\Subscription\Package $package
-     * @return void
-     */
-    public function paymentCancelled(Package $package)
-    {
-        $package->status = config('billing.status.cancelled.name');
-        $package->cancellation_at = now();
-        $package->push();
-    }
-
-    /**
-     * Set expires for the package
-     * @return void
-     */
-    public function paymentExpired(Package $package)
-    {
-        $package->status = config('billing.status.expired.name');
-        $package->push();
-    }
 
     /**
      * Enable or disable recurring payment by package
@@ -345,6 +321,6 @@ class PackageRepository implements Contracts
 
         $package->push();
 
-        return $this->message(__('Recurring payment for this package has been updated successfully'),);
+        return $this->message(__('Recurring payment for this package has been updated successfully'), );
     }
 }

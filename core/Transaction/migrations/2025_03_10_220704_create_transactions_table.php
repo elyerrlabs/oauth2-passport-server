@@ -35,23 +35,23 @@ return new class () extends Migration {
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->uuid('id')->unique()->primary();
-            $table->string('currency');
-            $table->string('status');
-            $table->unsignedBigInteger('subtotal')->nullable();
-            $table->unsignedBigInteger('total')->nullable();
-            $table->string('payment_method');
-            $table->string('payment_method_id')->nullable();
-            $table->string('billing_period');
-            $table->boolean('renew')->default(false);
-            $table->string('session_id')->nullable();
-            $table->string('payment_intent_id')->nullable();
-            $table->text('payment_url')->nullable();
-            $table->json('response')->nullable(); //save response
-            $table->json('meta')->nullable(); //save package
-            $table->string('code');
-            $table->uuidMorphs('transactionable');
-            $table->uuid('user_id')->nullable(); // Package activator if it si fail
+            $table->uuid('id')->primary()->comment('Primary key, UUID');
+            $table->string('currency')->index()->comment('Currency used in transaction, e.g. USD, EUR');
+            $table->string('status')->index()->comment('Transaction status: pending, success, failed, canceled, etc');
+            $table->unsignedBigInteger('total')->nullable()->comment('Total amount paid');
+            $table->string('payment_method')->index()->comment('Payment method name, e.g. card, paypal');
+            $table->string('payment_method_id')->nullable()->comment('ID provided by payment gateway');
+            $table->string('billing_period')->index()->comment('Billing period: monthly, yearly, etc.');
+            $table->boolean('renew')->default(false)->comment('Indicates if transaction is a renewal');
+            $table->string('session_id')->nullable()->comment('Checkout session ID from provider');
+            $table->string('payment_intent_id')->nullable()->comment('Payment intent ID from provider');
+            $table->dateTime('cancellation_at')->nullable()->comment('Cancellation timestamp if transaction canceled');
+            $table->text('payment_url')->nullable()->comment('Payment URL to redirect user');
+            $table->json('response')->nullable()->comment('Raw response from payment provider');
+            $table->json('meta')->nullable()->comment('Extra metadata for internal use');
+            $table->string('code')->unique()->index()->comment('Unique transaction code');
+            $table->uuidMorphs('transactionable'); // Laravel will create "transactionable_id" and "transactionable_type"
+            $table->uuid('user_id')->nullable()->comment('User who triggered the transaction');
             $table->timestamps();
         });
 
