@@ -87,19 +87,7 @@ class StripeSubscription implements PaymentMethod
             'mode' => 'payment',
             'customer' => $provider->customer_id,
             'expires_at' => now()->addMinutes(30)->timestamp,
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => $data['price']['currency'],
-                        'unit_amount' => $data['price']['amount'],
-                        'product_data' => [
-                            'name' => $data['name'],
-                            'description' => strip_tags($data['description']),
-                        ],
-                    ],
-                    'quantity' => 1,
-                ]
-            ],
+            'line_items' => $data['items'],
             'payment_intent_data' => [
                 'setup_future_usage' => 'off_session',
                 'metadata' => [
@@ -126,6 +114,7 @@ class StripeSubscription implements PaymentMethod
         }
     }
 
+    
     /**
      * Charge recurring payment
      * @param array $package

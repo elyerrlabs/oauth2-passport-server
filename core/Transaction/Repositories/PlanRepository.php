@@ -316,11 +316,13 @@ class PlanRepository implements Contracts
      */
     public function processPlan(string $plan_id, string $billing_period)
     {
+        // Retrieve the plan by id
         $plan = $this->model->where('id', $plan_id)->first();
-
+        // Retrieve the billing period
         $price = $plan->prices()->where('billing_period', $billing_period)->first();
         $price = fractal($price, PlanPriceTransformer::class)->toArray()['data'];
 
+        //Transform data
         $meta = fractal($plan, $this->model->transformer)->toArray()['data'];
 
         unset($meta['prices']); //remove prices
@@ -330,7 +332,7 @@ class PlanRepository implements Contracts
         }
         unset($price['links']); //remove links
         unset($price['expiration']); //remove links
-
+        
         //add price to renew plan
         $meta['price'] = $price; 
         

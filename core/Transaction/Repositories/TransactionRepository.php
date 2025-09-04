@@ -200,13 +200,28 @@ class TransactionRepository
         );
 
         $plan['transaction_code'] = $code;
+     
+        // Set the items to pay
+        $plan['items'] = [
+            [
+                'price_data' => [
+                    'currency' => $plan['price']['currency'],
+                    'unit_amount' => $plan['price']['amount'],
+                    'product_data' => [
+                        'name' => $plan['name'],
+                    ],
+                ],
+                'quantity' => 1,
+            ]
+        ];
 
-        //Use payment manager to resolve driver
+        // Use payment manager to resolve driver and generate checkout session to pay
         $paymentManager = $this->paymentManager->subscription(
             $data['payment_method'],
             $plan
         );
 
+        //
         DB::transaction(function () use ($plan, $data, $paymentManager) {
 
             $provider = $paymentManager->provider;
@@ -222,7 +237,90 @@ class TransactionRepository
 
             //Generate transaction 
             $transaction = [
-                'subtotal' => $paymentManager->amount_subtotal,
+                'total' => $paymentManager->amount_total,
+                'currency' => $plan['price']['currency'],
+                'status' => config("billing.status.pending.id"),
+                'payment_method' => $data['payment_method'],
+                'billing_period' => $plan['price']['billing_period'],
+                'renew' => false,
+                'code' => $plan['transaction_code'],
+                'response' => $paymentManager->toArray(),// save payment manager response
+            ];
+
+            /**
+             * Associate a partner to the user's transaction if applicable
+             */
+
+            // Check if the authenticated user already has an assigned partner
+            if (!empty($partner_id = $provider->user->partner_id)) {
+
+                // Find the partner by ID
+                $partner = $this->partnerRepository->find($partner_id);
+                // If the partner exists, associate it with the transaction
+                if (!empty($partner)) {
+                    $transaction['partner_id'] = $partner->id;
+                    $transaction['partner_commission_rate'] = $partner->commission_rate;
+                }
+
+                // If the user has no assigned partner, check for a referral code
+            } elseif (!empty($data['referral_code']) && empty($provider->user->partner_id)) {
+
+                // Find the partner by referral code
+                $partner = $this->partnerRepository->findByCode($data['referral_code']);
+
+                // If a valid partner is found, associate it with the transaction
+                if (!empty($partner)) {
+                    $transaction['partner_id'] = $partner->id;
+                    $transaction['partner_commission_rate'] = $partner->commission_rate;
+                }
+            }
+
+            $package->transactions()->create($transaction);
+        });
+
+        // Send request notification
+        auth()->user()->notify(new RequestSubscription(route('transaction.subscriptions.index'), $code));
+
+        return $this->data(
+            collect([
+                'data' => [
+                    "message" => "Redirecting to Stripe Checkout...",
+                    "redirect_to" => $paymentManager->url,
+                ]
+            ]),
+            201
+        );
+    }
+
+
+    public function buy(array $data)
+    {
+        // Generate transaction code
+        $code = $this->generateTransactionCode();
+
+
+        $plan['transaction_code'] = $code;
+
+        //Use payment manager to resolve driver
+        $paymentManager = $this->paymentManager->buy(
+            $data['payment_method'],
+            $plan
+        );
+
+        DB::transaction(function () use ($plan, $data, $paymentManager) {
+
+            $provider = $paymentManager->provider;
+
+            //Register package
+            $package = $this->packageRepository->create([ 
+                'is_recurring' => config('billing.period.one_time.id') != $plan['price']['billing_period'],
+                'transaction_code' => $plan['transaction_code'],
+                'user_id' => $provider->user_id,
+                'meta' => $plan, // add plan to the metadata
+            ]);
+
+            //Generate transaction 
+            $transaction = [
                 'total' => $paymentManager->amount_total,
                 'currency' => $plan['price']['currency'],
                 'status' => config("billing.status.pending.id"),
@@ -287,7 +385,6 @@ class TransactionRepository
     public function createStripeRecurringPayment(PaymentIntent $paymentIntent, array $data)
     {
         return $this->model->create([
-            'subtotal' => $paymentIntent->amount,
             'total' => $paymentIntent->amount,
             'currency' => $data['meta']['price']['currency'],
             'status' => config("billing.status.pending.id"),
