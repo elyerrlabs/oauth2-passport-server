@@ -242,10 +242,10 @@
                         >
                             <q-card-section class="q-pa-md">
                                 <div class="text-subtitle1 text-weight-bold">
-                                    {{ scope.role.name }}
+                                    {{ __(scope.role.name) }}
                                 </div>
                                 <div class="text-caption text-grey-7 q-mt-xs">
-                                    {{ scope.role.description }}
+                                    {{ __(scope.role.description) }}
                                 </div>
                                 <q-chip
                                     size="sm"
@@ -333,7 +333,7 @@
                                             "
                                             class="status-badge"
                                         >
-                                            {{ tx.status }}
+                                            {{ __(tx.status) }}
                                         </q-badge>
                                     </div>
                                 </div>
@@ -341,14 +341,6 @@
                                 <q-separator class="q-my-sm" />
 
                                 <div class="row q-col-gutter-md">
-                                    <div class="col-xs-12 col-sm-6">
-                                        <div class="text-caption text-grey">
-                                            {{ __("Subtotal") }}
-                                        </div>
-                                        <div class="text-weight-medium">
-                                            {{ tx.subtotal }} {{ tx.currency }}
-                                        </div>
-                                    </div>
                                     <div class="col-xs-12 col-sm-6">
                                         <div class="text-caption text-grey">
                                             {{ __("Total") }}
