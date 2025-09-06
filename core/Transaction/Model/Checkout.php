@@ -24,6 +24,7 @@ namespace Core\Transaction\Model;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Models\Common\Order;
 use Core\Transaction\Transformer\Admin\CheckoutTransformer;
 use App\Models\Master;
 
@@ -74,5 +75,14 @@ class Checkout extends Master
     public function transactions()
     {
         return $this->morphMany(Transaction::class, 'transactionable');
+    }
+
+    /**
+     * Has orders
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Order, Checkout>
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }
