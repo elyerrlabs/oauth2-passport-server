@@ -43,7 +43,7 @@ class DashboardController extends WebController
     {
         parent::__construct();
         $this->repository = $dashboardRepository;
-        $this->middleware('userCanAny:administrator:admin:full,administrator:admin:dashboard');
+        $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:dashboard');
     }
 
     public function dashboard(Request $request)

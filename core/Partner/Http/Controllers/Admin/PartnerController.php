@@ -44,7 +44,8 @@ class PartnerController extends WebController
     public function __construct(PartnerRepository $partnerRepository)
     {
         parent::__construct();
-        $this->middleware('userCanAny:administrator:partner:full');
+        $this->middleware('userCanAny:administrator:partner:full,reseller:partner:view')->only('index');
+        $this->middleware('userCanAny:administrator:partner:full,administrator:partner:update')->only('update');
         $this->repository = $partnerRepository;
     }
 

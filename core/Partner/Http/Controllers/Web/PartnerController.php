@@ -53,7 +53,10 @@ class PartnerController extends WebController
         parent::__construct();
         $this->dashboardRepository = $dashboardRepository;
         $this->repository = $partnerRepository;
-        $this->middleware("userCanAny:reseller:partner:full");
+        $this->middleware("userCanAny:reseller:partner:full,reseller:partner:dashboard")->only('dashboard');
+        $this->middleware("userCanAny:reseller:partner:full,reseller:partner:show")->only('show');
+        $this->middleware("userCanAny:reseller:partner:full,reseller:partner:create")->only('generate');
+        $this->middleware("userCanAny:reseller:partner:full,reseller:partner:view")->only('sales');
     }
 
     /**

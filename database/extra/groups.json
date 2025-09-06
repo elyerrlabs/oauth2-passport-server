@@ -80,6 +80,12 @@
         "description": "Service to manage resource of groups",
         "actions": [
           {
+            "name": "dashboard",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
             "name": "full",
             "public": 0,
             "active": 1,
@@ -518,6 +524,12 @@
             "api_key": 0
           },
           {
+            "name": "dashboard",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
             "name": "view",
             "public": 0,
             "active": 1,
@@ -537,6 +549,36 @@
         "actions": [
           {
             "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "partner",
+        "description": "Service to manage partners",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 1
+          },
+          {
+            "name": "dashboard",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
             "public": 0,
             "active": 1,
             "api_key": 0
@@ -660,6 +702,30 @@
         "actions": [
           {
             "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "dashboard",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "create",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "show",
             "public": 0,
             "active": 1,
             "api_key": 0
