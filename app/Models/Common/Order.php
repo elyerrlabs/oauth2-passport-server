@@ -43,8 +43,7 @@ class Order extends Master
         'quantity',
         'meta',
         'user_id',
-        'transaction_id',
-        'status'
+        'checkout_id'
     ];
 
     /**

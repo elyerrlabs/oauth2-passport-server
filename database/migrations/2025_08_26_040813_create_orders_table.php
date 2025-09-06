@@ -36,9 +36,7 @@ return new class () extends Migration {
             $table->uuid('id')->primary()->unique();
             $table->unsignedInteger('quantity')->index();
             $table->longText('meta');
-            $table->string('status')->default(config('billing.status.pending.name'));
             $table->uuid('user_id')->index();
-            $table->uuid('transaction_id')->index()->nullable();
             $table->uuidMorphs('orderable');
             $table->timestamps();
         });
