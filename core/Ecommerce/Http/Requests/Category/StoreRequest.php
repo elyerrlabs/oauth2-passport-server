@@ -68,10 +68,10 @@ class StoreRequest extends FormRequest
                                 $searchSlug->id !== $owner->id &&
                                 $searchSlug->tag !== $owner->tag
                             ) {
-                                $fail("The name has already been registered in another context.");
+                                $fail(__("The name has already been registered in another context."));
                             }
                         } else {
-                            $fail("The name has already been registered.");
+                            $fail(__("The name has already been registered."));
                         }
                     }
                 },

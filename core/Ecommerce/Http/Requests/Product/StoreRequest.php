@@ -67,11 +67,11 @@ class StoreRequest extends FormRequest
                                 $searchSlug->id !== $owner->id &&
                                 $searchSlug->tag !== $owner->tag
                             ) {
-                                $fail("The name has already been registered in another context.");
+                                $fail(__("The name has already been registered in another context."));
                             }
                         } else {
 
-                            $fail("The name has already been registered.");
+                            $fail(__("The name has already been registered."));
                         }
                     }
                 },
@@ -91,7 +91,7 @@ class StoreRequest extends FormRequest
                         $value = str_replace([',', '.'], '', $value);
 
                         if (filter_var($value, FILTER_VALIDATE_INT) === false) {
-                            $fail("The stock value is invalid");
+                            $fail(__("The stock value is invalid"));
                         }
                     }
                 }
@@ -118,7 +118,7 @@ class StoreRequest extends FormRequest
                         $value = str_replace([',', '.'], '', $value);
 
                         if (filter_var($value, FILTER_VALIDATE_INT) === false) {
-                            $fail("The stock value is invalid");
+                            $fail(__("The stock value is invalid"));
                         }
                     }
                 }
@@ -130,7 +130,7 @@ class StoreRequest extends FormRequest
                 'string',
                 function ($attribute, $value, $fail) {
                     if (empty(billing_get_currency($value))) {
-                        $fail("The billing period is invalid");
+                        $fail(__("The billing period is invalid"));
                     }
                 }
             ],
@@ -141,7 +141,7 @@ class StoreRequest extends FormRequest
                     $price = str_replace('.', '', $value);
 
                     if (filter_var($price, FILTER_VALIDATE_INT) == false) {
-                        $fail("The value is invalid");
+                        $fail(__("The value is invalid"));
                     }
                 }
             ],

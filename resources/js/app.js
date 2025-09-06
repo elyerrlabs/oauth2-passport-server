@@ -39,7 +39,7 @@ import { QComponents } from "./app/config/quasar.js";
 //Vue date picker
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import iconSet from "quasar/icon-set/material-icons.js";
+//import iconSet from "quasar/icon-set/material-icons.js";
 
 //icons https://pictogrammers.com/library/mdi/
 import "@mdi/font/css/materialdesignicons.css";
@@ -74,7 +74,7 @@ createInertiaApp({
         Ripple,
         ClosePopup,
       },
-      iconSet: iconSet,
+      //iconSet: iconSet,
     });
 
     QComponents.forEach((item) => {
@@ -87,7 +87,7 @@ createInertiaApp({
 
     app.component("VueDatePicker", VueDatePicker);
     app.use(plugin);
-    app.use(i18n);
+    //  app.use(i18n);
     app.mount(el);
   },
 });

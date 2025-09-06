@@ -71,7 +71,7 @@ class StoreRequest extends FormRequest
                         if ($attributes->count() > 0) {
                             // Validate that all required attributes are selected
                             if (empty($value) || count($value) < $attributes->count()) {
-                                $fail(__("You must select all required attributes for this product."));
+                                $fail(__("You must select all required attributes for this product"));
                             }
                         }
                     }

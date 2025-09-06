@@ -73,9 +73,16 @@ class OrderRepository implements Contracts
     {
         $query = $this->model->query();
 
-        $query->with('user', 'orderable', 'orderable.files', 'orderable.price');
+        $query->where('user_id', auth()->user()->id);
 
-        $query->where('status', config('billing.status.pending.name'));
+        $query->whereNull('checkout_id');
+
+        $query->with([
+            'user',
+            'orderable',
+            'orderable.files',
+            'orderable.price'
+        ]);
 
         if ($request->filled('quantity')) {
             $query->where('quantity', $request->quantity);
@@ -95,21 +102,6 @@ class OrderRepository implements Contracts
         $order = DB::transaction(function () use ($data) {
             $product = $this->productRepository->find($data['product_id']);
 
-            /* Change this action when user paid the product
-            $product->setStock($product->stock - $data['quantity']);
-             $product->push();
-
-              if (count($data['attrs'] ?? [])) {
-                  foreach ($data['attrs'] as $key => $value) {
-
-                      $attribute = $product->attributes->where('slug', $key)->where('value', $value)->first();
-
-                      $update_attribute_stock = $attribute->pivot->stock - $data['quantity'];
-
-                      $product->attributes()->syncWithoutDetaching([$attribute->id => ['stock' => $update_attribute_stock]]);
-                  }
-              }*/
-
             $meta = $product->toArray();
             unset($meta['attributes']);
             unset($meta['tags']);
@@ -119,7 +111,7 @@ class OrderRepository implements Contracts
             $meta['attributes'] = $data['attrs'];
             $data['meta'] = $meta;
             unset($data['attrs']);
-            
+
             return $product->orders()->create($data);
         });
 
@@ -134,7 +126,7 @@ class OrderRepository implements Contracts
     public function find(string $id)
     {
         try {
-            return $this->model->findOrFail($id);
+            return $this->model->find($id);
         } catch (\Throwable $th) {
             Log::error($th->getMessage(), [
                 'code' => $th->getCode(),
@@ -146,14 +138,14 @@ class OrderRepository implements Contracts
     }
 
     /**
-     * Update order
+     * Summary of update
      * @param string $id
      * @param array $data
      * @return bool
      */
     public function update(string $id, array $data)
     {
-        return $this->model->update(['id' => $id], $data);
+        return $this->model->where('id', $id)->update($data);
     }
 
     /**

@@ -56,6 +56,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </h6>
                     </div>
                     <q-btn
+                        outline
+                        icon="mdi-trash-can-outline"
+                        @click="clean"
+                        rounded
+                        color="warning"
+                    >
+                        {{ __("Clean form") }}
+                    </q-btn>
+                    <q-btn
                         flat
                         round
                         icon="mdi-close"
@@ -427,22 +436,7 @@ export default {
     methods: {
         close() {
             this.dialog = false;
-            this.form = {
-                name: "",
-                short_description: "",
-                description: "",
-                specification: "",
-                category: null,
-                price: "",
-                stock: 0,
-                icon: "",
-                published: false,
-                featured: false,
-                images: [],
-                currency: "",
-                attributes: [],
-                tags: [],
-            };
+            this.clean();
             this.errors = {};
         },
 
@@ -454,8 +448,7 @@ export default {
             this.form.attributes = item;
         },
 
-        open() {
-            this.dialog = true;
+        clean() {
             this.form = {
                 id: "",
                 name: "",
@@ -472,7 +465,15 @@ export default {
                 attributes: [],
                 tags: [],
             };
+            this.update_stock = 0;
+            this.current_stock = 0;
+            this.images = [];
+            this.errors = {};
+        },
 
+        open() {
+            this.dialog = true;
+            this.clean();
             this.getCategories();
             this.getCurrencies();
 

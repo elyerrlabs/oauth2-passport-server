@@ -27,10 +27,6 @@
     @yield('content')
 
     <x-privacy />
-    <script nonce="{{ $nonce }}">
-        window.translation = @json(setLanguage()->getData())
-        console.log(window.translation);
-    </script>
     @stack('js')
     @stack('modals')
 </body>

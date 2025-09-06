@@ -25,6 +25,7 @@ namespace Core\Ecommerce\Repositories;
  */
 
 use App\Models\Common\Attribute;
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Core\Ecommerce\Model\Product;
@@ -394,17 +395,13 @@ final class ProductRepository implements Contracts
                     'name' => strtolower($value['name']),
                     'slug' => Str::slug($value['name']),
                     'type' => strtolower($value['type']),
-                    'value' => $value['value'],
+                    'value' => strtolower($value['value']),
                     'widget' => strtolower($value['widget']),
-                    'multiple' => $value['multiple'],
+                    'multiple' => filter_var($value['multiple'], FILTER_VALIDATE_BOOL),
                     'unit_id' => $value['unit_id'] ?? null,
                 ];
-
-                $attribute = Attribute::where('slug', strtolower($value['name']))->first();
-
-                if (empty($attribute)) {
-                    $attribute = $product->attributes()->updateOrCreate($data, $data);
-                }
+ 
+                $attribute = Attribute::updateOrCreate($data);
 
                 $product->attributes()->syncWithoutDetaching([
                     $attribute->id => [
@@ -413,6 +410,34 @@ final class ProductRepository implements Contracts
                 ]);
             }
         }
+    }
+
+    /**
+     * Verify the stock
+     * @param string $id
+     * @param int $stock
+     * @return TModel|TValue|null
+     */
+    public function verifyStock(string $id, int $requestedQuantity)
+    {
+        $model = $this->model->find($id);
+
+        if (!$model) {
+            throw new ReportError(__("The product does not exist."), 404);
+        }
+
+        if ($model->stock < $requestedQuantity) {
+            throw new ReportError(__(
+                "Insufficient stock for :name . Available: :available, requested: :requested.",
+                [
+                    'name' => $model->name,
+                    'available' => $model->stock,
+                    'requested' => $requestedQuantity,
+                ]
+            ), 409);
+        }
+
+        return $model;
     }
 
     /**
@@ -451,7 +476,7 @@ final class ProductRepository implements Contracts
             $data['price'] = (int) str_replace('.', '', $data['price']);
             $model->update($data);
 
-            // $this->CreateOrUpdatePrice($model, $data);
+            $this->CreateOrUpdatePrice($model, $data);
             $this->createImage($model, $data);
             $this->createAttributes($model, $data);
             $this->createTags($model, $data);

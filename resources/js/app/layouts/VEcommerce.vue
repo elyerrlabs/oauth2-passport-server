@@ -20,7 +20,7 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-layout view="hHh Lpr lff">
+    <q-layout view="hHh Lpr lff" class="is-demo">
         <!-- Header -->
         <q-header elevated>
             <q-toolbar class="q-px-md q-py-sm">
@@ -401,7 +401,6 @@ export default {
     }
 }
 
-/* Estilos responsivos */
 @media (max-width: 1023px) {
     .q-toolbar {
         flex-wrap: wrap;

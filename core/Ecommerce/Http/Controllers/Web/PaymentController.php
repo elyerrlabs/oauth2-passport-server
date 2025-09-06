@@ -25,13 +25,11 @@ namespace Core\Ecommerce\Http\Controllers\Web;
  */
 
 use App\Http\Controllers\WebController;
-use Core\Ecommerce\Transformer\User\UserOrderTransformer;
+use Core\Ecommerce\Repositories\PaymentRepository;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Core\Ecommerce\Repositories\OrderRepository;
-use Core\Ecommerce\Http\Requests\Order\StoreRequest;
 
-class OrderController extends WebController
+class PaymentController extends WebController
 {
     /**
      * Repository
@@ -39,33 +37,27 @@ class OrderController extends WebController
      */
     private $repository;
 
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(PaymentRepository $paymentRepository)
     {
         parent::__construct();
-        $this->repository = $orderRepository;
+        $this->repository = $paymentRepository;
+
     }
 
     /**
      * Index
      * @param \Illuminate\Http\Request $request
-     * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
+     * @return  \Inertia\Response
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-            $query = $this->repository->searchForUser($request);
-
-            return $this->showAllByBuilder($query, UserOrderTransformer::class);
-        }
-
         return Inertia::render(
-            'Core/Ecommerce/Web/Orders',
+            'Core/Ecommerce/Web/Payment/Index',
             [
                 'routes' => [
                     'orders' => route('ecommerce.orders.index'),
                     'search' => route('ecommerce.search'),
                     'categories' => route('api.ecommerce.categories.index'),
-                    'payment' => route('ecommerce.payments.store')
                 ]
             ]
         );
@@ -73,18 +65,28 @@ class OrderController extends WebController
 
     /**
      * Add new order
-     * @param \Core\Ecommerce\Http\Requests\Order\StoreRequest $request
+     * @param Request $request
      * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function store(StoreRequest $request)
+    public function store(Request $request)
     {
-        $request->merge([
-            'user_id' => auth()->user()->id,
+        $this->validate($request, [
+            'payment_method' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (is_null(billing_get_method($value))) {
+                        $fail(__("The payment method is not valid"));
+                    }
+                }
+            ],
+            'delivery' => ['required', 'exists:delivery_addresses,id'],
+            'orders' => ['required', 'array'],
+            'orders.*.id' => ['exists:orders,id'],
+            'orders.*.product_id' => ['exists:products,id'],
+            'orders.*.quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $model = $this->repository->create($request->toArray());
-
-        return $this->showOne($model, UserOrderTransformer::class, 201);
+        return $this->repository->create($request->toArray());
     }
 
     /**
@@ -94,8 +96,7 @@ class OrderController extends WebController
      */
     public function destroy(string $order_id)
     {
-        $this->repository->delete($order_id);
 
-        return $this->message(__("Order deleted successfully"), 200);
     }
+
 }

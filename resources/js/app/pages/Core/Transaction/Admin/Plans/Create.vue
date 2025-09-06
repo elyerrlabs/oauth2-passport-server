@@ -633,7 +633,7 @@ export default {
                 if (res.status == 200) {
                     this.billing_periods = res.data.data.map((item) => ({
                         label: item.name,
-                        value: item.name,
+                        value: item.id,
                     }));
                 }
             } catch (error) {

@@ -22,7 +22,8 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Ecommerce\Http\Controllers\Web\OrderController;
+use Core\Ecommerce\Http\Controllers\Web\OrderController; 
+use Core\Ecommerce\Http\Controllers\Web\PaymentController;
 use Core\Ecommerce\Http\Controllers\Web\ProductController;
 
 Route::middleware(['throttle:ecommerce:web'])
@@ -33,6 +34,7 @@ Route::middleware(['throttle:ecommerce:web'])
         ], function () {
 
             Route::resource('orders', OrderController::class)->only('index', 'store', 'destroy');
+            Route::resource('payments', PaymentController::class)->only(['index', 'store', 'destroy']);
         });
 
         Route::get('', [ProductController::class, 'dashboard'])->name('dashboard');

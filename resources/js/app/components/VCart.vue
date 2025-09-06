@@ -44,19 +44,24 @@ export default {
     },
 
     created() {
-        this.getOrders();
+        if (this.$page.props.user?.id) {
+            this.getOrders();
+        }
     },
 
     mounted() {
         setInterval(() => {
-            this.getOrders();
+            if (this.$page.props.user?.id) {
+                this.getOrders();
+            }
         }, 10000);
     },
 
     methods: {
         open() {
-            if (window.location.href != this.$page.props.ecommerce_orders.route) {
-                
+            if (
+                window.location.href != this.$page.props.ecommerce_orders.route
+            ) {
                 window.location.href = this.$page.props.ecommerce_orders.route;
             }
         },

@@ -138,12 +138,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <!-- Stock Filter -->
                             <div class="col-12 col-md-6">
-                                <div class="text-caption text-grey-7 q-pb-xs">
+                                <div class="text-caption text-grey-7">
                                     {{ __("Stock Level") }}
                                 </div>
-                                <div
-                                    class="row no-wrap items-center stock-filter"
-                                >
+                                <div class="row">
                                     <q-select
                                         filled
                                         dense
@@ -151,7 +149,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :options="operators"
                                         emit-value
                                         map-options
-                                        class="operator-select"
+                                        class="col-2"
                                     />
                                     <q-input
                                         filled
@@ -161,7 +159,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :placeholder="__('Quantity')"
                                         clearable
                                         @update:model-value="getProducts"
-                                        class="flex-grow-1"
+                                        class="col-10"
                                         :rules="[
                                             (val) =>
                                                 val >= 0 ||
@@ -179,12 +177,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <!-- Price Filter -->
                             <div class="col-12 col-md-6">
-                                <div class="text-caption text-grey-7 q-pb-xs">
+                                <div class="text-caption text-grey-7">
                                     {{ __("Price Range") }}
                                 </div>
-                                <div
-                                    class="row no-wrap items-center price-filter"
-                                >
+                                <div class="row">
                                     <q-select
                                         filled
                                         dense
@@ -192,7 +188,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :options="operators"
                                         emit-value
                                         map-options
-                                        class="operator-select"
+                                        class="col-2"
                                     />
                                     <q-input
                                         filled
@@ -201,7 +197,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :placeholder="__('Amount')"
                                         clearable
                                         @update:model-value="getProducts"
-                                        class="flex-grow-1"
+                                        class="col-10"
                                         mask="#.##"
                                         fill-mask="0"
                                         reverse-fill-mask
@@ -220,7 +216,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <!-- Active Filters -->
                             <div class="col-12" v-if="activeFilterCount > 0">
-                                <div class="text-caption text-grey-7 q-pb-xs">
+                                <div class="text-caption text-grey-">
                                     {{ __("Active Filters") }}
                                 </div>
                                 <div class="row q-gutter-sm">

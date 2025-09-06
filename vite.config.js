@@ -18,6 +18,18 @@ export default defineConfig({
     vue(),
   ],
   build: {
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 2000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("vue")) return "vendor-vue";
+            if (id.includes("quasar")) return "vendor-quasar";
+            if (id.includes("tailwind")) return "vendor-tailwind";
+            return "vendor";
+          }
+        },
+      },
+    },
   },
 });

@@ -119,7 +119,9 @@ export default {
         };
     },
     mounted() {
-        this.getUnreadNotifications();
+        if (this.$page.props.user?.id) {
+            this.getUnreadNotifications();
+        }
     },
     methods: {
         async getUnreadNotifications() {

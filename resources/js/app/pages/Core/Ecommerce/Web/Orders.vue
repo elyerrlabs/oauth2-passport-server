@@ -1,25 +1,28 @@
 <template>
     <v-ecommerce>
         <div class="orders-container">
-            <div class="row items-center q-mb-lg">
-                <q-icon
-                    name="shopping_cart"
-                    size="28px"
-                    class="header-icon q-mr-sm"
-                    color="primary"
-                />
-                <div class="text-h5 text-weight-bold header-title">
-                    {{ __("Shopping Orders") }}
+            <!-- Header Section -->
+            <div class="row items-center q-mb-lg header-section">
+                <div class="header-content">
+                    <q-icon
+                        name="shopping_cart"
+                        size="32px"
+                        class="header-icon q-mr-sm"
+                        color="primary"
+                    />
+                    <div class="text-h4 text-weight-bold header-title">
+                        {{ __("Shopping Cart") }}
+                    </div>
+                    <q-badge
+                        v-if="orders.length"
+                        color="accent"
+                        class="q-ml-md item-count-badge"
+                        rounded
+                    >
+                        {{ orders.length }}
+                        {{ orders.length === 1 ? __("item") : __("items") }}
+                    </q-badge>
                 </div>
-                <q-badge
-                    v-if="orders.length"
-                    color="accent"
-                    class="q-ml-md item-count-badge"
-                    rounded
-                >
-                    {{ orders.length }}
-                    {{ orders.length === 1 ? __("item") : __("items") }}
-                </q-badge>
                 <q-space />
                 <q-btn
                     :label="__('Continue Shopping')"
@@ -27,7 +30,8 @@
                     outline
                     no-caps
                     icon="arrow_back"
-                    padding="8px 16px"
+                    padding="10px 20px"
+                    class="continue-shopping-btn"
                     @click="goTo($page.props.routes.search)"
                 />
             </div>
@@ -42,14 +46,14 @@
                     <div class="empty-icon-container">
                         <q-icon
                             name="shopping_bag"
-                            size="72px"
+                            size="80px"
                             class="empty-icon"
                         />
                     </div>
-                    <div class="text-h6 empty-title q-mt-lg">
-                        {{ __("Your order is empty") }}
+                    <div class="text-h5 empty-title q-mt-lg text-weight-bold">
+                        {{ __("Your cart is empty") }}
                     </div>
-                    <div class="text-body2 empty-subtitle q-mb-xl text-center">
+                    <div class="text-body1 empty-subtitle q-mb-xl text-center">
                         {{ __("Add products to your cart to get started") }}
                     </div>
                     <q-btn
@@ -59,8 +63,8 @@
                         no-caps
                         class="shopping-btn"
                         icon="store"
-                        padding="12px 24px"
-                        @click="$router.push('/products')"
+                        padding="14px 28px"
+                        @click="goTo($page.props.routes.search)"
                     />
                 </div>
 
@@ -88,13 +92,13 @@
                             </div>
                         </div>
 
-                        <q-separator class="q-mb-md" />
+                        <q-separator class="q-mb-lg separator" />
 
                         <div class="orders-items-list">
                             <q-item
                                 v-for="(product, index) in orders"
                                 :key="product.id"
-                                class="orders-item q-pa-md"
+                                class="orders-item q-pa-lg"
                                 :class="{
                                     'item-selected':
                                         selected_products.includes(product),
@@ -118,19 +122,32 @@
                                             :alt="product?.meta?.name"
                                             class="product-image"
                                             :ratio="1"
-                                            width="80px"
-                                            height="80px"
+                                            width="100px"
+                                            height="100px"
                                         />
+                                        <q-badge
+                                            v-if="product.discount > 0"
+                                            color="accent"
+                                            class="discount-badge"
+                                        >
+                                            -{{ product.discount }}%
+                                        </q-badge>
                                     </div>
                                 </q-item-section>
 
                                 <q-item-section class="product-info q-pl-md">
                                     <q-item-label
-                                        class="product-name text-weight-medium"
+                                        class="product-name text-weight-bold"
                                     >
                                         {{ product?.meta?.name }}
                                     </q-item-label>
-                                    <div class="product-attributes q-mt-xs">
+                                    <div
+                                        class="text-caption text-grey-7 product-sku q-mt-xs"
+                                        v-if="product?.meta?.sku"
+                                    >
+                                        SKU: {{ product?.meta?.sku }}
+                                    </div>
+                                    <div class="product-attributes q-mt-sm">
                                         <div
                                             v-for="(value, attr) in product
                                                 ?.meta?.attributes"
@@ -140,7 +157,7 @@
                                             {{ attr }}: {{ value }}
                                         </div>
                                     </div>
-                                    <div class="product-tags q-mt-sm">
+                                    <div class="product-tags q-mt-md">
                                         <q-badge
                                             v-if="product.stock > 0"
                                             color="positive"
@@ -174,10 +191,10 @@
                                             icon="mdi-eye"
                                             color="primary"
                                             size="sm"
-                                            class="q-ma-sm"
+                                            class="q-ml-sm view-product-btn"
                                             @click="goTo(product?.links.show)"
                                         >
-                                            {{ __("View product") }}
+                                            {{ __("View Details") }}
                                         </q-btn>
                                     </div>
                                 </q-item-section>
@@ -185,10 +202,35 @@
                                 <q-item-section side class="price-section">
                                     <div class="price-container">
                                         <div
-                                            class="product-price text-h6 text-weight-bold"
+                                            v-if="product.discount > 0"
+                                            class="original-price text-strike text-caption text-grey-6"
+                                        >
+                                            {{ product.currency }}
+                                            {{
+                                                formatPrice(
+                                                    product.original_price
+                                                )
+                                            }}
+                                        </div>
+                                        <div
+                                            class="product-price text-h5 text-weight-bold text-primary"
                                         >
                                             {{ product.currency }}
                                             {{ product.format_price }}
+                                        </div>
+                                        <div
+                                            v-if="product.discount > 0"
+                                            class="savings text-positive text-caption text-weight-medium q-mt-xs"
+                                        >
+                                            {{ __("You save") }}
+                                            {{ product.currency }}
+                                            {{
+                                                formatPrice(
+                                                    (product.original_price -
+                                                        product.price) *
+                                                        product.quantity
+                                                )
+                                            }}
                                         </div>
                                     </div>
                                 </q-item-section>
@@ -287,46 +329,63 @@
                                     </div>
                                 </q-item-section>
                             </q-item>
+
+                            <v-error :error="errors.orders"></v-error>
                         </div>
                     </q-card-section>
 
-                    <q-separator />
+                    <q-separator class="separator" />
 
                     <!-- Order Summary -->
-                    <q-card-actions class="order-summary-section q-pa-lg">
+                    <q-card-actions class="order-summary-section q-pa-xl">
                         <div class="row justify-between items-start full-width">
                             <div class="col-12 col-md-7 order-summary">
-                                <div class="text-h6 text-weight-bold q-mb-md">
+                                <div
+                                    class="text-h5 text-weight-bold q-mb-lg summary-title"
+                                >
                                     {{ __("Order Summary") }}
                                 </div>
+                                <v-delivery-address @selected="setAddress" />
+                                <v-error :error="errors.delivery"></v-error>
 
                                 <div class="summary-details q-pa-md">
                                     <div
-                                        class="row justify-between items-center q-mb-sm"
+                                        class="row justify-between items-center q-mb-sm summary-line"
                                     >
                                         <div class="text-body1">
-                                            {{ __("Total items") }} ({{
+                                            {{ __("Items") }} ({{
                                                 selected_products.length
-                                            }}
-                                            )
+                                            }})
                                         </div>
                                         <div
                                             class="text-body1 text-weight-medium"
                                         >
-                                            <div class="text-body1">
-                                                {{ __("Quantities") }} (
-                                                {{ totalItem }})
-                                            </div>
+                                            {{ orders[0]?.currency }}
+                                            {{ formatPrice(subtotal) }}
                                         </div>
                                     </div>
-
                                     <!--
-                                        <div
-                                        class="row justify-between items-center q-mb-sm"
-                                        v-if="estimatedTax > 0"
-                                        >
+                                    <div
+                                        class="row justify-between items-center q-mb-sm summary-line"
+                                        v-if="shipping > 0"
+                                    >
                                         <div class="text-body1">
-                                            {{__('Estimated Tax')}}
+                                            {{ __("Shipping") }}
+                                        </div>
+                                        <div
+                                            class="text-body1 text-weight-medium"
+                                        >
+                                            {{ orders[0]?.currency }}
+                                            {{ formatPrice(shipping) }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div
+                                        class="row justify-between items-center q-mb-sm summary-line"
+                                        v-if="estimatedTax > 0"
+                                    >
+                                        <div class="text-body1">
+                                            {{ __("Estimated Tax") }}
                                         </div>
                                         <div
                                             class="text-body1 text-weight-medium"
@@ -335,61 +394,148 @@
                                             {{ formatPrice(estimatedTax) }}
                                         </div>
                                     </div>
+
+                                    <div
+                                        class="row justify-between items-center q-mb-md summary-line"
+                                        v-if="totalDiscount > 0"
+                                    >
+                                        <div class="text-body1 text-positive">
+                                            {{ __("Discount") }}
+                                        </div>
+                                        <div
+                                            class="text-body1 text-weight-medium text-positive"
+                                        >
+                                            -{{ orders[0]?.currency }}
+                                            {{ formatPrice(totalDiscount) }}
+                                        </div>
+                                    </div>
                                     -->
 
-                                    <q-separator class="q-my-md" />
+                                    <q-separator class="q-my-md separator" />
 
                                     <div
                                         class="summary-total row justify-between items-center"
                                     >
-                                        <div class="text-h6">
+                                        <div class="text-h5 text-weight-bold">
                                             {{ __("Total") }}
                                         </div>
                                         <div
-                                            class="text-h4 text-weight-bold text-primary"
+                                            class="text-h3 text-weight-bold text-primary"
                                         >
                                             {{ orders[0]?.currency }}
                                             {{ formatPrice(total) }}
                                         </div>
                                     </div>
-
-                                    <div
-                                        class="text-caption text-secondary q-mt-sm"
-                                    >
-                                        *
-                                        {{
-                                            __(
-                                                "Total will be finalized during checkout"
-                                            )
-                                        }}
+                                    <!--
+                                        <div
+                                        class="shipping-notice q-mt-md q-pa-sm rounded-borders text-center"
+                                        >
+                                        <q-icon
+                                        name="local_shipping"
+                                        size="16px"
+                                        class="q-mr-xs"
+                                        />
+                                        {{ __("Free shipping on orders over") }}
+                                        {{ orders[0]?.currency }}100
                                     </div>
+                                    -->
                                 </div>
                             </div>
 
-                            <div class="col-12 col-md-4 checkout-actions">
-                                <div class="checkout-card q-pa-md">
+                            <div class="col-12 col-md-5 checkout-actions">
+                                <div class="checkout-card q-pa-lg">
                                     <div
-                                        class="text-h6 q-mb-md text-weight-medium"
+                                        class="text-h5 text-weight-bold q-mb-md"
                                     >
                                         {{ __("Complete Purchase") }}
                                     </div>
 
                                     <div class="pricing-breakdown q-mb-lg">
                                         <div
-                                            class="row justify-between items-center"
+                                            class="row justify-between items-center q-mb-xs"
                                         >
                                             <div class="text-body2">
-                                                {{ __("Order Total") }}
+                                                {{ __("Subtotal") }}
                                             </div>
                                             <div
                                                 class="text-body2 text-weight-medium"
                                             >
                                                 {{ orders[0]?.currency }}
+                                                {{ formatPrice(subtotal) }}
+                                            </div>
+                                        </div>
+                                        <!--
+                                        <div
+                                            class="row justify-between items-center q-mb-xs"
+                                            v-if="shipping > 0"
+                                        >
+                                            <div class="text-body2">
+                                                {{ __("Shipping") }}
+                                            </div>
+                                            <div
+                                                class="text-body2 text-weight-medium"
+                                            >
+                                                {{ orders[0]?.currency }}
+                                                {{ formatPrice(shipping) }}
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="row justify-between items-center q-mb-xs"
+                                            v-if="estimatedTax > 0"
+                                        >
+                                            <div class="text-body2">
+                                                {{ __("Tax") }}
+                                            </div>
+                                            <div
+                                                class="text-body2 text-weight-medium"
+                                            >
+                                                {{ orders[0]?.currency }}
+                                                {{ formatPrice(estimatedTax) }}
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="row justify-between items-center q-mb-sm"
+                                            v-if="totalDiscount > 0"
+                                        >
+                                            <div
+                                                class="text-body2 text-positive"
+                                            >
+                                                {{ __("Discount") }}
+                                            </div>
+                                            <div
+                                                class="text-body2 text-weight-medium text-positive"
+                                            >
+                                                -{{ orders[0]?.currency }}
+                                                {{ formatPrice(totalDiscount) }}
+                                            </div>
+                                        </div>
+                                        -->
+
+                                        <q-separator
+                                            class="q-my-sm separator"
+                                        />
+                                        <div
+                                            class="row justify-between items-center"
+                                        >
+                                            <div
+                                                class="text-h6 text-weight-bold"
+                                            >
+                                                {{ __("Total") }}
+                                            </div>
+                                            <div
+                                                class="text-h6 text-weight-bold text-primary"
+                                            >
+                                                {{ orders[0]?.currency }}
                                                 {{ formatPrice(total) }}
                                             </div>
                                         </div>
-                                        <q-separator class="q-my-sm" />
                                     </div>
+
+                                    <v-payment-method
+                                        class="q-mb-lg"
+                                        v-model="form.payment_method"
+                                    />
+                                    <v-error :error="errors.payment_method" />
 
                                     <q-btn
                                         :label="__('Proceed to Checkout')"
@@ -398,7 +544,7 @@
                                         no-caps
                                         class="full-width checkout-btn q-mb-md"
                                         size="lg"
-                                        :disable="!selected_products.length"
+                                        :disable="disabled"
                                         @click="checkout"
                                     >
                                         <q-icon
@@ -409,7 +555,7 @@
                                     </q-btn>
 
                                     <div
-                                        class="security-note row items-center justify-center q-mb-lg"
+                                        class="security-note row items-center justify-center"
                                     >
                                         <q-icon
                                             name="lock"
@@ -439,6 +585,15 @@ export default {
             orders: [],
             selectAll: false,
             selected_products: [],
+            form: {
+                payment_method: "",
+                delivery: "",
+                orders: [],
+            },
+            errors: {},
+            shipping: 0,
+            estimatedTax: 0,
+            disabled: false,
         };
     },
 
@@ -453,10 +608,26 @@ export default {
             }, 0);
         },
 
-        total() {
+        subtotal() {
             return this.selected_products.reduce((sum, item) => {
                 return sum + item.price * item.quantity;
             }, 0);
+        },
+
+        totalDiscount() {
+            return this.selected_products.reduce((sum, item) => {
+                if (item.discount > 0) {
+                    const originalTotal = item.original_price * item.quantity;
+                    const discountedTotal = item.price * item.quantity;
+                    return sum + (originalTotal - discountedTotal);
+                }
+                return sum;
+            }, 0);
+        },
+
+        total() {
+            // return this.subtotal + this.shipping + this.estimatedTax;
+            return this.subtotal;
         },
     },
 
@@ -474,8 +645,13 @@ export default {
 
                 if (res.status == 200) {
                     this.orders = res.data.data;
+                    // Calculate shipping based on order value
+                    this.shipping = this.subtotal > 100 ? 0 : 10;
+                    this.estimatedTax = this.subtotal * 0.08; // 8% tax
                 }
-            } catch (error) {}
+            } catch (error) {
+                console.error("Error fetching orders:", error);
+            }
         },
 
         async deleteItem(url) {
@@ -490,7 +666,9 @@ export default {
                         position: "top-right",
                     });
                 }
-            } catch (error) {}
+            } catch (error) {
+                console.error("Error deleting item:", error);
+            }
         },
 
         formatPrice(value) {
@@ -504,6 +682,9 @@ export default {
             const product = this.orders.find((p) => p.id === id);
             if (product) {
                 product.quantity = Math.max(1, newQuantity);
+                // Recalculate shipping and tax when quantity changes
+                this.shipping = this.subtotal > 100 ? 0 : 10;
+                this.estimatedTax = this.subtotal * 0.08;
             }
         },
 
@@ -513,20 +694,9 @@ export default {
             } else if (val === false) {
                 this.selected_products = [];
             }
-        },
-
-        calculateDiscountPercentage(product) {
-            if (
-                !product.originalPrice ||
-                !product.price ||
-                product.originalPrice <= product.price
-            )
-                return 0;
-            return Math.round(
-                ((product.originalPrice - product.price) /
-                    product.originalPrice) *
-                    100
-            );
+            // Recalculate shipping and tax when selection changes
+            this.shipping = this.subtotal > 100 ? 0 : 10;
+            this.estimatedTax = this.subtotal * 0.08;
         },
 
         getStatusColor(status) {
@@ -537,32 +707,69 @@ export default {
                 delivered: "positive",
                 cancelled: "negative",
             };
-            return statusColors[status.toLowerCase()] || "grey";
+            return statusColors[status] || "grey";
+        },
+
+        setAddress(id) {
+            this.form.delivery = id;
         },
 
         async checkout() {
-            const form = this.selected_products.map((item) => {
+            this.disabled = true;
+
+            this.form.orders = this.selected_products.map((item) => {
                 return {
-                    order_id: item.id,
+                    id: item.id,
                     product_id: item?.meta?.id,
                     quantity: item.quantity,
                 };
             });
 
-            /*try {
+            try {
                 const res = await this.$server.post(
-                    this.$page.props.routes.checkout,
-                    {
-                        product_id: this,
-                    }
+                    this.$page.props.routes.payment,
+                    this.form
                 );
-            } catch (error) {}*/
+
+                if (res.status == 201) {
+                    this.$q.notify({
+                        message: this.__(res.data.data.message),
+                        color: "positive",
+                        position: "top-right",
+                        icon: "mdi-check-circle",
+                    });
+                    window.location.href = res.data.data.redirect_to;
+                }
+            } catch (error) {
+                if (error?.response?.status == 422) {
+                    this.errors = error.response.data.errors;
+                    this.$q.notify({
+                        message: this.__(
+                            "Some errors were detected. Please review them and try again."
+                        ),
+                        color: "warning",
+                        position: "top-right",
+                        icon: "mdi-alert-circle",
+                    });
+                }
+
+                if (error?.response?.status == 409) {
+                    this.$q.notify({
+                        message: this.__(error.response.data.message),
+                        color: "warning",
+                        position: "top-right",
+                        icon: "mdi-alert-circle",
+                    });
+                }
+            } finally {
+                this.disabled = false;
+            }
         },
     },
 };
 </script>
 
-<style scoped>
+<style>
 /* CSS Variables for theming */
 .orders-container {
     --color-primary: #1976d2;
@@ -581,25 +788,35 @@ export default {
     --text-primary: #212529;
     --text-secondary: #6c757d;
     --text-muted: #adb5bd;
-    --border-radius: 12px;
+    --border-radius: 16px;
     --border-radius-sm: 8px;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     --spacing-xs: 8px;
     --spacing-sm: 12px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
     --spacing-xl: 32px;
+    --spacing-xxl: 48px;
     --transition-speed: 0.2s;
 }
 
 .orders-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: var(--spacing-md);
 }
 
 /* Header Section */
+.header-section {
+    padding: var(--spacing-lg) 0;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+}
+
 .header-icon {
     color: var(--color-primary);
 }
@@ -610,8 +827,13 @@ export default {
 }
 
 .item-count-badge {
-    font-size: 0.8rem;
-    padding: 4px 8px;
+    font-size: 0.9rem;
+    padding: 6px 12px;
+}
+
+.continue-shopping-btn {
+    border-radius: var(--border-radius-sm);
+    font-weight: 500;
 }
 
 /* Orders Card */
@@ -635,8 +857,8 @@ export default {
 .empty-icon-container {
     background: var(--bg-secondary);
     border-radius: 50%;
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -655,16 +877,18 @@ export default {
 
 .empty-subtitle {
     color: var(--text-secondary);
+    max-width: 300px;
 }
 
 .shopping-btn {
     border-radius: var(--border-radius-sm);
     font-weight: 500;
+    font-size: 1rem;
 }
 
 /* Orders Items Section */
 .orders-items-section {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xl);
 }
 
 .selection-controls {
@@ -674,12 +898,17 @@ export default {
 .select-all-checkbox :deep(.q-checkbox__label) {
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 1.1rem;
 }
 
 .selected-count {
     color: var(--text-secondary);
     font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.separator {
+    background-color: rgba(0, 0, 0, 0.08);
 }
 
 .orders-items-list {
@@ -690,82 +919,97 @@ export default {
 .orders-item {
     transition: all var(--transition-speed) ease;
     border-radius: var(--border-radius-sm);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
     border: 1px solid transparent;
     cursor: pointer;
+    background: var(--bg-primary);
 }
 
 .orders-item:hover {
     background-color: rgba(var(--color-primary-light), 0.03);
     border-color: rgba(var(--color-primary-light), 0.1);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .item-selected {
-    background-color: rgba(var(--color-primary-light), 0.06);
-    border-left: 3px solid var(--color-primary);
+    background-color: rgba(var(--color-primary-light), 0.08);
+    border-left: 4px solid var(--color-primary);
 }
 
 .product-image-container {
     position: relative;
     border-radius: var(--border-radius-sm);
     overflow: hidden;
+    width: 100px;
+    height: 100px;
 }
 
 .product-image {
     border-radius: var(--border-radius-sm);
+    object-fit: cover;
 }
 
 .discount-badge {
     position: absolute;
-    top: -4px;
-    right: -4px;
-    border-radius: 10px;
-    padding: 3px 6px;
-    font-size: 0.65rem;
+    top: -6px;
+    right: -6px;
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 0.7rem;
     font-weight: bold;
 }
 
 .product-info {
-    min-width: 200px;
+    min-width: 250px;
 }
 
 .product-name {
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 1.1rem;
     line-height: 1.4;
 }
 
 .product-sku {
     color: var(--text-muted);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
 }
 
 .product-attributes {
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
 }
 
 .attribute-chip {
     background: var(--bg-secondary);
-    padding: 3px 6px;
-    border-radius: 10px;
-    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
     color: var(--text-secondary);
 }
 
 .product-tags {
-    margin-top: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-xs);
 }
 
 .stock-badge,
 .status-badge {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+}
+
+.view-product-btn {
+    border-radius: var(--border-radius-sm);
 }
 
 .price-section {
-    min-width: 100px;
+    min-width: 120px;
 }
 
 .price-container {
@@ -774,33 +1018,33 @@ export default {
 
 .product-price {
     color: var(--text-primary);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
 }
 
 .original-price {
     color: var(--text-muted);
     margin-bottom: 2px;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
 }
 
 .savings {
     font-weight: 500;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
 }
 
 .quantity-section {
-    min-width: 100px;
+    min-width: 120px;
 }
 
 .quantity-controls {
     background: var(--bg-secondary);
     border-radius: var(--border-radius-sm);
-    padding: var(--spacing-xs);
+    padding: var(--spacing-sm);
 }
 
 .quantity-btn {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
 }
 
 .quantity-btn:disabled {
@@ -808,14 +1052,14 @@ export default {
 }
 
 .quantity-display {
-    min-width: 36px;
+    min-width: 40px;
     text-align: center;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .actions-section {
-    min-width: 50px;
+    min-width: 60px;
 }
 
 .action-btn {
@@ -832,49 +1076,58 @@ export default {
     background-color: var(--bg-secondary);
 }
 
+.summary-title {
+    color: var(--text-primary);
+}
+
 .order-summary {
-    padding-right: var(--spacing-lg);
+    padding-right: var(--spacing-xl);
 }
 
 .summary-details {
     background: var(--bg-primary);
     border-radius: var(--border-radius-sm);
-    padding: var(--spacing-md);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    padding: var(--spacing-lg);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .summary-line {
     color: var(--text-secondary);
+    padding: var(--spacing-xs) 0;
 }
 
 .summary-total {
     color: var(--text-primary);
+    padding: var(--spacing-sm) 0;
 }
 
 .shipping-notice {
-    background: rgba(var(--color-info), 0.08);
-    border: 1px solid rgba(var(--color-info), 0.15);
-    color: var(--text-secondary);
+    background: rgba(var(--color-info), 0.1);
+    border: 1px solid rgba(var(--color-info), 0.2);
+    color: var(--color-info);
     border-radius: var(--border-radius-sm);
+    padding: var(--spacing-xs);
+    margin-top: var(--spacing-md);
 }
 
 .checkout-actions {
-    padding-left: var(--spacing-lg);
+    padding-left: var(--spacing-xl);
 }
 
 .checkout-card {
     background: var(--bg-primary);
-    border-radius: var(--border-radius-sm);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
     position: sticky;
-    top: var(--spacing-lg);
+    top: var(--spacing-xl);
 }
 
 .checkout-btn {
     border-radius: var(--border-radius-sm);
-    padding: 10px;
+    padding: 12px;
     font-weight: 600;
-    height: 44px;
+    height: 48px;
+    font-size: 1rem;
 }
 
 .security-note {
@@ -889,7 +1142,11 @@ export default {
 
     .orders-items-section,
     .order-summary-section {
-        padding: var(--spacing-md);
+        padding: var(--spacing-lg);
+    }
+
+    .header-title {
+        font-size: 1.8rem;
     }
 }
 
@@ -905,22 +1162,23 @@ export default {
     }
 
     .order-summary {
-        margin-bottom: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
     }
 
     .checkout-card {
-        margin-top: var(--spacing-md);
+        margin-top: var(--spacing-lg);
         position: static;
     }
 
     .orders-item {
         flex-wrap: wrap;
+        padding: var(--spacing-md);
     }
 
     .product-info {
         min-width: 100%;
         order: 3;
-        margin-top: var(--spacing-sm);
+        margin-top: var(--spacing-md);
     }
 
     .price-section,
@@ -930,11 +1188,21 @@ export default {
     }
 
     .product-name {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     .product-price {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+    }
+
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .header-content {
+        margin-bottom: var(--spacing-sm);
     }
 }
 
@@ -948,15 +1216,15 @@ export default {
     }
 
     .orders-items-section {
-        padding: var(--spacing-md) var(--spacing-sm);
+        padding: var(--spacing-lg) var(--spacing-md);
     }
 
     .header-title {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
     }
 
     .orders-item {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-md);
     }
 
     .quantity-controls {
@@ -970,12 +1238,21 @@ export default {
     }
 
     .product-image-container {
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
     }
 
     .checkout-btn {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+    }
+
+    .empty-icon-container {
+        width: 120px;
+        height: 120px;
+    }
+
+    .empty-icon {
+        size: 60px;
     }
 }
 </style>

@@ -111,6 +111,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         v-model="form.icon"
                                         :label="__('Icon *')"
                                         :error="!!errors.icon"
+                                        placeholder="mdi-image"
                                         color="primary"
                                         class="custom-input"
                                         :hint="__('Material Design icon name')"

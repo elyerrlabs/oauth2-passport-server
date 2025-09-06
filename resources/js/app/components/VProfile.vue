@@ -26,8 +26,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             dense
             outline
             round
-            icon="mdi-dots-vertical-circle-outline"
+            icon="mdi-menu"
         >
+        <q-tooltip>
+            {{ __('Show the menu') }}
+        </q-tooltip>
             <q-menu fit anchor="bottom right" self="top right">
                 <q-card style="min-width: 240px" class="q-pa-sm">
                     <!-- User Info -->

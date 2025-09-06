@@ -198,6 +198,9 @@
                             {{ __("Max") }} {{ product?.stock || 10 }}
                             {{ __("per customer") }}
                         </div>
+                        <div class="col-12">
+                            <v-error :error="errors.quantity" />
+                        </div>
                     </div>
 
                     <!-- Action Buttons - Stack on mobile -->
@@ -342,6 +345,12 @@ export default {
     },
 
     methods: {
+        clean() {
+            this.form.product_id = "";
+            this.form.attrs = {};
+            this.form.quantity = 0;
+        },
+
         goTo(tag) {
             window.location.href = `${this.product?.links?.search}?q=${tag}`;
         },
@@ -359,7 +368,7 @@ export default {
                 }
             } catch (error) {
                 this.$q.notify({
-                    message: "Failed to load product details",
+                    message: this.__("Failed to load product details"),
                     color: "negative",
                 });
             }
@@ -378,9 +387,7 @@ export default {
                 if (response.status === 200) {
                     this.related_products = response.data.data;
                 }
-            } catch (error) {
-                console.error("Error fetching related products:", error);
-            }
+            } catch (error) {}
         },
 
         async checkWishlistStatus() {
@@ -388,9 +395,7 @@ export default {
                 // In a real app, this would check against your API
                 // This is just a mock implementation
                 this.isInWishlist = false;
-            } catch (error) {
-                console.error("Error checking wishlist status:", error);
-            }
+            } catch (error) {}
         },
 
         async addToCart() {
@@ -402,8 +407,11 @@ export default {
                 );
                 if (res.status == 201) {
                     this.errors = {};
+                    this.clean();
                     this.$q.notify({
-                        message: `${this.product.name} added to cart`,
+                        message: this.__(":name added to cart", {
+                            ":name": this.product.name,
+                        }),
                         color: "positive",
                         icon: "shopping_cart",
                         position: "top-right",
@@ -412,6 +420,17 @@ export default {
             } catch (error) {
                 if (error?.response?.status == 422) {
                     this.errors = error.response.data.errors;
+                }
+
+                if (error?.response?.status == 401) {
+                    this.$q.notify({
+                        message: this.__(
+                            "To continue the process, Please login first"
+                        ),
+                        color: "warning",
+                        icon: "shopping_cart",
+                        position: "top-right",
+                    });
                 }
             }
         },
