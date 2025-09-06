@@ -24,6 +24,9 @@ namespace Core\Transaction\Repositories;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Notifications\Checkout\CheckoutNotification;
+use Illuminate\Support\Facades\Log;
+use Core\Transaction\Model\Checkout;
 use Exception;
 use Stripe\PaymentIntent;
 use Illuminate\Support\Str;
@@ -200,7 +203,7 @@ class TransactionRepository
         );
 
         $plan['transaction_code'] = $code;
-     
+
         // Set the items to pay
         $plan['items'] = [
             [
@@ -216,7 +219,7 @@ class TransactionRepository
         ];
 
         // Use payment manager to resolve driver and generate checkout session to pay
-        $paymentManager = $this->paymentManager->subscription(
+        $paymentManager = $this->paymentManager->buy(
             $data['payment_method'],
             $plan
         );
@@ -279,7 +282,7 @@ class TransactionRepository
         });
 
         // Send request notification
-        auth()->user()->notify(new RequestSubscription(route('transaction.subscriptions.index'), $code));
+        //auth()->user()->notify(new RequestSubscription(route('transaction.subscriptions.index'), $code));
 
         return $this->data(
             collect([
@@ -295,80 +298,44 @@ class TransactionRepository
 
     public function buy(array $data)
     {
-        // Generate transaction code
-        $code = $this->generateTransactionCode();
-
-
-        $plan['transaction_code'] = $code;
+        // Generate transaction code 
+        $data['transaction_code'] = $this->generateTransactionCode();
 
         //Use payment manager to resolve driver
         $paymentManager = $this->paymentManager->buy(
             $data['payment_method'],
-            $plan
+            $data
         );
 
-        DB::transaction(function () use ($plan, $data, $paymentManager) {
+        DB::transaction(function () use ($data, $paymentManager) {
 
-            $provider = $paymentManager->provider;
-
-            //Register package
-            $package = $this->packageRepository->create([ 
-                'is_recurring' => config('billing.period.one_time.id') != $plan['price']['billing_period'],
-                'transaction_code' => $plan['transaction_code'],
-                'user_id' => $provider->user_id,
-                'meta' => $plan, // add plan to the metadata
-            ]);
+            //Retrieve the checkout object and update data
+            $checkout = Checkout::find($data['id']);
+            $checkout->transaction_code = $data['transaction_code'];
+            $checkout->push();
 
             //Generate transaction 
             $transaction = [
                 'total' => $paymentManager->amount_total,
-                'currency' => $plan['price']['currency'],
+                'currency' => $paymentManager->currency,
                 'status' => config("billing.status.pending.id"),
                 'payment_method' => $data['payment_method'],
-                'billing_period' => $plan['price']['billing_period'],
+                'billing_period' => $data['billing_period'],
                 'renew' => false,
-                'code' => $plan['transaction_code'],
+                'code' => $data['transaction_code'],
                 'response' => $paymentManager->toArray(),// save payment manager response
             ];
 
-            /**
-             * Associate a partner to the user's transaction if applicable
-             */
-
-            // Check if the authenticated user already has an assigned partner
-            if (!empty($partner_id = $provider->user->partner_id)) {
-
-                // Find the partner by ID
-                $partner = $this->partnerRepository->find($partner_id);
-                // If the partner exists, associate it with the transaction
-                if (!empty($partner)) {
-                    $transaction['partner_id'] = $partner->id;
-                    $transaction['partner_commission_rate'] = $partner->commission_rate;
-                }
-
-                // If the user has no assigned partner, check for a referral code
-            } elseif (!empty($data['referral_code']) && empty($provider->user->partner_id)) {
-
-                // Find the partner by referral code
-                $partner = $this->partnerRepository->findByCode($data['referral_code']);
-
-                // If a valid partner is found, associate it with the transaction
-                if (!empty($partner)) {
-                    $transaction['partner_id'] = $partner->id;
-                    $transaction['partner_commission_rate'] = $partner->commission_rate;
-                }
-            }
-
-            $package->transactions()->create($transaction);
+            $checkout->transactions()->create($transaction);
         });
 
         // Send request notification
-        auth()->user()->notify(new RequestSubscription(route('transaction.subscriptions.index'), $code));
+        //auth()->user()->notify(new RequestSubscription(route('transaction.subscriptions.index'), $data['transaction_code']));
 
         return $this->data(
             collect([
                 'data' => [
-                    "message" => "Redirecting to Stripe Checkout...",
+                    "message" => __("Redirecting to Stripe Checkout..."),
                     "redirect_to" => $paymentManager->url,
                 ]
             ]),
@@ -423,17 +390,13 @@ class TransactionRepository
      */
     public function retrieveTransactionForUser(string $code)
     {
-        $transaction = $this->model->where("code", $code)
-            ->with(['transactionable', 'transactionable.user'])
-            ->whereHas('transactionable', function ($query) {
-                $query->where('user_id', auth()->user()->id);
-            })->first();
+        $transaction = $this->model->where("code", $code)->first();
 
         if (empty($transaction)) {
             throw new Exception("Page not found", 404);
         }
 
-        return $transaction->toArray();
+        return $transaction;
     }
 
     /**
@@ -486,7 +449,6 @@ class TransactionRepository
         $auth_user = auth()->user();
 
         //Page to redirect after payment
-        $redirect_to = route('transaction.subscriptions.show', ['transaction_code' => $meta['metadata']['transaction_code']]);
 
         switch ($mode) {
             case 'session':
@@ -505,22 +467,31 @@ class TransactionRepository
                 $transaction->payment_url = $meta["receipt_url"];
                 $transaction->user_id = $auth_user ? $auth_user->id : null;
 
-                //Dispatch only renew packages
-                if ($transaction->renew) {
+                if (isset($meta['metadata']['checkout_code']) && !empty($meta['metadata']['checkout_code'])) {
 
-                    $this->packageRepository->RenewSuccessfully(
-                        $transaction->transactionable,
-                        $transaction->code
-                    );
+                    $redirect_to = route('transaction.checkout.success') . "?code={$meta['metadata']['transaction_code']}";
+                    $customer->notify(new CheckoutNotification($redirect_to));
 
-                    //dispatch notification
-                    $customer->notify(new RenewSuccessfully($redirect_to));
+                } else {// Only for subscription
+                    //Dispatch only renew packages
+                    $redirect_to = route('transaction.subscriptions.show', ['transaction_code' => $meta['metadata']['transaction_code']]);
 
-                } else {// Dispatch only buy packages
-                    $this->packageRepository->paymentSuccessfully($transaction->transactionable);
+                    if ($transaction->renew) {
 
-                    //Dispatch notification
-                    $customer->notify(new PaymentSuccessfully($redirect_to));
+                        $this->packageRepository->RenewSuccessfully(
+                            $transaction->transactionable,
+                            $transaction->code
+                        );
+
+                        //dispatch notification
+                        $customer->notify(new RenewSuccessfully($redirect_to));
+
+                    } else {// Dispatch only buy packages
+                        $this->packageRepository->paymentSuccessfully($transaction->transactionable);
+
+                        //Dispatch notification
+                        $customer->notify(new PaymentSuccessfully($redirect_to));
+                    }
                 }
 
                 //Set the package metadata
@@ -640,7 +611,6 @@ class TransactionRepository
 
         //Generate new transaction
         $current_package->transactions()->create([
-            'subtotal' => $package['payment_manager']['amount_subtotal'],
             'total' => $package['payment_manager']['amount_total'],
             'currency' => $package['meta']['price']['currency'],
             'status' => config("billing.status.pending.id"),
@@ -655,10 +625,10 @@ class TransactionRepository
         ]);
 
         // Send request notification
-        auth()->user()->notify(new RequestSubscription(
+       /* auth()->user()->notify(new RequestSubscription(
             route('transaction.subscriptions.show', ['transaction_code' => $code]),
             $code
-        ));
+        ));*/
 
         return $this->data([
             'data' => [

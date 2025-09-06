@@ -56,9 +56,9 @@ class PaymentManager
      * @param string $method
      * @param array $data
      */
-    public function subscription(string $method, array $data)
+    public function buy(string $method, array $data)
     {
-        return $this->resolve($method)->subscription($data);
+        return $this->resolve($method)->buy($data);
     }
 
     /**

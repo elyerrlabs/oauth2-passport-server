@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Core\Transaction\Model;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,18 +24,38 @@ namespace App\Models;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Master;
+use Core\Transaction\Model\User;
 
 class DeliveryAddress extends Master
 {
     protected $table = "delivery_addresses";
 
-
+    /**
+     * Summary of fillable
+     * @var array
+     */
     protected $fillable = [
+        'full_name',
+        'country',
+        'state',
+        'city',
+        'district',
         'address',
+        'address_line_2',
         'postal_code',
         'phone',
-        'country',
+        'secondary_phone',
         'references',
+        'user_id',
     ];
+
+    /**
+     * belongs to user
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, DeliveryAddress>
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

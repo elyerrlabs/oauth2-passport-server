@@ -23,7 +23,8 @@ namespace Core\Transaction\Model;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
+ 
+use Core\Transaction\Model\DeliveryAddress;
 use Core\Transaction\Model\PaymentProvider;
 
 class User extends \Core\User\Model\User
@@ -31,5 +32,14 @@ class User extends \Core\User\Model\User
     public function paymentProviders()
     {
         return $this->hasMany(PaymentProvider::class, 'user_id');
+    }
+
+    /**
+     * Has delivery addresses
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<DeliveryAddress, User>
+     */
+    public function DeliveryAddresses()
+    {
+        return $this->hasMany(DeliveryAddress::class);
     }
 }

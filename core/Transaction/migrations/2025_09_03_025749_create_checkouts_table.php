@@ -35,15 +35,9 @@ return new class () extends Migration {
         Schema::create('checkouts', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             $table->string('transaction_code')->index()->nullable();
-            $table->string('status')->default(config('billing.status.pending.name'));
             $table->string('code')->index();
-            $table->string('receive_name')->nullable();
-            $table->string('receive_last_name')->nullable();
-            $table->uuid('delivery_address_id');
+            $table->text('delivery_address');
             $table->timestamps();
-
-            $table->foreign('delivery_address_id')->references('id')->on('delivery_addresses')->onDelete('RESTRICT');
-            $table->foreign('transaction_code')->references('code')->on('transactions')->onDelete("RESTRICT");
         });
     }
 

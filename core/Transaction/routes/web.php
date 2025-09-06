@@ -22,6 +22,9 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+
+use Core\Transaction\Http\Controllers\Web\CheckoutController;
+use Core\Transaction\Http\Controllers\Web\DeliveryAddressController;
 use Core\Transaction\Http\Controllers\Web\UserSubscriptionController;
 
 Route::middleware(['throttle:transaction:web'])->group(function () {
@@ -36,7 +39,6 @@ Route::middleware(['throttle:transaction:web'])->group(function () {
 
     Route::put('/subscriptions/cancel/{transaction_id}', [UserSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
 
-    Route::get('/subscriptions/checkout/success', [UserSubscriptionController::class, 'success'])->name('checkout.success');
 
     Route::put('/packages/{package_id}/recurring', [UserSubscriptionController::class, 'recurringPayment'])->name('recurring.payment');
 
@@ -44,4 +46,15 @@ Route::middleware(['throttle:transaction:web'])->group(function () {
         UserSubscriptionController::class,
         'activate'
     ])->name('transactions.activate');
+
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+
+    Route::group([
+        'prefix' => 'delivery',
+        'as' => 'delivery.'
+    ], function () {
+        Route::get('addresses', [DeliveryAddressController::class, 'index'])->name('addresses.index');
+        Route::post('addresses', [DeliveryAddressController::class, 'store'])->name('addresses.store');
+        Route::delete('addresses/{id}', [DeliveryAddressController::class, 'destroy'])->name('addresses.delete');
+    });
 });

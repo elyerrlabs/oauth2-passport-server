@@ -24,15 +24,55 @@ namespace Core\Transaction\Model;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Illuminate\Database\Eloquent\Model;
+use Core\Transaction\Transformer\Admin\CheckoutTransformer;
+use App\Models\Master;
 
-class Checkout extends Model
+class Checkout extends Master
 {
+
+    public $tag = "checkout";
+
+    /**
+     * Table name
+     * @var string
+     */
     protected $table = "checkouts";
+
+    /**
+     * Transformers
+     * @var 
+     */
+    public $transformer = CheckoutTransformer::class;
+
+    /**
+     * Fillable
+     * @var array
+     */
     protected $fillable = [
         'transaction_code',
-        'status',
         'code',
-        'delivery_address_id',
+        'delivery_address',
     ];
+
+    public $casts = [
+        'delivery_address' => 'json'
+    ];
+
+    /**
+     * The last transaction
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function lastTransaction()
+    {
+        return $this->hasOne(Transaction::class, 'code', 'transaction_code');
+    }
+
+    /**
+     * Transactions
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function transactions()
+    {
+        return $this->morphMany(Transaction::class, 'transactionable');
+    }
 }

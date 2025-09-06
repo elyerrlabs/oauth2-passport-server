@@ -25,13 +25,14 @@ namespace Core\Transaction\Transformer\Admin;
  */
 
 
+use Core\Transaction\Model\Checkout;
 use Core\Transaction\Model\Package;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 use Core\User\Transformer\Admin\UserTransformer;
 use Core\Transaction\Transformer\Admin\TransactionTransformer;
 
-class PackageTransformer extends TransformerAbstract
+class CheckoutTransformer extends TransformerAbstract
 {
     use Asset;
 
@@ -58,19 +59,17 @@ class PackageTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(Package $package)
+    public function transform(Checkout $checkout)
     {
         return [
-            'id' => $package->id,
-            'start_at' => $this->format_date($package->start_at),
-            'end_at' => $this->format_date($package->end_at),
-            'is_recurring' => $package->is_recurring,
-            'transaction' => $package->transform($package->lastTransaction, TransactionTransformer::class),
-            'transactions' => $package->transform($package->transactions, TransactionTransformer::class),
-            'meta' => $package->meta, // save plan
-            'user' => $package->transform($package->user, UserTransformer::class),
-            'create' => $this->format_date($package->created_at),
-            'updated' => $this->format_date($package->updated),
+            'id' => $checkout->id,
+            'transaction_code' => $checkout->transaction_code,
+            'code' => $checkout->code,
+            'delivery_address' => $checkout->delivery_address,
+            'transaction' => $checkout->transform($checkout->lastTransaction, TransactionTransformer::class),
+            'transactions' => $checkout->transform($checkout->transactions, TransactionTransformer::class),
+            'create' => $this->format_date($checkout->created_at),
+            'updated' => $this->format_date($checkout->updated),
         ];
     }
 

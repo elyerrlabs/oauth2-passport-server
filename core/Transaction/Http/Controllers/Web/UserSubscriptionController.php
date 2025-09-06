@@ -132,18 +132,6 @@ class UserSubscriptionController extends WebController
     }
 
     /**
-     * Show the transaction view
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function success(Request $request)
-    {
-        $data = $this->transactionRepository->retrieveTransactionForUser($request->code);
-
-        return view('payment.success', ['transaction' => $data]);
-    }
-
-    /**
      * Enable or disable recurring payment
      * @param string $package_id
      * @return \Elyerr\ApiResponse\Assets\JsonResponser

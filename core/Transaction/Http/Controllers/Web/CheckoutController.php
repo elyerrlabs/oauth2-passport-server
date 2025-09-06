@@ -1,0 +1,63 @@
+<?php
+
+namespace Core\Transaction\Http\Controllers\Web;
+
+/**
+ * Copyright (c) 2025 Elvis Yerel Roman Concha
+ *
+ * This file is part of an open source project licensed under the
+ * "NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+ *
+ * You may use, study, modify, and redistribute this file for personal,
+ * educational, or non-commercial research purposes only.
+ *
+ * Commercial use is strictly prohibited without prior written consent
+ * from the author.
+ *
+ * Combining this software with any project licensed for commercial use
+ * (such as AGPL) is not permitted without explicit authorization.
+ *
+ * This software supports OAuth 2.0 and OpenID Connect.
+ *
+ * Author Contact: yerel9212@yahoo.es
+ *
+ * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+ */
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\WebController;
+use Core\Transaction\Repositories\TransactionRepository;
+
+
+class CheckoutController extends WebController
+{
+
+    /**
+     * Repository
+     * @var 
+     */
+    private $repository;
+
+    /**
+     * Construct
+     * @param \Core\Transaction\Repositories\TransactionRepository $transactionRepository
+     */
+    public function __construct(TransactionRepository $transactionRepository)
+    {
+        parent::__construct();
+        $this->repository = $transactionRepository;
+    }
+
+    /**
+     * Show the transaction view
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function success(Request $request)
+    {
+        $data = $this->repository->retrieveTransactionForUser($request->code);
+
+        return view('payment.success', ['transaction' => $data]);
+    }
+
+}

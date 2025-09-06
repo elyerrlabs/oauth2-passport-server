@@ -78,7 +78,7 @@ class StripeSubscription implements PaymentMethod
      * @param array $data
      * @return mixed
      */
-    public function subscription(array $data)
+    public function buy(array $data)
     {
         $provider = $this->createCustomerId($data);
 
@@ -102,6 +102,11 @@ class StripeSubscription implements PaymentMethod
             ],
         ];
 
+        if (isset($data['checkout_code'])) {
+            $meta['payment_intent_data']['metadata']['checkout_code'] = $data['checkout_code'];
+            $meta['metadata']['checkout_code'] = $data['checkout_code'];
+        }
+
         try {
             $session = Session::create($meta);
             // set provider and user data to session response
@@ -114,7 +119,7 @@ class StripeSubscription implements PaymentMethod
         }
     }
 
-    
+
     /**
      * Charge recurring payment
      * @param array $package

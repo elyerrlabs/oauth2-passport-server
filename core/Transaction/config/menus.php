@@ -31,6 +31,14 @@ return [
         'show' => "administrator"
     ],
 
+    'delivery_address' => [
+        'id' => 'index',
+        'name' => __('Add address'),
+        'route' => 'transaction.delivery.addresses.index',
+        'icon' => 'mdi-map-marker-outline',
+        'show' => true,
+    ],
+
     /**
      * Merge route in another menu
      */

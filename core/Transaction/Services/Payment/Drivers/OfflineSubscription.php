@@ -53,7 +53,7 @@ class OfflineSubscription implements PaymentMethod
      * @param array $data
      * @return  
      */
-    public function subscription(array $data)
+    public function buy(array $data)
     {
         $user = auth()->user();
 

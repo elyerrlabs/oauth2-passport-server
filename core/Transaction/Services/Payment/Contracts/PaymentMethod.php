@@ -34,7 +34,7 @@ interface PaymentMethod
      * @param array $data Payment data
      * @return mixed Result of payment process (e.g. session object, confirmation)
      */
-    public function subscription(array $data);
+    public function buy(array $data);
 
     /**
      * Charge recurring payment

@@ -94,6 +94,7 @@ class StripeWebhookController extends Controller
                 ]);
 
                 $metadata['session'] = $sessions->data[0]->toArray();
+                Log::info("payment_intent.payment_failed : ", $metadata);
                 $this->repository->paymentFailed($metadata);
                 break;
 

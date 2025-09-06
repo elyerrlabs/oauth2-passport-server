@@ -34,13 +34,21 @@ return new class () extends Migration {
     {
         Schema::create('delivery_addresses', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('full_name')->nullable();
             $table->string('country');
+            $table->string('state')->nullable();
             $table->string('city');
+            $table->string('district')->nullable();
             $table->string('address');
-            $table->string('postal_code');
+            $table->string('address_line_2')->nullable();
+            $table->string('postal_code')->nullable();
             $table->string('phone');
-            $table->string('references');
+            $table->string('secondary_phone')->nullable();
+            $table->string('references')->nullable();
+            $table->uuid('user_id');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete("RESTRICT");
         });
     }
 
