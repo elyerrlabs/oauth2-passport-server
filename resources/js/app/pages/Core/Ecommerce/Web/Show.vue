@@ -367,11 +367,14 @@ export default {
 
                     this.getRelatedProducts(this.product);
                 }
-            } catch (error) {
-                this.$q.notify({
-                    message: this.__("Failed to load product details"),
-                    color: "negative",
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -388,7 +391,15 @@ export default {
                 if (response.status === 200) {
                     this.related_products = response.data.data;
                 }
-            } catch (error) {}
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
+            }
         },
 
         async checkWishlistStatus() {
@@ -396,7 +407,15 @@ export default {
                 // In a real app, this would check against your API
                 // This is just a mock implementation
                 this.isInWishlist = false;
-            } catch (error) {}
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
+            }
         },
 
         async addToCart() {
@@ -418,12 +437,12 @@ export default {
                         position: "top-right",
                     });
                 }
-            } catch (error) {
-                if (error?.response?.status == 422) {
-                    this.errors = error.response.data.errors;
+            } catch (e) {
+                if (e?.response?.status == 422) {
+                    this.errors = e.response.data.errors;
                 }
 
-                if (error?.response?.status == 401) {
+                if (e?.response?.status == 401) {
                     this.$q.notify({
                         message: this.__(
                             "To continue the process, Please login first"

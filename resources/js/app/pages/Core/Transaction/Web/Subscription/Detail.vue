@@ -434,7 +434,7 @@
                                         :item="tx"
                                     />
 
-                                    <v-activate
+                                    <v-transaction-activate
                                         @updated="getPackages"
                                         v-if="check(tx)"
                                         :item="tx"
@@ -478,12 +478,10 @@
 
 <script>
 import VCancel from "./Cancel.vue";
-import VActivate from "../../Admin/Transaction/Activate.vue";
 
 export default {
     components: {
         VCancel,
-        VActivate,
     },
 
     data() {

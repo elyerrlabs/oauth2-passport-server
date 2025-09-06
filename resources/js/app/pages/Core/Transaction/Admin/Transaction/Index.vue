@@ -314,7 +314,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <q-td key="actions" :props="props" auto-width>
                         <div class="flex justify-between">
-                            <v-activate
+                            <v-transaction-activate
                                 @updated="getTransactions"
                                 v-if="check(props.row)"
                                 :item="props.row"
@@ -371,12 +371,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VActivate from "./Activate.vue";
 import VDetail from "./Detail.vue";
 
 export default {
     components: {
-        VActivate,
         VDetail,
     },
 

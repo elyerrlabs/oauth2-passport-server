@@ -324,8 +324,14 @@ export default {
                 if (res.status == 200) {
                     this.categories = res.data.data;
                 }
-            } catch (error) {
-                console.error("Error fetching categories:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -344,8 +350,15 @@ export default {
                 if (res.status == 200) {
                     this.allProducts = res.data.data;
                 }
-            } catch (error) {
-                console.error("Error searching products:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
+
                 this.allProducts = [];
                 this.filteredProducts = [];
             }

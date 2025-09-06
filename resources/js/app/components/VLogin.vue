@@ -161,19 +161,19 @@ export default {
                     window.location.reload();
                     this.dialog = false;
                 }
-            } catch (error) {
-                this.render_captcha = Math.round(Math.random() * 1000);
-
-                if (error?.response?.status == 422) {
-                    this.errors = error.response.data.errors;
-                }
-
-                if (error?.response?.status == 400) {
+            } catch (e) {
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: error.response.data.message,
+                        message: e.response.data.message,
                         timeout: 3000,
                     });
+                }
+
+                this.render_captcha = Math.round(Math.random() * 1000);
+
+                if (e?.response?.status == 422) {
+                    this.errors = e.response.data.errors;
                 }
             }
         },

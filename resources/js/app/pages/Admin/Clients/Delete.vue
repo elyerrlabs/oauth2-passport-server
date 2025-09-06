@@ -190,7 +190,7 @@ export default {
                     this.dialog = false;
                     this.showSuccessNotification();
                 }
-            } catch (error) {
+            } catch (e) {
                 if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",

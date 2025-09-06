@@ -619,8 +619,14 @@ export default {
                 if (res.status == 200) {
                     this.services = res.data.data;
                 }
-            } catch (error) {
-                console.error("Error fetching services:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -637,7 +643,7 @@ export default {
                     }));
                 }
             } catch (e) {
-                 if (e?.response?.data?.message) {
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
@@ -659,8 +665,14 @@ export default {
                         value: item.code,
                     }));
                 }
-            } catch (error) {
-                console.error("Error fetching currencies:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -682,8 +694,14 @@ export default {
                 if (res.status == 200) {
                     this.scopes = res.data.data;
                 }
-            } catch (error) {
-                console.error("Error fetching service scopes:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 

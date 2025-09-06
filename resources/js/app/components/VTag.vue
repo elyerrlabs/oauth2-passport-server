@@ -220,12 +220,14 @@ export default {
                             color: "positive",
                         });
                     }
-                } catch (error) {
-                    this.$q.notify({
-                        message: "Error deleting tag",
-                        color: "negative",
-                    });
-                    console.error("Error deleting tag:", error);
+                } catch (e) {
+                    if (e?.response?.data?.message) {
+                        this.$q.notify({
+                            type: "negative",
+                            message: e.response.data.message,
+                            timeout: 3000,
+                        });
+                    }
                 }
             } else {
                 this.internalTags.splice(index, 1);

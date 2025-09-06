@@ -325,13 +325,9 @@ export default {
                     this.$emit("created");
                     this.dialog = false;
                 }
-            } catch (error) {
-                if (
-                    error.response &&
-                    error.response.status == 422 &&
-                    error.response.data.errors
-                ) {
-                    this.errors = error.response.data.errors;
+            } catch (e) {
+                if (e.response.status == 422) {
+                    this.errors = e.response.data.errors;
                 }
 
                 if (e?.response?.data?.message) {

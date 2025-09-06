@@ -196,13 +196,12 @@ export default {
                         icon: "check",
                     });
                 }
-            } catch (error) {
+            } catch (e) {
                 this.$q.notify({
                     message: "Error deleting attribute",
                     color: "negative",
                     icon: "error",
                 });
-                console.error("Error deleting attribute:", error);
             }
         },
     },

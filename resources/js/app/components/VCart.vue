@@ -80,7 +80,15 @@ export default {
                 if (res.status == 200) {
                     this.orders = res.data.data;
                 }
-            } catch (error) {}
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
+            }
         },
     },
 };

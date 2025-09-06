@@ -353,8 +353,14 @@ export default {
                 if (res.status === 200) {
                     this.notifications = res.data.data;
                 }
-            } catch (error) {
-                console.error("Failed to load notifications", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }
@@ -385,8 +391,14 @@ export default {
                         timeout: 2000,
                     });
                 }
-            } catch (error) {
-                console.error("Failed to mark notification as read", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -408,8 +420,14 @@ export default {
                     position: "top-right",
                     timeout: 2000,
                 });
-            } catch (error) {
-                console.error("Failed to mark all as read", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -421,8 +439,14 @@ export default {
                 if (res.status === 200) {
                     this.unread_notification = res.data.data;
                 }
-            } catch (error) {
-                console.error("Failed to load unread notifications", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 

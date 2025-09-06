@@ -130,14 +130,16 @@ export default {
                     this.dialog = false;
                     this.$q.notify({
                         type: "positive",
-                        message: "Transaction has been activated successfully",
+                        message: this.__(
+                            "Transaction has been activated successfully"
+                        ),
                         icon: "mdi-check-circle",
                         position: "top-right",
                         timeout: 2500,
                     });
                     this.$emit("updated");
                 }
-            } catch (error) {
+            } catch (e) {
                 if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
@@ -146,7 +148,6 @@ export default {
                     });
                 }
             } finally {
-                this.dialog = false;
                 this.dialog = false;
             }
         },

@@ -177,9 +177,16 @@ export default {
                 if (res.status == 201) {
                     window.location.href = res.data.data.redirect_to;
                 }
-            } catch (error) {
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
+
                 this.disabled = false;
-                console.log(error);
             }
         },
 
@@ -200,9 +207,16 @@ export default {
                 if (res.status == 201) {
                     window.location.href = res.data.data.redirect_to;
                 }
-            } catch (error) {
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
+
                 this.disabled = false;
-                console.log(error);
             }
         },
 
@@ -215,8 +229,14 @@ export default {
                 if (res.status == 200) {
                     this.methods = res.data.data;
                 }
-            } catch (error) {
-                console.log(error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
     },

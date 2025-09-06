@@ -181,14 +181,14 @@ export default {
                         position: "top",
                     });
                 }
-            } catch (error) {
-                this.$q.notify({
-                    message: "Error deleting image",
-                    color: "negative",
-                    icon: "error",
-                    position: "top",
-                });
-                console.error("Error deleting image:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.confirmDialog = false;
                 this.imageToDelete = null;

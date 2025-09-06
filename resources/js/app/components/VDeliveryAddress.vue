@@ -618,8 +618,14 @@ export default {
                             }
                         }
                     });
-            } catch (error) {
-                console.error("Error removing address:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -637,8 +643,14 @@ export default {
                 if (res.status == 200) {
                     this.addresses = res.data.data;
                 }
-            } catch (error) {
-                console.error("Error fetching addresses:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -663,9 +675,17 @@ export default {
                     this.open();
                     this.errors = {};
                 }
-            } catch (error) {
-                if (error.response.status == 422) {
-                    this.errors = error.response.data.errors;
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
+
+                if (e.response.status == 422) {
+                    this.errors = e.response.data.errors;
                 }
             }
         },
