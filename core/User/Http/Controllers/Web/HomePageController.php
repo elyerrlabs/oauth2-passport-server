@@ -51,7 +51,7 @@ class HomePageController extends WebController
     public function dashboard(Request $request)
     {
         if ($request->wantsJson()) {
-            return $this->repository->home($request);
+            return $this->repository->user($request);
         }
 
         return Inertia::render("Core/User/Web/About", [
