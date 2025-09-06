@@ -92,9 +92,9 @@ if (!function_exists('billing_get_status_name')) {
      * @param string $status
      * @return string|null
      */
-    function billing_get_status_name(string $status)
+    function billing_get_status_name(string $period)
     {
-        return config('billing.status.' . $status . '.name', $status);
+        return config('billing.period.' . $period . '.name', $period);
     }
 }
 
