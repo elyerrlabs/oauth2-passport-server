@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Web\OAuth;
 
 /**
@@ -19,7 +20,7 @@ namespace App\Http\Controllers\Web\OAuth;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -41,7 +42,6 @@ use Laravel\Passport\Http\Controllers\AuthorizationController as Controller;
 
 class AuthorizationController extends Controller
 {
-
     use Scopes;
 
     /**
@@ -57,7 +57,8 @@ class AuthorizationController extends Controller
         protected StatefulGuard $guard,
         protected ClientRepository $clients
     ) {
-        parent::__construct($server, $guard, $clients); 
+        parent::__construct($server, $guard, $clients);
+        $this->denyActionForDemoUser();
     }
 
     /**
@@ -202,4 +203,14 @@ class AuthorizationController extends Controller
         session()->put('redirect_to', $redirect_to);
     }
 
+    /**
+     * Deny Oauth2 access for demo user
+     * @return void
+     */
+    public function denyActionForDemoUser()
+    {
+        if (auth()->check() && auth()->user()->email == config('system.demo.email')) {
+            abort(403, __("Access denied: Your session is authenticated with restricted demo credentials that do not allow the use of OAuth2/OpenID Connect protocols. Authorized credentials are required. You may request a valid test user to evaluate OAuth2 and OpenID Connect."));
+        }
+    }
 }

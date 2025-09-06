@@ -24,6 +24,7 @@ namespace App\Http\Middleware;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Illuminate\Support\Facades\Log;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Closure;
 use Illuminate\Http\Request;
@@ -52,18 +53,5 @@ class VerifyDemoUser
         }
 
         return $next($request);
-    }
-
-    /**
-     * Check demo user
-     * @param mixed $request
-     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function checkDemoUser($request)
-    {
-
-
-
     }
 }

@@ -80,5 +80,6 @@ class Kernel extends HttpKernel
         'reactive.account' => \App\Http\Middleware\ReactiveAccount::class,
         'userCanAny' => \App\Http\Middleware\UserCanAny::class,
         'captcha' => \App\Http\Middleware\VerifyCaptcha::class,
+        'demo' => \App\Http\Middleware\VerifyDemoUser::class,
     ];
 }
