@@ -37,7 +37,6 @@
                 </q-item>
             </template>
         </q-select>
-        <v-error :error="errors.country" />
     </div>
 </template>
 

@@ -214,8 +214,8 @@
                             @click="addToCart"
                             :disable="!product?.stock"
                         />
-                        <!--
-                            <q-btn
+
+                        <q-btn
                             color="orange"
                             icon="flash_on"
                             label="Buy Now"
@@ -223,8 +223,9 @@
                             size="lg"
                             @click="buyNow"
                             :disable="!product?.stock"
-                            />
-                        <q-btn
+                        />
+                        <!--
+                            <q-btn
                             flat
                             round
                             color="red"
@@ -437,8 +438,7 @@ export default {
 
         buyNow() {
             this.addToCart();
-            // In a real app, this would navigate to checkout
-            this.$router.push("/checkout");
+            window.location.href = this.$page.props.ecommerce_orders.route;
         },
 
         toggleWishlist() {

@@ -217,7 +217,6 @@
                                         <v-phone
                                             v-model="form.phone"
                                             :errors="errors"
-                                            class="custom-input"
                                         />
 
                                         <q-input
