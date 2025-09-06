@@ -24,10 +24,11 @@ namespace Core\Transaction\Services\Payment\Drivers;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Support\Fluent;
 use Core\Transaction\Model\Transaction;
 use Core\Transaction\Repositories\TransactionRepository;
-use Core\Transaction\Services\Payment\Contracts\PaymentMethod; 
+use Core\Transaction\Services\Payment\Contracts\PaymentMethod;
 
 class OfflineSubscription implements PaymentMethod
 {
@@ -57,18 +58,38 @@ class OfflineSubscription implements PaymentMethod
     {
         $user = auth()->user();
 
-        $session = new Fluent([
+        // Calculate total items
+        $result = collect($data['items'])->reduce(function ($carry, $item) {
+            $currency = $item['price_data']['currency'];
+            $carry['currency'] = $currency;
+            $carry['total'] += $item['price_data']['unit_amount'] * $item['quantity'];
+            return $carry;
+        }, ['currency' => null, 'total' => 0]);
+
+        $meta = [
             'id' => $this->repository->generateSessionId(),
-            'currency' => $data['price']['currency'],
-            'amount_subtotal' => $data['price']['amount'],
-            'amount_total' => $data['price']['amount'],
+            'currency' => $result['currency'],
+            'amount_total' => $result['total'],
             'payment_intent' => $this->repository->generateIntent(),
             'metadata' => [
                 'user_id' => $user->id,
                 'transaction_code' => $data['transaction_code'],
             ],
+            'payment_intent_data' => [
+                "metadata" => [
+                    'user_id' => $user->id,
+                    'transaction_code' => $data['transaction_code'],
+                ],
+            ],
             'url' => route('transaction.checkout.success') . "?code={$data['transaction_code']}",
-        ]);
+        ];
+
+        if (isset($data['checkout_code'])) {
+            $meta['payment_intent_data']['metadata']['checkout_code'] = $data['checkout_code'];
+            $meta['metadata']['checkout_code'] = $data['checkout_code'];
+        }
+
+        $session = new Fluent($meta);
 
         return $session;
     }
@@ -89,9 +110,23 @@ class OfflineSubscription implements PaymentMethod
 
     }
 
-
+    /**
+     * Force activation
+     * @param array $response
+     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
+     * @return void
+     */
     public function forceActivation(array $response)
     {
+        if (
+            !auth()->user()->hasAccess([
+                'administrator:transactions:full',
+                'administrator:transactions:update'
+            ])
+        ) {
+            throw new ReportError(__("You don’t have permission to perform this action"), 403);
+        }
+
         $response['payment_method'] = null;
         $response["status"] = config('billing.status.successful.name');
         $response["receipt_url"] = route('transaction.checkout.success') . "?code={$response['metadata']['transaction_code']}";

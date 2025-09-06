@@ -30,8 +30,8 @@ use DateTime;
 use DateInterval;
 use LogicException;
 use App\Support\CacheKeys;
-use Core\User\Model\UserScope;
 use Core\User\Model\Group;
+use Core\User\Model\UserScope;
 use Laravel\Passport\HasApiTokens;
 use App\Repositories\Traits\Scopes;
 use Elyerr\ApiResponse\Assets\Asset;
@@ -39,6 +39,7 @@ use App\Repositories\Traits\Standard;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\Auth\ResetPassword;
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -137,6 +138,35 @@ class Auth extends Authenticatable
 
         return false;
     }
+
+
+    /**
+     * Summary of canAny
+     * @param array $scopes
+     * @return bool
+     */
+    public function hasAccess(array $scopes)
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+
+        if (auth()->user()->isAdmin()) {
+            return true;
+        }
+
+        $userScopes = $this->scopes(false)->pluck('id') ?? [];
+
+        // Clean spaces
+        $scopes = array_map('trim', $scopes);
+
+        if (count($userScopes) && array_intersect($userScopes->toArray(), $scopes)) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     /**
      * Relationship with scopes
