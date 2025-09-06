@@ -26,6 +26,7 @@ namespace App\Models\Common;
 
 use App\Models\Master;
 use Core\Partner\Model\User;
+use Core\Transaction\Model\Checkout;
 
 class Order extends Master
 {
@@ -81,5 +82,14 @@ class Order extends Master
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Belongs to th checkout
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Checkout, Order>
+     */
+    public function checkout()
+    {
+        return $this->belongsTo(Checkout::class, 'checkout_id');
     }
 }
