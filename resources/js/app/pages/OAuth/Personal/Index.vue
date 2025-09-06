@@ -283,13 +283,13 @@ export default {
                         res.data.meta.pagination.total_pages;
                 })
                 .catch((e) => {
-                    console.error("Failed to load API keys:", e);
-                    this.$q.notify({
-                        message: "Failed to load API keys. Please try again.",
-                        color: "negative",
-                        icon: "error",
-                        position: "top",
-                    });
+                    if (e?.response?.data?.message) {
+                        this.$q.notify({
+                            type: "negative",
+                            message: e.response.data.message,
+                            timeout: 3000,
+                        });
+                    }
                 })
                 .finally(() => {
                     this.loading = false;

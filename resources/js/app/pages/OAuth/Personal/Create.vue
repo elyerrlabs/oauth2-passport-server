@@ -367,26 +367,13 @@ export default {
             } catch (e) {
                 if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
-                    this.$q.notify({
-                        type: "negative",
-                        message: "Please fix the form errors",
-                        icon: "mdi-alert-circle",
-                        position: "top",
-                    });
-                } else if (e?.response?.status == 404) {
+                }
+
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
-                        icon: "mdi-alert",
-                        position: "top",
-                        timeout: 5000,
-                    });
-                } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message: "Failed to create API key",
-                        icon: "mdi-alert",
-                        position: "top",
+                        timeout: 3000,
                     });
                 }
             } finally {
