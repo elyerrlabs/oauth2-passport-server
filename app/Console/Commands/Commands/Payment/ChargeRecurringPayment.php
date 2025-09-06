@@ -24,10 +24,10 @@ namespace App\Console\Commands\Commands\Payment;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Services\Payment\PaymentManager;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\Models\Subscription\Package;
-use App\Services\Payment\PaymentManager;
+use Core\Transaction\Model\Package; 
 
 class ChargeRecurringPayment extends Command
 {
