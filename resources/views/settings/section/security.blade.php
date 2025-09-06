@@ -163,11 +163,73 @@
                 </div>
             </div>
 
-            <!-- CAPTCHA Configuration -->
             <div
                 class="p-5 bg-[var(--color-bg-primary)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--color-border)]">
                 <div class="flex items-center mb-4">
                     <div class="flex items-center justify-center w-10 h-10 bg-[var(--color-warning-light)] rounded-lg mr-3">
+                        <i class="mdi mdi-monitor-eye text-[var(--color-warning)] text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-[var(--color-text-primary)]">
+                        {{ __('Demo Mode') }}
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Enable Demo Mode --}}
+                    <div class="md:col-span-2">
+                        <div
+                            class="flex items-center justify-between p-4 bg-[var(--color-bg-secondary)] rounded-lg border border-[var(--color-border)]">
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium text-[var(--color-text-primary)] mb-1">
+                                    {{ __('Enable Demo Mode') }}
+                                </label>
+                                <p class="text-sm text-[var(--color-text-secondary)]">
+                                    {{ __('Allow users to log in with demo credentials') }}
+                                </p>
+                            </div>
+                            <div class="ml-4">
+                                <select name="system[demo][enabled]"
+                                    class="w-32 px-3 py-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent">
+                                    <option value="1" {{ config('system.demo.enabled') ? 'selected' : '' }}>
+                                        {{ __('Enabled') }}
+                                    </option>
+                                    <option value="0" {{ !config('system.demo.enabled') ? 'selected' : '' }}>
+                                        {{ __('Disabled') }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Demo Email --}}
+                    <div>
+                        <label class="block text-sm font-medium text-[var(--color-text-primary)] mb-2">
+                            {{ __('Demo Email') }}
+                        </label>
+                        <input type="email" name="system[demo][email]"
+                            class="w-full px-4 py-3 rounded-lg border border-[var(--color-border)] shadow-sm focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-light)] transition-colors duration-300"
+                            value="{{ config('system.demo.email') }}" placeholder="demo@example.com">
+                    </div>
+
+                    {{-- Demo Password --}}
+                    <div>
+                        <label class="block text-sm font-medium text-[var(--color-text-primary)] mb-2">
+                            {{ __('Demo Password') }}
+                        </label>
+                        <input type="password" name="system[demo][password]"
+                            class="w-full px-4 py-3 rounded-lg border border-[var(--color-border)] shadow-sm focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-light)] transition-colors duration-300"
+                            value="{{ config('system.demo.password') }}" placeholder="••••••••">
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- CAPTCHA Configuration -->
+            <div
+                class="p-5 bg-[var(--color-bg-primary)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--color-border)]">
+                <div class="flex items-center mb-4">
+                    <div
+                        class="flex items-center justify-center w-10 h-10 bg-[var(--color-warning-light)] rounded-lg mr-3">
                         <i class="mdi mdi-robot text-[var(--color-warning)] text-xl"></i>
                     </div>
                     <h3 class="text-lg font-semibold text-[var(--color-text-primary)]">

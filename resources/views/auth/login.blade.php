@@ -91,6 +91,22 @@
                     <p class="text-sm text-gray-500 mt-2">{{ __('Sign in to your account') }}</p>
                 </div>
 
+                {{-- Demo Mode Card --}}
+                @if (config('system.demo.enabled'))
+                    <div class="mb-6 p-4 rounded-xl bg-yellow-50 border border-yellow-300 shadow-sm text-sm text-yellow-800">
+                        <div class="flex items-center mb-2">
+                            <i class="mdi mdi-monitor-eye text-yellow-600 text-xl mr-2"></i>
+                            <span class="font-semibold">{{ __('Demo Mode Active') }}</span>
+                        </div>
+                        <p class="mb-1">{{ __('You can log in using the demo credentials:') }}</p>
+                        <div class="bg-white border border-yellow-200 rounded-lg p-3 text-gray-700 text-xs">
+                            <p><strong>{{ __('Email') }}:</strong> {{ config('system.demo.email') ?? 'demo@example.com' }}
+                            </p>
+                            <p><strong>{{ __('Password') }}:</strong> {{ config('system.demo.password') ?? 'demo1234' }}</p>
+                        </div>
+                    </div>
+                @endif
+
                 <form action="{{ route('login') }}" method="POST" class="space-y-6">
                     <div class="floating-label">
                         <input type="email" id="email" name="email"

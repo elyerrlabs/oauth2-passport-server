@@ -282,6 +282,10 @@ class Setting
         settingLoad('system.policy_cookies', null);
         settingLoad('system.birthday.active', false);
         settingLoad('system.birthday.limit', 18);
+        settingLoad('system.demo.enabled', false);
+        settingLoad('system.demo.email', null);
+        settingLoad('system.demo.password', null);
+
 
         //Session settings
         //settingLoad('session.driver', 'database');
@@ -569,7 +573,9 @@ class Setting
         Config::set('system.policy_cookies', settingItem('system.policy_cookies', null));
         Config::set('system.birthday.active', settingItem('system.birthday.active', false));
         Config::set('system.birthday.limit', settingItem('system.birthday.limit', 18));
-
+        Config::set('system.demo.enabled', settingItem('system.demo.enabled', false));
+        Config::set('system.demo.email', settingItem('system.demo.email', null));
+        Config::set('system.demo.password', settingItem('system.demo.password', null));
     }
 
     /**

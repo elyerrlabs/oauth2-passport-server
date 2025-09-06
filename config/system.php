@@ -64,4 +64,10 @@ return [
         "active" => false, // Activate birthday
         "limit" => 18, // Limit of year to allow register users
     ],
+
+    "demo" => [
+        'enabled' => false,
+        'email' => null,
+        'password' => null
+    ]
 ];
