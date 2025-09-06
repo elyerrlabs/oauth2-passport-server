@@ -146,7 +146,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         @click="createPersonalAccessClient"
                         unelevated
                         icon="mdi-key-plus"
-                        :loading="loading"
                     />
                 </q-card-actions>
             </q-card>
@@ -182,7 +181,7 @@ export default {
 
             try {
                 const res = await this.$server.post(
-                    this.$page.props.route["personal"],
+                    this.$page.props.routes.personal,
                     this.form
                 );
 
@@ -208,6 +207,7 @@ export default {
                         timeout: 3000,
                     });
                 }
+                console.log(e);
             } finally {
                 this.loading = false;
             }
