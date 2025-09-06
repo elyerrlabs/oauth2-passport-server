@@ -24,7 +24,9 @@ namespace Core\Transaction\Repositories;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Models\Common\Order;
 use App\Notifications\Checkout\CheckoutNotification;
+use Core\Ecommerce\Model\Product;
 use Illuminate\Support\Facades\Log;
 use Core\Transaction\Model\Checkout;
 use Exception;
@@ -469,6 +471,29 @@ class TransactionRepository
 
                 if (isset($meta['metadata']['checkout_code']) && !empty($meta['metadata']['checkout_code'])) {
 
+                    $checkout = Checkout::with('orders')->where('code', $meta['metadata']['checkout_code'])->first();
+
+                    foreach ($checkout->orders as $item) {
+                        // Retrieve the order
+                        $order = Order::find($item->id);
+
+                        // Updated stock for products and attributes
+                        $product = Product::find($order->meta['id']);
+                        $product->setStock($product->stock - $order->quantity);
+                        $product->push();
+
+                        // Updated availability for attributes for current product
+                        if (count($order->meta['attributes'] ?? [])) {
+                            foreach ($order->meta['attributes'] as $key => $value) {
+
+                                $attribute = $product->attributes()->where('slug', $key)->where('value', $value)->first();
+
+                                $update_attribute_stock = $attribute->pivot->stock - $order->quantity;
+
+                                $product->attributes()->syncWithoutDetaching([$attribute->id => ['stock' => $update_attribute_stock]]);
+                            }
+                        }
+                    }
                     $redirect_to = route('transaction.checkout.success') . "?code={$meta['metadata']['transaction_code']}";
                     $customer->notify(new CheckoutNotification($redirect_to));
 
@@ -625,10 +650,10 @@ class TransactionRepository
         ]);
 
         // Send request notification
-       /* auth()->user()->notify(new RequestSubscription(
-            route('transaction.subscriptions.show', ['transaction_code' => $code]),
-            $code
-        ));*/
+        /* auth()->user()->notify(new RequestSubscription(
+             route('transaction.subscriptions.show', ['transaction_code' => $code]),
+             $code
+         ));*/
 
         return $this->data([
             'data' => [
