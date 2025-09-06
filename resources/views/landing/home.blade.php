@@ -823,6 +823,10 @@
     </main>
 @endsection
 
+@section('footer')
+    @include('layouts.parts.footer')
+@endsection
+
 @push('js')
     <script nonce="{{ $nonce }}">
         document.addEventListener('DOMContentLoaded', function() {

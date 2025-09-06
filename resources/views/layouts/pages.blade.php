@@ -25,8 +25,7 @@
 
     @yield('content')
 
-    @include('layouts.parts.footer')
-
+    @yield('footer')
     <x-privacy />
     @stack('js')
     @stack('modals')
