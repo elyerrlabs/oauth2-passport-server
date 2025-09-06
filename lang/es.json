@@ -2307,5 +2307,14 @@
   "Order Successfully Received": "Pedido recibido con éxito",
   "Your order was received and is being processed.": "Tu pedido fue recibido y está siendo procesado.",
   "Selected method": "Metodo seleccionado",
-  "Selected Delivery Address": "Dirección de entrega selleccionado"
+  "Selected Delivery Address": "Dirección de entrega selleccionado",
+  "Demo Mode": "Modo demo",
+  "Enable Demo Mode": "Habilitar modo demo",
+  "Allow users to log in with demo credentials": "Permitir a los usuarios iniciar sesión con credenciales de demostración",
+  "Demo Email": "Correo de demo",
+  "Demo Password": "Contraseña de demo",
+  "Demo Mode Active": "Modo demo activo",
+  "You can log in using the demo credentials:": "Puedes iniciar sesión usando las credenciales de demostración:",
+  "You don’t have permission to perform this action": "No cuentas con los permisos suficientes para realizar esta accion",
+  "You do not have the required permissions. It seems you are logged in as a demo user.": "No tienes los permisos requeridos. Parece que has iniciado sesión como usuario demo."
 }
