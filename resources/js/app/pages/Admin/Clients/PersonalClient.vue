@@ -207,7 +207,6 @@ export default {
                         timeout: 3000,
                     });
                 }
-                console.log(e);
             } finally {
                 this.loading = false;
             }
