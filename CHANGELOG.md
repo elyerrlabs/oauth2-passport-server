@@ -42,6 +42,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -   Change Transaction to polymorphic table
 -   Add Tags support for polymorphic relation instead of the model location
 -   Support for Spanish language has been added
+-   Add support for demo user
 
 ## 🚀 [v3.0.4]
 
