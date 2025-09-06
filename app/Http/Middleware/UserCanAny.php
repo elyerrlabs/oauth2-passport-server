@@ -50,6 +50,9 @@ class UserCanAny
         }
 
         $userScopes = $this->scopes(false)->pluck('id') ?? [];
+        
+        // Clean spaces
+        $scopes = array_map('trim', $scopes);
 
         if (count($userScopes) && array_intersect($userScopes->toArray(), $scopes)) {
             return $next($request);
