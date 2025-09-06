@@ -193,8 +193,14 @@ export default {
                     this.dialog = false;
                     this.showSuccessNotification();
                 }
-            } catch (error) {
-                this.showErrorNotification(error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }
@@ -207,27 +213,6 @@ export default {
                 icon: "mdi-check-circle",
                 position: "top-right",
                 timeout: 3000,
-                progress: true,
-            });
-        },
-
-        showErrorNotification(error) {
-            let message = "Failed to delete OAuth client";
-
-            if (error.response?.status === 404) {
-                message = "Client not found or already deleted";
-            } else if (error.response?.status === 403) {
-                message = "You don't have permission to delete this client";
-            } else if (error.response?.status === 409) {
-                message = "Cannot delete client with active sessions";
-            }
-
-            this.$q.notify({
-                message: message,
-                color: "negative",
-                icon: "mdi-alert-circle",
-                position: "top-right",
-                timeout: 5000,
                 progress: true,
             });
         },

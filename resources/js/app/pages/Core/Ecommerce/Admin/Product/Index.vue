@@ -934,15 +934,14 @@ export default {
                 this.groups = data.data;
                 this.pages = data.meta.pagination;
                 this.search.page = data.meta.pagination.current_page;
-            } catch (err) {
-                console.error("Error loading products:", err);
-                this.$q.notify({
-                    type: "negative",
-                    message: "Failed to load products",
-                    icon: "mdi-alert-circle",
-                    position: "top-right",
-                    timeout: 3000,
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }

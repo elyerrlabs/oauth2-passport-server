@@ -329,14 +329,14 @@ export default {
                     this.plans = res.data.data;
                     this.pages = res.data.meta.pagination;
                 }
-            } catch (error) {
-                console.error("Failed to load plans:", error);
-                this.$q.notify({
-                    message: "Failed to load plans. Please try again.",
-                    color: "negative",
-                    icon: "error",
-                    position: "top",
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
     },

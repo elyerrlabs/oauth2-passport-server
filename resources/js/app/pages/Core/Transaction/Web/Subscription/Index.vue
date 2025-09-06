@@ -426,14 +426,14 @@ export default {
                     this.packages = res.data.data;
                     this.pages = res.data.meta.pagination;
                 }
-            } catch (error) {
-                console.error("Failed to load packages:", error);
-                this.$q.notify({
-                    message: "Failed to load packages. Please try again.",
-                    color: "negative",
-                    icon: "error",
-                    position: "top",
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }

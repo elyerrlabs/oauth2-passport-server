@@ -299,35 +299,15 @@ export default {
                     });
                 }
             } catch (e) {
-                if (
-                    e.response &&
-                    e.response.data.errors &&
-                    e.response.status == 422
-                ) {
+                if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
-                } else if (
-                    e.response &&
-                    e.response.status != 422 &&
-                    e.response.data &&
-                    e.response.data.message
-                ) {
+                }
+
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
                         timeout: 3000,
-                        position: "top-right",
-                        icon: "mdi-alert-circle",
-                        progress: true,
-                    });
-                } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message:
-                            "An error occurred while updating the commission rate",
-                        timeout: 3000,
-                        position: "top-right",
-                        icon: "mdi-alert-circle",
-                        progress: true,
                     });
                 }
             } finally {

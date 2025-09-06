@@ -359,12 +359,14 @@ export default {
                     this.search.total_pages =
                         res.data.meta.pagination.total_pages;
                 }
-            } catch (error) {
-                this.$q.notify({
-                    type: "negative",
-                    message: this.__("Failed to load sales data"),
-                    position: "top-right",
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }

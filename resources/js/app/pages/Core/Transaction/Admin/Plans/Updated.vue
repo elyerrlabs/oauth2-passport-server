@@ -588,6 +588,14 @@ export default {
                 if (e.response && e.response.data.errors) {
                     this.errors = e.response.data.errors;
                 }
+
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 

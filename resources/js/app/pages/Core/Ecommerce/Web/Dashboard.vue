@@ -210,8 +210,14 @@ export default {
                         currentSlide: 0,
                     }));
                 }
-            } catch (error) {
-                console.error("Error fetching products:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -234,8 +240,14 @@ export default {
                         currentSlide: 0,
                     }));
                 }
-            } catch (error) {
-                console.error("Error fetching products:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -258,8 +270,14 @@ export default {
                         currentSlide: 0,
                     }));
                 }
-            } catch (error) {
-                console.error("Error fetching featured categories:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -288,8 +306,14 @@ export default {
                         );
                     });
                 }
-            } catch (error) {
-                console.error("Error fetching categories:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
     },

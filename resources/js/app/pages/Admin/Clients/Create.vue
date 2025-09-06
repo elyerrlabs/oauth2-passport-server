@@ -387,20 +387,15 @@ export default {
                     });
                 }
             } catch (e) {
-                if (e.response && e.response.data.errors) {
+                if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
+                }
+
+                if (e?.response?.data?.message) {
                     this.$q.notify({
-                        message: "Please fix the form errors",
-                        color: "negative",
-                        icon: "mdi-alert-circle",
-                        position: "top",
-                    });
-                } else {
-                    this.$q.notify({
-                        message: "Failed to create OAuth client",
-                        color: "negative",
-                        icon: "error",
-                        position: "top",
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
                     });
                 }
             } finally {

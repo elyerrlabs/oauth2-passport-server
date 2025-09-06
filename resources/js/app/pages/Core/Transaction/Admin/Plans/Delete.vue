@@ -207,15 +207,14 @@ export default {
                         position: "top-right",
                     });
                 }
-            } catch (error) {
-                console.error("Error deleting plan:", error);
-                this.$q.notify({
-                    type: "negative",
-                    message: "Failed to delete plan. Please try again.",
-                    timeout: 3000,
-                    icon: "mdi-alert-circle",
-                    position: "top-right",
-                });
+            } catch (e) {
+              if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
     },

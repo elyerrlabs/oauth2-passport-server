@@ -361,6 +361,13 @@ export default {
                         icon: "mdi-alert-circle",
                         timeout: 3000,
                     });
+
+                    if (e?.response?.status == 403) {
+                        this.$q.notify({
+                            type: "negative",
+                            message: e.response.data.message,
+                        });
+                    }
                 })
                 .finally(() => {
                     this.loading = false;
@@ -372,7 +379,7 @@ export default {
                 await navigator.clipboard.writeText(text);
                 this.$q.notify({
                     type: "positive",
-                    message: "Copied to clipboard",
+                    message: this.__("Copied to clipboard"),
                     position: "top",
                     icon: "mdi-check-circle",
                     timeout: 2000,
@@ -380,7 +387,7 @@ export default {
             } catch (err) {
                 this.$q.notify({
                     type: "negative",
-                    message: "Failed to copy",
+                    message: this.__("Failed to copy"),
                     position: "top",
                     icon: "mdi-alert-circle",
                     timeout: 2000,

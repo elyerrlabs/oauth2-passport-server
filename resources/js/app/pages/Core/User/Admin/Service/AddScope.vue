@@ -292,14 +292,14 @@ export default {
                         name: this.__(item.name),
                     }));
                 }
-            } catch (error) {
-                this.$q.notify({
-                    type: "negative",
-                    message: this.__("Failed to load roles"),
-                    position: "top",
-                    icon: "mdi-alert-circle",
-                    timeout: 3000,
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loadingRoles = false;
             }
@@ -332,21 +332,12 @@ export default {
                     error.response.data.errors
                 ) {
                     this.errors = error.response.data.errors;
+                }
+
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: this.__("Please check the form for errors"),
-                        position: "top",
-                        icon: "mdi-alert-circle",
-                        timeout: 3000,
-                    });
-                } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message:
-                            error.response?.data?.message ||
-                            this.__("Error saving scope"),
-                        position: "top",
-                        icon: "mdi-alert-circle",
+                        message: e.response.data.message,
                         timeout: 3000,
                     });
                 }

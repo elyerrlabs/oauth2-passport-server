@@ -451,12 +451,14 @@ export default {
                     this.updateChart(this.sales);
                     this.resetRefreshCountdown();
                 }
-            } catch (error) {
-                this.$q.notify({
-                    type: "negative",
-                    message: this.__("Failed to load sales data"),
-                    position: "top-right",
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 

@@ -531,8 +531,14 @@ export default {
                     this.transactions = res.data.data;
                     this.pages = res.data.meta.pagination;
                 }
-            } catch (error) {
-                console.error("Error fetching transactions:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }

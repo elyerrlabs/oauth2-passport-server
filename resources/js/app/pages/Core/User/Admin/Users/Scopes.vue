@@ -193,14 +193,14 @@ export default {
                 if (res.status == 200) {
                     this.user_roles = res.data.data;
                 }
-            } catch (error) {
-                this.$q.notify({
-                    type: "negative",
-                    message: "Failed to load user roles",
-                    position: "top",
-                    icon: "mdi-alert-circle",
-                    timeout: 3000,
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -233,21 +233,11 @@ export default {
             } catch (e) {
                 if (e.response?.status == 422) {
                     this.errors = e.response.data.errors;
+                }
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: "Please check the form for errors",
-                        position: "top",
-                        icon: "mdi-alert-circle",
-                        timeout: 3000,
-                    });
-                } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message:
-                            e.response?.data?.message ||
-                            "Error saving permissions",
-                        position: "top",
-                        icon: "mdi-alert-circle",
+                        message: e.response.data.message,
                         timeout: 3000,
                     });
                 }

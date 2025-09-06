@@ -446,23 +446,12 @@ export default {
                     e.response.status == 422
                 ) {
                     this.errors = e.response.data.errors;
-                    this.$q.notify({
-                        type: "negative",
-                        message: "Please check the form for errors",
-                        position: "top",
-                        icon: "mdi-alert-circle",
-                        timeout: 3000,
-                    });
-                } else if (
-                    e.response &&
-                    e.response.data &&
-                    e.response.data.message
-                ) {
+                }
+
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
-                        position: "top",
-                        icon: "mdi-alert-circle",
                         timeout: 3000,
                     });
                 }
@@ -476,13 +465,13 @@ export default {
                 });
                 if (res.status === 200) this.countries = res.data;
             } catch (e) {
-                this.$q.notify({
-                    type: "negative",
-                    message: "Failed to load countries",
-                    position: "top",
-                    icon: "mdi-alert-circle",
-                    timeout: 3000,
-                });
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
 
             this.filteredCountries = this.countries.map((c) => ({

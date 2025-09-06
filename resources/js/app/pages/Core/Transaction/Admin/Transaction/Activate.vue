@@ -138,21 +138,10 @@ export default {
                     this.$emit("updated");
                 }
             } catch (error) {
-                if (error?.response?.status == 402) {
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: `Cannot activate transaction: ${error.response.data.message}`,
-                        icon: "mdi-alert-circle",
-                        position: "top-right",
-                        timeout: 3000,
-                    });
-                } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message:
-                            "An error occurred while activating the transaction",
-                        icon: "mdi-alert-circle",
-                        position: "top-right",
+                        message: e.response.data.message,
                         timeout: 3000,
                     });
                 }

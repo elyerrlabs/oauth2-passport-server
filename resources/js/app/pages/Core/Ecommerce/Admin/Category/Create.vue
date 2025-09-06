@@ -379,32 +379,29 @@ export default {
                     this.$q.notify({
                         type: "positive",
                         message: this.form.id
-                            ? "Category updated successfully"
-                            : "Category created successfully",
+                            ? this.__("Category updated successfully")
+                            : this.__("Category created successfully"),
                         timeout: 3000,
                         icon: "mdi-check-circle",
                         position: "top-right",
                     });
                 }
             } catch (e) {
-                if (e?.response?.data?.errors && e?.response?.status == 422) {
+                if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
-                    if (e.response && e.response.data.errors) {
-                        this.errors = e.response.data.errors;
-                        this.$q.notify({
-                            type: "warning",
-                            message: "Please check the input fields",
-                            timeout: 3000,
-                            icon: "update",
-                        });
-                    }
-                } else {
+                    this.$q.notify({
+                        type: "warning",
+                        message: this.__("Please check the input fields"),
+                        timeout: 3000,
+                        icon: "update",
+                    });
+                }
+
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: "An error occurred. Please try again.",
+                        message: e.response.data.message,
                         timeout: 3000,
-                        icon: "mdi-alert-circle",
-                        position: "top-right",
                     });
                 }
             }

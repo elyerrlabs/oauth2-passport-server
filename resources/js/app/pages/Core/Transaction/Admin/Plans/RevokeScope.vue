@@ -226,15 +226,14 @@ export default {
                         position: "top-right",
                     });
                 }
-            } catch (error) {
-                console.error("Error revoking scope:", error);
-                this.$q.notify({
-                    type: "negative",
-                    message: "Failed to revoke scope. Please try again.",
-                    timeout: 3000,
-                    icon: "mdi-alert-circle",
-                    position: "top-right",
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
     },

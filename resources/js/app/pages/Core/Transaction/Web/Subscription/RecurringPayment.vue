@@ -118,11 +118,11 @@ export default {
                     });
                     this.$emit("success");
                 }
-            } catch (error) {
-                if (error?.response?.data?.message) {
+            } catch (e) {
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: error.response.data.message,
+                        message: e.response.data.message,
                         timeout: 3000,
                     });
                 }

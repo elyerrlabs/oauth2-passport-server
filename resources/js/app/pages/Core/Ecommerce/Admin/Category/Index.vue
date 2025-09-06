@@ -370,14 +370,14 @@ export default {
                     this.pages = meta.pagination;
                     this.search.page = meta.pagination.current_page;
                 })
-                .catch((err) => {
-                    console.error("Error loading categories:", err);
-                    this.$q.notify({
-                        type: "negative",
-                        message: "Failed to load categories",
-                        icon: "mdi-alert-circle",
-                        position: "top-right",
-                    });
+                .catch((e) => {
+                    if (e?.response?.data?.message) {
+                        this.$q.notify({
+                            type: "negative",
+                            message: e.response.data.message,
+                            timeout: 3000,
+                        });
+                    }
                 })
                 .finally(() => {
                     this.loading = false;

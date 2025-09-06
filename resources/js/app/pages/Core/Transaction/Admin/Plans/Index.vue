@@ -401,8 +401,14 @@ export default {
                     this.pages = meta.pagination;
                     this.search.current_page = meta.pagination.current_page;
                 }
-            } catch (error) {
-                console.error("Error fetching plans:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 

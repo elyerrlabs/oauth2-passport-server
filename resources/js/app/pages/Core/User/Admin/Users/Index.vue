@@ -415,7 +415,13 @@ export default {
                     this.search.current_page = meta.pagination.current_page;
                 }
             } catch (e) {
-                console.error("Error fetching users:", e);
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }

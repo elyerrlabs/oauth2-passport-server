@@ -313,13 +313,14 @@ export default {
                         icon: "mdi-check-circle",
                     });
                 }
-            } catch (error) {
-                this.$q.notify({
-                    type: "negative",
-                    message: "Failed to generate referral link",
-                    position: "top-right",
-                    icon: "mdi-alert-circle",
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.generating = false;
             }
@@ -334,7 +335,7 @@ export default {
 
                     // Visual feedback
                     this.$q.notify({
-                        message: "Copied to clipboard!",
+                        message: this.__("Copied to clipboard!"),
                         color: "positive",
                         icon: "mdi-content-copy",
                         position: "top-right",
@@ -343,7 +344,7 @@ export default {
                 })
                 .catch((err) => {
                     this.$q.notify({
-                        message: "Failed to copy to clipboard",
+                        message: this.__("Failed to copy to clipboard"),
                         color: "negative",
                         icon: "mdi-alert-circle",
                         position: "top-right",

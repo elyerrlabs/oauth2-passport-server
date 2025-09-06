@@ -146,18 +146,22 @@ export default {
                     this.$emit("created", true);
                     this.$q.notify({
                         type: "positive",
-                        message: "A new channel has been created",
+                        message: this.__("A new channel has been created"),
                         timeout: 3000,
                     });
                     this.dialog = false;
                 }
             } catch (e) {
-                if (
-                    e.response &&
-                    e.response.data.errors &&
-                    e.response.status == 422
-                ) {
+                if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
+                }
+
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
                 }
             }
         },

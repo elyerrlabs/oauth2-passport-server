@@ -281,20 +281,21 @@ export default {
                     });
                 }
             } catch (e) {
-                if (e.response && e.response.status == 422) {
+                if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
                     this.$q.notify({
-                        message: "Please fix the form errors",
+                        message: this.__("Please fix the form errors"),
                         color: "negative",
                         icon: "mdi-alert-circle",
                         position: "top",
                     });
-                } else {
+                }
+
+                if (e?.response?.data?.message) {
                     this.$q.notify({
-                        message: "Failed to update OAuth client",
-                        color: "negative",
-                        icon: "error",
-                        position: "top",
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
                     });
                 }
             } finally {
@@ -306,7 +307,7 @@ export default {
             try {
                 await navigator.clipboard.writeText(text);
                 this.$q.notify({
-                    message: "Client ID copied to clipboard",
+                    message: this.__("Client ID copied to clipboard"),
                     color: "positive",
                     icon: "mdi-check",
                     position: "top-right",
@@ -314,7 +315,7 @@ export default {
                 });
             } catch (err) {
                 this.$q.notify({
-                    message: "Failed to copy to clipboard",
+                    message: this.__("Failed to copy to clipboard"),
                     color: "negative",
                     icon: "error",
                     position: "top",

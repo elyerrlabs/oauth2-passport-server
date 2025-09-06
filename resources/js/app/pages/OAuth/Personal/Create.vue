@@ -333,13 +333,14 @@ export default {
                     position: "top",
                     timeout: 2000,
                 });
-            } catch (err) {
-                this.$q.notify({
-                    type: "negative",
-                    message: "Failed to copy to clipboard",
-                    icon: "mdi-alert",
-                    position: "top",
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 

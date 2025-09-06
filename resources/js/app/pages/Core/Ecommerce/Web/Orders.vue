@@ -649,8 +649,14 @@ export default {
                     this.shipping = this.subtotal > 100 ? 0 : 10;
                     this.estimatedTax = this.subtotal * 0.08; // 8% tax
                 }
-            } catch (error) {
-                console.error("Error fetching orders:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -666,8 +672,14 @@ export default {
                         position: "top-right",
                     });
                 }
-            } catch (error) {
-                console.error("Error deleting item:", error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 
@@ -740,9 +752,9 @@ export default {
                     });
                     window.location.href = res.data.data.redirect_to;
                 }
-            } catch (error) {
-                if (error?.response?.status == 422) {
-                    this.errors = error.response.data.errors;
+            } catch (e) {
+                if (e?.response?.status == 422) {
+                    this.errors = e.response.data.errors;
                     this.$q.notify({
                         message: this.__(
                             "Some errors were detected. Please review them and try again."
@@ -753,12 +765,20 @@ export default {
                     });
                 }
 
-                if (error?.response?.status == 409) {
+                if (e?.response?.status == 409) {
                     this.$q.notify({
-                        message: this.__(error.response.data.message),
+                        message: this.__(e.response.data.message),
                         color: "warning",
                         position: "top-right",
                         icon: "mdi-alert-circle",
+                    });
+                }
+
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
                     });
                 }
             } finally {

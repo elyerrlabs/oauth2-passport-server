@@ -301,7 +301,15 @@ export default {
                         description: item.description,
                     }));
                 }
-            } catch (error) {}
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
+            }
         },
 
         renderChart() {

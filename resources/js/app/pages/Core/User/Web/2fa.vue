@@ -405,17 +405,14 @@ export default {
             } catch (err) {
                 if (err.response && err.response.status == 422) {
                     this.errors = err.response.data.errors;
-                    this.popup(
-                        "Invalid verification code. Please try again.",
-                        "negative"
-                    );
-                } else if (err.response) {
-                    this.popup(
-                        err.response.data.message || "An error occurred",
-                        "negative"
-                    );
-                } else {
-                    this.popup("Failed to update 2FA settings", "negative");
+                }
+
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
                 }
             } finally {
                 this.loading = false;

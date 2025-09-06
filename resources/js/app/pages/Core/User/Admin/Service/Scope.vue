@@ -476,12 +476,13 @@ export default {
                     this.scopes = res.data.data;
                 }
             } catch (e) {
-                this.$q.notify({
-                    type: "negative",
-                    message: this.__("Failed to load scopes"),
-                    icon: "mdi-alert-circle",
-                    timeout: 3000,
-                });
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }

@@ -317,31 +317,12 @@ export default {
                     e.response.data.errors
                 ) {
                     this.errors = e.response.data.errors;
-                    this.$q.notify({
-                        type: "negative",
-                        message: "Please check the form for errors",
-                        position: "top",
-                        icon: "mdi-alert-circle",
-                        timeout: 3000,
-                    });
-                } else if (
-                    e.response &&
-                    e.response.data &&
-                    e.response.data.message
-                ) {
+                }
+
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
-                        position: "top",
-                        icon: "mdi-alert-circle",
-                        timeout: 3000,
-                    });
-                } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message: "An unexpected error occurred",
-                        position: "top",
-                        icon: "mdi-alert-circle",
                         timeout: 3000,
                     });
                 }

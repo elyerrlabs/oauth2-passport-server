@@ -207,15 +207,14 @@ export default {
                     this.$emit("deleted", true);
                     this.dialog = false;
                 }
-            } catch (err) {
-                this.$q.notify({
-                    type: "negative",
-                    message:
-                        err.response?.data?.message || "Error deleting service",
-                    position: "top",
-                    icon: "mdi-alert-circle",
-                    timeout: 3000,
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }

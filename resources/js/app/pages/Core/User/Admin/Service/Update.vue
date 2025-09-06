@@ -270,19 +270,12 @@ export default {
             } catch (e) {
                 if (e.response && e.response.status == 422) {
                     this.errors = e.response.data.errors;
+                }
+
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: "Please check the form for errors",
-                        position: "top",
-                        icon: "mdi-alert-circle",
-                        timeout: 3000,
-                    });
-                } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message: "Error updating service",
-                        position: "top",
-                        icon: "mdi-alert-circle",
+                        message: e.response.data.message,
                         timeout: 3000,
                     });
                 }

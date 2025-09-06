@@ -324,13 +324,13 @@ export default {
                     this.search.current_page = meta.pagination.current_page;
                 })
                 .catch((e) => {
-                    console.error("Failed to load clients:", e);
-                    this.$q.notify({
-                        message: "Failed to load OAuth clients",
-                        color: "negative",
-                        icon: "error",
-                        position: "top",
-                    });
+                    if (e?.response?.data?.message) {
+                        this.$q.notify({
+                            type: "negative",
+                            message: e.response.data.message,
+                            timeout: 3000,
+                        });
+                    }
                 })
                 .finally(() => {
                     this.loading = false;

@@ -536,14 +536,13 @@ export default {
             } catch (e) {
                 if (e.response && e.response.status == 422) {
                     this.errors = e.response.data.errors;
+                }
 
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: "Please fix the errors in the form",
+                        message: e.response.data.message,
                         timeout: 3000,
-                        position: "top-right",
-                        icon: "mdi-alert-circle",
-                        progress: true,
                     });
                 }
             } finally {
@@ -568,7 +567,13 @@ export default {
                     }));
                 }
             } catch (e) {
-                console.error("Failed to load countries", e);
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 

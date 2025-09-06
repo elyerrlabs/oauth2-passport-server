@@ -459,14 +459,14 @@ export default {
                 if (res.status === 200) {
                     this.user_roles = res.data.data;
                 }
-            } catch (error) {
-                this.$q.notify({
-                    type: "negative",
-                    message: "Failed to load assigned scopes",
-                    position: "top",
-                    icon: "mdi-alert-circle",
-                    timeout: 3000,
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }
@@ -490,16 +490,14 @@ export default {
                     this.userRoles();
                     this.confirm = false;
                 }
-            } catch (error) {
-                this.$q.notify({
-                    type: "negative",
-                    message:
-                        error.response?.data?.message ||
-                        "Error revoking permission",
-                    position: "top",
-                    icon: "mdi-alert-circle",
-                    timeout: 3000,
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.revoking = false;
             }

@@ -636,8 +636,14 @@ export default {
                         value: item.id,
                     }));
                 }
-            } catch (error) {
-                console.error("Error fetching billing periods:", error);
+            } catch (e) {
+                 if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             }
         },
 

@@ -461,11 +461,13 @@ export default {
                     };
                 }
             } catch (e) {
-                console.error(e);
-                this.$q.notify({
-                    type: "negative",
-                    message: "Error loading partners",
-                });
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }

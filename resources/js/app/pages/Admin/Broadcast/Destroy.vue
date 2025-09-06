@@ -94,12 +94,14 @@ export default {
                     this.$emit("deleted", true);
                     this.$q.notify({
                         type: "positive",
-                        message: "The channel has been deleted successfully",
+                        message: this.__(
+                            "The channel has been deleted successfully"
+                        ),
                         timeout: 3000,
                     });
                 }
             } catch (e) {
-                if (e.response && e.response.data && e.response.data.message) {
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,

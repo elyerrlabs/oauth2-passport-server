@@ -128,10 +128,14 @@ export default {
                         "positive"
                     );
                 }
-            } catch (err) {
-                const message =
-                    err?.response?.data?.message || "Failed to delete product";
-                this.showNotification(message, "negative");
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.dialog = false;
             }

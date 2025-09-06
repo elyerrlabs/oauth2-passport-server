@@ -243,25 +243,24 @@ export default {
                         actions: [{ icon: "mdi-close", color: "white" }],
                     });
                 }
-            } catch (err) {
-                if (err?.response?.data?.message) {
+            } catch (e) {
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: err.response.data.message,
+                        message: e.response.data.message,
                         timeout: 3000,
                         icon: "mdi-alert-circle",
                         position: "top-right",
                         actions: [{ icon: "mdi-close", color: "white" }],
                     });
                 } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message: "Failed to delete category. Please try again.",
-                        timeout: 3000,
-                        icon: "mdi-alert-circle",
-                        position: "top-right",
-                        actions: [{ icon: "mdi-close", color: "white" }],
-                    });
+                    if (e?.response?.data?.message) {
+                        this.$q.notify({
+                            type: "negative",
+                            message: e.response.data.message,
+                            timeout: 3000,
+                        });
+                    }
                 }
             } finally {
                 this.dialog = false;

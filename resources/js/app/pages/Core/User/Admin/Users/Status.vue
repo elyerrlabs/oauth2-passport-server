@@ -231,20 +231,10 @@ export default {
                     this.$emit("updated", true);
                 }
             } catch (e) {
-                if (e.response && e.response.data && e.response.data.message) {
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
-                        position: "top",
-                        icon: "mdi-alert-circle",
-                        timeout: 3000,
-                    });
-                } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message: "Error disabling user",
-                        position: "top",
-                        icon: "mdi-alert-circle",
                         timeout: 3000,
                     });
                 }
@@ -269,20 +259,10 @@ export default {
                     this.$emit("updated", true);
                 }
             } catch (e) {
-                if (e.response && e.response.data && e.response.data.message) {
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
-                        position: "top",
-                        icon: "mdi-alert-circle",
-                        timeout: 3000,
-                    });
-                } else {
-                    this.$q.notify({
-                        type: "negative",
-                        message: "Error enabling user",
-                        position: "top",
-                        icon: "mdi-alert-circle",
                         timeout: 3000,
                     });
                 }

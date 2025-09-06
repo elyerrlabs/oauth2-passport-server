@@ -89,7 +89,14 @@ export default {
                 if (res.status == 200) {
                     this.$emit("success");
                 }
-            } catch (error) {
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.dialog = false;
             }

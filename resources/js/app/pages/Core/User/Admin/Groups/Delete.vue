@@ -153,13 +153,14 @@ export default {
                     this.$emit("deleted", true);
                     this.dialog = false;
                 }
-            } catch (err) {
-                this.$q.notify({
-                    type: "negative",
-                    message: "Error deleting group",
-                    position: "top",
-                    icon: "mdi-alert-circle",
-                });
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }

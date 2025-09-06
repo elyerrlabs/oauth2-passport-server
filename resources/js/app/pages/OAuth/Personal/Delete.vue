@@ -166,8 +166,14 @@ export default {
                     this.showSuccessNotification();
                     this.dialog = false;
                 }
-            } catch (error) {
-                this.showErrorNotification(error);
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
+                }
             } finally {
                 this.loading = false;
             }
@@ -180,25 +186,6 @@ export default {
                 icon: "mdi-check-circle",
                 position: "top-right",
                 timeout: 3000,
-                progress: true,
-            });
-        },
-
-        showErrorNotification(error) {
-            let message = "Failed to delete API key";
-
-            if (error.response?.status === 404) {
-                message = "API key not found or already deleted";
-            } else if (error.response?.status === 403) {
-                message = "You don't have permission to delete this API key";
-            }
-
-            this.$q.notify({
-                type: "negative",
-                message: message,
-                icon: "mdi-alert-circle",
-                position: "top-right",
-                timeout: 5000,
                 progress: true,
             });
         },

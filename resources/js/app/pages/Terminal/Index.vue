@@ -218,7 +218,7 @@ export default {
                 if (e.response && e.response.status == 422) {
                     this.errors = e.response.data.errors;
                 }
-                if (e.response && e.response.data && e.response.data.message) {
+                if (e?.response?.status == 403) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
