@@ -170,5 +170,8 @@ return [
         'category_id' => 'categoria_id',
         'category' => 'categoria',
         'check_out' => 'salida',
-    ],
+        'quantity' => 'cantidad',
+        'delivery' => 'entrega',
+        'payment_method' => 'método de pago',
+     ],
 ];
