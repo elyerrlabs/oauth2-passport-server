@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Language;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -30,6 +31,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            \App\Http\Middleware\Lang::class,
             \App\Http\Middleware\SecureHeaders::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -37,13 +39,14 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            //   \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
+            \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
             \App\Http\Middleware\VerifyDemoUser::class,
             \App\Http\Middleware\VerifyAccount::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
         ],
 
         'api' => [
+            \App\Http\Middleware\Lang::class,
             \App\Http\Middleware\VerifyDemoUser::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\VerifyAccount::class,

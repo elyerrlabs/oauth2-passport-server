@@ -37,14 +37,6 @@ class SecureHeaders
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
-
-        $langs_supported = ['es', 'en'];
-
-        if (in_array($locale, $langs_supported)) {
-            app()->setLocale($locale);
-        }
-
         $nonce = $this->generateNonce();
 
         view()->share('nonce', $nonce);
