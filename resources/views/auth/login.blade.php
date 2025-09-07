@@ -99,10 +99,27 @@
                             <span class="font-semibold">{{ __('Demo Mode Active') }}</span>
                         </div>
                         <p class="mb-1">{{ __('You can log in using the demo credentials:') }}</p>
-                        <div class="bg-white border border-yellow-200 rounded-lg p-3 text-gray-700 text-xs">
-                            <p><strong>{{ __('Email') }}:</strong> {{ config('system.demo.email') ?? 'demo@example.com' }}
-                            </p>
-                            <p><strong>{{ __('Password') }}:</strong> {{ config('system.demo.password') ?? 'demo1234' }}</p>
+                        <div class="bg-white border border-yellow-200 rounded-lg p-3 text-gray-700 text-xs space-y-2">
+                            <div class="flex items-center justify-between">
+                                <p>
+                                    <strong>{{ __('Email') }}:</strong>
+                                    <span id="demo-email">{{ config('system.demo.email') }}</span>
+                                </p>
+                                <button type="button" id="copy-email"
+                                    class="ml-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center">
+                                    <i class="mdi mdi-content-copy mr-1"></i>{{ __('Copy') }}
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p>
+                                    <strong>{{ __('Password') }}:</strong>
+                                    <span id="demo-password">{{ config('system.demo.password') }}</span>
+                                </p>
+                                <button type="button" id="copy-password"
+                                    class="ml-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center">
+                                    <i class="mdi mdi-content-copy mr-1"></i>{{ __('Copy') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -123,7 +140,7 @@
                         <input type="password" id="password" name="password"
                             class="floating-input w-full px-4 py-3 rounded-lg bg-gray-50" placeholder=" " required>
                         <label for="password">{{ __('Password') }}</label>
-                        <span class="toggle-password" onclick="togglePassword()">
+                        <span class="toggle-password" id="toggle-password">
                             <i class="mdi mdi-eye"></i>
                         </span>
                         @if ($errors->has('password'))
@@ -233,19 +250,50 @@
 
 @push('js')
     <script nonce="{{ $nonce }}">
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.querySelector('.toggle-password i');
+        document.addEventListener("DOMContentLoaded", (event) => {
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.classList.remove('mdi-eye');
-                eyeIcon.classList.add('mdi-eye-off');
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.classList.remove('mdi-eye-off');
-                eyeIcon.classList.add('mdi-eye');
-            }
-        }
+
+
+            const demoPassword = document.getElementById("copy-password");
+            const demoEmail = document.getElementById("copy-email");
+            const showPassword = document.getElementById('toggle-password')
+
+            showPassword.addEventListener("click", function() {
+
+                const passwordInput = document.getElementById('password');
+                const eyeIcon = document.querySelector('.toggle-password i');
+
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeIcon.classList.remove('mdi-eye');
+                    eyeIcon.classList.add('mdi-eye-off');
+                } else {
+                    passwordInput.type = 'password';
+                    eyeIcon.classList.remove('mdi-eye-off');
+                    eyeIcon.classList.add('mdi-eye');
+                }
+            })
+
+
+            demoPassword.addEventListener("click", function() {
+                const password = document.getElementById('demo-password').innerText
+                navigator.clipboard.writeText(password).then((res) => {
+                    alert("{{ __('Demo password copied') }}")
+                }).catch(e => {
+                    console.log(e);
+
+                })
+            });
+
+            demoEmail.addEventListener("click", function() {
+                const email = document.getElementById('demo-email').innerText
+                navigator.clipboard.writeText(email).then((res) => {
+                    alert("{{ __('Demo email copied') }}")
+                }).catch(e => {
+                    console.log(e);
+
+                })
+            });
+        });
     </script>
 @endpush
