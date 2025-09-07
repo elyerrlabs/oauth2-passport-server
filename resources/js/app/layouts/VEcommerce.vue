@@ -307,19 +307,19 @@ export default {
         goToSearch() {
             if (this.searchQuery) {
                 this.goTo(
-                    `${
-                        this.$page.props.routes["search"]
-                    }?q=${encodeURIComponent(this.searchQuery)}`
+                    `${this.$page.props.routes.search}?q=${encodeURIComponent(
+                        this.searchQuery
+                    )}`
                 );
             } else {
-                this.goTo(this.$page.props.routes["search"]);
+                this.goTo(this.$page.props.routes.search);
             }
         },
 
         async getCategories() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes["categories"]
+                    this.$page.props.routes.categories_api
                 );
                 if (res.status == 200) {
                     this.categories = res.data.data;
@@ -332,13 +332,15 @@ export default {
                         timeout: 3000,
                     });
                 }
+                console.log(e);
+                
             }
         },
 
         async performSearch(query) {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes["search"],
+                    this.$page.props.routes.search_api,
                     {
                         params: {
                             q: query,
@@ -389,7 +391,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .size {
     min-width: 50%;
 }

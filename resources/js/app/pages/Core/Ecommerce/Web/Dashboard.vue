@@ -195,7 +195,7 @@ export default {
         async getProducts() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes["search"],
+                    this.$page.props.routes.search_api,
                     {
                         params: {
                             per_page: 150,
@@ -224,7 +224,7 @@ export default {
         async getFeaturedProducts() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes["search"],
+                    this.$page.props.routes.search_api,
                     {
                         params: {
                             per_page: 50,
@@ -254,7 +254,7 @@ export default {
         async getFeaturedCategories() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes["categories"],
+                    this.$page.props.routes.categories_api,
                     {
                         params: {
                             featured: true,
@@ -284,7 +284,7 @@ export default {
         async getCategories() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes["categories"],
+                    this.$page.props.routes.categories_api,
                     {
                         params: {
                             random: true,

@@ -312,6 +312,7 @@ export default {
                 quantity: 1,
             },
             errors: {},
+            status: false,
 
             product: {},
             related_products: [],
@@ -359,7 +360,7 @@ export default {
         async getProduct() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes["show"]
+                    this.$page.props.routes["show_api"]
                 );
 
                 if (res.status === 200) {
@@ -380,13 +381,16 @@ export default {
 
         async getRelatedProducts(item) {
             try {
-                const response = await this.$server.get(item.links.search, {
-                    params: {
-                        random: true,
-                        per_page: 30,
-                        tags: item.tags.map((tag) => tag.name).join(","),
-                    },
-                });
+                const response = await this.$server.get(
+                    this.$page.props.routes.search_api,
+                    {
+                        params: {
+                            random: true,
+                            per_page: 30,
+                            tags: item.tags.map((tag) => tag.name).join(","),
+                        },
+                    }
+                );
 
                 if (response.status === 200) {
                     this.related_products = response.data.data;
@@ -422,7 +426,7 @@ export default {
             this.form.product_id = this.product.id;
             try {
                 const res = await this.$server.post(
-                    this.$page.props.routes.orders,
+                    this.$page.props.routes.orders_api,
                     this.form
                 );
                 if (res.status == 201) {
@@ -436,8 +440,11 @@ export default {
                         icon: "shopping_cart",
                         position: "top-right",
                     });
+                    this.status = true;
                 }
             } catch (e) {
+                this.status = false;
+
                 if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
                 }
@@ -452,12 +459,24 @@ export default {
                         position: "top-right",
                     });
                 }
+
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        message: e.response.data.message,
+                        color: "warning",
+                        icon: "shopping_cart",
+                        position: "top-right",
+                    });
+                }
             }
         },
 
-        buyNow() {
-            this.addToCart();
-            window.location.href = this.$page.props.ecommerce_orders.route;
+        async buyNow() {
+            await this.addToCart();
+
+            if (this.status) {
+                window.location.href = this.$page.props.routes.orders;
+            }
         },
 
         toggleWishlist() {

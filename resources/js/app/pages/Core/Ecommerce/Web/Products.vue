@@ -15,18 +15,21 @@ export default {
     },
 
     created() {
-        this.getProducts(window.location.href);
+        this.getProducts();
     },
 
     methods: {
-        async getProducts(url) {
+        async getProducts() {
             try {
-                const res = await this.$server.get(url, {
-                    params: {
-                        per_page: 150,
-                        random: true,
-                    },
-                });
+                const res = await this.$server.get(
+                    this.$page.props.routes.search_api,
+                    {
+                        params: {
+                            per_page: 150,
+                            random: true,
+                        },
+                    }
+                );
 
                 if (res.status == 200) {
                     this.products = res.data.data.map((product) => ({

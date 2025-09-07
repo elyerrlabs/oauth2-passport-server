@@ -319,7 +319,7 @@
                                             color="grey-6"
                                             class="action-btn q-mt-sm"
                                             @click.stop="
-                                                deleteItem(product.deleteUrl)
+                                                deleteItem(product.links.delete)
                                             "
                                         >
                                             <q-tooltip>{{
@@ -639,7 +639,7 @@ export default {
         async getOrders() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes.orders,
+                    this.$page.props.routes.orders_api,
                     { params: { per_page: 50 } }
                 );
 
@@ -657,6 +657,7 @@ export default {
                         timeout: 3000,
                     });
                 }
+                console.log(e);
             }
         },
 
@@ -739,7 +740,7 @@ export default {
 
             try {
                 const res = await this.$server.post(
-                    this.$page.props.routes.payment,
+                    this.$page.props.routes.payment_api,
                     this.form
                 );
 

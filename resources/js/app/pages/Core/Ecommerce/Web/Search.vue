@@ -23,21 +23,29 @@ export default {
     methods: {
         async getProducts() {
             try {
-                const res = await this.$server.get(window.location.href, {
-                    params: {
-                        per_page: 150,
-                        random: true,
-                    },
-                });
+                const currentParams = Object.fromEntries(
+                    new URLSearchParams(window.location.search)
+                );
 
-                if (res.status == 200) {
+                const params = {
+                    ...currentParams,
+                    per_page: 150,
+                    random: true,
+                };
+
+                const res = await this.$server.get(
+                    this.$page.props.routes.search_api,
+                    { params }
+                );
+
+                if (res.status === 200) {
                     this.products = res.data.data.map((product) => ({
                         ...product,
                         currentSlide: 0,
                     }));
                 }
             } catch (e) {
-               if (e?.response?.data?.message) {
+                if (e?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
                         message: e.response.data.message,
