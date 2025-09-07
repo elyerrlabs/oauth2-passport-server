@@ -61,8 +61,6 @@ class settingsSystem extends Command
         Artisan::call('settings:channels-upload');
         Artisan::call('passport:keys');
         Setting::setDefaultKeys();
-        Artisan::call('cache:clear');
-        Artisan::call('view:clear');
         $this->info("Server installed successfully");
         Log::info("Server installed successfully");
     }
