@@ -47,9 +47,9 @@ class Kernel extends HttpKernel
 
         'api' => [
             \App\Http\Middleware\Lang::class,
-            \App\Http\Middleware\VerifyDemoUser::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\VerifyAccount::class,
+            \App\Http\Middleware\VerifyDemoUser::class,
         ],
     ];
 
