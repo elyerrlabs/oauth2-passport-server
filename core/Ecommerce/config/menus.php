@@ -38,7 +38,23 @@ return [
         "name" => __("My cart"),
         "route" => "ecommerce.orders.index",
         "icon" => "mdi-store-cog",
-        'show' => "administrator"
+        'show' => true
+    ],
+
+    "ecommerce_checkout" => [
+        "id" => "orders",
+        "name" => __("My cart"),
+        "route" => "ecommerce.checkouts.index",
+        "icon" => "mdi-store-cog",
+        'show' => true
+    ],
+
+    "ecommerce_orders_api" => [
+        "id" => "orders",
+        "name" => __("My cart"),
+        "route" => "api.ecommerce.orders.index",
+        "icon" => "mdi-store-cog",
+        'show' => true
     ],
 
     "merge" => [

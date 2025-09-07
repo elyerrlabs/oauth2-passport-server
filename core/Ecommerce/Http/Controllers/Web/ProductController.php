@@ -28,7 +28,6 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
 use Core\Ecommerce\Repositories\ProductRepository;
-use Core\Ecommerce\Transformer\User\UserProductTransformer;
 
 class ProductController extends WebController
 {
@@ -56,9 +55,10 @@ class ProductController extends WebController
             'Core/Ecommerce/Web/Dashboard',
             [
                 'routes' => [
-                    'dashboard' => route('ecommerce.dashboard'),
                     'search' => route('ecommerce.search'),
-                    'categories' => route('api.ecommerce.categories.index'),
+                    'dashboard' => route('ecommerce.dashboard'),
+                    'search_api' => route('api.ecommerce.search'),
+                    'categories_api' => route('api.ecommerce.categories.index'),
                 ],
             ]
         );
@@ -71,22 +71,13 @@ class ProductController extends WebController
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-
-            $query = $this->repository->searchForUsers(
-                $request
-            );
-
-            return $this->showAllByBuilder($query, UserProductTransformer::class);
-        }
-
         return Inertia::render(
             'Core/Ecommerce/Web/Search',
             [
                 'routes' => [
                     'dashboard' => route('ecommerce.dashboard'),
-                    'search' => route('ecommerce.search'),
-                    'categories' => route('api.ecommerce.categories.index'),
+                    'search_api' => route('api.ecommerce.search'),
+                    'categories_api' => route('api.ecommerce.categories.index'),
                 ],
             ]
         );
@@ -100,23 +91,16 @@ class ProductController extends WebController
      */
     public function category(Request $request, string $category = null)
     {
-        if ($request->wantsJson()) {
-
-            $query = $this->repository->searchForUsers(
-                $request,
-                $category
-            );
-
-            return $this->showAllByBuilder($query, UserProductTransformer::class);
-        }
-
         return Inertia::render(
             'Core/Ecommerce/Web/Products',
             [
                 'routes' => [
                     'dashboard' => route('ecommerce.dashboard'),
                     'search' => route('ecommerce.search'),
-                    'categories' => route('api.ecommerce.categories.index'),
+                    'categories_api' => route('api.ecommerce.categories.index'),
+                    'search_api' => route('api.ecommerce.category.show', [
+                        'category' => $category
+                    ])
                 ],
             ]
         );
@@ -130,12 +114,6 @@ class ProductController extends WebController
      */
     public function productDetails(string $category_slug, string $product_slug)
     {
-        $model = $this->repository->findProductByCategory($category_slug, $product_slug);
-
-        if (request()->wantsJson()) {
-            return $this->showOne($model, UserProductTransformer::class);
-        }
-
         return Inertia::render(
             'Core/Ecommerce/Web/Show',
             [
@@ -143,12 +121,14 @@ class ProductController extends WebController
                     'search' => route('ecommerce.search'),
                     'dashboard' => route('ecommerce.dashboard'),
                     'ecommerce' => route('ecommerce.search'),
-                    'categories' => route('api.ecommerce.categories.index'),
-                    'show' => route('ecommerce.products.show', [
+                    'orders' => route('ecommerce.orders.index'),
+                    'search_api' => route('api.ecommerce.search'),
+                    'categories_api' => route('api.ecommerce.categories.index'),
+                    'show_api' => route('api.ecommerce.products.show', [
                         'category' => $category_slug,
                         'product' => $product_slug
                     ]),
-                    'orders' => route('ecommerce.orders.index')
+                    'orders_api' => route('api.ecommerce.orders.index')
                 ],
             ]
         );

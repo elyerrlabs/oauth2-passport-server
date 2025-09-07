@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Http\Controllers\Web;
+namespace Core\Ecommerce\Http\Controllers\Api\Web;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,12 +24,12 @@ namespace Core\Ecommerce\Http\Controllers\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\ApiController;
 use Core\Ecommerce\Repositories\PaymentRepository;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
-class PaymentController extends WebController
+class PaymentController extends ApiController
 {
     /**
      * Repository
@@ -42,25 +42,6 @@ class PaymentController extends WebController
         parent::__construct();
         $this->repository = $paymentRepository;
 
-    }
-
-    /**
-     * Index
-     * @param \Illuminate\Http\Request $request
-     * @return  \Inertia\Response
-     */
-    public function index(Request $request)
-    {
-        return Inertia::render(
-            'Core/Ecommerce/Web/Payment/Index',
-            [
-                'routes' => [
-                    'orders' => route('ecommerce.orders.index'),
-                    'search' => route('ecommerce.search'),
-                    'categories' => route('api.ecommerce.categories.index'),
-                ]
-            ]
-        );
     }
 
     /**
@@ -88,15 +69,4 @@ class PaymentController extends WebController
 
         return $this->repository->create($request->toArray());
     }
-
-    /**
-     * Destroy
-     * @param string $order_id
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function destroy(string $order_id)
-    {
-
-    }
-
 }

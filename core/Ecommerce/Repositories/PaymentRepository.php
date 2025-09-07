@@ -66,15 +66,22 @@ class PaymentRepository implements Contracts
         $this->productRepository = $productRepository;
         $this->transactionRepository = $transactionRepository;
     }
-
     /**
      * Search resources
      * @param \Illuminate\Http\Request $request
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Builder<Checkout>
      */
     public function search(Request $request)
     {
+        $query = $this->model->query();
 
+        $query->orderByDesc('created_at');
+
+        $query->whereHas('orders', function ($query) {
+            $query->where('user_id', auth()->user()->id);
+        });
+
+        return $query;
     }
 
     /**

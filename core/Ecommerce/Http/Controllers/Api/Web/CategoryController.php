@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Http\Controllers\Web;
+namespace Core\Ecommerce\Http\Controllers\Api\Web;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -25,20 +25,28 @@ namespace Core\Ecommerce\Http\Controllers\Web;
  */
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\CategoryRepository; 
+use App\Http\Controllers\ApiController;
+use Core\Ecommerce\Repositories\ProductRepository;
+use Core\Ecommerce\Repositories\CategoryRepository;
+use Core\Ecommerce\Transformer\User\UserProductTransformer;
 use Core\Ecommerce\Transformer\User\UserCategoryTransformer;
 
-final class CategoryController extends WebController
+final class CategoryController extends ApiController
 {
     /**
      * @var CategoryRepository
      */
     private $repository;
 
-    public function __construct(CategoryRepository $categoryRepository)
+    /**
+     * Product Repository
+     */
+    private $productRepository;
+
+    public function __construct(CategoryRepository $categoryRepository, ProductRepository $productRepository)
     {
         $this->repository = $categoryRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -52,5 +60,21 @@ final class CategoryController extends WebController
 
         return $this->showAllByBuilder($query, UserCategoryTransformer::class);
 
+    }
+
+    /**
+     * Show product by category
+     * @param \Illuminate\Http\Request $request
+     * @param string $category
+     * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
+     */
+    public function show(Request $request, string $category = null)
+    {
+        $query = $this->productRepository->searchForUsers(
+            $request,
+            $category
+        );
+
+        return $this->showAllByBuilder($query, UserProductTransformer::class);
     }
 }

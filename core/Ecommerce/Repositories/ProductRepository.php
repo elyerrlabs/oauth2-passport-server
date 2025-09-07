@@ -400,7 +400,7 @@ final class ProductRepository implements Contracts
                     'multiple' => filter_var($value['multiple'], FILTER_VALIDATE_BOOL),
                     'unit_id' => $value['unit_id'] ?? null,
                 ];
- 
+
                 $attribute = Attribute::updateOrCreate($data);
 
                 $product->attributes()->syncWithoutDetaching([

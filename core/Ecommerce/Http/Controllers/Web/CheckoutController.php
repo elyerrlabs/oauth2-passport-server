@@ -27,9 +27,9 @@ namespace Core\Ecommerce\Http\Controllers\Web;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\OrderRepository;
+use Core\Ecommerce\Repositories\PaymentRepository;
 
-class OrderController extends WebController
+class CheckoutController extends WebController
 {
     /**
      * Repository
@@ -37,27 +37,27 @@ class OrderController extends WebController
      */
     private $repository;
 
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(PaymentRepository $paymentRepository)
     {
         parent::__construct();
-        $this->repository = $orderRepository;
+        $this->repository = $paymentRepository;
+
     }
 
     /**
      * Index
      * @param \Illuminate\Http\Request $request
-     * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
+     * @return  \Inertia\Response
      */
     public function index(Request $request)
     {
         return Inertia::render(
-            'Core/Ecommerce/Web/Orders',
+            'Core/Ecommerce/Web/Checkout/Index',
             [
                 'routes' => [
-                    'orders_api' => route('api.ecommerce.orders.index'),
+                    'checkout_api' => route('api.ecommerce.checkouts.index'),
                     'search' => route('ecommerce.search'),
                     'categories' => route('api.ecommerce.categories.index'),
-                    'payment_api' => route('api.ecommerce.payments.store')
                 ]
             ]
         );

@@ -1,5 +1,11 @@
 <?php
 
+use Core\Ecommerce\Http\Controllers\Api\Web\CheckoutController;
+use Core\Ecommerce\Http\Controllers\Api\Web\OrderController;
+use Core\Ecommerce\Http\Controllers\Api\Web\PaymentController;
+use Core\Ecommerce\Http\Controllers\Api\Web\ProductController;
+use Core\Ecommerce\Http\Controllers\Api\Web\CategoryController;
+
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
  *
@@ -22,10 +28,23 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Ecommerce\Http\Controllers\Web\CategoryController;
+Route::middleware(['throttle:ecommerce:api', 'wants.json'])->group(function () {
 
-Route::middleware(['throttle:ecommerce:api'])->group(function () {
+
+    Route::group([
+        'prefix' => 'shopping'
+    ], function () {
+
+        Route::resource('orders', OrderController::class)->only('index', 'store', 'destroy');
+
+        Route::post('payments', [PaymentController::class, 'store'])->name('payments.store');
+        Route::get('checkouts', [CheckoutController::class, 'index'])->name('checkouts.index');
+    });
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('category.show');
+
+    Route::get('/', [ProductController::class, 'index'])->name('search');
+    Route::get('/{category}/{product}', [ProductController::class, 'productDetails'])->name('products.show');
 
 });

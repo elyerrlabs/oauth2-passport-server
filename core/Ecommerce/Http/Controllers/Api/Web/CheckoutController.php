@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Http\Controllers\Web;
+namespace Core\Ecommerce\Http\Controllers\Api\Web;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,12 +24,13 @@ namespace Core\Ecommerce\Http\Controllers\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Http\Controllers\ApiController;
+use Core\Ecommerce\Repositories\PaymentRepository;
+use Core\Transaction\Transformer\User\UserCheckoutTransformer;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\OrderRepository;
 
-class OrderController extends WebController
+class CheckoutController extends ApiController
 {
     /**
      * Repository
@@ -37,29 +38,22 @@ class OrderController extends WebController
      */
     private $repository;
 
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(PaymentRepository $paymentRepository)
     {
         parent::__construct();
-        $this->repository = $orderRepository;
+        $this->repository = $paymentRepository;
+
     }
 
     /**
      * Index
      * @param \Illuminate\Http\Request $request
-     * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
+     * @return  \Inertia\Response
      */
     public function index(Request $request)
-    {
-        return Inertia::render(
-            'Core/Ecommerce/Web/Orders',
-            [
-                'routes' => [
-                    'orders_api' => route('api.ecommerce.orders.index'),
-                    'search' => route('ecommerce.search'),
-                    'categories' => route('api.ecommerce.categories.index'),
-                    'payment_api' => route('api.ecommerce.payments.store')
-                ]
-            ]
-        );
+    {   //
+        $query = $this->repository->search($request);
+
+        return $this->showAllByBuilder($query, UserCheckoutTransformer::class);
     }
 }
