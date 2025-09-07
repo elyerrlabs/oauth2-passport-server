@@ -58,7 +58,7 @@ class TransactionTransformer extends TransformerAbstract
     {
         return [
             'id' => $transaction->id,
-            'currency' => $transaction->currency,
+            'currency' => strtoupper($transaction->currency),
             'status' => $transaction->status,
             'total' => $this->formatMoney($transaction->total),
             'payment_method' => $transaction->payment_method,
