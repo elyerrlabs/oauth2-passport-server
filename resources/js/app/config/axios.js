@@ -35,6 +35,12 @@ export function createServer(config = {}) {
         },
       };
 
+      if (mergedOptions.params) {
+        const query = new URLSearchParams(mergedOptions.params).toString();
+        url += (url.includes("?") ? "&" : "?") + query;
+        delete mergedOptions.params;
+      }
+
       for (const interceptor of this.interceptors.request) {
         mergedOptions = (await interceptor(mergedOptions)) || mergedOptions;
       }
