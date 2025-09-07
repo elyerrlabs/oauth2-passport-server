@@ -329,43 +329,31 @@ export default {
     },
     mounted() {
         this.user = this.$page.props.user;
+        console.log(this.$page.props.user.links);
     },
     methods: {
-        popup(message, type = "positive") {
-            if (message) {
-                this.$q.notify({
-                    message,
-                    type,
-                    position: "top-right",
-                    timeout: 3000,
-                    progress: true,
-                    icon:
-                        type === "positive"
-                            ? "mdi-check-circle"
-                            : "mdi-alert-circle",
-                    classes: type === "positive" ? "text-white" : "",
-                });
-            }
-        },
-
         async requestCode() {
             this.sendingCode = true;
             try {
                 const res = await this.$server.post(
-                    this.$page.props.routes["f2a_authorize"]
+                    this.$page.props.user.links.request_2fa_code
                 );
                 if (res.status === 201) {
-                    this.popup("Verification code sent to your email");
+                    this.$q.notify({
+                        type: "positive",
+                        message: res.data.message,
+                        timeout: 3000,
+                    });
+
                     this.errors = {};
                 }
-            } catch (err) {
-                if (err.response) {
-                    this.popup(
-                        err.response.data.message || "Failed to send code",
-                        "warning"
-                    );
-                } else {
-                    this.popup("Failed to send verification code", "negative");
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "negative",
+                        message: e.response.data.message,
+                        timeout: 3000,
+                    });
                 }
             } finally {
                 this.sendingCode = false;
@@ -374,7 +362,14 @@ export default {
 
         async activateFactor() {
             if (!this.token && !this.user.m2fa) {
-                this.popup("Please enter a verification code", "warning");
+                if (e?.response?.data?.message) {
+                    this.$q.notify({
+                        type: "warning",
+                        message: this.__("Please enter a verification code"),
+                        timeout: 3000,
+                    });
+                }
+
                 return;
             }
 
@@ -383,7 +378,7 @@ export default {
 
             try {
                 const res = await this.$server.post(
-                    this.$page.props.routes["f2a_activate"],
+                    this.$page.props.user.links.f2a_activate,
                     {
                         token: this.token,
                     }
@@ -391,12 +386,11 @@ export default {
 
                 if (res.status === 201) {
                     this.token = "";
-                    this.popup(
-                        this.user.m2fa
-                            ? "Two-factor authentication has been disabled"
-                            : "Two-factor authentication has been enabled"
-                    );
-
+                    this.$q.notify({
+                        type: "positive",
+                        message: res.data.message,
+                        timeout: 3000,
+                    });
                     // Reload after a short delay to show the success message
                     setTimeout(() => {
                         window.location.reload();

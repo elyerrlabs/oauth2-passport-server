@@ -27,10 +27,12 @@ use DateTime;
 use DateInterval;
 use Inertia\Inertia;
 use Core\User\Model\User;
+use App\Support\CacheKeys;
 use App\Models\Setting\Code;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\WebController;
 use App\Http\Middleware\Auth2faMiddleware;
 use Elyerr\ApiResponse\Assets\JsonResponser;
@@ -99,7 +101,7 @@ class CodeController extends WebController
         }
 
         // Verify token
-        if (!Hash::check($request->token, $code->code)) { 
+        if (!Hash::check($request->token, $code->code)) {
             return back()->with([
                 'warning' => __('Invalid verification code. Please check your email and try again.'),
             ]);
@@ -192,7 +194,7 @@ class CodeController extends WebController
         $user->push();
 
         Code::destroyToken($code->status);
-
+        Cache::forget(CacheKeys::userAuth($user->id));
         return $this->message(__($user->m2fa ? "2FA activated" : "2FA unactivated"), 201);
     }
 }

@@ -85,7 +85,8 @@ class AuthTransformer extends TransformerAbstract
                 'verify_account' => route('user.verify.account'),
                 'verified_account' => route('user.verified.account'),
                 'check_account' => route('user.check.account'),
-                'f2a_send_code' => route('user.2fa.send-code'),
+                'request_2fa_code' => route('user.2fa.authorize'),
+                'f2a_activate' => route('user.2fa.activate'),
                 'f2a_login' => route('user.2fa.login'),
 
             ],
