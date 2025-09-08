@@ -25,7 +25,7 @@ namespace Core\Ecommerce\Http\Controllers\Api\Web;
  */
 
 use App\Http\Controllers\ApiController;
-use Core\Ecommerce\Repositories\PaymentRepository;
+use Core\Ecommerce\Repositories\CheckoutRepository;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
@@ -37,7 +37,7 @@ class PaymentController extends ApiController
      */
     private $repository;
 
-    public function __construct(PaymentRepository $paymentRepository)
+    public function __construct(CheckoutRepository $paymentRepository)
     {
         parent::__construct();
         $this->repository = $paymentRepository;

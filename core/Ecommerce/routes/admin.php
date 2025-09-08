@@ -22,6 +22,7 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Http\Controllers\Admin\OrderController;
 use Core\Ecommerce\Http\Controllers\Admin\ProductController;
 use Core\Ecommerce\Http\Controllers\Admin\CategoryController;
 use Core\Ecommerce\Http\Controllers\Admin\DashboardController;
@@ -37,4 +38,6 @@ Route::middleware(['throttle:ecommerce:admin'])->group(function () {
     Route::resource('products.tags', ProductTagController::class)->only('destroy');
     Route::resource('products.attributes', ProductAttributeController::class)->only('destroy');
 
+    Route::get('orders', [OrderController::class, 'complete'])->name('orders.complete');
+    Route::get('orders/pending', [OrderController::class, 'pending'])->name('orders.pending');
 });

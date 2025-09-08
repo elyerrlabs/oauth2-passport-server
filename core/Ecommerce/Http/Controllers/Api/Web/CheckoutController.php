@@ -24,11 +24,11 @@ namespace Core\Ecommerce\Http\Controllers\Api\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Http\Controllers\ApiController;
-use Core\Ecommerce\Repositories\PaymentRepository;
-use Core\Transaction\Transformer\User\UserCheckoutTransformer;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
+use Core\Ecommerce\Repositories\CheckoutRepository; 
+use Core\Ecommerce\Transformer\User\UserCheckoutTransformer;
 
 class CheckoutController extends ApiController
 {
@@ -38,7 +38,7 @@ class CheckoutController extends ApiController
      */
     private $repository;
 
-    public function __construct(PaymentRepository $paymentRepository)
+    public function __construct(CheckoutRepository $paymentRepository)
     {
         parent::__construct();
         $this->repository = $paymentRepository;
@@ -51,7 +51,7 @@ class CheckoutController extends ApiController
      * @return  \Inertia\Response
      */
     public function index(Request $request)
-    {   //
+    {   // 
         $query = $this->repository->search($request);
 
         return $this->showAllByBuilder($query, UserCheckoutTransformer::class);

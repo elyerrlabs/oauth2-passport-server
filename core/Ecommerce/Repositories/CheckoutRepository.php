@@ -31,7 +31,7 @@ use Illuminate\Http\Request;
 use Core\Transaction\Model\Checkout;
 use App\Repositories\Contracts\Contracts;
 
-class PaymentRepository implements Contracts
+class CheckoutRepository implements Contracts
 {
 
     /**
@@ -80,6 +80,41 @@ class PaymentRepository implements Contracts
         $query->whereHas('orders', function ($query) {
             $query->where('user_id', auth()->user()->id);
         });
+
+        return $query;
+    }
+
+    /**
+     * Searcher for admins
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Builder<Checkout>
+     */
+    public function searchForAdmin(Request $request)
+    {
+        $query = $this->model->query();
+
+        $query->with(['lastTransaction', 'orders', 'orders.orderable']);
+
+        $query->orderByDesc('created_at');
+
+        if ($request->filled('code')) {
+            $query->where('code', $request->code);
+        }
+
+        $query->whereHas('lastTransaction', function ($query) use ($request) {
+            if ($request->filled('transaction_code')) {
+                $query->where('code', $request->transaction_code);
+            }
+
+            $status = $request->filled('status') ? $request->status : config('billing.status.successful.id');
+            $query->where('status', $status);
+        });
+
+        if ($request->filled('user_id')) {
+            $query->whereHas('orders', function ($query) {
+                $query->where('user_id', auth()->user()->id);
+            });
+        }
 
         return $query;
     }
