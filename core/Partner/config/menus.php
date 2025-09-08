@@ -23,12 +23,30 @@
  */
 
 return [
-    "partner_dashboard" => [
-        "id" => "partner",
-        "name" => __("Partner"),
-        "route" => "partner.dashboard",
-        "icon" => "mdi-account-cash",
-        'show' => 'reseller',
+
+    "merge" => [
+
+        "user_routes" => [
+
+            "partner" => [
+                "id" => "partner",
+                "name" => __("Partner"),
+                "route" => "partner.dashboard",
+                "icon" => "mdi-account-cash",
+                'service' => 'reseller:partner',
+            ],
+        ],
+
+        "admin_dashboard" => [
+            
+            "partner" => [
+                "id" => "list",
+                "name" => __("Partners"),
+                "route" => "partner.admin.partner.index",
+                "icon" => "mdi-handshake-outline",
+                'service' => 'administrator:partner',
+            ]
+        ],
     ],
 
     "partner_routes" => [
@@ -37,28 +55,28 @@ return [
             "name" => __("Dashboard"),
             "route" => "partner.dashboard",
             "icon" => "mdi-account-cash",
-            'service' => 'reseller',
+            'service' => 'reseller:partner',
         ],
         [
             "id" => "referral_link",
             "name" => __("Referral Link"),
             "route" => "partner.generate",
             "icon" => "mdi-reload",
-            'service' => 'reseller',
+            'service' => 'reseller:partner',
         ],
         [
             "id" => "sales",
             "name" => __("Sales"),
             "route" => "partner.sales",
             "icon" => "mdi-cash-multiple",
-            'service' => 'reseller',
+            'service' => 'reseller:partner',
         ],
         [
             "id" => "list",
             "name" => __("Partners"),
             "route" => "partner.admin.partner.index",
             "icon" => "mdi-handshake-outline",
-            'service' => 'reseller',
+            'service' => 'administrator:partner',
         ]
     ]
 ];

@@ -25,28 +25,20 @@
 
 return [
 
-    "ecommerce_dashboard" => [
-        "id" => "ecommerce",
-        "name" => __("Ecommerce"),
-        "route" => "ecommerce.admin.dashboard",
-        "icon" => "mdi-store-cog",
-        'show' => "administrator"
-    ],
-
     "ecommerce_orders" => [
         "id" => "orders",
         "name" => __("My cart"),
         "route" => "ecommerce.orders.index",
         "icon" => "mdi-store-cog",
-        'show' => true
+        'service' => true
     ],
 
     "ecommerce_checkout" => [
         "id" => "orders",
-        "name" => __("My cart"),
+        "name" => __("My checkouts"),
         "route" => "ecommerce.checkouts.index",
         "icon" => "mdi-store-cog",
-        'show' => true
+        'service' => true
     ],
 
     "ecommerce_orders_api" => [
@@ -54,19 +46,46 @@ return [
         "name" => __("My cart"),
         "route" => "api.ecommerce.orders.index",
         "icon" => "mdi-store-cog",
-        'show' => true
+        'service' => true
     ],
 
     "merge" => [
 
+        "admin_dashboard" => [
+            "ecommerce" => [
+                "id" => "ecommerce",
+                "name" => __("Ecommerce"),
+                "route" => "ecommerce.admin.dashboard",
+                "icon" => "mdi-store-cog",
+                'service' => "administrator:ecommerce"
+            ],
+        ],
+
         "user_routes" => [
+            
             "ecommerce" => [
                 "id" => "ecommerce",
                 "name" => __("Ecommerce"),
                 "route" => "ecommerce.dashboard",
                 "icon" => "mdi-store-cog",
-                'show' => "administrator"
-            ]
+                'service' => true
+            ],
+
+            "ecommerce_orders" => [
+                "id" => "orders",
+                "name" => __("My cart"),
+                "route" => "ecommerce.orders.index",
+                "icon" => "mdi-store-cog",
+                'service' => true
+            ],
+
+            "ecommerce_checkout" => [
+                "id" => "orders",
+                "name" => __("My orders"),
+                "route" => "ecommerce.checkouts.index",
+                "icon" => "mdi-store-cog",
+                'service' => true
+            ],
         ]
     ],
 

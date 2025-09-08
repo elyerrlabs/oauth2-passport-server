@@ -49,7 +49,7 @@ class Menu
                     foreach ($items as $item) {
                         $canShow = true;
 
-                        if (isset($item['service'])) {
+                        if (isset($item['service']) && !filter_var($item['service'], FILTER_VALIDATE_BOOL)) {
                             $canShow = $user && method_exists($user, 'canAccessMenu')
                                 ? $user->canAccessMenu($item['service'])
                                 : false;
@@ -77,9 +77,10 @@ class Menu
 
 
             $canShow = true;
-            if (isset($value['service'])) {
+
+            if (isset($value['show']) && !filter_var($value['show'], FILTER_VALIDATE_BOOL)) {
                 $canShow = $user && method_exists($user, 'canAccessMenu')
-                    ? $user->canAccessMenu($value['service'])
+                    ? $user->canAccessMenu($value['show'])
                     : false;
             }
 
@@ -89,7 +90,7 @@ class Menu
                     'name' => __($value['name']) ?? null,
                     'icon' => $value['icon'] ?? null,
                     'route' => isset($value['route']) ? route($value['route']) : null,
-                    'show' => $canShow,
+                    'service' => $canShow,
                 ];
             }
         }
@@ -138,12 +139,6 @@ class Menu
                 'route' => route('documentation.index'),
                 'icon' => 'mdi-book-cog',
                 'show' => true
-            ],
-            "settings" => [
-                "name" => __("Settings"),
-                "route" => route("admin.settings.general"),
-                "icon" => "mdi-cogs",
-                'show' => empty($user) ? false : $user->canAccessMenu('administrator'),
             ],
             "auth_routes" => [
                 "login" => route('login'),

@@ -23,20 +23,13 @@
  */
 
 return [
-    "transaction_dashboard" => [
-        "id" => "transaction",
-        "name" => __("Transaction"),
-        "route" => "transaction.admin.dashboard",
-        "icon" => "mdi-swap-vertical",
-        'show' => "administrator"
-    ],
 
     'delivery_address' => [
         'id' => 'index',
         'name' => __('Add address'),
         'route' => 'transaction.delivery.addresses.index',
         'icon' => 'mdi-map-marker-outline',
-        'show' => true,
+        'service' => true,
     ],
 
     /**
@@ -44,33 +37,33 @@ return [
      */
     "merge" => [
 
-        "user_routes" => [
+        "admin_dashboard" => [
 
-            'subscription' => [
+            "transactions" => [
+                "id" => "transaction",
+                "name" => __("Transaction"),
+                "route" => "transaction.admin.dashboard",
+                "icon" => "mdi-swap-vertical",
+                'service' => "administrator:transactions"
+            ],
+        ],
+
+        "user_routes" => [
+            'my_subscription' => [
                 'id' => 'subscriptions',
-                'name' => __('Subscriptions'),
+                'name' => __('My subscriptions'),
                 'route' => 'transaction.subscriptions.index',
                 'icon' => 'mdi-gift-outline',
-                'show' => true,
+                'service' => true,
             ],
-            'store' => [
+            'buy_subscription' => [
                 'id' => 'store',
                 'name' => __('Buy subscription'),
                 'route' => 'transaction.plans.index',
                 'icon' => 'mdi-currency-usd',
-                'show' => true,
+                'service' => true,
             ],
         ],
-
-        "transactions" => [
-            'plans' => [
-                "id" => "plans",
-                "name" => __("Subscriptions"),
-                "route" => "transaction.plans.index",
-                "icon" => "mdi-cash-clock",
-                'show' => true,
-            ],
-        ]
     ],
 
     "transaction_routes" => [
@@ -79,21 +72,21 @@ return [
             "name" => __("Dashboard"),
             "route" => "transaction.admin.dashboard",
             "icon" => "mdi-view-dashboard",
-            'show' => 'administrator',
+            'service' => 'administrator:transactions',
         ],
         [
             'id' => 'transaction',
             'name' => __('Transactions'),
             'route' => 'transaction.admin.transactions.index',
             'icon' => 'mdi-cash',
-            'show' => true,
+            'service' => "administrator:transactions",
         ],
         [
             "id" => "plans",
             "name" => __("Plans"),
             "route" => "transaction.admin.plans.index",
             "icon" => "mdi-cash-clock",
-            'show' => 'administrator',
+            'service' => 'administrator:plans',
         ],
     ]
 ];

@@ -27,7 +27,7 @@ return [
         "name" => __("Dashboard"),
         "route" => "user.dashboard",
         "icon" => "mdi-home",
-        'show' => true,
+        'service' => true,
     ],
 
     "notification" => [
@@ -35,7 +35,7 @@ return [
         "name" => __("Notification"),
         "route" => "user.notification.unread",
         "icon" => "mdi-bell",
-        'show' => true,
+        'service' => true,
     ],
 
     "notification_mark_as_read" => [
@@ -43,50 +43,55 @@ return [
         "name" => __("Unread Notification"),
         "route" => "user.notification.mark-all-as-read",
         "icon" => "mdi-bell",
-        'show' => true,
+        'service' => true,
     ],
 
-    "admin_dashboard" => [
-        "id" => "admin",
-        "name" => __("Admin"),
-        "route" => "user.admin.dashboard",
-        "icon" => "mdi-security",
-        'show' => "administrator",
-    ],
 
     "merge" => [
 
-        "user_routes" => [
+        "admin_dashboard" => [
+
+            "admin" => [
+                "id" => "admin",
+                "name" => __("Admin"),
+                "route" => "user.admin.dashboard",
+                "icon" => "mdi-security",
+                'service' => "administrator:dashboard",
+            ],
+
+            "settings" => [
+                "name" => __("Settings"),
+                "route" => "admin.settings.general",
+                "icon" => "mdi-cogs",
+                'service' => 'administrator:settings',
+            ],
+
+        ],
+
+        "user_settings" => [
 
             "profile" => [
                 'id' => 'profile',
-                'name' => __('Information'),
+                'name' => __('Update Information'),
                 'route' => 'user.profile',
                 'icon' => 'mdi-account-details-outline',
-                'show' => true,
+                'service' => true,
             ],
             "password" => [
                 'id' => 'password',
                 'name' => __('Change password'),
                 'route' => 'user.password',
                 'icon' => 'mdi-lock-reset',
-                'show' => true,
+                'service' => true,
             ],
             '2fa' => [
                 'id' => '2fa',
                 'name' => __('Two Factor Authorization'),
                 'route' => 'user.2fa.request',
                 'icon' => 'mdi-two-factor-authentication',
-                'show' => true,
+                'service' => true,
             ],
-            "notifications" => [
-                'id' => 'notifications',
-                'name' => __('Notifications'),
-                'route' => 'user.notification.index',
-                'icon' => 'mdi-bell-badge-outline',
-                'show' => true,
-                'count' => request()->user() ? request()->user()->unreadNotifications()->count() : 0
-            ]
+
         ],
     ],
 
@@ -96,42 +101,42 @@ return [
             "name" => __("Dashboard"),
             "route" => "user.admin.dashboard",
             "icon" => "mdi-view-dashboard",
-            'show' => 'administrator',
+            'service' => 'administrator',
         ],
         [
             "id" => "groups",
             "name" => __("Groups"),
             "route" => "user.admin.groups.index",
             "icon" => "mdi-account-group",
-            'show' => 'administrator',
+            'service' => 'administrator',
         ],
         [
             "id" => "roles",
             "name" => __("Roles"),
             "route" => "user.admin.roles.index",
             "icon" => "mdi-format-list-group",
-            'show' => 'administrator',
+            'service' => 'administrator',
         ],
         [
             "id" => "services",
             "name" => __("Services"),
             "route" => "user.admin.services.index",
             "icon" => "mdi-text-box-check",
-            'show' => 'administrator',
+            'service' => 'administrator',
         ],
         [
             "id" => "users",
             "name" => __("Users"),
             "route" => "user.admin.users.index",
             "icon" => "mdi-account-multiple",
-            'show' => 'administrator',
+            'service' => 'administrator',
         ],
         [
             "id" => "clients",
             "name" => __("Clients"),
             "route" => "admin.clients.index",
             "icon" => "mdi-apps",
-            'show' => 'administrator',
+            'service' => 'administrator',
         ],
     ]
 ];
