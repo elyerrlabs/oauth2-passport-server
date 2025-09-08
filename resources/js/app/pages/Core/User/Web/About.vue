@@ -27,26 +27,29 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="row items-center q-col-gutter-xl">
                     <div class="col-auto">
                         <div class="user-avatar-container">
-                            <q-icon
-                                name="mdi-account"
-                                size="120px"
+                            <q-avatar
+                                size="100px"
                                 color="white"
-                                class="user-avatar"
-                            />
+                                text-color="primary"
+                            >
+                                {{ userInitials }}
+                            </q-avatar>
                             <div class="online-indicator"></div>
                         </div>
                     </div>
 
                     <div class="col">
-                        <div class="text-h3 text-weight-bold welcome-title">
-                            {{ __("Welcome") }} {{ user.name }}
-                            {{ user.last_name }}
+                        <div
+                            class="text-h3 text-weight-bold text-white welcome-title"
+                        >
+                            {{ __("Welcome") }}, {{ user.name }}!
                         </div>
-                        <div class="text-subtitle1 welcome-subtitle q-mt-md">
-                            {{ __("Hello,") }} {{ user.name }}!
+                        <div
+                            class="text-subtitle1 welcome-subtitle q-mt-md text-blue-1"
+                        >
                             {{
                                 __(
-                                    "We're glad you're here. What would you like to do today? Below are several options to manage your account and set it up as you prefer."
+                                    "Access and manage all your applications from one place"
                                 )
                             }}
                         </div>
@@ -54,195 +57,219 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
             </div>
 
-            <!-- Main Content -->
+            <!-- Main Content - Applications Grid -->
             <div class="dashboard-content q-px-lg q-pb-lg">
-                <div class="row q-col-gutter-lg">
-                    <!-- Account Options Card -->
-                    <div class="col-12 col-md-6">
-                        <q-card
-                            class="dashboard-card account-options-card"
-                            flat
-                            bordered
-                        >
-                            <q-card-section class="card-header">
-                                <div
-                                    class="text-h6 text-weight-medium card-title"
-                                >
-                                    <q-icon name="mdi-cog" class="q-mr-sm" />
-                                    {{ __("Account Options") }}
-                                </div>
-                            </q-card-section>
-
-                            <q-list class="option-list">
-                                <q-item
-                                    v-for="(item, index) in userRoutes"
-                                    :key="index"
-                                    clickable
-                                    v-ripple
-                                    @click="open(item)"
-                                    class="option-item"
-                                >
-                                    <q-item-section avatar>
-                                        <q-avatar
-                                            size="md"
-                                            color="primary"
-                                            text-color="white"
-                                            :icon="item.icon"
-                                            class="option-icon"
-                                        />
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                        <div class="option-name">
-                                            {{ item.name }}
-                                        </div>
-                                    </q-item-section>
-
-                                    <q-item-section side v-if="item.count">
-                                        <q-badge
-                                            color="primary"
-                                            rounded
-                                            class="option-badge"
-                                        >
-                                            {{ item.count }}
-                                        </q-badge>
-                                    </q-item-section>
-
-                                    <q-item-section side>
-                                        <q-icon
-                                            name="mdi-chevron-right"
-                                            color="grey-5"
-                                        />
-                                    </q-item-section>
-                                </q-item>
-                            </q-list>
-                        </q-card>
+                <!-- Applications Header -->
+                <div class="row items-center q-mb-lg">
+                    <div class="col">
+                        <div class="text-h5 text-weight-bold text-dark">
+                            <q-icon name="mdi-application" class="q-mr-sm" />
+                            {{ __("My applications") }}
+                        </div>
+                        <div class="text-caption text-grey-6">
+                            {{
+                                __(
+                                    "All your connected applications in one place"
+                                )
+                            }}
+                        </div>
                     </div>
-
-                    <!-- Inspiration Card -->
-                    <div class="col-12 col-md-6">
-                        <q-card
-                            class="dashboard-card inspiration-card"
-                            flat
-                            bordered
+                    <div class="col-auto">
+                        <q-input
+                            v-model="searchTerm"
+                            :placeholder="__('Search applications...')"
+                            dense
+                            outlined
+                            clearable
+                            class="search-input"
                         >
-                            <q-card-section>
-                                <div
-                                    class="text-h6 text-weight-medium card-title"
-                                >
-                                    <q-icon
-                                        name="mdi-lightbulb-on-outline"
-                                        class="q-mr-sm"
-                                    />
-                                    {{ __("Daily Inspiration") }}
-                                </div>
-                                <div class="inspiration-quote q-mt-md">
-                                    <q-icon
-                                        name="mdi-format-quote-open"
-                                        size="sm"
-                                        color="primary"
-                                        class="quote-icon"
-                                    />
-                                    <div class="quote-text">
-                                        {{
-                                            __(
-                                                "Great things are done by a series of small things brought together."
-                                            )
-                                        }}
-                                    </div>
-                                    <div
-                                        class="quote-author text-white q-mt-sm"
-                                    >
-                                        — {{ __("Vincent Van Gogh") }}
-                                    </div>
-                                </div>
-                                <div class="text-caption text-white q-mt-lg">
-                                    {{
-                                        __(
-                                            "Stay productive while we improve your experience. More tools will appear here soon."
-                                        )
-                                    }}
-                                </div>
-                            </q-card-section>
-                        </q-card>
-
-                        <!-- Upgrade Card -->
-                        <q-card
-                            class="dashboard-card upgrade-card q-mt-lg"
-                            flat
-                            bordered
-                        >
-                            <q-card-section>
-                                <div
-                                    class="text-h6 text-weight-medium card-title"
-                                >
-                                    <q-icon
-                                        name="mdi-rocket-launch"
-                                        class="q-mr-sm"
-                                    />
-                                    {{ __("Dashboard Upgrade") }}
-                                </div>
-                                <div class="text-body2 text-white q-mt-sm">
-                                    {{
-                                        __(
-                                            "We're working on personalized suggestions and insights. Soon, you'll be able to manage your apps and track your activity from this section."
-                                        )
-                                    }}
-                                </div>
-                                <div class="upgrade-progress q-mt-md">
-                                    <q-linear-progress
-                                        rounded
-                                        size="10px"
-                                        :value="0.65"
-                                        color="primary"
-                                        class="q-mb-sm"
-                                    />
-                                    <div class="text-caption text-white">
-                                        {{ __("Development progress:") }} 65%
-                                    </div>
-                                </div>
-                            </q-card-section>
-                        </q-card>
+                            <template v-slot:append>
+                                <q-icon name="mdi-magnify" />
+                            </template>
+                        </q-input>
                     </div>
                 </div>
 
-                <!-- Coming Soon Features -->
-                <q-card
-                    class="dashboard-card features-card q-mt-lg"
-                    flat
-                    bordered
-                >
-                    <q-card-section>
-                        <div class="text-h6 text-weight-medium card-title">
-                            <q-icon name="mdi-tools" class="q-mr-sm" />
-                            {{ __("What's Coming Soon?") }}
+                <!-- Applications Grid -->
+                <div class="applications-grid">
+                    <div
+                        v-if="filteredApplications.length === 0"
+                        class="empty-state text-center q-pa-xl"
+                    >
+                        <q-icon
+                            name="mdi-application-outline"
+                            size="64px"
+                            color="grey-4"
+                        />
+                        <div class="text-h6 q-mt-md text-grey-6">
+                            {{ __("No applications found") }}
                         </div>
+                        <div class="text-body2 q-mt-sm text-grey-5">
+                            {{
+                                __(
+                                    "Try adjusting your search or check back later"
+                                )
+                            }}
+                        </div>
+                    </div>
 
-                        <div class="row q-col-gutter-md q-mt-md">
-                            <div
-                                v-for="(feature, index) in upcomingFeatures"
-                                :key="index"
-                                class="col-12 col-sm-6 col-md-4"
-                            >
-                                <div class="feature-item">
-                                    <q-icon
-                                        :name="feature.icon"
-                                        size="24px"
+                    <div v-else class="row q-col-gutter-lg">
+                        <div
+                            v-for="(app, index) in filteredApplications"
+                            :key="index"
+                            class="col-12 col-sm-6 col-md-4 col-lg-3"
+                        >
+                            <q-card class="application-card" flat bordered>
+                                <q-card-section class="app-card-header">
+                                    <div class="row items-center no-wrap">
+                                        <div class="col">
+                                            <div class="app-icon bg-blue-1">
+                                                <q-icon
+                                                    :name="app.icon"
+                                                    size="24px"
+                                                    :color="
+                                                        app.iconColor
+                                                            ? 'white'
+                                                            : 'blue'
+                                                    "
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <q-btn
+                                                flat
+                                                round
+                                                icon="mdi-open-in-new"
+                                                size="sm"
+                                                @click="openApplication(app)"
+                                            >
+                                                <q-tooltip>{{
+                                                    __("Open application")
+                                                }}</q-tooltip>
+                                            </q-btn>
+                                        </div>
+                                    </div>
+
+                                    <div class="q-mt-md">
+                                        <div
+                                            class="text-h6 text-weight-medium app-name text-dark"
+                                        >
+                                            {{ app.name }}
+                                        </div>
+                                        <div
+                                            class="text-caption text-grey-6 app-description q-mt-xs"
+                                        >
+                                            {{
+                                                app.description ||
+                                                __("No description available")
+                                            }}
+                                        </div>
+                                    </div>
+                                </q-card-section>
+
+                                <q-separator />
+
+                                <q-card-actions>
+                                    <q-btn
+                                        flat
                                         color="primary"
-                                        class="q-mr-sm"
+                                        icon="mdi-launch"
+                                        :label="__('Open')"
+                                        @click="openApplication(app)"
+                                        class="full-width"
                                     />
-                                    <span class="feature-name">{{
-                                        feature.name
-                                    }}</span>
-                                </div>
+                                </q-card-actions>
+                            </q-card>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings & Preferences Section -->
+                <div class="settings-section q-mt-xl">
+                    <div class="row items-center q-mb-lg">
+                        <div class="col">
+                            <div class="text-h5 text-weight-bold text-dark">
+                                <q-icon name="mdi-cog" class="q-mr-sm" />
+                                {{ __("Settings & Preferences") }}
+                            </div>
+                            <div class="text-caption text-grey-6">
+                                {{
+                                    __(
+                                        "Manage your account settings and preferences"
+                                    )
+                                }}
                             </div>
                         </div>
+                    </div>
 
-                        <div class="text-caption text-grey q-mt-lg">
-                            {{ __("We're building this for you. Stay tuned!") }}
+                    <div class="row q-col-gutter-lg">
+                        <div
+                            v-for="(setting, index) in userSettings"
+                            :key="'setting-' + index"
+                            class="col-12 col-sm-6 col-md-4 col-lg-3"
+                        >
+                            <q-card class="setting-card" flat bordered>
+                                <q-card-section class="setting-card-header">
+                                    <div class="row items-center no-wrap">
+                                        <div class="col">
+                                            <div
+                                                class="setting-icon bg-primary"
+                                            >
+                                                <q-icon
+                                                    :name="setting.icon"
+                                                    size="24px"
+                                                    color="white"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <q-btn
+                                                flat
+                                                round
+                                                icon="mdi-chevron-right"
+                                                size="sm"
+                                                @click="openSetting(setting)"
+                                                class="bg-primary text-white"
+                                            >
+                                                <q-tooltip>{{
+                                                    __("Open setting")
+                                                }}</q-tooltip>
+                                            </q-btn>
+                                        </div>
+                                    </div>
+
+                                    <div class="q-mt-md">
+                                        <div
+                                            class="text-h6 text-weight-medium setting-name text-dark"
+                                        >
+                                            {{ setting.name }}
+                                        </div>
+                                        <div
+                                            class="text-caption text-grey-6 setting-description q-mt-xs"
+                                        >
+                                            {{
+                                                setting.description ||
+                                                __("Configure your preferences")
+                                            }}
+                                        </div>
+                                    </div>
+                                </q-card-section>
+
+                                <q-separator />
+
+                                <q-card-actions>
+                                    <q-btn
+                                        flat
+                                        icon="mdi-tune"
+                                        :label="__('Configure')"
+                                        @click="openSetting(setting)"
+                                        class="full-width"
+                                    />
+                                </q-card-actions>
+                            </q-card>
                         </div>
-                    </q-card-section>
-                </q-card>
+                    </div>
+                </div>
             </div>
         </q-page>
     </v-user-layout>
@@ -250,47 +277,60 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 export default {
+    data() {
+        return {
+            refreshing: false,
+            searchTerm: "",
+        };
+    },
+
     computed: {
         user() {
             return this.$page.props.user;
         },
+
+        userInitials() {
+            return `${this.user.name?.[0] || ""}${
+                this.user.last_name?.[0] || ""
+            }`.toUpperCase();
+        },
+
         userRoutes() {
-            return Object.values(this.$page.props.user_routes).sort((a, b) =>
-                a.name.localeCompare(b.name)
+            return Object.values(this.$page.props.user_routes || {}).sort(
+                (a, b) => a.name.localeCompare(b.name)
             );
         },
-        upcomingFeatures() {
-            return [
-                {
-                    icon: "mdi-chart-line",
-                    name: this.__("App usage analytics"),
-                },
-                {
-                    icon: "mdi-application-cog",
-                    name: this.__("Application manager"),
-                },
-                { icon: "mdi-code-tags", name: this.__("Developer options") },
-                { icon: "mdi-file-outline", name: this.__("File manager") },
-                {
-                    icon: "mdi-lock-check-outline",
-                    name: this.__("Encrypt end-to-end"),
-                },
-                { icon: "mdi-qrcode-scan", name: this.__("TOP and QR Login") },
-                {
-                    icon: "mdi-currency-btc",
-                    name: this.__("Cryptocurrency payment"),
-                },
-                {
-                    icon: "mdi-dots-horizontal-circle-outline",
-                    name: this.__("And much more"),
-                },
-            ];
+
+        userSettings() {
+            return Object.values(this.$page.props.user_settings || {}).sort(
+                (a, b) => a.name.localeCompare(b.name)
+            );
+        },
+
+        filteredApplications() {
+            if (!this.searchTerm) return this.userRoutes;
+
+            const searchLower = this.searchTerm.toLowerCase();
+            return this.userRoutes.filter(
+                (app) =>
+                    app.name.toLowerCase().includes(searchLower) ||
+                    (app.description &&
+                        app.description.toLowerCase().includes(searchLower))
+            );
         },
     },
 
     methods: {
-        open(item) {
-            window.location.href = item.route;
+        openApplication(app) {
+            if (app.route) {
+                window.location.href = app.route;
+            }
+        },
+
+        openSetting(setting) {
+            if (setting.route) {
+                window.location.href = setting.route;
+            }
         },
     },
 };
@@ -298,204 +338,173 @@ export default {
 
 <style lang="scss" scoped>
 .user-dashboard-page {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     min-height: 100vh;
 }
 
 .welcome-section {
-    background: linear-gradient(145deg, var(--q-primary) 0%, #3a7bd5 100%);
+    background: linear-gradient(145deg, var(--q-primary) 0%, #2563eb 100%);
     color: white;
-    padding-top: 40px;
-    padding-bottom: 60px;
+    padding: 40px 32px;
 
     .user-avatar-container {
         position: relative;
-        display: inline-block;
-
-        .user-avatar {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            padding: 20px;
-            backdrop-filter: blur(5px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
 
         .online-indicator {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 20px;
-            height: 20px;
-            background: #4caf50;
+            bottom: 5px;
+            right: 5px;
+            width: 16px;
+            height: 16px;
+            background: #22c55e;
             border: 2px solid white;
             border-radius: 50%;
         }
     }
 
     .welcome-title {
-        font-size: 2.5rem;
+        font-size: 2.25rem;
         line-height: 1.2;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .welcome-subtitle {
         opacity: 0.9;
-        max-width: 600px;
-        line-height: 1.6;
+        max-width: 500px;
     }
 }
 
 .dashboard-content {
-    margin-top: -40px;
-    position: relative;
-    z-index: 1;
+    padding-top: 24px;
 }
 
-.dashboard-card {
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.search-input {
+    min-width: 250px;
+}
 
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    }
+.applications-grid {
+    .application-card {
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        height: 100%;
 
-    .card-header {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        background: rgba(0, 0, 0, 0.02);
-    }
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
 
-    .card-title {
-        display: flex;
-        align-items: center;
-        color: var(--q-primary);
+        .app-card-header {
+            padding: 20px;
+        }
+
+        .app-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-name {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .app-description {
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     }
 }
 
-.account-options-card {
-    .option-list {
-        padding: 8px 0;
+.settings-section {
+    .setting-card {
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        height: 100%;
 
-        .option-item {
-            padding: 16px 20px;
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .setting-card-header {
+            padding: 20px;
+        }
+
+        .setting-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .setting-name {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .setting-description {
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    }
+
+    .advanced-settings-card {
+        border-radius: 12px;
+
+        .advanced-setting-item {
             border-radius: 8px;
-            margin: 4px 8px;
             transition: background-color 0.2s ease;
 
             &:hover {
-                background: rgba(0, 0, 0, 0.03);
-            }
-
-            .option-icon {
-                transition: transform 0.2s ease;
-            }
-
-            &:hover .option-icon {
-                transform: scale(1.1);
-            }
-
-            .option-name {
-                font-weight: 500;
-                color: #2d3748;
-            }
-
-            .option-badge {
-                font-size: 12px;
-                padding: 4px 8px;
+                background: rgba(0, 0, 0, 0.02);
             }
         }
     }
 }
 
-.inspiration-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-
-    .card-title {
-        color: white;
-    }
-
-    .inspiration-quote {
-        position: relative;
-
-        .quote-icon {
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            opacity: 0.7;
-        }
-
-        .quote-text {
-            font-size: 1.1rem;
-            font-style: italic;
-            line-height: 1.6;
-            padding-left: 24px;
-        }
-
-        .quote-author {
-            color: rgba(255, 255, 255, 0.8);
-        }
-    }
-}
-
-.upgrade-card {
-    .upgrade-progress {
-        .q-linear-progress {
-            height: 8px;
-        }
-    }
-}
-
-.features-card {
-    .feature-item {
-        display: flex;
-        align-items: center;
-        padding: 12px 16px;
-        background: rgba(0, 0, 0, 0.02);
-        border-radius: 8px;
-        margin-bottom: 8px;
-        transition: background-color 0.2s ease;
-
-        &:hover {
-            background: rgba(0, 0, 0, 0.04);
-        }
-
-        .feature-name {
-            font-size: 0.95rem;
-            color: #2d3748;
-        }
+.empty-state {
+    .q-icon {
+        opacity: 0.5;
     }
 }
 
 // Responsive adjustments
 @media (max-width: 1023px) {
     .welcome-section {
-        padding: 30px 20px 50px;
+        padding: 32px 24px;
 
         .welcome-title {
-            font-size: 2rem;
+            font-size: 1.875rem;
         }
     }
 
     .dashboard-content {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .search-input {
+        min-width: 200px;
     }
 }
 
 @media (max-width: 599px) {
     .welcome-section {
+        padding: 24px 16px;
         text-align: center;
-        padding: 20px 16px 40px;
 
         .welcome-title {
-            font-size: 1.75rem;
-        }
-
-        .user-avatar {
-            padding: 16px;
-            font-size: 80px;
+            font-size: 1.5rem;
         }
     }
 
@@ -504,8 +513,17 @@ export default {
         padding-right: 16px;
     }
 
-    .feature-item {
-        padding: 10px 12px;
+    .search-input {
+        min-width: 100%;
+        margin-top: 16px;
+    }
+
+    .application-card,
+    .setting-card {
+        .app-name,
+        .setting-name {
+            font-size: 1rem;
+        }
     }
 }
 </style>

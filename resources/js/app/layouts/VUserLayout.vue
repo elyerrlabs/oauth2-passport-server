@@ -97,7 +97,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         clickable
                         v-ripple
                         @click="open($page.props.user_dashboard)"
-                        v-if="$page.props.user_dashboard.show"
                         class="modern-menu-item"
                     >
                         <q-item-section avatar>
@@ -143,15 +142,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Dashboards -->
                     <q-separator class="q-my-md" />
 
-                    <q-item-label header class="menu-section-title">
+                    <q-item-label
+                        header
+                        class="menu-section-title"
+                        v-if="admin_dashboard.length"
+                    >
                         {{ __("Dashboards") }}
                     </q-item-label>
 
                     <q-item
+                        v-for="(item, index) in admin_dashboard"
+                        :key="index"
                         clickable
                         v-ripple
-                        @click="open(admin_dashboard)"
-                        v-if="admin_dashboard.show"
+                        @click="open(item)"
                         class="modern-menu-item"
                     >
                         <q-item-section avatar>
@@ -159,91 +163,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="sm"
                                 color="green"
                                 text-color="white"
-                                :icon="admin_dashboard.icon"
+                                :icon="item.icon"
                             />
                         </q-item-section>
                         <q-item-section>
-                            {{ __(admin_dashboard.name) }}
-                        </q-item-section>
-                    </q-item>
-
-                    <q-item
-                        clickable
-                        v-ripple
-                        @click="open(transaction_dashboard)"
-                        v-if="transaction_dashboard.show"
-                        class="modern-menu-item"
-                    >
-                        <q-item-section avatar>
-                            <q-avatar
-                                size="sm"
-                                color="orange"
-                                text-color="white"
-                                :icon="transaction_dashboard.icon"
-                            />
-                        </q-item-section>
-                        <q-item-section>
-                            {{ __(transaction_dashboard.name) }}
-                        </q-item-section>
-                    </q-item>
-
-                    <q-item
-                        clickable
-                        v-ripple
-                        @click="open(partner_dashboard)"
-                        v-if="partner_dashboard.show"
-                        class="modern-menu-item"
-                    >
-                        <q-item-section avatar>
-                            <q-avatar
-                                size="sm"
-                                color="purple"
-                                text-color="white"
-                                :icon="partner_dashboard.icon"
-                            />
-                        </q-item-section>
-                        <q-item-section>
-                            {{ __(partner_dashboard.name) }}
-                        </q-item-section>
-                    </q-item>
-
-                    <q-item
-                        clickable
-                        v-ripple
-                        @click="open(ecommerce_dashboard)"
-                        v-if="ecommerce_dashboard.show"
-                        class="modern-menu-item"
-                    >
-                        <q-item-section avatar>
-                            <q-avatar
-                                size="sm"
-                                color="amber"
-                                text-color="white"
-                                :icon="ecommerce_dashboard.icon"
-                            />
-                        </q-item-section>
-                        <q-item-section>
-                            {{ __(ecommerce_dashboard.name) }}
-                        </q-item-section>
-                    </q-item>
-
-                    <q-item
-                        clickable
-                        v-ripple
-                        @click="open(settings)"
-                        v-if="settings.show"
-                        class="modern-menu-item"
-                    >
-                        <q-item-section avatar>
-                            <q-avatar
-                                size="sm"
-                                color="grey"
-                                text-color="white"
-                                :icon="settings.icon"
-                            />
-                        </q-item-section>
-                        <q-item-section>
-                            {{ __(settings.name) }}
+                            {{ __(item.name) }}
                         </q-item-section>
                     </q-item>
                 </q-list>
@@ -319,15 +243,11 @@ export default {
     },
 
     created() {
-        this.user = this.$page.props.user;
-        this.app_name = this.$page.props.app_name;
-        this.menus = this.$page.props.user_routes;
-        this.admin_dashboard = this.$page.props.admin_dashboard;
-        this.transaction_dashboard = this.$page.props.transaction_dashboard;
-        this.partner_dashboard = this.$page.props.partner_dashboard;
-        this.settings = this.$page.props.settings;
-        this.developers = this.$page.props.developers;
-        this.ecommerce_dashboard = this.$page.props.ecommerce_dashboard;
+        this.user = this.$page.props.user ?? [];
+        this.app_name = this.$page.props.app_name ?? "";
+        this.menus = this.$page.props.user_routes ?? [];
+        this.admin_dashboard = this.$page.props.admin_dashboard ?? [];
+        this.developers = this.$page.props.developers ?? [];
     },
 
     mounted() {
