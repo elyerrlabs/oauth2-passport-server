@@ -223,9 +223,12 @@ class Auth extends Authenticatable
             return true;
         }
 
-        $groups = $this->listUserGroups();
+        $groups = $this->scopes()
+            ->pluck('id')
+            ->map(fn($item) => implode(':', array_slice(explode(':', $item), 0, 2)))
+            ->toArray();
 
-        return count($groups) ? $groups->pluck('slug')->contains($group) : false;
+        return in_array($group, $groups, true);
     }
 
 
