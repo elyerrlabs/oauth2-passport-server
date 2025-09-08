@@ -119,7 +119,12 @@ final class ProductRepository implements Contracts
             $operator = in_array($request->get('price_operator'), ['=', '>', '>=', '<', '<=']) ? $request->get('price_operator') : '=';
             $price = (int) str_replace('.', '', $request->price);
 
-            $query->where('price', $operator, $price);
+            $query->whereHas(
+                'price',
+                function ($query) use ($price, $operator) {
+                    $query->where('amount', $operator, $price);
+                }
+            );
         }
 
         return $query;
