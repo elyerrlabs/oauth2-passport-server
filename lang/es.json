@@ -2317,5 +2317,19 @@
   "You can log in using the demo credentials:": "Puedes iniciar sesión usando las credenciales de demostración:",
   "You don’t have permission to perform this action": "No cuentas con los permisos suficientes para realizar esta accion",
   "You do not have the required permissions. It seems you are logged in as a demo user.": "No tienes los permisos requeridos. Parece que has iniciado sesión como usuario demo.",
-  "Access denied: Your session is authenticated with restricted demo credentials that do not allow the use of OAuth2/OpenID Connect protocols. Authorized credentials are required. You may request a valid test user to evaluate OAuth2 and OpenID Connect.": "Acceso denegado: Tu sesión está autenticada con credenciales de demostración restringidas que no permiten el uso de los protocolos OAuth2/OpenID Connect. Se requieren credenciales autorizadas. Puedes solicitar un usuario de prueba válido para evaluar OAuth2 y OpenID Connect."
+  "Access denied: Your session is authenticated with restricted demo credentials that do not allow the use of OAuth2/OpenID Connect protocols. Authorized credentials are required. You may request a valid test user to evaluate OAuth2 and OpenID Connect.": "Acceso denegado: Tu sesión está autenticada con credenciales de demostración restringidas que no permiten el uso de los protocolos OAuth2/OpenID Connect. Se requieren credenciales autorizadas. Puedes solicitar un usuario de prueba válido para evaluar OAuth2 y OpenID Connect.",
+  "Manage your account settings and preferences": "Administra la configuración y preferencias de tu cuenta",
+  "Settings & Preferences": "Configuracion y preferencias",
+  "My applications": "Mis aplicaciones",
+  "All your connected applications in one place": "Todas tus aplicaciones conectadas en un solo lugar",
+  "Access and manage all your applications from one place": "Accede y administra todas tus aplicaciones desde un solo lugar",
+  "My subscriptions": "Mis subscripciones",
+  "Open setting": "Abrir configuración",
+  "Open": "Abrir",
+  "open": "abrir",
+  "Search applications": "Buscar applicaciones",
+  "Search applications...": "Buscar aplicaciones...",
+  "My cart": "Mi carrito",
+  "My orders": "Mis pedidos",
+  "Configure your preferences": "Configura tus preferencias"
 }
