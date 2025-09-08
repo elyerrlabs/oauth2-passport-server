@@ -371,7 +371,7 @@ export default {
                     );
 
                     this.pages = res.data.meta.pagination;
-                    this.search.current_page = res.data.pagination.current_page;
+                    this.search.current_page = res.data.meta.pagination.current_page;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {

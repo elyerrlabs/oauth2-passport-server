@@ -21,7 +21,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <q-layout view="hHh Lpr lFf" class="admin-layout bg-grey-1">
-        <!-- Header Mejorado -->
         <q-header elevated class="admin-header bg-primary text-white">
             <q-toolbar class="q-px-md">
                 <q-btn
@@ -49,7 +48,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </q-toolbar>
         </q-header>
 
-        <!-- Sidebar Mejorado -->
         <q-drawer
             v-model="leftDrawerOpen"
             show-if-above
@@ -70,7 +68,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <q-separator />
 
                 <q-list padding class="menu-list">
-                    <!-- Dashboard -->
                     <q-item
                         clickable
                         v-ripple
@@ -87,7 +84,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </q-item-section>
                     </q-item>
 
-                    <!-- Products Section -->
                     <q-expansion-item
                         icon="mdi-package-variant"
                         :label="__('Products')"
@@ -95,7 +91,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         expand-icon-class="text-grey-6"
                         class="expansion-item"
                     >
-                        <!-- Categories -->
                         <q-item
                             clickable
                             v-ripple
@@ -117,7 +112,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </q-item-section>
                         </q-item>
 
-                        <!-- Products List -->
                         <q-item
                             clickable
                             v-ripple
@@ -140,57 +134,54 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </q-item>
                     </q-expansion-item>
 
-                    <!-- Orders Section -->
                     <q-expansion-item
                         icon="mdi-cart-outline"
                         :label="__('Orders')"
                         expand-icon-class="text-grey-6"
+                        default-opened
                         class="expansion-item"
                     >
                         <q-item
                             clickable
                             v-ripple
                             exact
-                            to="/admin/orders"
+                            @click="open(menu_orders)"
                             class="submenu-item"
+                            :active="isActive(menu_orders)"
                         >
                             <q-item-section avatar>
                                 <q-icon
                                     color="primary"
-                                    name="mdi-format-list-checks"
+                                    :name="menu_orders.icon"
                                     size="sm"
                                 />
                             </q-item-section>
                             <q-item-section>{{
-                                __("All Orders")
+                                __(menu_orders.name)
                             }}</q-item-section>
-                            <q-item-section side>
-                                <q-badge color="blue" rounded>15</q-badge>
-                            </q-item-section>
                         </q-item>
 
                         <q-item
                             clickable
                             v-ripple
                             exact
-                            to="/admin/orders/pending"
+                            @click="open(menu_orders_pending)"
                             class="submenu-item"
+                            :active="isActive(menu_orders_pending)"
                         >
                             <q-item-section avatar>
                                 <q-icon
                                     color="primary"
-                                    name="mdi-clock-outline"
+                                    :name="menu_orders_pending.icon"
                                     size="sm"
                                 />
                             </q-item-section>
-                            <q-item-section>{{ __("Pending") }}</q-item-section>
-                            <q-item-section side>
-                                <q-badge color="orange" rounded>5</q-badge>
-                            </q-item-section>
+                            <q-item-section>{{
+                                __(menu_orders_pending.name)
+                            }}</q-item-section>
                         </q-item>
                     </q-expansion-item>
 
-                    <!-- Customers -->
                     <q-item
                         clickable
                         v-ripple
@@ -207,7 +198,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </q-item-section>
                     </q-item>
 
-                    <!-- Reports -->
                     <q-item
                         clickable
                         v-ripple
@@ -241,8 +231,8 @@ export default {
             menu_category: {},
             menu_products: {},
             menu_dashboard: {},
-            menu_models: {},
-            menu_family: {},
+            menu_orders: {},
+            menu_orders_pending: {},
             leftDrawerOpen: false,
         };
     },
@@ -254,11 +244,11 @@ export default {
 
         this.menu_category = this.menus.find((item) => item.id == "categories");
         this.menu_dashboard = this.menus.find((item) => item.id == "dashboard");
-        this.menu_models = this.menus.find((item) => item.id == "models");
-        this.menu_family = this.menus.find(
-            (item) => item.id == "family_models"
-        );
         this.menu_products = this.menus.find((item) => item.id == "products");
+        this.menu_orders = this.menus.find((item) => item.id == "orders");
+        this.menu_orders_pending = this.menus.find(
+            (item) => item.id == "orders_pending"
+        );
     },
 
     methods: {
