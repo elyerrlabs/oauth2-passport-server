@@ -51,12 +51,12 @@ return [
 
         "admin_dashboard" => [
 
-            "admin" => [
+            "administrator" => [
                 "id" => "admin",
                 "name" => __("Admin"),
                 "route" => "user.admin.dashboard",
                 "icon" => "mdi-security",
-                'service' => "administrator:dashboard",
+                'service' => "administrator:admin",
             ],
 
             "settings" => [
@@ -101,42 +101,42 @@ return [
             "name" => __("Dashboard"),
             "route" => "user.admin.dashboard",
             "icon" => "mdi-view-dashboard",
-            'service' => 'administrator',
+            'service' => 'administrator:admin',
         ],
         [
             "id" => "groups",
             "name" => __("Groups"),
             "route" => "user.admin.groups.index",
             "icon" => "mdi-account-group",
-            'service' => 'administrator',
+            'service' => 'administrator:group',
         ],
         [
             "id" => "roles",
             "name" => __("Roles"),
             "route" => "user.admin.roles.index",
             "icon" => "mdi-format-list-group",
-            'service' => 'administrator',
+            'service' => 'administrator:role',
         ],
         [
             "id" => "services",
             "name" => __("Services"),
             "route" => "user.admin.services.index",
             "icon" => "mdi-text-box-check",
-            'service' => 'administrator',
+            'service' => 'administrator:service',
         ],
         [
             "id" => "users",
             "name" => __("Users"),
             "route" => "user.admin.users.index",
             "icon" => "mdi-account-multiple",
-            'service' => 'administrator',
+            'service' => 'administrator:user',
         ],
         [
             "id" => "clients",
             "name" => __("Clients"),
             "route" => "admin.clients.index",
             "icon" => "mdi-apps",
-            'service' => 'administrator',
+            'service' => 'administrator:application',
         ],
     ]
 ];

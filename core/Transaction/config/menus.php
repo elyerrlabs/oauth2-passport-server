@@ -86,7 +86,7 @@ return [
             "name" => __("Plans"),
             "route" => "transaction.admin.plans.index",
             "icon" => "mdi-cash-clock",
-            'service' => 'administrator:plans',
+            'service' => 'administrator:plan',
         ],
     ]
 ];
