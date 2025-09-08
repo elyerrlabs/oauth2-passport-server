@@ -62,7 +62,7 @@ return [
         ],
 
         "user_routes" => [
-            
+
             "ecommerce" => [
                 "id" => "ecommerce",
                 "name" => __("Ecommerce"),
@@ -95,21 +95,35 @@ return [
             "name" => __("Dashboard"),
             "route" => "ecommerce.admin.dashboard",
             "icon" => "mdi-view-dashboard",
-            'service' => "administrator"
+            'service' => "administrator:ecommerce"
         ],
         [
             "id" => "categories",
             "name" => __("Categories"),
             "route" => "ecommerce.admin.categories.index",
             "icon" => "mdi-circle-outline",
-            'service' => "administrator"
+            'service' => "administrator:ecommerce"
         ],
         [
             "id" => "products",
             "name" => __("Products"),
             "route" => "ecommerce.admin.products.index",
             "icon" => "mdi-circle-outline",
-            'service' => "administrator"
+            'service' => "administrator:ecommerce"
+        ],
+        [
+            "id" => "orders",
+            "name" => __("Orders"),
+            "route" => "ecommerce.admin.orders.complete",
+            "icon" => "mdi-format-list-checks",
+            'service' => "administrator:ecommerce"
+        ],
+        [
+            "id" => "orders_pending",
+            "name" => __("Pending"),
+            "route" => "ecommerce.admin.orders.pending",
+            "icon" => "mdi-clock-outline",
+            'service' => "administrator:ecommerce"
         ],
     ],
 ];
