@@ -2360,5 +2360,7 @@
   "orders totaling": "pedidos con un total de",
   "Order details would be shown here": "Los detalles de los pedidos se mostrarán aquí",
   "View All Orders": "Ver todos los pedidos",
-  "This customer hasn't placed any orders yet": "Este cliente aún no ha realizado ningún pedido"
+  "This customer hasn't placed any orders yet": "Este cliente aún no ha realizado ningún pedido",
+  "Demo email copied": "Correo electronico demo has sido copiado",
+  "Demo password copied": "Password demo has sido copiado"
 }

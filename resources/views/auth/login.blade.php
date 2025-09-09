@@ -252,6 +252,17 @@
     <script nonce="{{ $nonce }}">
         document.addEventListener("DOMContentLoaded", (event) => {
 
+            const notyf = new Notyf({
+                duration: 10000,
+                position: {
+                    x: 'right',
+                    y: 'top'
+                },
+                types: [{
+                    type: 'success',
+                    background: 'var(--success-color, #28a745)',
+                }, ],
+            });
 
 
             const demoPassword = document.getElementById("copy-password");
@@ -278,7 +289,7 @@
             demoPassword.addEventListener("click", function() {
                 const password = document.getElementById('demo-password').innerText
                 navigator.clipboard.writeText(password).then((res) => {
-                    alert("{{ __('Demo password copied') }}")
+                    notyf.success("{{ __('Demo password copied') }}");
                 }).catch(e => {
                     console.log(e);
 
@@ -288,7 +299,7 @@
             demoEmail.addEventListener("click", function() {
                 const email = document.getElementById('demo-email').innerText
                 navigator.clipboard.writeText(email).then((res) => {
-                    alert("{{ __('Demo email copied') }}")
+                    notyf.success("{{ __('Demo email copied') }}");
                 }).catch(e => {
                     console.log(e);
 
