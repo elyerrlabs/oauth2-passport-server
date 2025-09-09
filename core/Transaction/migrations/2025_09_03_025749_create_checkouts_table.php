@@ -37,7 +37,13 @@ return new class () extends Migration {
             $table->string('transaction_code')->index()->nullable();
             $table->string('code')->index();
             $table->text('delivery_address');
+            $table->uuid('user_id')->index();
             $table->timestamps();
+            
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->restrictOnDelete();
         });
     }
 

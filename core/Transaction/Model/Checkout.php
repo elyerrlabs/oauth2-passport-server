@@ -24,8 +24,9 @@ namespace Core\Transaction\Model;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Transformer\Admin\CheckoutTransformer;
+use Core\Transaction\Model\User;
 use App\Models\Common\Order;
-use Core\Transaction\Transformer\Admin\CheckoutTransformer;
 use App\Models\Master;
 
 class Checkout extends Master
@@ -53,6 +54,7 @@ class Checkout extends Master
         'transaction_code',
         'code',
         'delivery_address',
+        'user_id'
     ];
 
     public $casts = [
@@ -84,5 +86,14 @@ class Checkout extends Master
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * user
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, Checkout>
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
