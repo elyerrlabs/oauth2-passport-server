@@ -22,6 +22,7 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Http\Controllers\Admin\CustomerController;
 use Core\Ecommerce\Http\Controllers\Admin\OrderController;
 use Core\Ecommerce\Http\Controllers\Admin\ProductController;
 use Core\Ecommerce\Http\Controllers\Admin\CategoryController;
@@ -40,4 +41,5 @@ Route::middleware(['throttle:ecommerce:admin'])->group(function () {
 
     Route::get('orders', [OrderController::class, 'complete'])->name('orders.complete');
     Route::get('orders/pending', [OrderController::class, 'pending'])->name('orders.pending');
+    Route::get('orders/customers', [CustomerController::class, 'index'])->name('orders.customers');
 });

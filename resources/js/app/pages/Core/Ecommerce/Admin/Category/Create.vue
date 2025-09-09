@@ -293,6 +293,7 @@ export default {
             },
             errors: {},
             current_images: [],
+            disabled: false,
         };
     },
 
@@ -346,6 +347,7 @@ export default {
         },
 
         async create() {
+            this.disabled = true;
             const payload = new FormData();
 
             payload.append("id", this.form.id);
@@ -404,6 +406,8 @@ export default {
                         timeout: 3000,
                     });
                 }
+            } finally {
+                this.disabled = false;
             }
         },
     },

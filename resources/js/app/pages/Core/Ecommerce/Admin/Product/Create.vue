@@ -338,6 +338,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         unelevated
                         color="positive"
                         :label="__('Accept')"
+                        :disable="disabled"
                         @click="create"
                         class="action-btn submit-btn"
                     />
@@ -398,6 +399,7 @@ export default {
             products: [],
             filtered_products: [],
             images: [],
+            disabled: false,
         };
     },
 
@@ -566,6 +568,7 @@ export default {
         },
 
         async create() {
+            this.disabled = true;
             const payload = new FormData();
 
             // Campos simples
@@ -672,6 +675,8 @@ export default {
                         timeout: 3000,
                     });
                 }
+            } finally {
+                this.disabled = false;
             }
         },
 

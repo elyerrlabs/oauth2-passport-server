@@ -24,6 +24,8 @@ namespace Core\Ecommerce\Repositories;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Model\Transaction;
+use Core\Transaction\Model\User;
 use Core\Transaction\Model\DeliveryAddress;
 use Core\Transaction\Repositories\TransactionRepository;
 use Illuminate\Support\Str;
@@ -33,16 +35,15 @@ use App\Repositories\Contracts\Contracts;
 
 class CheckoutRepository implements Contracts
 {
-
     /**
      * Model
-     * @var 
+     * @var
      */
     private $model;
 
     /**
      * Order repository
-     * @var 
+     * @var
      */
     private $orderRepository;
 
@@ -120,6 +121,34 @@ class CheckoutRepository implements Contracts
     }
 
     /**
+     * Summary of listCustomers
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Builder<Checkout>
+     */
+    public function listCustomers(Request $request)
+    {
+        $query = User::query();
+
+        $query->with([
+            'checkouts',
+            'checkouts.transactions'
+        ]);
+
+        $query->whereHas(
+            'checkouts.transactions',
+            function ($query) {
+                $query->where('status', 'successful');
+            }
+        );
+
+        if ($request->filled('user_id')) {
+            $query->where('id', $request->user_id);
+        }
+
+        return $query;
+    }
+
+    /**
      * Create new checkout
      * @param array $data
      * @return mixed|\Illuminate\Http\JsonResponse
@@ -153,7 +182,7 @@ class CheckoutRepository implements Contracts
             'delivery_address' => $delivery,
             'status' => config('billing.status.pending.id'),
             'code' => $checkout_code = $this->generateCheckoutCode(),
-            'delivery_address_id',
+            'user_id' => auth()->user()->id,
         ])->toArray();
 
         // Add checkout id and update stock to the orders
@@ -183,7 +212,7 @@ class CheckoutRepository implements Contracts
             ];
         }
 
-        // Set the checkout order code 
+        // Set the checkout order code
         $checkout['checkout_code'] = $checkout_code;
         $checkout['billing_period'] = config('billing.period.one_time.id');
         $checkout['payment_method'] = $data['payment_method'];
@@ -226,7 +255,7 @@ class CheckoutRepository implements Contracts
 
     /**
      * Delete specific resource
-     * @param string $id 
+     * @param string $id
      * @return void
      */
     public function delete(string $id)

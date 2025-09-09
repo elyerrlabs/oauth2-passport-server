@@ -39,7 +39,7 @@ class OrderController extends WebController
     public function __construct(CheckoutRepository $checkoutRepository)
     {
         parent::__construct();
-        $this->middleware("userCanAny:administrator:full,administrator:view");
+        $this->middleware("userCanAny:administrator:ecommerce:full,administrator:ecommerce:view");
         $this->repository = $checkoutRepository;
     }
 

@@ -23,6 +23,7 @@ namespace Core\User\Model;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Models\Common\Order;
 use App\Models\Auth;
 use Illuminate\Http\Request;
 use App\Models\Setting\Terminal;
@@ -109,5 +110,11 @@ class User extends Auth
     public function terminals()
     {
         return $this->hasMany(Terminal::class);
+    }
+
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

@@ -27,10 +27,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="header-content">
                     <q-icon name="shopping_bag" size="sm" class="header-icon" />
                     <div class="header-text">
-                        <h1 class="header-title">Order History</h1>
-                        <p class="header-subtitle">
-                            Review your past purchases
-                        </p>
+                        <h1 class="header-title">
+                            {{ __("Orders successfully") }}
+                        </h1>
                     </div>
                 </div>
                 <q-btn
@@ -42,7 +41,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="refresh-btn"
                     :loading="loading"
                 >
-                    <q-tooltip>Refresh orders</q-tooltip>
+                    <q-tooltip>{{ __("Refresh orders") }}</q-tooltip>
                 </q-btn>
             </div>
 
@@ -52,10 +51,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 class="empty-state text-center q-pa-lg"
             >
                 <q-icon name="inventory_2" size="lg" class="empty-icon" />
-                <h3 class="empty-title">No orders yet</h3>
-                <p class="empty-subtitle">
-                    Your order history will appear here once you make a purchase
-                </p>
+                <h3 class="empty-title">{{ __("No orders yet") }}</h3>
                 <q-btn
                     color="primary"
                     label="Start Shopping"
@@ -90,7 +86,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <q-item-section class="order-info">
                                 <div class="order-code">
-                                    Order #{{ order.code }}
+                                    {{ __("Order") }} #{{ order.code }}
                                 </div>
                                 <div class="order-date">
                                     {{ formatCompactDate(order.created_at) }}
@@ -100,9 +96,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <q-item-section side class="order-status">
                                 <q-badge
                                     :class="`status-badge status-${order.transaction.status}`"
-                                    :label="
-                                        formatStatus(order.transaction.status)
-                                    "
+                                    :label="__(order.transaction.status)"
                                 />
                                 <div class="order-total text-bold">
                                     {{ order.transaction.total }}
@@ -118,39 +112,34 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="section-container">
                                     <div class="section-header">
                                         <q-icon name="receipt" size="sm" />
-                                        <span class="section-title"
-                                            >Transaction</span
-                                        >
+                                        <span class="section-title">{{
+                                            __("Transaction")
+                                        }}</span>
                                     </div>
                                     <div class="details-grid">
                                         <div class="detail-item">
-                                            <span class="detail-label"
-                                                >Status:</span
+                                            <span class="detail-label">
+                                                {{ __("Status") }} :</span
                                             >
                                             <span
                                                 :class="`detail-value status-${order.transaction.status}`"
                                             >
                                                 {{
-                                                    formatStatus(
-                                                        order.transaction.status
-                                                    )
+                                                    __(order.transaction.status)
                                                 }}
                                             </span>
                                         </div>
                                         <div class="detail-item">
                                             <span class="detail-label"
-                                                >Payment:</span
+                                                >{{ __("Payment") }}:</span
                                             >
                                             <span class="detail-value">{{
-                                                formatPaymentMethod(
-                                                    order.transaction
-                                                        .payment_method
-                                                )
+                                                order.transaction.payment_method
                                             }}</span>
                                         </div>
                                         <div class="detail-item">
                                             <span class="detail-label"
-                                                >Total:</span
+                                                >{{ __("Total") }}:</span
                                             >
                                             <span
                                                 class="detail-value total-amount"
@@ -166,9 +155,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="section-container">
                                     <div class="section-header">
                                         <q-icon name="location_on" size="sm" />
-                                        <span class="section-title"
-                                            >Delivery</span
-                                        >
+                                        <span class="section-title">{{
+                                            __("Delivery")
+                                        }}</span>
                                     </div>
                                     <div class="address-card">
                                         <div class="address-details">
@@ -218,9 +207,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             "
                                             target="_blank"
                                         >
-                                            <q-tooltip
-                                                >Contact via WhatsApp</q-tooltip
-                                            >
+                                            <q-tooltip>{{
+                                                __("Contact via WhatsApp")
+                                            }}</q-tooltip>
                                         </q-btn>
                                     </div>
                                 </div>
@@ -230,7 +219,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div class="section-header">
                                         <q-icon name="inventory_2" size="sm" />
                                         <span class="section-title"
-                                            >Items ({{
+                                            >{{ __("Items") }} ({{
                                                 order.items.length
                                             }})</span
                                         >
@@ -256,14 +245,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 </h4>
                                                 <div class="item-meta">
                                                     <span class="item-quantity"
-                                                        >Qty:
+                                                        >{{ __("Qty") }}:
                                                         {{
                                                             item.quantity
                                                         }}</span
                                                     >
                                                     <span class="item-price">
                                                         {{ item.unitPrice }}
-                                                        {{ item.currency }} each
+                                                        {{ item.currency }}
+                                                        {{ __("each") }}
                                                     </span>
                                                 </div>
                                             </div>
@@ -284,7 +274,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         flat
                                         color="primary"
                                         icon="receipt"
-                                        label="Receipt"
+                                        :label="__('Receipt')"
                                         :href="order.transaction.payment_url"
                                         target="_blank"
                                         size="sm"
@@ -294,18 +284,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         flat
                                         color="secondary"
                                         icon="replay"
-                                        label="Reorder"
+                                        :label="__('Reorder')"
                                         size="sm"
                                         @click="reorder(order)"
                                     />
-                                    <q-btn
-                                        flat
-                                        color="grey"
-                                        icon="content_copy"
-                                        label="Copy Order ID"
-                                        size="sm"
-                                        @click="copyOrderId(order.code)"
-                                    />
+                                    <q-btn flat color="grey" icon="content_copy"
+                                    :label="__('Copy Order ID')" size="sm"
+                                    @click="copyOrderId(order.code)" />
                                 </div>
                             </q-card-section>
                         </q-card>
@@ -316,7 +301,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Loading State -->
             <q-inner-loading :showing="loading">
                 <q-spinner-gears size="40px" color="primary" />
-                <p class="q-mt-sm">Loading orders...</p>
+                <p class="q-mt-sm">{{ __("Loading orders...") }}</p>
             </q-inner-loading>
 
             <!-- Pagination (if needed in future) -->
@@ -438,7 +423,6 @@ export default {
                         timeout: 3000,
                     });
                 }
-                console.error("Error loading orders:", e);
             } finally {
                 this.loading = false;
             }
@@ -467,27 +451,6 @@ export default {
             return code.slice(-1).toUpperCase();
         },
 
-        formatStatus(status) {
-            const statusMap = {
-                successful: "Successful",
-                failed: "Failed",
-                pending: "Pending",
-                refunded: "Refunded",
-                cancelled: "Cancelled",
-            };
-            return statusMap[status] || status;
-        },
-
-        formatPaymentMethod(method) {
-            const methodMap = {
-                offline: "Offline",
-                card: "Credit Card",
-                paypal: "PayPal",
-                bank_transfer: "Bank Transfer",
-            };
-            return methodMap[method] || method;
-        },
-
         canReorder(order) {
             return (
                 order.transaction.status === "successful" ||
@@ -508,7 +471,7 @@ export default {
         copyOrderId(orderCode) {
             navigator.clipboard.writeText(orderCode);
             this.$q.notify({
-                message: "Order ID copied to clipboard",
+                message: this.__("Order ID copied to clipboard"),
                 color: "info",
                 icon: "content_copy",
                 timeout: 1500,

@@ -24,9 +24,46 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Transformer\Admin\UserTransformer;
+use Inertia\Inertia;
+use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
+use Core\Ecommerce\Repositories\CheckoutRepository;
 
 class CustomerController extends WebController
 {
-    
+
+    private $repository;
+
+
+    public function __construct(CheckoutRepository $checkoutRepository)
+    {
+        $this->middleware("userCanAny:administrator:ecommerce:full,administrator:ecommerce:view");
+        $this->repository = $checkoutRepository;
+    }
+
+    /**
+     * Customers
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
+     */
+    public function index(Request $request)
+    {
+        if ($request->wantsJson()) {
+
+            $query = $this->repository->listCustomers($request);
+
+            return $this->showAllByBuilder($query, UserTransformer::class);
+        }
+
+        return Inertia::render(
+            "Core/Ecommerce/Admin/Order/Customer",
+            [
+                'routes' => [
+                    'customers' => route("ecommerce.admin.orders.customers")
+                ],
+                'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
+            ]
+        );
+    }
 }

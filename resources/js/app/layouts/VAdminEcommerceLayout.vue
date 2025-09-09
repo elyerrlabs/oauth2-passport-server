@@ -185,16 +185,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-item
                         clickable
                         v-ripple
-                        exact
-                        to="/admin/customers"
                         class="menu-item"
+                        @click="open(menu_orders_customer)"
+                        :active="isActive(menu_orders_customer)"
                     >
                         <q-item-section avatar>
-                            <q-icon color="primary" name="mdi-account-group" />
+                            <q-icon
+                                color="primary"
+                                :name="menu_orders_customer.icon"
+                            />
                         </q-item-section>
-                        <q-item-section>{{ __("Customers") }}</q-item-section>
-                        <q-item-section side>
-                            <q-badge color="green" rounded>1,245</q-badge>
+                        <q-item-section>
+                            {{ __(menu_orders_customer.name) }}
                         </q-item-section>
                     </q-item>
 
@@ -233,6 +235,7 @@ export default {
             menu_dashboard: {},
             menu_orders: {},
             menu_orders_pending: {},
+            menu_orders_customer: {},
             leftDrawerOpen: false,
         };
     },
@@ -249,6 +252,10 @@ export default {
         this.menu_orders_pending = this.menus.find(
             (item) => item.id == "orders_pending"
         );
+
+        this.menu_orders_customer = this.menus.find(
+            (item) => item.id == "orders_customers"
+        );
     },
 
     methods: {
@@ -261,7 +268,7 @@ export default {
         },
 
         isActive(item) {
-            //   return this.route.path === item.route;
+            return window.location.href === item.route;
         },
     },
 };

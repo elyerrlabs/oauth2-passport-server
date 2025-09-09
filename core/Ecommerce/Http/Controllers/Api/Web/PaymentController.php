@@ -26,7 +26,6 @@ namespace Core\Ecommerce\Http\Controllers\Api\Web;
 
 use App\Http\Controllers\ApiController;
 use Core\Ecommerce\Repositories\CheckoutRepository;
-use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 class PaymentController extends ApiController

@@ -125,6 +125,13 @@ return [
             "icon" => "mdi-clock-outline",
             'service' => "administrator:ecommerce"
         ],
+        [
+            "id" => "orders_customers",
+            "name" => __("Customers"),
+            "route" => "ecommerce.admin.orders.customers",
+            "icon" => "mdi-account-group",
+            'service' => "administrator:ecommerce"
+        ],
     ],
 ];
 
