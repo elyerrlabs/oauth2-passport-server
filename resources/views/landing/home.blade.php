@@ -247,10 +247,12 @@
                             <i class="mdi mdi-book-open-page-variant mr-2"></i>
                             {{ __('Documentation') }}
                         </a>
-                        <a href="{{ route('passport.clients.index') }}" class="btn-success inline-flex items-center">
-                            <i class="mdi mdi-rocket-launch mr-2"></i>
-                            {{ __('Try Now') }}
-                        </a>
+                        @if (Route::has('passport.clients.index'))
+                            <a href="{{ route('passport.clients.index') }}" class="btn-success inline-flex items-center">
+                                <i class="mdi mdi-rocket-launch mr-2"></i>
+                                {{ __('Try Now') }}
+                            </a>
+                        @endif
                         @if (Route::has('passport.personal.tokens.index'))
                             <a href="{{ route('passport.personal.tokens.index') }}"
                                 class="btn-outline inline-flex items-center">

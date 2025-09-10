@@ -20,17 +20,17 @@ namespace App\Transformers\OAuth;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Illuminate\Support\Facades\Route;
 use App\Models\OAuth\Client;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class ClientTransformer extends TransformerAbstract
 {
-
     use Asset;
 
     /**
@@ -72,7 +72,7 @@ class ClientTransformer extends TransformerAbstract
             "created_at" => $this->format_date($client->created_at),
             "updated_at" => $this->format_date($client->updated_at),
             'links' => [
-                'index' => route('passport.clients.index'),
+                'index' => Route::has('passport.clients.index') ? route('passport.clients.index') : '',
                 'store' => route('passport.clients.store'),
                 'update' => route('passport.clients.update', ['client_id' => $client->id]),
                 'destroy' => route('passport.clients.destroy', ['client_id' => $client->id])
