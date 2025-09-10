@@ -199,19 +199,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             {{ __(menu_orders_customer.name) }}
                         </q-item-section>
                     </q-item>
-
-                    <q-item
+                    <!--
+                        <q-item
                         clickable
                         v-ripple
                         exact
                         to="/admin/reports"
                         class="menu-item"
-                    >
+                        >
                         <q-item-section avatar>
                             <q-icon color="primary" name="mdi-chart-bar" />
                         </q-item-section>
                         <q-item-section>{{ __("Reports") }}</q-item-section>
                     </q-item>
+                    -->
                 </q-list>
             </q-scroll-area>
         </q-drawer>

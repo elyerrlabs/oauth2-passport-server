@@ -2406,5 +2406,14 @@
   "Passport • Online": "Pasaporte • En Línea",
   "OpenID • Online": "OpenID • En Línea",
   "DB • Online": "Base de Datos • En Línea",
-  "Payments • Online": "Pagos • En Línea"
+  "Payments • Online": "Pagos • En Línea",
+  "from yesterday": "desde yesterday",
+  "last month": "ultimo mes",
+  "high priority": "prioridad alta",
+  "Total Revenue": "Ingresos Totales",
+  "customer": "cliente",
+  "Customer": "Cliente",
+  "date": "fecha",
+  "Date": "Fecha",
+  "Today Sales Goal": "Meta de Ventas de Hoy"
 }

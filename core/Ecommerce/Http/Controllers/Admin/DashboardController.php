@@ -24,6 +24,9 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Illuminate\Http\Request;
+use App\Models\Common\Category;
+use Core\Ecommerce\Repositories\DashboardRepository;
 use Inertia\Inertia;
 use Core\Ecommerce\Model\Product;
 use App\Http\Controllers\WebController;
@@ -31,29 +34,33 @@ use App\Http\Controllers\WebController;
 final class DashboardController extends WebController
 {
 
+    private $repository;
 
-    public function __construct()
+    public function __construct(DashboardRepository $dashboardRepository)
     {
         parent::__construct();
-        $this->middleware('auth');
+        $this->repository = $dashboardRepository;
         $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:dashboard');
     }
 
     /**
      * Dashboard
-     * @return \Inertia\Response
+     * @param \Illuminate\Http\Request $request
+     * @return array|\Inertia\Response
      */
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $products = Product::count();
 
-        $low_product_stock = Product::where('stock', '>', 10)->count();
+        if ($request->wantsJson()) {
+            return $this->repository->dashboard($request);
+        }
 
         return Inertia::render(
             'Core/Ecommerce/Admin/Dashboard/Index',
             [
-                'products' => $products,
-                'products_low_stock' => $low_product_stock,
+                'routes' => [
+                    'dashboard' => route('ecommerce.admin.dashboard')
+                ],
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
         );

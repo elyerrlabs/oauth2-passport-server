@@ -31,20 +31,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="text-subtitle1 text-grey-7">
                                     {{ __("Total Sales") }}
                                 </div>
-                                <div class="text-h4 text-weight-bold">
-                                    $24,560
+                                <div class="text-h6 text-weight-bold">
+                                    {{ dashboard.currency_symbol }}
+                                    {{ dashboard.transactions_total }}
                                 </div>
                                 <div class="text-caption text-green">
                                     <q-icon name="mdi-arrow-up" />
-                                    {{ __("12% from last month") }}
+                                    {{ __("last month") }}
                                 </div>
-                            </div>
-                            <div class="col-auto">
-                                <q-icon
-                                    name="mdi-currency-usd"
-                                    size="lg"
-                                    color="blue"
-                                />
                             </div>
                         </div>
                     </q-card-section>
@@ -59,12 +53,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="text-subtitle1 text-grey-7">
                                     {{ __("Today Sales") }}
                                 </div>
-                                <div class="text-h4 text-weight-bold">
-                                    $1,850
+                                <div class="text-h6 text-weight-bold">
+                                    {{ dashboard.currency_symbol }}
+                                    {{ dashboard.transactions_today }}
                                 </div>
                                 <div class="text-caption text-green">
                                     <q-icon name="mdi-arrow-up" />
-                                    {{ __("5% from yesterday") }}
+                                    {{ __("from yesterday") }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -87,11 +82,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="text-subtitle1 text-grey-7">
                                     {{ __("Total Products") }}
                                 </div>
-                                <div class="text-h4 text-weight-bold">
-                                    {{ $page.props.products }}
+                                <div class="text-h6 text-weight-bold">
+                                    {{ dashboard.products_stock_total }}
                                 </div>
                                 <div class="text-caption text-grey">
-                                    {{ $page.props.products_low_stock }}
+                                    {{ dashboard.products_lower_stock }}
                                     {{ __("low in stock") }}
                                 </div>
                             </div>
@@ -115,10 +110,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="text-subtitle1 text-grey-7">
                                     {{ __("Pending Orders") }}
                                 </div>
-                                <div class="text-h4 text-weight-bold">18</div>
+                                <div class="text-h6 text-weight-bold">
+                                    {{ dashboard.products_pending }}
+                                </div>
                                 <div class="text-caption text-red">
                                     <q-icon name="mdi-alert" />
-                                    {{ __("3 high priority") }}
+                                    {{ __("high priority") }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -244,11 +241,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <q-card-section class="q-pa-none">
                         <q-table
                             flat
-                            :rows="recentOrders"
-                            :columns="orderColumns"
-                            row-key="id"
+                            :rows="checkouts"
+                            :columns="columns"
                             hide-pagination
-                            :rows-per-page-options="[0]"
                         >
                             <template v-slot:body-cell-status="props">
                                 <q-td :props="props">
@@ -340,7 +335,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import { ref } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 
 export default {
@@ -348,402 +342,299 @@ export default {
         apexchart: VueApexCharts,
     },
 
-    setup() {
-        const leftDrawerOpen = ref(true);
+    data() {
+        return {
+            leftDrawerOpen: true,
 
-        // Stats Data
-        const stats = ref([
-            {
-                title: "Total Sales",
-                value: "$24,560",
-                icon: "mdi-currency-usd",
-                iconColor: "blue",
-                trendIcon: "mdi-arrow-up",
-                trendText: "12% from last month",
-                trendColor: "text-green",
-            },
-            {
-                title: "Today Sales",
-                value: "$1,850",
-                icon: "mdi-cash-fast",
-                iconColor: "green",
-                trendIcon: "mdi-arrow-up",
-                trendText: "5% from yesterday",
-                trendColor: "text-green",
-            },
-            {
-                title: "Total Products",
-                value: "342",
-                icon: "mdi-package-variant",
-                iconColor: "orange",
-                trendText: "12 low in stock",
-                trendColor: "text-grey",
-            },
-            {
-                title: "Pending Orders",
-                value: "18",
-                icon: "mdi-clock-outline",
-                iconColor: "purple",
-                trendIcon: "mdi-alert",
-                trendText: "3 high priority",
-                trendColor: "text-red",
-            },
-        ]);
-
-        // Sales Chart Data
-        const salesChartOptions = ref({
-            chart: {
-                type: "area",
-                height: 350,
-                toolbar: {
-                    show: false,
+            revenue: [],
+            dashboard: [],
+            checkouts: [],
+            columns: [
+                {
+                    name: "id",
+                    label: this.__("Order"),
+                    field: "id",
+                    align: "left",
                 },
-            },
-            colors: ["#4CAF50"],
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                curve: "smooth",
-                width: 2,
-            },
-            xaxis: {
-                categories: Array.from(
-                    { length: 30 },
-                    (_, i) => `Day ${i + 1}`
-                ),
-                labels: {
-                    show: false,
+                {
+                    name: "customer",
+                    label: this.__("Customer"),
+                    field: "customer",
+                    align: "left",
                 },
-                axisBorder: {
-                    show: false,
+                {
+                    name: "date",
+                    label: this.__("Date"),
+                    field: "date",
+                    align: "left",
                 },
-                axisTicks: {
-                    show: false,
+                {
+                    name: "total",
+                    label: this.__("Total"),
+                    field: "total",
+                    align: "right",
                 },
-            },
-            yaxis: {
-                labels: {
-                    formatter: function (val) {
-                        return "$" + val.toFixed(0);
-                    },
+                {
+                    name: "status",
+                    label: this.__("Status"),
+                    field: "status",
+                    align: "center",
                 },
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return "$" + val.toFixed(2);
-                    },
-                },
-            },
-            grid: {
-                borderColor: "#f1f1f1",
-            },
-        });
-
-        const salesChartSeries = ref([
-            {
-                name: "Sales",
-                data: Array.from(
-                    { length: 30 },
-                    () => Math.floor(Math.random() * 2000) + 500
-                ),
-            },
-        ]);
-
-        // Revenue Chart Data
-        const revenueChartOptions = ref({
-            chart: {
-                type: "donut",
-            },
-            labels: [
-                "Electronics",
-                "Clothing",
-                "Home Goods",
-                "Accessories",
-                "Other",
+                { name: "actions", label: "", align: "center" },
             ],
-            colors: ["#2196F3", "#4CAF50", "#FF9800", "#9C27B0", "#607D8B"],
-            legend: {
-                position: "bottom",
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        labels: {
+
+            salesChartOptions: {},
+
+            salesChartSeries: [],
+
+            revenueChartOptions: {},
+
+            revenueChartSeries: [],
+
+            topProductsChartOptions: {},
+            topProductsChartSeries: [],
+
+            todaySalesChartOptions: {
+                chart: { type: "radialBar" },
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -135,
+                        endAngle: 225,
+                        hollow: {
+                            margin: 0,
+                            size: "70%",
+                            background: "#fff",
+                            position: "front",
+                        },
+                        track: {
+                            background: "#f1f1f1",
+                            strokeWidth: "67%",
+                            margin: 0,
+                        },
+                        dataLabels: {
                             show: true,
-                            total: {
+                            name: {
+                                offsetY: -10,
+                                color: "#888",
+                                fontSize: "13px",
+                            },
+                            value: {
+                                formatter: (val) =>
+                                    this.dashboard.currency_symbol + val,
+                                color: "#111",
+                                fontSize: "30px",
                                 show: true,
-                                label: "Total Revenue",
-                                formatter: function () {
-                                    return "$24,560";
+                            },
+                        },
+                    },
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shade: "dark",
+                        type: "horizontal",
+                        shadeIntensity: 0.5,
+                        gradientToColors: ["#4CAF50"],
+                        inverseColors: true,
+                        opacityFrom: 1,
+                        opacityTo: 1,
+                        stops: [0, 100],
+                    },
+                },
+                stroke: { lineCap: "round" },
+                labels: [this.__("Today Sales Goal")],
+            },
+
+            todaySalesChartSeries: [],
+
+            topProducts: [],
+        };
+    },
+
+    created() {
+        this.getData();
+    },
+
+    methods: {
+        toggleLeftDrawer() {
+            this.leftDrawerOpen = !this.leftDrawerOpen;
+        },
+
+        async getData() {
+            try {
+                const res = await this.$server.get(
+                    this.$page.props.routes.dashboard
+                );
+
+                if (res.status == 200) {
+                    this.dashboard = res.data;
+                    this.checkouts = res.data.checkouts;
+                    this.topProducts = res.data.top_products;
+                    this.revenue = res.data.revenue;
+                    this.todaySalesChartSeries = [res.data.transactions_today];
+                    this.renderSales();
+                    this.renderTopProducts();
+                    this.renderRevenue();
+                }
+            } catch (e) {}
+        },
+
+        renderTopProducts() {
+            this.topProductsChartOptions = {
+                chart: { type: "bar", toolbar: { show: false } },
+                plotOptions: {
+                    bar: { borderRadius: 4, horizontal: true },
+                },
+                colors: ["#2196F3"],
+                dataLabels: { enabled: false },
+                xaxis: {
+                    categories: this.topProducts.map((item) => item.category),
+                },
+                tooltip: {
+                    y: {
+                        formatter: (val) => val + " " + this.__("units sold"),
+                    },
+                },
+            };
+
+            this.topProductsChartSeries = [
+                {
+                    name: this.__("Units Sold"),
+                    data: this.topProducts.map((item) => item.sold),
+                },
+            ];
+        },
+
+        renderRevenue() {
+            const totalRevenue = this.revenue.reduce(
+                (sum, item) => sum + item.total,
+                0
+            );
+
+            this.revenueChartOptions = {
+                chart: { type: "donut" },
+                labels: this.revenue.map((item) => item.name),
+                colors: ["#2196F3", "#4CAF50", "#FF9800", "#9C27B0", "#607D8B"],
+                legend: { position: "bottom" },
+                dataLabels: { enabled: true },
+                tooltip: {
+                    y: {
+                        formatter: (val) =>
+                            this.dashboard.currency_symbol +
+                            " " +
+                            (val / 100).toFixed(2),
+                    },
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            labels: {
+                                show: true,
+                                name: { show: true },
+                                value: {
+                                    show: true,
+                                    formatter: (val) =>
+                                        this.dashboard.currency_symbol +
+                                        " " +
+                                        (val / 100).toFixed(2),
+                                },
+                                total: {
+                                    show: true,
+                                    label: this.__("Total Revenue"),
+                                    formatter: () =>
+                                        this.dashboard.currency_symbol +
+                                        " " +
+                                        (totalRevenue / 100).toFixed(2),
                                 },
                             },
                         },
                     },
                 },
-            },
-            dataLabels: {
-                enabled: false,
-            },
-        });
+            };
 
-        const revenueChartSeries = ref([12500, 5800, 3200, 1800, 1260]);
+            this.revenueChartSeries = this.revenue.map((item) => item.total);
+        },
 
-        // Top Products Chart Data
-        const topProductsChartOptions = ref({
-            chart: {
-                type: "bar",
-                toolbar: {
-                    show: false,
+        renderSales() {
+            this.salesChartSeries = [
+                {
+                    name: "Sales",
+                    data: this.dashboard.transactions.map((item) => item.total),
                 },
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 4,
-                    horizontal: true,
-                },
-            },
-            colors: ["#2196F3"],
-            dataLabels: {
-                enabled: false,
-            },
-            xaxis: {
-                categories: [
-                    "Wireless Headphones",
-                    "Smart Watch",
-                    "Running Shoes",
-                    "Bluetooth Speaker",
-                    "Coffee Maker",
-                ],
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return val + " units sold";
-                    },
-                },
-            },
-        });
+            ];
 
-        const topProductsChartSeries = ref([
-            {
-                name: "Units Sold",
-                data: [45, 32, 28, 25, 22],
-            },
-        ]);
-
-        // Today Sales Chart Data
-        const todaySalesChartOptions = ref({
-            chart: {
-                type: "radialBar",
-            },
-            plotOptions: {
-                radialBar: {
-                    startAngle: -135,
-                    endAngle: 225,
-                    hollow: {
-                        margin: 0,
-                        size: "70%",
-                        background: "#fff",
-                        position: "front",
-                    },
-                    track: {
-                        background: "#f1f1f1",
-                        strokeWidth: "67%",
-                        margin: 0,
-                    },
-                    dataLabels: {
+            this.salesChartOptions = {
+                chart: {
+                    type: "area",
+                    height: 350,
+                    toolbar: {
                         show: true,
-                        name: {
-                            offsetY: -10,
-                            color: "#888",
-                            fontSize: "13px",
-                        },
-                        value: {
-                            formatter: function (val) {
-                                return "$" + val;
-                            },
-                            color: "#111",
-                            fontSize: "30px",
-                            show: true,
+                        tools: {
+                            download: true,
+                            selection: true,
+                            zoom: true,
+                            zoomin: true,
+                            zoomout: true,
+                            pan: true,
+                            reset: true,
                         },
                     },
                 },
-            },
-            fill: {
-                type: "gradient",
-                gradient: {
-                    shade: "dark",
-                    type: "horizontal",
-                    shadeIntensity: 0.5,
-                    gradientToColors: ["#4CAF50"],
-                    inverseColors: true,
-                    opacityFrom: 1,
-                    opacityTo: 1,
-                    stops: [0, 100],
+                colors: ["#4CAF50"],
+                dataLabels: {
+                    enabled: false,
+                    formatter: (val) => {
+                        return (
+                            this.dashboard.currency_symbol +
+                            " " +
+                            (val / 100).toFixed(2)
+                        );
+                    },
                 },
-            },
-            stroke: {
-                lineCap: "round",
-            },
-            labels: ["Today Sales Goal"],
-        });
+                stroke: { curve: "smooth", width: 2 },
+                xaxis: {
+                    categories: this.dashboard.transactions.map(
+                        (item) => item.date
+                    ),
 
-        const todaySalesChartSeries = ref([85]);
+                    labels: { show: false },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                },
+                yaxis: {
+                    labels: {
+                        formatter: (val) =>
+                            this.dashboard.currency_symbol +
+                            " " +
+                            (val / 100).toFixed(2),
+                    },
+                },
+                tooltip: {
+                    y: {
+                        formatter: (val) =>
+                            this.dashboard.currency_symbol +
+                            " " +
+                            (val / 100).toFixed(2),
+                    },
+                },
+                grid: { borderColor: "#f1f1f1" },
+            };
+        },
 
-        // Orders Data
-        const recentOrders = ref([
-            {
-                id: 1256,
-                customer: "John Doe",
-                date: "2023-05-15",
-                amount: 245.99,
-                status: "Completed",
-                payment: "Credit Card",
-            },
-            {
-                id: 1255,
-                customer: "Jane Smith",
-                date: "2023-05-14",
-                amount: 189.5,
-                status: "Processing",
-                payment: "PayPal",
-            },
-            {
-                id: 1254,
-                customer: "Robert Johnson",
-                date: "2023-05-14",
-                amount: 320.0,
-                status: "Shipped",
-                payment: "Credit Card",
-            },
-            {
-                id: 1253,
-                customer: "Emily Davis",
-                date: "2023-05-13",
-                amount: 95.75,
-                status: "Pending",
-                payment: "Bank Transfer",
-            },
-            {
-                id: 1252,
-                customer: "Michael Wilson",
-                date: "2023-05-12",
-                amount: 156.3,
-                status: "Completed",
-                payment: "Credit Card",
-            },
-        ]);
-
-        const orderColumns = ref([
-            { name: "id", label: "Order ID", field: "id", align: "left" },
-            {
-                name: "customer",
-                label: "Customer",
-                field: "customer",
-                align: "left",
-            },
-            { name: "date", label: "Date", field: "date", align: "left" },
-            {
-                name: "amount",
-                label: "Amount",
-                field: "amount",
-                align: "right",
-            },
-            {
-                name: "status",
-                label: "Status",
-                field: "status",
-                align: "center",
-            },
-            { name: "actions", label: "", align: "center" },
-        ]);
-
-        // Top Products Data
-        const topProducts = ref([
-            {
-                id: 1,
-                name: "Wireless Headphones",
-                category: "Electronics",
-                price: 99.99,
-                sold: 45,
-                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80",
-            },
-            {
-                id: 2,
-                name: "Smart Watch",
-                category: "Wearables",
-                price: 199.99,
-                sold: 32,
-                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80",
-            },
-            {
-                id: 3,
-                name: "Running Shoes",
-                category: "Sports",
-                price: 79.99,
-                sold: 28,
-                image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80",
-            },
-            {
-                id: 4,
-                name: "Bluetooth Speaker",
-                category: "Electronics",
-                price: 59.99,
-                sold: 25,
-                image: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80",
-            },
-            {
-                id: 5,
-                name: "Coffee Maker",
-                category: "Home",
-                price: 129.99,
-                sold: 22,
-                image: "https://images.unsplash.com/photo-1556910006-89a1c7f5b1c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80",
-            },
-        ]);
-
-        const toggleLeftDrawer = () => {
-            leftDrawerOpen.value = !leftDrawerOpen.value;
-        };
-
-        const getStatusColor = (status) => {
+        getStatusColor(status) {
             switch (status) {
-                case "Completed":
+                case "successful":
                     return "green";
-                case "Processing":
+                case "pending":
                     return "orange";
-                case "Shipped":
-                    return "blue";
                 default:
                     return "grey";
             }
-        };
+        },
 
-        const viewOrder = (order) => {
-            console.log("View order:", order.id);
-            // Aquí iría la lógica para ver el detalle del pedido
-        };
-
-        return {
-            leftDrawerOpen,
-            stats,
-            salesChartOptions,
-            salesChartSeries,
-            revenueChartOptions,
-            revenueChartSeries,
-            topProductsChartOptions,
-            topProductsChartSeries,
-            todaySalesChartOptions,
-            todaySalesChartSeries,
-            recentOrders,
-            orderColumns,
-            topProducts,
-            toggleLeftDrawer,
-            getStatusColor,
-            viewOrder,
-        };
+        viewOrder(order) {
+            window.location.href = order.link;
+        },
     },
 };
 </script>
