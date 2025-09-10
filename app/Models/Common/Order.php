@@ -90,6 +90,6 @@ class Order extends Master
      */
     public function checkout()
     {
-        return $this->belongsTo(Checkout::class, 'checkout_id');
+        return $this->belongsTo(Checkout::class);
     }
 }
