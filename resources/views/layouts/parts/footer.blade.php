@@ -30,11 +30,6 @@
                         title="{{ __('GitLab Profile') }}">
                         <i class="mdi mdi-gitlab"></i>
                     </a>
-                    <a href="https://www.linkedin.com/in/elyerr" target="_blank" rel="noopener noreferrer"
-                        class="w-10 h-10 bg-[var(--color-bg-tertiary)] hover:bg-[var(--color-primary)] text-[var(--color-text-secondary)] hover:text-white rounded-lg flex items-center justify-center transition-all duration-300"
-                        title="{{ __('LinkedIn Profile') }}">
-                        <i class="mdi mdi-linkedin"></i>
-                    </a>
                     <a href="https://t.me/elyerr" target="_blank" rel="noopener noreferrer"
                         class="w-10 h-10 bg-[var(--color-bg-tertiary)] hover:bg-[var(--color-primary)] text-[var(--color-text-secondary)] hover:text-white rounded-lg flex items-center justify-center transition-all duration-300"
                         title="{{ __('Telegram') }}">
