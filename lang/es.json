@@ -2435,5 +2435,17 @@
   "Search products, brands and more...": "Buscar productos, marcas y más...",
   "All Categories": "Todas las categorias",
   "Specifications": "Especificaciones",
-  "Reviews": "Reseñas"
+  "Reviews": "Reseñas",
+  "Laravel log viewer": "Visor de logs de Laravel",
+  "Laravel Log Viewer": "Visor de Logs de Laravel",
+  "Dark Mode": "Modo oscuro",
+  "Log file >50M, please download it.": "Archivo de log mayor a 50M, por favor descárgalo.",
+  "Level": "Nivel",
+  "Context": "Contexto",
+  "Line number": "Número de línea",
+  "Content": "Contenido",
+  "Download file": "Descargar archivo",
+  "Clean file": "Limpiar archivo",
+  "Delete file": "Eliminar archivo",
+  "Delete all files": "Eliminar todos los archivos"
 }

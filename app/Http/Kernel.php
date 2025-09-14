@@ -71,7 +71,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-        'transform.request' => \Elyerr\ApiResponse\Middleware\TransformRequest::class,
         'client' => \App\Http\Middleware\CheckClientCredentials::class,
         'scopes' => \App\Http\Middleware\CheckScopes::class,
         'scope' => \App\Http\Middleware\CheckForAnyScope::class,
