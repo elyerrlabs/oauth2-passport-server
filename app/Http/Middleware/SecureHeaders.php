@@ -79,7 +79,7 @@ class SecureHeaders
             "frame-src 'self' https://newassets.hcaptcha.com/ https://challenges.cloudflare.com",
             "frame-ancestors 'self'",
             "img-src 'self' data:",
-            "font-src 'self'",
+            "font-src 'self' https://cdnjs.cloudflare.com/   https://fonts.gstatic.com/",
             //"connect-src 'self'",
             "form-action *",
             "worker-src *",
