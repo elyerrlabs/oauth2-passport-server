@@ -61,7 +61,7 @@ class ProductController extends WebController
                     'categories_api' => route('api.ecommerce.categories.index'),
                 ],
             ]
-        );
+        )->rootView('ecommerce');
     }
 
     /**
@@ -76,11 +76,12 @@ class ProductController extends WebController
             [
                 'routes' => [
                     'dashboard' => route('ecommerce.dashboard'),
+                    'search' => route('ecommerce.search'),
                     'search_api' => route('api.ecommerce.search'),
                     'categories_api' => route('api.ecommerce.categories.index'),
                 ],
             ]
-        );
+        )->rootView('ecommerce');
     }
 
     /**
@@ -92,18 +93,18 @@ class ProductController extends WebController
     public function category(Request $request, string $category = null)
     {
         return Inertia::render(
-            'Core/Ecommerce/Web/Products',
+            'Core/Ecommerce/Web/Search',
             [
                 'routes' => [
                     'dashboard' => route('ecommerce.dashboard'),
-                    'search' => route('ecommerce.search'),
+                    'search' => route('ecommerce.category', ['category' => $category]),
                     'categories_api' => route('api.ecommerce.categories.index'),
                     'search_api' => route('api.ecommerce.category.show', [
                         'category' => $category
                     ])
                 ],
             ]
-        );
+        )->rootView('ecommerce');
     }
 
     /**
@@ -124,6 +125,7 @@ class ProductController extends WebController
                     'orders' => route('ecommerce.orders.index'),
                     'search_api' => route('api.ecommerce.search'),
                     'categories_api' => route('api.ecommerce.categories.index'),
+                    'show' => route('ecommerce.category', ['category' => $category_slug]),
                     'show_api' => route('api.ecommerce.products.show', [
                         'category' => $category_slug,
                         'product' => $product_slug
@@ -131,6 +133,6 @@ class ProductController extends WebController
                     'orders_api' => route('api.ecommerce.orders.index')
                 ],
             ]
-        );
+        )->rootView('ecommerce');
     }
 }

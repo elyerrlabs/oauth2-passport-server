@@ -145,6 +145,8 @@ class Menu
                 "forgot_password" => route('forgot-password'),
                 "register" => Route::has('register') ? route('register') : '',
                 "logout" => route('logout'),
+                "dashboard" => route('user.dashboard'),
+                "profile" => "user.profile"
             ],
             "guest_routes" => [
                 "home_page" => url(config('system.home_page')),

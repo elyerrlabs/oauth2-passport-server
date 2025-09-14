@@ -33,7 +33,7 @@ class CheckoutController extends WebController
 {
     /**
      * Repository
-     * @var 
+     * @var
      */
     private $repository;
 

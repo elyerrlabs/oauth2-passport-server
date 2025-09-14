@@ -47,7 +47,7 @@ final class ProductController extends WebController
 
     /**
      * Summary of __construct
-     * @param \App\Repositories\ProductRepository $productRepository
+     * @param  ProductRepository $productRepository
      */
     public function __construct(ProductRepository $productRepository)
     {

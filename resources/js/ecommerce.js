@@ -18,34 +18,24 @@
  * Author Contact: yerel9212@yahoo.es
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
- */ 
+ */
 
+import "../css/ecommerce.css";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { setupI18n, __ } from "./app/config/locale.js";
+import { $notify } from "./app/config/notify.js";
 
-import { customComponents } from "./app/config/customComponents.js";
 //import { $echo } from "./app/config/echo.js";
 import { $server } from "./app/config/axios.js";
-import { layouts } from "./app/config/layouts.js";
-
-//Quasar
-import { Quasar, Ripple, ClosePopup, Notify, Dialog, Loading } from "quasar";
-import "quasar/dist/quasar.css";
-import "@quasar/extras/material-icons/material-icons.css";
-import { QComponents } from "./app/config/quasar.js";
-
-//Vue date picker
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-//import iconSet from "quasar/icon-set/material-icons.js";
 
 //icons https://pictogrammers.com/library/mdi/
 import "@mdi/font/css/materialdesignicons.css";
 
-const i18n = setupI18n();
+setupI18n();
 window.__ = __;
+window.$notify = $notify;
 
 createInertiaApp({
   resolve: (name) =>
@@ -56,36 +46,11 @@ createInertiaApp({
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) });
 
-    customComponents.forEach((index) => {
-      app.component(index[0], index[1]);
-    });
-
-    layouts.forEach((index) => {
-      app.component(index[0], index[1]);
-    });
-
-    app.use(Quasar, {
-      plugins: {
-        Notify,
-        Dialog,
-        Loading,
-      },
-      directives: {
-        Ripple,
-        ClosePopup,
-      },
-      //iconSet: iconSet,
-    });
-
-    QComponents.forEach((item) => {
-      app.component(item.name, item);
-    });
-
     // app.config.globalProperties.$echo = $echo;
     app.config.globalProperties.$server = $server;
     app.config.globalProperties.__ = __;
+    app.config.globalProperties.$notify = $notify;
 
-    app.component("VueDatePicker", VueDatePicker);
     app.use(plugin);
     //  app.use(i18n);
     app.mount(el);
