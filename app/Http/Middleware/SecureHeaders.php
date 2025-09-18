@@ -20,7 +20,7 @@ namespace App\Http\Middleware;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -60,7 +60,7 @@ class SecureHeaders
     }
 
     /**
-     * Setting default content security policies 
+     * Setting default content security policies
      * @return string
      */
     public function ContentSecurityPolicy($nonce)
@@ -79,7 +79,7 @@ class SecureHeaders
             "frame-src 'self' https://newassets.hcaptcha.com/ https://challenges.cloudflare.com",
             "frame-ancestors 'self'",
             "img-src 'self' data:",
-            "font-src 'self' https://cdnjs.cloudflare.com/   https://fonts.gstatic.com/",
+            "font-src 'self'",
             //"connect-src 'self'",
             "form-action *",
             "worker-src *",

@@ -33,7 +33,7 @@ class OrderController extends WebController
 {
     /**
      * Repository
-     * @var 
+     * @var
      */
     private $repository;
 
@@ -60,6 +60,6 @@ class OrderController extends WebController
                     'payment_api' => route('api.ecommerce.payments.store'),
                 ]
             ]
-        );
+        )->rootView('ecommerce');
     }
 }

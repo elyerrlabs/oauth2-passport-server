@@ -179,7 +179,6 @@
                                         class="px-4 py-2 border-l border-r border-gray-300 w-12 text-center"
                                         >{{ form.quantity }}</span
                                     >
-                                    <v-error :error="errors.quantity" />
                                     <button
                                         @click="increaseQuantity"
                                         class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition"
@@ -188,6 +187,7 @@
                                     </button>
                                 </div>
                             </div>
+                            <v-error :error="errors.quantity" />
 
                             <div
                                 class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"

@@ -21,11 +21,14 @@
  */
 
 import "../css/ecommerce.css";
+import "@tailwindplus/elements";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { setupI18n, __ } from "./app/config/locale.js";
 import { $notify } from "./app/config/notify.js";
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 //import { $echo } from "./app/config/echo.js";
 import { $server } from "./app/config/axios.js";
@@ -52,6 +55,7 @@ createInertiaApp({
     app.config.globalProperties.$notify = $notify;
 
     app.use(plugin);
+    app.use(VueSweetalert2);
     //  app.use(i18n);
     app.mount(el);
   },

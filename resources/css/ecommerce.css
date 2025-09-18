@@ -1,6 +1,6 @@
 /** custom css styles */
 @import 'tailwindcss';
-
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 
 @theme {
     --color-primary-50: #faf5ff;
