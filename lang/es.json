@@ -2472,5 +2472,10 @@
   "Review your items and proceed to checkout": "Revisa tus artículos y procede al pago",
   "You don't have any orders yet": "Aún no tienes órdenes",
   "Go Shopping": "Ir a comprar",
-  "Secure checkout. All data is encrypted.": "Pago seguro. Todos los datos están encriptados."
+  "Secure checkout. All data is encrypted.": "Pago seguro. Todos los datos están encriptados.",
+  "Review your past purchases": "Revisa tus compras anteriores",
+  "Your order history will appear here once you make a purchase": "Tu historial de pedidos aparecerá aquí una vez realices una compra",
+  "Start Shopping": "Comenzar a comprar",
+  "Delivery Address": "Dirección de entrega",
+  "Order Items": "Artículos del pedido"
 }
