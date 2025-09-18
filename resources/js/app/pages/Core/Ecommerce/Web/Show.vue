@@ -369,8 +369,8 @@
                     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
                 >
                     <div
-                        v-for="relatedProduct in relatedProducts"
-                        :key="relatedProduct.id"
+                        v-for="product in relatedProducts"
+                        :key="product.id"
                         class="product-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer hover:bg-black/20"
                         @click="goTo(product?.links?.show)"
                     >
@@ -378,14 +378,14 @@
                             class="h-48 bg-gray-100 flex items-center justify-center p-4 relative"
                         >
                             <img
-                                :src="relatedProduct.images[0].url"
-                                :alt="relatedProduct.name"
+                                :src="product.images[0].url"
+                                :alt="product.name"
                                 class="h-40 object-contain"
                             />
                         </div>
                         <div class="p-4">
                             <h3 class="font-medium text-gray-900 mb-2 truncate">
-                                {{ relatedProduct.name }}
+                                {{ product.name }}
                             </h3>
                             <div class="flex items-center mb-2">
                                 <div class="flex text-yellow-400 text-xs mr-2">
