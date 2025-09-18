@@ -60,6 +60,6 @@ class CheckoutController extends WebController
                     'categories_api' => route('api.ecommerce.categories.index'),
                 ]
             ]
-        );
+        )->rootView('ecommerce');
     }
 }

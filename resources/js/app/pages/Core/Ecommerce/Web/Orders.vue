@@ -32,9 +32,9 @@
             </div>
 
             <!-- Cart Items -->
-            <div v-else class="w-full flex flex-col lg:flex-row gap-6">
+            <div v-else class="w-full flex flex-col gap-6">
                 <!-- Left Column - Items -->
-                <div class="w-full lg:w-2/3 space-y-4">
+                <div class="w-full space-y-4">
                     <!-- Cart Item -->
                     <div
                         v-for="item in orders"
@@ -152,7 +152,7 @@
                 </div>
 
                 <!-- Right Column - Summary -->
-                <div class="w-full lg:w-1/3 space-y-6">
+                <div class="w-full space-y-6">
                     <div v-if="orders.length > 0" class="w-full">
                         <v-delivery-address @selected="setAddress" />
                         <v-error :error="errors.delivery"></v-error>
