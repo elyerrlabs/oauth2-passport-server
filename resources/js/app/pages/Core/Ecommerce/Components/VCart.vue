@@ -61,12 +61,7 @@ export default {
         }
     },
     mounted() {
-        // Refresh orders every 10 seconds
-        setInterval(() => {
-            if (this.$page.props.user?.id) {
-                this.getOrders();
-            }
-        }, 10000);
+        this.getOrders();
     },
     methods: {
         open(url) {
@@ -77,7 +72,7 @@ export default {
         async getOrders() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.ecommerce_orders_api.route,
+                    this.$page.props.api.ecommerce.orders,
                     {
                         params: { per_page: 100 },
                     }

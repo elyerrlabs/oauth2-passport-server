@@ -33,7 +33,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         >
             <q-badge color="red" floating>{{ orders.length }}</q-badge>
         </q-btn>
-         
+
         <q-btn
             no-caps
             dense
@@ -62,11 +62,7 @@ export default {
     },
 
     mounted() {
-        setInterval(() => {
-            if (this.$page.props.user?.id) {
-                this.getOrders();
-            }
-        }, 10000);
+        this.getOrders();
     },
 
     methods: {
@@ -79,7 +75,7 @@ export default {
         async getOrders() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.ecommerce_orders_api.route,
+                    this.$page.props.api.ecommerce.orders,
                     {
                         params: {
                             per_page: 100,
