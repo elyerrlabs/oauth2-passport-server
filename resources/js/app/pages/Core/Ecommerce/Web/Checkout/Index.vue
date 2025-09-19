@@ -349,14 +349,14 @@
                                             <p
                                                 class="text-sm text-gray-500 mt-1"
                                             >
-                                                {{ __("Quantity") }}: 1
+                                                {{ __("Quantity") }}: {{ item.quantity }}
                                             </p>
                                         </div>
                                         <p
                                             class="font-bold text-purple-600 text-lg"
                                         >
-                                            {{ order.transaction.currency }}
-                                            {{ order.transaction.total }}
+                                            {{ item.currency }}
+                                            {{ item.format_price }}
                                         </p>
                                     </div>
                                 </div>
