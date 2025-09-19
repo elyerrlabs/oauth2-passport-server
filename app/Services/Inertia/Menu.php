@@ -46,23 +46,36 @@ class Menu
 
             if ($key === 'merge' && is_array($value)) {
                 foreach ($value as $groupKey => $items) {
-                    foreach ($items as $item) {
-                        $canShow = true;
 
-                        if (isset($item['service']) && !filter_var($item['service'], FILTER_VALIDATE_BOOL)) {
-                            $canShow = $user && method_exists($user, 'canAccessMenu')
-                                ? $user->canAccessMenu($item['service'])
-                                : false;
+                    if ($groupKey === 'api') {
+
+                        foreach ($items as $key => $routes) {
+
+                            foreach ($routes as $name => $route) {
+                                if (Route::has($route)) {
+                                    $menus[$groupKey][$key][$name] = route($route);
+                                }
+                            }
                         }
+                    } else {
+                        foreach ($items as $item) {
+                            $canShow = true;
 
-                        if ($canShow) {
-                            $menus[$groupKey][] = [
-                                'id' => $item['id'] ?? null,
-                                'name' => __($item['name']) ?? null,
-                                'icon' => $item['icon'] ?? null,
-                                'route' => isset($item['route']) ? route($item['route']) : null,
-                                'show' => $canShow,
-                            ];
+                            if (isset($item['service']) && !filter_var($item['service'], FILTER_VALIDATE_BOOL)) {
+                                $canShow = $user && method_exists($user, 'canAccessMenu')
+                                    ? $user->canAccessMenu($item['service'])
+                                    : false;
+                            }
+
+                            if ($canShow) {
+                                $menus[$groupKey][] = [
+                                    'id' => $item['id'] ?? null,
+                                    'name' => __($item['name']) ?? null,
+                                    'icon' => $item['icon'] ?? null,
+                                    'route' => isset($item['route']) ? route($item['route']) : null,
+                                    'show' => $canShow,
+                                ];
+                            }
                         }
                     }
                 }
@@ -172,8 +185,8 @@ class Menu
                 ]
             ],
             "allow_register" => Route::has('register'),
+            "api" => []
         ];
-
         return array_merge($keys, static::appendChildMenu($user));
     }
 
