@@ -1,6 +1,7 @@
 <?php
 
 use Core\Ecommerce\Http\Controllers\Api\Web\CheckoutController;
+use Core\Ecommerce\Http\Controllers\Api\Web\FilterController;
 use Core\Ecommerce\Http\Controllers\Api\Web\OrderController;
 use Core\Ecommerce\Http\Controllers\Api\Web\PaymentController;
 use Core\Ecommerce\Http\Controllers\Api\Web\ProductController;
@@ -47,4 +48,5 @@ Route::middleware(['throttle:ecommerce:api', 'wants.json'])->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('search');
     Route::get('/{category}/{product}', [ProductController::class, 'productDetails'])->name('products.show');
 
+    Route::get('/filters', [FilterController::class, 'index'])->name('filters.index');
 });

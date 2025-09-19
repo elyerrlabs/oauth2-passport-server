@@ -24,6 +24,7 @@ namespace Core\Ecommerce\Transformer\User;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Models\Common\Attribute;
 use League\Fractal\TransformerAbstract;
 
 class UserAttributeTransformer extends TransformerAbstract
@@ -51,10 +52,16 @@ class UserAttributeTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform()
+    public function transform($attribute)
     {
         return [
-            //
+            "name" => $attribute['name'],
+            "slug" => $attribute['slug'],
+            "type" => $attribute['type'],
+            "widget" => $attribute['widget'],
+            "multiple" => $attribute['multiple'],
+            //      "unit_id" => $attribute['unit_id'],
+            "values" => $attribute['values']
         ];
     }
 }
