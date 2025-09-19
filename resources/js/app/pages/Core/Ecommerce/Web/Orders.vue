@@ -3,8 +3,10 @@
         <!-- Header -->
         <VHeader />
 
+        <v-loader :loading="loading" />
         <!-- Cart Header -->
         <div
+            v-if="!loading"
             class="cart-header bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-4 md:py-6"
         >
             <div class="container mx-auto px-4 text-center">
@@ -219,9 +221,16 @@ import VHeader from "../Components/VHeader.vue";
 import VPaymentMethod from "../Components/VPaymentMethod.vue";
 import VError from "../Components/VError.vue";
 import VDeliveryAddress from "../Components/VDeliveryAddress.vue";
+import VLoader from "../Components/VLoader.vue";
 
 export default {
-    components: { VHeader, VPaymentMethod, VError, VDeliveryAddress },
+    components: {
+        VHeader,
+        VPaymentMethod,
+        VError,
+        VDeliveryAddress,
+        VLoader,
+    },
     data() {
         return {
             orders: [],
@@ -233,6 +242,7 @@ export default {
             },
             errors: {},
             disabled: false,
+            loading: true,
         };
     },
     computed: {
@@ -350,6 +360,8 @@ export default {
                 if (e?.response?.data?.message) {
                     this.$notify.error(e.response.data.message);
                 }
+            } finally {
+                this.loading = false;
             }
         },
     },
