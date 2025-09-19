@@ -62,7 +62,7 @@ export default {
             this.loading = true;
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes.categories_api
+                    this.$page.props.api.ecommerce.categories
                 );
                 if (res.status === 200) {
                     this.categories = res.data.data;

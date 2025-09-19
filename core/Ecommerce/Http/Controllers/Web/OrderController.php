@@ -54,10 +54,8 @@ class OrderController extends WebController
             'Core/Ecommerce/Web/Orders',
             [
                 'routes' => [
-                    'orders_api' => route('api.ecommerce.orders.index'),
                     'search' => route('ecommerce.search'),
-                    'categories_api' => route('api.ecommerce.categories.index'),
-                    'payment_api' => route('api.ecommerce.payments.store'),
+                    'dashboard' => route('ecommerce.dashboard'),
                 ]
             ]
         )->rootView('ecommerce');

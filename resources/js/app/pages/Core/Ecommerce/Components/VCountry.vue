@@ -36,7 +36,7 @@
                 @click="selectCountry(country)"
                 class="cursor-pointer px-3 py-2 hover:bg-gray-100 flex items-center space-x-2"
             >
-                <span>{{ country.name_en.split(" ")[0] }}</span>
+                <span>{{ country.emoji }}</span>
                 <span>{{ country.name_en.replace(/^.*? /, "") }}</span>
             </li>
         </ul>
@@ -64,7 +64,7 @@ export default {
 
     data() {
         return {
-            countries: [], 
+            countries: [],
             search: "",
             open: false,
         };

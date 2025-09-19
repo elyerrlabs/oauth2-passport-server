@@ -321,7 +321,7 @@ export default {
 
             try {
                 const res = await this.$server.post(
-                    this.$page.props.routes.payment_api,
+                    this.$page.props.api.ecommerce.payments,
                     this.form
                 );
 
@@ -349,7 +349,7 @@ export default {
         async getOrders() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes.orders_api,
+                    this.$page.props.api.ecommerce.orders,
                     { params: { per_page: 50 } }
                 );
 

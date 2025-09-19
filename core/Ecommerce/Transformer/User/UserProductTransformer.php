@@ -30,7 +30,7 @@ use League\Fractal\TransformerAbstract;
 use Core\Ecommerce\Transformer\User\UserFileTransformer;
 use Core\Ecommerce\Transformer\User\UserCategoryTransformer;
 use Core\Ecommerce\Transformer\User\UserProductTagTransformer;
-use Core\Ecommerce\Transformer\User\UserProductAttributeTransformer; 
+use Core\Ecommerce\Transformer\User\UserProductAttributeTransformer;
 
 class UserProductTransformer extends TransformerAbstract
 {
@@ -80,11 +80,7 @@ class UserProductTransformer extends TransformerAbstract
             'published' => $product->published ? true : false,
             'featured' => $product->featured ? true : false,
             'links' => [
-                'search' => route('ecommerce.search', ['q' => request()->name]),
-                'index' => route('ecommerce.category', [
-                    'category' => $product->category->slug
-                ]),
-                'show' => route('ecommerce.products.show', [
+                'show' => route('api.ecommerce.products.show', [
                     'category' => $product->category->slug,
                     'product' => $product->slug
                 ]),

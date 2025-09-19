@@ -123,14 +123,9 @@ class ProductController extends WebController
                     'dashboard' => route('ecommerce.dashboard'),
                     'ecommerce' => route('ecommerce.search'),
                     'orders' => route('ecommerce.orders.index'),
-                    'search_api' => route('api.ecommerce.search'),
-                    'categories_api' => route('api.ecommerce.categories.index'),
-                    'show' => route('ecommerce.category', ['category' => $category_slug]),
-                    'show_api' => route('api.ecommerce.products.show', [
-                        'category' => $category_slug,
-                        'product' => $product_slug
+                    'show' => route('ecommerce.category', [
+                        'category' => $category_slug
                     ]),
-                    'orders_api' => route('api.ecommerce.orders.index')
                 ],
             ]
         )->rootView('ecommerce');

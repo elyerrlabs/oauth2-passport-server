@@ -191,7 +191,7 @@ export default {
         async performSearch(query) {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes.search_api,
+                    this.$page.props.api.ecommerce.search,
                     { params: { q: query, limit: 10 } }
                 );
 

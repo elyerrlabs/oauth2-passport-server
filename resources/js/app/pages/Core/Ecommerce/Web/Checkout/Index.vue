@@ -349,7 +349,8 @@
                                             <p
                                                 class="text-sm text-gray-500 mt-1"
                                             >
-                                                {{ __("Quantity") }}: {{ item.quantity }}
+                                                {{ __("Quantity") }}:
+                                                {{ item.quantity }}
                                             </p>
                                         </div>
                                         <p
@@ -468,7 +469,10 @@ export default {
             this.loading = true;
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes.checkout_api
+                    this.$page.props.api.ecommerce.checkouts,
+                    {
+                        params: this.search,
+                    }
                 );
                 if (res.status === 200) {
                     this.orders = res.data.data;

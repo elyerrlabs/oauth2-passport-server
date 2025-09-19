@@ -82,7 +82,10 @@ class UserCheckoutTransformer extends TransformerAbstract
             ],
             "orders" => fractal($checkout->orders, UserOrderTransformer::class)->toArray()['data'],
             "created_at" => $this->format_date($checkout->created_at),
-            "updated_at" => $this->format_date($checkout->updated_at)
+            "updated_at" => $this->format_date($checkout->updated_at),
+            'links' => [
+                'index' => route('api.ecommerce.checkouts.index'),
+            ]
         ];
     }
 

@@ -66,7 +66,7 @@ class UserCategoryTransformer extends TransformerAbstract
             'icon' => $category->getIcon($category->icon, UserIconTransformer::class),
             'images' => $category->getImages($category->files, UserFileTransformer::class),
             'links' => [
-                'index' => route('ecommerce.category', [
+                'index' => route('api.ecommerce.category.show', [
                     'category' => $category->slug
                 ]),
             ],

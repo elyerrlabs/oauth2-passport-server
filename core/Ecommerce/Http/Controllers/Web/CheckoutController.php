@@ -55,9 +55,8 @@ class CheckoutController extends WebController
             'Core/Ecommerce/Web/Checkout/Index',
             [
                 'routes' => [
-                    'checkout_api' => route('api.ecommerce.checkouts.index'),
                     'search' => route('ecommerce.search'),
-                    'categories_api' => route('api.ecommerce.categories.index'),
+                    'dashboard' => route('ecommerce.dashboard'),
                 ]
             ]
         )->rootView('ecommerce');
