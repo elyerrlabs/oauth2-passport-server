@@ -103,10 +103,6 @@ export default {
         },
     },
 
-    mounted() {
-        this.getCountries();
-    },
-
     methods: {
         async getCountries() {
             try {

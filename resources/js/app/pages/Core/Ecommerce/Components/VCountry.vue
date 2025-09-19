@@ -13,7 +13,7 @@
             <input
                 type="text"
                 v-model="search"
-                @input="filterCountries"
+                @input="getCountries"
                 @blur="handleBlur"
                 @focus="open = true"
                 @click="open = true"
@@ -71,7 +71,6 @@ export default {
     },
 
     mounted() {
-        this.getCountries();
         window.addEventListener("keydown", this.handleEscape);
     },
 
