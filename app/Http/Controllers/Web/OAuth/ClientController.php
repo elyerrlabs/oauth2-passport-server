@@ -24,9 +24,9 @@ namespace App\Http\Controllers\Web\OAuth;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Illuminate\Routing\Route;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebController;
 use App\Http\Requests\Client\StoreRequest;
 use App\Http\Requests\Client\UpdateRequest;
