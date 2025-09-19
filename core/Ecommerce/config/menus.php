@@ -41,15 +41,18 @@ return [
         'service' => true
     ],
 
-    "ecommerce_orders_api" => [
-        "id" => "orders",
-        "name" => __("My cart"),
-        "route" => "api.ecommerce.orders.index",
-        "icon" => "mdi-store-cog",
-        'service' => true
-    ],
-
     "merge" => [
+
+        "api" => [
+            'ecommerce' => [
+                'search' => 'api.ecommerce.search',
+                'categories' => 'api.ecommerce.categories.index',
+                'filters' => 'api.ecommerce.filters.index',
+                'checkouts' => 'api.ecommerce.checkouts.index',
+                'orders' => 'api.ecommerce.orders.index',
+                'payments' => 'api.ecommerce.payments.store'
+            ]
+        ],
 
         "admin_dashboard" => [
             "ecommerce" => [
@@ -134,6 +137,3 @@ return [
         ],
     ],
 ];
-
-
-
