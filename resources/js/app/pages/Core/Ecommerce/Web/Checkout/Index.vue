@@ -488,7 +488,6 @@ export default {
                         timeout: 3000,
                     });
                 }
-                console.error("Error loading orders:", e);
             } finally {
                 this.loading = false;
             }
