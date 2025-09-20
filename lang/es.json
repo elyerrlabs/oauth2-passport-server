@@ -2477,5 +2477,20 @@
   "Your order history will appear here once you make a purchase": "Tu historial de pedidos aparecerá aquí una vez realices una compra",
   "Start Shopping": "Comenzar a comprar",
   "Delivery Address": "Dirección de entrega",
-  "Order Items": "Artículos del pedido"
+  "Order Items": "Artículos del pedido",
+  "products found": "productos encontrados",
+  "Sort by:": "Ordenar por:",
+  "Price: Low to High": "Precio: Menor a Mayor",
+  "Price: High to Low": "Precio: Mayor a Menor",
+  "Rating": "Calificación",
+  "Try adjusting your search or filter criteria": "Intenta ajustar tu búsqueda o los criterios de filtro",
+  "Clear All Filters": "Limpiar todos los filtros",
+  "% OFF": "% DESCUENTO",
+  "Sort by": "Ordenar por",
+  "Low to High": "Menor a Mayor",
+  "High to Low": "Mayor a Menor",
+  "Min Price": "Precio Mínimo",
+  "Max Price": "Precio Máximo",
+  "Quick Select": "Selección Rápida",
+  "Under": "Menos de"
 }
