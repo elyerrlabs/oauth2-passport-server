@@ -102,7 +102,7 @@ class StoreRequest extends FormRequest
                 }),
                 'array'
             ],
-            'images.*' => ['image', 'mimes:web,jpg,jpeg,bmp,png', 'max:2048'],
+            'images.*' => ['image', 'mimes:webp,jpg,jpeg,bmp,png', 'max:2048'],
             'attributes' => ['required', 'array'],
             'attributes.*.name' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
             'attributes.*.type' => ['required', new UndefinedValues(), 'in:string,number,boolean,date'],

@@ -94,7 +94,7 @@ class StoreRequest extends FormRequest
                 }),
                 'array'
             ],
-            'images.*' => ['image', 'mimes:web,jpg,jpeg,bmp,png', 'max:2048'],
+            'images.*' => ['image', 'mimes:webp,jpg,jpeg,bmp,png', 'max:2048'],
         ];
     }
 }
