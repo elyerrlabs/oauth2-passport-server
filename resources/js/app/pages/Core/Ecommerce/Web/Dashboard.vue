@@ -45,7 +45,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </h2>
                                     <p
                                         class="text-xl mb-6"
-                                        v-html="slide.description"
+                                        v-html="slide.short_description"
                                     ></p>
                                     <button
                                         class="bg-white text-purple-700 font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-gray-100 transition duration-300"
