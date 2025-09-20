@@ -26,7 +26,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <button
                     @click="goToPage(currentPage - 1)"
                     :disabled="currentPage === 1"
-                    class="px-3 py-1 rounded-lg border text-sm font-medium"
+                    class="px-3 py-1 rounded-lg border text-sm font-medium cursor-pointer"
                     :class="
                         currentPage === 1
                             ? 'text-gray-400 border-gray-200 cursor-not-allowed'
@@ -42,7 +42,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     v-if="page !== '...'"
                     @click="goToPage(page)"
                     :class="[
-                        'px-3 py-1 rounded-lg border text-sm font-medium',
+                        'px-3 py-1 rounded-lg border text-sm font-medium cursor-pointer',
                         currentPage === page
                             ? 'bg-primary-600 text-white border-primary-600'
                             : 'text-gray-700 border-gray-300 hover:bg-gray-100',
@@ -59,7 +59,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <button
                     @click="goToPage(currentPage + 1)"
                     :disabled="currentPage === totalPages"
-                    class="px-3 py-1 rounded-lg border text-sm font-medium"
+                    class="px-3 py-1 rounded-lg border text-sm font-medium cursor-pointer"
                     :class="
                         currentPage === totalPages
                             ? 'text-gray-400 border-gray-200 cursor-not-allowed'
