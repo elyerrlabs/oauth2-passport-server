@@ -29,8 +29,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="user-avatar-container">
                             <q-avatar
                                 size="100px"
-                                color="white"
-                                text-color="primary"
+                                class="bg-white text-primary shadow-3"
                             >
                                 {{ userInitials }}
                             </q-avatar>
@@ -63,7 +62,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="row items-center q-mb-lg">
                     <div class="col">
                         <div class="text-h5 text-weight-bold text-dark">
-                            <q-icon name="mdi-application" class="q-mr-sm" />
+                            <q-icon
+                                name="mdi-apps"
+                                class="q-mr-sm text-primary"
+                            />
                             {{ __("My applications") }}
                         </div>
                         <div class="text-caption text-grey-6">
@@ -81,10 +83,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             dense
                             outlined
                             clearable
-                            class="search-input"
+                            class="search-input bg-white"
+                            color="primary"
                         >
                             <template v-slot:append>
-                                <q-icon name="mdi-magnify" />
+                                <q-icon name="mdi-magnify" color="primary" />
                             </template>
                         </q-input>
                     </div>
@@ -119,19 +122,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :key="index"
                             class="col-12 col-sm-6 col-md-4 col-lg-3"
                         >
-                            <q-card class="application-card" flat bordered>
+                            <q-card class="application-card shadow-3" bordered>
                                 <q-card-section class="app-card-header">
                                     <div class="row items-center no-wrap">
                                         <div class="col">
-                                            <div class="app-icon bg-blue-1">
+                                            <div
+                                                class="app-icon bg-primary shadow-2"
+                                            >
                                                 <q-icon
-                                                    :name="app.icon"
-                                                    size="24px"
-                                                    :color="
-                                                        app.iconColor
-                                                            ? 'white'
-                                                            : 'blue'
+                                                    :name="
+                                                        app.icon ||
+                                                        'mdi-application'
                                                     "
+                                                    size="24px"
+                                                    color="white"
                                                 />
                                             </div>
                                         </div>
@@ -141,6 +145,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 round
                                                 icon="mdi-open-in-new"
                                                 size="sm"
+                                                color="primary"
                                                 @click="openApplication(app)"
                                             >
                                                 <q-tooltip>{{
@@ -169,14 +174,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                 <q-separator />
 
-                                <q-card-actions>
+                                <q-card-actions class="q-pa-md">
                                     <q-btn
-                                        flat
+                                        unelevated
                                         color="primary"
                                         icon="mdi-launch"
                                         :label="__('Open')"
                                         @click="openApplication(app)"
                                         class="full-width"
+                                        no-caps
                                     />
                                 </q-card-actions>
                             </q-card>
@@ -189,7 +195,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="row items-center q-mb-lg">
                         <div class="col">
                             <div class="text-h5 text-weight-bold text-dark">
-                                <q-icon name="mdi-cog" class="q-mr-sm" />
+                                <q-icon
+                                    name="mdi-cog"
+                                    class="q-mr-sm text-primary"
+                                />
                                 {{ __("Settings & Preferences") }}
                             </div>
                             <div class="text-caption text-grey-6">
@@ -208,15 +217,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :key="'setting-' + index"
                             class="col-12 col-sm-6 col-md-4 col-lg-3"
                         >
-                            <q-card class="setting-card" flat bordered>
+                            <q-card class="setting-card shadow-3" bordered>
                                 <q-card-section class="setting-card-header">
                                     <div class="row items-center no-wrap">
                                         <div class="col">
                                             <div
-                                                class="setting-icon bg-primary"
+                                                class="setting-icon bg-primary shadow-2"
                                             >
                                                 <q-icon
-                                                    :name="setting.icon"
+                                                    :name="
+                                                        setting.icon ||
+                                                        'mdi-cog'
+                                                    "
                                                     size="24px"
                                                     color="white"
                                                 />
@@ -228,8 +240,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 round
                                                 icon="mdi-chevron-right"
                                                 size="sm"
+                                                color="primary"
                                                 @click="openSetting(setting)"
-                                                class="bg-primary text-white"
                                             >
                                                 <q-tooltip>{{
                                                     __("Open setting")
@@ -257,13 +269,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                 <q-separator />
 
-                                <q-card-actions>
+                                <q-card-actions class="q-pa-md">
                                     <q-btn
                                         flat
+                                        color="primary"
                                         icon="mdi-tune"
                                         :label="__('Configure')"
                                         @click="openSetting(setting)"
                                         class="full-width"
+                                        no-caps
                                     />
                                 </q-card-actions>
                             </q-card>
@@ -345,146 +359,146 @@ export default {
 .welcome-section {
     background: linear-gradient(145deg, var(--q-primary) 0%, #2563eb 100%);
     color: white;
-    padding: 40px 32px;
+    padding: 60px 32px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.1;
+    }
 
     .user-avatar-container {
         position: relative;
+        z-index: 1;
 
         .online-indicator {
             position: absolute;
-            bottom: 5px;
-            right: 5px;
-            width: 16px;
-            height: 16px;
+            bottom: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
             background: #22c55e;
-            border: 2px solid white;
+            border: 3px solid white;
             border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
     }
 
     .welcome-title {
-        font-size: 2.25rem;
+        font-size: 2.5rem;
         line-height: 1.2;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        position: relative;
     }
 
     .welcome-subtitle {
         opacity: 0.9;
         max-width: 500px;
+        z-index: 1;
+        position: relative;
     }
 }
 
 .dashboard-content {
-    padding-top: 24px;
+    padding-top: 40px;
+    position: relative;
+    z-index: 2;
 }
 
 .search-input {
-    min-width: 250px;
-}
+    min-width: 280px;
+    border-radius: 12px;
 
-.applications-grid {
-    .application-card {
+    :deep(.q-field__control) {
         border-radius: 12px;
-        transition: all 0.3s ease;
-        height: 100%;
-
-        &:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .app-card-header {
-            padding: 20px;
-        }
-
-        .app-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .app-name {
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-        }
-
-        .app-description {
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
     }
 }
 
+.applications-grid,
 .settings-section {
+    .application-card,
     .setting-card {
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        height: 100%;
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
 
         &:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: var(--q-primary);
         }
 
+        .app-card-header,
         .setting-card-header {
-            padding: 20px;
+            padding: 24px;
         }
 
+        .app-icon,
         .setting-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
 
+        .app-name,
         .setting-name {
-            font-size: 1.1rem;
-            margin-bottom: 4px;
+            font-size: 1.125rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
 
+        .app-description,
         .setting-description {
-            line-height: 1.4;
+            line-height: 1.5;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-    }
 
-    .advanced-settings-card {
-        border-radius: 12px;
+        .q-card__actions {
+            padding: 20px;
 
-        .advanced-setting-item {
-            border-radius: 8px;
-            transition: background-color 0.2s ease;
-
-            &:hover {
-                background: rgba(0, 0, 0, 0.02);
+            .q-btn {
+                border-radius: 12px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
             }
         }
     }
 }
 
 .empty-state {
+    background: white;
+    border-radius: 16px;
+    padding: 80px 40px;
+    border: 2px dashed #e2e8f0;
+
     .q-icon {
-        opacity: 0.5;
+        opacity: 0.3;
     }
 }
 
 // Responsive adjustments
 @media (max-width: 1023px) {
     .welcome-section {
-        padding: 32px 24px;
+        padding: 40px 24px;
 
         .welcome-title {
-            font-size: 1.875rem;
+            font-size: 2rem;
         }
     }
 
@@ -494,17 +508,21 @@ export default {
     }
 
     .search-input {
-        min-width: 200px;
+        min-width: 240px;
     }
 }
 
-@media (max-width: 599px) {
+@media (max-width: 767px) {
     .welcome-section {
-        padding: 24px 16px;
+        padding: 32px 20px;
         text-align: center;
 
         .welcome-title {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
+        }
+
+        .row.items-center {
+            justify-content: center;
         }
     }
 
@@ -515,15 +533,88 @@ export default {
 
     .search-input {
         min-width: 100%;
-        margin-top: 16px;
+        margin-top: 20px;
+    }
+
+    .applications-grid,
+    .settings-section {
+        .row.q-col-gutter-lg {
+            margin: 0 -8px;
+
+            & > [class*="col-"] {
+                padding: 8px;
+            }
+        }
+    }
+}
+
+@media (max-width: 599px) {
+    .welcome-section {
+        padding: 24px 16px;
+
+        .welcome-title {
+            font-size: 1.5rem;
+        }
+
+        .user-avatar-container .q-avatar {
+            width: 80px;
+            height: 80px;
+            font-size: 1.5rem;
+        }
+
+        .online-indicator {
+            width: 16px;
+            height: 16px;
+            bottom: 6px;
+            right: 6px;
+        }
     }
 
     .application-card,
     .setting-card {
+        .app-card-header,
+        .setting-card-header {
+            padding: 20px;
+        }
+
+        .app-icon,
+        .setting-icon {
+            width: 56px;
+            height: 56px;
+        }
+
         .app-name,
         .setting-name {
             font-size: 1rem;
         }
+    }
+}
+
+// Dark mode support
+.body--dark {
+    .user-dashboard-page {
+        background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    }
+
+    .application-card,
+    .setting-card {
+        background: #2d3748;
+        border-color: #4a5568;
+
+        .app-name,
+        .setting-name {
+            color: #e2e8f0;
+        }
+
+        .app-description,
+        .setting-description {
+            color: #a0aec0;
+        }
+    }
+
+    .empty-state {
+        background: #2d3748;
+        border-color: #4a5568;
     }
 }
 </style>
