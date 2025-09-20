@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-1">
+        <div class="container-fluid mx-auto px-4 py-1">
             <div class="flex items-center justify-between">
                 <!-- Logo and Mobile Menu -->
                 <div class="flex items-center">

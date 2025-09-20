@@ -3,9 +3,11 @@
         <!-- Header -->
         <v-header />
         <!-- Main Content -->
-        <main class="container mx-auto px-2 py-8">
+        <main class="container-fluid mx-auto p-4">
             <div class="flex flex-col md:flex-row gap-2">
                 <!-- Products Section -->
+                <v-filters @changed="filters" />
+
                 <div class="flex-1">
                     <!-- Search and Sort Header -->
                     <div
@@ -19,29 +21,32 @@
                                 {{ products.length }} {{ __("products found") }}
                             </p>
                         </div>
-                        <!--
+
                         <div class="flex items-center space-x-4">
                             <div class="flex items-center">
-                                <label for="sort" class="text-gray-600 mr-2"
-                                    >Sort by:</label
-                                >
+                                <label for="sort" class="text-gray-600 mr-2">
+                                    {{ __("Sort by") }}:
+                                </label>
                                 <select
                                     id="sort"
                                     v-model="sortBy"
                                     class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-200"
                                 >
-                                    <option value="featured">Featured</option>
+                                    <option value="featured">
+                                        {{ __("Featured") }}
+                                    </option>
                                     <option value="price-low">
-                                        Price: Low to High
+                                        {{ __("Price") }}:
+                                        {{ __("Low to High") }}
                                     </option>
                                     <option value="price-high">
-                                        Price: High to Low
+                                        {{ __("Price") }}:
+                                        {{ __("High to Low") }}
                                     </option>
-                                    <option value="rating">Rating</option>
                                 </select>
                             </div>
                         </div>
-                    --></div>
+                    </div>
 
                     <v-loader :loading="loading" />
                     <div v-if="!loading">
@@ -129,11 +134,16 @@
 
                                 <!-- Product Details -->
                                 <div class="p-4">
-                                    <h3
-                                        class="font-semibold text-lg text-gray-800"
-                                    >
-                                        {{ product.name }}
-                                    </h3>
+                                    <div class="flex justify-between">
+                                        <h3
+                                            class="font-semibold text-lg text-gray-800"
+                                        >
+                                            {{ product.name }}
+                                        </h3>
+                                        <i
+                                            class="mdi mdi-star-circle-outline text-yellow-400 text-3xl"
+                                        ></i>
+                                    </div>
                                     <p class="text-gray-600 text-sm mt-1">
                                         {{ product.category.name }}
                                     </p>
@@ -213,12 +223,12 @@
                                     )
                                 }}
                             </p>
-                            <button
-                                @click="clearFilters"
-                                class="mt-4 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition"
+                            <a
+                                :href="$page.props.ecommerce_dashboard.route"
+                                class="mt-4 bg-primary-600 block mx-auto cursor-pointer text-white md:w-full lg:w-1/2 px-4 py-2 rounded-lg hover:bg-primary-700 transition text-center"
                             >
                                 {{ __("Clear All Filters") }}
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -230,12 +240,14 @@
 import VHeader from "../Components/VHeader.vue";
 import VPaginate from "../Components/VPaginate.vue";
 import VLoader from "../Components/VLoader.vue";
+import VFilters from "../Components/VFilters.vue";
 
 export default {
     components: {
         VHeader,
         VPaginate,
         VLoader,
+        VFilters,
     },
 
     data() {
@@ -254,12 +266,20 @@ export default {
                 per_page: 50,
                 random: true,
             },
+            filter: {},
             loading: true,
         };
     },
 
     created() {
         this.getProducts();
+    },
+
+    watch: {
+        sortBy(value) {
+            this.sortProducts();
+            console.log(value);
+        },
     },
 
     mounted() {
@@ -273,7 +293,34 @@ export default {
             });
         }, 5000);
     },
+
     methods: {
+        sortProducts() {
+            switch (this.sortBy) {
+                case "price-low":
+                    this.products = this.products.sort(
+                        (a, b) => a.price - b.price
+                    );
+                    break;
+                case "price-high":
+                    this.products = this.products.sort(
+                        (a, b) => b.price - a.price
+                    );
+                    break;
+                case "featured":
+                    this.products = this.products.sort((a, b) => {
+                        const af = a.featured ? 1 : 0;
+                        const bf = b.featured ? 1 : 0;
+                        return bf - af;
+                    });
+                    break;
+            }
+        },
+
+        filters(event) {
+            this.getProducts(event);
+        },
+
         nextImage(productId) {
             const product = this.products.find((p) => p.id === productId);
             if (product) {
@@ -306,8 +353,13 @@ export default {
             window.location.href = url;
         },
 
-        async getProducts() {
-            const params = { ...this.search, ...this.getParams() };
+        async getProducts(filter = {}) {
+            this.loading = true;
+            const params = { ...this.search, ...this.getParams(), ...filter };
+
+            const queryString = new URLSearchParams(params).toString();
+            const newUrl = `${window.location.pathname}?${queryString}`;
+            window.history.pushState({}, "", newUrl);
 
             try {
                 const res = await this.$server.get(
@@ -325,7 +377,7 @@ export default {
                 if (e?.response?.data?.message) {
                     this.$notify.error(e.response.data.message);
                 }
-            }finally {
+            } finally {
                 this.loading = false;
             }
         },

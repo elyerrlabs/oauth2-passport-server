@@ -529,7 +529,7 @@ export default {
         async getRelatedProducts(item) {
             try {
                 const response = await this.$server.get(
-                    this.$page.props.routes.search_api,
+                    this.$page.props.api.ecommerce.search,
                     {
                         params: {
                             random: true,
