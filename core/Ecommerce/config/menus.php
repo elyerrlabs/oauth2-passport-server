@@ -33,11 +33,19 @@ return [
         'service' => true
     ],
 
+    "ecommerce_dashboard" => [
+        "id" => "search",
+        "name" => __("Search"),
+        "route" => "ecommerce.search",
+        "icon" => "mdi-shopping-search-outline",
+        'service' => true
+    ],
+
     "ecommerce_checkout" => [
         "id" => "orders",
         "name" => __("My checkouts"),
         "route" => "ecommerce.checkouts.index",
-        "icon" => "mdi-store-cog",
+        "icon" => "mdi-shopping-search-outline",
         'service' => true
     ],
 
