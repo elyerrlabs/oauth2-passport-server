@@ -213,32 +213,38 @@ final class ProductRepository implements Contracts
 
         // search by attributes
         if ($request->filled('attrs')) {
-            $attrs = explode(',', $request->attrs);
-            $query->whereHas(
-                'attributes',
-                function ($query) use ($attrs) {
+            $pairs = explode(',', $request->attrs);
+            $attrs = [];
 
-                    foreach ($attrs as $key) {
-                        $query->orWhereRaw(
-                            "LOWER(value) LIKE ?",
-                            ['%' . strtolower($key) . '%']
-                        );
+            foreach ($pairs as $pair) {
+                [$key, $value] = explode('=', $pair);
+                $attrs[] = [
+                    'key' => strtolower(trim($key)),
+                    'value' => strtolower(trim($value)),
+                ];
+            }
+
+            $query->whereHas('attributes', function ($q) use ($attrs) {
+                $q->where(function ($sub) use ($attrs) {
+                    foreach ($attrs as $attr) {
+                        $sub->orWhere(function ($cond) use ($attr) {
+                            $cond->whereRaw('LOWER(name) = ?', [$attr['key']])
+                                ->whereRaw('LOWER(value) LIKE ?', ['%' . $attr['value'] . '%']);
+                        });
                     }
-                }
-            );
+                });
+            });
         }
+
 
         // Search by price
         if ($request->filled('price')) {
-            $query->whereHas(
-                'price',
-                function ($query) use ($request) {
-                    $operator = in_array($request->get('price_operator'), ['=', '>', '>=', '<', '<=']) ? $request->get('price_operator') : '=';
-                    $price = (int) str_replace([',', ';', '.'], '', $request->price);
-
-                    $query->where('price', $operator, $price);
-                }
-            );
+            $query->whereHas('price', function ($query) use ($request) {
+                $price = explode(',', $request->price);
+                $min = $price[0] == 0 ? 0 : (int) $price[0] * 100;
+                $max = (int) $price[1] * 100;
+                $query->whereBetween('amount', [$min, $max]);
+            });
         }
 
         $query->inRandomOrder();
