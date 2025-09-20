@@ -126,6 +126,10 @@ class ProductController extends WebController
                     'show' => route('ecommerce.category', [
                         'category' => $category_slug
                     ]),
+                    'show_api' => route('api.ecommerce.products.show', [
+                        'category' => $category_slug,
+                        'product' => $product_slug
+                    ])
                 ],
             ]
         )->rootView('ecommerce');
