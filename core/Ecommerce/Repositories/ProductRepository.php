@@ -153,16 +153,22 @@ final class ProductRepository implements Contracts
             $query->whereHas(
                 'category',
                 function ($query) use ($request) {
-                    $query->whereRaw("LOWER(name) LIKE ?", ['%' . strtolower($request->category) . '%']);
+                    $search = strtolower($request->category);
+                    $query->whereRaw("LOWER(name) LIKE ?", ["%{$search}%"])
+                        ->orWhereRaw("LOWER(slug) LIKE ?", ["%{$search}%"]);
                 }
             );
         }
 
-        // Search by product name
+        // Search by product name or slug
         if ($request->filled('name')) {
-            $value = $request->name;
-            $query->whereRaw("LOWER(name) LIKE ?", ['%' . strtolower($value) . '%']);
+            $value = '%' . strtolower($request->name) . '%';
+            $query->where(function ($q) use ($value) {
+                $q->whereRaw('LOWER(name) LIKE ?', [$value])
+                    ->orWhereRaw('LOWER(slug) LIKE ?', [$value]);
+            });
         }
+
 
         // Search by q param
         if ($request->filled('q')) {
