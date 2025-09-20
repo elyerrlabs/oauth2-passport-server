@@ -71,6 +71,7 @@ class UserProductTransformer extends TransformerAbstract
             'symbol' => getCurrencySymbol($product->price->currency),
             'stock' => filter_var($product->stock, FILTER_VALIDATE_INT),
             'currency' => $product->price->currency,
+            'price' => $product->price->amount,
             'format_price' => $this->formatMoney($product->price->amount),
             'public' => $product->public ? true : false,
             'category' => fractal($product->category, UserCategoryTransformer::class)->toArray()['data'],
@@ -80,7 +81,11 @@ class UserProductTransformer extends TransformerAbstract
             'published' => $product->published ? true : false,
             'featured' => $product->featured ? true : false,
             'links' => [
-                'show' => route('api.ecommerce.products.show', [
+                'show' => route('ecommerce.products.show', [
+                    'category' => $product->category->slug,
+                    'product' => $product->slug
+                ]),
+                'show_api' => route('api.ecommerce.products.show', [
                     'category' => $product->category->slug,
                     'product' => $product->slug
                 ]),
