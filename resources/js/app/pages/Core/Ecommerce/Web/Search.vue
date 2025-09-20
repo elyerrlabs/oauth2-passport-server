@@ -222,7 +222,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <v-paginate
                                 v-model="search.page"
                                 :total-pages="pages.total_pages"
-                                @change="searcher"
+                                @change="getProducts"
                             />
                         </div>
 
@@ -298,8 +298,9 @@ export default {
 
     watch: {
         sortBy(value) {
-            this.sortProducts();
-            console.log(value);
+            setTimeout(function () {
+                this.sortProducts();
+            }, 5000);
         },
     },
 
@@ -376,11 +377,14 @@ export default {
 
         async getProducts(filter = {}) {
             this.loading = true;
-            const params = { ...this.search, ...this.getParams(), ...filter };
+            const params = {
+                ...this.getParams(),
+                ...this.search,
+                ...filter,
+            };
 
             const queryString = new URLSearchParams(params).toString();
             const newUrl = `${window.location.pathname}?${queryString}`;
-            window.history.pushState({}, "", newUrl);
 
             try {
                 const res = await this.$server.get(
@@ -400,15 +404,8 @@ export default {
                 }
             } finally {
                 this.loading = false;
+                window.history.pushState({}, "", newUrl);
             }
-        },
-
-        searcher() {
-            const params = { ...this.getParams(), ...this.search };
-            const queryString = new URLSearchParams(params).toString();
-            const url = `${this.$page.props.routes.search}?${queryString}`;
-
-            window.location.href = url;
         },
     },
 };
