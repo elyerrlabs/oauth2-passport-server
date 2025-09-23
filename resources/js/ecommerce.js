@@ -39,6 +39,7 @@ import "@mdi/font/css/materialdesignicons.css";
 setupI18n();
 window.__ = __;
 window.$notify = $notify;
+window.$server = $server;
 
 createInertiaApp({
   resolve: (name) =>
