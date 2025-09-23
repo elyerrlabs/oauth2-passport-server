@@ -19,261 +19,389 @@ Author Contact: yerel9212@yahoo.es
 
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
+
 <template>
-    <v-admin-ecommerce-layout>
+    <v-admin-layout>
         <!-- Header Section -->
-        <div class="header-section q-pa-lg bg-primary text-white">
-            <div class="row items-center justify-between">
-                <div class="col">
-                    <div class="text-h4 text-weight-bold">
+        <div class="header-section bg-blue-600 text-white p-4 md:p-6">
+            <div
+                class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+            >
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold">
                         {{ __("Categories Management") }}
-                    </div>
-                    <div class="text-subtitle1 opacity-70">
+                    </h1>
+                    <p
+                        class="text-blue-100 opacity-90 mt-1 text-sm md:text-base"
+                    >
                         {{ __("Manage product categories and organization") }}
-                    </div>
+                    </p>
                 </div>
-                <div class="col-auto">
-                    <v-create @created="getCategories" />
+                <div class="w-full md:w-auto">
+                    <a
+                        :href="$page.props.routes.create"
+                        class="py-2 px-4 bg-green-500 cursor-pointer text-gray-100 rounded-full font-medium"
+                    >
+                        <span class="mdi mdi-plus"></span>
+                        {{ __("Create Category") }}
+                    </a>
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="q-pa-lg">
-            <!-- Search and Filters (if needed in the future) -->
-            <div class="row q-mb-md">
-                <div class="col-12">
-                    <q-input
-                        outlined
+        <div class="p-4 md:p-6">
+            <!-- Search and Filters -->
+            <div class="mb-4 md:mb-6">
+                <div class="relative">
+                    <input
                         v-model="searchTerm"
-                        :placeholder="__('Search categories...')"
-                        clearable
-                        class="search-input"
-                        @update:model-value="handleSearch"
+                        placeholder="Search categories..."
+                        class="w-full pl-10 pr-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-200"
+                        @input="handleSearch"
+                    />
+                    <div
+                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                     >
-                        <template v-slot:prepend>
-                            <q-icon name="mdi-magnify" />
-                        </template>
-                    </q-input>
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
                 </div>
             </div>
 
-            <!-- Categories Table -->
-            <q-card class="categories-card shadow-3 rounded-borders">
-                <q-table
-                    :rows="groups"
-                    :columns="columns"
-                    row-key="id"
-                    flat
-                    bordered
-                    :pagination="{
-                        page: search.page,
-                        rowsPerPage: search.per_page,
-                    }"
-                    hide-pagination
-                    class="categories-table"
-                    :loading="loading"
+            <!-- Categories Table - Desktop View -->
+            <div
+                class="bg-white rounded-lg shadow-md overflow-hidden hidden md:block"
+            >
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    v-for="col in columns"
+                                    :key="col.name"
+                                    class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    {{ __(col.label) }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr
+                                v-for="group in groups"
+                                :key="group.id"
+                                class="hover:bg-gray-50 transition-colors duration-150"
+                            >
+                                <!-- Name Column -->
+                                <td class="px-4 md:px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i
+                                            v-if="group.icon?.icon"
+                                            :class="`mdi ${group.icon.icon} text-blue-600 mr-2 text-lg`"
+                                        ></i>
+                                        <span class="font-medium text-gray-900">
+                                            {{ group.name }}
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <!-- Slug Column -->
+                                <td
+                                    class="px-4 md:px-6 py-4 whitespace-nowrap text-center"
+                                >
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                                    >
+                                        {{ group.slug }}
+                                    </span>
+                                </td>
+
+                                <!-- Icon Column -->
+                                <td
+                                    class="px-4 md:px-6 py-4 whitespace-nowrap text-center"
+                                >
+                                    <i
+                                        v-if="group.icon?.icon"
+                                        :class="`mdi ${group.icon.icon} text-blue-600 text-xl`"
+                                    ></i>
+                                    <i
+                                        v-else
+                                        class="fas fa-question-circle text-gray-300 text-xl"
+                                    ></i>
+                                </td>
+
+                                <!-- Published Column -->
+                                <td
+                                    class="px-4 md:px-6 py-4 whitespace-nowrap text-center"
+                                >
+                                    <span
+                                        :class="`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                            group.published
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-gray-100 text-gray-800'
+                                        }`"
+                                    >
+                                        <i
+                                            :class="`fas ${
+                                                group.published
+                                                    ? 'fa-check-circle'
+                                                    : 'fa-times-circle'
+                                            } mr-1`"
+                                        ></i>
+                                        {{
+                                            group.published
+                                                ? __("Published")
+                                                : "Hidden"
+                                        }}
+                                    </span>
+                                </td>
+
+                                <!-- Featured Column -->
+                                <td
+                                    class="px-4 md:px-6 py-4 whitespace-nowrap text-center"
+                                >
+                                    <span
+                                        :class="`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                            group.featured
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-gray-100 text-gray-800'
+                                        }`"
+                                    >
+                                        <i
+                                            :class="`fas ${
+                                                group.featured
+                                                    ? 'fa-star'
+                                                    : 'fa-star-o'
+                                            } mr-1`"
+                                        ></i>
+                                        {{
+                                            group.featured
+                                                ? __("Featured")
+                                                : "Standard"
+                                        }}
+                                    </span>
+                                </td>
+
+                                <!-- Actions Column -->
+                                <td
+                                    class="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                                >
+                                    <div
+                                        class="flex items-center justify-end space-x-2"
+                                    >
+                                        <a
+                                            :href="group?.links.edit"
+                                            class="py-2 px-4 cursor-pointer bg-green-500 text-gray-100 rounded-full font-medium"
+                                        >
+                                            <span class="mdi mdi-plus"></span>
+                                            {{ __("Edit") }}
+                                        </a>
+                                        <v-delete
+                                            :item="group"
+                                            @deleted="getCategories"
+                                            class="action-btn"
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Empty State -->
+                            <tr v-if="groups.length === 0 && !loading">
+                                <td
+                                    :colspan="columns.length"
+                                    class="px-6 py-12 text-center"
+                                >
+                                    <div
+                                        class="flex flex-col items-center text-gray-400"
+                                    >
+                                        <i
+                                            class="fas fa-folder-open text-4xl mb-3"
+                                        ></i>
+                                        <h3 class="text-lg font-medium mb-1">
+                                            {{ __("No categories found") }}
+                                        </h3>
+                                        <p class="text-sm">
+                                            {{
+                                                __(
+                                                    "Create your first category to get started"
+                                                )
+                                            }}
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Loading State -->
+                <div
+                    v-if="loading"
+                    class="flex items-center justify-center p-12"
                 >
-                    <!-- Header Slot -->
-                    <template v-slot:header="props">
-                        <q-tr :props="props">
-                            <q-th
-                                v-for="col in props.cols"
-                                :key="col.name"
-                                :props="props"
-                                class="text-weight-bold table-header"
-                            >
-                                {{ col.label }}
-                            </q-th>
-                        </q-tr>
-                    </template>
+                    <div
+                        class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+                    ></div>
+                </div>
+            </div>
 
-                    <!-- Body Slots -->
-                    <template v-slot:body-cell-name="props">
-                        <q-td :props="props" class="name-cell">
-                            <div class="row items-center">
-                                <q-icon
-                                    v-if="props.row.icon?.icon"
-                                    :name="props.row.icon.icon"
-                                    size="20px"
-                                    class="q-mr-sm text-primary"
-                                />
-                                <span class="text-weight-medium">{{
-                                    props.row.name
-                                }}</span>
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-slug="props">
-                        <q-td :props="props" class="slug-cell">
-                            <q-badge
-                                color="blue-grey-1"
-                                text-color="blue-grey-9"
-                                class="slug-badge"
-                            >
-                                {{ props.row.slug }}
-                            </q-badge>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-icon="props">
-                        <q-td :props="props" class="icon-cell text-center">
-                            <q-icon
-                                v-if="props.row.icon?.icon"
-                                :name="props.row.icon.icon"
-                                size="24px"
-                                class="text-primary"
-                            />
-                            <q-icon
-                                v-else
-                                name="mdi-help-circle"
-                                size="24px"
-                                class="text-grey-4"
-                            />
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-published="props">
-                        <q-td :props="props" class="status-cell text-center">
-                            <q-badge
-                                :color="
-                                    props.row.published ? 'positive' : 'grey-5'
-                                "
-                                :text-color="
-                                    props.row.published ? 'white' : 'dark'
-                                "
-                                class="status-badge"
-                            >
-                                <q-icon
-                                    :name="
-                                        props.row.published
-                                            ? 'mdi-check-circle'
-                                            : 'mdi-close-circle'
-                                    "
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{
-                                    props.row.published
-                                        ? __("Published")
-                                        : __("Hidden")
-                                }}
-                            </q-badge>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-featured="props">
-                        <q-td :props="props" class="status-cell text-center">
-                            <q-badge
-                                :color="
-                                    props.row.featured ? 'accent' : 'grey-5'
-                                "
-                                :text-color="
-                                    props.row.featured ? 'white' : 'dark'
-                                "
-                                class="status-badge"
-                            >
-                                <q-icon
-                                    :name="
-                                        props.row.featured
-                                            ? 'mdi-star'
-                                            : 'mdi-star-outline'
-                                    "
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{
-                                    props.row.featured
-                                        ? __("Featured")
-                                        : __("Standard")
-                                }}
-                            </q-badge>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-actions="props">
-                        <q-td :props="props" class="actions-cell">
-                            <div class="row q-gutter-xs justify-end">
-                                <v-create
-                                    :item="props.row"
-                                    @created="getCategories"
-                                    :title="__('Update')"
-                                    class="action-btn"
-                                />
-                                <v-delete
-                                    :item="props.row"
-                                    @deleted="getCategories"
-                                    class="action-btn"
-                                />
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <!-- Empty State -->
-                    <template v-slot:no-data>
-                        <div
-                            class="full-width row flex-center text-grey-6 q-pa-lg"
-                        >
-                            <q-icon
-                                name="mdi-folder-open"
-                                size="48px"
-                                class="q-mb-sm"
-                            />
-                            <div class="text-h6">
-                                {{ __("No categories found") }}
-                            </div>
-                            <div class="text-caption">
-                                {{
-                                    __(
-                                        "Create your first category to get started"
-                                    )
-                                }}
-                            </div>
+            <!-- Mobile Cards View -->
+            <div class="md:hidden space-y-4">
+                <div
+                    v-for="group in groups"
+                    :key="group.id"
+                    class="bg-white rounded-lg shadow-md p-4"
+                >
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <i
+                                v-if="group.icon?.icon"
+                                :class="`mdi ${group.icon.icon} text-blue-600 mr-2 text-lg`"
+                            ></i>
+                            <span class="font-medium text-gray-900">
+                                {{ group.name }}
+                            </span>
                         </div>
-                    </template>
+                        <div class="flex items-center space-x-2">
+                            <a
+                                :href="group?.links.edit"
+                                class="py-2 px-4 cursor-pointer bg-green-500 text-gray-100 rounded-full font-medium"
+                            >
+                                <span class="mdi mdi-plus"></span>
+                                {{ __("Edit") }}
+                            </a>
+                            <v-delete
+                                :item="group"
+                                @deleted="getCategories"
+                                class="action-btn"
+                            />
+                        </div>
+                    </div>
 
-                    <!-- Loading State -->
-                    <template v-slot:loading>
-                        <q-inner-loading showing color="primary" />
-                    </template>
-                </q-table>
-            </q-card>
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div class="flex flex-col">
+                            <span class="text-gray-500">{{ __("Slug") }}</span>
+                            <span class="font-medium">{{ group.slug }}</span>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <span class="text-gray-500">
+                                {{ __("Status") }}
+                            </span>
+                            <span
+                                :class="`inline-flex items-center ${
+                                    group.published
+                                        ? 'text-green-600'
+                                        : 'text-gray-600'
+                                }`"
+                            >
+                                <i
+                                    :class="`fas ${
+                                        group.published
+                                            ? 'fa-check-circle'
+                                            : 'fa-times-circle'
+                                    } mr-1`"
+                                ></i>
+                                {{
+                                    group.published ? __("Published") : "Hidden"
+                                }}
+                            </span>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <span class="text-gray-500">
+                                {{ __("Featured") }}
+                            </span>
+                            <span
+                                :class="`inline-flex items-center ${
+                                    group.featured
+                                        ? 'text-yellow-600'
+                                        : 'text-gray-600'
+                                }`"
+                            >
+                                <i
+                                    :class="`fas ${
+                                        group.featured ? 'fa-star' : 'fa-star-o'
+                                    } mr-1`"
+                                ></i>
+                                {{ group.featured ? "Yes" : "No" }}
+                            </span>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <span class="text-gray-500">{{ __("Icon") }}</span>
+                            <span>
+                                <i
+                                    v-if="group.icon?.icon"
+                                    :class="`mdi ${group.icon.icon} text-blue-600`"
+                                ></i>
+                                <i
+                                    v-else
+                                    class="fas fa-question-circle text-gray-300"
+                                ></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State for Mobile -->
+                <div
+                    v-if="groups.length === 0 && !loading"
+                    class="bg-white rounded-lg shadow-md p-6 text-center"
+                >
+                    <div class="flex flex-col items-center text-gray-400">
+                        <i class="fas fa-folder-open text-3xl mb-2"></i>
+                        <h3 class="text-base font-medium mb-1">
+                            {{ __("No categories found") }}
+                        </h3>
+                        <p class="text-xs">
+                            {{
+                                __("Create your first category to get started")
+                            }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Loading State for Mobile -->
+                <div
+                    v-if="loading"
+                    class="bg-white rounded-lg shadow-md p-8 flex items-center justify-center"
+                >
+                    <div
+                        class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"
+                    ></div>
+                </div>
+            </div>
 
             <!-- Pagination -->
-            <div class="row justify-center q-mt-lg">
-                <q-pagination
-                    v-model="search.page"
-                    :max="pages.total_pages"
-                    color="primary"
-                    :max-pages="6"
-                    size="md"
-                    boundary-numbers
-                    direction-links
-                    ellipses
-                    class="pagination-control"
-                />
-            </div>
+            <v-paginate
+                v-model="search.page"
+                :total-pages="pages.total_pages"
+                @change="getCategories"
+            />
 
             <!-- Results Count -->
-            <div class="row justify-center q-mt-md">
-                <div class="text-caption text-grey-6">
+            <div class="flex justify-center mt-4">
+                <p class="text-xs md:text-sm text-gray-500">
                     {{ __("Showing") }} {{ groups.length }} {{ __("of") }}
                     {{ pages.total || 0 }} {{ __("categories") }}
-                </div>
+                </p>
             </div>
         </div>
-    </v-admin-ecommerce-layout>
+    </v-admin-layout>
 </template>
 
 <script>
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
+import VAdminLayout from "../../Components/VAdminLayout.vue";
+import VPaginate from "../../Components/VPaginate.vue";
 
 export default {
     components: {
         VCreate,
         VDelete,
+        VAdminLayout,
+        VPaginate,
     },
 
     data() {
@@ -334,6 +462,31 @@ export default {
         };
     },
 
+    computed: {
+        visiblePages() {
+            const current = this.search.page;
+            const total = this.pages.total_pages;
+            const range = 2; // Show 2 pages before and after current
+
+            let start = Math.max(1, current - range);
+            let end = Math.min(total, current + range);
+
+            // Adjust if we're near the start or end
+            if (current - range <= 1) {
+                end = Math.min(total, 1 + range * 2);
+            }
+            if (current + range >= total) {
+                start = Math.max(1, total - range * 2);
+            }
+
+            const pages = [];
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+            return pages;
+        },
+    },
+
     created() {
         this.getCategories();
     },
@@ -349,7 +502,6 @@ export default {
 
     methods: {
         handleSearch() {
-            // Debounce search implementation
             clearTimeout(this.searchTimeout);
             this.searchTimeout = setTimeout(() => {
                 this.getCategories({ search: this.searchTerm });
@@ -361,7 +513,7 @@ export default {
             const params = { ...this.search, ...param };
 
             this.$server
-                .get(this.$page.props.route, {
+                .get(this.$page.props.routes.index, {
                     params: params,
                 })
                 .then((res) => {
@@ -372,11 +524,7 @@ export default {
                 })
                 .catch((e) => {
                     if (e?.response?.data?.message) {
-                        this.$q.notify({
-                            type: "negative",
-                            message: e.response.data.message,
-                            timeout: 3000,
-                        });
+                        this.$notify(e.response.data.message);
                     }
                 })
                 .finally(() => {
@@ -386,121 +534,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-/* CSS Variables for Theme Consistency */
-:root {
-    --color-primary: #1976d2;
-    --color-secondary: #26a69a;
-    --color-accent: #ff6b35;
-    --color-positive: #21ba45;
-    --color-negative: #c10015;
-    --color-warning: #f2c037;
-    --border-radius: 12px;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --transition-speed: 0.3s;
-}
-
-.header-section {
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
-    margin-bottom: 24px;
-}
-
-.categories-card {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-}
-
-.categories-table {
-    border: none;
-}
-
-.table-header {
-    background-color: #f8f9fa;
-    font-size: 0.9rem;
-    padding: 16px 12px;
-}
-
-.name-cell {
-    font-weight: 500;
-}
-
-.slug-badge {
-    border-radius: 16px;
-    padding: 4px 12px;
-    font-family: monospace;
-    font-size: 0.8rem;
-}
-
-.status-badge {
-    border-radius: 16px;
-    padding: 6px 12px;
-    font-weight: 500;
-}
-
-.actions-cell {
-    padding: 8px 16px;
-}
-
-.action-btn {
-    transition: transform var(--transition-speed) ease;
-}
-
-.action-btn:hover {
-    transform: scale(1.1);
-}
-
-.search-input {
-    border-radius: 8px;
-}
-
-.search-input :deep(.q-field__control) {
-    border-radius: 8px;
-}
-
-.pagination-control {
-    background: white;
-    padding: 12px 20px;
-    border-radius: 50px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-    .header-section {
-        border-radius: 0;
-        margin-bottom: 16px;
-    }
-
-    .categories-card {
-        margin: 0 -8px;
-    }
-
-    .table-header {
-        font-size: 0.8rem;
-        padding: 12px 8px;
-    }
-}
-
-@media (max-width: 600px) {
-    .header-section .text-h4 {
-        font-size: 1.5rem;
-    }
-
-    .header-section .text-subtitle1 {
-        font-size: 0.9rem;
-    }
-
-    .actions-cell {
-        padding: 4px 8px;
-    }
-
-    .action-btn {
-        transform: scale(0.9);
-    }
-
-    .action-btn:hover {
-        transform: scale(1);
-    }
-}
-</style>

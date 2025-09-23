@@ -20,191 +20,15 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="q-pa-md q-gutter-sm">
+    <div>
         <!-- Delete Button -->
-        <q-btn
-            color="negative"
-            @click="dialog = true"
-            icon="mdi-delete"
-            size="sm"
-            class="delete-btn shadow-3"
-            unelevated
+        <button
+            @click="confirmDelete"
+            class="delete-btn bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow-md transition-colors duration-200 flex items-center space-x-2"
         >
-            {{ __("Delete") }}
-            <q-tooltip class="bg-negative">{{
-                __("Delete Category")
-            }}</q-tooltip>
-        </q-btn>
-
-        <!-- Delete Confirmation Dialog -->
-        <q-dialog
-            v-model="dialog"
-            persistent
-            transition-show="scale"
-            transition-hide="scale"
-        >
-            <q-card class="delete-category-dialog rounded-borders">
-                <!-- Dialog Header -->
-                <q-card-section class="dialog-header bg-negative text-white">
-                    <div class="row items-center">
-                        <q-icon
-                            name="mdi-delete-alert"
-                            size="28px"
-                            class="q-mr-sm"
-                        />
-                        <div class="text-h5 text-weight-bold">
-                            {{ __("Delete Category") }}
-                        </div>
-                        <q-space />
-                        <q-btn
-                            icon="close"
-                            flat
-                            round
-                            dense
-                            v-close-popup
-                            class="text-white"
-                            @click="dialog = false"
-                        />
-                    </div>
-                </q-card-section>
-
-                <!-- Warning Content -->
-                <q-card-section class="warning-section">
-                    <div class="row items-center q-mb-md">
-                        <q-icon
-                            name="mdi-alert-circle"
-                            color="negative"
-                            size="48px"
-                            class="q-mr-md"
-                        />
-                        <div class="text-h6 text-weight-medium">
-                            {{ __("Confirm Deletion") }}
-                        </div>
-                    </div>
-
-                    <div class="text-body1 q-mb-lg">
-                        {{ __("You are about to delete the category") }}
-                        <strong class="text-negative">"{{ item.name }}"</strong
-                        >.
-                        {{
-                            __(
-                                "This action cannot be undone and will remove all associated data."
-                            )
-                        }}
-                    </div>
-
-                    <!-- Category Details -->
-                    <q-card
-                        flat
-                        bordered
-                        class="bg-grey-2 category-details-card"
-                    >
-                        <q-card-section>
-                            <div class="text-subtitle2 text-grey-8 q-mb-sm">
-                                {{ __("Category Details") }}
-                            </div>
-
-                            <div class="row items-center q-mb-xs">
-                                <q-icon
-                                    name="mdi-tag"
-                                    size="16px"
-                                    class="q-mr-sm text-grey-6"
-                                />
-                                <span class="text-weight-medium">{{
-                                    __("Name:")
-                                }}</span>
-                                <span class="q-ml-sm">{{ item.name }}</span>
-                            </div>
-
-                            <div
-                                class="row items-center q-mb-xs"
-                                v-if="item.icon?.icon"
-                            >
-                                <q-icon
-                                    name="mdi-emoticon"
-                                    size="16px"
-                                    class="q-mr-sm text-grey-6"
-                                />
-                                <span class="text-weight-medium">{{
-                                    __("Icon:")
-                                }}</span>
-                                <span class="q-ml-sm">
-                                    <q-icon
-                                        :name="item.icon.icon"
-                                        size="20px"
-                                        class="text-primary q-mr-xs"
-                                    />
-                                    {{ item.icon.icon }}
-                                </span>
-                            </div>
-
-                            <div class="row items-center">
-                                <q-icon
-                                    name="mdi-eye"
-                                    size="16px"
-                                    :color="
-                                        item.published ? 'positive' : 'grey-5'
-                                    "
-                                    class="q-mr-sm"
-                                />
-                                <span class="text-weight-medium">{{
-                                    __("Status:")
-                                }}</span>
-                                <span class="q-ml-sm">{{
-                                    item.published
-                                        ? __("Published")
-                                        : __("Hidden")
-                                }}</span>
-                            </div>
-
-                            <div class="row items-center q-mt-xs">
-                                <q-icon
-                                    name="mdi-star"
-                                    size="16px"
-                                    :color="item.featured ? 'accent' : 'grey-5'"
-                                    class="q-mr-sm"
-                                />
-                                <span class="text-weight-medium">{{
-                                    __("Featured:")
-                                }}</span>
-                                <span class="q-ml-sm">{{
-                                    item.featured ? __("Yes") : __("No")
-                                }}</span>
-                            </div>
-                        </q-card-section>
-                    </q-card>
-
-                    <div class="text-caption text-negative q-mt-md">
-                        <q-icon name="mdi-alert" size="16px" class="q-mr-xs" />
-                        {{
-                            __(
-                                "Warning: This will permanently delete the category and cannot be recovered."
-                            )
-                        }}
-                    </div>
-                </q-card-section>
-
-                <!-- Dialog Actions -->
-                <q-card-actions align="right" class="dialog-actions q-pa-md">
-                    <q-btn
-                        :label="__('Cancel')"
-                        color="grey"
-                        @click="dialog = false"
-                        outline
-                        class="action-btn"
-                        icon="mdi-close"
-                    />
-                    <q-btn
-                        :label="__('Delete Category')"
-                        color="negative"
-                        @click="destroy"
-                        class="action-btn"
-                        icon="mdi-delete"
-                        unelevated
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
+            <i class="fas fa-trash"></i>
+            <span>{{ __("Delete") }}</span>
+        </button>
     </div>
 </template>
 
@@ -219,142 +43,174 @@ export default {
         },
     },
 
-    data() {
-        return {
-            dialog: false,
-        };
-    },
-
     methods: {
+        async confirmDelete() {
+            try {
+                const result = await this.$swal({
+                    title: this.__("Delete Category?"),
+                    html: `
+                        <div class="text-left">
+                            <p class="mb-4">${this.__(
+                                "You are about to delete the category"
+                            )} <strong class="text-red-600">"${
+                        this.item.name
+                    }"</strong>.</p>
+                            <p class="mb-4">${this.__(
+                                "This action cannot be undone and will remove all associated data."
+                            )}</p>
+
+                            <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                                <h4 class="font-semibold text-gray-800 mb-2">${this.__(
+                                    "Category Details"
+                                )}</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-tag text-gray-500 mr-2 w-5"></i>
+                                        <span class="font-medium">${this.__(
+                                            "Name:"
+                                        )}</span>
+                                        <span class="ml-2">${
+                                            this.item.name
+                                        }</span>
+                                    </div>
+                                    ${
+                                        this.item.icon?.icon
+                                            ? `
+                                    <div class="flex items-center">
+                                        <i class="fas fa-icons text-gray-500 mr-2 w-5"></i>
+                                        <span class="font-medium">${this.__(
+                                            "Icon:"
+                                        )}</span>
+                                        <span class="ml-2">
+                                            <i class="mdi ${
+                                                this.item.icon.icon
+                                            } text-blue-500 mr-1"></i>
+                                            ${this.item.icon.icon}
+                                        </span>
+                                    </div>
+                                    `
+                                            : ""
+                                    }
+                                    <div class="flex items-center">
+                                        <i class="fas fa-eye ${
+                                            this.item.published
+                                                ? "text-green-500"
+                                                : "text-gray-400"
+                                        } mr-2 w-5"></i>
+                                        <span class="font-medium">${this.__(
+                                            "Status:"
+                                        )}</span>
+                                        <span class="ml-2">${
+                                            this.item.published
+                                                ? this.__("Published")
+                                                : this.__("Hidden")
+                                        }</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-star ${
+                                            this.item.featured
+                                                ? "text-yellow-500"
+                                                : "text-gray-400"
+                                        } mr-2 w-5"></i>
+                                        <span class="font-medium">${this.__(
+                                            "Featured:"
+                                        )}</span>
+                                        <span class="ml-2">${
+                                            this.item.featured
+                                                ? this.__("Yes")
+                                                : this.__("No")
+                                        }</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-red-600 text-sm flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                ${this.__(
+                                    "Warning: This will permanently delete the category and cannot be recovered."
+                                )}
+                            </p>
+                        </div>
+                    `,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#6b7280",
+                    confirmButtonText: this.__("Delete Category"),
+                    cancelButtonText: this.__("Cancel"),
+                    focusCancel: true,
+                    customClass: {
+                        popup: "rounded-lg",
+                        confirmButton: "px-4 py-2 rounded-lg",
+                        cancelButton: "px-4 py-2 rounded-lg mr-2",
+                    },
+                    buttonsStyling: false,
+                });
+
+                if (result.isConfirmed) {
+                    await this.destroy();
+                }
+            } catch (error) {
+                this.$swal({
+                    title: this.__("Error!"),
+                    text: this.__("Delete cancelled"),
+                    icon: "error",
+                    confirmButtonText: this.__("OK"),
+                });
+            }
+        },
+
         async destroy() {
             try {
                 const res = await this.$server.delete(this.item.links.destroy);
 
                 if (res.status == 200) {
                     this.$emit("deleted", true);
-                    this.dialog = false;
 
-                    this.$q.notify({
-                        type: "positive",
-                        message: "Category has been deleted successfully",
-                        timeout: 3000,
-                        icon: "mdi-check-circle",
-                        position: "top-right",
-                        actions: [{ icon: "mdi-close", color: "white" }],
+                    // Success notification
+                    this.$swal({
+                        title: this.__("Deleted!"),
+                        text: this.__("Category has been deleted successfully"),
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false,
                     });
                 }
             } catch (e) {
+                let errorMessage = this.__(
+                    "An error occurred while deleting the category"
+                );
+
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                        icon: "mdi-alert-circle",
-                        position: "top-right",
-                        actions: [{ icon: "mdi-close", color: "white" }],
-                    });
-                } else {
-                    if (e?.response?.data?.message) {
-                        this.$q.notify({
-                            type: "negative",
-                            message: e.response.data.message,
-                            timeout: 3000,
-                        });
-                    }
+                    errorMessage = this.__(e.response.data.message);
                 }
-            } finally {
-                this.dialog = false;
+
+                this.$swal({
+                    title: this.__("Error!"),
+                    text: errorMessage,
+                    icon: "error",
+                    confirmButtonText: this.__("OK"),
+                });
             }
         },
     },
 };
 </script>
 
-<style scoped>
-/* CSS Variables for Theme Consistency */
-:root {
-    --color-primary: #1976d2;
-    --color-secondary: #26a69a;
-    --color-negative: #c10015;
-    --color-warning: #f2c037;
-    --color-dark: #1d1d1d;
-    --color-light: #f5f5f5;
-    --border-radius: 12px;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --transition-speed: 0.3s;
-}
-
+<style>
 .delete-btn {
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-weight: 500;
-    transition: transform var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease;
+    min-width: 100px;
 }
 
-.delete-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+.swal2-popup {
+    border-radius: 12px !important;
+    padding: 2rem !important;
 }
 
-.delete-category-dialog {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    max-width: 500px;
-    width: 100%;
-}
-
-.dialog-header {
-    padding: 20px 24px;
-}
-
-.warning-section {
-    padding: 24px;
-}
-
-.category-details-card {
-    border-left: 4px solid var(--color-negative);
-}
-
-.dialog-actions {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    background: var(--color-light);
-}
-
-.action-btn {
-    border-radius: 8px;
-    padding: 8px 20px;
-    font-weight: 500;
-    min-width: 140px;
-    transition: transform var(--transition-speed) ease;
-}
-
-.action-btn:hover {
-    transform: scale(1.02);
-}
-
-/* Responsive adjustments */
-@media (max-width: 599px) {
-    .delete-category-dialog {
-        max-width: 95vw;
-    }
-
-    .dialog-header .text-h5 {
-        font-size: 1.25rem;
-    }
-
-    .warning-section {
-        padding: 16px;
-    }
-
-    .action-btn {
-        min-width: 120px;
-        padding: 6px 16px;
-        font-size: 0.9rem;
-    }
-
-    .category-details-card {
-        margin: 0 -8px;
-    }
+.swal2-confirm,
+.swal2-cancel {
+    border-radius: 8px !important;
+    padding: 0.5rem 1.5rem !important;
+    font-weight: 500 !important;
 }
 </style>

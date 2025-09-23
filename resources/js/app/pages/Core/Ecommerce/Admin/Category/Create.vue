@@ -20,268 +20,184 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="q-pa-md q-gutter-sm">
-        <!-- Create/Update Button -->
-        <q-btn
-            color="primary"
-            outline
-            @click="open"
-            :icon="item ? 'mdi-pencil' : 'mdi-plus'"
-            :label="title"
-            class="action-btn shadow-3"
-            :class="{ 'text-white': !item?.id }"
-            size="sm"
-        >
-        </q-btn>
+    <v-admin-layout>
+        <div class="min-h-screen bg-gray-50 py-2 px-4 sm:px-6 lg:px-2">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        {{
+                            form.id
+                                ? __("Update category")
+                                : __("Create new category")
+                        }}
+                    </h1>
+                    <p class="text-gray-600">
+                        {{ __("Manage your product categories with ease") }}
+                    </p>
+                </div>
 
-        <!-- Category Form Dialog -->
-        <q-dialog
-            v-model="dialog"
-            persistent
-            transition-show="scale"
-            transition-hide="scale"
-            full-width
-        >
-            <q-card class="category-form-dialog rounded-borders">
-                <!-- Dialog Header -->
-                <q-card-section class="dialog-header bg-primary text-white">
-                    <div class="row items-center">
-                        <q-icon
-                            :name="
-                                item ? 'mdi-pencil-circle' : 'mdi-plus-circle'
-                            "
-                            size="28px"
-                            class="q-mr-sm"
-                        />
-                        <div class="text-h5 text-weight-bold">
-                            {{ title }} {{ __("Category") }}
-                        </div>
-                        <q-space />
-                        <q-btn
-                            icon="close"
-                            flat
-                            round
-                            dense
-                            v-close-popup
-                            class="text-white"
-                            @click="close"
-                        />
-                    </div>
-                </q-card-section>
-
-                <!-- Form Content -->
-                <q-card-section class="dialog-content scroll">
-                    <div class="q-gutter-y-lg">
+                <!-- Form Card -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                    <!-- Form Content -->
+                    <div class="p-4 space-y-8">
                         <!-- Basic Information Section -->
-                        <div class="section-container">
-                            <div class="section-title">
-                                <q-icon
-                                    name="mdi-information"
-                                    class="q-mr-sm"
-                                />
-                                {{ __("Basic Information") }}
+                        <div class="space-y-6">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 bg-blue-100 rounded-lg">
+                                    <i
+                                        class="mdi mdi-information text-blue-600 text-xl"
+                                    ></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800">
+                                    {{ __("Basic Information") }}
+                                </h3>
                             </div>
 
-                            <div class="row q-col-gutter-md">
-                                <!-- Name -->
-                                <div class="col-12 col-md-6">
-                                    <q-input
-                                        outlined
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Name Field -->
+                                <div class="space-y-2">
+                                    <v-input
+                                        :label="__('Category Name')"
                                         v-model="form.name"
-                                        :label="__('Category Name *')"
-                                        :error="!!errors.name"
-                                        color="primary"
-                                        class="custom-input"
-                                    >
-                                        <template v-slot:prepend>
-                                            <q-icon name="mdi-tag" />
-                                        </template>
-                                        <template v-slot:error>
-                                            <v-error
-                                                :error="errors.name"
-                                            ></v-error>
-                                        </template>
-                                    </q-input>
+                                        :placeholder="__('Enter category name')"
+                                        :error="errors.name"
+                                        :required="true"
+                                    />
                                 </div>
 
-                                <!-- Icon -->
-                                <div class="col-12 col-md-6">
-                                    <q-input
-                                        outlined
+                                <!-- Icon Field -->
+                                <div class="space-y-2">
+                                    <v-input
+                                        :label="__('Icon')"
                                         v-model="form.icon"
-                                        :label="__('Icon *')"
-                                        :error="!!errors.icon"
+                                        :placeholder="__('Enter category name')"
+                                        :error="errors.icon"
+                                        :required="true"
                                         placeholder="mdi-image"
-                                        color="primary"
-                                        class="custom-input"
-                                        :hint="__('Material Design icon name')"
+                                    />
+
+                                    <a
+                                        href="https://pictogrammers.com/library/mdi/"
+                                        target="_blank"
+                                        class="text-blue-600"
                                     >
-                                        <template v-slot:prepend>
-                                            <q-icon name="mdi-emoticon" />
-                                        </template>
-                                        <template v-slot:append>
-                                            <q-btn
-                                                flat
-                                                round
-                                                icon="mdi-launch"
-                                                color="primary"
-                                                @click="openIconLibrary"
-                                                class="icon-library-btn"
-                                            >
-                                                <q-tooltip>{{
-                                                    __("View Icon Library")
-                                                }}</q-tooltip>
-                                            </q-btn>
-                                        </template>
-                                        <template v-slot:error>
-                                            <v-error :error="errors.icon" />
-                                        </template>
-                                    </q-input>
+                                        <i class="mdi mdi-launch">
+                                            View Icon Library
+                                        </i>
+                                    </a>
                                 </div>
 
                                 <!-- Status Toggles -->
-                                <div class="col-12 col-md-6">
-                                    <div class="toggle-group">
-                                        <q-toggle
-                                            v-model="form.published"
-                                            :label="__('Published')"
-                                            color="positive"
-                                            :error="!!errors.published"
-                                            icon="mdi-eye"
-                                            class="custom-toggle"
-                                        >
-                                            <q-tooltip>{{
-                                                __(
-                                                    "Make category visible to users"
-                                                )
-                                            }}</q-tooltip>
-                                        </q-toggle>
-                                        <v-error :error="errors.published" />
-                                    </div>
+                                <div class="space-y-4">
+                                    <v-switch
+                                        v-model="form.published"
+                                        :label="__('Published')"
+                                        :required="true"
+                                        :error="errors.published"
+                                    />
                                 </div>
 
-                                <div class="col-12 col-md-6">
-                                    <div class="toggle-group">
-                                        <q-toggle
-                                            v-model="form.featured"
-                                            :label="__('Featured')"
-                                            color="accent"
-                                            :error="!!errors.featured"
-                                            icon="mdi-star"
-                                            class="custom-toggle"
-                                        >
-                                            <q-tooltip>{{
-                                                __(
-                                                    "Highlight this category as featured"
-                                                )
-                                            }}</q-tooltip>
-                                        </q-toggle>
-                                        <v-error :error="errors.featured" />
-                                    </div>
+                                <div class="space-y-4">
+                                    <v-switch
+                                        v-model="form.featured"
+                                        :label="__('Featured')"
+                                        :required="true"
+                                        :error="errors.featured"
+                                    />
                                 </div>
                             </div>
                         </div>
 
                         <!-- Description Section -->
-                        <div class="section-container">
-                            <div class="section-title">
-                                <q-icon name="mdi-text" class="q-mr-sm" />
-                                {{ __("Description") }}
-                            </div>
-                            <div
-                                class="text-caption text-weight-medium q-mb-xs"
-                            >
-                                {{
-                                    __(
-                                        "Category description (supports rich text formatting)"
-                                    )
-                                }}
-                            </div>
-                            <v-editor
-                                class="required"
-                                v-model="form.description"
-                                :label="__('Category Description')"
-                            />
-                            <v-error :error="errors.description" />
-                        </div>
-
-                        <!-- Images Section -->
-                        <div class="section-container">
-                            <div class="section-title">
-                                <q-icon name="mdi-image" class="q-mr-sm" />
-                                {{ __("Category Images") }}
-                            </div>
-
-                            <div class="q-mb-md">
-                                <v-file-uploader
-                                    class="required"
-                                    type="images"
-                                    @uploaded="loadImages"
-                                ></v-file-uploader>
-                                <v-error :error="errors.images"></v-error>
-                            </div>
-
-                            <!-- Image Gallery -->
-                            <div
-                                v-if="current_images && current_images.length"
-                                class="gallery-section"
-                            >
-                                <div
-                                    class="text-caption text-weight-medium q-mb-sm"
-                                >
-                                    {{ __("Current Images") }}
+                        <div class="space-y-6">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 bg-blue-100 rounded-lg">
+                                    <i
+                                        class="mdi mdi-text text-blue-600 text-xl"
+                                    ></i>
                                 </div>
-                                <v-gallery
-                                    :images="current_images"
-                                    class="category-gallery"
-                                ></v-gallery>
+                                <h3 class="text-lg font-semibold text-gray-800">
+                                    {{ __("Description") }}
+                                </h3>
                             </div>
+                            <div class="space-y-2">
+                                <v-editor
+                                    v-model="form.description"
+                                    class="border border-gray-300 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent transition-all duration-200"
+                                />
+                            </div>
+                        </div>
+                        <!-- Images Section -->
+                        <div class="space-y-6">
+                            <v-file-uploader v-model="form.images" />
+                            <v-error :error="errors.images" />
+                        </div>
+                        <div class="space-y-6" v-if="current_images.length">
+                            <v-file-viewer v-model="current_images" />
                         </div>
                     </div>
-                </q-card-section>
 
-                <!-- Dialog Actions -->
-                <q-card-actions align="right" class="dialog-actions q-pa-md">
-                    <q-btn
-                        :label="__('Cancel')"
-                        color="grey"
-                        @click="close"
-                        outline
-                        class="action-btn"
-                        icon="mdi-close"
-                    />
-                    <q-btn
-                        :label="item ? __('Update') : __('Create')"
-                        color="primary"
-                        @click="create"
-                        class="action-btn"
-                        :icon="item ? 'mdi-check' : 'mdi-plus'"
-                        unelevated
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
-    </div>
+                    <!-- Form Actions -->
+                    <div class="px-6 py-6 bg-gray-50 border-t border-gray-200">
+                        <div
+                            class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4"
+                        >
+                            <button
+                                @click="create"
+                                :disabled="disabled"
+                                :class="[
+                                    'px-6 py-3 rounded-xl transition-all duration-200 flex items-center cursor-pointer justify-center space-x-2 font-medium',
+                                    disabled
+                                        ? 'bg-gray-400 text-white cursor-not-allowed'
+                                        : 'bg-gradient-to-r from-blue-600 to-indigo-700 text-white hover:from-blue-700 hover:to-indigo-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5',
+                                ]"
+                            >
+                                <i
+                                    :class="
+                                        form?.id
+                                            ? 'mdi mdi-check'
+                                            : 'mdi mdi-plus'
+                                    "
+                                ></i>
+                                <span>
+                                    {{
+                                        form?.id
+                                            ? "Update Category"
+                                            : "Create Category"
+                                    }}
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </v-admin-layout>
 </template>
 
 <script>
-export default {
-    emits: ["created"],
+import VAdminLayout from "../../Components/VAdminLayout.vue";
+import VEditor from "../../Components/VEditor.vue";
+import VFileUploader from "../../Components/VFileUploader.vue";
+import VInput from "../../Components/VInput.vue";
+import VSwitch from "../../Components/VSwitch.vue";
+import VFileViewer from "../../Components/VFileViewer.vue";
+import VError from "../../Components/VError.vue";
 
-    props: {
-        title: {
-            type: String,
-            default: "Create",
-        },
-        item: {
-            type: Object,
-            required: false,
-        },
+export default {
+    components: {
+        VAdminLayout,
+        VEditor,
+        VFileUploader,
+        VInput,
+        VSwitch,
+        VFileViewer,
+        VError,
     },
 
     data() {
         return {
-            dialog: false,
             form: {
                 id: "",
                 name: "",
@@ -297,53 +213,17 @@ export default {
         };
     },
 
+    created() {
+        this.loadData(this.$page.props.model);
+    },
+
     methods: {
-        close() {
-            this.form = {
-                id: "",
-                name: "",
-                icon: "",
-                description: "",
-                published: false,
-                featured: false,
-                images: [],
-            };
-            this.errors = {};
-            this.current_images = [];
-            this.dialog = false;
-        },
-
-        open() {
-            this.form = {
-                id: "",
-                name: "",
-                icon: "",
-                description: "",
-                published: false,
-                featured: false,
-                images: [],
-            };
-            this.errors = {};
-
-            if (this.item) {
-                this.form.id = this.item.id;
-                this.form.name = this.item.name;
-                this.form.description = this.item.description;
-                this.form.icon = this.item?.icon?.icon || "";
-                this.form.featured = this.item.featured;
-                this.form.published = this.item.published;
-                this.current_images = this.item?.images || [];
+        loadData(model) {
+            if (model?.id) {
+                this.form = { ...model, images: [] };
+                this.current_images = model.images;
+                this.form.icon = model.icon.icon;
             }
-
-            this.dialog = true;
-        },
-
-        loadImages(files) {
-            this.form.images = files;
-        },
-
-        openIconLibrary() {
-            window.open("https://pictogrammers.com/library/mdi/", "_blank");
         },
 
         async create() {
@@ -365,7 +245,7 @@ export default {
 
             try {
                 const res = await this.$server.post(
-                    this.$page.props.route,
+                    this.$page.props.routes.store,
                     payload,
                     {
                         headers: {
@@ -374,37 +254,22 @@ export default {
                     }
                 );
 
-                if (res.status === 200 || res.status === 201) {
-                    this.close();
-                    this.$emit("created", true);
+                if (res.status == 201) {
+                    window.location.href = res.data.data.links.edit;
+                }
 
-                    this.$q.notify({
-                        type: "positive",
-                        message: this.form.id
-                            ? this.__("Category updated successfully")
-                            : this.__("Category created successfully"),
-                        timeout: 3000,
-                        icon: "mdi-check-circle",
-                        position: "top-right",
-                    });
+                if (res.status === 200) {
+                    this.$notify.success(__("Category updated successfully"));
+
+                    this.loadData(res.data.data);
                 }
             } catch (e) {
                 if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
-                    this.$q.notify({
-                        type: "warning",
-                        message: this.__("Please check the input fields"),
-                        timeout: 3000,
-                        icon: "update",
-                    });
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    this.$notify.error(__(e.response.data.message));
                 }
             } finally {
                 this.disabled = false;
@@ -414,132 +279,30 @@ export default {
 };
 </script>
 
-<style scoped>
-/* CSS Variables for Theme Consistency */
-:root {
-    --color-primary: #1976d2;
-    --color-secondary: #26a69a;
-    --color-accent: #ff6b35;
-    --color-positive: #21ba45;
-    --color-negative: #c10015;
-    --color-warning: #f2c037;
-    --border-radius: 12px;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --transition-speed: 0.3s;
+<style>
+/* Smooth transitions for all interactive elements */
+* {
+    transition-property: color, background-color, border-color, transform,
+        box-shadow;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.action-btn {
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-weight: 500;
-    transition: transform var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease;
+/* Custom scrollbar for the form */
+.form-content::-webkit-scrollbar {
+    width: 6px;
 }
 
-.action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+.form-content::-webkit-scrollbar-track {
+    background: #f1f5f9;
 }
 
-.category-form-dialog {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    width: 100%;
-    max-height: 90vh;
+.form-content::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
 }
 
-.dialog-header {
-    padding: 20px 24px;
-}
-
-.dialog-content {
-    padding: 24px;
-    max-height: 60vh;
-}
-
-.dialog-actions {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    background: var(--color-light);
-}
-
-.section-container {
-    padding: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: var(--border-radius);
-    background: white;
-    margin-bottom: 20px;
-}
-
-.section-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--color-primary);
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.06);
-}
-
-.custom-input :deep(.q-field__control) {
-    border-radius: 8px;
-}
-
-.custom-toggle :deep(.q-toggle__label) {
-    font-weight: 500;
-}
-
-.toggle-group {
-    padding: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 8px;
-    background: #fafafa;
-}
-
-.icon-library-btn {
-    transition: transform var(--transition-speed) ease;
-}
-
-.icon-library-btn:hover {
-    transform: scale(1.1);
-}
-
-.gallery-section {
-    margin-top: 16px;
-}
-
-.category-gallery {
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: var(--border-radius);
-    padding: 12px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1023px) {
-    .category-form-dialog {
-        max-width: 95vw;
-    }
-
-    .dialog-content {
-        padding: 16px;
-        max-height: 70vh;
-    }
-
-    .section-container {
-        padding: 16px;
-    }
-}
-
-@media (max-width: 599px) {
-    .dialog-header .text-h5 {
-        font-size: 1.25rem;
-    }
-
-    .action-btn {
-        min-width: 100px;
-        padding: 6px 12px;
-    }
-
-    .toggle-group {
-        margin-bottom: 12px;
-    }
+.form-content::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 </style>
