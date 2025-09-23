@@ -24,6 +24,8 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Http\Middleware\WantsJsonHeader;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Rules\BooleanRule;
 use Illuminate\Http\Request;
@@ -80,9 +82,50 @@ class CategoryController extends WebController
             );
         }
         return Inertia::render('Core/Ecommerce/Admin/Category/Index', [
-            'route' => route('ecommerce.admin.categories.index'),
+            'routes' => [
+                'index' => route('ecommerce.admin.categories.index'),
+                'create' => route('ecommerce.admin.categories.create')
+            ],
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
-        ]);
+        ])->rootView('ecommerce');
+    }
+
+    /**
+     * Show detail
+     * @param string $category_slug
+     * @return \Inertia\Response
+     */
+    public function create()
+    {
+        return Inertia::render('Core/Ecommerce/Admin/Category/Create', [
+            'routes' => [
+                'index' => route('ecommerce.admin.categories.index'),
+                'create' => route('ecommerce.admin.categories.create'),
+                'store' => route('ecommerce.admin.categories.store'),
+            ],
+            'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
+        ])->rootView('ecommerce');
+    }
+
+    /**
+     * Edit
+     * @param Request $request
+     * @param string $id
+     * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
+     */
+    public function edit(Request $request, string $id)
+    {
+        $model = $this->repository->find($id);
+
+        return Inertia::render('Core/Ecommerce/Admin/Category/Create', [
+            'model' => fractal($model, $this->repository->transformer)->toArray()['data'],
+            'routes' => [
+                'index' => route('ecommerce.admin.categories.index'),
+                'create' => route('ecommerce.admin.categories.create'),
+                'store' => route('ecommerce.admin.categories.store'),
+            ],
+            'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
+        ])->rootView('ecommerce');
     }
 
     /**
