@@ -20,7 +20,7 @@ namespace Core\Ecommerce\Transformer\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -67,8 +67,9 @@ class CategoryTransformer extends TransformerAbstract
             'images' => $category->getImages($category->files),
             'links' => [
                 'index' => route('ecommerce.admin.categories.index'),
+                'create' => route('ecommerce.admin.categories.store'),
                 'store' => route('ecommerce.admin.categories.store'),
-                'show' => route('ecommerce.admin.categories.show', ['category' => $category->id]), 
+                'edit' => route('ecommerce.admin.categories.edit', ['category' => $category->id]),
                 'destroy' => route('ecommerce.admin.categories.destroy', ['category' => $category->id]),
             ]
         ];
