@@ -34,7 +34,7 @@ Route::middleware(['throttle:ecommerce:admin'])->group(function () {
 
     Route::get("/", [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::resource('categories', CategoryController::class)->except('edit', 'create', 'update');
+    Route::resource('categories', CategoryController::class)->except('show', 'update');
     Route::resource('products', ProductController::class)->except('edit', 'create', 'update');
     Route::resource('products.tags', ProductTagController::class)->only('destroy');
     Route::resource('products.attributes', ProductAttributeController::class)->only('destroy');
