@@ -21,325 +21,362 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 
 <template>
-    <v-admin-ecommerce-layout>
-        <div class="row q-pa-sm q-pa-md">
-            <div class="col-12 col-sm-6 col-md-3">
-                <q-card class="stat-card bg-blue-1">
-                    <q-card-section>
-                        <div class="row items-center no-wrap">
-                            <div class="col">
-                                <div class="text-subtitle1 text-grey-7">
-                                    {{ __("Total Sales") }}
-                                </div>
-                                <div class="text-h6 text-weight-bold">
-                                    {{ dashboard.currency_symbol }}
-                                    {{ dashboard.transactions_total }}
-                                </div>
-                                <div class="text-caption text-green">
-                                    <q-icon name="mdi-arrow-up" />
-                                    {{ __("last month") }}
-                                </div>
+    <v-admin-layout>
+        <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-3 md:p-6"
+        >
+            <!-- Total Sales Card -->
+            <div
+                class="stat-card bg-blue-50 border-l-4 border-blue-500 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+                <div class="p-6">
+                    <div class="flex items-center">
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-600">Total Sales</div>
+                            <div class="text-xl font-bold">
+                                {{ dashboard.currency_symbol }}
+                                {{ dashboard.transactions_total }}
+                            </div>
+                            <div
+                                class="text-xs text-green-600 flex items-center mt-1"
+                            >
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                last month
                             </div>
                         </div>
-                    </q-card-section>
-                </q-card>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3">
-                <q-card class="stat-card bg-green-1">
-                    <q-card-section>
-                        <div class="row items-center no-wrap">
-                            <div class="col">
-                                <div class="text-subtitle1 text-grey-7">
-                                    {{ __("Today Sales") }}
-                                </div>
-                                <div class="text-h6 text-weight-bold">
-                                    {{ dashboard.currency_symbol }}
-                                    {{ dashboard.transactions_today }}
-                                </div>
-                                <div class="text-caption text-green">
-                                    <q-icon name="mdi-arrow-up" />
-                                    {{ __("from yesterday") }}
-                                </div>
+            <!-- Today Sales Card -->
+            <div
+                class="stat-card bg-green-50 border-l-4 border-green-500 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-600">Today Sales</div>
+                            <div class="text-xl font-bold">
+                                {{ dashboard.currency_symbol }}
+                                {{ dashboard.transactions_today }}
                             </div>
-                            <div class="col-auto">
-                                <q-icon
-                                    name="mdi-cash-fast"
-                                    size="lg"
-                                    color="green"
-                                />
+                            <div
+                                class="text-xs text-green-600 flex items-center mt-1"
+                            >
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                from yesterday
                             </div>
                         </div>
-                    </q-card-section>
-                </q-card>
+                        <div class="text-green-500 text-2xl">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3">
-                <q-card class="stat-card bg-orange-1">
-                    <q-card-section>
-                        <div class="row items-center no-wrap">
-                            <div class="col">
-                                <div class="text-subtitle1 text-grey-7">
-                                    {{ __("Total Products") }}
-                                </div>
-                                <div class="text-h6 text-weight-bold">
-                                    {{ dashboard.products_stock_total }}
-                                </div>
-                                <div class="text-caption text-grey">
-                                    {{ dashboard.products_lower_stock }}
-                                    {{ __("low in stock") }}
-                                </div>
+            <!-- Total Products Card -->
+            <div
+                class="stat-card bg-orange-50 border-l-4 border-orange-500 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-600">
+                                Total Products
                             </div>
-                            <div class="col-auto">
-                                <q-icon
-                                    name="mdi-package-variant"
-                                    size="lg"
-                                    color="orange"
-                                />
+                            <div class="text-xl font-bold">
+                                {{ dashboard.products_stock_total }}
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                {{ dashboard.products_lower_stock }}
+                                low in stock
                             </div>
                         </div>
-                    </q-card-section>
-                </q-card>
+                        <div class="text-orange-500 text-2xl">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3">
-                <q-card class="stat-card bg-purple-1">
-                    <q-card-section>
-                        <div class="row items-center no-wrap">
-                            <div class="col">
-                                <div class="text-subtitle1 text-grey-7">
-                                    {{ __("Pending Orders") }}
-                                </div>
-                                <div class="text-h6 text-weight-bold">
-                                    {{ dashboard.products_pending }}
-                                </div>
-                                <div class="text-caption text-red">
-                                    <q-icon name="mdi-alert" />
-                                    {{ __("high priority") }}
-                                </div>
+            <!-- Pending Orders Card -->
+            <div
+                class="stat-card bg-purple-50 border-l-4 border-purple-500 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-600">
+                                Pending Orders
                             </div>
-                            <div class="col-auto">
-                                <q-icon
-                                    name="mdi-clock-outline"
-                                    size="lg"
-                                    color="purple"
-                                />
+                            <div class="text-xl font-bold">
+                                {{ dashboard.products_pending }}
+                            </div>
+                            <div
+                                class="text-xs text-red-600 flex items-center mt-1"
+                            >
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                high priority
                             </div>
                         </div>
-                    </q-card-section>
-                </q-card>
+                        <div class="text-purple-500 text-2xl">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Charts Row -->
-        <div class="row q-col-gutter-md q-mb-md">
-            <div class="col-12 col-lg-8">
-                <q-card class="chart-card">
-                    <q-card-section class="card-header">
-                        <div class="text-h6">
-                            {{ __("Sales Overview (Last 30 Days)") }}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-3 md:p-6">
+            <div class="lg:col-span-2">
+                <div
+                    class="chart-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                >
+                    <div
+                        class="flex justify-between items-center p-6 border-b border-gray-100"
+                    >
+                        <div class="text-lg font-semibold">
+                            Sales Overview (Last 30 Days)
                         </div>
-                        <q-btn
-                            flat
-                            round
-                            dense
-                            icon="mdi-dots-vertical"
-                            class="card-menu"
-                        >
-                            <q-menu>
-                                <q-list>
-                                    <q-item clickable v-close-popup>
-                                        <q-item-section>{{
-                                            __("Export Data")
-                                        }}</q-item-section>
-                                    </q-item>
-                                </q-list>
-                            </q-menu>
-                        </q-btn>
-                    </q-card-section>
-                    <q-card-section>
+                        <div class="relative">
+                            <button
+                                class="text-gray-400 hover:text-gray-600 p-2"
+                            >
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
                         <apexchart
                             type="area"
                             height="350"
                             :options="salesChartOptions"
                             :series="salesChartSeries"
                         />
-                    </q-card-section>
-                </q-card>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-12 col-lg-4">
-                <q-card class="chart-card">
-                    <q-card-section class="card-header">
-                        <div class="text-h6">{{ __("Revenue Sources") }}</div>
-                    </q-card-section>
-                    <q-card-section>
+            <div class="lg:col-span-1">
+                <div
+                    class="chart-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                >
+                    <div
+                        class="flex justify-between items-center p-6 border-b border-gray-100"
+                    >
+                        <div class="text-lg font-semibold">Revenue Sources</div>
+                    </div>
+                    <div class="p-6">
                         <apexchart
                             type="donut"
                             height="350"
                             :options="revenueChartOptions"
                             :series="revenueChartSeries"
                         />
-                    </q-card-section>
-                </q-card>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Second Row Charts -->
-        <div class="row q-col-gutter-md q-mb-md">
-            <div class="col-12 col-md-6">
-                <q-card class="chart-card">
-                    <q-card-section class="card-header">
-                        <div class="text-h6">
-                            {{ __("Top Selling Products") }}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-3 md:p-6">
+            <div>
+                <div
+                    class="chart-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                >
+                    <div
+                        class="flex justify-between items-center p-6 border-b border-gray-100"
+                    >
+                        <div class="text-lg font-semibold">
+                            Top Selling Products
                         </div>
-                    </q-card-section>
-                    <q-card-section>
+                    </div>
+                    <div class="p-6">
                         <apexchart
                             type="bar"
                             height="300"
                             :options="topProductsChartOptions"
                             :series="topProductsChartSeries"
                         />
-                    </q-card-section>
-                </q-card>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-12 col-md-6">
-                <q-card class="chart-card">
-                    <q-card-section class="card-header">
-                        <div class="text-h6">
-                            {{ __("Today's Sales Status") }}
+            <div>
+                <div
+                    class="chart-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                >
+                    <div
+                        class="flex justify-between items-center p-6 border-b border-gray-100"
+                    >
+                        <div class="text-lg font-semibold">
+                            Today's Sales Status
                         </div>
-                    </q-card-section>
-                    <q-card-section>
+                    </div>
+                    <div class="p-6">
                         <apexchart
                             type="radialBar"
                             height="300"
                             :options="todaySalesChartOptions"
                             :series="todaySalesChartSeries"
                         />
-                    </q-card-section>
-                </q-card>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Data Tables Section -->
-        <div class="row q-col-gutter-md">
-            <div class="col-12 col-lg-7">
-                <q-card class="data-card">
-                    <q-card-section class="card-header">
-                        <div class="text-h6">{{ __("Recent Orders") }}</div>
-                        <q-btn
-                            flat
-                            color="primary"
-                            :label="__('View All')"
-                            size="sm"
-                        />
-                    </q-card-section>
-                    <q-separator />
-                    <q-card-section class="q-pa-none">
-                        <q-table
-                            flat
-                            :rows="checkouts"
-                            :columns="columns"
-                            hide-pagination
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-3 md:p-6">
+            <div>
+                <div
+                    class="data-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                >
+                    <div
+                        class="flex justify-between items-center p-6 border-b border-gray-100"
+                    >
+                        <div class="text-lg font-semibold">Recent Orders</div>
+                        <button
+                            class="text-blue-600 hover:text-blue-800 text-sm font-medium"
                         >
-                            <template v-slot:body-cell-status="props">
-                                <q-td :props="props">
-                                    <q-badge
-                                        :color="
-                                            getStatusColor(props.row.status)
-                                        "
-                                        class="status-badge"
+                            View All
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr
+                                    class="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    <th class="px-6 py-3">Order</th>
+                                    <th class="px-6 py-3">Customer</th>
+                                    <th class="px-6 py-3">Date</th>
+                                    <th class="px-6 py-3 text-right">Total</th>
+                                    <th class="px-6 py-3 text-center">
+                                        Status
+                                    </th>
+                                    <th class="px-6 py-3 text-center">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr
+                                    v-for="checkout in checkouts"
+                                    :key="checkout.id"
+                                    class="hover:bg-gray-50"
+                                >
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
                                     >
-                                        {{ props.row.status }}
-                                    </q-badge>
-                                </q-td>
-                            </template>
-
-                            <template v-slot:body-cell-actions="props">
-                                <q-td :props="props" class="actions-cell">
-                                    <q-btn
-                                        flat
-                                        round
-                                        dense
-                                        icon="mdi-eye-outline"
-                                        color="blue"
-                                        size="sm"
-                                        @click="viewOrder(props.row)"
-                                    />
-                                </q-td>
-                            </template>
-                        </q-table>
-                    </q-card-section>
-                </q-card>
+                                        {{ checkout.id }}
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                    >
+                                        {{ checkout.customer }}
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                    >
+                                        {{ checkout.date }}
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right"
+                                    >
+                                        {{ checkout.total }}
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-center"
+                                    >
+                                        <span
+                                            :class="`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+                                                checkout.status
+                                            )}`"
+                                        >
+                                            {{ checkout.status }}
+                                        </span>
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
+                                    >
+                                        <button
+                                            @click="viewOrder(checkout)"
+                                            class="text-blue-600 hover:text-blue-900"
+                                        >
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-12 col-lg-5">
-                <q-card class="data-card">
-                    <q-card-section class="card-header">
-                        <div class="text-h6">
-                            {{ __("Top Selling Products") }}
+            <div>
+                <div
+                    class="data-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                >
+                    <div
+                        class="flex justify-between items-center p-6 border-b border-gray-100"
+                    >
+                        <div class="text-lg font-semibold">
+                            Top Selling Products
                         </div>
-                        <q-btn
-                            flat
-                            color="primary"
-                            :label="__('View All')"
-                            size="sm"
-                        />
-                    </q-card-section>
-                    <q-separator />
-                    <q-card-section class="q-pa-none">
-                        <q-list bordered separator class="product-list">
-                            <q-item
-                                v-for="product in topProducts"
-                                :key="product.id"
-                                class="product-item"
+                        <button
+                            class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                        >
+                            View All
+                        </button>
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <div
+                            v-for="product in topProducts"
+                            :key="product.id"
+                            class="flex items-center p-4 hover:bg-gray-50"
+                        >
+                            <div
+                                class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden"
                             >
-                                <q-item-section avatar>
-                                    <q-avatar rounded>
-                                        <img
-                                            :src="product.image"
-                                            :alt="product.name"
-                                        />
-                                    </q-avatar>
-                                </q-item-section>
-
-                                <q-item-section>
-                                    <q-item-label class="product-name">{{
-                                        product.name
-                                    }}</q-item-label>
-                                    <q-item-label
-                                        caption
-                                        class="product-category"
-                                        >{{ product.category }}</q-item-label
-                                    >
-                                </q-item-section>
-
-                                <q-item-section side>
-                                    <div class="text-weight-bold text-primary">
-                                        ${{ product.price }}
-                                    </div>
-                                    <div class="text-caption text-grey-7">
-                                        {{ __("Sold:") }} {{ product.sold }}
-                                    </div>
-                                </q-item-section>
-                            </q-item>
-                        </q-list>
-                    </q-card-section>
-                </q-card>
+                                <img
+                                    :src="product.image"
+                                    :alt="product.name"
+                                    class="h-full w-full object-cover"
+                                />
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ product.name }}
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    {{ product.category }}
+                                </div>
+                            </div>
+                            <div class="ml-4 text-right">
+                                <div class="text-sm font-medium text-blue-600">
+                                    ${{ product.price }}
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    Sold: {{ product.sold }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </v-admin-ecommerce-layout>
+    </v-admin-layout>
 </template>
 
 <script>
 import VueApexCharts from "vue3-apexcharts";
+import VAdminLayout from "../../Components/VAdminLayout.vue";
 
 export default {
     components: {
         apexchart: VueApexCharts,
+        VAdminLayout,
     },
 
     data() {
@@ -349,46 +386,11 @@ export default {
             revenue: [],
             dashboard: [],
             checkouts: [],
-            columns: [
-                {
-                    name: "id",
-                    label: this.__("Order"),
-                    field: "id",
-                    align: "left",
-                },
-                {
-                    name: "customer",
-                    label: this.__("Customer"),
-                    field: "customer",
-                    align: "left",
-                },
-                {
-                    name: "date",
-                    label: this.__("Date"),
-                    field: "date",
-                    align: "left",
-                },
-                {
-                    name: "total",
-                    label: this.__("Total"),
-                    field: "total",
-                    align: "right",
-                },
-                {
-                    name: "status",
-                    label: this.__("Status"),
-                    field: "status",
-                    align: "center",
-                },
-                { name: "actions", label: "", align: "center" },
-            ],
 
             salesChartOptions: {},
-
             salesChartSeries: [],
 
             revenueChartOptions: {},
-
             revenueChartSeries: [],
 
             topProductsChartOptions: {},
@@ -442,7 +444,7 @@ export default {
                     },
                 },
                 stroke: { lineCap: "round" },
-                labels: [this.__("Today Sales Goal")],
+                labels: ["Today Sales Goal"],
             },
 
             todaySalesChartSeries: [],
@@ -492,14 +494,14 @@ export default {
                 },
                 tooltip: {
                     y: {
-                        formatter: (val) => val + " " + this.__("units sold"),
+                        formatter: (val) => val + " units sold",
                     },
                 },
             };
 
             this.topProductsChartSeries = [
                 {
-                    name: this.__("Units Sold"),
+                    name: "Units Sold",
                     data: this.topProducts.map((item) => item.sold),
                 },
             ];
@@ -540,7 +542,7 @@ export default {
                                 },
                                 total: {
                                     show: true,
-                                    label: this.__("Total Revenue"),
+                                    label: "Total Revenue",
                                     formatter: () =>
                                         this.dashboard.currency_symbol +
                                         " " +
@@ -624,11 +626,11 @@ export default {
         getStatusColor(status) {
             switch (status) {
                 case "successful":
-                    return "green";
+                    return "bg-green-100 text-green-800";
                 case "pending":
-                    return "orange";
+                    return "bg-orange-100 text-orange-800";
                 default:
-                    return "grey";
+                    return "bg-gray-100 text-gray-800";
             }
         },
 
@@ -638,109 +640,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-/* Cards Styles */
-.stat-card {
-    transition: all 0.3s ease;
-    border-left: 4px solid;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.stat-card.bg-blue-1 {
-    border-left-color: #2196f3;
-}
-
-.stat-card.bg-green-1 {
-    border-left-color: #4caf50;
-}
-
-.stat-card.bg-orange-1 {
-    border-left-color: #ff9800;
-}
-
-.stat-card.bg-purple-1 {
-    border-left-color: #9c27b0;
-}
-
-/* Chart Cards */
-.chart-card,
-.data-card {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
-}
-
-.chart-card:hover,
-.data-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Card Headers */
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.card-menu {
-    margin-right: -8px;
-}
-
-/* Status Badges */
-.status-badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-}
-
-/* Product List */
-.product-list {
-    border-radius: 0 0 12px 12px;
-}
-
-.product-item {
-    transition: all 0.2s ease;
-    padding: 12px 16px;
-}
-
-.product-item:hover {
-    background-color: #f5f5f5;
-}
-
-.product-name {
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.product-category {
-    font-size: 0.75rem;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 1023px) {
-    .chart-card {
-        margin-bottom: 16px;
-    }
-}
-
-@media (max-width: 599px) {
-    .card-header {
-        padding: 12px;
-    }
-
-    .product-item {
-        padding: 8px 12px;
-    }
-}
-</style>
