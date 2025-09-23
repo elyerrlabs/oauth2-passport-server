@@ -33,7 +33,6 @@ use App\Http\Controllers\WebController;
 
 final class DashboardController extends WebController
 {
-
     private $repository;
 
     public function __construct(DashboardRepository $dashboardRepository)
@@ -63,6 +62,6 @@ final class DashboardController extends WebController
                 ],
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
-        );
+        )->rootView('ecommerce');
     }
 }
