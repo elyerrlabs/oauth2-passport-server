@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <div class="w-full">
         <!-- Label Section -->
-        <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center justify-start mb-2">
             <label
                 class="block text-sm font-medium text-gray-700 transition-colors duration-200"
             >
@@ -102,7 +102,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Toggle Label -->
                 <span
-                    class="ml-3 text-sm font-medium text-gray-700 transition-colors duration-200"
+                    class="mx-4 text-sm font-medium text-gray-700 transition-colors duration-200"
                     :class="localValue ? 'text-green-700' : 'text-gray-700'"
                 >
                     {{ localValue ? __(activeLabel) : __(inactiveLabel) }}

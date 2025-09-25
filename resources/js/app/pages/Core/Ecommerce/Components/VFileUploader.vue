@@ -148,7 +148,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </p>
                 </div>
             </div>
-
+            <v-error :error="error" />
             <transition name="fade">
                 <div
                     v-if="previewImage"
@@ -173,6 +173,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </div>
 </template>
 <script setup>
+import VError from "./VError.vue";
 import { ref, computed, watch } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);

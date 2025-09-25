@@ -130,8 +130,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <!-- Images Section -->
                         <div class="space-y-6">
-                            <v-file-uploader v-model="form.images" />
-                            <v-error :error="errors.images" />
+                            <v-file-uploader
+                                v-model="form.images"
+                                :error="errors.images"
+                            />
                         </div>
                         <div class="space-y-6" v-if="current_images.length">
                             <v-file-viewer v-model="current_images" />

@@ -22,6 +22,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
         <!-- Tabs -->
+        <label class="text-sm md:text-lg lg:text-lg text-gray-600 font-medium">
+            {{ label }}
+            <span class="text-red-500" v-if="required">*</span>
+        </label>
         <div class="flex border-b border-gray-200 mb-4">
             <button
                 class="px-4 py-2 font-medium"
@@ -60,7 +64,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Editor Tab -->
         <div v-show="activeTab === 'editor'">
-            <div id="editor" class="min-h-[300px]"></div>
+            <div :id="editorId" class="min-h-[300px]"></div>
         </div>
 
         <!-- HTML Tab -->
@@ -93,7 +97,18 @@ const props = defineProps({
         type: String,
         default: "",
     },
-    error: Array,
+    error: {
+        type: Array,
+        default: [],
+    },
+    label: {
+        type: String,
+        default: "Editor",
+    },
+    required: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -103,15 +118,23 @@ const htmlContent = ref(props.modelValue);
 const previewContent = ref(props.modelValue);
 const quill = ref(null);
 
+const randomIdentifier = (length = 8) => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    return Array.from({ length }, () =>
+        chars.charAt(Math.floor(Math.random() * chars.length))
+    ).join("");
+};
+
+const editorId = `editor-${randomIdentifier(10)}`;
+
 // Inicializar Quill
 onMounted(() => {
-    quill.value = new Quill("#editor", {
+    quill.value = new Quill(`#${editorId}`, {
         theme: "snow",
         modules: {
             toolbar: [
                 [{ header: [1, 2, 3, 4, 5, 6, false] }],
                 ["bold", "italic", "underline", "strike"],
-                //   [{ list: "ordered" }, { list: "bullet" }],
                 [{ script: "sub" }, { script: "super" }],
                 [{ indent: "-1" }, { indent: "+1" }],
                 [{ direction: "rtl" }],
@@ -136,7 +159,7 @@ onMounted(() => {
     });
 });
 
-watch(htmlContent, (newVal, oldVal) => {
+watch(htmlContent, (newVal) => {
     if (quill.value && quill.value.root.innerHTML !== newVal) {
         quill.value.root.innerHTML = newVal;
     }

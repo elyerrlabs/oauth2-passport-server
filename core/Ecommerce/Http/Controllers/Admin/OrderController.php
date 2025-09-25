@@ -61,7 +61,7 @@ class OrderController extends WebController
             ],
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
 
-        ]);
+        ])->rootView('ecommerce');
     }
 
 
@@ -82,6 +82,6 @@ class OrderController extends WebController
                 'orders' => route("ecommerce.admin.orders.complete")
             ],
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
-        ]);
+        ])->rootView('ecommerce');
     }
 }

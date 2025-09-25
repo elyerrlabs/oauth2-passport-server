@@ -20,704 +20,799 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <v-admin-ecommerce-layout>
-        <!-- Header Section -->
-        <div class="header-section q-pa-lg bg-primary text-white">
-            <div class="row items-center justify-between">
-                <div class="col">
-                    <div class="text-h4 text-weight-bold">
-                        {{ __("Products Management") }}
+    <v-admin-layout>
+        <!-- Enhanced Header Section -->
+        <div
+            class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white shadow-xl"
+        >
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div
+                    class="flex flex-col md:flex-row md:items-center md:justify-between"
+                >
+                    <div class="mb-4 md:mb-0">
+                        <h1
+                            class="text-2xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent"
+                        >
+                            {{ __("Products Management") }}
+                        </h1>
+                        <p
+                            class="text-blue-100 text-sm md:text-base opacity-90 max-w-2xl"
+                        >
+                            {{
+                                __(
+                                    "Manage your product inventory and catalog with real-time updates and advanced filtering"
+                                )
+                            }}
+                        </p>
                     </div>
-                    <div class="text-subtitle1 opacity-70">
-                        {{ __("Manage your product inventory and catalog") }}
+                    <div class="flex flex-wrap gap-3">
+                        <a
+                            :href="$page.props.routes.create"
+                            class="px-4 py-2 font-medium bg-white/20 cursor-pointer hover:bg-white/30 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 backdrop-blur-sm border border-white/30 hover:border-white/50 shadow-md hover:shadow-lg"
+                        >
+                            <i class="mdi mdi-edit"></i>
+                            {{ __("Create") }}
+                        </a>
                     </div>
-                </div>
-                <div class="col-auto">
-                    <v-create @created="getProducts" />
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="q-pa-lg">
-            <!-- Filter Section -->
-            <q-card class="filter-card shadow-3 rounded-borders q-mb-lg">
-                <q-expansion-item
-                    v-model="filterExpanded"
-                    expand-icon-toggle
-                    switch-toggle-side
-                    :label="filterHeaderText"
-                    header-class="text-primary filter-header"
+        <div class="max-w-7xl mx-auto py-6">
+            <!-- Enhanced Filter Section -->
+            <div
+                class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-6"
+            >
+                <!-- Filter Header -->
+                <div
+                    class="bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100"
                 >
-                    <template v-slot:header>
-                        <q-item-section avatar>
-                            <q-icon name="mdi-filter" size="sm" />
-                        </q-item-section>
-                        <q-item-section>
-                            <div class="text-subtitle1">
-                                {{ filterHeaderText }}
-                            </div>
-                        </q-item-section>
-                        <q-item-section side>
-                            <q-btn
-                                size="sm"
-                                flat
-                                round
-                                icon="mdi-help-circle"
-                                @click.stop="showFilterHelp = true"
+                    <button
+                        @click="filterExpanded = !filterExpanded"
+                        class="w-full p-6 flex items-center cursor-pointer justify-between text-left hover:bg-white/50 transition-all duration-300"
+                    >
+                        <div class="flex items-center space-x-4">
+                            <div
+                                class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg"
                             >
-                                <q-tooltip>{{ __("Filter Help") }}</q-tooltip>
-                            </q-btn>
-                        </q-item-section>
-                    </template>
-
-                    <q-separator />
-
-                    <q-form @submit.prevent="getProducts" class="q-pa-md">
-                        <div class="row q-col-gutter-md">
-                            <!-- Search Inputs -->
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <q-input
-                                    filled
-                                    v-model="search.name"
-                                    :label="__('Product Name')"
-                                    clearable
-                                    @update:model-value="getProducts"
-                                    class="filter-input"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="mdi-tag" />
-                                    </template>
-                                </q-input>
+                                <i class="fas fa-filter text-white text-lg"></i>
                             </div>
-
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <q-input
-                                    filled
-                                    v-model="search.category"
-                                    :label="__('Category')"
-                                    clearable
-                                    @update:model-value="getProducts"
-                                    class="filter-input"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="mdi-folder" />
-                                    </template>
-                                </q-input>
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-lg">
+                                    {{ filterHeaderText }}
+                                </h3>
+                                <p class="text-gray-600 text-sm">
+                                    {{ __("Filter and search products") }}
+                                </p>
                             </div>
-
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <q-input
-                                    filled
-                                    v-model="search.model"
-                                    :label="__('Model')"
-                                    clearable
-                                    @update:model-value="getProducts"
-                                    class="filter-input"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="mdi-cube" />
-                                    </template>
-                                </q-input>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <button
+                                @click.stop="showFilterHelp = true"
+                                class="w-10 h-10 flex items-center justify-center text-blue-600 hover:text-blue-700 rounded-xl hover:bg-blue-50 transition-colors"
+                                :title="__('Filter Help')"
+                            >
+                                <i class="fas fa-question-circle text-lg"></i>
+                            </button>
+                            <div
+                                class="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm border border-gray-200"
+                            >
+                                <i
+                                    class="fas fa-chevron-down text-gray-600 transition-transform duration-300"
+                                    :class="{ 'rotate-180': filterExpanded }"
+                                ></i>
                             </div>
+                        </div>
+                    </button>
+                </div>
 
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <q-input
-                                    filled
-                                    v-model="search.family"
-                                    :label="__('Family')"
-                                    clearable
-                                    @update:model-value="getProducts"
-                                    class="filter-input"
+                <!-- Filter Content -->
+                <div v-if="filterExpanded" class="p-3 bg-white">
+                    <form @submit.prevent="getProducts" class="space-y-6">
+                        <!-- Search Inputs Grid -->
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                        >
+                            <div
+                                v-for="(field, index) in filterFields"
+                                :key="index"
+                                class="group"
+                            >
+                                <label
+                                    class="text-sm font-semibold text-gray-700 mb-2 flex items-center"
                                 >
-                                    <template v-slot:prepend>
-                                        <q-icon name="mdi-group" />
-                                    </template>
-                                </q-input>
-                            </div>
-
-                            <!-- Stock Filter -->
-                            <div class="col-12 col-md-6">
-                                <div class="text-caption text-grey-7">
-                                    {{ __("Stock Level") }}
-                                </div>
-                                <div class="row">
-                                    <q-select
-                                        filled
-                                        dense
-                                        v-model="search.stock_operator"
-                                        :options="operators"
-                                        emit-value
-                                        map-options
-                                        class="col-2"
+                                    <i
+                                        :class="field.icon"
+                                        class="mr-2 text-blue-500"
+                                    ></i>
+                                    {{ __(field.label) }}
+                                </label>
+                                <div class="relative">
+                                    <i
+                                        :class="
+                                            field.icon +
+                                            ' absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors'
+                                        "
+                                    ></i>
+                                    <input
+                                        v-model="search[field.key]"
+                                        type="text"
+                                        :placeholder="__(field.placeholder)"
+                                        class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 bg-white shadow-sm"
+                                        @input="debouncedGetProducts"
                                     />
-                                    <q-input
-                                        filled
-                                        dense
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stock and Price Filters -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div class="space-y-3">
+                                <label
+                                    class="text-sm font-semibold text-gray-700 flex items-center"
+                                >
+                                    <i
+                                        class="fas fa-boxes mr-2 text-blue-500"
+                                    ></i>
+                                    {{ __("Stock Level") }}
+                                </label>
+                                <div
+                                    class="flex space-x-3 bg-gray-50 p-3 rounded-xl"
+                                >
+                                    <select
+                                        v-model="search.stock_operator"
+                                        class="w-24 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white shadow-sm"
+                                        @change="getProducts"
+                                    >
+                                        <option
+                                            v-for="op in operators"
+                                            :key="op.value"
+                                            :value="op.value"
+                                        >
+                                            {{ op.label }}
+                                        </option>
+                                    </select>
+                                    <input
                                         v-model="search.stock"
                                         type="number"
+                                        min="0"
+                                        class="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 shadow-sm"
                                         :placeholder="__('Quantity')"
-                                        clearable
-                                        @update:model-value="getProducts"
-                                        class="col-10"
-                                        :rules="[
-                                            (val) =>
-                                                val >= 0 ||
-                                                __('Must be positive'),
-                                        ]"
-                                    >
-                                        <template v-slot:prepend>
-                                            <q-icon
-                                                name="mdi-package-variant"
-                                            />
-                                        </template>
-                                    </q-input>
-                                </div>
-                            </div>
-
-                            <!-- Price Filter -->
-                            <div class="col-12 col-md-6">
-                                <div class="text-caption text-grey-7">
-                                    {{ __("Price Range") }}
-                                </div>
-                                <div class="row">
-                                    <q-select
-                                        filled
-                                        dense
-                                        v-model="search.price_operator"
-                                        :options="operators"
-                                        emit-value
-                                        map-options
-                                        class="col-2"
+                                        @input="debouncedGetProducts"
                                     />
-                                    <q-input
-                                        filled
-                                        dense
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <label
+                                    class="text-sm font-semibold text-gray-700 flex items-center"
+                                >
+                                    <i
+                                        class="fas fa-dollar-sign mr-2 text-green-500"
+                                    ></i>
+                                    {{ __("Price Range") }}
+                                </label>
+                                <div
+                                    class="flex space-x-3 bg-gray-50 p-3 rounded-xl"
+                                >
+                                    <select
+                                        v-model="search.price_operator"
+                                        class="w-24 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white shadow-sm"
+                                        @change="getProducts"
+                                    >
+                                        <option
+                                            v-for="op in operators"
+                                            :key="op.value"
+                                            :value="op.value"
+                                        >
+                                            {{ op.label }}
+                                        </option>
+                                    </select>
+                                    <input
                                         v-model="search.price"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        class="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 shadow-sm"
                                         :placeholder="__('Amount')"
-                                        clearable
-                                        @update:model-value="getProducts"
-                                        class="col-10"
-                                        mask="#.##"
-                                        fill-mask="0"
-                                        reverse-fill-mask
-                                        :rules="[
-                                            (val) =>
-                                                val >= 0 ||
-                                                __('Must be positive'),
-                                        ]"
-                                    >
-                                        <template v-slot:prepend>
-                                            <q-icon name="mdi-currency-usd" />
-                                        </template>
-                                    </q-input>
+                                        @input="debouncedGetProducts"
+                                    />
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Active Filters -->
-                            <div class="col-12" v-if="activeFilterCount > 0">
-                                <div class="text-caption text-grey-">
-                                    {{ __("Active Filters") }}
-                                </div>
-                                <div class="row q-gutter-sm">
-                                    <q-badge
-                                        v-for="(value, key) in activeFilters"
-                                        :key="key"
-                                        color="primary"
-                                        class="filter-badge"
-                                    >
-                                        {{ filterLabels[key] }}: {{ value }}
-                                        <q-icon
-                                            name="mdi-close"
-                                            size="xs"
-                                            class="q-ml-xs cursor-pointer"
-                                            @click="clearFilter(key)"
-                                        />
-                                    </q-badge>
-                                </div>
-                            </div>
-
-                            <!-- Action Buttons -->
-                            <div
-                                class="col-12 flex justify-between items-center q-pt-md"
+                        <!-- Active Filters -->
+                        <div
+                            v-if="activeFilterCount > 0"
+                            class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100"
+                        >
+                            <label
+                                class="text-sm font-semibold text-gray-700 mb-3 flex items-center"
                             >
-                                <q-btn
-                                    color="primary"
-                                    outline
-                                    :label="__('Reset All Filters')"
-                                    icon="mdi-refresh"
-                                    @click="resetFilters"
-                                    class="action-btn"
-                                />
-                                <div class="text-caption text-grey-6">
+                                <i class="fas fa-filter mr-2 text-blue-600"></i>
+                                {{ __("Active Filters") }} ({{
+                                    activeFilterCount
+                                }})
+                            </label>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    v-for="(value, key) in activeFilters"
+                                    :key="key"
+                                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white text-blue-700 border border-blue-200 shadow-sm hover:shadow-md transition-shadow"
+                                >
+                                    <i
+                                        class="fas fa-tag mr-2 text-blue-500"
+                                    ></i>
+                                    {{ filterLabels[key] }}: {{ value }}
+                                    <button
+                                        @click="clearFilter(key)"
+                                        class="ml-3 hover:text-blue-900 transition-colors"
+                                    >
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div
+                            class="flex justify-between items-center pt-6 border-t border-gray-100"
+                        >
+                            <button
+                                type="button"
+                                @click="resetFilters"
+                                class="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-300 flex items-center space-x-3 shadow-sm hover:shadow-md"
+                            >
+                                <i class="fas fa-undo-alt"></i>
+                                <span class="font-medium">{{
+                                    __("Reset All Filters")
+                                }}</span>
+                            </button>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600 font-medium">
                                     {{ filteredResultsText }}
-                                </div>
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    {{ __("Real-time filtering") }}
+                                </p>
                             </div>
                         </div>
-                    </q-form>
-                </q-expansion-item>
-            </q-card>
+                    </form>
+                </div>
+            </div>
 
-            <!-- Products Table Section -->
-            <q-card class="products-card shadow-3 rounded-borders">
-                <q-card-section class="table-header">
-                    <div class="row items-center justify-between">
-                        <div class="col">
-                            <div class="text-h6 text-weight-bold">
+            <!-- Enhanced Products Table Section -->
+            <div
+                class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+            >
+                <!-- Table Header -->
+                <div
+                    class="px-4 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white"
+                >
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+                    >
+                        <div class="mb-4 sm:mb-0">
+                            <h2
+                                class="text-xl font-bold text-gray-900 flex items-center"
+                            >
+                                <i class="fas fa-boxes mr-3 text-blue-600"></i>
                                 {{ __("Product Inventory") }}
-                            </div>
-                            <div
-                                class="text-caption text-grey-6"
+                            </h2>
+                            <p
                                 v-if="!loading"
+                                class="text-gray-600 mt-1 flex items-center"
                             >
+                                <i
+                                    class="fas fa-chart-bar mr-2 text-green-500"
+                                ></i>
                                 {{ __("Managing") }}
-                                {{ pagination.rowsNumber }} {{ __("products") }}
-                            </div>
+                                <span
+                                    class="font-semibold text-gray-900 mx-1"
+                                    >{{ pagination.rowsNumber }}</span
+                                >
+                                {{ __("products") }}
+                            </p>
                         </div>
-                        <div class="col-auto row items-center q-gutter-sm">
-                            <q-select
-                                v-model="search.per_page"
-                                :options="[10, 15, 25, 50, 100]"
-                                dense
-                                filled
-                                emit-value
-                                map-options
-                                :label="__('Items per page')"
-                                @update:model-value="getProducts"
-                                class="per-page-select"
-                            />
-                            <q-btn
-                                color="primary"
-                                icon="mdi-refresh"
-                                round
-                                dense
-                                @click="getProducts"
-                                :loading="loading"
+                        <div class="flex items-center space-x-4">
+                            <a
+                                :href="$page.props.routes.create"
+                                class="px-4 py-2 hidden font-medium bg-white/20 cursor-pointer hover:bg-white/30 text-shadow-gray-400 rounded-lg transition-all duration-300 lg:flex items-center space-x-2 backdrop-blur-sm border border-gray-300 shadow-md hover:shadow-lg"
                             >
-                                <q-tooltip>{{ __("Refresh Data") }}</q-tooltip>
-                            </q-btn>
+                                <i class="mdi mdi-edit"></i>
+                                {{ __("Create") }}
+                            </a>
+
+                            <div
+                                class="flex items-center space-x-2 bg-white rounded-xl px-3 py-2 border border-gray-200 shadow-sm"
+                            >
+                                <i class="fas fa-list-ol text-gray-400"></i>
+                                <select
+                                    v-model="search.per_page"
+                                    @change="getProducts"
+                                    class="border-0 focus:ring-0 text-gray-700 font-medium bg-transparent"
+                                >
+                                    <option value="10">
+                                        10 {{ __("per page") }}
+                                    </option>
+                                    <option value="15">
+                                        15 {{ __("per page") }}
+                                    </option>
+                                    <option value="25">
+                                        25 {{ __("per page") }}
+                                    </option>
+                                    <option value="50">
+                                        50 {{ __("per page") }}
+                                    </option>
+                                    <option value="100">
+                                        100 {{ __("per page") }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </q-card-section>
+                </div>
 
-                <q-separator />
-
-                <!-- Products Table -->
-                <q-table
-                    :rows="groups"
-                    :columns="columns"
-                    row-key="id"
-                    flat
-                    bordered
-                    :pagination="pagination"
-                    :loading="loading"
-                    hide-bottom
-                    class="products-table"
-                    :grid="$q.screen.lt.md"
-                    @request="onTableRequest"
-                >
-                    <!-- Table Header -->
-                    <template v-slot:header="props">
-                        <q-tr :props="props" class="table-header-row">
-                            <q-th
-                                v-for="col in props.cols"
-                                :key="col.name"
-                                :props="props"
-                                class="text-weight-bold"
+                <!-- Desktop Table -->
+                <div class="hidden lg:block overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gradient-to-r from-gray-50 to-blue-50">
+                            <tr>
+                                <th
+                                    v-for="(column, index) in columns"
+                                    :key="index"
+                                    class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200"
+                                >
+                                    <div class="flex items-center space-x-2">
+                                        <i
+                                            :class="getColumnIcon(column)"
+                                            class="text-blue-500"
+                                        ></i>
+                                        <span>{{ __(column) }}</span>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr
+                                v-for="product in products"
+                                :key="product.id"
+                                class="hover:bg-blue-50/50 transition-all duration-300 group"
                             >
-                                {{ col.label }}
-                            </q-th>
-                        </q-tr>
-                    </template>
-
-                    <!-- Stock Column -->
-                    <template v-slot:body-cell-stock="props">
-                        <q-td :props="props">
-                            <q-badge
-                                :color="getStockColor(props.row.stock)"
-                                class="stock-badge"
-                            >
-                                <q-icon
-                                    :name="getStockIcon(props.row.stock)"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{ props.row.stock }}
-                            </q-badge>
-                        </q-td>
-                    </template>
-
-                    <!-- Price Column -->
-                    <template v-slot:body-cell-format_price="props">
-                        <q-td :props="props">
-                            <div class="text-weight-medium text-primary">
-                                {{ props.row.currency }}
-                                {{ props.row.format_price }}
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <!-- Status Columns -->
-                    <template v-slot:body-cell-published="props">
-                        <q-td :props="props" class="text-center">
-                            <q-badge
-                                :color="
-                                    props.row.published ? 'positive' : 'grey-5'
-                                "
-                                :text-color="
-                                    props.row.published ? 'white' : 'dark'
-                                "
-                                class="status-badge"
-                            >
-                                <q-icon
-                                    :name="
-                                        props.row.published
-                                            ? 'mdi-eye'
-                                            : 'mdi-eye-off'
-                                    "
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{ props.row.published ? __("Yes") : __("No") }}
-                            </q-badge>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-featured="props">
-                        <q-td :props="props" class="text-center">
-                            <q-badge
-                                :color="
-                                    props.row.featured ? 'accent' : 'grey-5'
-                                "
-                                :text-color="
-                                    props.row.featured ? 'white' : 'dark'
-                                "
-                                class="status-badge"
-                            >
-                                <q-icon
-                                    :name="
-                                        props.row.featured
-                                            ? 'mdi-star'
-                                            : 'mdi-star-outline'
-                                    "
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{ props.row.featured ? __("Yes") : __("No") }}
-                            </q-badge>
-                        </q-td>
-                    </template>
-
-                    <!-- Actions Column -->
-                    <template v-slot:body-cell-actions="props">
-                        <q-td :props="props" class="actions-cell">
-                            <div class="row q-gutter-xs justify-end">
-                                <v-create
-                                    :item="props.row"
-                                    @created="getProducts"
-                                    :title="__('Edit')"
-                                    class="action-btn"
-                                    :searchable="props.row.name"
-                                    color="primary"
-                                    icon="edit"
-                                    size="sm"
-                                />
-                                <v-delete
-                                    :item="props.row"
-                                    @deleted="getProducts"
-                                    class="action-btn"
-                                />
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <!-- Mobile/Grid View -->
-                    <template v-slot:item="props">
-                        <div class="col-12 col-sm-6 col-md-4 q-pa-sm">
-                            <q-card class="product-card hover-card">
-                                <q-card-section>
-                                    <div class="row items-center no-wrap">
-                                        <div class="col">
-                                            <div
-                                                class="text-h6 text-weight-medium ellipsis"
-                                            >
-                                                {{ props.row.name }}
-                                            </div>
-                                            <div
-                                                class="text-caption text-grey-6"
-                                            >
-                                                {{ props.row.category?.name }}
-                                            </div>
-                                        </div>
-                                        <q-badge
-                                            :color="
-                                                getStockColor(props.row.stock)
-                                            "
-                                            class="stock-badge-mobile"
+                                <!-- Product Name -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-4">
+                                        <div
+                                            class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center"
                                         >
-                                            {{ props.row.stock }}
-                                            {{ __("in stock") }}
-                                        </q-badge>
-                                    </div>
-                                </q-card-section>
-
-                                <q-separator />
-
-                                <q-card-section class="q-pt-none">
-                                    <div class="row q-col-gutter-sm">
-                                        <div class="col-6">
-                                            <div class="text-caption">
-                                                {{ __("Price") }}
-                                            </div>
+                                            <i
+                                                class="fas fa-box text-blue-600"
+                                            ></i>
+                                        </div>
+                                        <div>
                                             <div
-                                                class="text-weight-bold text-primary"
+                                                class="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors"
                                             >
-                                                {{ props.row.currency }}
-                                                {{ props.row.format_price }}
+                                                {{ product.name }}
                                             </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="text-caption">
-                                                {{ __("Status") }}
-                                            </div>
-                                            <div class="row items-center">
-                                                <q-icon
-                                                    :name="
-                                                        props.row.published
-                                                            ? 'mdi-eye-check'
-                                                            : 'mdi-eye-off'
-                                                    "
-                                                    :color="
-                                                        props.row.published
-                                                            ? 'positive'
-                                                            : 'grey-5'
-                                                    "
-                                                    size="16px"
-                                                    class="q-mr-xs"
-                                                />
-                                                <span class="text-caption">
-                                                    {{
-                                                        props.row.published
-                                                            ? __("Published")
-                                                            : __("Hidden")
-                                                    }}
-                                                </span>
-                                            </div>
+                                            <span
+                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs bg-purple-100 text-purple-800 mt-1"
+                                            >
+                                                <i
+                                                    class="fas fa-tag text-xs mr-1"
+                                                ></i>
+                                                {{ product.category.name }}
+                                            </span>
                                         </div>
                                     </div>
-                                </q-card-section>
+                                </td>
 
-                                <q-separator />
+                                <!-- Stock Level -->
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-center"
+                                >
+                                    <span
+                                        :class="
+                                            getStockBadgeClass(product.stock)
+                                        "
+                                        class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-sm transition-all duration-300"
+                                    >
+                                        <i
+                                            :class="getStockIcon(product.stock)"
+                                            class="mr-2"
+                                        ></i>
+                                        {{ product.stock }}
+                                        <span class="ml-1 text-xs opacity-90">{{
+                                            __("units")
+                                        }}</span>
+                                    </span>
+                                </td>
 
-                                <q-card-actions align="right" class="q-pa-sm">
-                                    <v-create
-                                        :item="props.row"
-                                        @created="getProducts"
-                                        :title="__('Edit')"
-                                        color="primary"
-                                        icon="mdi-pencil"
-                                    />
-                                    <v-delete
-                                        :item="props.row"
-                                        @deleted="getProducts"
-                                        size="sm"
-                                    />
-                                </q-card-actions>
-                            </q-card>
+                                <!-- Price -->
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-right"
+                                >
+                                    <div class="flex flex-col items-end">
+                                        <span class="font-bold text-green-600">
+                                            {{ product.currency }}
+                                            {{ product.format_price }}
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <!-- Published -->
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-center"
+                                >
+                                    <span
+                                        :class="
+                                            product.published
+                                                ? 'bg-green-100 text-green-800 border-green-200'
+                                                : 'bg-red-100 text-red-800 border-red-200'
+                                        "
+                                        class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium border transition-all duration-300"
+                                    >
+                                        <i
+                                            :class="
+                                                product.published
+                                                    ? 'fas fa-eye mr-2'
+                                                    : 'fas fa-eye-slash mr-2'
+                                            "
+                                        ></i>
+                                        {{
+                                            product.published
+                                                ? __("Published")
+                                                : __("Hidden")
+                                        }}
+                                    </span>
+                                </td>
+
+                                <!-- Featured -->
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-center"
+                                >
+                                    <span
+                                        :class="
+                                            product.featured
+                                                ? 'bg-yellow-100 text-yellow-800 border-yellow-200'
+                                                : 'bg-gray-100 text-gray-600 border-gray-200'
+                                        "
+                                        class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium border transition-all duration-300"
+                                    >
+                                        <i
+                                            :class="
+                                                product.featured
+                                                    ? 'fas fa-star mr-2 text-yellow-500'
+                                                    : 'far fa-star mr-2'
+                                            "
+                                        ></i>
+                                        {{
+                                            product.featured
+                                                ? __("Featured")
+                                                : __("Standard")
+                                        }}
+                                    </span>
+                                </td>
+
+                                <!-- Actions -->
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-right"
+                                >
+                                    <div class="flex justify-end space-x-2">
+                                        <a
+                                            :href="product.links.edit"
+                                            class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                                        >
+                                            <i class="fas fa-edit"></i>
+                                            <span>{{ __("Edit") }}</span>
+                                        </a>
+                                        <v-delete
+                                            :item="product"
+                                            @deleted="getProducts"
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile Cards -->
+                <div class="lg:hidden space-y-4 p-6">
+                    <div
+                        v-for="product in products"
+                        :key="product.id"
+                        class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300"
+                    >
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <div
+                                        class="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center"
+                                    >
+                                        <i class="fas fa-box text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-gray-900">
+                                            {{ product.name }}
+                                        </h3>
+                                        <p class="text-gray-600 text-sm">
+                                            {{ product.category?.name }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <span
+                                :class="getStockBadgeClass(product.stock)"
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold shadow-sm"
+                            >
+                                {{ product.stock }} {{ __("in stock") }}
+                            </span>
                         </div>
-                    </template>
 
-                    <!-- Empty State -->
-                    <template v-slot:no-data>
+                        <!-- Info Grid -->
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="bg-gray-50 rounded-lg p-3">
+                                <p class="text-xs text-gray-500 font-semibold">
+                                    {{ __("Price") }}
+                                </p>
+                                <p class="font-bold text-green-600">
+                                    {{ product.currency }}
+                                    {{ product.format_price }}
+                                </p>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-3">
+                                <p class="text-xs text-gray-500 font-semibold">
+                                    {{ __("Status") }}
+                                </p>
+                                <div class="flex items-center mt-1">
+                                    <i
+                                        :class="
+                                            product.published
+                                                ? 'fas fa-eye text-green-500'
+                                                : 'fas fa-eye-slash text-red-500'
+                                        "
+                                        class="mr-2"
+                                    ></i>
+                                    <span class="text-sm font-medium">
+                                        {{
+                                            product.published
+                                                ? __("Published")
+                                                : __("Hidden")
+                                        }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
                         <div
-                            class="full-width row flex-center text-grey q-pa-xl"
+                            class="flex justify-end space-x-3 pt-4 border-t border-gray-100"
                         >
-                            <div class="text-center">
-                                <q-icon
-                                    name="mdi-package-variant-closed"
-                                    size="64px"
-                                    color="grey-4"
-                                />
-                                <div class="text-h6 q-mt-md">
-                                    {{ __("No products found") }}
-                                </div>
-                                <div class="text-caption q-mb-md">
-                                    {{
-                                        activeFilterCount > 0
-                                            ? __("Try adjusting your filters")
-                                            : __(
-                                                  "Get started by creating your first product"
-                                              )
-                                    }}
-                                </div>
-                                <q-btn
-                                    v-if="activeFilterCount > 0"
-                                    color="primary"
-                                    :label="__('Reset Filters')"
-                                    @click="resetFilters"
-                                    icon="mdi-filter-remove"
-                                />
-                                <v-create v-else @created="getProducts" />
-                            </div>
+                            <a
+                                :href="product.links.edit"
+                                class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                            >
+                                <i class="fas fa-edit"></i>
+                                <span>{{ __("Edit") }}</span>
+                            </a>
+                            <v-delete :item="product" @deleted="getProducts" />
                         </div>
-                    </template>
+                    </div>
+                </div>
 
-                    <!-- Loading State -->
-                    <template v-slot:loading>
-                        <q-inner-loading showing color="primary">
-                            <q-spinner-gears size="50px" color="primary" />
-                            <div class="q-mt-md">
-                                {{ __("Loading products...") }}
-                            </div>
-                        </q-inner-loading>
-                    </template>
-                </q-table>
+                <!-- Empty State -->
+                <div
+                    v-if="products.length === 0 && !loading"
+                    class="text-center py-16"
+                >
+                    <div
+                        class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg"
+                    >
+                        <i class="fas fa-box-open text-gray-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">
+                        {{ __("No products found") }}
+                    </h3>
+                    <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                        {{
+                            activeFilterCount > 0
+                                ? __(
+                                      "Try adjusting your filters to see more results"
+                                  )
+                                : __(
+                                      "Get started by adding your first product to the catalog"
+                                  )
+                        }}
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <button
+                            v-if="activeFilterCount > 0"
+                            @click="resetFilters"
+                            class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl"
+                        >
+                            <i class="fas fa-filter-circle-xmark"></i>
+                            <span class="font-semibold">{{
+                                __("Reset Filters")
+                            }}</span>
+                        </button>
+                        <!--
+                        <VCreate v-else @created="getProducts" />
+                        -->
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div
+                    v-if="loading"
+                    class="flex justify-center items-center py-20"
+                >
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                        >
+                            <i
+                                class="fas fa-spinner fa-spin text-blue-600 text-2xl"
+                            ></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                            {{ __("Loading products") }}
+                        </h3>
+                        <p class="text-gray-600">
+                            {{
+                                __("Please wait while we fetch your inventory")
+                            }}
+                        </p>
+                    </div>
+                </div>
 
                 <!-- Pagination -->
                 <div
-                    class="row justify-between items-center q-px-lg q-py-md pagination-section"
+                    v-if="products.length > 0"
+                    class="px-6 py-4 border-t border-gray-100 bg-gray-50/50"
                 >
-                    <div class="text-caption text-grey-6">
-                        {{ __("Showing") }} {{ paginationStart }}
-                        {{ __("to") }} {{ paginationEnd }} {{ __("of") }}
-                        {{ pagination.rowsNumber }} {{ __("products") }}
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+                    >
+                        <p class="text-gray-700 mb-4 sm:mb-0 flex items-center">
+                            <i class="fas fa-chart-pie mr-2 text-blue-500"></i>
+                            {{ __("Showing") }}
+                            <span class="font-bold text-gray-900 mx-1">{{
+                                paginationStart
+                            }}</span>
+                            {{ __("to") }}
+                            <span class="font-bold text-gray-900 mx-1">{{
+                                paginationEnd
+                            }}</span>
+                            {{ __("of") }}
+                            <span class="font-bold text-blue-600 mx-1">{{
+                                pagination.rowsNumber
+                            }}</span>
+                            {{ __("products") }}
+                        </p>
+                        <div class="flex space-x-2">
+                            <v-paginate
+                                :total-pages="pages.total_pages"
+                                v-model="search.page"
+                                @change="getProducts"
+                            />
+                        </div>
                     </div>
-                    <q-pagination
-                        v-model="search.page"
-                        :max="pages.total_pages"
-                        :max-pages="6"
-                        color="primary"
-                        size="sm"
-                        boundary-numbers
-                        direction-links
-                        ellipses
-                        class="pagination-control"
-                    />
                 </div>
-            </q-card>
+            </div>
+        </div>
 
-            <!-- Filter Help Dialog -->
-            <q-dialog v-model="showFilterHelp">
-                <q-card class="help-dialog rounded-borders">
-                    <q-card-section class="dialog-header bg-primary text-white">
-                        <div class="text-h6">{{ __("Filter Help Guide") }}</div>
-                    </q-card-section>
+        <!-- Enhanced Filter Help Modal -->
+        <div
+            v-if="showFilterHelp"
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+            @click="showFilterHelp = false"
+        >
+            <div
+                class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-95 hover:scale-100"
+                @click.stop
+            >
+                <div
+                    class="bg-gradient-to-r from-blue-600 to-purple-700 text-white px-8 py-6"
+                >
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-life-ring mr-3"></i>
+                            {{ __("Filter Help Guide") }}
+                        </h3>
+                        <button
+                            @click="showFilterHelp = false"
+                            class="w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
+                        >
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
 
-                    <q-card-section class="q-pt-lg">
-                        <div class="q-gutter-y-md">
-                            <div>
-                                <div
-                                    class="text-subtitle2 text-weight-medium q-mb-xs"
+                <div class="p-8 space-y-6 overflow-y-auto max-h-[60vh]">
+                    <!-- Operators Section -->
+                    <div
+                        class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6"
+                    >
+                        <h4
+                            class="font-bold text-gray-900 text-lg mb-4 flex items-center"
+                        >
+                            <i class="fas fa-filter mr-3 text-blue-600"></i>
+                            {{ __("Filter Operators") }}
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div
+                                v-for="(op, index) in operatorExamples"
+                                :key="index"
+                                class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-gray-200"
+                            >
+                                <code
+                                    class="font-mono bg-gray-100 px-2 py-1 rounded text-sm"
+                                    >{{ op.symbol }}</code
                                 >
-                                    <q-icon name="mdi-filter" class="q-mr-sm" />
-                                    {{ __("Filter Operators") }}
-                                </div>
-                                <div class="q-pl-md">
-                                    <div class="row items-center q-mb-xs">
-                                        <q-badge color="primary" class="q-mr-sm"
-                                            >=</q-badge
-                                        >
-                                        <span>{{ __("Equal to") }}</span>
-                                    </div>
-                                    <div class="row items-center q-mb-xs">
-                                        <q-badge color="primary" class="q-mr-sm"
-                                            >></q-badge
-                                        >
-                                        <span>{{ __("Greater than") }}</span>
-                                    </div>
-                                    <div class="row items-center q-mb-xs">
-                                        <q-badge color="primary" class="q-mr-sm"
-                                            >>=</q-badge
-                                        >
-                                        <span>{{
-                                            __("Greater than or equal to")
-                                        }}</span>
-                                    </div>
-                                    <div class="row items-center q-mb-xs">
-                                        <q-badge color="primary" class="q-mr-sm"
-                                            ><</q-badge
-                                        >
-                                        <span>{{ __("Less than") }}</span>
-                                    </div>
-                                    <div class="row items-center">
-                                        <q-badge color="primary" class="q-mr-sm"
-                                            ><=</q-badge
-                                        >
-                                        <span>{{
-                                            __("Less than or equal to")
-                                        }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <q-separator />
-
-                            <div>
-                                <div
-                                    class="text-subtitle2 text-weight-medium q-mb-xs"
-                                >
-                                    <q-icon
-                                        name="mdi-information"
-                                        class="q-mr-sm"
-                                    />
-                                    {{ __("Tips & Notes") }}
-                                </div>
-                                <ul class="q-pl-md">
-                                    <li>
-                                        {{
-                                            __(
-                                                "Text fields support partial matches"
-                                            )
-                                        }}
-                                    </li>
-                                    <li>
-                                        {{
-                                            __(
-                                                "Empty filter fields are ignored"
-                                            )
-                                        }}
-                                    </li>
-                                    <li>
-                                        {{
-                                            __(
-                                                "Use the reset button to clear all filters"
-                                            )
-                                        }}
-                                    </li>
-                                    <li>
-                                        {{
-                                            __(
-                                                "Stock and price filters work with numeric comparisons"
-                                            )
-                                        }}
-                                    </li>
-                                </ul>
+                                <span class="text-gray-700 font-medium">{{
+                                    __(op.description)
+                                }}</span>
                             </div>
                         </div>
-                    </q-card-section>
+                    </div>
 
-                    <q-card-actions align="right" class="q-pa-md">
-                        <q-btn
-                            :label="__('Got It')"
-                            color="primary"
-                            v-close-popup
-                            unelevated
-                        />
-                    </q-card-actions>
-                </q-card>
-            </q-dialog>
+                    <!-- Tips Section -->
+                    <div
+                        class="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6"
+                    >
+                        <h4
+                            class="font-bold text-gray-900 text-lg mb-4 flex items-center"
+                        >
+                            <i
+                                class="fas fa-lightbulb mr-3 text-yellow-500"
+                            ></i>
+                            {{ __("Tips & Best Practices") }}
+                        </h4>
+                        <ul class="space-y-3">
+                            <li
+                                v-for="(tip, index) in helpTips"
+                                :key="index"
+                                class="flex items-start"
+                            >
+                                <i
+                                    class="fas fa-check-circle text-green-500 mt-1 mr-3"
+                                ></i>
+                                <span class="text-gray-700">{{ __(tip) }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div
+                    class="px-8 py-6 bg-gray-50 border-t border-gray-200 flex justify-end"
+                >
+                    <button
+                        @click="showFilterHelp = false"
+                        class="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
+                    >
+                        {{ __("Got It") }}
+                    </button>
+                </div>
+            </div>
         </div>
-    </v-admin-ecommerce-layout>
+    </v-admin-layout>
 </template>
 
 <script>
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
+import VAdminLayout from "../../Components/VAdminLayout.vue";
+import VPaginate from "../../Components/VPaginate.vue";
 
 export default {
     components: {
         VCreate,
         VDelete,
+        VAdminLayout,
+        VPaginate,
     },
 
     data() {
@@ -725,7 +820,7 @@ export default {
             filterExpanded: false,
             loading: false,
             showFilterHelp: false,
-            groups: [],
+            products: [],
             pages: {
                 total_pages: 0,
             },
@@ -751,53 +846,12 @@ export default {
                 { label: "<=", value: "<=" },
             ],
             columns: [
-                {
-                    name: "name",
-                    label: this.__("Product Name"),
-                    field: "name",
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "stock",
-                    label: this.__("Stock Level"),
-                    field: "stock",
-                    align: "center",
-                    sortable: true,
-                },
-                {
-                    name: "format_price",
-                    label: this.__("Price"),
-                    field: "format_price",
-                    align: "right",
-                    sortable: true,
-                },
-                {
-                    name: "category",
-                    label: this.__("Category"),
-                    field: (row) => row.category?.name,
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "published",
-                    label: this.__("Published"),
-                    field: "published",
-                    align: "center",
-                    sortable: true,
-                },
-                {
-                    name: "featured",
-                    label: this.__("Featured"),
-                    field: "featured",
-                    align: "center",
-                    sortable: true,
-                },
-                {
-                    name: "actions",
-                    label: this.__("Actions"),
-                    align: "center",
-                },
+                "Product",
+                "Stock",
+                "Price",
+                "Published",
+                "Featured",
+                "Actions",
             ],
             filterLabels: {
                 name: this.__("Name"),
@@ -807,6 +861,48 @@ export default {
                 stock: this.__("Stock"),
                 price: this.__("Price"),
             },
+            filterFields: [
+                {
+                    key: "name",
+                    label: "Product Name",
+                    icon: "fas fa-tag",
+                    placeholder: "Search by name",
+                },
+                {
+                    key: "category",
+                    label: "Category",
+                    icon: "fas fa-folder",
+                    placeholder: "Search by category",
+                },
+                {
+                    key: "model",
+                    label: "Model",
+                    icon: "fas fa-cube",
+                    placeholder: "Search by model",
+                },
+                {
+                    key: "family",
+                    label: "Family",
+                    icon: "fas fa-users",
+                    placeholder: "Search by family",
+                },
+            ],
+            operatorExamples: [
+                { symbol: "=", description: "Equal to" },
+                { symbol: ">", description: "Greater than" },
+                { symbol: ">=", description: "Greater than or equal to" },
+                { symbol: "<", description: "Less than" },
+                { symbol: "<=", description: "Less than or equal to" },
+            ],
+            helpTips: [
+                "Text fields support partial matches and are case-insensitive",
+                "Empty filter fields are automatically ignored in the search",
+                "Use the reset button to quickly clear all active filters",
+                "Stock and price filters work with numeric comparisons",
+                "Combining multiple filters narrows down results further",
+                "Real-time filtering updates results as you type",
+            ],
+            debounceTimeout: null,
         };
     },
 
@@ -829,7 +925,9 @@ export default {
         },
         filterHeaderText() {
             const count = this.activeFilterCount;
-            return count > 0 ? `Active Filters (${count})` : "Filter Products";
+            return count > 0
+                ? `${this.__("Active Filters")} (${count})`
+                : this.__("Filter Products");
         },
         activeFilterCount() {
             return Object.keys(this.activeFilters).length;
@@ -847,10 +945,12 @@ export default {
             return filters;
         },
         filteredResultsText() {
-            if (this.loading) return "Loading...";
-            if (this.groups.length === 0)
-                return "No products match your filters";
-            return `${this.groups.length} of ${this.pagination.rowsNumber} products shown`;
+            if (this.loading) return this.__("Loading...");
+            if (this.products.length === 0)
+                return this.__("No products match your filters");
+            return this.__(
+                `${this.products.length} of ${this.pagination.rowsNumber} products shown`
+            );
         },
     },
 
@@ -866,20 +966,37 @@ export default {
     },
 
     methods: {
-        getStockColor(stock) {
-            if (stock === null || stock === undefined) return "grey";
-            if (stock > 50) return "positive";
-            if (stock > 10) return "warning";
-            if (stock > 0) return "orange";
-            return "negative";
+        getStockBadgeClass(stock) {
+            if (stock === null || stock === undefined)
+                return "bg-gray-200 text-gray-700";
+            if (stock > 50)
+                return "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg";
+            if (stock > 10)
+                return "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg";
+            if (stock > 0)
+                return "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg";
+            return "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg";
         },
 
         getStockIcon(stock) {
-            if (stock === null || stock === undefined) return "mdi-help-circle";
-            if (stock > 50) return "mdi-package-variant";
-            if (stock > 10) return "mdi-package-variant-closed";
-            if (stock > 0) return "mdi-alert-circle";
-            return "mdi-cancel";
+            if (stock === null || stock === undefined)
+                return "fas fa-question-circle";
+            if (stock > 50) return "fas fa-boxes";
+            if (stock > 10) return "fas fa-box";
+            if (stock > 0) return "fas fa-exclamation-triangle";
+            return "fas fa-times-circle";
+        },
+
+        getColumnIcon(column) {
+            const icons = {
+                Product: "fas fa-tag",
+                Stock: "fas fa-boxes",
+                Price: "fas fa-dollar-sign",
+                Published: "fas fa-eye",
+                Featured: "fas fa-star",
+                Actions: "fas fa-cog",
+            };
+            return icons[column] || "fas fa-circle";
         },
 
         onTableRequest(props) {
@@ -894,10 +1011,10 @@ export default {
 
         clearFilter(key) {
             if (key === "stock") {
-                this.search.stock = null;
+                this.search.stock = "";
                 this.search.stock_operator = "=";
             } else if (key === "price") {
-                this.search.price = null;
+                this.search.price = "";
                 this.search.price_operator = "=";
             } else {
                 this.search[key] = "";
@@ -912,13 +1029,25 @@ export default {
                 category: "",
                 model: "",
                 family: "",
-                stock: null,
+                stock: "",
                 stock_operator: "=",
-                price: null,
+                price: "",
                 price_operator: "=",
                 page: 1,
             };
             this.getProducts();
+        },
+
+        debouncedGetProducts() {
+            // Clear existing timeout
+            if (this.debounceTimeout) {
+                clearTimeout(this.debounceTimeout);
+            }
+
+            // Set new timeout
+            this.debounceTimeout = setTimeout(() => {
+                this.getProducts();
+            }, 500); // 500ms debounce
         },
 
         async getProducts() {
@@ -931,16 +1060,12 @@ export default {
                     }
                 );
 
-                this.groups = data.data;
+                this.products = data.data;
                 this.pages = data.meta.pagination;
                 this.search.page = data.meta.pagination.current_page;
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    this.$notify(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -951,182 +1076,57 @@ export default {
 </script>
 
 <style scoped>
-/* CSS Variables for Theme Consistency */
-:root {
-    --color-primary: #1976d2;
-    --color-secondary: #26a69a;
-    --color-accent: #ff6b35;
-    --color-positive: #21ba45;
-    --color-negative: #c10015;
-    --color-warning: #f2c037;
-    --border-radius: 12px;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --transition-speed: 0.3s;
+/* Smooth transitions for all interactive elements */
+button,
+input,
+select,
+.transition-all {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.header-section {
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
-    margin-bottom: 24px;
+/* Custom scrollbar for modal */
+.modal-content::-webkit-scrollbar {
+    width: 6px;
 }
 
-.filter-card {
-    border: 1px solid rgba(0, 0, 0, 0.08);
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
 }
 
-.filter-header {
-    background-color: #f8f9fa;
-    border-top-left-radius: var(--border-radius);
-    border-top-right-radius: var(--border-radius);
+.modal-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
 }
 
-.filter-input :deep(.q-field__control) {
-    border-radius: 8px;
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 
-.stock-filter,
-.price-filter {
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    border-radius: 8px;
-    overflow: hidden;
+/* Gradient text effect */
+.gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.operator-select {
-    min-width: 80px;
-    border-right: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.operator-select :deep(.q-field__control) {
-    border-radius: 0;
-}
-
-.filter-badge {
-    border-radius: 12px;
-    padding: 6px 10px;
-    font-size: 0.8rem;
-}
-
-.products-card {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-}
-
-.table-header {
-    background-color: #f8f9fa;
-    border-top-left-radius: var(--border-radius);
-    border-top-right-radius: var(--border-radius);
-}
-
-.table-header-row {
-    background-color: #f8f9fa;
-}
-
-.products-table {
-    border: none;
-}
-
-.stock-badge {
-    border-radius: 12px;
-    padding: 6px 10px;
-    font-weight: 500;
-}
-
-.status-badge {
-    border-radius: 12px;
-    padding: 6px 10px;
-    font-weight: 500;
-}
-
-.actions-cell {
-    padding: 8px 16px;
-}
-
-.action-btn {
-    transition: transform var(--transition-speed) ease;
-}
-
-.action-btn:hover {
-    transform: scale(1.1);
-}
-
-.product-card {
-    transition: all var(--transition-speed) ease;
-    border-radius: 8px;
-}
-
-.product-card:hover {
+/* Hover effects for cards */
+.hover-lift:hover {
     transform: translateY(-4px);
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-.stock-badge-mobile {
-    border-radius: 12px;
-    padding: 4px 8px;
-    font-size: 0.8rem;
-}
-
-.pagination-section {
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    background-color: #fafafa;
-}
-
-.pagination-control {
-    background: white;
-    padding: 8px 16px;
-    border-radius: 25px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.help-dialog {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    max-width: 500px;
-}
-
-.per-page-select {
-    min-width: 120px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1023px) {
-    .header-section {
-        border-radius: 0;
-        margin-bottom: 16px;
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+    .mobile-card {
+        margin: 0.5rem;
+        padding: 1rem;
     }
 
-    .filter-card,
-    .products-card {
-        margin: 0 -8px;
-        border-radius: 0;
-    }
-
-    .table-header {
-        border-radius: 0;
-    }
-}
-
-@media (max-width: 599px) {
-    .header-section .text-h4 {
-        font-size: 1.5rem;
-    }
-
-    .header-section .text-subtitle1 {
-        font-size: 0.9rem;
-    }
-
-    .actions-cell {
-        padding: 4px 8px;
-    }
-
-    .action-btn {
-        transform: scale(0.9);
-    }
-
-    .action-btn:hover {
-        transform: scale(1);
-    }
-
-    .pagination-control {
-        padding: 6px 12px;
+    .mobile-stats {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
     }
 }
 </style>

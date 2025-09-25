@@ -76,12 +76,55 @@ final class ProductController extends WebController
             [
                 'routes' => [
                     'products' => route('ecommerce.admin.products.index'),
+                    'create' => route('ecommerce.admin.products.create'),
                     'categories' => route('ecommerce.admin.categories.index'),
                     'currencies' => route('api.transaction.payments.currencies')
                 ],
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
-        );
+        )->rootView('ecommerce');
+    }
+
+    /**
+     * Create product
+     * @return \Inertia\Response
+     */
+    public function create()
+    {
+        return Inertia::render(
+            'Core/Ecommerce/Admin/Product/Create',
+            [
+                'routes' => [
+                    'products' => route('ecommerce.admin.products.index'),
+                    'create' => route('ecommerce.admin.products.create'),
+                    'store' => route('ecommerce.admin.products.store'),
+                    'categories' => route('ecommerce.admin.categories.index'),
+                    'currencies' => route('api.transaction.payments.currencies')
+                ],
+                'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
+            ]
+        )->rootView('ecommerce');
+
+    }
+
+    public function edit(string $id)
+    {
+        $model = $this->repository->find($id);
+
+        return Inertia::render(
+            'Core/Ecommerce/Admin/Product/Create',
+            [
+                'model' => fractal($model, $this->repository->transformer)->toArray()['data'],
+                'routes' => [
+                    'products' => route('ecommerce.admin.products.index'),
+                    'store' => route('ecommerce.admin.products.store'),
+                    'categories' => route('ecommerce.admin.categories.index'),
+                    'currencies' => route('api.transaction.payments.currencies')
+                ],
+                'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
+            ]
+        )->rootView('ecommerce');
+
     }
 
     /**
@@ -119,6 +162,7 @@ final class ProductController extends WebController
         $data['slug'] = normalizeSlug($request->input('name'));
 
         $product = $this->repository->create($data);
+        
         return $this->showOne($product, $this->repository->transformer, 201);
     }
 

@@ -299,6 +299,7 @@ final class ProductRepository implements Contracts
             $this->createAttributes($model, $data);
             $this->createTags($model, $data);
 
+            return $model;
         });
 
         return $model;

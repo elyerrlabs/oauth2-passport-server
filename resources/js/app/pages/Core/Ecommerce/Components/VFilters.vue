@@ -20,7 +20,9 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <aside class="w-full md:w-80 bg-white rounded-2xl shadow-lg p-3 md:p-6 space-y-6">
+    <aside
+        class="w-full md:w-80 bg-white rounded-2xl shadow-lg p-3 md:p-6 space-y-6"
+    >
         <div class="flex justify-between md:justify-start">
             <h2 class="text-xl font-semibold text-gray-800">
                 {{ __("Filters") }}
@@ -273,7 +275,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 @click="applyAllFilters"
                 class="flex-1 bg-gradient-to-r cursor-pointer from-blue-500 to-indigo-600 text-white py-3 rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md font-medium transform hover:scale-105"
             >
-                Apply Filters
+                {{ __("Apply Filters") }}
             </button>
             <button
                 @click="clearAllFilters"

@@ -22,11 +22,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <div class="admin-layout min-h-screen bg-gray-100 flex">
         <!-- Header -->
-        <header
-            class="admin-header bg-blue-600 text-white shadow-md fixed w-full z-30"
-        >
+        <header class="bg-blue-600 text-gray-600 shadow-md fixed w-full z-30">
             <div class="flex items-center justify-between px-4 py-2">
-                <div class="flex items-center">
+                <div class="flex items-center text-white">
                     <button
                         class="p-2 rounded-full hover:bg-blue-700 mr-2 focus:outline-none"
                         @click="toggleLeftDrawer"
@@ -34,17 +32,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <i class="fas fa-bars"></i>
                     </button>
 
-                    <div class="admin-title flex items-center text-xl">
+                    <div class="text-white flex items-center text-xl">
                         <i class="fas fa-store mr-2"></i>
-                        <span class="font-bold">{{ __("E-Commerce") }}</span>
-                        {{ __("Admin") }}
+                        <span class="font-bold">{{ __("eCommerce") }} </span>
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-4">
-                    <v-theme class="theme-toggle" />
+                <div class="flex items-center xs:space-x-2 md:space-x-4">
+                    <!-- Notifications -->
                     <v-notification />
-                    <v-profile class="profile-menu"></v-profile>
+
+                    <!-- User menu (hidden on mobile) -->
+                    <v-profile />
                 </div>
             </div>
         </header>
@@ -251,7 +250,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="main-content flex-1 transition-all duration-300 pt-14"
             :class="{ 'md:ml-72': leftDrawerOpen }"
         >
-            <div class="p-6">
+            <div class="p-2">
                 <slot />
             </div>
         </main>
@@ -266,7 +265,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
+import VNotification from "./VNotification.vue";
+import VProfile from "./VProfile.vue";
+
 export default {
+    components: {
+        VNotification,
+        VProfile,
+    },
+
     data() {
         return {
             menus: [],
