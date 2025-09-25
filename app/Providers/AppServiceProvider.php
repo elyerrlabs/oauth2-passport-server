@@ -91,6 +91,7 @@ class AppServiceProvider extends ServiceProvider
             (new \App\Models\Common\Tag())->tag => \App\Models\Common\Tag::class,
             (new \App\Models\Common\Unit())->tag => \App\Models\Common\Unit::class,
             (new \App\Models\Common\Order())->tag => \App\Models\Common\Order::class,
+            (new \App\Models\Common\Variant())->tag => \App\Models\Common\Variant::class
         ];
 
         Relation::morphMap(array_merge(
