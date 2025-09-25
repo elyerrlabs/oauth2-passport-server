@@ -56,7 +56,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                             <img
                                 v-if="product?.images?.length"
-                                :src="product?.images[selectedImageIndex].url"
+                                :src="product?.images[selectedImageIndex]?.url"
                                 :alt="product.name"
                                 class="w-full h-80 object-contain zoom-effect"
                             />
@@ -86,7 +86,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 ]"
                             >
                                 <img
-                                    :src="image.url"
+                                    :src="image?.url"
                                     class="h-16 w-16 object-contain rounded-md"
                                 />
                             </div>
@@ -399,7 +399,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="h-48 bg-gray-100 flex items-center justify-center p-4 relative"
                         >
                             <img
-                                :src="product.images[0].url"
+                                :src="product.images[0]?.url"
                                 :alt="product.name"
                                 class="h-40 object-contain"
                             />
@@ -444,7 +444,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         >
             <div class="max-w-4xl w-full p-4">
                 <img
-                    :src="product?.images[selectedImageIndex].url"
+                    :src="product?.images[selectedImageIndex]?.url"
                     :alt="product.name"
                     class="w-full h-auto rounded-lg"
                 />
@@ -574,7 +574,7 @@ export default {
             this.form.product_id = this.product.id;
             try {
                 const res = await this.$server.post(
-                    this.$page.props.routes.orders_api,
+                    this.$page.props.api.ecommerce.orders,
                     this.form
                 );
                 if (res.status == 201) {
