@@ -194,10 +194,6 @@ export default {
         },
     },
 
-    created() {
-        this.getCategories();
-    },
-
     methods: {
         handleSearch() {
             // Search is handled by the computed property
@@ -239,21 +235,6 @@ export default {
         },
         toggleMobileCategories() {
             this.mobileCategoriesOpen = !this.mobileCategoriesOpen;
-        },
-
-        async getCategories() {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.categories_api
-                );
-                if (res.status == 200) {
-                    this.categories = res.data.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
-                }
-            }
         },
     },
 };
