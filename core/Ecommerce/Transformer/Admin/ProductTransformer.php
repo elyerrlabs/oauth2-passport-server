@@ -58,7 +58,7 @@ class ProductTransformer extends TransformerAbstract
      */
     public function transform(Product $product)
     {
-        $variant = $product->variants ?? [];
+        $variant = count($product->variants) ? $product->variants[0] : null;
 
         return [
             'id' => $product->id,
@@ -66,10 +66,10 @@ class ProductTransformer extends TransformerAbstract
             'slug' => $product->slug,
             'published' => $product->published ? true : false,
             'featured' => $product->featured ? true : false,
-            'stock' => count($variant) ? $variant->sum('stock') : 0,
-            'price' => count($variant) ? $variant->price->amount : 0,
-            'format_price' => count($variant) ? $this->formatMoney($variant->price->amount) : 0,
-            'currency' => count($variant) ? getCurrencySymbol($variant->price->currency) : '',
+            'stock' => !empty($variant) ? $variant->sum('stock') : 0,
+            'price' => !empty($variant) ? $variant->price->amount : 0,
+            'format_price' => !empty($variant) ? $this->formatMoney($variant->price->amount) : 0,
+            'currency' => !empty($variant) ? getCurrencySymbol($variant->price->currency) : '',
             'short_description' => $product->short_description,
             'description' => $product->description,
             'specification' => $product->specification,
