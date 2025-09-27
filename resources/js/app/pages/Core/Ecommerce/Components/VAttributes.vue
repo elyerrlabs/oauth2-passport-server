@@ -20,280 +20,220 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="w-full max-w-7xl mx-auto p-3">
+    <div class="w-full max-w-7xl mx-auto p-6">
         <!-- Header Section -->
-        <div class="mb-4">
-            <div class="flex items-center space-x-4 mb-2">
+        <div
+            class="mb-8 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 shadow-sm"
+        >
+            <div class="flex items-start gap-2 mb-4">
                 <div
-                    class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shadow-sm"
+                    class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg"
                 >
-                    <i class="fas fa-pencil-alt text-blue-600 text-lg"></i>
+                    <i class="fas fa-pencil-alt text-white text-2xl"></i>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900">
+                <div class="flex-1">
+                    <h2 class="text-lg font-bold text-gray-900 mb-3">
                         {{ __("Product Attributes") }}
                     </h2>
-                    <p class="text-gray-600">
+                    <p class="text-md text-gray-700 font-medium mb-4">
                         {{ __("Manage product attributes and variations") }}
                     </p>
-                </div>
-            </div>
-            <p class="text-gray-500 text-sm leading-relaxed mt-2">
-                {{
-                    __(
-                        "Product attributes represent the main characteristics of your products (e.g., color, size, material). These attributes help customers filter products in the store and make more accurate purchase decisions."
-                    )
-                }}
-            </p>
-        </div>
-
-        <!-- Main Content Card -->
-        <div
-            class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
-        >
-            <!-- Attributes List -->
-            <div class="p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900">
-                        {{ __("Attributes List") }}
-                    </h3>
-                    <span
-                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
-                    >
-                        {{ internalAttributes.length }} {{ __("attribute") }}(s)
-                    </span>
-                </div>
-
-                <!-- Empty State -->
-                <div
-                    v-if="internalAttributes.length === 0"
-                    class="text-center py-6"
-                >
-                    <div
-                        class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
-                    >
-                        <i class="fas fa-tags text-gray-400 text-2xl"></i>
-                    </div>
-                    <h4 class="text-lg font-medium text-gray-900 mb-2">
-                        {{ __("No attributes added yet") }}
-                    </h4>
-                    <p class="text-gray-500 mb-6">
+                    <p class="text-gray-600 text-lg leading-relaxed">
                         {{
                             __(
-                                "Get started by adding your first product attribute"
+                                "Product attributes represent the main characteristics of your products (e.g., color, size, material). These attributes help customers filter products in the store and make more accurate purchase decisions."
                             )
                         }}
                     </p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-8"
+        >
+            <!-- Card Header -->
+            <div
+                class="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6 border-b border-gray-200"
+            >
+                <div
+                    class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+                >
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                            {{ __("Attributes List") }}
+                        </h3>
+                        <p class="text-gray-600">
+                            {{
+                                __("Manage all product attributes in one place")
+                            }}
+                        </p>
+                    </div>
+                    <span
+                        class="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-semibold shadow-sm"
+                    >
+                        {{ modelValue.length }} {{ __("attribute") }}(s)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-8">
+                <!-- Empty State -->
+                <div v-if="modelValue.length === 0" class="text-center py-16">
+                    <div
+                        class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner"
+                    >
+                        <i class="fas fa-tags text-gray-400 text-4xl"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold text-gray-900 mb-3">
+                        {{ __("No attributes added yet") }}
+                    </h4>
+                    <p class="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+                        {{
+                            __(
+                                "Get started by adding your first product attribute to enhance your product catalog."
+                            )
+                        }}
+                    </p>
+                    <button
+                        @click="addAttribute"
+                        class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                        <i class="fas fa-plus-circle text-xl"></i>
+                        <span class="text-lg">{{
+                            __("Add First Attribute")
+                        }}</span>
+                    </button>
+                </div>
 
                 <!-- Attributes Grid -->
-                <div v-else class="space-y-4">
+                <div v-else class="space-y-6">
                     <div
-                        v-for="(attr, index) in internalAttributes"
+                        v-for="(attr, index) in modelValue"
                         :key="index"
-                        class="bg-gray-50 rounded-lg p-6 border border-gray-200 hover:border-blue-300 transition-colors duration-200"
+                        class="group bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-gray-100 p-6 shadow-sm hover:shadow-2xl transition-all duration-300 hover:border-blue-200"
                     >
+                        <!-- Attribute Header -->
                         <div
-                            class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start"
+                            class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 pb-6 border-b border-gray-200"
                         >
-                            <!-- Name - Full width on mobile, 3 cols on desktop -->
-                            <div class="lg:col-span-2">
-                                <label
-                                    class="text-sm font-medium text-gray-700 mb-2 flex items-center space-x-2"
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md"
                                 >
-                                    <i
-                                        class="fas fa-tag text-gray-400 text-sm"
-                                    ></i>
-                                    <span>{{ __("Name") }}</span>
-                                </label>
-                                <input
-                                    v-model="attr.name"
-                                    type="text"
-                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                                    placeholder="e.g., Color, Size"
-                                    @input="emitUpdate"
-                                />
-                            </div>
-
-                            <!-- Type and Widget - 2 cols each on desktop -->
-                            <div class="lg:col-span-2">
-                                <label
-                                    class="text-sm font-medium text-gray-700 mb-2 flex items-center space-x-2"
-                                >
-                                    <i
-                                        class="fas fa-list text-gray-400 text-sm"
-                                    ></i>
-                                    <span>{{ __("Type") }}</span>
-                                </label>
-                                <div class="relative">
-                                    <select
-                                        v-model="attr.type"
-                                        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white pr-10"
-                                        @change="emitUpdate"
+                                    <span
+                                        class="text-white font-bold text-lg"
+                                        >{{ index + 1 }}</span
                                     >
-                                        <option
-                                            v-for="option in typeOptions"
-                                            :key="option"
-                                            :value="option"
-                                        >
-                                            {{ option }}
-                                        </option>
-                                    </select>
-                                    <i
-                                        class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
-                                    ></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-900">
+                                        {{ __("Attribute") }} #{{ index + 1 }}
+                                    </h4>
+                                    <p
+                                        v-if="attr.name"
+                                        class="text-blue-600 font-medium"
+                                    >
+                                        {{ attr.name }}
+                                    </p>
+                                    <p v-else class="text-gray-500 text-sm">
+                                        {{ __("Unnamed attribute") }}
+                                    </p>
                                 </div>
                             </div>
-
-                            <div class="lg:col-span-2">
-                                <label
-                                    class="text-sm font-medium text-gray-700 mb-2 flex items-center space-x-2"
-                                >
-                                    <i
-                                        class="fas fa-puzzle-piece text-gray-400 text-sm"
-                                    ></i>
-                                    <span>{{ __("Widget") }}</span>
-                                </label>
-                                <div class="relative">
-                                    <select
-                                        v-model="attr.widget"
-                                        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white pr-10"
-                                        @change="emitUpdate"
-                                    >
-                                        <option
-                                            v-for="option in widgetOptions"
-                                            :key="option"
-                                            :value="option"
-                                        >
-                                            {{ option }}
-                                        </option>
-                                    </select>
-                                    <i
-                                        class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
-                                    ></i>
-                                </div>
-                            </div>
-
-                            <!-- Value and Stock - 2 cols each on desktop -->
-                            <div class="lg:col-span-2">
-                                <label
-                                    class="text-sm font-medium text-gray-700 mb-2 flex items-center space-x-2"
-                                >
-                                    <i
-                                        class="fas fa-code text-gray-400 text-sm"
-                                    ></i>
-                                    <span>{{ __("Value") }}</span>
-                                </label>
-                                <input
-                                    v-model="attr.value"
-                                    type="text"
-                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                                    placeholder="e.g., Red, Large"
-                                    @input="emitUpdate"
-                                />
-                            </div>
-
-                            <div class="lg:col-span-1">
-                                <label
-                                    class="text-sm font-medium text-gray-700 mb-2 flex items-center space-x-2"
-                                >
-                                    <i
-                                        class="fas fa-cubes text-gray-400 text-sm"
-                                    ></i>
-                                    <span>{{ __("Stock") }}</span>
-                                </label>
-                                <input
-                                    v-model="attr.stock"
-                                    type="number"
-                                    min="0"
-                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                                    @input="emitUpdate"
-                                />
-                            </div>
-
-                            <!-- Multiple Checkbox and Delete Button -->
-                            <div
-                                class="lg:col-span-2 flex items-center justify-between space-x-4 pt-2"
+                            <button
+                                @click="deleteAttribute(index)"
+                                class="flex items-center gap-2 px-4 py-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200 border border-transparent hover:border-red-200 font-medium"
+                                :title="__('Delete attribute')"
                             >
-                                <label
-                                    class="flex items-center space-x-3 cursor-pointer group"
-                                >
-                                    <div class="relative">
-                                        <input
-                                            v-model="attr.multiple"
-                                            type="checkbox"
-                                            class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 transition-all duration-200"
-                                            @change="emitUpdate"
-                                        />
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <span
-                                            class="text-sm font-medium text-gray-700"
-                                            >{{ __("Multiple Values") }}</span
-                                        >
-                                        <span class="text-xs text-gray-500">{{
-                                            __("Allow multiple selections")
-                                        }}</span>
-                                    </div>
-                                </label>
+                                <i class="fas fa-trash-alt"></i>
+                                <span>{{ __("Delete") }}</span>
+                            </button>
+                        </div>
 
-                                <button
-                                    @click="deleteAttribute(index)"
-                                    class="flex-shrink-0 w-12 h-12 flex items-center justify-center border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all duration-200 group"
-                                    :title="__('Delete attribute')"
-                                >
-                                    <i
-                                        class="fas fa-trash-alt group-hover:scale-110 transition-transform duration-200"
-                                    ></i>
-                                </button>
-                            </div>
+                        <!-- Form Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <v-input
+                                :label="__('Attribute Name')"
+                                v-model="attr.name"
+                                :required="true"
+                                :placeholder="__('e.g., Color, Size, Material')"
+                            />
+                            <v-select
+                                :label="__('Data Type')"
+                                :options="typeOptions"
+                                v-model="attr.type"
+                                :required="true"
+                            />
+                            <v-select
+                                :label="__('Display Widget')"
+                                :options="widgetOptions"
+                                v-model="attr.widget"
+                                :required="true"
+                            />
+                            <v-input
+                                :label="__('Attribute Value')"
+                                v-model="attr.value"
+                                :required="true"
+                                :placeholder="__('e.g., Red, Large, Cotton')"
+                            />
+                            <!--
+                                <v-input
+                                :label="__('Available Stock')"
+                                v-model="attr.stock"
+                                :required="true"
+                                type="number"
+                                :placeholder="__('Enter stock quantity')"
+                                />
+                                -->
+                            <v-switch
+                                :label="__('Multiple Values')"
+                                v-model="attr.multiple"
+                            />
                         </div>
                     </div>
                 </div>
-                <v-error :error="error" />
             </div>
 
-            <!-- Add Button Section -->
-            <div class="border-t border-gray-200 bg-gray-50 px-6 py-4">
+            <!-- Add Button -->
+            <div
+                v-if="modelValue.length > 0"
+                class="border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6"
+            >
                 <button
                     @click="addAttribute"
-                    class="w-full max-w-md mx-auto px-6 py-4 border-2 border-dashed border-blue-300 text-blue-600 rounded-xl hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 flex items-center justify-center space-x-3 font-medium group"
+                    class="w-full max-w-md mx-auto px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
                 >
-                    <i
-                        class="fas fa-plus-circle text-lg group-hover:scale-110 transition-transform duration-200"
-                    ></i>
+                    <i class="fas fa-plus-circle text-xl"></i>
                     <span class="text-lg">{{ __("Add New Attribute") }}</span>
                 </button>
             </div>
         </div>
+
+        <v-error :error="error" />
     </div>
 </template>
 
 <script>
 import VError from "./VError.vue";
+import VInput from "./VInput.vue";
+import VSelect from "./VSelect.vue";
+import VSwitch from "./VSwitch.vue";
 
 export default {
     components: {
         VError,
+        VInput,
+        VSelect,
+        VSwitch,
     },
     emits: ["update:modelValue"],
     props: {
         modelValue: {
             type: Array,
-            required: true,
-            default: () => [],
-            validator: (value) => {
-                return value.every(
-                    (attr) =>
-                        typeof attr === "object" &&
-                        "name" in attr &&
-                        "type" in attr &&
-                        "value" in attr &&
-                        "widget" in attr &&
-                        "multiple" in attr &&
-                        "stock" in attr
-                );
-            },
+            default: [],
         },
         error: {
             type: Array,
@@ -303,55 +243,22 @@ export default {
 
     data() {
         return {
-            internalAttributes: [],
-            typeOptions: ["string", "integer", "boolean"],
-            widgetOptions: ["checkbox", "select", "radio", "slide"],
+            typeOptions: [
+                { name: "String", id: "string" },
+                { name: "Number", id: "number" },
+                { name: "Boolean", id: "boolean" },
+            ],
+            widgetOptions: [
+                { name: "Checkbox", id: "checkbox" },
+                { name: "Select", id: "select" },
+            ],
             lastValidState: [],
         };
     },
 
-    computed: {
-        multipleCount() {
-            return this.internalAttributes.filter((attr) => attr.multiple)
-                .length;
-        },
-        totalStock() {
-            return this.internalAttributes.reduce(
-                (sum, attr) => sum + (parseInt(attr.stock) || 0),
-                0
-            );
-        },
-        linkedCount() {
-            return this.internalAttributes.filter((attr) => attr.links).length;
-        },
-    },
-
-    watch: {
-        modelValue: {
-            immediate: true,
-            deep: true,
-            handler(newVal) {
-                this.lastValidState = JSON.parse(JSON.stringify(newVal));
-                this.internalAttributes = this.normalizeAttributes(newVal);
-            },
-        },
-    },
-
     methods: {
-        normalizeAttributes(attrs) {
-            return attrs.map((attr) => ({
-                name: attr.name || "",
-                type: attr.type || "string",
-                value: attr.value || "",
-                widget: attr.widget || "checkbox",
-                multiple: attr.multiple || false,
-                stock: attr.stock || 0,
-                ...(attr.links ? { links: attr.links } : {}),
-            }));
-        },
-
         addAttribute() {
-            this.internalAttributes.push({
+            this.modelValue.push({
                 name: "",
                 type: "string",
                 value: "",
@@ -359,20 +266,13 @@ export default {
                 multiple: false,
                 stock: 0,
             });
-            this.emitUpdate();
-        },
 
-        emitUpdate() {
-            const attributes = JSON.parse(
-                JSON.stringify(this.internalAttributes)
-            );
-            this.$emit("update:modelValue", attributes);
+            this.$emit("update:modelValue", this.modelValue);
         },
 
         async deleteAttribute(index) {
-            const item = this.internalAttributes[index];
+            const item = this.modelValue[index];
 
-            // Replace confirm with SweetAlert2
             const result = await this.$swal({
                 title: this.__("Are you sure?"),
                 text: this.__(
@@ -395,8 +295,7 @@ export default {
 
             // Local attribute (no server link)
             if (!item.links?.destroy) {
-                this.internalAttributes.splice(index, 1);
-                this.emitUpdate();
+                this.modelValue.splice(index, 1);
 
                 // Show success notification with SweetAlert2
                 await this.$swal({
@@ -408,6 +307,8 @@ export default {
                     toast: true,
                     position: "top-end",
                 });
+
+                this.$emit("update:modelValue", this.modelValue);
                 return;
             }
 
@@ -415,8 +316,7 @@ export default {
             try {
                 const res = await this.$server.delete(item.links.destroy);
                 if (res.status === 200) {
-                    this.internalAttributes.splice(index, 1);
-                    this.emitUpdate();
+                    this.modelValue.splice(index, 1);
 
                     await this.$swal({
                         title: this.__("Deleted!"),
@@ -439,6 +339,8 @@ export default {
                     icon: "error",
                     confirmButtonText: this.__("OK"),
                 });
+            } finally {
+                this.$emit("update:modelValue", this.modelValue);
             }
         },
     },

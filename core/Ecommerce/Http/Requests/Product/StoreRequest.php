@@ -80,22 +80,6 @@ class StoreRequest extends FormRequest
             'short_description' => ['required', new UndefinedValues(), 'min:0', 'max:1000',],
             'description' => ['required', new UndefinedValues()],
             'category' => ['required', new UndefinedValues(), 'exists:categories,id', 'max:100',],
-            'stock' => [
-                Rule::requiredIf(function () {
-                    return !$this->filled('id');
-                }),
-                function ($attribute, $value, $fail) {
-
-                    if (!empty($value)) {
-
-                        $value = str_replace([',', '.'], '', $value);
-
-                        if (filter_var($value, FILTER_VALIDATE_INT) === false) {
-                            $fail(__("The stock value is invalid"));
-                        }
-                    }
-                }
-            ],
             'images' => [
                 Rule::requiredIf(function () {
                     return !$this->filled('id');
@@ -109,7 +93,7 @@ class StoreRequest extends FormRequest
             'attributes.*.value' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
             'attributes.*.widget' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
             'attributes.*.multiple' => ['required', new UndefinedValues(), new BooleanRule()],
-            'attributes.*.stock' => [
+            /*'attributes.*.stock' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
 
@@ -122,22 +106,29 @@ class StoreRequest extends FormRequest
                         }
                     }
                 }
-            ],
+            ],*/
             'tags' => ['nullable', 'array'],
             'tags.*.name' => ['max:100', 'min:1'],
-            'currency' => [
-                'required',
-                'string',
-                function ($attribute, $value, $fail) {
-                    if (empty(billing_get_currency($value))) {
-                        $fail(__("The billing period is invalid"));
-                    }
-                }
-            ],
-            'price' => [
+            'variants' => ['array', 'required'],
+            'variants.*.name' => ['string', 'required', 'max:150'],
+            'variants.*.stock' => [
                 'required',
                 function ($attribute, $value, $fail) {
 
+                    $value = str_replace([',', '.'], '', $value);
+
+                    if (filter_var($value, FILTER_VALIDATE_INT) === false) {
+                        $fail(__("The stock value is invalid"));
+                    }
+
+                    if (filter_var($value, FILTER_VALIDATE_INT) === 0) {
+                        $fail(__('The minimum stock is 1'));
+                    }
+                }
+            ],
+            'variants.*.price' => [
+                'required',
+                function ($attribute, $value, $fail) {
                     $price = str_replace('.', '', $value);
 
                     if (filter_var($price, FILTER_VALIDATE_INT) == false) {
@@ -145,6 +136,16 @@ class StoreRequest extends FormRequest
                     }
                 }
             ],
+            'variants.*.currency' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (empty(billing_get_currency($value))) {
+                        $fail(__("The currency is invalid"));
+                    }
+                }
+            ],
+            'variants.*.description' => ['required', 'max:800'],
         ];
     }
 }

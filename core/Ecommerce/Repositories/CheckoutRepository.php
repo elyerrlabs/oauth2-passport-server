@@ -24,6 +24,7 @@ namespace Core\Ecommerce\Repositories;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Models\Common\Variant;
 use Core\Transaction\Model\Transaction;
 use Core\Transaction\Model\User;
 use Core\Transaction\Model\DeliveryAddress;
@@ -157,17 +158,17 @@ class CheckoutRepository implements Contracts
     {
         // Join the same products
         $products = collect($data['orders'])
-            ->groupBy('product_id')
+            ->groupBy('variant_id')
             ->map(function ($items) {
                 return [
-                    'product_id' => $items->first()['product_id'],
+                    'variant_id' => $items->first()['variant_id'],
                     'total_quantity' => $items->sum('quantity'),
                 ];
             });
 
         //check total stock
         foreach ($products as $item) {
-            $this->productRepository->verifyStock($item['product_id'], $item['total_quantity']);
+            $this->productRepository->verifyStock($item['variant_id'], $item['total_quantity']);
         }
 
         // Set delivery address
@@ -198,14 +199,19 @@ class CheckoutRepository implements Contracts
 
         // Prepare items to pay
         foreach ($products as $item) {
-            $product = $this->productRepository->find($item['product_id'])->toArray();
+            $product = Variant::with(
+                [
+                    'variantable',
+                    'price'
+                ]
+            )->find($item['variant_id'])->toArray();
 
             $checkout['items'][] = [
                 'price_data' => [
                     'currency' => strtolower($product['price']['currency']),
                     'unit_amount' => $product['price']['amount'],
                     'product_data' => [
-                        'name' => $product['name'],
+                        'name' => $product['variantable']['name'],
                     ],
                 ],
                 'quantity' => $item['total_quantity'],

@@ -90,68 +90,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :error="errors.category"
                                 />
                             </div>
-
-                            <!-- Currency -->
-                            <div>
-                                <v-select
-                                    v-model="form.currency"
-                                    :options="currencies"
-                                    :label="__('Currency')"
-                                    value-key="code"
-                                    label-key="name"
-                                    :required="true"
-                                    :error="errors.currency"
-                                />
-                            </div>
-
-                            <!-- Pricing & Stock -->
-                            <div class="space-y-4">
-                                <!-- Price -->
-                                <v-input
-                                    :label="__('Price')"
-                                    v-model="form.price"
-                                    :error="errors.price"
-                                    type="money"
-                                    :required="true"
-                                />
-                            </div>
-                        </div>
-
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-2 border-b border-gray-300 gap-6 py-4"
-                        >
-                            <v-input
-                                :label="__('Initial Stock')"
-                                v-model="current_stock"
-                                :error="errors.current_stock"
-                                type="number"
-                                :disabled="form.id ? true : false"
-                            />
-
-                            <div
-                                v-if="form.id"
-                                class="flex justify-between gap-2"
-                            >
-                                <v-input
-                                    :label="__('Stock Adjustment')"
-                                    v-model="update_stock"
-                                    :error="errors.stock"
-                                    type="number"
-                                />
-
-                                <v-switch
-                                    :label="
-                                        decrease
-                                            ? __('Decrease Stock')
-                                            : __('Increase Stock')
-                                    "
-                                    v-model="decrease"
-                                    inactive-label=""
-                                    active-label=""
-                                    active-text=""
-                                    inactive-text=""
-                                />
-                            </div>
                         </div>
 
                         <!-- Toggle Switches -->
@@ -177,6 +115,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                     <div class="p-2 border-b border-gray-200">
                         <v-tags v-model="form.tags" :error="errors.tags" />
+                    </div>
+
+                    <div class="p-2 border-b border-gray-300">
+                        <v-variant v-model="form.variants" :error="errors" />
                     </div>
 
                     <!-- Descriptions Section -->
@@ -274,10 +216,12 @@ import VTags from "../../Components/VTags.vue";
 import VFileUploader from "../../Components/VFileUploader.vue";
 import VFileViewer from "../../Components/VFileViewer.vue";
 import VSelect from "../../Components/VSelect.vue";
+import VVariant from "../../Components/VVariant.vue";
 
 export default {
     components: {
         VEditor,
+        VVariant,
         VAdminLayout,
         VSwitch,
         VInput,
@@ -306,37 +250,20 @@ export default {
                 description: "",
                 specification: "",
                 category: "",
-                price: "",
-                stock: 0,
                 published: false,
                 featured: false,
                 currency: "",
                 attributes: [],
                 tags: [],
                 images: [],
+                variants: [],
             },
             current_images: [],
-            currencies: [],
             categories: [],
             products: [],
-            current_stock: 0,
-            update_stock: 0,
-            decrease: false,
             errors: {},
             disabled: false,
         };
-    },
-
-    watch: {
-        update_stock(value) {
-            console.log(value);
-
-            this.calculateStock();
-        },
-
-        decrease(value) {
-            this.calculateStock();
-        },
     },
 
     created() {
@@ -347,19 +274,6 @@ export default {
     },
 
     methods: {
-        calculateStock() {
-            let stock = Number(this.form.stock);
-            const adjustment = Number(this.update_stock) || 0;
-
-            if (this.decrease) {
-                stock -= adjustment;
-            } else {
-                stock += adjustment;
-            }
-
-            this.current_stock = Math.max(0, stock);
-        },
-
         loadData(model) {
             if (model?.id) {
                 this.current_images = model.images;
@@ -369,12 +283,8 @@ export default {
                     images: [],
                 };
 
-                this.current_stock = 0;
-                this.update_stock = 0;
-                this.decrease = false;
                 this.errors = {};
             }
-            this.calculateStock();
         },
 
         async getCurrencies() {
@@ -430,8 +340,8 @@ export default {
 
             // Append attributes
             this.form.attributes.forEach((attr, index) => {
-                Object.keys(attr).forEach((prop) => {
-                    payload.append(`attributes[${index}][${prop}]`, attr[prop]);
+                Object.keys(attr).forEach((key) => {
+                    payload.append(`attributes[${index}][${key}]`, attr[key]);
                 });
             });
 
@@ -443,6 +353,12 @@ export default {
             // Append images
             this.form.images.forEach((file) => {
                 payload.append("images[]", file);
+            });
+
+            this.form.variants.forEach((variant, index) => {
+                Object.keys(variant).forEach((key) => {
+                    payload.append(`variants[${index}][${key}]`, variant[key]);
+                });
             });
 
             try {
@@ -460,7 +376,7 @@ export default {
                         __("New product has been created successfully.")
                     );
 
-                    window.location.href = res.data.links.edit;
+                    window.location.href = res.data.data.links.edit;
                 }
 
                 if (res.status == 200) {

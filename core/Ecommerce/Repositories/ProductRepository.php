@@ -25,6 +25,7 @@ namespace Core\Ecommerce\Repositories;
  */
 
 use App\Models\Common\Attribute;
+use App\Models\Common\Variant;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -94,7 +95,8 @@ final class ProductRepository implements Contracts
             'files',
             'tags',
             'attributes',
-            'price'
+            'variants',
+            'variants.price'
         ]);
 
         if ($request->filled('category')) {
@@ -111,16 +113,22 @@ final class ProductRepository implements Contracts
         }
 
         if ($request->filled('stock')) {
-            $operator = in_array($request->get('stock_operator'), ['=', '>', '>=', '<', '<=']) ? $request->get('stock_operator') : '=';
-            $query->where('stock', $operator, $request->stock);
+            $query->whereHas(
+                'variants',
+                function ($query) use ($request) {
+                    $operator = in_array($request->get('stock_operator'), ['=', '>', '>=', '<', '<=']) ? $request->get('stock_operator') : '=';
+                    $query->where('stock', $operator, $request->stock);
+                }
+            );
         }
 
         if ($request->filled('price')) {
             $operator = in_array($request->get('price_operator'), ['=', '>', '>=', '<', '<=']) ? $request->get('price_operator') : '=';
             $price = (int) str_replace('.', '', $request->price);
 
+
             $query->whereHas(
-                'price',
+                'variants.price',
                 function ($query) use ($price, $operator) {
                     $query->where('amount', $operator, $price);
                 }
@@ -145,7 +153,7 @@ final class ProductRepository implements Contracts
 
         $query = $this->model->query();
 
-        $query->with('files', 'tags', 'attributes', 'price');
+        $query->with('files', 'tags', 'attributes', 'variants', 'variants.price');
 
         $query->where('published', true);
 
@@ -245,12 +253,15 @@ final class ProductRepository implements Contracts
 
         // Search by price
         if ($request->filled('price')) {
-            $query->whereHas('price', function ($query) use ($request) {
-                $price = explode(',', $request->price);
-                $min = $price[0] == 0 ? 0 : (int) $price[0] * 100;
-                $max = (int) $price[1] * 100;
-                $query->whereBetween('amount', [$min, $max]);
-            });
+            $query->whereHas(
+                'variants.price',
+                function ($query) use ($request) {
+                    $price = explode(',', $request->price);
+                    $min = $price[0] == 0 ? 0 : (int) $price[0] * 100;
+                    $max = (int) $price[1] * 100;
+                    $query->whereBetween('amount', [$min, $max]);
+                }
+            );
         }
 
         $query->inRandomOrder();
@@ -272,14 +283,15 @@ final class ProductRepository implements Contracts
                 'files',
                 'tags',
                 'attributes',
-                'price'
+                'variants',
+                'variants.price'
             ]
         )->whereHas(
-                'category',
-                function ($query) use ($category) {
-                    $query->where('slug', $category);
-                }
-            )->where('slug', $product)->firstOrFail();
+            'category',
+            function ($query) use ($category) {
+                $query->where('slug', $category);
+            }
+        )->where('slug', $product)->firstOrFail();
     }
 
     /**
@@ -292,9 +304,9 @@ final class ProductRepository implements Contracts
         $model = DB::transaction(function () use ($data) {
 
             $data['category_id'] = $data['category'];
-            $data['price'] = (int) str_replace('.', '', $data['price']);
+
             $model = $this->model->create($data);
-            $this->CreateOrUpdatePrice($model, $data);
+            $this->createOrUpdateVariants($model, $data);
             $this->createImage($model, $data);
             $this->createAttributes($model, $data);
             $this->createTags($model, $data);
@@ -302,7 +314,7 @@ final class ProductRepository implements Contracts
             return $model;
         });
 
-        return $model;
+        return $this->find($model->id);
     }
 
     /**
@@ -318,7 +330,8 @@ final class ProductRepository implements Contracts
                 'files',
                 'tags',
                 'attributes',
-                'price'
+                'variants',
+                'variants.price'
             ])->findOrFail($id);
 
         } catch (\Throwable $th) {
@@ -381,21 +394,36 @@ final class ProductRepository implements Contracts
      * @param array $data
      * @return void
      */
-    public function CreateOrUpdatePrice(Product $product, array $data)
+    public function createOrUpdateVariants(Product $product, array $data)
     {
-        $price = [
-            'billing_period' => config('billing.period.one_time.name'),
-            'currency' => $data['currency'],
-            'amount' => $data['price'],
-        ];
+        foreach ($data['variants'] as $key => $value) {
+            // Create variant o update
+            $variant = $product->variants()->updateOrCreate(
+                [
+                    'id' => $value['id'] ?? null
+                ],
+                [
+                    'name' => $value['name'],
+                    'stock' => $value['stock'],
+                    'description' => $value['description']
+                ]
+            );
 
-        if (!empty($product->price)) {
-            $product->price()->updateOrCreate([
-                'id' => $product->price->id
-            ], $price);
+            // Price
+            $price = [
+                'billing_period' => config('billing.period.one_time.name'),
+                'currency' => $value['currency'],
+                'amount' => $value['price'],
+            ];
+
+            if (!empty($variant->price)) {
+                $variant->price()->updateOrCreate([
+                    'id' => $variant->price->id
+                ], $price);
+            }
+
+            $variant->price()->updateOrCreate($price);
         }
-
-        $product->price()->updateOrCreate($price);
     }
 
     /**
@@ -419,13 +447,13 @@ final class ProductRepository implements Contracts
                     'unit_id' => $value['unit_id'] ?? null,
                 ];
 
-                $attribute = Attribute::updateOrCreate($data);
-
+                Attribute::updateOrCreate($data);
+                /*
                 $product->attributes()->syncWithoutDetaching([
                     $attribute->id => [
                         'stock' => $value['stock'] ?? 0
                     ]
-                ]);
+                ]);*/
             }
         }
     }
@@ -434,11 +462,11 @@ final class ProductRepository implements Contracts
      * Verify the stock
      * @param string $id
      * @param int $stock
-     * @return TModel|TValue|null
+     * @return Variant
      */
     public function verifyStock(string $id, int $requestedQuantity)
     {
-        $model = $this->model->find($id);
+        $model = Variant::find($id);
 
         if (!$model) {
             throw new ReportError(__("The product does not exist."), 404);
@@ -486,15 +514,14 @@ final class ProductRepository implements Contracts
      */
     public function update(string $id, array $data)
     {
-        $model = DB::transaction(function () use ($id, $data) {
+        DB::transaction(function () use ($id, $data) {
 
             $data['category_id'] = $data['category'];
 
             $model = $this->find($id);
-            $data['price'] = (int) str_replace('.', '', $data['price']);
             $model->update($data);
 
-            $this->CreateOrUpdatePrice($model, $data);
+            $this->createOrUpdateVariants($model, $data);
             $this->createImage($model, $data);
             $this->createAttributes($model, $data);
             $this->createTags($model, $data);
@@ -502,8 +529,7 @@ final class ProductRepository implements Contracts
             return $model;
         });
 
-
-        return $model;
+        return $this->find($id);
     }
 
     /**
@@ -558,5 +584,29 @@ final class ProductRepository implements Contracts
         $model->attributes()->detach($attribute_id);
 
         return $model;
+    }
+
+    /**
+     * Delete variant
+     * @param string $product_id
+     * @param string $variant_id
+     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
+     * @return Variant
+     */
+    public function deleteVariant(string $product_id, string $variant_id)
+    {
+        $variant = Variant::where('id', $variant_id)
+            ->where('variantable_id', $product_id)
+            ->first();
+
+        if (empty($variant)) {
+            throw new ReportError(__('Variant cannot be removed'), 404);
+        }
+
+        $variant->price->delete();
+
+        $variant->delete();
+
+        return $variant;
     }
 }

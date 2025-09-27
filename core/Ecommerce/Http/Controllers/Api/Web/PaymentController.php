@@ -62,10 +62,10 @@ class PaymentController extends ApiController
             'delivery' => ['required', 'exists:delivery_addresses,id'],
             'orders' => ['required', 'array'],
             'orders.*.id' => ['exists:orders,id'],
-            'orders.*.product_id' => ['exists:products,id'],
+            'orders.*.variant_id' => ['exists:variants,id'],
             'orders.*.quantity' => ['required', 'integer', 'min:1'],
         ]);
-
+        
         return $this->repository->create($request->toArray());
     }
 }

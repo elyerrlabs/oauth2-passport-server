@@ -45,47 +45,18 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        // Retrieve the product with attributes       
-        $product = !empty($this->product_id) ? Product::with('attributes')->find($this->product_id) : null;
-
         return [
-            'product_id' => ['required', 'exists:products,id'],
-            'attrs' => [
-                'array',
-                function ($attribute, $value, $fail) use ($product) {
-                    if (!empty($product)) {
-                        // Get attributes available with enough stock
-                        $attributes = $product->attributes->where('pivot.stock', '>=', $this->quantity);
-
-                        $attributes = $attributes
-                            ->where('pivot.stock', '>', 0)
-                            ->groupBy('name')
-                            ->map(function ($items, $key) {
-                                return [
-                                    'name' => $key,
-                                    'slug' => $items->first()['slug'],
-                                ];
-                            })
-                            ->values();
-
-                        if ($attributes->count() > 0) {
-                            // Validate that all required attributes are selected
-                            if (empty($value) || count($value) < $attributes->count()) {
-                                $fail(__("You must select all required attributes for this product"));
-                            }
-                        }
-                    }
-                }
-            ],
+            'variant_id' => ['required', 'exists:variants,id'],
             'quantity' => [
                 'required',
                 'min:1',
                 'integer',
-                function ($attribute, $value, $fail) use ($product) {
-                    if (!empty($product) && $value > $product->stock) {
+                function ($attribute, $value, $fail) {
+                    $variant = \App\Models\Common\Variant::find($this->variant_id);
+                    if ($variant && $value > $variant->stock) {
                         $fail(__("The requested quantity (:requested) exceeds the available stock (:stock).", [
-                            'requested' => $this->quantity,
-                            'stock' => $product->stock,
+                            'requested' => $value,
+                            'stock' => $variant->stock,
                         ]));
                     }
                 }

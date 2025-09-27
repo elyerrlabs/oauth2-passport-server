@@ -62,7 +62,7 @@ class UserOrderTransformer extends TransformerAbstract
         return [
             'id' => $order->id,
             'meta' => $order->meta,
-            'images' => fractal($order->orderable->files, UserFileTransformer::class)->toArray()['data'],
+            'images' => fractal($order->orderable->variantable->files, UserFileTransformer::class)->toArray()['data'],
             'quantity' => $order->quantity,
             'stock' => $order->orderable->stock,
             'price' => $order->orderable->price->amount,

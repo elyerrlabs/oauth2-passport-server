@@ -107,6 +107,11 @@ final class ProductController extends WebController
 
     }
 
+    /**
+     * Edit product
+     * @param string $id
+     * @return \Inertia\Response
+     */
     public function edit(string $id)
     {
         $model = $this->repository->find($id);
@@ -134,7 +139,6 @@ final class ProductController extends WebController
      */
     public function store(StoreRequest $request)
     {
-
         $data = [
             'id' => $request->input('id'),
             'name' => $request->input('name'),
@@ -143,14 +147,13 @@ final class ProductController extends WebController
             'description' => Purify::config('editor')->clean($request->input('description')),
             'specification' => Purify::config('editor')->clean($request->input('specification')),
             'stock' => $request->input('stock'),
-            'currency' => $request->input('currency'),
-            'price' => $request->input('price'),
             'images' => $request->file('images'),
             'category' => $request->input('category'),
             'published' => $request->input('published'),
             'featured' => $request->input('featured'),
             'attributes' => $request->input('attributes') ?? [],
             'tags' => $request->input('tags') ?? [],
+            'variants' => $request->input('variants', [])
         ];
 
         if (!empty($request->filled('id')) && $this->repository->find($request->id)) {
@@ -162,7 +165,7 @@ final class ProductController extends WebController
         $data['slug'] = normalizeSlug($request->input('name'));
 
         $product = $this->repository->create($data);
-        
+
         return $this->showOne($product, $this->repository->transformer, 201);
     }
 

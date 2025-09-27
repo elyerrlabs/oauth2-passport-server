@@ -25,6 +25,8 @@ namespace Core\Ecommerce\Repositories;
  */
 
 use App\Models\Common\Order;
+use Core\Ecommerce\Transformer\Admin\VariantTransformer;
+use App\Models\Common\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -80,7 +82,7 @@ class OrderRepository implements Contracts
         $query->with([
             'user',
             'orderable',
-            'orderable.files',
+            'orderable.variantable.files',
             'orderable.price'
         ]);
 
@@ -100,19 +102,16 @@ class OrderRepository implements Contracts
     public function create(array $data)
     {
         $order = DB::transaction(function () use ($data) {
-            $product = $this->productRepository->find($data['product_id']);
 
-            $meta = $product->toArray();
-            unset($meta['attributes']);
-            unset($meta['tags']);
-            unset($meta['files']);
-            unset($meta['category']['created_at']);
-            unset($meta['category']['updated_at']);
-            $meta['attributes'] = $data['attrs'];
-            $data['meta'] = $meta;
-            unset($data['attrs']);
+            $variant = Variant::find($data['variant_id']);
 
-            return $product->orders()->create($data);
+            $data['meta'] = $variant->variantable->toArray();
+            $data['meta']['category'] = $variant->variantable->category->toArray();
+            $data['meta']['variant'] = fractal($variant, VariantTransformer::class)->toArray()['data'];
+
+            unset($data['meta']['variant']['links']);
+
+            return $variant->orders()->create($data);
         });
 
         return $order;

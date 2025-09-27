@@ -20,175 +20,256 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="w-full max-w-4xl p-2">
-        <!-- Header Section -->
-        <div class="mb-6">
-            <div class="flex items-center space-x-3">
+    <div class="w-full max-w-6xl mx-auto p-3">
+        <!-- Header Section - Mejorado -->
+        <div
+            class="mb-8 p-4 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl border border-purple-100 shadow-sm"
+        >
+            <div class="flex items-start gap-6 mb-4">
                 <div
-                    class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                    class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg"
                 >
-                    <i class="fas fa-tags text-blue-600"></i>
+                    <i class="fas fa-tags text-white text-2xl"></i>
                 </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">
-                        {{ __("Tags") }}
-                    </h3>
-                    <p class="text-sm text-gray-600">
+                <div class="flex-1">
+                    <h2 class="text-lg font-bold text-gray-900 mb-3">
+                        {{ __("Product Tags") }}
+                    </h2>
+                    <p class="text-xl text-gray-700 font-medium mb-4">
                         {{ __("Manage product tags and categories") }}
+                    </p>
+                    <p class="text-gray-600 text-md leading-relaxed">
+                        {{
+                            __(
+                                "Tags allow you to add keywords or labels to your products (e.g., 'eco-friendly', 'new arrival', 'summer collection'). Unlike categories, tags are flexible and can be combined freely. They help customers quickly find related products and improve search and filtering in your store."
+                            )
+                        }}
                     </p>
                 </div>
             </div>
-            <p class="text-gray-500 text-sm leading-relaxed mt-2">
-                {{
-                    __(
-                        "Tags allow you to add keywords or labels to your products (e.g., 'eco-friendly', 'new arrival', 'summer collection'). Unlike categories, tags are flexible and can be combined freely. They help customers quickly find related products and improve search and filtering in your store."
-                    )
-                }}
-            </p>
         </div>
 
-        <!-- Main Content Card -->
+        <!-- Main Content Card  -->
         <div
-            class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 overflow-hidden mx-auto"
+            class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden"
         >
-            <div class="p-2">
-                <!-- Tags Counter -->
-                <div class="flex items-center justify-between mb-4">
-                    <span class="text-sm font-medium text-gray-700">{{
-                        __("Tags List")
-                    }}</span>
-                    <span
-                        class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
-                    >
-                        {{ internalTags.length }} {{ __("tag") }}(s)
-                    </span>
-                </div>
-
-                <!-- Tags Grid -->
-                <div class="flex flex-wrap gap-3 mb-6">
-                    <div
-                        v-for="(tag, index) in internalTags"
-                        :key="index"
-                        :class="[
-                            'tag-item flex items-center space-x-2 px-4 py-2 rounded-full border transition-all duration-200',
-                            tag.editing
-                                ? 'bg-white border-blue-300 shadow-sm'
-                                : 'bg-blue-50 border-blue-200 hover:bg-blue-100',
-                        ]"
-                    >
-                        <!-- Tag Display -->
-                        <div
-                            v-if="!tag.editing"
-                            class="flex items-center space-x-2"
-                        >
-                            <span
-                                class="text-sm font-medium text-blue-800 max-w-[120px] truncate"
-                            >
-                                {{ tag.name || __("New Tag") }}
-                            </span>
-                        </div>
-
-                        <!-- Edit Input -->
-                        <div v-else class="flex items-center space-x-2">
-                            <input
-                                v-model="tag.name"
-                                type="text"
-                                class="w-32 px-2 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Tag name"
-                                @blur="finishEditing(tag, index)"
-                                @keyup.enter="finishEditing(tag, index)"
-                                @keyup.esc="cancelEditing(index)"
-                                ref="tagInputs"
-                            />
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex items-center space-x-1">
-                            <!-- Edit/Save Button -->
-                            <button
-                                @click="
-                                    tag.editing
-                                        ? finishEditing(tag, index)
-                                        : startEditing(tag, index)
-                                "
-                                :class="[
-                                    'w-6 h-6 rounded-full flex items-center justify-center transition-colors duration-200',
-                                    tag.editing
-                                        ? 'bg-green-100 text-green-600 hover:bg-green-200'
-                                        : 'bg-blue-100 text-blue-600 hover:bg-blue-200',
-                                ]"
-                                :title="tag.editing ? __('Save') : __('Edit')"
-                            >
-                                <i
-                                    class="fas text-xs"
-                                    :class="
-                                        tag.editing ? 'fa-check' : 'fa-edit'
-                                    "
-                                ></i>
-                            </button>
-
-                            <!-- Delete Button -->
-                            <button
-                                @click="deleteTag(index)"
-                                class="w-6 h-6 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition-colors duration-200"
-                                title="Delete tag"
-                            >
-                                <i class="fas fa-trash text-xs"></i>
-                            </button>
-
-                            <!-- Cancel Button (only when editing) -->
-                            <button
-                                v-if="tag.editing"
-                                @click="cancelEditing(index)"
-                                class="w-6 h-6 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors duration-200"
-                                title="Cancel"
-                            >
-                                <i class="fas fa-times text-xs"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Add Tag Button -->
-                <button
-                    @click="addTag"
-                    :disabled="maxTags && internalTags.length >= maxTags"
-                    :class="[
-                        'add-btn px-4 py-2 rounded-lg border-2 border-dashed transition-all duration-200 flex items-center space-x-2',
-                        maxTags && internalTags.length >= maxTags
-                            ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-                            : 'border-blue-300 text-blue-600 hover:border-blue-400 hover:bg-blue-50',
-                    ]"
-                >
-                    <i class="fas fa-plus"></i>
-                    <span class="text-sm font-medium">{{ __("Add Tag") }}</span>
-                </button>
-
-                <!-- Max Tags Message -->
+            <!-- Card Header -->
+            <div
+                class="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6 border-b border-gray-200"
+            >
                 <div
-                    v-if="maxTags && internalTags.length >= maxTags"
-                    class="mt-2 text-sm text-amber-600 flex items-center space-x-1"
+                    class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
                 >
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span
-                        >{{ __("Maximum") }} {{ maxTags }} {{ __("tags") }}
-                        {{ __("allowed") }}</span
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                            {{ __("Tags Manager") }}
+                        </h3>
+                        <p class="text-gray-600">
+                            {{
+                                __("Add, edit, and organize your product tags")
+                            }}
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="px-4 py-2 bg-purple-500 text-white rounded-full text-sm font-semibold shadow-sm"
+                        >
+                            {{ internalTags.length }} {{ __("tag") }}(s)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags Content -->
+            <div class="p-8">
+                <!-- Empty State - Mejorado -->
+                <div v-if="internalTags.length === 0" class="text-center py-16">
+                    <div
+                        class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner"
                     >
+                        <i class="fas fa-tags text-gray-400 text-4xl"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold text-gray-900 mb-3">
+                        {{ __("No tags added yet") }}
+                    </h4>
+                    <p class="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+                        {{
+                            __(
+                                "Start by adding tags to help customers discover your products through search and filtering."
+                            )
+                        }}
+                    </p>
+                    <button
+                        @click="addTag"
+                        :disabled="maxTags && internalTags.length >= maxTags"
+                        class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    >
+                        <i class="fas fa-plus-circle text-xl"></i>
+                        <span class="text-lg">{{ __("Add First Tag") }}</span>
+                    </button>
                 </div>
 
-                <!-- Empty State -->
-                <div v-if="internalTags.length === 0" class="text-center py-8">
+                <!-- Tags Grid - Mejorado -->
+                <div v-else class="space-y-4 mb-8">
                     <div
-                        class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
                     >
-                        <i class="fas fa-tag text-gray-400 text-xl"></i>
+                        <div
+                            v-for="(tag, index) in internalTags"
+                            :key="index"
+                            :class="[
+                                'group relative bg-gradient-to-br from-white to-gray-50 rounded-2xl border-2 p-4 shadow-sm hover:shadow-xl transition-all duration-300',
+                                tag.editing
+                                    ? 'border-purple-300 ring-4 ring-purple-100'
+                                    : 'border-gray-200 hover:border-purple-200',
+                            ]"
+                        >
+                            <!-- Tag Content -->
+                            <div class="flex items-center justify-between">
+                                <!-- Tag Display -->
+                                <div v-if="!tag.editing" class="flex-1 min-w-0">
+                                    <span
+                                        class="text-sm font-semibold text-gray-900 truncate block"
+                                    >
+                                        {{ tag.name || __("New Tag") }}
+                                    </span>
+                                </div>
+
+                                <!-- Edit Input -->
+                                <div v-else class="flex-1">
+                                    <input
+                                        v-model="tag.name"
+                                        type="text"
+                                        class="w-full px-3 py-2 text-sm border-2 border-purple-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                                        :placeholder="__('Tag name')"
+                                        @blur="finishEditing(tag, index)"
+                                        @keyup.enter="finishEditing(tag, index)"
+                                        @keyup.esc="cancelEditing(index)"
+                                        ref="tagInputs"
+                                    />
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="flex items-center gap-2 ml-3">
+                                    <!-- Edit/Save Button -->
+                                    <button
+                                        @click="
+                                            tag.editing
+                                                ? finishEditing(tag, index)
+                                                : startEditing(tag, index)
+                                        "
+                                        :class="[
+                                            'w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 shadow-sm',
+                                            tag.editing
+                                                ? 'bg-green-500 text-white hover:bg-green-600 hover:scale-110'
+                                                : 'bg-purple-100 text-purple-600 hover:bg-purple-200 hover:scale-110',
+                                        ]"
+                                        :title="
+                                            tag.editing
+                                                ? __('Save')
+                                                : __('Edit')
+                                        "
+                                    >
+                                        <i
+                                            class="fas text-xs"
+                                            :class="
+                                                tag.editing
+                                                    ? 'fa-check'
+                                                    : 'fa-edit'
+                                            "
+                                        ></i>
+                                    </button>
+
+                                    <!-- Delete Button -->
+                                    <button
+                                        @click="deleteTag(index)"
+                                        class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 hover:scale-110 transition-all duration-200 shadow-sm"
+                                        :title="__('Delete tag')"
+                                    >
+                                        <i class="fas fa-trash text-xs"></i>
+                                    </button>
+
+                                    <!-- Cancel Button (only when editing) -->
+                                    <button
+                                        v-if="tag.editing"
+                                        @click="cancelEditing(index)"
+                                        class="w-8 h-8 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 hover:scale-110 transition-all duration-200 shadow-sm"
+                                        :title="__('Cancel')"
+                                    >
+                                        <i class="fas fa-times text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Editing Indicator -->
+                            <div
+                                v-if="tag.editing"
+                                class="absolute -top-2 -right-2"
+                            >
+                                <span
+                                    class="px-2 py-1 bg-purple-500 text-white text-xs font-semibold rounded-full shadow-lg"
+                                >
+                                    {{ __("Editing") }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-gray-500 text-sm">
-                        {{ __("No tags added yet") }}
-                    </p>
-                    <p class="text-xs text-gray-400 mt-1">
-                        {{ __("Click the button above to add your first tag") }}
-                    </p>
+                </div>
+
+                <!-- Add Tag Section - Mejorado -->
+                <div
+                    v-if="internalTags.length > 0"
+                    class="border-t border-gray-200 pt-8"
+                >
+                    <div
+                        class="flex flex-col sm:flex-row items-center justify-between gap-4"
+                    >
+                        <div class="flex-1">
+                            <p class="text-gray-600 text-sm">
+                                {{
+                                    __(
+                                        "Add more tags to improve product discoverability"
+                                    )
+                                }}
+                            </p>
+                        </div>
+                        <button
+                            @click="addTag"
+                            :disabled="
+                                maxTags && internalTags.length >= maxTags
+                            "
+                            :class="[
+                                'px-6 py-3 rounded-xl border-2 font-semibold transition-all duration-300 flex items-center gap-2',
+                                maxTags && internalTags.length >= maxTags
+                                    ? 'border-gray-300 text-gray-400 cursor-not-allowed bg-gray-100'
+                                    : 'border-purple-300 text-purple-600 hover:border-purple-400 hover:bg-purple-50 hover:scale-105 bg-white shadow-sm',
+                            ]"
+                        >
+                            <i class="fas fa-plus"></i>
+                            <span>{{ __("Add New Tag") }}</span>
+                        </button>
+                    </div>
+
+                    <!-- Max Tags Message -->
+                    <div
+                        v-if="maxTags && internalTags.length >= maxTags"
+                        class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl"
+                    >
+                        <div class="flex items-center gap-3">
+                            <i
+                                class="fas fa-exclamation-triangle text-amber-500 text-lg"
+                            ></i>
+                            <div>
+                                <p class="text-amber-800 font-semibold">
+                                    {{ __("Maximum Tags Reached") }}
+                                </p>
+                                <p class="text-amber-700 text-sm">
+                                    {{ __("You can only add up to") }}
+                                    {{ maxTags }} {{ __("tags") }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -257,8 +338,10 @@ export default {
             if (this.maxTags && this.internalTags.length >= this.maxTags) {
                 this.$swal({
                     icon: "warning",
-                    title: "Maximum Tags Reached",
-                    text: `You can only add up to ${this.maxTags} tags.`,
+                    title: this.__("Maximum Tags Reached"),
+                    text: this.__(
+                        "You can only add up to {maxTags} tags."
+                    ).replace("{maxTags}", this.maxTags),
                     timer: 3000,
                     showConfirmButton: false,
                 });
@@ -303,8 +386,8 @@ export default {
             if (!this.allowDuplicates && this.isDuplicate(name, index)) {
                 this.$swal({
                     icon: "error",
-                    title: "Duplicate Tag",
-                    text: "This tag already exists.",
+                    title: this.__("Duplicate Tag"),
+                    text: this.__("This tag already exists."),
                     timer: 2000,
                     showConfirmButton: false,
                 });
@@ -321,7 +404,6 @@ export default {
         },
 
         cancelEditing(index) {
-            // Restore last valid state if it's a new empty tag
             if (
                 this.internalTags[index].name === "" &&
                 !this.lastValidState[index]
@@ -347,7 +429,6 @@ export default {
         async deleteTag(index) {
             const item = this.internalTags[index];
 
-            // SweetAlert2 confirmation
             const result = await this.$swal({
                 title: this.__("Delete Tag?"),
                 text: this.__("Are you sure you want to delete this tag?"),
@@ -405,7 +486,6 @@ export default {
         },
 
         emitUpdate() {
-            // Always emit as array of objects with name property
             const tags = this.internalTags.map((tag) => ({
                 name: tag.name,
                 ...(tag.links ? { links: tag.links } : {}),

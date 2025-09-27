@@ -90,7 +90,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <p
                                 class="text-gray-500 text-xs md:text-sm mb-2 md:mb-0"
                             >
-                                {{ item?.meta?.short_description }}
+                                <span
+                                    v-html="item?.meta?.short_description"
+                                ></span>
                             </p>
 
                             <!-- Mobile price and controls -->
@@ -335,7 +337,7 @@ export default {
             this.form.orders = this.selected_products.map((item) => {
                 return {
                     id: item.id,
-                    product_id: item?.meta?.id,
+                    variant_id: item?.meta?.variant?.id,
                     quantity: item.quantity,
                 };
             });

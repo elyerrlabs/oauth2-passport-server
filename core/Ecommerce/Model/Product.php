@@ -20,11 +20,12 @@ namespace Core\Ecommerce\Model;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use App\Models\Master;
+use App\Models\Common\Variant;
 use App\Models\Common\Tag;
 use App\Models\Common\File;
 use App\Models\Common\Order;
@@ -56,7 +57,6 @@ class Product extends Master
         'short_description',
         'description',
         'specification',
-        'stock',
         'featured',
         'published',
         'category_id',
@@ -72,19 +72,9 @@ class Product extends Master
         'published' => 'boolean'
     ];
 
-    /**
-     * set stock
-     * @param mixed $value
-     * @return void
-     */
-    public function setStock($value)
-    {
-        $value = str_replace([',', '.'], '', $value);
-        $this->attributes['stock'] = filter_var($value, FILTER_VALIDATE_INT);
-    }
 
     /**
-     * 
+     *
      * @param mixed $value
      * @return void
      */
@@ -94,7 +84,7 @@ class Product extends Master
     }
 
     /**
-     * 
+     *
      * @param mixed $value
      * @return void
      */
@@ -149,14 +139,6 @@ class Product extends Master
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
-    /**
-     * Orders
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function orders()
-    {
-        return $this->morphMany(Order::class, 'orderable');
-    }
 
     /**
      * Retrieve the tags
@@ -194,7 +176,7 @@ class Product extends Master
                 return [
                     'name' => $key,
                     'slug' => $items->first()['slug'],
-                    'stock' => $items->sum('pivot.stock'),
+                    //'stock' => $items->sum('pivot.stock'),
                     'value' => $items->pluck('value')->all(),
                 ];
             })
@@ -213,5 +195,14 @@ class Product extends Master
     public function price()
     {
         return $this->morphOne(Price::class, 'priceable');
+    }
+
+    /**
+     *Variant
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function variants()
+    {
+        return $this->morphMany(Variant::class, 'variantable');
     }
 }

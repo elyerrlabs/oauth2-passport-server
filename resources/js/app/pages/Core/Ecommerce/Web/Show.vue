@@ -24,9 +24,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <v-header />
 
         <!-- Main Content -->
-        <main class="container mx-auto px-4 py-8">
+        <main class="container mx-auto px-4 py-6">
             <!-- Breadcrumbs -->
-            <div class="flex items-center text-sm text-gray-500 mb-6">
+            <div class="flex items-center text-sm text-gray-500 mb-4">
                 <a
                     :href="$page.props.routes.search"
                     class="text-indigo-500 hover:text-indigo-700"
@@ -39,56 +39,108 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >{{ product?.category?.name }}</a
                 >
                 <i class="fas fa-chevron-right mx-2 text-xs"></i>
-
                 <span class="text-gray-800">{{ product?.name }}</span>
             </div>
 
             <!-- Product Section -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
-                    <!-- Product Images -->
-                    <div>
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+                    <!-- Product Gallery -->
+                    <div class="flex flex-col lg:flex-row gap-4">
+                        <!-- Thumbnails Vertical -->
                         <div
-                            class="relative bg-gray-100 rounded-2xl p-6 mb-4 overflow-hidden"
+                            class="flex lg:flex-col gap-2 order-2 lg:order-1 overflow-auto lg:overflow-visible"
                         >
-                            <div v-if="product.discount" class="discount-badge">
-                                {{ product.discount }}% OFF
-                            </div>
-                            <img
-                                v-if="product?.images?.length"
-                                :src="product?.images[selectedImageIndex]?.url"
-                                :alt="product.name"
-                                class="w-full h-80 object-contain zoom-effect"
-                            />
-                            <button
-                                @click="toggleZoom"
-                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md text-gray-600 hover:text-indigo-600"
-                            >
-                                <i
-                                    :class="[
-                                        isZoomed
-                                            ? 'fas fa-search-minus'
-                                            : 'fas fa-search-plus',
-                                    ]"
-                                ></i>
-                            </button>
-                        </div>
-                        <div class="flex space-x-3 overflow-x-auto pb-2">
                             <div
                                 v-for="(image, index) in product?.images"
                                 :key="index"
                                 @click="selectedImageIndex = index"
                                 :class="[
-                                    'cursor-pointer p-1 rounded-lg transition-all duration-200 transform hover:scale-105',
+                                    'cursor-pointer p-1 rounded-lg border-2 transition-all duration-200 flex-shrink-0',
                                     selectedImageIndex === index
-                                        ? 'border-2 border-indigo-500'
-                                        : 'border border-gray-200',
+                                        ? 'border-indigo-500 scale-105'
+                                        : 'border-gray-200 hover:border-indigo-300',
                                 ]"
                             >
                                 <img
                                     :src="image?.url"
-                                    class="h-16 w-16 object-contain rounded-md"
+                                    class="h-16 w-16 lg:h-20 lg:w-20 object-contain rounded bg-gray-100"
                                 />
+                            </div>
+                        </div>
+
+                        <!-- Main Image -->
+                        <div class="relative flex-1 order-1 lg:order-2">
+                            <div
+                                class="bg-gray-50 rounded-xl p-4 overflow-hidden"
+                            >
+                                <div
+                                    v-if="product.discount"
+                                    class="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold z-10"
+                                >
+                                    {{ product.discount }}% OFF
+                                </div>
+
+                                <div
+                                    class="relative h-80 overflow-hidden rounded-lg"
+                                >
+                                    <img
+                                        v-if="product?.images?.length"
+                                        :src="
+                                            product?.images[selectedImageIndex]
+                                                ?.url
+                                        "
+                                        :alt="product.name"
+                                        class="w-full h-full object-contain transition-transform duration-500 cursor-zoom-in"
+                                        :class="{ 'scale-150': isZoomed }"
+                                        @click="toggleZoom"
+                                    />
+                                </div>
+
+                                <!-- Navigation Arrows -->
+                                <div
+                                    v-if="product.images?.length > 1"
+                                    class="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-2"
+                                >
+                                    <button
+                                        @click="prevImage"
+                                        class="bg-white/80 hover:bg-white text-gray-800 rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-all"
+                                    >
+                                        <i
+                                            class="fas fa-chevron-left text-sm"
+                                        ></i>
+                                    </button>
+                                    <button
+                                        @click="nextImage"
+                                        class="bg-white/80 hover:bg-white text-gray-800 rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-all"
+                                    >
+                                        <i
+                                            class="fas fa-chevron-right text-sm"
+                                        ></i>
+                                    </button>
+                                </div>
+
+                                <!-- Zoom Button -->
+                                <button
+                                    @click="toggleZoom"
+                                    class="absolute top-3 right-3 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg text-gray-600 hover:text-indigo-600 z-10 transition-all"
+                                >
+                                    <i
+                                        :class="[
+                                            isZoomed
+                                                ? 'fas fa-search-minus'
+                                                : 'fas fa-search-plus',
+                                        ]"
+                                    ></i>
+                                </button>
+
+                                <!-- Image Counter -->
+                                <div
+                                    class="absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-black/50 text-white px-2 py-1 rounded-full text-xs"
+                                >
+                                    {{ selectedImageIndex + 1 }} /
+                                    {{ product.images?.length }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -96,13 +148,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Product Info -->
                     <div>
                         <div class="flex justify-between items-start mb-2">
-                            <h1 class="text-3xl font-bold text-gray-900">
+                            <h1 class="text-2xl font-bold text-gray-900">
                                 {{ product.name }}
                             </h1>
                         </div>
 
-                        <div class="flex items-center mb-4">
-                            <div class="flex text-yellow-400 text-sm">
+                        <div class="flex items-center mb-3 text-sm">
+                            <div class="flex text-yellow-400 mr-2">
                                 <i
                                     v-for="star in 5"
                                     :key="star"
@@ -113,138 +165,231 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     ]"
                                 ></i>
                             </div>
-                            <span class="ml-2 text-gray-600"
+                            <span class="text-gray-600"
                                 >({{ 3 }} {{ __("reviews") }})</span
                             >
-                            <span class="mx-2 text-gray-300"
-                                >| {{ product.stock }}
-                            </span>
+                            <span class="mx-2 text-gray-300">|</span>
                             <span
                                 class="text-green-600 font-medium flex items-center"
                             >
-                                <i class="fas fa-check-circle mr-1"></i>
+                                <i class="fas fa-check-circle mr-1 text-xs"></i>
                                 {{ __("In stock") }}
                             </span>
                         </div>
 
+                        <!-- Price Section -->
                         <div
-                            class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl"
+                            class="mb-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100"
                         >
-                            <div class="flex items-end">
-                                <span
-                                    class="text-3xl font-bold text-indigo-600"
-                                >
-                                    {{ product.symbol }}
-                                    {{ product.format_price }}
-                                </span>
-                                <span
-                                    v-if="product.originalPrice"
-                                    class="ml-2 text-lg text-gray-500 line-through"
-                                >
-                                    {{ product.originalPrice }}
-                                </span>
+                            <div class="flex items-end justify-between">
+                                <div>
+                                    <span
+                                        class="text-2xl font-bold text-indigo-600"
+                                    >
+                                        {{ symbol }}
+                                        {{ price }}
+                                    </span>
+                                    <span
+                                        v-if="product.originalPrice"
+                                        class="ml-2 text-gray-500 line-through text-sm"
+                                    >
+                                        {{ product.originalPrice }}
+                                    </span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm text-gray-600">
+                                        {{ __("Available") }}:
+                                    </div>
+                                    <div class="font-semibold text-green-600">
+                                        {{ maxQuantity }} {{ __("units") }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
+                        <!-- Short Description -->
                         <p
-                            class="text-gray-700 mb-6 leading-relaxed"
+                            class="text-gray-700 mb-4 text-sm leading-relaxed"
                             v-html="product.short_description"
                         ></p>
 
-                        <div
-                            v-for="(attribute, index) in product.attributes"
-                            :key="index"
-                            class="mb-6"
-                        >
+                        <!-- Variants Selection -->
+                        <div v-if="product.variants?.length" class="mb-4">
                             <h3
                                 class="text-lg font-semibold text-gray-900 mb-3"
                             >
-                                {{ __(attribute.name) }}:
+                                {{ __("Available Variants") }}
                             </h3>
-                            <div class="flex flex-wrap gap-3">
-                                <button
-                                    v-for="(
-                                        value, valueIndex
-                                    ) in attribute.value"
-                                    :key="valueIndex"
-                                    @click="form.attrs[attribute.slug] = value"
+                            <div class="grid grid-cols-1 gap-2">
+                                <div
+                                    v-for="variant in product.variants"
+                                    :key="variant.id"
+                                    @click="selectVariant(variant)"
                                     :class="[
-                                        'px-4 py-2 rounded-lg border font-medium transition-all cursor-pointer',
-                                        form.attrs[attribute.slug] === value
-                                            ? 'bg-indigo-100 text-indigo-700 border-indigo-300 scale-105'
-                                            : 'bg-white text-gray-700 border-gray-300 hover:border-indigo-300',
+                                        'p-3 rounded-lg border cursor-pointer transition-all transform hover:scale-[1.02]',
+                                        form.variant_id === variant.id
+                                            ? 'bg-indigo-50 border-indigo-300 ring-2 ring-indigo-200 shadow-sm'
+                                            : 'bg-white border-gray-200 hover:border-indigo-300',
                                     ]"
                                 >
-                                    {{ __(value) }}
-                                </button>
+                                    <div
+                                        class="flex justify-between items-center"
+                                    >
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                :class="[
+                                                    'w-3 h-3 rounded-full border-2 transition-all',
+                                                    selectedVariant?.id ===
+                                                    variant.id
+                                                        ? 'bg-indigo-500 border-indigo-500'
+                                                        : 'border-gray-400',
+                                                ]"
+                                            ></div>
+                                            <div>
+                                                <span
+                                                    class="font-medium text-gray-900 block"
+                                                    >{{ variant.name }}</span
+                                                >
+                                                <p
+                                                    v-if="variant.description"
+                                                    class="text-xs text-gray-600 mt-1"
+                                                >
+                                                    {{ variant.description }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span
+                                                class="font-bold text-indigo-600 text-sm"
+                                                >{{ variant.symbol }}
+                                                {{ variant.format_price }}</span
+                                            >
+                                            <div
+                                                class="text-xs text-green-600 mt-1 flex items-center justify-end"
+                                            >
+                                                <i class="fas fa-box mr-1"></i
+                                                >{{ variant.stock }}
+                                                {{ __("available") }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <v-error :error="errors.variant_id" />
                             </div>
-                            <v-error :error="errors.attrs" />
                         </div>
 
-                        <!-- Quantity Selector -->
-                        <div class="mb-6">
-                            <div class="flex items-center mb-4">
-                                <span class="mr-4 text-gray-900 font-medium"
+                        <!-- Quantity and Actions -->
+                        <div class="mb-4">
+                            <div
+                                class="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg"
+                            >
+                                <span class="text-gray-900 font-medium text-sm"
                                     >{{ __("Quantity") }}:</span
                                 >
-                                <div
-                                    class="flex items-center border border-gray-300 rounded-lg overflow-hidden"
-                                >
-                                    <button
-                                        @click="decreaseQuantity"
-                                        class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition"
+                                <div class="flex items-center">
+                                    <div
+                                        class="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white"
                                     >
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <span
-                                        class="px-4 py-2 border-l border-r border-gray-300 w-12 text-center"
-                                        >{{ form.quantity }}</span
-                                    >
-                                    <button
-                                        @click="increaseQuantity"
-                                        class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition"
-                                    >
-                                        <i class="fas fa-plus"></i>
-                                    </button>
+                                        <button
+                                            @click="decreaseQuantity"
+                                            :disabled="form.quantity <= 1"
+                                            :class="[
+                                                'px-3 py-2 transition',
+                                                form.quantity <= 1
+                                                    ? 'text-gray-400 cursor-not-allowed'
+                                                    : 'text-gray-600 hover:bg-gray-100',
+                                            ]"
+                                        >
+                                            <i class="fas fa-minus text-xs"></i>
+                                        </button>
+                                        <span
+                                            class="px-4 py-2 border-l border-r border-gray-300 w-12 text-center text-sm font-medium"
+                                            >{{ form.quantity }}</span
+                                        >
+                                        <button
+                                            @click="increaseQuantity"
+                                            :disabled="
+                                                form.quantity >= maxQuantity
+                                            "
+                                            :class="[
+                                                'px-3 py-2 transition',
+                                                form.quantity >= maxQuantity
+                                                    ? 'text-gray-400 cursor-not-allowed'
+                                                    : 'text-gray-600 hover:bg-gray-100',
+                                            ]"
+                                        >
+                                            <i class="fas fa-plus text-xs"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <v-error :error="errors.quantity" />
 
-                            <div
-                                class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"
-                            >
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <button
                                     @click="addToCart"
-                                    class="add-to-cart-btn flex-1 text-white py-3 px-6 rounded-lg font-medium flex items-center justify-center shadow-md"
+                                    class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center shadow-md transition-all transform hover:scale-[1.02]"
                                 >
                                     <i class="fas fa-shopping-cart mr-2"></i>
                                     {{ __("Add to Cart") }}
                                 </button>
                                 <button
                                     @click="buyNow"
-                                    class="buy-now-btn flex-1 text-white py-3 px-6 rounded-lg font-medium flex items-center justify-center shadow-md"
+                                    class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center shadow-md transition-all transform hover:scale-[1.02]"
                                 >
                                     <i class="fas fa-bolt mr-2"></i>
                                     {{ __("Buy Now") }}
                                 </button>
                             </div>
                         </div>
+
+                        <!-- Product Features -->
+                        <div
+                            class="grid grid-cols-2 gap-3 text-xs text-gray-600 border-t pt-4 mt-4"
+                        >
+                            <!--
+                            <div class="flex items-center">
+                                <i
+                                class="fas fa-shipping-fast mr-2 text-indigo-500"
+                                ></i>
+                                <span>{{ __("Free shipping") }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i
+                                class="fas fa-shield-alt mr-2 text-green-500"
+                                ></i>
+                                <span>{{ __("2-year warranty") }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i
+                                class="fas fa-undo-alt mr-2 text-blue-500"
+                                ></i>
+                                <span>{{ __("30-day returns") }}</span>
+                            </div>
+                            -->
+                            <div class="flex items-center">
+                                <i
+                                    class="fas fa-headset mr-2 text-purple-500"
+                                ></i>
+                                <span>{{ __("24/7 support") }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Product Details Tabs -->
-                <div class="border-t border-gray-200 mt-8">
-                    <div class="px-8">
-                        <nav class="flex space-x-8">
+                <div class="border-t border-gray-200 mt-6">
+                    <div class="px-6">
+                        <nav class="flex space-x-8 border-b">
                             <button
                                 v-for="tab in tabs"
                                 :key="tab.id"
                                 @click="activeTab = tab.id"
                                 :class="[
-                                    'tab-button py-4 px-1 font-medium text-sm transition',
+                                    'tab-button py-4 px-1 font-medium text-sm transition-all border-b-2',
                                     activeTab === tab.id
-                                        ? 'active text-indigo-600'
-                                        : 'text-gray-500 hover:text-gray-700',
+                                        ? 'text-indigo-600 border-indigo-600 font-semibold'
+                                        : 'text-gray-500 hover:text-gray-700 border-transparent',
                                 ]"
                             >
                                 {{ __(tab.name) }}
@@ -252,164 +397,80 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </nav>
                     </div>
 
-                    <div class="px-8 pb-8">
-                        <!-- Description -->
+                    <div class="px-6 pb-6 pt-4">
                         <div
                             v-if="activeTab === 'description'"
-                            class="prose max-w-none"
+                            class="prose prose-sm max-w-none text-gray-700 leading-relaxed"
                         >
-                            <p
-                                class="text-gray-700 leading-relaxed mb-4"
-                                v-html="product.description"
-                            ></p>
+                            <div v-html="product.description"></div>
                         </div>
 
-                        <!-- Specifications -->
                         <div
                             v-if="activeTab === 'specifications'"
-                            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                            class="text-sm text-gray-700"
                         >
-                            <div class="flex border-b border-gray-100 py-3">
-                                <span
-                                    class="text-gray-600"
-                                    v-html="product.specification"
-                                >
-                                </span>
-                            </div>
+                            <div v-html="product.specification"></div>
                         </div>
 
-                        <!-- Reviews 
-                        <div v-if="activeTab === 'reviews'">
-                            <div
-                                class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6"
-                            >
-                                <div>
-                                    <h3
-                                        class="text-xl font-semibold text-gray-900"
-                                    >
-                                        Customer Reviews
-                                    </h3>
-                                    <div class="flex items-center mt-2">
-                                        <div class="flex text-yellow-400 mr-2">
-                                            <i
-                                                v-for="star in 5"
-                                                :key="star"
-                                                :class="[
-                                                    star <= product.rating
-                                                        ? 'fas fa-star'
-                                                        : 'far fa-star',
-                                                ]"
-                                            ></i>
-                                        </div>
-                                        <span class="text-gray-600"
-                                            >{{ product.rating }} out of 5 ({{
-                                                product.reviewCount
-                                            }}
-                                            reviews)</span
-                                        >
-                                    </div>
-                                </div>
-                                <button
-                                    class="mt-4 md:mt-0 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
-                                >
-                                    Write a Review
-                                </button>
-                            </div>
-
-                            <div class="space-y-6">
-                                <div
-                                    v-for="review in product.reviews"
-                                    :key="review.id"
-                                    class="border-b border-gray-200 pb-6"
-                                >
-                                    <div
-                                        class="flex justify-between items-start mb-2"
-                                    >
-                                        <div class="flex items-center">
-                                            <div
-                                                class="flex text-yellow-400 mr-4 text-sm"
-                                            >
-                                                <i
-                                                    v-for="star in 5"
-                                                    :key="star"
-                                                    :class="[
-                                                        star <= review.rating
-                                                            ? 'fas fa-star'
-                                                            : 'far fa-star',
-                                                    ]"
-                                                ></i>
-                                            </div>
-                                            <span
-                                                class="font-medium text-gray-900"
-                                                >{{ review.author }}</span
-                                            >
-                                        </div>
-                                        <span class="text-sm text-gray-500">{{
-                                            review.date
-                                        }}</span>
-                                    </div>
-                                    <p class="text-gray-700 mb-2">
-                                        {{ review.comment }}
-                                    </p>
-                                    <div
-                                        class="flex items-center text-sm text-gray-500"
-                                    >
-                                        <span class="flex items-center mr-4">
-                                            <i
-                                                class="far fa-thumbs-up mr-1"
-                                            ></i>
-                                            Helpful ({{ review.helpful }})
-                                        </span>
-                                        <span class="flex items-center">
-                                            <i class="far fa-comment mr-1"></i>
-                                            Reply
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
+                        <div
+                            v-if="activeTab === 'reviews'"
+                            class="text-center py-8 text-gray-500"
+                        >
+                            <i
+                                class="fas fa-comments text-4xl mb-3 text-gray-300"
+                            ></i>
+                            <p>
+                                {{
+                                    __(
+                                        "No reviews yet. Be the first to review this product!"
+                                    )
+                                }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Related Products -->
-            <div class="mb-12">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-900">
                         {{ __("Related Products") }}
                     </h2>
                     <a
                         :href="$page.props.routes.search"
-                        class="text-indigo-600 hover:text-indigo-800 flex items-center"
+                        class="text-indigo-600 hover:text-indigo-800 flex items-center text-sm"
                     >
                         {{ __("View all") }}
-                        <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        <i class="fas fa-arrow-right ml-1 text-xs"></i>
                     </a>
                 </div>
                 <div
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                 >
                     <div
                         v-for="product in relatedProducts"
                         :key="product.id"
-                        class="product-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer hover:bg-black/20"
+                        class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-all transform hover:scale-[1.02]"
                         @click="goTo(product?.links?.show)"
                     >
                         <div
-                            class="h-48 bg-gray-100 flex items-center justify-center p-4 relative"
+                            class="h-32 bg-gray-50 flex items-center justify-center p-3 relative"
                         >
                             <img
                                 :src="product.images[0]?.url"
                                 :alt="product.name"
-                                class="h-40 object-contain"
+                                class="h-24 object-contain transition-transform duration-300 hover:scale-110"
                             />
                         </div>
-                        <div class="p-4">
-                            <h3 class="font-medium text-gray-900 mb-2 truncate">
+                        <div class="p-3">
+                            <h3
+                                class="font-medium text-gray-900 text-sm mb-1 truncate"
+                            >
                                 {{ product.name }}
                             </h3>
-                            <div class="flex items-center mb-2">
-                                <div class="flex text-yellow-400 text-xs mr-2">
+                            <div class="flex items-center mb-1">
+                                <div class="flex text-yellow-400 text-xs mr-1">
                                     <i
                                         v-for="star in 5"
                                         :key="star"
@@ -420,12 +481,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         ]"
                                     ></i>
                                 </div>
-                                <span class="text-gray-500 text-sm"
+                                <span class="text-gray-500 text-xs"
                                     >({{ 3 }})</span
                                 >
                             </div>
                             <div class="flex items-center justify-between">
-                                <span class="text-lg font-bold text-indigo-600">
+                                <span
+                                    class="text-base font-bold text-indigo-600"
+                                >
                                     {{ product.symbol }}
                                     {{ product.format_price }}
                                 </span>
@@ -439,28 +502,56 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Image Zoom Modal -->
         <div
             v-if="isZoomed"
-            class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+            class="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-50 p-4"
             @click="isZoomed = false"
         >
-            <div class="max-w-4xl w-full p-4">
+            <div class="max-w-6xl w-full max-h-full relative">
                 <img
                     :src="product?.images[selectedImageIndex]?.url"
                     :alt="product.name"
-                    class="w-full h-auto rounded-lg"
+                    class="w-full h-full object-contain rounded-lg"
                 />
                 <button
                     @click="isZoomed = false"
-                    class="absolute top-4 right-4 text-white text-2xl"
+                    class="absolute top-4 right-4 text-white text-2xl bg-black/50 hover:bg-black/70 rounded-full w-10 h-10 flex items-center justify-center transition-all"
                 >
                     <i class="fas fa-times"></i>
                 </button>
+
+                <!-- Navigation in Modal -->
+                <div
+                    v-if="product.images?.length > 1"
+                    class="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-4"
+                >
+                    <button
+                        @click.stop="prevImage"
+                        class="bg-white/20 hover:bg-white/30 text-white rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-sm transition-all"
+                    >
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button
+                        @click.stop="nextImage"
+                        class="bg-white/20 hover:bg-white/30 text-white rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-sm transition-all"
+                    >
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Image Counter in Modal -->
+                <div
+                    class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm"
+                >
+                    {{ selectedImageIndex + 1 }} / {{ product.images?.length }}
+                </div>
             </div>
         </div>
     </div>
 </template>
+
 <script>
 import VHeader from "../Components/VHeader.vue";
 import VError from "../Components/VError.vue";
+
 export default {
     components: {
         VHeader,
@@ -470,8 +561,7 @@ export default {
     data() {
         return {
             form: {
-                product_id: "",
-                attrs: {},
+                variant_id: "",
                 quantity: 1,
             },
             errors: {},
@@ -479,9 +569,7 @@ export default {
             selectedImageIndex: 0,
             activeTab: "description",
             isZoomed: false,
-            isInWishlist: false,
-            showNotification: false,
-            selectedAttributes: [],
+            selectedVariant: null,
 
             // Product data
             product: {},
@@ -498,13 +586,29 @@ export default {
         };
     },
 
+    computed: {
+        maxQuantity() {
+            return this.selectedVariant?.stock || this.product.stock || 0;
+        },
+
+        price() {
+            return (
+                this.selectedVariant?.format_price || this.product.format_price
+            );
+        },
+
+        symbol() {
+            return this.selectedVariant?.symbol || this.product.symbol;
+        },
+    },
+
     created() {
         this.getProduct();
     },
 
     methods: {
         increaseQuantity() {
-            if (this.form.quantity <= this.product.stock - 1) {
+            if (this.form.quantity < this.maxQuantity) {
                 this.form.quantity++;
             }
         },
@@ -516,9 +620,8 @@ export default {
         },
 
         clean() {
-            this.form.product_id = "";
-            this.form.attrs = {};
-            this.form.quantity = 0;
+            this.form.variant_id = "";
+            this.form.quantity = 1;
         },
 
         goTo(link) {
@@ -529,6 +632,29 @@ export default {
             this.isZoomed = !this.isZoomed;
         },
 
+        prevImage() {
+            if (this.product.images?.length) {
+                this.selectedImageIndex =
+                    this.selectedImageIndex === 0
+                        ? this.product.images.length - 1
+                        : this.selectedImageIndex - 1;
+            }
+        },
+
+        nextImage() {
+            if (this.product.images?.length) {
+                this.selectedImageIndex =
+                    this.selectedImageIndex === this.product.images.length - 1
+                        ? 0
+                        : this.selectedImageIndex + 1;
+            }
+        },
+
+        selectVariant(variant) {
+            this.form.variant_id = variant.id;
+            this.selectedVariant = variant;
+        },
+
         async getProduct() {
             try {
                 const res = await this.$server.get(
@@ -537,7 +663,9 @@ export default {
 
                 if (res.status === 200) {
                     this.product = res.data.data;
-
+                    if (this.product.variants?.length) {
+                        this.selectVariant(this.product.variants[0]);
+                    }
                     this.getRelatedProducts(this.product);
                 }
             } catch (e) {
@@ -554,7 +682,7 @@ export default {
                     {
                         params: {
                             random: true,
-                            per_page: 30,
+                            per_page: 8,
                             tags: item.tags.map((tag) => tag.name).join(","),
                         },
                     }
@@ -571,7 +699,7 @@ export default {
         },
 
         async addToCart() {
-            this.form.product_id = this.product.id;
+            this.form.product_id = this.selectedVariant?.id || this.product.id;
             try {
                 const res = await this.$server.post(
                     this.$page.props.api.ecommerce.orders,
@@ -616,89 +744,3 @@ export default {
     },
 };
 </script>
-
-<style scoped lang="css">
-body {
-    font-family: "Inter", sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-    min-height: 100vh;
-}
-.product-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-        0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-.discount-badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-    color: white;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.75rem;
-}
-.color-option {
-    transition: all 0.2s ease;
-}
-.color-option.selected {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 3px white, 0 0 0 5px #4f46e5;
-}
-.add-to-cart-btn {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c73e6 100%);
-    transition: all 0.3s ease;
-}
-.add-to-cart-btn:hover {
-    background: linear-gradient(135deg, #4338ca 0%, #6d64e6 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
-}
-.buy-now-btn {
-    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-    transition: all 0.3s ease;
-}
-.buy-now-btn:hover {
-    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
-}
-.tab-button {
-    transition: all 0.2s ease;
-}
-.tab-button.active {
-    border-bottom: 3px solid #4f46e5;
-}
-.notification {
-    animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
-}
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-        visibility: hidden;
-    }
-}
-.zoom-effect {
-    transition: transform 0.3s ease;
-}
-.zoom-effect:hover {
-    transform: scale(1.05);
-}
-</style>

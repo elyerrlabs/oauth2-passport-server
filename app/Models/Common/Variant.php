@@ -25,6 +25,7 @@ namespace App\Models\Common;
  */
 
 use App\Models\Master;
+use App\Models\Common\Order;
 
 class Variant extends Master
 {
@@ -63,4 +64,21 @@ class Variant extends Master
         return $this->morphTo();
     }
 
+    /**
+     * Orders
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function orders()
+    {
+        return $this->morphMany(Order::class, 'orderable');
+    }
+
+    /**
+     * has price
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne<Price, Product>
+     */
+    public function price()
+    {
+        return $this->morphOne(Price::class, 'priceable');
+    }
 }

@@ -25,9 +25,8 @@ namespace Core\Ecommerce\Repositories;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Models\Common\Order;
-use Illuminate\Support\Facades\DB;
 use App\Models\Common\Category;
+use App\Models\Common\Variant;
 use Illuminate\Support\Facades\Storage;
 use Core\Ecommerce\Transformer\Admin\TotalTransformer;
 use Core\Ecommerce\Model\Product;
@@ -78,8 +77,12 @@ class DashboardRepository
         $data['currency_symbol'] = getCurrencySymbol(strtoupper($currency));
 
         // Lower products
-        $data['products_lower_stock'] = Product::where('stock', '<=', $request->stock)->count();
-        $data['products_stock_total'] = Product::sum('stock');
+        $data['products_lower_stock'] = Product::whereHas('variants', function ($query) use ($request) {
+            $query->where('stock', '<=', $request->stock);
+        })->count();
+
+        // Total stock
+        $data['products_stock_total'] = Variant::sum('stock');
 
         // Transaction by range 
         $data['transactions_total'] = $this->formatMoney(Transaction::query()
@@ -121,7 +124,12 @@ class DashboardRepository
             });
 
         // Top Products
-        $data['top_products'] = Product::limit(25)->with(['category', 'orders', 'price'])
+        //$data['top_products'] = Product::limit(25)->with(['category', 'orders', 'price'])
+        $data['top_products'] = Variant::limit(25)->with([
+            'variantable.category',
+            'orders',
+            'price'
+        ])
             ->whereHas(
                 'orders',
                 function ($q) {
@@ -134,27 +142,34 @@ class DashboardRepository
                 ])
             ->orderByDesc('orders_with_checkout_count')
             ->get()->map(function ($query) {
+
                 return [
                     'id' => $query->id,
                     'name' => $query->name,
-                    'category' => $query->category->name,
+                    'category' => $query->variantable->category->name,
                     'price' => getCurrencySymbol(strtoupper($query->price->currency)) . " " . $this->formatMoney($query->price->amount),
                     'sold' => $query->orders_with_checkout_count,
-                    'image' => Storage::url($query->files[0]->path),
+                    'image' => Storage::url($query->variantable->files[0]->path),
                 ];
             });
 
         // Top categories  
-        $data['revenue'] = Category::with(['products.orders.checkout.transactions'])
+        $data['revenue'] = Category::with(['products.variants.orders.checkout.transactions'])
             ->get()
             ->map(function ($category) {
                 $category_total = $category->products->map(function ($product) {
-                    $product_total = $product->orders->map(function ($order) {
-                        if (isset($order->checkout->transactions)) {
-                            return $order->checkout->transactions
-                                ->where('status', config('billing.status.successful.id'))
-                                ->sum('total');
-                        }
+                    $product_total = $product->variants->map(function ($variant) {
+                        $variant_total = $variant->orders->map(function ($order) {
+                            if (isset($order->checkout->transactions)) {
+                                return $order->checkout->transactions
+                                    ->where('status', config('billing.status.successful.id'))
+                                    ->sum('total');
+                            }
+                            return 0;
+                        })->sum();
+
+                        $variant->total_from_orders = $variant_total;
+                        return $variant_total;
                     })->sum();
 
                     $product->total_from_orders = $product_total;
@@ -166,8 +181,9 @@ class DashboardRepository
                     "total" => $category_total
                 ];
             })
-            ->sortByDesc('total_sales')
+            ->sortByDesc('total')
             ->take(10);
+
 
         return $data;
     }

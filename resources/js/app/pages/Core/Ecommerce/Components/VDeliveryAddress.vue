@@ -215,6 +215,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     v-model="form.city"
                                                     :error="errors.city"
                                                     :label="__('City')"
+                                                    :required="true"
                                                     :placeholder="
                                                         __('Enter your city')
                                                     "

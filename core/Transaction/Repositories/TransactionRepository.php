@@ -25,6 +25,7 @@ namespace Core\Transaction\Repositories;
  */
 
 use App\Models\Common\Order;
+use App\Models\Common\Variant;
 use App\Notifications\Checkout\CheckoutNotification;
 use Core\Ecommerce\Model\Product;
 use Illuminate\Support\Facades\Log;
@@ -477,13 +478,13 @@ class TransactionRepository
                         // Retrieve the order
                         $order = Order::find($item->id);
 
-                        // Updated stock for products and attributes
-                        $product = Product::find($order->meta['id']);
+                        // Updated stock for products variant and attributes
+                        $product = Variant::find($order->meta['variant']['id']);
                         $product->setStock($product->stock - $order->quantity);
                         $product->push();
 
                         // Updated availability for attributes for current product
-                        if (count($order->meta['attributes'] ?? [])) {
+                        /*if (count($order->meta['attributes'] ?? [])) {
                             foreach ($order->meta['attributes'] as $key => $value) {
 
                                 $attribute = $product->attributes()->where('slug', $key)->where('value', $value)->first();
@@ -492,7 +493,7 @@ class TransactionRepository
 
                                 $product->attributes()->syncWithoutDetaching([$attribute->id => ['stock' => $update_attribute_stock]]);
                             }
-                        }
+                        }*/
                     }
                     $redirect_to = route('transaction.checkout.success') . "?code={$meta['metadata']['transaction_code']}";
                     $customer->notify(new CheckoutNotification($redirect_to));
