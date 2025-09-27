@@ -20,7 +20,7 @@ namespace Core\Ecommerce\Transformer\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -58,16 +58,18 @@ class ProductTransformer extends TransformerAbstract
      */
     public function transform(Product $product)
     {
+        $variant = $product->variants ?? [];
+
         return [
             'id' => $product->id,
             'name' => $product->name,
             'slug' => $product->slug,
             'published' => $product->published ? true : false,
             'featured' => $product->featured ? true : false,
-            'stock' => $product->variants->sum('stock'),
-            'price' => $product->variants[0]->price->amount,
-            'format_price' => $this->formatMoney($product->variants[0]->price->amount),
-            'currency' => getCurrencySymbol($product->variants[0]->price->currency),
+            'stock' => count($variant) ? $variant->sum('stock') : 0,
+            'price' => count($variant) ? $variant->price->amount : 0,
+            'format_price' => count($variant) ? $this->formatMoney($variant->price->amount) : 0,
+            'currency' => count($variant) ? getCurrencySymbol($variant->price->currency) : '',
             'short_description' => $product->short_description,
             'description' => $product->description,
             'specification' => $product->specification,
