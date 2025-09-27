@@ -61,18 +61,19 @@ class UserProductTransformer extends TransformerAbstract
      */
     public function transform(Product $product)
     {
+
+        $variant = count($product->variants) ? $product->variants[0] : null;
+
         return [
             'id' => $product->id,
             'name' => $product->name,
             'slug' => $product->slug,
             'published' => $product->published ? true : false,
             'featured' => $product->featured ? true : false,
-            'stock' => $product->variants->sum('stock'),
-            'price' => $product->variants[0]->price->amount,
-            'format_price' => $this->formatMoney($product->variants[0]->price->amount),
-            'currency' => $product->variants[0]->price->currency,
-            'symbol' => getCurrencySymbol($product->variants[0]->price->currency),
-            'public' => $product->public ? true : false,
+            'stock' => !empty($variant) ? $variant->sum('stock') : 0,
+            'price' => !empty($variant) ? $variant->price->amount : 0,
+            'format_price' => !empty($variant) ? $this->formatMoney($variant->price->amount) : 0,
+            'currency' => !empty($variant) ? getCurrencySymbol($variant->price->currency) : '',
             'category' => fractal($product->category, UserCategoryTransformer::class)->toArray()['data'],
             'images' => $product->getImages($product->files, UserFileTransformer::class),
             'tags' => $product->getTags($product->tags, UserProductTagTransformer::class),
