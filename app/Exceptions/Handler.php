@@ -78,6 +78,27 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
+        if ($e instanceof ValidationException) {
+            $errors = $errors = $e->errors();
+
+            $formatted = [];
+
+            foreach ($errors as $field => $messages) {
+
+                foreach ($messages as $key => &$value) {
+                    $value = preg_replace('/\.\d+\./', ' ', $value);
+                }
+
+                data_set($formatted, $field, $messages);
+            }
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'errors' => $formatted
+                ], 422);
+            }
+        }
 
         if ($e instanceof ModelNotFoundException) {
             throw new ReportError(__("Not Found"), 404);
