@@ -93,49 +93,12 @@ class StoreRequest extends FormRequest
             'attributes.*.value' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
             'attributes.*.widget' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
             'attributes.*.multiple' => ['required', new UndefinedValues(), new BooleanRule()],
-            /*'attributes.*.stock' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-
-                    if (!empty($value)) {
-
-                        $value = str_replace([',', '.'], '', $value);
-
-                        if (filter_var($value, FILTER_VALIDATE_INT) === false) {
-                            $fail(__("The stock value is invalid"));
-                        }
-                    }
-                }
-            ],*/
             'tags' => ['nullable', 'array'],
             'tags.*.name' => ['max:100', 'min:1'],
             'variants' => ['array', 'required'],
             'variants.*.name' => ['string', 'required', 'max:150'],
-            'variants.*.stock' => [
-                'required',
-                function ($attribute, $value, $fail) {
-
-                    $value = str_replace([',', '.'], '', $value);
-
-                    if (filter_var($value, FILTER_VALIDATE_INT) === false) {
-                        $fail(__("The stock value is invalid"));
-                    }
-
-                    if (filter_var($value, FILTER_VALIDATE_INT) === 0) {
-                        $fail(__('The minimum stock is 1'));
-                    }
-                }
-            ],
-            'variants.*.price' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    $price = str_replace('.', '', $value);
-
-                    if (filter_var($price, FILTER_VALIDATE_INT) == false) {
-                        $fail(__("The value is invalid"));
-                    }
-                }
-            ],
+            'variants.*.stock' => ['required', 'integer', 'min:0'],
+            'variants.*.price' => ['required', 'integer', 'min:1'],
             'variants.*.currency' => [
                 'required',
                 'string',
