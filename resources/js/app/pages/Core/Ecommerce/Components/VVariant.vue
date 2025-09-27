@@ -202,36 +202,66 @@
 
                 <!-- Variant Form -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <v-input
-                        :label="__('Variant Name')"
-                        v-model="variant.name"
-                        :required="true"
-                    />
-                    <v-input
-                        :label="__('Stock Quantity')"
-                        v-model="variant.stock"
-                        :required="true"
-                        type="number"
-                    />
-                    <v-input
-                        :label="__('Price')"
-                        v-model="variant.price"
-                        :required="true"
-                        type="money"
-                    />
-                    <v-select
-                        v-model="variant.currency"
-                        :options="currencies"
-                        :label="__('Currency')"
-                        value-key="code"
-                        label-key="name"
-                        :required="true"
-                    />
+                    <div>
+                        <v-input
+                            :label="__('Variant Name')"
+                            v-model="variant.name"
+                            :required="true"
+                        />
+                        <v-error
+                            v-if="error[index]"
+                            :error="error[index]['name']"
+                        />
+                    </div>
+
+                    <div>
+                        <v-input
+                            :label="__('Stock Quantity')"
+                            v-model="variant.stock"
+                            :required="true"
+                            type="number"
+                        />
+                        <v-error
+                            v-if="error[index]"
+                            :error="error[index]['stock']"
+                        />
+                    </div>
+                    <div>
+                        <v-input
+                            :label="__('Price')"
+                            v-model="variant.price"
+                            :required="true"
+                            type="money"
+                        />
+                        <v-error
+                            v-if="error[index]"
+                            :error="error[index]['price']"
+                        />
+                    </div>
+                    <div>
+                        <v-select
+                            v-model="variant.currency"
+                            :options="currencies"
+                            :label="__('Currency')"
+                            value-key="code"
+                            label-key="name"
+                            :required="true"
+                        />
+                        <v-error
+                            v-if="error[index]"
+                            :error="error[index]['currency']"
+                        />
+                    </div>
+
                     <div class="lg:col-span-2">
                         <v-textarea
                             :label="__('Description')"
                             v-model="variant.description"
                             :required="true"
+                        />
+                        <v-error
+                            v-if="error[index]"
+                            :error="error[index]['description']"
                         />
                     </div>
                 </div>
@@ -265,6 +295,7 @@
                 <i class="fas fa-plus-circle"></i>
                 <span>{{ __("Create First Variant") }}</span>
             </button>
+            <v-error v-for="(value, index) in error" :error="value" />
         </div>
     </div>
 </template>
@@ -273,17 +304,23 @@
 import VInput from "./VInput.vue";
 import VSelect from "./VSelect.vue";
 import VTextarea from "./VTextarea.vue";
+import VError from "./VError.vue";
 
 export default {
     components: {
         VInput,
         VSelect,
         VTextarea,
+        VError,
     },
     props: {
         modelValue: {
             type: Array,
             default: () => [],
+        },
+        error: {
+            type: Array,
+            default: [],
         },
     },
     emits: ["update:modelValue"],

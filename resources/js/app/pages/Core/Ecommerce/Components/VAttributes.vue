@@ -106,6 +106,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             __("Add First Attribute")
                         }}</span>
                     </button>
+
+                    <v-error :error="error" />
                 </div>
 
                 <!-- Attributes Grid -->
@@ -154,31 +156,61 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
 
                         <!-- Form Grid -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <v-input
-                                :label="__('Attribute Name')"
-                                v-model="attr.name"
-                                :required="true"
-                                :placeholder="__('e.g., Color, Size, Material')"
-                            />
-                            <v-select
-                                :label="__('Data Type')"
-                                :options="typeOptions"
-                                v-model="attr.type"
-                                :required="true"
-                            />
-                            <v-select
-                                :label="__('Display Widget')"
-                                :options="widgetOptions"
-                                v-model="attr.widget"
-                                :required="true"
-                            />
-                            <v-input
-                                :label="__('Attribute Value')"
-                                v-model="attr.value"
-                                :required="true"
-                                :placeholder="__('e.g., Red, Large, Cotton')"
-                            />
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        >
+                            <div>
+                                <v-input
+                                    :label="__('Attribute Name')"
+                                    v-model="attr.name"
+                                    :required="true"
+                                    :placeholder="
+                                        __('e.g., Color, Size, Material')
+                                    "
+                                />
+                                <v-error
+                                    v-if="error[index]"
+                                    :error="error[index]['name']"
+                                />
+                            </div>
+                            <div>
+                                <v-select
+                                    :label="__('Data Type')"
+                                    :options="typeOptions"
+                                    v-model="attr.type"
+                                    :required="true"
+                                />
+                                <v-error
+                                    v-if="error[index]"
+                                    :error="error[index]['type']"
+                                />
+                            </div>
+                            <div>
+                                <v-select
+                                    :label="__('Display Widget')"
+                                    :options="widgetOptions"
+                                    v-model="attr.widget"
+                                    :required="true"
+                                />
+                                <v-error
+                                    v-if="error[index]"
+                                    :error="error[index]['widget']"
+                                />
+                            </div>
+                            <div>
+                                <v-input
+                                    :label="__('Attribute Value')"
+                                    v-model="attr.value"
+                                    :required="true"
+                                    :placeholder="
+                                        __('e.g., Red, Large, Cotton')
+                                    "
+                                />
+                                <v-error
+                                    v-if="error[index]"
+                                    :error="error[index]['value']"
+                                />
+                            </div>
                             <!--
                                 <v-input
                                 :label="__('Available Stock')"
@@ -188,10 +220,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :placeholder="__('Enter stock quantity')"
                                 />
                                 -->
-                            <v-switch
-                                :label="__('Multiple Values')"
-                                v-model="attr.multiple"
-                            />
+                            <div>
+                                <v-switch
+                                    :label="__('Multiple Values')"
+                                    v-model="attr.multiple"
+                                />
+                                <v-error
+                                    v-if="error[index]"
+                                    :error="error[index]['multiple']"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -211,8 +249,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </button>
             </div>
         </div>
-
-        <v-error :error="error" />
     </div>
 </template>
 

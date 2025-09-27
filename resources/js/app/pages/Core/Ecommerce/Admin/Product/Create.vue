@@ -118,7 +118,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <div class="p-2 border-b border-gray-300">
-                        <v-variant v-model="form.variants" :error="errors" />
+                        <v-variant
+                            v-model="form.variants"
+                            :error="errors.variants"
+                        />
                     </div>
 
                     <!-- Descriptions Section -->

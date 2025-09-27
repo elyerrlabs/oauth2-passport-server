@@ -80,13 +80,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         {{ __("Selected Images") }} ({{ images.length }})
                     </h2>
 
-                    <div
-                        class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"
-                    >
+                    <div class="grid grid-cols-1 gap-3">
                         <div
                             v-for="(image, index) in images"
                             :key="index"
-                            class="relative group rounded-md border border-gray-200 bg-gray-50 overflow-hidden"
+                            class="relative group rounded-md  bg-gray-50 overflow-hidden"
+                            :class="[
+                                error[index] ? 'border-2 border-red-500' : 'border border-gray-200',
+                            ]"
                         >
                             <img
                                 :src="image.preview"
@@ -103,6 +104,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <p class="text-xs text-gray-500">
                                     {{ formatFileSize(image.size) }}
                                 </p>
+                                <v-error
+                                    v-if="error[index]"
+                                    :error="error[index]"
+                                />
                             </div>
 
                             <div
@@ -131,7 +136,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <span class="text-gray-600 text-sm">
                         <i class="fas fa-info-circle text-blue-500 mr-1"></i>
-                        {{ totalFilesSize }} total
+                        {{ totalFilesSize }} {{ __("total") }}
                     </span>
                     <button
                         @click="clearAll"
@@ -146,9 +151,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <p class="text-gray-500 text-sm">
                         {{ __("No images selected yet") }}
                     </p>
+                    <v-error :error="error" />
                 </div>
             </div>
-            <v-error :error="error" />
+
             <transition name="fade">
                 <div
                     v-if="previewImage"
