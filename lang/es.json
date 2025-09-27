@@ -2657,5 +2657,6 @@
   "Available Stock": "Stock disponible",
   "Enter stock quantity": "Ingresa la cantidad en stock",
   "Variant cannot be removed": "La variante no puede ser eliminado",
-  "Available Variants": "Variantes disponibles"
+  "Available Variants": "Variantes disponibles",
+  "You haven't logged in yet. Please log in to unlock all features.": "Aún no has iniciado sesión. Por favor, inicia sesión para desbloquear todas las funciones."
 }

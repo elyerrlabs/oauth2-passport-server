@@ -112,7 +112,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof AccessDeniedHttpException) {
-            throw new ReportError(__("Unauthorized"), 401);
+            throw new ReportError(__("You haven't logged in yet. Please log in to unlock all features."), 401);
         }
 
         $e = $this->prepareException($this->mapException($e));
