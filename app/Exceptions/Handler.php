@@ -87,6 +87,7 @@ class Handler extends ExceptionHandler
 
                 foreach ($messages as $key => &$value) {
                     $value = preg_replace('/\.\d+\./', ' ', $value);
+                    $value = preg_replace('/\.\d+/', ' ', $value);
                 }
 
                 data_set($formatted, $field, $messages);
