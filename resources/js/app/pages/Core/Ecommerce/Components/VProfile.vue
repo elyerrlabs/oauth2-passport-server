@@ -20,11 +20,11 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="relative text-center p-2 hidden md:block">
+    <div class="relative text-center p-2 hidden md:block" ref="menuContainer">
         <!-- Menu Button -->
         <button
-            @click="menuOpen = !menuOpen"
-            class="px-3 py-2 bg-purple-600 text-white rounded-full shadow-md hover:bg-purple-700 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-400 relative"
+            @click="toggleMenu"
+            class="px-3 py-2 bg-purple-600 text-white rounded-full shadow-md hover:bg-purple-700 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-400 relative cursor-pointer"
         >
             <i class="mdi mdi-account-circle text-2xl"></i>
             <span class="sr-only">{{ __("Show the menu") }}</span>
@@ -68,45 +68,49 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Menu Options -->
                 <ul class="divide-y divide-gray-100">
                     <li>
-                        <button
-                            @click="homePage"
-                            class="w-full text-left px-4 py-3 hover:bg-purple-50 flex items-center transition"
+                        <a
+                            href="/"
+                            @click.prevent="homePage"
+                            class="w-full text-left px-4 py-3 hover:bg-purple-50 flex items-center transition cursor-pointer"
                         >
                             <i class="mdi mdi-home text-purple-600 mr-3"></i>
                             {{ __("Home page") }}
-                        </button>
+                        </a>
                     </li>
 
                     <li v-if="user?.id">
-                        <button
-                            @click="myAccount"
-                            class="w-full text-left px-4 py-3 hover:bg-purple-50 flex items-center transition"
+                        <a
+                            :href="userDashboardRoute"
+                            @click.prevent="myAccount"
+                            class="w-full text-left px-4 py-3 hover:bg-purple-50 flex items-center transition cursor-pointer"
                         >
                             <i
                                 class="mdi mdi-account-cog text-purple-600 mr-3"
                             ></i>
                             {{ __("My account") }}
-                        </button>
+                        </a>
                     </li>
 
                     <li v-if="!user?.id">
-                        <button
-                            @click="goTo($page.props.auth_routes['login'])"
-                            class="w-full text-left px-4 py-3 hover:bg-purple-50 flex items-center transition"
+                        <a
+                            :href="loginRoute"
+                            @click.prevent="goTo(loginRoute)"
+                            class="w-full text-left px-4 py-3 hover:bg-purple-50 flex items-center transition cursor-pointer"
                         >
                             <i class="mdi mdi-login text-purple-600 mr-3"></i>
                             {{ __("Login") }}
-                        </button>
+                        </a>
                     </li>
 
                     <li v-if="user?.id">
-                        <button
-                            @click="goTo($page.props.auth_routes['logout'])"
-                            class="w-full text-left px-4 py-3 hover:bg-red-50 flex items-center text-red-600 transition"
+                        <a
+                            :href="logoutRoute"
+                            @click.prevent="goTo(logoutRoute)"
+                            class="w-full text-left px-4 py-3 hover:bg-red-50 flex items-center text-red-600 transition cursor-pointer"
                         >
                             <i class="mdi mdi-logout text-red-600 mr-3"></i>
                             {{ __("Logout") }}
-                        </button>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -125,17 +129,50 @@ export default {
         user() {
             return this.$page.props.user;
         },
+        loginRoute() {
+            return this.$page.props.auth_routes["login"];
+        },
+        logoutRoute() {
+            return this.$page.props.auth_routes["logout"];
+        },
+        userDashboardRoute() {
+            return this.$page.props.user_dashboard?.route || "#";
+        },
     },
     methods: {
+        toggleMenu() {
+            this.menuOpen = !this.menuOpen;
+        },
+        closeMenu() {
+            this.menuOpen = false;
+        },
         goTo(url) {
+            this.closeMenu();
             window.location.href = url;
         },
         homePage() {
+            this.closeMenu();
             window.location.href = "/";
         },
         myAccount() {
-            window.location.href = this.$page.props.user_dashboard["route"];
+            this.closeMenu();
+            window.location.href = this.userDashboardRoute;
         },
+        handleClickOutside(event) {
+            if (
+                this.menuOpen &&
+                this.$refs.menuContainer &&
+                !this.$refs.menuContainer.contains(event.target)
+            ) {
+                this.closeMenu();
+            }
+        },
+    },
+    mounted() {
+        document.addEventListener("click", this.handleClickOutside);
+    },
+    beforeUnmount() {
+        document.removeEventListener("click", this.handleClickOutside);
     },
 };
 </script>
