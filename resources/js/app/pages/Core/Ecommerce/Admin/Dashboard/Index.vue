@@ -41,7 +41,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="text-xs text-green-600 flex items-center mt-1"
                             >
                                 <i class="fas fa-arrow-up mr-1"></i>
-                                last month
+                                {{ __("last month") }}
                             </div>
                         </div>
                     </div>
@@ -55,7 +55,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="p-6">
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
-                            <div class="text-sm text-gray-600">Today Sales</div>
+                            <div class="text-sm text-gray-600">
+                                {{ __("Today Sales") }}
+                            </div>
                             <div class="text-xl font-bold">
                                 {{ dashboard.currency_symbol }}
                                 {{ dashboard.transactions_today }}
@@ -64,7 +66,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="text-xs text-green-600 flex items-center mt-1"
                             >
                                 <i class="fas fa-arrow-up mr-1"></i>
-                                from yesterday
+                                {{ __("from yesterday") }}
                             </div>
                         </div>
                         <div class="text-green-500 text-2xl">
@@ -82,14 +84,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <div class="text-sm text-gray-600">
-                                Total Products
+                                {{ __("Total Products") }}
                             </div>
                             <div class="text-xl font-bold">
                                 {{ dashboard.products_stock_total }}
                             </div>
                             <div class="text-xs text-gray-500 mt-1">
                                 {{ dashboard.products_lower_stock }}
-                                low in stock
+                                {{ __("low in stock") }}
                             </div>
                         </div>
                         <div class="text-orange-500 text-2xl">
@@ -107,7 +109,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <div class="text-sm text-gray-600">
-                                Pending Orders
+                                {{ __("Pending Orders") }}
                             </div>
                             <div class="text-xl font-bold">
                                 {{ dashboard.products_pending }}
@@ -116,7 +118,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="text-xs text-red-600 flex items-center mt-1"
                             >
                                 <i class="fas fa-exclamation-circle mr-1"></i>
-                                high priority
+                                {{ __("high priority") }}
                             </div>
                         </div>
                         <div class="text-purple-500 text-2xl">
@@ -128,8 +130,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
 
         <!-- Charts Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-3 md:p-6">
-            <div class="lg:col-span-2">
+        <div class="grid grid-cols-1 gap-6 p-3 md:p-6">
+            <div>
                 <div
                     class="chart-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
@@ -137,7 +139,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="flex justify-between items-center p-6 border-b border-gray-100"
                     >
                         <div class="text-lg font-semibold">
-                            Sales Overview (Last 30 Days)
+                            {{ __("Sales Overview (Last 30 Days)") }}
                         </div>
                         <div class="relative">
                             <button
@@ -157,26 +159,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                 </div>
             </div>
-
-            <div class="lg:col-span-1">
-                <div
-                    class="chart-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
-                >
-                    <div
-                        class="flex justify-between items-center p-6 border-b border-gray-100"
-                    >
-                        <div class="text-lg font-semibold">Revenue Sources</div>
-                    </div>
-                    <div class="p-6">
-                        <apexchart
-                            type="donut"
-                            height="350"
-                            :options="revenueChartOptions"
-                            :series="revenueChartSeries"
-                        />
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Second Row Charts -->
@@ -189,7 +171,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="flex justify-between items-center p-6 border-b border-gray-100"
                     >
                         <div class="text-lg font-semibold">
-                            Top Selling Products
+                            {{ __("Top Selling Products") }}
                         </div>
                     </div>
                     <div class="p-6">
@@ -211,7 +193,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="flex justify-between items-center p-6 border-b border-gray-100"
                     >
                         <div class="text-lg font-semibold">
-                            Today's Sales Status
+                            {{ __("Today's Sales Status") }}
                         </div>
                     </div>
                     <div class="p-6">
@@ -235,11 +217,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         class="flex justify-between items-center p-6 border-b border-gray-100"
                     >
-                        <div class="text-lg font-semibold">Recent Orders</div>
+                        <div class="text-lg font-semibold">
+                            {{ __("Recent Orders") }}
+                        </div>
                         <button
                             class="text-blue-600 hover:text-blue-800 text-sm font-medium"
                         >
-                            View All
+                            {{ __("View All") }}
                         </button>
                     </div>
                     <div class="overflow-x-auto">
@@ -248,15 +232,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <tr
                                     class="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    <th class="px-6 py-3">Order</th>
-                                    <th class="px-6 py-3">Customer</th>
-                                    <th class="px-6 py-3">Date</th>
-                                    <th class="px-6 py-3 text-right">Total</th>
-                                    <th class="px-6 py-3 text-center">
-                                        Status
+                                    <th class="px-6 py-3">{{ __("Order") }}</th>
+                                    <th class="px-6 py-3">
+                                        {{ __("Customer") }}
+                                    </th>
+                                    <th class="px-6 py-3">{{ __("Date") }}</th>
+                                    <th class="px-6 py-3 text-right">
+                                        {{ __("Total") }}
                                     </th>
                                     <th class="px-6 py-3 text-center">
-                                        Actions
+                                        {{ __("Status") }}
+                                    </th>
+                                    <th class="px-6 py-3 text-center">
+                                        {{ __("Actions") }}
                                     </th>
                                 </tr>
                             </thead>
@@ -322,12 +310,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="flex justify-between items-center p-6 border-b border-gray-100"
                     >
                         <div class="text-lg font-semibold">
-                            Top Selling Products
+                            {{ __("Top Selling Products") }}
                         </div>
                         <button
                             class="text-blue-600 hover:text-blue-800 text-sm font-medium"
                         >
-                            View All
+                            {{ __("View All") }}
                         </button>
                     </div>
                     <div class="divide-y divide-gray-200">
@@ -355,10 +343,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                             <div class="ml-4 text-right">
                                 <div class="text-sm font-medium text-blue-600">
-                                    ${{ product.price }}
+                                    {{ product.price }}
                                 </div>
                                 <div class="text-xs text-gray-500">
-                                    Sold: {{ product.sold }}
+                                    {{ __("Sold") }}: {{ product.sold }}
                                 </div>
                             </div>
                         </div>
@@ -444,7 +432,7 @@ export default {
                     },
                 },
                 stroke: { lineCap: "round" },
-                labels: ["Today Sales Goal"],
+                labels: [this.__("Today Sales Goal")],
             },
 
             todaySalesChartSeries: [],
@@ -494,14 +482,14 @@ export default {
                 },
                 tooltip: {
                     y: {
-                        formatter: (val) => val + " units sold",
+                        formatter: (val) => val + " " + this.__("units sold"),
                     },
                 },
             };
 
             this.topProductsChartSeries = [
                 {
-                    name: "Units Sold",
+                    name: this.__("Units Sold"),
                     data: this.topProducts.map((item) => item.sold),
                 },
             ];
@@ -542,7 +530,7 @@ export default {
                                 },
                                 total: {
                                     show: true,
-                                    label: "Total Revenue",
+                                    label: this.__("Total Revenue"),
                                     formatter: () =>
                                         this.dashboard.currency_symbol +
                                         " " +
@@ -560,7 +548,7 @@ export default {
         renderSales() {
             this.salesChartSeries = [
                 {
-                    name: "Sales",
+                    name: this.__("Sales"),
                     data: this.dashboard.transactions.map((item) => item.total),
                 },
             ];

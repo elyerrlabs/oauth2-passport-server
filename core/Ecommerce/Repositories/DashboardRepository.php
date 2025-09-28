@@ -153,38 +153,6 @@ class DashboardRepository
                 ];
             });
 
-        // Top categories  
-        $data['revenue'] = Category::with(['products.variants.orders.checkout.transactions'])
-            ->get()
-            ->map(function ($category) {
-                $category_total = $category->products->map(function ($product) {
-                    $product_total = $product->variants->map(function ($variant) {
-                        $variant_total = $variant->orders->map(function ($order) {
-                            if (isset($order->checkout->transactions)) {
-                                return $order->checkout->transactions
-                                    ->where('status', config('billing.status.successful.id'))
-                                    ->sum('total');
-                            }
-                            return 0;
-                        })->sum();
-
-                        $variant->total_from_orders = $variant_total;
-                        return $variant_total;
-                    })->sum();
-
-                    $product->total_from_orders = $product_total;
-                    return $product_total;
-                })->sum();
-
-                return [
-                    "name" => $category->name,
-                    "total" => $category_total
-                ];
-            })
-            ->sortByDesc('total')
-            ->take(10);
-
-
         return $data;
     }
 
