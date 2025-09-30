@@ -24,6 +24,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Admin\Setting\SettingController;
+use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
+use App\Http\Controllers\Web\Admin\Policies\PrivacyTermsController;
 
 Route::group([
     'prefix' => 'settings',
@@ -44,4 +46,15 @@ Route::group([
 
     Route::put('/', [SettingController::class, 'update'])->name('update');
     Route::put('/cache/reload', [SettingController::class, 'reloadCache'])->name('reload');
+});
+
+Route::group([
+    'prefix' => 'policies',
+    'as' => 'policies.',
+    'middleware' => ['throttle:general:settings']
+], function () {
+    // Route::get("/", [PoliciesController::class, 'dashboard'])->name('dashboard');
+    Route::get('terms-and-conditions', [PoliciesController::class, 'termsAndConditionForm'])->name('terms-and-conditions');
+    Route::get('policies-of-privacy', [PoliciesController::class, 'policiesOfPrivacyForm'])->name('policies-of-privacy');
+    Route::get('policies-of-cookies', [PoliciesController::class, 'policiesOfCookiesForm'])->name('policies-of-cookies');
 });

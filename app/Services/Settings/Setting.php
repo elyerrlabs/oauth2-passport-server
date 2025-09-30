@@ -285,6 +285,10 @@ class Setting
         settingLoad('system.demo.enabled', false);
         settingLoad('system.demo.email', null);
         settingLoad('system.demo.password', null);
+        settingLoad('system.legal.terms_and_condition', null);
+        settingLoad('system.legal.policies_of_privacy', null);
+        settingLoad('system.legal.policies_of_cookies', null);
+
 
 
         //Session settings
@@ -576,6 +580,9 @@ class Setting
         Config::set('system.demo.enabled', settingItem('system.demo.enabled', false));
         Config::set('system.demo.email', settingItem('system.demo.email', null));
         Config::set('system.demo.password', settingItem('system.demo.password', null));
+        Config::set('system.legal.terms_and_condition', settingItem('system.legal.terms_and_condition', config('system.legal.terms_and_condition')));
+        Config::set('system.legal.policies_of_privacy', settingItem('system.legal.policies_of_privacy', config('system.legal.policies_of_privacy')));
+        Config::set('system.legal.policies_of_cookies', settingItem('system.legal.policies_of_cookies', config('system.legal.policies_of_cookies')));
     }
 
     /**

@@ -1,3 +1,7 @@
+<?php
+
+namespace App\View\Components;
+
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
  *
@@ -19,34 +23,31 @@
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-import flatpickr from "flatpickr";
-import "../css/app.css";
-import "@tailwindplus/elements";
-import "../css/quill.css";
 
-import Quill from "quill";
-import "quill/dist/quill.core.css";
-window.Quill = Quill;
+use Closure;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
 
-flatpickr(".date", {
-  dateFormat: "Y-m-d",
-  locale: "en",
-  maxDate: "today",
-});
+class editor extends Component
+{
+    public $content;
 
-flatpickr(".datetime", {
-  enableTime: true,
-  dateFormat: "Y-m-d H:i",
-  locale: "en",
-  maxDate: "today",
-  minuteIncrement: 1,
-});
+    public $name;
 
-flatpickr(".range", {
-  mode: "range",
-  enableTime: true,
-  dateFormat: "Y-m-d H:i",
-  locale: "en",
-  maxDate: "today",
-  minuteIncrement: 1,
-});
+    /**
+     * Create a new component instance.
+     */
+    public function __construct($content, $name)
+    {
+        $this->content = $content;
+        $this->name = $content;
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string
+    {
+        return view('components.editor');
+    }
+}

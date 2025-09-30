@@ -147,11 +147,19 @@ class Menu
             "app_name" => config('app.name'),
             "org_name" => config("app.org_name"),
             "user" => static::authenticated_user(),
-            "docs" => [
-                'name' => __('Documentation'),
-                'route' => route('documentation.index'),
-                'icon' => 'mdi-book-cog',
-                'show' => true
+            "policies" => [
+                "docs" => [
+                    'name' => __('Documentation'),
+                    'route' => route('documentation.index'),
+                    'icon' => 'mdi-book-cog',
+                    'show' => true
+                ],
+                "legal" => [
+                    'name' => __('Policies'),
+                    'route' => route('admin.policies.terms-and-conditions'),
+                    'icon' => "mdi-file-sign",
+                    'show' => !empty($user) ? $user->canAccessMenu("administrator:settings") : false,
+                ]
             ],
             "auth_routes" => [
                 "login" => route('login'),

@@ -107,6 +107,7 @@
             </div>
 
             {{-- Terms URL --}}
+            {{-- Terms and Conditions URL --}}
             <div
                 class="p-5 bg-[var(--color-bg-primary)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--color-border)]">
                 <div class="flex items-center mb-3">
@@ -122,11 +123,11 @@
                     placeholder="https://example.com/terms" value="{{ config('system.terms_url') }}">
                 <small class="block mt-2 text-sm text-[var(--color-text-secondary)]">
                     <i class="mdi mdi-information-outline mr-1"></i>
-                    {{ __('This field specifies the URL where users can read the Terms and Conditions.') }}
+                    {{ __('Provide the URL where users can read the full Terms and Conditions. This document outlines the rules, obligations, and rights of users when using your website or service, including acceptable behavior, limitations of liability, and other legal agreements.') }}
                 </small>
             </div>
 
-            {{-- Privacy URL --}}
+            {{-- Privacy Policy URL --}}
             <div
                 class="p-5 bg-[var(--color-bg-primary)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--color-border)]">
                 <div class="flex items-center mb-3">
@@ -142,11 +143,11 @@
                     placeholder="https://example.com/privacy" value="{{ config('system.privacy_url') }}">
                 <small class="block mt-2 text-sm text-[var(--color-text-secondary)]">
                     <i class="mdi mdi-information-outline mr-1"></i>
-                    {{ __('This field specifies the URL where users can read the Privacy Policy.') }}
+                    {{ __('Provide the URL where users can read your Privacy Policy. This document explains how personal data is collected, used, stored, and protected, including user rights, cookies usage, third-party sharing, and compliance with privacy regulations such as GDPR or CCPA.') }}
                 </small>
             </div>
 
-            {{-- Cookies Policy --}}
+            {{-- Cookies Policy URL --}}
             <div
                 class="p-5 bg-[var(--color-bg-primary)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--color-border)]">
                 <div class="flex items-center mb-3">
@@ -162,7 +163,7 @@
                     placeholder="https://example.com/cookies" value="{{ config('system.policy_cookies') }}">
                 <small class="block mt-2 text-sm text-[var(--color-text-secondary)]">
                     <i class="mdi mdi-information-outline mr-1"></i>
-                    {{ __('This field specifies the URL where users can read the Cookies Policy.') }}
+                    {{ __('Provide the URL where users can read your Cookies Policy. This page details the types of cookies used, their purpose, and how users can manage or opt-out of cookies, ensuring transparency and compliance with relevant privacy laws.') }}
                 </small>
             </div>
         </div>

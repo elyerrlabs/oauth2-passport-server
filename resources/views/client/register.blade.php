@@ -247,10 +247,12 @@
                         </label>
                         <label for="accept_terms" class="mt-0.5">
                             {{ __('By choosing this option, you accept the') }}
-                            <a href="{{ config('system.terms_url') }}" target="_blank"
+                            <a href="{{ config('system.terms_url') ?? route('legal.terms-and-conditions') }}"
+                                target="_blank"
                                 class="text-indigo-600 hover:underline">{{ __('Terms and Conditions') }}</a>
-                            {{ __('and') }} <a href="{{ config('system.privacy_url') }}" target="_blank"
-                                class="text-indigo-600 hover:underline">
+                            {{ __('and') }} <a
+                                href="{{ config('system.privacy_url') ?? route('legal.policies-of-privacy') }}"
+                                target="_blank" class="text-indigo-600 hover:underline">
                                 {{ __('Privacy Policy') }}
                             </a>.
                         </label>
@@ -267,8 +269,8 @@
                         </label>
                         <label for="accept_cookies" class="mt-0.5">
                             {{ __('By choosing this option, you accept the') }}
-                            <a href="{{ config('system.policy_cookies') }}" target="_blank"
-                                class="text-indigo-600 hover:underline">{{ __('Cookies Policy') }}</a>.
+                            <a href="{{ config('system.policy_cookies') ?? route('legal.policies-of-cookies') }}"
+                                target="_blank" class="text-indigo-600 hover:underline">{{ __('Cookies Policy') }}</a>.
                         </label>
                     </div>
                     @error('accept_cookies')

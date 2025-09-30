@@ -199,7 +199,7 @@
     </div>
 
     <!-- Wallet Modal -->
-    <div id="walletModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div id="walletModal" class="fixed inset-0 bg-black/80 bg-opacity-70 flex items-center justify-center z-50 hidden">
         <div
             class="bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-xl w-full max-w-md mx-4 max-h-[90vh] overflow-hidden flex flex-col">
             <div
