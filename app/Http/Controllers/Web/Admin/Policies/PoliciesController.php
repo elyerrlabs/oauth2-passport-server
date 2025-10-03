@@ -59,7 +59,7 @@ class PoliciesController extends WebController
 
     public function policiesOfCookiesForm()
     {
-        return view('policies/section/policies-of-cookies', [
+        return view('policies/edit', [
             'title' => 'Cookies Policy',
             'description' => 'In this section, you can edit the Cookies Policy for your website. This policy informs your users about the cookies used, how they are utilized to maintain session functionality, and assures that no tracking or profiling is performed.',
             'content' => config('system.legal.policies_of_cookies'),
