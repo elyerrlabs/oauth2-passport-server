@@ -20,14 +20,14 @@ namespace Core\User\Http\Controllers\Web;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 
 use Inertia\Inertia;
 use App\Http\Controllers\WebController;
-use Core\User\Repositories\UserRepository; 
+use Core\User\Repositories\UserRepository;
 use Core\User\Http\Requests\UserPersonalUpdateRequest;
 use Core\User\Http\Requests\UserPersonalPasswordRequest;
 
@@ -57,7 +57,7 @@ class UserController extends WebController
     {
         return Inertia::render("Core/User/Web/Information", [
             'route' => route('user.update'),
-        ]);
+        ])->rootView('system');
     }
 
     /**
@@ -76,7 +76,7 @@ class UserController extends WebController
      */
     public function formToChangePassword()
     {
-        return Inertia::render("Core/User/Web/Password");
+        return Inertia::render("Core/User/Web/Password")->rootView('system');
     }
 
     /**

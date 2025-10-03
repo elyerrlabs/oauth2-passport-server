@@ -9,6 +9,7 @@ export default defineConfig({
     laravel({
       input: [
         "resources/js/app.js",
+        "resources/js/system.js",
         "resources/js/ecommerce.js",
         "resources/scss/app.scss",
         "resources/js/pages.js",

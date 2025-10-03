@@ -177,11 +177,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="sidebar-footer">
                 <q-list class="sidebar-menu q-ma-sm">
                     <q-item
-                        v-for="(item, index) in $page.props.policies"
                         clickable
                         v-ripple
-                        @click="open(item)"
-                        show="item.show"
+                        @click="open($page.props.docs)"
+                        v-if="$page.props.docs.show"
                         class="modern-menu-item"
                     >
                         <q-item-section avatar>
@@ -189,11 +188,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 size="sm"
                                 color="grey"
                                 text-color="white"
-                                :icon="item.icon"
+                                :icon="$page.props.docs.icon"
                             />
                         </q-item-section>
                         <q-item-section>
-                            {{ __(item.name) }}
+                            {{ __($page.props.docs.name) }}
                         </q-item-section>
                     </q-item>
                 </q-list>

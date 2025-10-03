@@ -62,9 +62,9 @@ class ClientController extends WebController
             return $this->repository->findClientsForUser($request);
         }
 
-        return Inertia::render("OAuth/Clients/Index", [
+        return Inertia::render("Core/OAuth2/Web/Clients/Index", [
             'route' => Route::has('passport.clients.index') ? route('passport.clients.index') : ''
-        ]);
+        ])->rootView('system');
     }
 
     /**

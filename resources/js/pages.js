@@ -21,8 +21,7 @@
  */
 import flatpickr from "flatpickr";
 import "../css/app.css";
-import "@tailwindplus/elements";
-import "../css/quill.css";
+import "@tailwindplus/elements"; 
 
 import Quill from "quill";
 import "quill/dist/quill.core.css";

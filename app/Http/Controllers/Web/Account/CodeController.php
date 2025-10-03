@@ -133,7 +133,7 @@ class CodeController extends WebController
      */
     public function formToRequestToken()
     {
-        return Inertia::render("Core/User/Web/2fa");
+        return Inertia::render("Core/User/Web/2fa")->rootView('system');;
     }
 
     /**

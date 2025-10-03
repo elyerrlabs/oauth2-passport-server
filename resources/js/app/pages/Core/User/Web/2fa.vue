@@ -20,304 +20,258 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <v-user-layout>
-        <q-page class="two-factor-auth-page">
-            <div class="page-container">
-                <!-- Header Section -->
-                <div class="page-header">
-                    <div class="header-content">
-                        <q-icon
-                            name="mdi-shield-lock"
-                            size="36px"
-                            color="primary"
-                            class="header-icon"
-                        />
-                        <q-toolbar-title
-                            class="text-h4 text-weight-bold text-grey-8"
-                        >
-                            {{ __("Two-Factor Authentication") }}
-                        </q-toolbar-title>
-                    </div>
-                    <div class="text-subtitle1 text-grey-7 q-mt-sm">
-                        {{
-                            __("Add an extra layer of security to your account")
-                        }}
+    <v-account-layout>
+        <div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto">
+                <!-- Compact Header -->
+                <div class="mb-8">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-semibold text-gray-900">Two-Factor Authentication</h1>
+                            <p class="text-sm text-gray-600 mt-1">Secure your account with an extra layer of protection</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Main Content -->
-                <div class="row q-col-gutter-lg justify-center">
-                    <div class="col-12 col-md-8 col-lg-6">
-                        <!-- Status Card -->
-                        <q-card class="status-card" flat bordered>
-                            <q-card-section class="status-section">
-                                <div class="row items-center justify-between">
-                                    <div class="col">
-                                        <div
-                                            class="text-h6 text-weight-medium text-grey-8"
-                                        >
-                                            {{ __("Current Status") }}
-                                        </div>
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Column - Status & Actions -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Security Status Card -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                        </svg>
                                     </div>
-                                    <div class="col-auto">
-                                        <q-badge
-                                            :color="
-                                                user.m2fa
-                                                    ? 'positive'
-                                                    : 'negative'
-                                            "
-                                            class="status-badge"
-                                            rounded
-                                        >
-                                            <q-icon
-                                                :name="
-                                                    user.m2fa
-                                                        ? 'mdi-check-decagram'
-                                                        : 'mdi-shield-off'
-                                                "
-                                                size="16px"
-                                                class="q-mr-xs"
-                                            />
-                                            {{
-                                                user.m2fa
-                                                    ? __("ACTIVE")
-                                                    : __("INACTIVE")
-                                            }}
-                                        </q-badge>
+                                    <div>
+                                        <h2 class="text-lg font-semibold text-gray-900">Security Status</h2>
+                                        <p class="text-sm text-gray-500">Current two-factor authentication status</p>
                                     </div>
                                 </div>
-
-                                <div class="status-message q-mt-md">
-                                    <q-icon
-                                        :name="
-                                            user.m2fa
-                                                ? 'mdi-check-circle'
-                                                : 'mdi-alert-circle'
-                                        "
-                                        :color="
-                                            user.m2fa ? 'positive' : 'warning'
-                                        "
-                                        size="20px"
-                                        class="q-mr-sm"
-                                    />
-                                    <span
-                                        :class="
-                                            user.m2fa
-                                                ? 'text-positive'
-                                                : 'text-warning'
-                                        "
-                                    >
-                                        {{
-                                            user.m2fa
-                                                ? __(
-                                                      "Your account is protected with 2FA"
-                                                  )
-                                                : __(
-                                                      "Enable 2FA for enhanced security"
-                                                  )
-                                        }}
+                                <div :class="[
+                                    'px-4 py-2 rounded-lg font-medium text-sm border',
+                                    user.m2fa 
+                                        ? 'bg-green-100 text-green-700 border-green-200' 
+                                        : 'bg-red-100 text-red-700 border-red-200'
+                                ]">
+                                    <span class="flex items-center space-x-1">
+                                        <svg v-if="user.m2fa" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                        </svg>
+                                        <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                        </svg>
+                                        <span>{{ user.m2fa ? 'Protected' : 'At Risk' }}</span>
                                     </span>
                                 </div>
-                            </q-card-section>
-                        </q-card>
+                            </div>
 
-                        <!-- Authentication Card -->
-                        <q-card class="auth-card q-mt-lg" flat bordered>
-                            <q-card-section>
-                                <div
-                                    class="text-h6 text-weight-medium text-grey-8 q-mb-md"
-                                >
-                                    <q-icon
-                                        name="mdi-email-fast"
-                                        class="q-mr-sm"
-                                    />
-                                    {{ __("Email Verification") }}
+                            <!-- Status Message -->
+                            <div :class="[
+                                'p-4 rounded-lg border',
+                                user.m2fa 
+                                    ? 'bg-green-50 border-green-200 text-green-800' 
+                                    : 'bg-amber-50 border-amber-200 text-amber-800'
+                            ]">
+                                <div class="flex items-center space-x-3">
+                                    <svg v-if="user.m2fa" class="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                    </svg>
+                                    <svg v-else class="w-5 h-5 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium text-sm">
+                                            {{ user.m2fa 
+                                                ? 'Your account is secured with 2FA' 
+                                                : 'Enable 2FA to protect your account' 
+                                            }}
+                                        </p>
+                                        <p class="text-xs opacity-80 mt-1">
+                                            {{ user.m2fa 
+                                                ? 'Unauthorized access attempts will be blocked' 
+                                                : 'Your account is vulnerable to unauthorized access' 
+                                            }}
+                                        </p>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="text-caption text-grey-7 q-mb-lg">
-                                    {{
-                                        __(
-                                            "We'll send a verification code to your email address to enable two-factor authentication."
-                                        )
-                                    }}
+                        <!-- Verification Card -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <div class="flex items-center space-x-3 mb-6">
+                                <div class="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
                                 </div>
+                                <div>
+                                    <h2 class="text-lg font-semibold text-gray-900">Email Verification</h2>
+                                    <p class="text-sm text-gray-500">Verify your identity with a secure code</p>
+                                </div>
+                            </div>
 
-                                <div class="token-section">
-                                    <q-input
-                                        v-model="token"
-                                        :label="
-                                            __(
-                                                'Enter 6-digit verification code'
-                                            )
-                                        "
-                                        outlined
-                                        dense
-                                        class="token-input"
-                                        :error="!!errors.token"
-                                        maxlength="6"
-                                        counter
-                                        @keyup.enter="activateFactor"
-                                    >
-                                        <template v-slot:prepend>
-                                            <q-icon
-                                                name="mdi-lock"
-                                                color="grey-6"
-                                            />
-                                        </template>
-                                        <template v-slot:append>
-                                            <q-icon
-                                                name="mdi-refresh"
-                                                color="primary"
-                                                class="cursor-pointer"
-                                                @click="requestCode"
-                                            >
-                                                <q-tooltip>{{
-                                                    __("Request new code")
-                                                }}</q-tooltip>
-                                            </q-icon>
-                                        </template>
-                                    </q-input>
+                            <!-- Code Input Section -->
+                            <div class="space-y-4">
+                                <div class="space-y-3">
+                                    <label class="block text-sm font-medium text-gray-700">
+                                        Verification Code
+                                    </label>
+                                    <div class="relative">
+                                        <input
+                                            v-model="token"
+                                            type="text"
+                                            maxlength="6"
+                                            placeholder="Enter 6-digit code"
+                                            class="w-full pl-4 pr-32 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm font-mono placeholder-gray-400"
+                                            :class="errors.token ? 'border-red-500 focus:ring-red-500' : ''"
+                                            @keyup.enter="activateFactor"
+                                        />
+                                        <button
+                                            @click="requestCode"
+                                            :disabled="sendingCode"
+                                            class="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs"
+                                        >
+                                            <svg v-if="sendingCode" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                                            </svg>
+                                            <span>{{ sendingCode ? 'Sending...' : 'Get Code' }}</span>
+                                        </button>
+                                    </div>
                                     <v-error :error="errors.token" />
-
-                                    <div class="input-hint q-mt-xs">
-                                        {{
-                                            __(
-                                                "Enter the 6-digit code sent to your email"
-                                            )
-                                        }}
-                                    </div>
+                                    <p class="text-xs text-gray-500">
+                                        Check your email for the 6-digit verification code
+                                    </p>
                                 </div>
-                            </q-card-section>
 
-                            <q-card-actions
-                                class="action-buttons q-px-md q-pb-md"
-                            >
-                                <q-btn
-                                    @click="requestCode"
-                                    :label="__('Send Verification Code')"
-                                    color="primary"
-                                    outline
-                                    icon="mdi-email-send"
-                                    class="request-button"
-                                    :loading="sendingCode"
-                                >
-                                    <template v-slot:loading>
-                                        <q-spinner-hourglass class="on-left" />
-                                        {{ __("Sending...") }}
-                                    </template>
-                                </q-btn>
-
-                                <q-btn
-                                    :label="
-                                        user.m2fa
-                                            ? __('Disable 2FA')
-                                            : __('Enable 2FA')
-                                    "
-                                    :color="user.m2fa ? 'negative' : 'positive'"
-                                    @click="activateFactor"
-                                    :icon="
-                                        user.m2fa
-                                            ? 'mdi-lock-open'
-                                            : 'mdi-lock-check'
-                                    "
-                                    unelevated
-                                    class="action-button"
-                                    :loading="loading"
-                                    :disable="!token && !user.m2fa"
-                                >
-                                    <template v-slot:loading>
-                                        <q-spinner-hourglass class="on-left" />
-                                        {{
+                                <!-- Action Button -->
+                                <div class="pt-4">
+                                    <button
+                                        @click="activateFactor"
+                                        :disabled="loading || (!token && !user.m2fa)"
+                                        :class="[
+                                            'w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm',
                                             user.m2fa
-                                                ? __("Disabling...")
-                                                : __("Enabling...")
-                                        }}
-                                    </template>
-                                </q-btn>
-                            </q-card-actions>
-                        </q-card>
-
-                        <!-- Coming Soon Features -->
-                        <q-card
-                            class="upcoming-features-card q-mt-lg"
-                            flat
-                            bordered
-                        >
-                            <q-card-section>
-                                <div
-                                    class="text-h6 text-weight-medium text-grey-8 q-mb-md"
-                                >
-                                    <q-icon
-                                        name="mdi-rocket-launch"
-                                        class="q-mr-sm"
-                                    />
-                                    {{ __("Coming Soon") }}
-                                </div>
-
-                                <div class="features-list">
-                                    <div
-                                        class="feature-item row items-center q-mb-md"
+                                                ? 'bg-red-600 hover:bg-red-700 text-white'
+                                                : 'bg-green-600 hover:bg-green-700 text-white'
+                                        ]"
                                     >
-                                        <q-icon
-                                            name="mdi-cellphone-key"
-                                            color="blue"
-                                            size="24px"
-                                            class="q-mr-md"
-                                        />
+                                        <svg v-if="loading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path v-if="user.m2fa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>
+                                            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                        </svg>
+                                        <span>
+                                            {{ loading 
+                                                ? (user.m2fa ? 'Disabling...' : 'Activating...')
+                                                : (user.m2fa ? 'Disable 2FA' : 'Activate 2FA')
+                                            }}
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Features -->
+                    <div class="lg:col-span-1">
+                        <div class="space-y-4">
+                            <!-- Security Features -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-base font-semibold text-gray-900">Coming Features</h3>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <!-- Authenticator App -->
+                                    <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                        <div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                            </svg>
+                                        </div>
                                         <div>
-                                            <div class="text-weight-medium">
-                                                {{
-                                                    __(
-                                                        "Authenticator App (TOTP)"
-                                                    )
-                                                }}
-                                            </div>
-                                            <div
-                                                class="text-caption text-grey-7"
-                                            >
-                                                {{
-                                                    __(
-                                                        "Use apps like Google Authenticator or Authy for verification codes"
-                                                    )
-                                                }}
-                                            </div>
+                                            <h4 class="text-sm font-medium text-gray-900 mb-1">Authenticator App</h4>
+                                            <p class="text-xs text-gray-600">Google Authenticator & Authy integration</p>
                                         </div>
                                     </div>
 
-                                    <div class="feature-item row items-center">
-                                        <q-icon
-                                            name="mdi-qrcode-scan"
-                                            color="green"
-                                            size="24px"
-                                            class="q-mr-md"
-                                        />
+                                    <!-- QR Code -->
+                                    <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                        <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                                            </svg>
+                                        </div>
                                         <div>
-                                            <div class="text-weight-medium">
-                                                {{ __("QR Code Setup") }}
-                                            </div>
-                                            <div
-                                                class="text-caption text-grey-7"
-                                            >
-                                                {{
-                                                    __(
-                                                        "Quick setup with QR code scanning for authenticator apps"
-                                                    )
-                                                }}
-                                            </div>
+                                            <h4 class="text-sm font-medium text-gray-900 mb-1">QR Setup</h4>
+                                            <p class="text-xs text-gray-600">Instant setup with QR code scanning</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Backup -->
+                                    <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-medium text-gray-900 mb-1">Backup Codes</h4>
+                                            <p class="text-xs text-gray-600">Emergency recovery codes for backup</p>
                                         </div>
                                     </div>
                                 </div>
-                            </q-card-section>
-                        </q-card>
+                            </div>
+
+                            <!-- Security Tips -->
+                            <div class="bg-blue-50 rounded-xl border border-blue-200 p-4">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <h4 class="text-sm font-medium text-blue-900">Security Tip</h4>
+                                </div>
+                                <p class="text-xs text-blue-800 leading-relaxed">
+                                    Always keep your backup codes in a secure location and never share your 2FA codes with anyone.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </q-page>
-    </v-user-layout>
+        </div>
+    </v-account-layout>
 </template>
 
 <script>
+import VAccountLayout from "../../../Components/VAccountLayout.vue";
+
 export default {
+    components: {
+        VAccountLayout,
+    },
     data() {
         return {
             token: "",
@@ -329,7 +283,6 @@ export default {
     },
     mounted() {
         this.user = this.$page.props.user;
-        console.log(this.$page.props.user.links);
     },
     methods: {
         async requestCode() {
@@ -344,7 +297,6 @@ export default {
                         message: res.data.message,
                         timeout: 3000,
                     });
-
                     this.errors = {};
                 }
             } catch (e) {
@@ -362,14 +314,11 @@ export default {
 
         async activateFactor() {
             if (!this.token && !this.user.m2fa) {
-                if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "warning",
-                        message: this.__("Please enter a verification code"),
-                        timeout: 3000,
-                    });
-                }
-
+                this.$q.notify({
+                    type: "warning",
+                    message: this.__("Please enter a verification code"),
+                    timeout: 3000,
+                });
                 return;
             }
 
@@ -391,7 +340,6 @@ export default {
                         message: res.data.message,
                         timeout: 3000,
                     });
-                    // Reload after a short delay to show the success message
                     setTimeout(() => {
                         window.location.reload();
                     }, 1500);
@@ -401,10 +349,10 @@ export default {
                     this.errors = err.response.data.errors;
                 }
 
-                if (e?.response?.data?.message) {
+                if (err?.response?.data?.message) {
                     this.$q.notify({
                         type: "negative",
-                        message: e.response.data.message,
+                        message: err.response.data.message,
                         timeout: 3000,
                     });
                 }
@@ -415,172 +363,4 @@ export default {
     },
 };
 </script>
-
-<style lang="scss" scoped>
-.two-factor-auth-page {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 24px;
-}
-
-.page-container {
-    max-width: 1000px;
-    width: 100%;
-}
-
-.page-header {
-    text-align: center;
-    margin-bottom: 32px;
-
-    .header-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-        margin-bottom: 8px;
-    }
-
-    .header-icon {
-        background: rgba(0, 0, 0, 0.05);
-        padding: 16px;
-        border-radius: 50%;
-    }
-}
-
-.status-card,
-.auth-card,
-.upcoming-features-card {
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-
-    .q-card__section {
-        padding: 24px;
-    }
-}
-
-.status-card {
-    .status-badge {
-        padding: 8px 16px;
-        font-weight: 600;
-        font-size: 0.9rem;
-    }
-
-    .status-message {
-        display: flex;
-        align-items: center;
-        font-weight: 500;
-    }
-}
-
-.auth-card {
-    .token-section {
-        .token-input {
-            :deep(.q-field__control) {
-                border-radius: 10px;
-                height: 52px;
-            }
-
-            :deep(.q-field__native) {
-                padding-top: 8px;
-                padding-bottom: 8px;
-                font-size: 1.1rem;
-                letter-spacing: 2px;
-                font-weight: 500;
-                text-align: center;
-            }
-        }
-
-        .input-hint {
-            font-size: 0.75rem;
-            color: #718096;
-            text-align: center;
-        }
-    }
-
-    .action-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-
-        .request-button,
-        .action-button {
-            flex: 1;
-            min-width: 180px;
-            height: 48px;
-            border-radius: 10px;
-            font-weight: 600;
-            text-transform: none;
-            letter-spacing: 0.5px;
-        }
-    }
-}
-
-.upcoming-features-card {
-    .feature-item {
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-
-        &:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-    }
-}
-
-// Responsive adjustments
-@media (max-width: 1023px) {
-    .two-factor-auth-page {
-        padding: 16px;
-    }
-
-    .page-header {
-        .text-h4 {
-            font-size: 1.75rem;
-        }
-
-        .header-icon {
-            padding: 12px;
-            font-size: 28px;
-        }
-    }
-}
-
-@media (max-width: 767px) {
-    .two-factor-auth-page {
-        padding: 12px;
-    }
-
-    .auth-card .action-buttons {
-        flex-direction: column;
-
-        .request-button,
-        .action-button {
-            width: 100%;
-        }
-    }
-
-    .page-header {
-        .text-h4 {
-            font-size: 1.5rem;
-        }
-
-        .header-content {
-            flex-direction: column;
-            gap: 12px;
-        }
-    }
-}
-
-// Animation for status changes
-.status-badge {
-    transition: all 0.3s ease;
-}
-
-// Enhanced focus states
-.token-input :deep(.q-field__control:focus-within) {
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-}
-</style>
+ 
