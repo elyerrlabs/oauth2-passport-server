@@ -26,7 +26,7 @@
 
         <!-- SIDEBAR (FIJO) -->
         <aside id="sidebar"
-            class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-md overflow-y-auto z-40 transform transition-transform duration-300 lg:translate-x-0 -translate-x-full">
+            class="fixed xl:relative inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-md overflow-y-auto z-40 transform transition-transform duration-300 lg:translate-x-0 -translate-x-full">
 
             <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">

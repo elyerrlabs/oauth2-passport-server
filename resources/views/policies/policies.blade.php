@@ -4,9 +4,8 @@
     @include('layouts.parts.title', ['title' => __('Policies')])
 @endsection
 
-
 @section('header')
-    <nav class="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white py-4 shadow-lg">
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center px-6">
             <a href="{{ route('user.dashboard') }}"
                 class="flex items-center space-x-2 text-lg font-semibold hover:opacity-90 transition-opacity">
@@ -59,7 +58,7 @@
             <nav class="p-4 space-y-2 flex-1 overflow-y-auto">
                 @foreach ($routes as $item)
                     <a href="{{ $item['route'] }}"
-                        class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg transition-colors duration-200 hover:bg-blue-50 hover:text-blue-700 {{ request()->url() === $item['route'] ? 'bg-blue-50 border border-blue-100' : '' }}">
+                        class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg transition-colors duration-200 hover:bg-blue-100 hover:text-blue-800 {{ request()->url() === $item['route'] ? 'bg-blue-100 border border-blue-200' : '' }}">
                         <span class="{{ $item['icon'] }}"></span>
                         <span class="font-medium">{{ $item['name'] }}</span>
                     </a>
@@ -94,9 +93,9 @@
                     @yield('form')
                 </div>
 
-                <div class="mt-8 pt-6 border-t border-[var(--color-border)] flex justify-end">
+                <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end">
                     <button type="submit"
-                        class="flex items-center px-6 py-3 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:from-[var(--color-primary-hover)] hover:to-[var(--color-primary-hover)] focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2">
+                        class="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <i class="mdi mdi-content-save-all mr-2"></i>{{ __('Save Changes') }}
                     </button>
                 </div>
