@@ -60,6 +60,19 @@ class CoreServiceProvider extends ServiceProvider
             $migrationPath = $modulePath . '/migrations';
             $routesPath = $modulePath . '/routes';
 
+            $module = $configPath . "/module.php";
+            if (file_exists($module)) {
+                $moduleConfig = include $module;
+
+                if (is_array($moduleConfig) && array_key_exists('module_enabled', $moduleConfig)) {
+                    $key = 'module.' . strtolower($moduleName) . '.module_enabled';
+
+                    if (config($key, true) == false) {
+                        continue;
+                    }
+                }
+            }
+
             if (is_dir($migrationPath)) {
                 $this->loadMigrationsFrom($migrationPath);
             }
