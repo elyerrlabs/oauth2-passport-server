@@ -38,7 +38,7 @@
 use Core\Transaction\Http\Controllers\Web\PlanController;
 use Core\Transaction\Services\Payment\Webhook\StripeWebhookController;
 
-if (config('module.transaction.routes.subscriptions_enabled', true)) {
+if (config('module.transaction.module.routes.subscriptions_enabled', true)) {
 
     Route::get('/plans', [PlanController::class, 'index'])
         ->name('plans.index')

@@ -22,5 +22,6 @@
  */
 
 return [
+    'name' => 'eCommerce Module',
     'module_enabled' => true
 ];

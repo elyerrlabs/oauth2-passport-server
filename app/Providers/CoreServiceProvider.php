@@ -65,8 +65,8 @@ class CoreServiceProvider extends ServiceProvider
                 $moduleConfig = include $module;
 
                 if (is_array($moduleConfig) && array_key_exists('module_enabled', $moduleConfig)) {
-                    $key = 'module.' . strtolower($moduleName) . '.module_enabled';
-
+                    $key = 'module.' . strtolower($moduleName) . '.module.module_enabled';
+                    
                     if (config($key, true) == false) {
                         continue;
                     }

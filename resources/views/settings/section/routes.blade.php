@@ -132,74 +132,88 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Feature Dependencies Section -->
+                <div
+                    class="p-5 mt-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <div class="flex items-center justify-center w-10 h-10 bg-yellow-100 rounded-lg mr-3">
+                            <i class="mdi mdi-link text-yellow-500 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800">{{ __('Feature Dependencies') }}</h3>
+                    </div>
+
+                    <div class="space-y-3 text-sm text-gray-500">
+                        <div class="flex items-start">
+                            <i class="mdi mdi-information-outline mr-2 mt-0.5 text-blue-500"></i>
+                            <span>{{ __('The API menu requires the Developers menu to be enabled for full functionality') }}</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="mdi mdi-information-outline mr-2 mt-0.5 text-blue-500"></i>
+                            <span>{{ __('Client management features depend on both Developers and API menus being enabled') }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Feature Dependencies Section -->
+            <!-- Transaction routes -->
             <div
                 class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
                 <div class="flex items-center mb-4">
-                    <div class="flex items-center justify-center w-10 h-10 bg-yellow-100 rounded-lg mr-3">
-                        <i class="mdi mdi-link text-yellow-500 text-xl"></i>
+                    <div class="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-lg mr-3">
+                        <i class="mdi mdi-view-dashboard text-indigo-600 text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">{{ __('Feature Dependencies') }}</h3>
+                    <h3 class="text-lg font-semibold text-gray-800">{{ __('Transactions routes') }}</h3>
                 </div>
 
-                <div class="space-y-3 text-sm text-gray-500">
-                    <div class="flex items-start">
-                        <i class="mdi mdi-information-outline mr-2 mt-0.5 text-blue-500"></i>
-                        <span>{{ __('The API menu requires the Developers menu to be enabled for full functionality') }}</span>
-                    </div>
-                    <div class="flex items-start">
-                        <i class="mdi mdi-information-outline mr-2 mt-0.5 text-blue-500"></i>
-                        <span>{{ __('Client management features depend on both Developers and API menus being enabled') }}</span>
-                    </div>
-                </div>
-            </div>
+                <div class="space-y-4 mb-5">
 
-            <!-- Current Configuration Status -->
-            <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
-                <div class="flex items-center mb-4">
-                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg mr-3">
-                        <i class="mdi mdi-checkbox-marked-circle-outline text-blue-500 text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-800">{{ __('Current Configuration') }}</h3>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="flex items-center">
-                        <span
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ config('routes.guest.register') ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
-                            {{ config('routes.guest.register') ? __('Enabled') : __('Disabled') }}
-                        </span>
-                        <span class="ml-2 text-sm text-gray-500">{{ __('User Registration') }}</span>
+                    <div class="space-y-4 mb-5">
+                        {{-- Plan routes for admin --}}
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <div class="flex-1">
+                                <label
+                                    class="block text-sm font-medium text-gray-800 mb-1">{{ __('Plan routes') }}</label>
+                                <p class="text-sm text-gray-500">
+                                    {{ __('Disable plans routes for admin') }}</p>
+                            </div>
+                            <div class="ml-4">
+                                <select name="module[transaction][module][routes][plans_enabled]"
+                                    class="w-32 px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <option value="1"
+                                        {{ config('module.transaction.module.routes.plans_enabled', true) == true ? 'selected' : '' }}>
+                                        {{ __('Enabled') }}</option>
+                                    <option value="0"
+                                        {{ config('module.transaction.module.routes.plans_enabled', true) == false ? 'selected' : '' }}>
+                                        {{ __('Disabled') }}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="flex items-center">
-                        <span
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ config('routes.users.developers') ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
-                            {{ config('routes.users.developers') ? __('Enabled') : __('Disabled') }}
-                        </span>
-                        <span class="ml-2 text-sm text-gray-500">{{ __('Developers Menu') }}</span>
-                    </div>
-
-                    <div class="flex items-center">
-                        <span
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ config('routes.users.api') ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
-                            {{ config('routes.users.api') ? __('Enabled') : __('Disabled') }}
-                        </span>
-                        <span class="ml-2 text-sm text-gray-500">{{ __('API Menu') }}</span>
-                    </div>
-
-                    <div class="flex items-center">
-                        <span
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ config('routes.users.clients') ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
-                            {{ config('routes.users.clients') ? __('Enabled') : __('Disabled') }}
-                        </span>
-                        <span class="ml-2 text-sm text-gray-500">{{ __('Clients Section') }}</span>
+                    <div class="space-y-4">
+                        {{-- Subscription routes for users --}}
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <div class="flex-1">
+                                <label
+                                    class="block text-sm font-medium text-gray-800 mb-1">{{ __('Subscription routes') }}</label>
+                                <p class="text-sm text-gray-500">
+                                    {{ __('Disable subscription routes for users') }}</p>
+                            </div>
+                            <div class="ml-4">
+                                <select name="module[transaction][module][routes][subscriptions_enabled]"
+                                    class="w-32 px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <option value="1"
+                                        {{ config('module.transaction.module.routes.subscriptions_enabled', true) == true ? 'selected' : '' }}>
+                                        {{ __('Enabled') }}</option>
+                                    <option value="0"
+                                        {{ config('module.transaction.module.routes.subscriptions_enabled', true) == false ? 'selected' : '' }}>
+                                        {{ __('Disabled') }}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection

@@ -22,7 +22,8 @@
  */
 
 return [
-    'module_enabled' => true,
+    // 'name' = "Transaction module"
+    //'module_enabled' => true,
 
     'routes' => [
         'subscriptions_enabled' => true,

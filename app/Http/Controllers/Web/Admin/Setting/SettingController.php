@@ -26,6 +26,7 @@ namespace App\Http\Controllers\Web\Admin\Setting;
 
 
 use App\Support\CacheKeys;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Models\Setting\Setting;
 use Illuminate\Support\Facades\Cache;
@@ -92,8 +93,9 @@ class SettingController extends WebController
 
     /**
      * Reload cache for settings
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Setting\Setting $setting
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function reloadCache(Request $request, Setting $setting)
     {
@@ -214,5 +216,34 @@ class SettingController extends WebController
     public function rateLimit()
     {
         return view('settings.section.rate_limit');
+    }
+
+    /**
+     * Summary of security
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function modules()
+    {
+        $modulesPath = base_path('core');
+
+        $keys = [];
+
+        foreach (File::directories($modulesPath) as $modulePath) {
+            $moduleName = basename($modulePath);
+            $configPath = $modulePath . '/config';
+
+            $module = $configPath . "/module.php";
+            if (file_exists($module)) {
+                $config = include $module;
+
+                if (isset($config['name']) && isset($config['module_enabled'])) {
+                    $data = $this->transformRequest($config);
+                    $keys[strtolower($moduleName)][] = 'module.' . strtolower($moduleName) . '.module.name';
+                    $keys[strtolower($moduleName)][] = 'module.' . strtolower($moduleName) . '.module.module_enabled';
+                }
+            }
+        }
+
+        return view('settings.section.modules', compact('keys'));
     }
 }

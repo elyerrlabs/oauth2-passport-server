@@ -81,10 +81,9 @@ class settingsSystem extends Command
                 $keys = $this->transformRequest($moduleConfig);
 
                 foreach ($keys as $key => $value) {
-                    $key = "module." . strtolower($moduleName) . "." . $key;
+                    $key = "module." . strtolower($moduleName) . ".module." . $key;
                     settingLoad($key, $value);
                 }
-
             }
         }
     }

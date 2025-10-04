@@ -25,7 +25,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Admin\Setting\SettingController;
 use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
-use App\Http\Controllers\Web\Admin\Policies\PrivacyTermsController;
 
 Route::group([
     'prefix' => 'settings',
@@ -43,6 +42,7 @@ Route::group([
     Route::get('/session', [SettingController::class, 'session'])->name('session');
     Route::get('/security', [SettingController::class, 'security'])->name('security');
     Route::get('/rate_limit', [SettingController::class, 'rateLimit'])->name('rate_limit');
+    Route::get('/modules', [SettingController::class, 'modules'])->name('modules');
 
     Route::put('/', [SettingController::class, 'update'])->name('update');
     Route::put('/cache/reload', [SettingController::class, 'reloadCache'])->name('reload');

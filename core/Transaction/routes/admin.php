@@ -41,7 +41,7 @@ Route::middleware(['throttle:transaction:admin'])->group(function () {
     ])->name('transactions.index');
 
 
-    if (config('module.transaction.routes.plans_enabled', true)) {
+    if (config('module.transaction.module.routes.plans_enabled', true)) {
 
         Route::resource('/plans', PlanController::class)->except('edit', 'create');
 

@@ -76,7 +76,7 @@ return [
 
             "ecommerce" => [
                 "id" => "ecommerce",
-                "name" => __("Ecommerce"),
+                "name" => __("My Store"),
                 "route" => "ecommerce.dashboard",
                 "icon" => "mdi-store-cog",
                 'service' => true

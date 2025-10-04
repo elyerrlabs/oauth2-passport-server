@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\QueryException;
+use PhpParser\Node\Stmt\TryCatch;
 
 class Setting
 {
@@ -45,9 +46,12 @@ class Setting
      */
     public static function getDefaultSetting()
     {
-        $settings = \App\Models\Setting\Setting::all(['key', 'value']);
-        foreach ($settings as $key => $item) {
-            Config::set($item->key, $item->value);
+        try {
+            $settings = \App\Models\Setting\Setting::all(['key', 'value']);
+            foreach ($settings as $key => $item) {
+                Config::set($item->key, $item->value);
+            }
+        } catch (\Throwable $th) {
         }
 
         Setting::getPassportSetting();

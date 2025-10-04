@@ -22,5 +22,6 @@
  */
 
 return [
-    'module_enabled' => false
+    'name' => 'Partner module',
+    'module_enabled' => true
 ];

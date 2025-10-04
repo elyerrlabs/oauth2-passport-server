@@ -29,8 +29,7 @@ use Core\Transaction\Http\Controllers\Web\UserSubscriptionController;
 
 Route::middleware(['throttle:transaction:web'])->group(function () {
 
-    if (config('module.transaction.routes.subscriptions_enabled', true)) {
-
+    if (config('module.transaction.module.routes.subscriptions_enabled', true)) {
         Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
         Route::post('/subscriptions', [UserSubscriptionController::class, 'subscription'])->name('subscriptions.pay');
         Route::post('/subscriptions/renew', [UserSubscriptionController::class, 'renew'])->name('subscriptions.renew');
