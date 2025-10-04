@@ -8,11 +8,8 @@
 
     @include('layouts.parts.favicon')
 
-    @vite(['resources/js/pages.js', 'resources/scss/pages.scss'])
-
-    <!-- Notyf-->
-    <link nonce={{ $nonce }} rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
-    <script nonce={{ $nonce }} src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
+    @vite(['resources/js/pages.js'])
+    
     @stack('head')
     @stack('css')
 </head>

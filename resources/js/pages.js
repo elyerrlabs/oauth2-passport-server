@@ -21,7 +21,9 @@
  */
 import flatpickr from "flatpickr";
 import "../css/app.css";
-import "@tailwindplus/elements"; 
+import "@tailwindplus/elements";
+import { $notify } from "./app/config/notify.js";
+window.$notify = $notify;
 
 import Quill from "quill";
 import "quill/dist/quill.core.css";

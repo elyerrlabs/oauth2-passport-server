@@ -461,11 +461,13 @@
                                 <i class="mdi mdi-cash mr-2"></i>
                                 <span class="text-sm">{{ __('Transactions') }}</span>
                             </a>
-                            <a href="{{ route('partner.dashboard') }}"
-                                class="flex items-center text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors">
-                                <i class="mdi mdi-text-recognition mr-2"></i>
-                                <span class="text-sm">{{ __('Partners') }}</span>
-                            </a>
+                            @if (Route::has('partner.dashboard'))
+                                <a href="{{ route('partner.dashboard') }}"
+                                    class="flex items-center text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors">
+                                    <i class="mdi mdi-text-recognition mr-2"></i>
+                                    <span class="text-sm">{{ __('Partners') }}</span>
+                                </a>
+                            @endif
                         </div>
                     </div>
 

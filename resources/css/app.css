@@ -1,10 +1,6 @@
 @import "flatpickr";
 @import 'tailwindcss';
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
-
+/*
 :root {
     --color-primary: rgb(79 70 229);
     --color-primary-hover: rgb(67 56 202);
@@ -38,7 +34,7 @@
     --radius-xl: 1rem;
 }
 
-/* Custom scrollbar */
+ 
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
 }
@@ -55,4 +51,4 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: var(--color-border-hover);
-}
+}*/
