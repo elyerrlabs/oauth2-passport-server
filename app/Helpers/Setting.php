@@ -172,6 +172,10 @@ if (!function_exists('resolveInertiaRoutes')) {
         $user = auth()->user();
 
         foreach ($items as $key => $value) {
+
+            if (!Route::has($value['route'])) {
+                continue;
+            }
             $canShow = true;
             if (isset($value['service'])) {
                 $canShow = $user && method_exists($user, 'canAccessMenu')

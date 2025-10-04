@@ -45,26 +45,18 @@ class Setting
      */
     public static function getDefaultSetting()
     {
-        Setting::getSystemSetting();
+        $settings = \App\Models\Setting\Setting::all(['key', 'value']);
+        foreach ($settings as $key => $item) {
+            Config::set($item->key, $item->value);
+        }
+
         Setting::getPassportSetting();
-        Setting::getRedisConfig();
-        Setting::getQueueSetting();
-        Setting::getFileSystems();
-        Setting::getEmailSettings();
-        Setting::getServicesSettings();
-        Setting::getPaymentSettings();
-        Setting::getSessionSettings();
-        Setting::getCacheSettings();
-        Setting::getRoutesSettings();
-        Setting::getRateLimitSettings();
 
         if (config('system.schema_mode', 'https') == 'https') {
             URL::forceScheme('https');
         }
-
-        Config::set('app.name', settingItem('app.name', 'Oauth2 Server'));
-        Config::set('app.org_name', settingItem('app.org_name', 'Oauth2 org'));
     }
+
 
     /**
      * Add default setting into the system
@@ -72,7 +64,6 @@ class Setting
      */
     public static function setDefaultKeys()
     {
-
         //App name
         settingLoad('app.name', 'Oauth2 Server');
         settingLoad('app.org_name', 'Server org');
@@ -321,58 +312,6 @@ class Setting
         }
     }
 
-    /**
-     * Setting default values for files system
-     * @return void
-     */
-    public static function getFileSystems()
-    {
-        Config::set('filesystems.default', settingItem('filesystems.default', 'local'));
-        Config::set('filesystems.disks.local.driver', settingItem('filesystems.disks.local.driver', 'local'));
-        Config::set('filesystems.disks.local.root', settingItem('filesystems.disks.local.root', storage_path('app')));
-        Config::set('filesystems.disks.local.throw', settingItem('filesystems.disks.local.throw', false));
-
-        Config::set('filesystems.disks.public.driver', settingItem('filesystems.disks.public.driver', 'local'));
-        Config::set('filesystems.disks.public.root', settingItem('filesystems.disks.public.root', storage_path('app/public')));
-        Config::set('filesystems.disks.public.url', settingItem('filesystems.disks.public.url', config('app.url', null) . '/storage'));
-        Config::set('filesystems.disks.public.visibility', settingItem('filesystems.disks.public.visibility', 'public'));
-        Config::set('filesystems.disks.public.throw', settingItem('filesystems.disks.public.throw', false));
-
-        Config::set('filesystems.disks.s3.driver', settingItem('filesystems.disks.s3.driver', 's3'));
-        Config::set('filesystems.disks.s3.key', settingItem('filesystems.disks.s3.key', null));
-        Config::set('filesystems.disks.s3.secret', settingItem('filesystems.disks.s3.secret', null));
-        Config::set('filesystems.disks.s3.region', settingItem('filesystems.disks.s3.region', null));
-        Config::set('filesystems.disks.s3.bucket', settingItem('filesystems.disks.s3.bucket', null));
-        Config::set('filesystems.disks.s3.url', settingItem('filesystems.disks.s3.url', null));
-        Config::set('filesystems.disks.s3.endpoint', settingItem('filesystems.disks.s3.endpoint', null));
-        Config::set('filesystems.disks.s3.use_path_style_endpoint', settingItem('filesystems.disks.s3.use_path_style_endpoint', false));
-        Config::set('filesystems.disks.s3.throw', settingItem('filesystems.disks.s3.throw', false));
-
-        Config::set('filesystems.links.public', settingItem('filesystems.links.public', public_path('storage')));
-        Config::set('filesystems.links.storage', settingItem('filesystems.links.storage', storage_path('app/public')));
-    }
-
-    /**
-     * Redis configuration
-     * @return void
-     */
-    public static function getRedisConfig()
-    {
-        Config::set('database.redis.default.url', settingItem('database.redis.default.url', null));
-        Config::set('database.redis.default.host', settingItem('database.redis.default.host', '6379'));
-        Config::set('database.redis.default.username', settingItem('database.redis.default.username', null));
-        Config::set('database.redis.default.password', settingItem('database.redis.default.password', null));
-        Config::set('database.redis.default.port', settingItem('database.redis.default.port', '127.0.0.1'));
-        Config::set('database.redis.default.database', settingItem('database.redis.default.database', 0));
-
-        Config::set('database.redis.cache.url', settingItem('database.redis.cache.url', null));
-        Config::set('database.redis.cache.host', settingItem('database.redis.cache.host', '6379'));
-        Config::set('database.redis.cache.username', settingItem('database.redis.cache.username', null));
-        Config::set('database.redis.cache.password', settingItem('database.redis.cache.password', null));
-        Config::set('database.redis.cache.port', settingItem('database.redis.cache.port', '127.0.0.1'));
-        Config::set('database.redis.cache.database', settingItem('database.redis.cache.database', 1));
-
-    }
 
     /**
      * Setting for laravel passport
@@ -384,7 +323,7 @@ class Setting
         Passport::loadKeysFrom(base_path('secrets/oauth'));
 
         //Cookies names
-        Passport::cookie(settingItem('system.cookie_name'));
+        Passport::cookie(config('system.cookie_name'));
 
         try {
 
@@ -419,237 +358,5 @@ class Setting
         Passport::useRefreshTokenModel(RefreshToken::class);
         Passport::useAuthCodeModel(AuthCode::class);
         Passport::useClientModel(Client::class);
-    }
-
-    /**
-     * Loading default queue settings
-     * @return void
-     */
-    public static function getQueueSetting()
-    {
-        //default queues
-        Config::set('queue.default', settingItem('queue.default', 'sync'));
-
-        //Sync setting
-        Config::set('queue.connections.sync.driver', settingItem('queue.connections.sync.driver', 'sync'));
-
-        //Database settings
-        Config::set('queue.connections.sync.driver', settingItem('queue.connections.database.driver', 'database'));
-        Config::set('queue.connections.sync.table', settingItem('queue.connections.database.table', 'jobs'));
-        Config::set('queue.connections.sync.queue', settingItem('queue.connections.database.queue', 'default'));
-        Config::set('queue.connections.sync.retry_after', settingItem('queue.connections.database.retry_after', 90));
-        Config::set('queue.connections.sync.after_commit', settingItem('queue.connections.database.after_commit', false));
-
-        //beanstalkd Settings
-        Config::set('queue.connections.beanstalkd.driver', settingItem('queue.connections.beanstalkd.driver', 'beanstalkd'));
-        Config::set('queue.connections.beanstalkd.host', settingItem('queue.connections.beanstalkd.host', 'localhost'));
-        Config::set('queue.connections.beanstalkd.queue', settingItem('queue.connections.beanstalkd.queue', 'default'));
-        Config::set('queue.connections.beanstalkd.retry_after', settingItem('queue.connections.beanstalkd.retry_after', 90));
-        Config::set('queue.connections.beanstalkd.block_for', settingItem('queue.connections.beanstalkd.block_for', 0));
-        Config::set('queue.connections.beanstalkd.after_commit', settingItem('queue.connections.beanstalkd.after_commit', false));
-
-        //AWS settings
-        Config::set('queue.connections.sqs.driver', settingItem('queue.connections.sqs.driver', 'sqs'));
-        Config::set('queue.connections.sqs.key', settingItem('queue.connections.sqs.key', null));
-        Config::set('queue.connections.sqs.secret', settingItem('queue.connections.sqs.secret', null));
-        Config::set('queue.connections.sqs.prefix', settingItem('queue.connections.sqs.prefix', 'https://sqs.us-east-1.amazonaws.com/your-account-id'));
-        Config::set('queue.connections.sqs.queue', settingItem('queue.connections.sqs.queue', 'default'));
-        Config::set('queue.connections.sqs.suffix', settingItem('queue.connections.sqs.suffix', null));
-        Config::set('queue.connections.sqs.region', settingItem('queue.connections.sqs.region', 'us-east-1'));
-        Config::set('queue.connections.sqs.after_commit', settingItem('queue.connections.sqs.after_commit', false));
-
-        //Redis Settings
-        Config::set('queue.connections.redis.driver', settingItem('queue.connections.redis.driver', 'redis'));
-        Config::set('queue.connections.redis.connection', settingItem('queue.connections.redis.connection', 'default'));
-        Config::set('queue.connections.redis.queue', settingItem('queue.connections.redis.queue', 'default'));
-        Config::set('queue.connections.redis.retry_after', settingItem('queue.connections.redis.retry_after', 90));
-        Config::set('queue.connections.redis.block_for', settingItem('queue.connections.redis.block_for', null));
-        Config::set('queue.connections.redis.after_commit', settingItem('queue.connections.redis.after_commit', false));
-
-        //Fail queue settings
-        Config::set('queue.failed.driver', settingItem('queue.failed.driver', 'database-uuids'));
-        Config::set('queue.failed.database', settingItem('queue.failed.database', 'mysql'));
-        Config::set('queue.failed.table', settingItem('queue.failed.table', 'failed_jobs'));
-    }
-
-
-    /**
-     * Email settings
-     * @return void
-     */
-    public static function getEmailSettings()
-    {
-        Config::set('mail.default', settingItem('mail.default', 'smtp'));
-
-        Config::set('mail.mailers.smtp.transport', settingItem('mail.mailers.smtp.transport', 'smtp'));
-        Config::set('mail.mailers.smtp.host', settingItem('mail.mailers.smtp.host', 'smtp.mailgun.org'));
-        Config::set('mail.mailers.smtp.port', settingItem('mail.mailers.smtp.port', 587));
-        Config::set('mail.mailers.smtp.encryption', settingItem('mail.mailers.smtp.encryption', 'tls'));
-        Config::set('mail.mailers.smtp.username', settingItem('mail.mailers.smtp.username', null));
-        Config::set('mail.mailers.smtp.password', settingItem('mail.mailers.smtp.password', null));
-        Config::set('mail.mailers.smtp.timeout', settingItem('mail.mailers.smtp.timeout', null));
-        Config::set('mail.mailers.smtp.local_domain', settingItem('mail.mailers.smtp.local_domain', null));
-
-        Config::set('mail.mailers.ses.transport', settingItem('mail.mailers.ses.transport', 'ses'));
-        Config::set('mail.mailers.mailgun.transport', settingItem('mail.mailers.mailgun.transport', 'mailgun'));
-        Config::set('mail.mailers.postmark.transport', settingItem('mail.mailers.postmark.transport', 'postmark'));
-
-        Config::set('mail.mailers.sendmail.transport', settingItem('mail.mailers.sendmail.transport', 'sendmail'));
-
-        Config::set('mail.mailers.log.transport', settingItem('mail.mailers.log.transport', 'log'));
-        Config::set('mail.mailers.log.channel', settingItem('mail.mailers.log.channel', 'MAIL_LOG_CHANNEL'));
-
-        Config::set('mail.mailers.array.transport', settingItem('mail.mailers.array.transport', 'array'));
-
-        Config::set('mail.mailers.failover.transport', settingItem('mail.mailers.failover.transport', 'failover'));
-
-        Config::set('mail.from.address', settingItem('mail.from.address', 'hello@example.com'));
-        Config::set('mail.from.name', settingItem('mail.from.name', 'Example'));
-    }
-
-
-    public static function getServicesSettings()
-    {
-        Config::set('services.mailgun.domain', settingItem('services.mailgun.domain', null));
-        Config::set('services.mailgun.secret', settingItem('services.mailgun.secret', null));
-        Config::set('services.mailgun.endpoint', settingItem('services.mailgun.endpoint', null));
-        Config::set('services.mailgun.scheme', settingItem('services.mailgun.scheme', 'https'));
-
-        Config::set('services.passport.token', settingItem('services.passport.token', null));
-
-        Config::set('services.ses.key', settingItem('services.ses.key', null));
-        Config::set('services.ses.secret', settingItem('services.ses.secret', null));
-        Config::set('services.ses.region', settingItem('services.ses.region', null));
-
-        Config::set('services.captcha.driver', settingItem('services.captcha.driver', 'hcaptcha'));
-        Config::set('services.captcha.enabled', settingItem('services.captcha.enabled', false));
-
-        Config::set('services.captcha.providers.turnstile.api', settingItem('services.captcha.providers.turnstile.api', 'https://challenges.cloudflare.com/turnstile/v0/siteverify'));
-        Config::set('services.captcha.providers.turnstile.secret', settingItem('services.captcha.providers.turnstile.secret', null));
-        Config::set('services.captcha.providers.turnstile.sitekey', settingItem('services.captcha.providers.turnstile.sitekey', null));
-
-        Config::set('services.captcha.providers.hcaptcha.api', settingItem('services.captcha.providers.hcaptcha.api', 'https://hcaptcha.com/siteverify'));
-        Config::set('services.captcha.providers.hcaptcha.secret', settingItem('services.captcha.providers.hcaptcha.secret', null));
-        Config::set('services.captcha.providers.hcaptcha.sitekey', settingItem('services.captcha.providers.hcaptcha.sitekey', null));
-    }
-
-    /**
-     * Payment settings
-     * @return void
-     */
-    public static function getPaymentSettings()
-    {
-
-        Config::set('billing.methods.stripe.name', settingItem('billing.methods.stripe.name', 'Credit Card (Stripe)'));
-        Config::set('billing.methods.stripe.icon', settingItem('billing.methods.stripe.icon', 'mdi-credit-card-outline'));
-        Config::set('billing.methods.stripe.enable', settingItem('billing.methods.stripe.enable', true));
-        Config::set('services.stripe.secret', settingItem('services.stripe.secret', null));
-        Config::set('services.stripe.key', settingItem('services.stripe.key', null));
-        Config::set('services.stripe.webhook_secret', settingItem('services.stripe.webhook_secret', null));
-
-        Config::set('billing.methods.offline.name', settingItem('billing.methods.offline.name', 'Peer 2 Peer'));
-        Config::set('billing.methods.offline.icon', settingItem('billing.methods.offline.icon', 'mdi-cash-register'));
-        Config::set('billing.methods.offline.enable', settingItem('billing.methods.offline.enable', true));
-
-        Config::set('billing.renew.enable', settingItem('billing.renew.enable', false));
-        Config::set('billing.renew.hours_before', settingItem('billing.renew.hours_before', 10));
-        Config::set('billing.renew.bonus_enabled', settingItem('billing.renew.bonus_enabled', false));
-        Config::set('billing.renew.grace_period_days', settingItem('billing.renew.grace_period_days', 5));
-    }
-
-    /**
-     * Setting system
-     * @return void
-     */
-    public static function getSystemSetting()
-    {
-        Config::set('system.home_page', settingItem('system.home_page', "/"));
-        Config::set('system.cookie_name', settingItem('system.cookie_name', null));
-        Config::set('system.passport_token_services', settingItem('system.passport_token_services', null));
-        Config::set('system.verify_account_time', settingItem('system.verify_account_time', 5));
-        Config::set('system.disable_create_user_by_command', settingItem('system.disable_create_user_by_command', false));
-        Config::set('system.destroy_user_after', settingItem('system.destroy_user_after', 30));
-        Config::set('system.code_2fa_email_expires', settingItem('system.code_2fa_email_expires', 5));
-        Config::set('system.csp_enabled', settingItem('system.csp_enabled', false));
-        Config::set('system.redirect_to', settingItem('system.redirect_to', null));
-        Config::set('system.privacy_url', settingItem('system.privacy_url', null));
-        Config::set('system.terms_url', settingItem('system.terms_url', null));
-        Config::set('system.policy_cookies', settingItem('system.policy_cookies', null));
-        Config::set('system.birthday.active', settingItem('system.birthday.active', false));
-        Config::set('system.birthday.limit', settingItem('system.birthday.limit', 18));
-        Config::set('system.demo.enabled', settingItem('system.demo.enabled', false));
-        Config::set('system.demo.email', settingItem('system.demo.email', null));
-        Config::set('system.demo.password', settingItem('system.demo.password', null));
-        Config::set('system.legal.terms_and_condition', settingItem('system.legal.terms_and_condition', config('system.legal.terms_and_condition')));
-        Config::set('system.legal.policies_of_privacy', settingItem('system.legal.policies_of_privacy', config('system.legal.policies_of_privacy')));
-        Config::set('system.legal.policies_of_cookies', settingItem('system.legal.policies_of_cookies', config('system.legal.policies_of_cookies')));
-    }
-
-    /**
-     * Summary of getSessionSettings
-     * @return void
-     */
-    public static function getSessionSettings()
-    {
-        Config::set('session.driver', 'database');// default session driver
-        Config::set('session.lifetime', settingItem('session.lifetime', 7200));
-        Config::set('session.expire_on_close', settingItem('session.expire_on_close', false));
-        Config::set('session.encrypt', settingItem('session.encrypt', false));
-        Config::set('session.table', settingItem('session.table', 'sessions'));
-        Config::set('session.cookie', settingItem('session.cookie', 'oauth2_session'));
-        Config::set('session.xcsrf-token', settingItem('session.xcsrf-token', 'oauth2_csrf'));
-        Config::set('session.path', settingItem('session.path', '/'));
-        Config::set('session.secure', settingItem('session.secure', false));
-        Config::set('session.http_only', settingItem('session.http_only', true));
-        Config::set('session.partitioned', settingItem('session.partitioned', false));
-    }
-
-    public static function getCacheSettings()
-    {
-        Config::set('cache.default', settingItem('cache.default', 'file', false));
-        Config::set('cache.expires', settingItem('cache.expires', 30, false));
-        Config::set('cache.prefix', settingItem('cache.prefix', null, false));
-
-        Config::set('cache.stores.database.connection', settingItem('cache.stores.database.connection', null, null));
-        Config::set('cache.stores.database.table', settingItem('cache.stores.database.table', 'cache', null));
-
-        Config::set('cache.stores.redis.connection', settingItem('cache.stores.redis.connection', 'cache', null));
-        Config::set('cache.stores.redis.lock_connection', settingItem('cache.stores.redis.lock_connection', 'default', null));
-
-        Config::set('cache.stores.memcached.persistent_id', settingItem('cache.stores.memcached.persistent_id', null, null));
-        Config::set('cache.stores.memcached.sasl.username', settingItem('cache.stores.memcached.sasl.username', null, null));
-        Config::set('cache.stores.memcached.sasl.password', settingItem('cache.stores.memcached.sasl.password', null, null));
-        Config::set('cache.stores.memcached.servers.0.host.', settingItem('cache.stores.memcached.servers.0.host', '127.0.0.1', null));
-        Config::set('cache.stores.memcached.servers.0.port', settingItem('cache.stores.memcached.servers.0.port', 11211, null));
-        Config::set('cache.stores.memcached.servers.0.weight', settingItem('cache.stores.memcached.servers.0.weight', 100, null));
-
-        Config::set('cache.stores.dynamodb.key', settingItem('cache.stores.dynamodb.key', null, null));
-        Config::set('cache.stores.dynamodb.secret', settingItem('cache.stores.dynamodb.secret', null, null));
-        Config::set('cache.stores.dynamodb.region', settingItem('cache.stores.dynamodb.region', 'us-east-1', null));
-        Config::set('cache.stores.dynamodb.table', settingItem('cache.stores.dynamodb.table', 'cache', null));
-        Config::set('cache.stores.dynamodb.table', settingItem('cache.stores.dynamodb.endpoint', null, null));
-    }
-
-
-    public static function getRoutesSettings()
-    {
-        Config::set('routes.users.developers', settingItem('routes.users.developers', true));
-        Config::set('routes.users.api', settingItem('routes.users.api', true));
-        Config::set('routes.users.clients', settingItem('routes.users.clients', true));
-        Config::set('routes.guest.register', settingItem('routes.guest.register', true));
-    }
-
-
-    public static function getRateLimitSettings()
-    {
-        $rateLimits = config('rate_limit') ?? [];
-
-        foreach ($rateLimits as $module => $items) {
-            foreach ($items as $key => $value) {
-                Config::set("rate_limit.$module.$key.limit", settingItem("rate_limit.$module.$key.limit", 300));
-                Config::set("rate_limit.$module.$key.block_time", settingItem("rate_limit.$module.$key.block_time", 120));
-            }
-        }
-
     }
 }

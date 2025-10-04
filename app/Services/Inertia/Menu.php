@@ -59,6 +59,11 @@ class Menu
                         }
                     } else {
                         foreach ($items as $item) {
+
+                            if (!Route::has($item['route'])) {
+                                continue;
+                            }
+
                             $canShow = true;
 
                             if (isset($item['service']) && !filter_var($item['service'], FILTER_VALIDATE_BOOL)) {
@@ -88,6 +93,9 @@ class Menu
                 continue;
             }
 
+            if (!Route::has($value['route'])) {
+                continue;
+            }
 
             $canShow = true;
 

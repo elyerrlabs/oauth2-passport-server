@@ -40,16 +40,20 @@ Route::middleware(['throttle:transaction:admin'])->group(function () {
         'index'
     ])->name('transactions.index');
 
-    Route::resource('/plans', PlanController::class)->except('edit', 'create');
 
-    Route::delete('/plans/{plan}/scopes/{scope}', [
-        PlanScopeController::class,
-        'revoke'
-    ])->name('plans.scopes.revoke');
+    if (config('module.transaction.routes.plans_enabled', true)) {
 
-    Route::delete('/plans/{plan}/prices/{price}', [
-        PlanPriceController::class,
-        'destroy'
-    ])->name('plans.prices.destroy');
+        Route::resource('/plans', PlanController::class)->except('edit', 'create');
+
+        Route::delete('/plans/{plan}/scopes/{scope}', [
+            PlanScopeController::class,
+            'revoke'
+        ])->name('plans.scopes.revoke');
+
+        Route::delete('/plans/{plan}/prices/{price}', [
+            PlanPriceController::class,
+            'destroy'
+        ])->name('plans.prices.destroy');
+    }
 
 });

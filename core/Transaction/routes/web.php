@@ -29,18 +29,18 @@ use Core\Transaction\Http\Controllers\Web\UserSubscriptionController;
 
 Route::middleware(['throttle:transaction:web'])->group(function () {
 
-    Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
+    if (config('module.transaction.routes.subscriptions_enabled', true)) {
 
-    Route::post('/subscriptions', [UserSubscriptionController::class, 'subscription'])->name('subscriptions.pay');
+        Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::post('/subscriptions', [UserSubscriptionController::class, 'subscription'])->name('subscriptions.pay');
+        Route::post('/subscriptions/renew', [UserSubscriptionController::class, 'renew'])->name('subscriptions.renew');
+        Route::put('/packages/{package_id}/recurring', [UserSubscriptionController::class, 'recurringPayment'])->name('recurring.payment');
+    }
 
     Route::get('/subscriptions/{transaction_code}', [UserSubscriptionController::class, 'show'])->name('subscriptions.show');
 
-    Route::post('/subscriptions/renew', [UserSubscriptionController::class, 'renew'])->name('subscriptions.renew');
-
     Route::put('/subscriptions/cancel/{transaction_id}', [UserSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
 
-
-    Route::put('/packages/{package_id}/recurring', [UserSubscriptionController::class, 'recurringPayment'])->name('recurring.payment');
 
     Route::put('/subscriptions/{transaction}/activate', [
         UserSubscriptionController::class,
