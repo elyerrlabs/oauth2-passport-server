@@ -158,6 +158,26 @@ class Menu
             "guest_routes" => [
                 "home_page" => url(config('system.home_page')),
             ],
+            "developers" => [
+                'id' => 'dev',
+                'name' => __('Developers'),
+                'icon' => 'mdi-tools',
+                'show' => intval(config('routes.users.developers')) ? true : false,
+                'menu' => [
+                    [
+                        'name' => __('Applications'),
+                        'route' => route('passport.clients.index'),
+                        'icon' => 'mdi-connection',
+                        'show' => intval(config('routes.users.clients')) ? true : false
+                    ],
+                    [
+                        'name' => __('API Key'),
+                        'route' => route('passport.personal.tokens.index'),
+                        'icon' => 'mdi-xml',
+                        'show' => intval(config('routes.users.api')) ? true : false,
+                    ],
+                ]
+            ],
             "auth_routes" => [
                 "login" => route('login'),
                 "forgot_password" => route('forgot-password'),
@@ -209,27 +229,6 @@ class Menu
                     'route' => 'admin.policies.terms-and-conditions',
                     'icon' => "mdi-file-sign",
                     'show' => !empty($user) ? $user->canAccessMenu("administrator:settings") : false,
-                ]
-            ],
-
-            "developers" => [
-                'id' => 'dev',
-                'name' => __('Developers'),
-                'icon' => 'mdi-tools',
-                'show' => intval(config('routes.users.developers')) ? true : false,
-                'menu' => [
-                    [
-                        'name' => __('Applications'),
-                        'route' => 'passport.clients.index',
-                        'icon' => 'mdi-connection',
-                        'show' => intval(config('routes.users.clients')) ? true : false
-                    ],
-                    [
-                        'name' => __('API Key'),
-                        'route' => 'passport.personal.tokens.index',
-                        'icon' => 'mdi-xml',
-                        'show' => intval(config('routes.users.api')) ? true : false,
-                    ],
                 ]
             ],
         ];
