@@ -45,10 +45,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div>
                             <h1 class="text-xl font-semibold text-gray-900">
-                                Account Information
+                                {{ __("Account Information") }}
                             </h1>
                             <p class="text-sm text-gray-600 mt-1">
-                                Manage your personal details
+                                {{ __("Manage your personal details") }}
                             </p>
                         </div>
                     </div>
@@ -61,7 +61,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Card Header -->
                     <div class="px-6 py-4 border-b border-gray-100">
                         <h2 class="text-lg font-medium text-gray-900">
-                            Personal Details
+                            {{ __("Personal Details") }}
                         </h2>
                     </div>
 
@@ -338,7 +338,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.success(e.response.data.message);
+                    this.$notify.error(e.response.data.message);
                 }
             }
         },

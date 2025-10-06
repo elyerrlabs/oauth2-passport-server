@@ -26,14 +26,34 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Compact Header -->
                 <div class="mb-8">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        <div
+                            class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-5 h-5 text-blue-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                />
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-xl font-semibold text-gray-900">Two-Factor Authentication</h1>
-                            <p class="text-sm text-gray-600 mt-1">Secure your account with an extra layer of protection</p>
+                            <h1 class="text-xl font-semibold text-gray-900">
+                                {{ "Two-Factor Authentication" }}
+                            </h1>
+                            <p class="text-sm text-gray-600 mt-1">
+                                {{
+                                    __(
+                                        "Secure your account with an extra layer of protection"
+                                    )
+                                }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -43,62 +63,146 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Left Column - Status & Actions -->
                     <div class="lg:col-span-2 space-y-6">
                         <!-- Security Status Card -->
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                        >
                             <div class="flex items-center justify-between mb-6">
                                 <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                    <div
+                                        class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                                    >
+                                        <svg
+                                            class="w-5 h-5 text-blue-600"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                                            />
                                         </svg>
                                     </div>
                                     <div>
-                                        <h2 class="text-lg font-semibold text-gray-900">Security Status</h2>
-                                        <p class="text-sm text-gray-500">Current two-factor authentication status</p>
+                                        <h2
+                                            class="text-lg font-semibold text-gray-900"
+                                        >
+                                            {{ __("Security Status") }}
+                                        </h2>
+                                        <p class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Current two-factor authentication status"
+                                                )
+                                            }}
+                                        </p>
                                     </div>
                                 </div>
-                                <div :class="[
-                                    'px-4 py-2 rounded-lg font-medium text-sm border',
-                                    user.m2fa 
-                                        ? 'bg-green-100 text-green-700 border-green-200' 
-                                        : 'bg-red-100 text-red-700 border-red-200'
-                                ]">
+                                <div
+                                    :class="[
+                                        'px-4 py-2 rounded-lg font-medium text-sm border',
+                                        user.m2fa
+                                            ? 'bg-green-100 text-green-700 border-green-200'
+                                            : 'bg-red-100 text-red-700 border-red-200',
+                                    ]"
+                                >
                                     <span class="flex items-center space-x-1">
-                                        <svg v-if="user.m2fa" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                        <svg
+                                            v-if="user.m2fa"
+                                            class="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                                            />
                                         </svg>
-                                        <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                        <svg
+                                            v-else
+                                            class="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                                            />
                                         </svg>
-                                        <span>{{ user.m2fa ? 'Protected' : 'At Risk' }}</span>
+                                        <span>{{
+                                            user.m2fa ? __("Protected") : __("At Risk")
+                                        }}</span>
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Status Message -->
-                            <div :class="[
-                                'p-4 rounded-lg border',
-                                user.m2fa 
-                                    ? 'bg-green-50 border-green-200 text-green-800' 
-                                    : 'bg-amber-50 border-amber-200 text-amber-800'
-                            ]">
+                            <div
+                                :class="[
+                                    'p-4 rounded-lg border',
+                                    user.m2fa
+                                        ? 'bg-green-50 border-green-200 text-green-800'
+                                        : 'bg-amber-50 border-amber-200 text-amber-800',
+                                ]"
+                            >
                                 <div class="flex items-center space-x-3">
-                                    <svg v-if="user.m2fa" class="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                    <svg
+                                        v-if="user.m2fa"
+                                        class="w-5 h-5 text-green-600 flex-shrink-0"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                                        />
                                     </svg>
-                                    <svg v-else class="w-5 h-5 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                    <svg
+                                        v-else
+                                        class="w-5 h-5 text-amber-600 flex-shrink-0"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                                        />
                                     </svg>
                                     <div>
                                         <p class="font-medium text-sm">
-                                            {{ user.m2fa 
-                                                ? 'Your account is secured with 2FA' 
-                                                : 'Enable 2FA to protect your account' 
+                                            {{
+                                                user.m2fa
+                                                    ? __(
+                                                          "Your account is secured with 2FA"
+                                                      )
+                                                    : __(
+                                                          "Enable 2FA to protect your account"
+                                                      )
                                             }}
                                         </p>
                                         <p class="text-xs opacity-80 mt-1">
-                                            {{ user.m2fa 
-                                                ? 'Unauthorized access attempts will be blocked' 
-                                                : 'Your account is vulnerable to unauthorized access' 
+                                            {{
+                                                user.m2fa
+                                                    ? __(
+                                                          "Unauthorized access attempts will be blocked"
+                                                      )
+                                                    : __(
+                                                          "Your account is vulnerable to unauthorized access"
+                                                      )
                                             }}
                                         </p>
                                     </div>
@@ -107,24 +211,50 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
 
                         <!-- Verification Card -->
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                        >
                             <div class="flex items-center space-x-3 mb-6">
-                                <div class="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                <div
+                                    class="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center"
+                                >
+                                    <svg
+                                        class="w-5 h-5 text-cyan-600"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                        />
                                     </svg>
                                 </div>
                                 <div>
-                                    <h2 class="text-lg font-semibold text-gray-900">Email Verification</h2>
-                                    <p class="text-sm text-gray-500">Verify your identity with a secure code</p>
+                                    <h2
+                                        class="text-lg font-semibold text-gray-900"
+                                    >
+                                        {{ __("Email Verification") }}
+                                    </h2>
+                                    <p class="text-sm text-gray-500">
+                                        {{
+                                            __(
+                                                "Verify your identity with a secure code"
+                                            )
+                                        }}
+                                    </p>
                                 </div>
                             </div>
 
                             <!-- Code Input Section -->
                             <div class="space-y-4">
                                 <div class="space-y-3">
-                                    <label class="block text-sm font-medium text-gray-700">
-                                        Verification Code
+                                    <label
+                                        class="block text-sm font-medium text-gray-700"
+                                    >
+                                        {{ __("Verification Code") }}
                                     </label>
                                     <div class="relative">
                                         <input
@@ -133,7 +263,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             maxlength="6"
                                             placeholder="Enter 6-digit code"
                                             class="w-full pl-4 pr-32 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm font-mono placeholder-gray-400"
-                                            :class="errors.token ? 'border-red-500 focus:ring-red-500' : ''"
+                                            :class="
+                                                errors.token
+                                                    ? 'border-red-500 focus:ring-red-500'
+                                                    : ''
+                                            "
                                             @keyup.enter="activateFactor"
                                         />
                                         <button
@@ -141,19 +275,54 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             :disabled="sendingCode"
                                             class="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs"
                                         >
-                                            <svg v-if="sendingCode" class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
-                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            <svg
+                                                v-if="sendingCode"
+                                                class="w-3 h-3 animate-spin"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <circle
+                                                    class="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    stroke-width="4"
+                                                ></circle>
+                                                <path
+                                                    class="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
                                             </svg>
-                                            <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                                            <svg
+                                                v-else
+                                                class="w-3 h-3"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M13 5l7 7-7 7M5 5l7 7-7 7"
+                                                />
                                             </svg>
-                                            <span>{{ sendingCode ? 'Sending...' : 'Get Code' }}</span>
+                                            <span>{{
+                                                sendingCode
+                                                    ? "Sending..."
+                                                    : "Get Code"
+                                            }}</span>
                                         </button>
                                     </div>
                                     <v-error :error="errors.token" />
                                     <p class="text-xs text-gray-500">
-                                        Check your email for the 6-digit verification code
+                                        {{
+                                            __(
+                                                "Check your email for the 6-digit verification code"
+                                            )
+                                        }}
                                     </p>
                                 </div>
 
@@ -161,26 +330,67 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="pt-4">
                                     <button
                                         @click="activateFactor"
-                                        :disabled="loading || (!token && !user.m2fa)"
+                                        :disabled="
+                                            loading || (!token && !user.m2fa)
+                                        "
                                         :class="[
                                             'w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm',
                                             user.m2fa
                                                 ? 'bg-red-600 hover:bg-red-700 text-white'
-                                                : 'bg-green-600 hover:bg-green-700 text-white'
+                                                : 'bg-green-600 hover:bg-green-700 text-white',
                                         ]"
                                     >
-                                        <svg v-if="loading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        <svg
+                                            v-if="loading"
+                                            class="w-4 h-4 animate-spin"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                class="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                stroke-width="4"
+                                            ></circle>
+                                            <path
+                                                class="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
                                         </svg>
-                                        <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path v-if="user.m2fa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>
-                                            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                        <svg
+                                            v-else
+                                            class="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                v-if="user.m2fa"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
+                                            />
+                                            <path
+                                                v-else
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                            />
                                         </svg>
                                         <span>
-                                            {{ loading 
-                                                ? (user.m2fa ? 'Disabling...' : 'Activating...')
-                                                : (user.m2fa ? 'Disable 2FA' : 'Activate 2FA')
+                                            {{
+                                                loading
+                                                    ? user.m2fa
+                                                        ? "Disabling..."
+                                                        : "Activating..."
+                                                    : user.m2fa
+                                                    ? "Disable 2FA"
+                                                    : "Activate 2FA"
                                             }}
                                         </span>
                                     </button>
@@ -193,68 +403,180 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="lg:col-span-1">
                         <div class="space-y-4">
                             <!-- Security Features -->
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                            <div
+                                class="bg-white rounded-xl shadow-sm border border-gray-200 p-5"
+                            >
                                 <div class="flex items-center space-x-3 mb-4">
-                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    <div
+                                        class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"
+                                    >
+                                        <svg
+                                            class="w-4 h-4 text-purple-600"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M13 10V3L4 14h7v7l9-11h-7z"
+                                            />
                                         </svg>
                                     </div>
-                                    <h3 class="text-base font-semibold text-gray-900">Coming Features</h3>
+                                    <h3
+                                        class="text-base font-semibold text-gray-900"
+                                    >
+                                        {{ __("Coming Features") }}
+                                    </h3>
                                 </div>
 
                                 <div class="space-y-3">
                                     <!-- Authenticator App -->
-                                    <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                        <div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                            <svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                    <div
+                                        class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+                                    >
+                                        <div
+                                            class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        >
+                                            <svg
+                                                class="w-4 h-4 text-cyan-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                                                />
                                             </svg>
                                         </div>
                                         <div>
-                                            <h4 class="text-sm font-medium text-gray-900 mb-1">Authenticator App</h4>
-                                            <p class="text-xs text-gray-600">Google Authenticator & Authy integration</p>
+                                            <h4
+                                                class="text-sm font-medium text-gray-900 mb-1"
+                                            >
+                                                {{ __("Authenticator App") }}
+                                            </h4>
+                                            <p class="text-xs text-gray-600">
+                                                {{
+                                                    __(
+                                                        "Google Authenticator & Authy integration"
+                                                    )
+                                                }}
+                                            </p>
                                         </div>
                                     </div>
 
                                     <!-- QR Code -->
-                                    <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                        <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                                    <div
+                                        class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+                                    >
+                                        <div
+                                            class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        >
+                                            <svg
+                                                class="w-4 h-4 text-emerald-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+                                                />
                                             </svg>
                                         </div>
                                         <div>
-                                            <h4 class="text-sm font-medium text-gray-900 mb-1">QR Setup</h4>
-                                            <p class="text-xs text-gray-600">Instant setup with QR code scanning</p>
+                                            <h4
+                                                class="text-sm font-medium text-gray-900 mb-1"
+                                            >
+                                                {{ __("QR Setup") }}
+                                            </h4>
+                                            <p class="text-xs text-gray-600">
+                                                {{
+                                                    __(
+                                                        "Instant setup with QR code scanning"
+                                                    )
+                                                }}
+                                            </p>
                                         </div>
                                     </div>
 
                                     <!-- Backup -->
-                                    <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                                    <div
+                                        class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+                                    >
+                                        <div
+                                            class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        >
+                                            <svg
+                                                class="w-4 h-4 text-amber-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                                                />
                                             </svg>
                                         </div>
                                         <div>
-                                            <h4 class="text-sm font-medium text-gray-900 mb-1">Backup Codes</h4>
-                                            <p class="text-xs text-gray-600">Emergency recovery codes for backup</p>
+                                            <h4
+                                                class="text-sm font-medium text-gray-900 mb-1"
+                                            >
+                                                {{ __("Backup Codes") }}
+                                            </h4>
+                                            <p class="text-xs text-gray-600">
+                                                {{
+                                                    __(
+                                                        "Emergency recovery codes for backup"
+                                                    )
+                                                }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Security Tips -->
-                            <div class="bg-blue-50 rounded-xl border border-blue-200 p-4">
+                            <div
+                                class="bg-blue-50 rounded-xl border border-blue-200 p-4"
+                            >
                                 <div class="flex items-center space-x-2 mb-2">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    <svg
+                                        class="w-4 h-4 text-blue-600"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        />
                                     </svg>
-                                    <h4 class="text-sm font-medium text-blue-900">Security Tip</h4>
+                                    <h4
+                                        class="text-sm font-medium text-blue-900"
+                                    >
+                                        {{ __("Security Tip") }}
+                                    </h4>
                                 </div>
-                                <p class="text-xs text-blue-800 leading-relaxed">
-                                    Always keep your backup codes in a secure location and never share your 2FA codes with anyone.
+                                <p
+                                    class="text-xs text-blue-800 leading-relaxed"
+                                >
+                                    {{
+                                        __(
+                                            "Always keep your backup codes in a secure location and never share your 2FA codes with anyone."
+                                        )
+                                    }}
                                 </p>
                             </div>
                         </div>
@@ -292,20 +614,12 @@ export default {
                     this.$page.props.user.links.request_2fa_code
                 );
                 if (res.status === 201) {
-                    this.$q.notify({
-                        type: "positive",
-                        message: res.data.message,
-                        timeout: 3000,
-                    });
+                    this.$notify.success(res.data.message);
                     this.errors = {};
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    this.$notify.error(e.response.data.message);
                 }
             } finally {
                 this.sendingCode = false;
@@ -314,11 +628,7 @@ export default {
 
         async activateFactor() {
             if (!this.token && !this.user.m2fa) {
-                this.$q.notify({
-                    type: "warning",
-                    message: this.__("Please enter a verification code"),
-                    timeout: 3000,
-                });
+                this.$notify.error(__("Please enter a verification code"));
                 return;
             }
 
@@ -335,11 +645,7 @@ export default {
 
                 if (res.status === 201) {
                     this.token = "";
-                    this.$q.notify({
-                        type: "positive",
-                        message: res.data.message,
-                        timeout: 3000,
-                    });
+                    this.$notify.success(res.data.message);
                     setTimeout(() => {
                         window.location.reload();
                     }, 1500);
@@ -350,11 +656,7 @@ export default {
                 }
 
                 if (err?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: err.response.data.message,
-                        timeout: 3000,
-                    });
+                    this.$notify.error(err.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -363,4 +665,3 @@ export default {
     },
 };
 </script>
- 

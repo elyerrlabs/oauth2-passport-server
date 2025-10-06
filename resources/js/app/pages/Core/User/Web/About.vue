@@ -42,10 +42,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div class="flex-1">
                             <h1 class="text-2xl font-bold text-slate-800 mb-1">
-                                Welcome back, {{ user.name }}
+                                {{ __("Welcome back") }}, {{ user.name }}
                             </h1>
                             <p class="text-slate-600 text-sm">
-                                Manage your applications and preferences
+                                {{
+                                    __(
+                                        "Manage your applications and preferences"
+                                    )
+                                }}
                             </p>
                         </div>
                         <div class="hidden sm:flex items-center space-x-3">
@@ -58,7 +62,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     {{ userRoutes.length }}
                                 </div>
                                 <div class="text-xs text-slate-500">
-                                    Applications
+                                    {{ __("Applications") }}
                                 </div>
                             </div>
                         </div>
@@ -99,10 +103,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <h2
                                             class="text-lg font-semibold text-slate-800"
                                         >
-                                            My Applications
+                                            {{ __("My Applications") }}
                                         </h2>
                                         <p class="text-sm text-slate-600">
-                                            Access your connected applications
+                                            {{
+                                                __(
+                                                    "Access your connected applications"
+                                                )
+                                            }}
                                         </p>
                                     </div>
                                 </div>
@@ -156,10 +164,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <h3
                                     class="text-lg font-medium text-slate-500 mb-2"
                                 >
-                                    No applications found
+                                    {{ __("No applications found") }}
                                 </h3>
                                 <p class="text-sm text-slate-400">
-                                    Try adjusting your search terms
+                                    {{ __("Try adjusting your search terms") }}
                                 </p>
                             </div>
 
@@ -223,8 +231,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 class="text-sm text-slate-600 leading-relaxed"
                                             >
                                                 {{
-                                                    app.description ||
-                                                    "No description available"
+                                                    __(
+                                                        "No description available"
+                                                    )
                                                 }}
                                             </p>
                                         </div>
@@ -233,7 +242,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             @click="openApplication(app)"
                                             class="w-full bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-300 text-sm flex items-center justify-center space-x-2"
                                         >
-                                            <span>Launch Application</span>
+                                            <span>{{
+                                                __("Launch Application")
+                                            }}</span>
                                             <svg
                                                 class="w-4 h-4"
                                                 fill="none"
@@ -283,10 +294,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <h2
                                         class="text-lg font-semibold text-slate-800"
                                     >
-                                        Settings & Preferences
+                                        {{ __("Settings & Preferences") }}
                                     </h2>
                                     <p class="text-sm text-slate-600">
-                                        Manage your account settings
+                                        {{ __("Manage your account settings") }}
                                     </p>
                                 </div>
                             </div>
@@ -350,8 +361,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 class="text-sm text-slate-600 leading-relaxed"
                                             >
                                                 {{
-                                                    setting.description ||
-                                                    "Configure your preferences"
+                                                    __(
+                                                        "Configure your preferences"
+                                                    )
                                                 }}
                                             </p>
                                         </div>
@@ -360,7 +372,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             @click="openSetting(setting)"
                                             class="w-full bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-300 text-sm flex items-center justify-center space-x-2"
                                         >
-                                            <span>Configure</span>
+                                            <span>{{ __("Configure") }}</span>
                                             <svg
                                                 class="w-4 h-4"
                                                 fill="none"

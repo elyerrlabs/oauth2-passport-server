@@ -45,10 +45,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div>
                             <h1 class="text-lg font-semibold text-gray-900">
-                                Update Password
+                                {{ __("Update Password") }}
                             </h1>
                             <p class="text-sm text-gray-600 mt-1">
-                                Secure your account
+                                {{ __("Secure your account") }}
                             </p>
                         </div>
                     </div>
@@ -65,7 +65,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <label
                                     class="block text-sm font-medium text-gray-700"
                                 >
-                                    Current Password
+                                    {{ __("Current Password") }}
                                 </label>
                                 <div class="relative">
                                     <input
@@ -133,7 +133,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <label
                                     class="block text-sm font-medium text-gray-700"
                                 >
-                                    New Password
+                                    {{ __("New Password") }}
                                 </label>
                                 <div class="relative">
                                     <input
@@ -197,7 +197,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div
                                         class="flex items-center justify-between text-xs text-gray-600 mb-1"
                                     >
-                                        <span>Password strength:</span>
+                                        <span
+                                            >{{
+                                                __("Password strength")
+                                            }}:</span
+                                        >
                                         <span class="font-medium">{{
                                             passwordStrengthText
                                         }}</span>
@@ -224,7 +228,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <label
                                     class="block text-sm font-medium text-gray-700"
                                 >
-                                    Confirm Password
+                                    {{ __("Confirm Password") }}
                                 </label>
                                 <div class="relative">
                                     <input
@@ -399,7 +403,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </svg>
                             </div>
                             <h2 class="text-base font-semibold text-gray-900">
-                                Password Security Tips
+                                {{ __("Password Security Tips") }}
                             </h2>
                         </div>
                         <ul class="space-y-3 text-sm">
@@ -418,7 +422,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     />
                                 </svg>
                                 <span class="text-gray-600"
-                                    >Use at least 8 characters</span
+                                    >{{ __("Use at least 8 character") }}s</span
                                 >
                             </li>
                             <li class="flex items-start">
@@ -435,10 +439,29 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         d="M5 13l4 4L19 7"
                                     />
                                 </svg>
-                                <span class="text-gray-600"
-                                    >Include uppercase and lowercase
-                                    letters</span
+                                <span class="text-gray-600">{{
+                                    __(
+                                        "Include uppercase and lowercase letters"
+                                    )
+                                }}</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg
+                                    class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                 >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 13l4 4L19 7"
+                                    />
+                                </svg>
+                                <span class="text-gray-600">{{
+                                    __("Add numbers and special characters")
+                                }}</span>
                             </li>
                             <li class="flex items-start">
                                 <svg
@@ -455,27 +478,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     />
                                 </svg>
                                 <span class="text-gray-600"
-                                    >Add numbers and special characters</span
-                                >
-                            </li>
-                            <li class="flex items-start">
-                                <svg
-                                    class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 13l4 4L19 7"
-                                    />
-                                </svg>
-                                <span class="text-gray-600"
-                                    >Avoid common words or personal
-                                    information</span
-                                >
+                                    >{{
+                                        __(
+                                            "Avoid common words or personal information"
+                                        )
+                                    }}
+                                </span>
                             </li>
                         </ul>
                     </div>
