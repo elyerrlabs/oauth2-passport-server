@@ -27,8 +27,10 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { setupI18n, __ } from "./app/config/locale.js";
 import { $notify } from "./app/config/notify.js";
-import VueSweetalert2 from 'vue-sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+
+import "./config/editor.js";
 
 //import { $echo } from "./app/config/echo.js";
 import { $server } from "./app/config/axios.js";

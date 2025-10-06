@@ -25,6 +25,8 @@ import "@tailwindplus/elements";
 import { $notify } from "./app/config/notify.js";
 window.$notify = $notify;
 
+import "./config/editor.js";
+
 import Quill from "quill";
 import "quill/dist/quill.core.css";
 window.Quill = Quill;
