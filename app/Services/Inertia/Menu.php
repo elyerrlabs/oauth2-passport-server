@@ -155,19 +155,8 @@ class Menu
             "app_name" => config('app.name'),
             "org_name" => config("app.org_name"),
             "user" => static::authenticated_user(),
-            "policies" => [
-                "docs" => [
-                    'name' => __('Documentation'),
-                    'route' => route('documentation.index'),
-                    'icon' => 'mdi-book-cog',
-                    'show' => true
-                ],
-                "legal" => [
-                    'name' => __('Policies'),
-                    'route' => route('admin.policies.terms-and-conditions'),
-                    'icon' => "mdi-file-sign",
-                    'show' => !empty($user) ? $user->canAccessMenu("administrator:settings") : false,
-                ]
+            "guest_routes" => [
+                "home_page" => url(config('system.home_page')),
             ],
             "auth_routes" => [
                 "login" => route('login'),
@@ -177,33 +166,10 @@ class Menu
                 "dashboard" => route('user.dashboard'),
                 "profile" => "user.profile"
             ],
-            "guest_routes" => [
-                "home_page" => url(config('system.home_page')),
-            ],
-            "developers" => [
-                'id' => 'dev',
-                'name' => __('Developers'),
-                'icon' => 'mdi-tools',
-                'show' => intval(config('routes.users.developers')) ? true : false,
-                'menu' => [
-                    [
-                        'name' => __('Applications'),
-                        'route' => intval(config('routes.users.api')) ? route('passport.clients.index') : null,
-                        'icon' => 'mdi-connection',
-                        'show' => intval(config('routes.users.clients')) ? true : false
-                    ],
-                    [
-                        'name' => __('API Key'),
-                        'route' => intval(config('routes.users.api')) ? route('passport.personal.tokens.index') : null,
-                        'icon' => 'mdi-xml',
-                        'show' => intval(config('routes.users.api')) ? true : false,
-                    ],
-                ]
-            ],
             "allow_register" => Route::has('register'),
             "api" => []
         ];
-        return array_merge($keys, static::appendChildMenu($user));
+        return array_merge($keys, static::appendChildMenu($user), static::filterActiveRoutes($user));
     }
 
     /**
@@ -220,4 +186,85 @@ class Menu
             "providers" => array_keys(config('services.captcha.providers')),
         ];
     }
+
+    /**
+     * filter routes
+     * @param mixed $user
+     * @return array<array>
+     */
+    public static function filterActiveRoutes($user)
+    {
+        $user = auth()->user();
+
+        $routes = [
+            "policies" => [
+                "docs" => [
+                    'name' => __('Documentation'),
+                    'route' => 'documentation.index',
+                    'icon' => 'mdi-book-cog',
+                    'show' => true
+                ],
+                "legal" => [
+                    'name' => __('Policies'),
+                    'route' => 'admin.policies.terms-and-conditions',
+                    'icon' => "mdi-file-sign",
+                    'show' => !empty($user) ? $user->canAccessMenu("administrator:settings") : false,
+                ]
+            ],
+
+            "developers" => [
+                'id' => 'dev',
+                'name' => __('Developers'),
+                'icon' => 'mdi-tools',
+                'show' => intval(config('routes.users.developers')) ? true : false,
+                'menu' => [
+                    [
+                        'name' => __('Applications'),
+                        'route' => 'passport.clients.index',
+                        'icon' => 'mdi-connection',
+                        'show' => intval(config('routes.users.clients')) ? true : false
+                    ],
+                    [
+                        'name' => __('API Key'),
+                        'route' => 'passport.personal.tokens.index',
+                        'icon' => 'mdi-xml',
+                        'show' => intval(config('routes.users.api')) ? true : false,
+                    ],
+                ]
+            ],
+        ];
+
+        $filtered = [];
+
+        foreach ($routes as $key => $group) {
+            $groupData = [];
+
+            foreach ($group as $subKey => $item) {
+                if ($subKey === 'menu' && is_array($item)) {
+                    $subMenu = array_filter($item, function ($subItem) {
+                        return $subItem['show'] && Route::has($subItem['route']);
+                    });
+
+                    if (!empty($subMenu)) {
+                        $groupData[$subKey] = array_map(function ($subItem) {
+                            $subItem['route'] = route($subItem['route']);
+                            return $subItem;
+                        }, $subMenu);
+                    }
+                } elseif (is_array($item)) {
+                    if ($item['show'] && Route::has($item['route'])) {
+                        $item['route'] = route($item['route']);
+                        $groupData[$subKey] = $item;
+                    }
+                }
+            }
+
+            if (!empty($groupData)) {
+                $filtered[$key] = $groupData;
+            }
+        }
+
+        return $filtered;
+    }
+
 }
