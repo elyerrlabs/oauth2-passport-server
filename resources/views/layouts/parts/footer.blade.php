@@ -44,13 +44,15 @@
                     class="text-lg font-semibold text-[var(--color-text-primary)] mb-4 pb-2 border-b border-[var(--color-border)]">
                     {{ __('Quick Links') }}</h4>
                 <ul class="space-y-2">
-                    <li>
-                        <a href="{{ route('documentation.index') }}"
-                            class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
-                            <i class="mdi mdi-book-open-page-variant mr-2 text-sm"></i>
-                            {{ __('Documentation') }}
-                        </a>
-                    </li>
+                    @if (Route::has('documentation.index'))
+                        <li>
+                            <a href="{{ route('documentation.index') }}"
+                                class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
+                                <i class="mdi mdi-book-open-page-variant mr-2 text-sm"></i>
+                                {{ __('Documentation') }}
+                            </a>
+                        </li>
+                    @endif
                     @if (Route::has('passport.clients.index'))
                         <li>
                             <a href="{{ route('passport.clients.index') }}"
@@ -199,7 +201,8 @@
     </div>
 
     <!-- Wallet Modal -->
-    <div id="walletModal" class="fixed inset-0 bg-black/80 bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div id="walletModal"
+        class="fixed inset-0 bg-black/80 bg-opacity-70 flex items-center justify-center z-50 hidden">
         <div
             class="bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-xl w-full max-w-md mx-4 max-h-[90vh] overflow-hidden flex flex-col">
             <div

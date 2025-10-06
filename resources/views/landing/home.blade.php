@@ -243,10 +243,12 @@
                         {{ __('Secure OAuth2 + OpenID Connect server that connects applications, microservices, and platforms with centralized session, users and services management') }}
                     </p>
                     <div class="flex flex-wrap justify-center gap-4 mb-12">
-                        <a href="{{ route('documentation.index') }}" class="btn-primary inline-flex items-center">
-                            <i class="mdi mdi-book-open-page-variant mr-2"></i>
-                            {{ __('Documentation') }}
-                        </a>
+                        @if (Route::has('documentation.index'))
+                            <a href="{{ route('documentation.index') }}" class="btn-primary inline-flex items-center">
+                                <i class="mdi mdi-book-open-page-variant mr-2"></i>
+                                {{ __('Documentation') }}
+                            </a>
+                        @endif
                         @if (Route::has('passport.clients.index'))
                             <a href="{{ route('passport.clients.index') }}" class="btn-success inline-flex items-center">
                                 <i class="mdi mdi-rocket-launch mr-2"></i>

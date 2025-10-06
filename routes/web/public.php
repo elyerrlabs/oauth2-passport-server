@@ -30,7 +30,10 @@ use App\Http\Controllers\Web\Home\HomeController;
 Route::middleware(['throttle:general:public'])->group(function () {
 
     Route::get("/", [HomeController::class, 'homePage'])->name('welcome');
-    Route::get("/documentation", [DocumentationController::class, 'index'])->name('documentation.index');
+
+    if (config('routes.documentation.index', true)) {
+        Route::get("/documentation", [DocumentationController::class, 'index'])->name('documentation.index');
+    }
 
 
     Route::group([

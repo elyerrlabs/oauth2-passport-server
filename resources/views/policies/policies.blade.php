@@ -89,7 +89,7 @@
                 @csrf
                 <input type="hidden" name="current_route" value="{{ url()->current() }}">
 
-                <div class="max-h-[100vh] overflow-y-auto custom-scrollbar pr-2 -mr-2">
+                <div class="p-2 min-h-screen">
                     @yield('form')
                 </div>
 
