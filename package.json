@@ -34,7 +34,6 @@
     "monaco-editor": "^0.53.0",
     "notyf": "^3.10.0",
     "quasar": "^2.18.1",
-    "quill": "^2.0.3",
     "sass": "^1.85.1",
     "stream-browserify": "^3.0.0",
     "vue": "^3.2.41",
