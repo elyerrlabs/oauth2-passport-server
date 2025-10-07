@@ -124,6 +124,24 @@
                     </div>
                 @endif
 
+                @if (config('system.demo.domain.enabled', false))
+                    <div class="mb-6 p-3 text-center border border-yellow-300 rounded-xl">
+                        <div
+                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl pb-3  bg-yellow-50/60 text-yellow-800/90 shadow-sm backdrop-blur-sm">
+                            <i class="mdi mdi-eye-outline text-yellow-600 text-lg"></i>
+                            <span class="text-sm font-medium text-gray-800">
+                                {{ __('Demo environment active for preview purposes') }}
+                            </span>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-500 p-4">
+                            <a href="{{ config('system.demo.domain.url') }}" target="_blank"
+                                class="hover:text-yellow-700 hover:bg-blue-700 cursor-pointer font-medium transition rounded-2xl bg-blue-600 text-white p-3">
+                                {{ config('system.demo.domain.url') }}
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
                 <form action="{{ route('login') }}" method="POST" class="space-y-6">
                     <div class="floating-label">
                         <input type="email" id="email" name="email"
@@ -229,20 +247,22 @@
                     </div>
                 </div>
 
-                <div class="mt-8 pt-6 border-t border-indigo-400">
-                    <p class="text-sm text-indigo-100">
-                    <div class="text-center">
-                        <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
-                            {{ config('app.org_name') }}
-                        </a>
-                    </div>
+                @if (Route::has('welcome'))
+                    <div class="mt-8 pt-6 border-t border-indigo-400">
+                        <p class="text-sm text-indigo-100">
+                        <div class="text-center">
+                            <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
+                                {{ config('app.org_name') }}
+                            </a>
+                        </div>
 
-                    {{-- 
+                        {{-- 
                         {{ __('Need help?') }} <a href="#"
                         class="font-semibold hover:underline">{{ __('Contact our team') }}</a>
                         --}}
-                    </p>
-                </div>
+                        </p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

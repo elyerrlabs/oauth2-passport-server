@@ -29,7 +29,9 @@ use App\Http\Controllers\Web\Home\HomeController;
 
 Route::middleware(['throttle:general:public'])->group(function () {
 
-    Route::get("/", [HomeController::class, 'homePage'])->name('welcome');
+    if (config('routes.guest.landing', true)) {
+        Route::get("/", [HomeController::class, 'homePage'])->name('welcome');
+    }
 
     if (config('routes.documentation.index', true)) {
         Route::get("/documentation", [DocumentationController::class, 'index'])->name('documentation.index');

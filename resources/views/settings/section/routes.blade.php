@@ -66,6 +66,26 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="space-y-4 mt-4">
+                    {{-- Landing page --}}
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-800 mb-1">{{ __('Landing page') }}</label>
+                            <p class="text-sm text-gray-500">
+                                {{ __('Allow visitors view the landing page') }}</p>
+                        </div>
+                        <div class="ml-4">
+                            <select name="routes[guest][landing]"
+                                class="w-32 px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <option value="1" {{ config('routes.guest.landing', true) ? 'selected' : '' }}>
+                                    {{ __('Enabled') }}</option>
+                                <option value="0" {{ !config('routes.guest.landing', true) ? 'selected' : '' }}>
+                                    {{ __('Disabled') }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- User Dashboard Features Section -->
@@ -192,7 +212,8 @@
                         {{-- Plan routes for admin --}}
                         <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
                             <div class="flex-1">
-                                <label class="block text-sm font-medium text-gray-800 mb-1">{{ __('Plan routes') }}</label>
+                                <label
+                                    class="block text-sm font-medium text-gray-800 mb-1">{{ __('Plan routes') }}</label>
                                 <p class="text-sm text-gray-500">
                                     {{ __('Disable plans routes for admin') }}</p>
                             </div>

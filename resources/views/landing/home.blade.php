@@ -249,8 +249,8 @@
                                 {{ __('Documentation') }}
                             </a>
                         @endif
-                        @if (Route::has('passport.clients.index'))
-                            <a href="{{ route('passport.clients.index') }}" class="btn-success inline-flex items-center">
+                        @if (config('system.demo.domain.enabled', false))
+                            <a href="{{ config('system.demo.domain.url') }}" class="btn-success inline-flex items-center">
                                 <i class="mdi mdi-rocket-launch mr-2"></i>
                                 {{ __('Try Now') }}
                             </a>

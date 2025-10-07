@@ -96,10 +96,12 @@
             <!-- Recovery Form -->
             <div class="w-full md:w-1/2 bg-white p-8">
                 <!-- Back Button -->
-                <a href="{{ route('welcome') }}"
-                    class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 mb-6 back-button">
-                    <span class="mdi mdi-arrow-left mr-1"></span> {{ __('Back to Login') }}
-                </a>
+                @if (Route::has('welcome'))
+                    <a href="{{ route('welcome') }}"
+                        class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 mb-6 back-button">
+                        <span class="mdi mdi-arrow-left mr-1"></span> {{ __('Back to Login') }}
+                    </a>
+                @endif
 
                 <!-- Header -->
                 <div class="text-center mb-6">
@@ -196,18 +198,19 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="mt-8 pt-6 border-t border-indigo-400">
-                    <div class="text-center">
-                        <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
-                            {{ config('app.org_name') }}
-                        </a>
+                @if (Route::has('welcome'))
+                    <div class="mt-8 pt-6 border-t border-indigo-400">
+                        <div class="text-center">
+                            <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
+                                {{ config('app.org_name') }}
+                            </a>
+                        </div>
+                        <p class="text-sm text-indigo-100 text-center">
+                            <span class="mdi mdi-shield-lock-outline mr-1"></span>
+                            {{ __('Your security is our priority. All reset requests are logged and monitored.') }}
+                        </p>
                     </div>
-                    <p class="text-sm text-indigo-100 text-center">
-                        <span class="mdi mdi-shield-lock-outline mr-1"></span>
-                        {{ __('Your security is our priority. All reset requests are logged and monitored.') }}
-                    </p>
-                </div>
+                @endif
             </div>
         </div>
     </div>

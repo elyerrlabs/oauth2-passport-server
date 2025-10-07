@@ -101,8 +101,12 @@ class Handler extends ExceptionHandler
             }
         }
 
+        if ($e instanceof NotFoundHttpException && request()->acceptsHtml() && request()->path() == '/') {
+            return redirect()->route('login');
+        }
+
         if ($e instanceof ModelNotFoundException) {
-            throw new ReportError(__("Not Found"), 404);
+            throw new ReportError(__("Model not be found"), 404);
         }
 
         if ($e instanceof TokenMismatchException) {

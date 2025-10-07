@@ -328,23 +328,24 @@
                         </p>
                     </div>
                 </div>
+                @if (Route::has('welcome'))
+                    <div class="mt-8 pt-6 border-t border-indigo-400">
 
-                <div class="mt-8 pt-6 border-t border-indigo-400">
-
-                    <p class="text-sm text-indigo-100">
-                    <div class="text-center">
-                        <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
-                            {{ config('app.org_name') }}
-                        </a>
-                    </div>
-                    {{-- 
+                        <p class="text-sm text-indigo-100">
+                        <div class="text-center">
+                            <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
+                                {{ config('app.org_name') }}
+                            </a>
+                        </div>
+                        {{-- 
                         <span class="mdi mdi-information-outline mr-1"></span>
                         Need assistance? <a href="" class="font-semibold hover:underline">Contact our
                             support
                             team</a>
                             --}}
-                    </p>
-                </div>
+                        </p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

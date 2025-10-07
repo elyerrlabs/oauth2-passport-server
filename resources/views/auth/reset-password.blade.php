@@ -232,11 +232,13 @@
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-indigo-400">
-                    <div class="text-center">
-                        <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
-                            {{ config('app.org_name') }}
-                        </a>
-                    </div>
+                    @if (Route::has('welcome'))
+                        <div class="text-center">
+                            <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
+                                {{ config('app.org_name') }}
+                            </a>
+                        </div>
+                    @endif
                     <p class="text-sm text-indigo-100 text-center">
                         <span class="mdi mdi-clock-fast mr-1"></span>
                         {{ __('Password reset links expire after :minute minutes for security reasons.', ['minute' => config('auth.passwords.users.expire')]) }}
