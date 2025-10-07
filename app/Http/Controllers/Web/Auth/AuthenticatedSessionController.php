@@ -24,6 +24,7 @@ namespace App\Http\Controllers\Web\Auth;
  */
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\WebController;
 use App\Http\Requests\Auth\LoginRequest;
@@ -134,6 +135,6 @@ class AuthenticatedSessionController extends WebController
             return redirect($request->post_logout_redirect_uri);
         }
 
-        return redirect()->route('welcome');
+        return Route::has('welcome') ? redirect()->route('welcome') : redirect()->route('login');
     }
 }
