@@ -2736,5 +2736,12 @@
   "Format Code": "Formatear código",
   "Toggle Word Wrap": "Alternar ajuste de línea",
   "Toggle Minimap": "Alternar minimapa",
-  "Copied to clipboard!": "¡Copiado al portapapeles!"
+  "Copied to clipboard!": "¡Copiado al portapapeles!",
+  "Enable Development Site": "Habilitar sitio de desarrollo",
+  "Development Site Settings": "Configuración del sitio de desarrollo",
+  "Allow this instance to act as the development or demo environment for previewing updates.": "Permite que esta instancia funcione como el entorno de desarrollo o demostración para previsualizar actualizaciones.",
+  "Demo environment active for preview purposes": "Entorno de desarrollo activo solo para propositos de visualizar el sistema en su totalidad con una cuenta demo",
+  "Allow visitors view the landing page": "Permite a los visitantes ver el landing page o pagina de inicio",
+  "Landing page": "Pagina de inicio",
+  "Allow users to log in with demo credentials.": "Permite a los usuarios iniciar sección con credenciales de demostracion"
 }
