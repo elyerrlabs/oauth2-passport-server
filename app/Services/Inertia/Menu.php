@@ -166,13 +166,13 @@ class Menu
                 'menu' => [
                     [
                         'name' => __('Applications'),
-                        'route' => route('passport.clients.index'),
+                        'route' => Route::has('passport.clients.index') ? route('passport.clients.index') : '',
                         'icon' => 'mdi-connection',
                         'show' => intval(config('routes.users.clients')) ? true : false
                     ],
                     [
                         'name' => __('API Key'),
-                        'route' => route('passport.personal.tokens.index'),
+                        'route' => Route::has('passport.personal.tokens.index') ? route('passport.personal.tokens.index') : '',
                         'icon' => 'mdi-xml',
                         'show' => intval(config('routes.users.api')) ? true : false,
                     ],
