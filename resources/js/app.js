@@ -18,23 +18,23 @@
  * Author Contact: yerel9212@yahoo.es
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
- */ 
+ */
 
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import { setupI18n, __ } from "./app/config/locale.js";
+import { setupI18n, __ } from "./config/locale.js";
 
-import { customComponents } from "./app/config/customComponents.js";
-//import { $echo } from "./app/config/echo.js";
-import { $server } from "./app/config/axios.js";
-import { layouts } from "./app/config/layouts.js";
+import { customComponents } from "./config/customComponents.js";
+//import { $echo } from "./config/echo.js";
+import { $server } from "./config/axios.js";
+import { layouts } from "./config/layouts.js";
 
 //Quasar
 import { Quasar, Ripple, ClosePopup, Notify, Dialog, Loading } from "quasar";
 import "quasar/dist/quasar.css";
 import "@quasar/extras/material-icons/material-icons.css";
-import { QComponents } from "./app/config/quasar.js";
+import { QComponents } from "./config/quasar.js";
 
 //Vue date picker
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -50,8 +50,8 @@ window.__ = __;
 createInertiaApp({
   resolve: (name) =>
     resolvePageComponent(
-      `./app/pages/${name}.vue`,
-      import.meta.glob("./app/pages/**/*.vue")
+      `./pages/${name}.vue`,
+      import.meta.glob("./pages/**/*.vue")
     ),
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) });

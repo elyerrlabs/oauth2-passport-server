@@ -25,15 +25,15 @@ import "@tailwindplus/elements";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import { setupI18n, __ } from "./app/config/locale.js";
-import { $notify } from "./app/config/notify.js";
+import { setupI18n, __ } from "./config/locale.js";
+import { $notify } from "./config/notify.js";
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
 import "./config/editor.js";
 
-//import { $echo } from "./app/config/echo.js";
-import { $server } from "./app/config/axios.js";
+//import { $echo } from "./config/echo.js";
+import { $server } from "./config/axios.js";
 
 //icons https://pictogrammers.com/library/mdi/
 import "@mdi/font/css/materialdesignicons.css";
@@ -50,8 +50,8 @@ window.$server = $server;
 createInertiaApp({
   resolve: (name) =>
     resolvePageComponent(
-      `./app/pages/${name}.vue`,
-      import.meta.glob("./app/pages/**/*.vue")
+      `./pages/${name}.vue`,
+      import.meta.glob("./pages/**/*.vue")
     ),
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) });

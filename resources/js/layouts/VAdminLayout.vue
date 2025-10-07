@@ -36,7 +36,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <q-toolbar-title class="app-title">
                     <q-avatar size="40px" class="app-logo">
-                        <img src="../../../img/favicon.png" />
+                        <!--
+                            <img src="../../../img/favicon.png" />
+                            -->
                     </q-avatar>
                     <span class="app-name">{{ app_name }}</span>
                     <q-badge color="primary" class="admin-badge">{{
