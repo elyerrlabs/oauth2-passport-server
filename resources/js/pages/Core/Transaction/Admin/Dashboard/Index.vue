@@ -21,174 +21,295 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-transaction-layout>
-        <q-page class="q-pa-lg">
-            <!-- Header Section -->
-            <div class="row items-center q-mb-xl">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-3 mb-2">
+                <div class="p-2 bg-blue-50 rounded-lg">
+                    <i
+                        class="mdi mdi-chart-areaspline text-blue-600 text-lg"
+                    ></i>
+                </div>
                 <div>
-                    <div class="text-h4 text-primary text-weight-bold">
+                    <h1 class="text-2xl font-semibold text-gray-900">
                         {{ __("Dashboard Analytics") }}
-                    </div>
-                    <div class="text-subtitle1 text-grey-7">
+                    </h1>
+                    <p class="text-gray-500 text-sm mt-1">
                         {{
                             __(
                                 "Monitor your transaction metrics and performance"
                             )
                         }}
-                    </div>
+                    </p>
                 </div>
             </div>
+        </div>
 
-            <!-- Statistics Cards -->
-            <div class="row q-col-gutter-lg q-mb-xl">
-                <div
-                    v-for="card in cards"
-                    :key="card.label"
-                    class="col-xs-12 col-sm-6 col-md-4"
-                >
-                    <q-card class="stat-card q-pa-lg shadow-3" flat bordered>
-                        <div class="column full-height justify-between">
-                            <div
-                                class="text-caption text-weight-medium text-uppercase text-grey-6 q-mb-sm"
-                            >
-                                {{ card.label }}
-                            </div>
-                            <div class="row items-center justify-between">
-                                <div
-                                    class="text-h3 text-weight-bold text-primary"
-                                >
-                                    {{ card.value }}
-                                </div>
-                                <q-icon
-                                    :name="card.icon"
-                                    size="42px"
-                                    color="primary"
-                                    class="card-icon"
-                                />
-                            </div>
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+            <div
+                v-for="card in cards"
+                :key="card.label"
+                class="group bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-100"
+            >
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div
+                            class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1"
+                        >
+                            {{ card.label }}
                         </div>
-                    </q-card>
+                        <div class="text-2xl font-bold text-gray-900">
+                            {{ card.value }}
+                        </div>
+                    </div>
+                    <div
+                        class="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors duration-300"
+                    >
+                        <i :class="[card.icon, 'text-blue-600 text-base']"></i>
+                    </div>
                 </div>
+                <div
+                    class="mt-3 w-8 h-0.5 bg-blue-200 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                ></div>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div
+            class="bg-white rounded-xl border border-gray-100 p-6 mb-8 shadow-sm"
+        >
+            <div class="flex items-center space-x-2 mb-4">
+                <i class="mdi mdi-tune text-gray-400 text-base"></i>
+                <h2 class="text-lg font-semibold text-gray-900">
+                    {{ __("Filter Analytics") }}
+                </h2>
             </div>
 
-            <!-- Filters Section -->
-            <q-card flat bordered class="q-mb-xl filter-section">
-                <q-card-section>
-                    <div class="text-h6 text-weight-medium q-mb-md">
-                        {{ __("Filter Analytics") }}
-                    </div>
-                    <div class="row q-col-gutter-md items-end">
-                        <q-input
+            <div
+                class="grid grid-cols-1 xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 gap-4"
+            >
+                <!-- Start Date -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-medium text-gray-600">
+                        {{ __("Start date") }}
+                    </label>
+                    <div class="relative">
+                        <input
                             v-model="params.start"
                             type="date"
-                            :label="__('Start date')"
-                            outlined
-                            dense
-                            class="col-12 col-sm-6 col-md-2"
+                            class="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        />
+                        <div
+                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
                         >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-calendar-start" size="sm" />
-                            </template>
-                        </q-input>
+                            <i
+                                class="mdi mdi-calendar-start text-gray-400 text-sm"
+                            ></i>
+                        </div>
+                    </div>
+                </div>
 
-                        <q-input
+                <!-- End Date -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-medium text-gray-600">
+                        {{ __("End date") }}
+                    </label>
+                    <div class="relative">
+                        <input
                             v-model="params.end"
                             type="date"
-                            :label="__('End date')"
-                            outlined
-                            dense
-                            class="col-12 col-sm-6 col-md-2"
+                            class="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        />
+                        <div
+                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
                         >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-calendar-end" size="sm" />
-                            </template>
-                        </q-input>
+                            <i
+                                class="mdi mdi-calendar-end text-gray-400 text-sm"
+                            ></i>
+                        </div>
+                    </div>
+                </div>
 
-                        <q-select
+                <!-- Status -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-medium text-gray-600">
+                        {{ __("Status") }}
+                    </label>
+                    <div class="relative">
+                        <select
                             v-model="params.status"
-                            :options="status"
-                            :label="__('Status')"
-                            outlined
-                            dense
-                            class="col-12 col-sm-6 col-md-2"
+                            class="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none"
                         >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-status" size="sm" />
-                            </template>
-                        </q-select>
+                            <option
+                                v-for="option in status"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.label }}
+                            </option>
+                        </select>
+                        <div
+                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
+                        >
+                            <i class="mdi mdi-status text-gray-400 text-sm"></i>
+                        </div>
+                        <div
+                            class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
+                        >
+                            <i
+                                class="mdi mdi-chevron-down text-gray-400 text-sm"
+                            ></i>
+                        </div>
+                    </div>
+                </div>
 
-                        <q-select
+                <!-- Chart Type -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-medium text-gray-600">
+                        {{ __("Chart type") }}
+                    </label>
+                    <div class="relative">
+                        <select
                             v-model="chartType"
-                            :options="chartTypes"
-                            :label="__('Chart type')"
-                            outlined
-                            dense
-                            class="col-12 col-sm-6 col-md-2"
+                            class="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none"
                         >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-chart-bar" size="sm" />
-                            </template>
-                        </q-select>
+                            <option
+                                v-for="type in chartTypes"
+                                :key="type"
+                                :value="type"
+                            >
+                                {{
+                                    __(
+                                        type.charAt(0).toUpperCase() +
+                                            type.slice(1)
+                                    )
+                                }}
+                            </option>
+                        </select>
+                        <div
+                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
+                        >
+                            <i
+                                class="mdi mdi-chart-bar text-gray-400 text-sm"
+                            ></i>
+                        </div>
+                        <div
+                            class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
+                        >
+                            <i
+                                class="mdi mdi-chevron-down text-gray-400 text-sm"
+                            ></i>
+                        </div>
+                    </div>
+                </div>
 
-                        <q-select
+                <!-- Date Grouping -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-medium text-gray-600">
+                        {{ __("Date grouping") }}
+                    </label>
+                    <div class="relative">
+                        <select
                             v-model="params.type"
-                            :options="types"
-                            :label="__('Date grouping')"
-                            outlined
-                            dense
-                            class="col-12 col-sm-6 col-md-2"
+                            class="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none"
                         >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-calendar-group" size="sm" />
-                            </template>
-                        </q-select>
-
-                        <div class="col-12 col-sm-6 col-md-2">
-                            <q-btn
-                                :label="__('Apply Filters')"
-                                @click="getData"
-                                color="primary"
-                                icon="mdi-filter"
-                                unelevated
-                                class="full-width filter-btn"
-                            />
+                            <option
+                                v-for="type in types"
+                                :key="type"
+                                :value="type"
+                            >
+                                {{
+                                    __(
+                                        type.charAt(0).toUpperCase() +
+                                            type.slice(1)
+                                    )
+                                }}
+                            </option>
+                        </select>
+                        <div
+                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
+                        >
+                            <i
+                                class="mdi mdi-calendar-group text-gray-400 text-sm"
+                            ></i>
+                        </div>
+                        <div
+                            class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
+                        >
+                            <i
+                                class="mdi mdi-chevron-down text-gray-400 text-sm"
+                            ></i>
                         </div>
                     </div>
-                </q-card-section>
-            </q-card>
+                </div>
 
-            <!-- Chart Section -->
-            <q-card flat bordered class="chart-card">
-                <q-card-section>
-                    <div class="row items-center justify-between q-mb-md">
-                        <div class="text-h6 text-weight-medium">
+                <!-- Apply Filters Button -->
+                <div class="flex items-end">
+                    <button
+                        @click="getData"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm hover:shadow"
+                    >
+                        <i class="mdi mdi-filter text-xs"></i>
+                        <span>{{ __("Apply") }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+            <div
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6"
+            >
+                <div class="flex items-center space-x-3 mb-3 lg:mb-0">
+                    <div class="p-2 bg-blue-50 rounded-lg">
+                        <i
+                            class="mdi mdi-chart-line text-blue-600 text-base"
+                        ></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900">
                             {{ __("Transaction Analytics") }}
-                        </div>
-                        <q-badge color="blue" class="q-pa-sm">
-                            <q-icon name="mdi-sync" size="sm" class="q-mr-xs" />
-                            {{ __("Auto-refreshing every 10 seconds") }}
-                        </q-badge>
+                        </h2>
+                        <p class="text-gray-500 text-xs mt-1">
+                            {{
+                                __("Real-time insights and performance metrics")
+                            }}
+                        </p>
                     </div>
+                </div>
+                <div
+                    class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1.5"
+                >
+                    <i
+                        class="mdi mdi-sync animate-spin text-blue-600 text-xs"
+                    ></i>
+                    <span>{{ __("Auto-refresh: 10s") }}</span>
+                </div>
+            </div>
 
-                    <apex-charts
-                        width="100%"
-                        height="400"
-                        :type="chartType"
-                        :options="chartOptions"
-                        :series="chartSeries"
-                        class="chart-container"
-                    />
-                </q-card-section>
-            </q-card>
-        </q-page>
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                <apex-charts
+                    width="100%"
+                    height="350"
+                    :type="chartType"
+                    :options="chartOptions"
+                    :series="chartSeries"
+                    class="chart-container"
+                />
+            </div>
+        </div>
     </v-admin-transaction-layout>
 </template>
 
 <script>
 import ApexCharts from "vue3-apexcharts";
+import VAdminTransactionLayout from "@/layouts/VAdminTransactionLayout.vue";
 
 export default {
     components: {
         ApexCharts,
+        VAdminTransactionLayout,
     },
 
     data() {
@@ -259,19 +380,19 @@ export default {
 
             this.cards = [
                 {
-                    label: this.__("Packages"),
+                    label: __("Packages"),
                     value: data["packages"],
-                    icon: "mdi-package-variant",
+                    icon: "mdi mdi-package-variant",
                 },
                 {
-                    label: this.__("Plans"),
+                    label: __("Plans"),
                     value: data["plans"],
-                    icon: "inventory_2",
+                    icon: "mdi mdi-inventory",
                 },
                 {
-                    label: this.__("Total Transactions"),
+                    label: __("Total Transactions"),
                     value: data["transactions"],
-                    icon: "bar_chart",
+                    icon: "mdi mdi-chart-bar",
                 },
             ];
 
@@ -289,11 +410,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    console.error("Error:", e.response.data.message);
                 }
             }
         },
@@ -311,11 +428,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    console.error("Error:", e.response.data.message);
                 }
             }
         },
@@ -323,7 +436,7 @@ export default {
         renderChart() {
             this.chartSeries = [
                 {
-                    name: this.__("Transactions"),
+                    name: __("Transactions"),
                     data: this.transactions_by_month.map((item) => item.total),
                 },
             ];
@@ -338,124 +451,71 @@ export default {
                     toolbar: {
                         show: true,
                         tools: {
-                            download: false,
+                            download: true,
                             selection: false,
                             zoom: false,
                             zoomin: false,
                             zoomout: false,
                             pan: false,
-                            reset: false,
+                            reset: true,
                         },
                     },
+                    animations: {
+                        enabled: true,
+                        easing: "easeinout",
+                        speed: 600,
+                    },
                 },
-                colors: ["#1976d2"],
+                colors: ["#3B82F6"],
                 dataLabels: {
-                    enabled: true,
+                    enabled: false,
                 },
                 stroke: {
                     curve: "smooth",
-                    width: 3,
-                },
-                title: {
-                    text: this.__("Transactions by :type", {
-                        ":type": this.__(this.params.type),
-                    }),
-                    align: "left",
-                    style: {
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                    },
+                    width: 2,
                 },
                 grid: {
-                    row: {
-                        colors: ["#f3f3f3", "transparent"],
-                        opacity: 0.5,
-                    },
+                    borderColor: "#F3F4F6",
+                    strokeDashArray: 3,
                 },
                 xaxis: {
                     categories: this.transactions_by_month.map(
                         (item) => item.month
                     ),
+                    labels: {
+                        style: {
+                            colors: "#6B7280",
+                            fontSize: "11px",
+                        },
+                    },
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: "#6B7280",
+                            fontSize: "11px",
+                        },
+                    },
+                },
+                tooltip: {
+                    theme: "light",
+                    style: {
+                        fontSize: "12px",
+                    },
                 },
             };
         },
 
         formatDate(dateStr) {
             const options = { year: "numeric", month: "short", day: "numeric" };
-            return new Date(dateStr).toLocaleDateString("es-ES", options);
+            return new Date(dateStr).toLocaleDateString("en-US", options);
         },
     },
 };
 </script>
 
 <style scoped>
-.stat-card {
-    border-radius: 12px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-}
-
-.stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-}
-
-.card-icon {
-    opacity: 0.8;
-    transition: transform 0.3s ease;
-}
-
-.stat-card:hover .card-icon {
-    transform: scale(1.1);
-    opacity: 1;
-}
-
-.filter-section {
-    border-radius: 12px;
-}
-
-.filter-btn {
-    border-radius: 8px;
-    height: 40px;
-}
-
-.chart-card {
-    border-radius: 12px;
-}
-
 .chart-container {
     border-radius: 8px;
-}
-
-.text-h3 {
-    font-size: 2.5rem;
-    line-height: 1.2;
-}
-
-.text-h4 {
-    font-size: 2rem;
-    line-height: 1.2;
-}
-
-.text-h6 {
-    font-weight: 600;
-}
-
-.shadow-3 {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.q-card {
-    border: 1px solid #e0e0e0;
-}
-
-.q-input,
-.q-select {
-    border-radius: 8px;
-}
-
-.q-btn {
-    text-transform: none;
-    font-weight: 500;
 }
 </style>

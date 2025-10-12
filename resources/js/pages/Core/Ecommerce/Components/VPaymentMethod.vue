@@ -162,7 +162,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(this.__(e.response.data.message));
+                     $notify.error(__(e.response.data.message));
                 }
             }
         },

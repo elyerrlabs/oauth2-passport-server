@@ -26,11 +26,11 @@ import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { setupI18n, __ } from "./config/locale.js";
-import { $notify } from "./config/notify.js";
+import "./config/notify.js";
+import "./config/editor.js";
+
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-
-import "./config/editor.js";
 
 //import { $echo } from "./app/config/echo.js";
 import { $server } from "./config/axios.js";
@@ -40,8 +40,8 @@ import "@mdi/font/css/materialdesignicons.css";
 
 setupI18n();
 window.__ = __;
-window.$notify = $notify;
 window.$server = $server;
+window.$notify = $notify;
 
 createInertiaApp({
   resolve: (name) =>
@@ -55,11 +55,9 @@ createInertiaApp({
     // app.config.globalProperties.$echo = $echo;
     app.config.globalProperties.$server = $server;
     app.config.globalProperties.__ = __;
-    app.config.globalProperties.$notify = $notify;
 
-    app.use(plugin);
     app.use(VueSweetalert2);
-    //  app.use(i18n);
+    app.use(plugin);
     app.mount(el);
   },
 });

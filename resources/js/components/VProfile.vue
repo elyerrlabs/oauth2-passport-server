@@ -20,126 +20,159 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="text-center q-ma-sm">
-        <q-btn
-            no-caps
-            dense
-            outline
-            round
-            icon="mdi-menu"
+    <div class="relative text-center p-2 hidden md:block" ref="menuContainer">
+        <!-- Menu Button -->
+        <button
+            @click="toggleMenu"
+            class="px-3 py-2 bg-purple-600 text-white rounded-full shadow-md hover:bg-purple-700 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-400 relative cursor-pointer"
         >
-        <q-tooltip>
-            {{ __('Show the menu') }}
-        </q-tooltip>
-            <q-menu fit anchor="bottom right" self="top right">
-                <q-card style="min-width: 240px" class="q-pa-sm">
-                    <!-- User Info -->
-                    <div v-if="user?.id" class="q-pa-sm flex items-center">
-                        <q-avatar size="40px" class="q-mr-sm">
-                            <q-icon
-                                color="primary"
-                                name="mdi-account-circle"
-                                size="28px"
-                            />
-                        </q-avatar>
-                        <div>
-                            <div class="text-weight-medium">
-                                {{ user.name }} {{ user.last_name }}
-                            </div>
-                            <div class="text-caption text-grey">
-                                {{ user.email }}
-                            </div>
+            <i class="mdi mdi-account-circle text-2xl"></i>
+            <span class="sr-only">{{ __("Show the menu") }}</span>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <transition
+            enter-active-class="transition ease-out duration-200"
+            enter-from-class="opacity-0 scale-95"
+            enter-to-class="opacity-100 scale-100"
+            leave-active-class="transition ease-in duration-150"
+            leave-from-class="opacity-100 scale-100"
+            leave-to-class="opacity-0 scale-95"
+        >
+            <div
+                v-if="menuOpen"
+                class="absolute right-0 mt-3 w-64 bg-white rounded-xl shadow-xl ring-1 ring-black/5 z-50 overflow-hidden"
+            >
+                <!-- User Info -->
+                <div
+                    v-if="user?.id"
+                    class="flex items-center p-4 border-b border-gray-100 bg-gray-50"
+                >
+                    <div class="flex-shrink-0 mr-3">
+                        <div
+                            class="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white shadow-inner"
+                        >
+                            <i class="mdi mdi-account text-2xl"></i>
                         </div>
                     </div>
+                    <div class="text-left">
+                        <div class="font-semibold text-gray-800">
+                            {{ user.name }} {{ user.last_name }}
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            {{ user.email }}
+                        </div>
+                    </div>
+                </div>
 
-                    <q-separator class="q-my-sm" />
-
-                    <!-- Menu Options -->
-                    <q-list padding>
-                        <q-item clickable @click="homePage">
-                            <q-item-section avatar>
-                                <q-icon color="primary" name="mdi-home" />
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label>{{
-                                    __("Home page")
-                                }}</q-item-label>
-                            </q-item-section>
-                        </q-item>
-
-                        <q-separator class="q-my-sm" />
-
-                        <q-item v-if="user?.id" clickable @click="myAccount">
-                            <q-item-section avatar>
-                                <q-icon
-                                    color="primary"
-                                    name="mdi-home-account"
-                                />
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label>{{
-                                    __("My account")
-                                }}</q-item-label>
-                            </q-item-section>
-                        </q-item>
-
-                        <q-separator class="q-my-sm" />
-
-                        <q-item
-                            v-if="!user?.id"
-                            clickable
-                            v-close-popup
-                            @click="goTo($page.props.auth_routes['login'])"
+                <!-- Menu Options -->
+                <ul class="divide-y divide-gray-100">
+                    <li>
+                        <a
+                            href="/"
+                            @click.prevent="homePage"
+                            class="w-full text-left px-4 py-3 hover:bg-purple-50 flex items-center transition cursor-pointer"
                         >
-                            <q-item-section avatar>
-                                <q-icon color="primary" name="mdi-login" />
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label> {{ __("Login") }} </q-item-label>
-                            </q-item-section>
-                        </q-item>
-                        <q-item
-                            v-if="user?.id"
-                            clickable
-                            v-close-popup
-                            @click="goTo($page.props.auth_routes['logout'])"
+                            <i class="mdi mdi-home text-purple-600 mr-3"></i>
+                            {{ __("Home page") }}
+                        </a>
+                    </li>
+
+                    <li v-if="user?.id">
+                        <a
+                            :href="userDashboardRoute"
+                            @click.prevent="myAccount"
+                            class="w-full text-left px-4 py-3 hover:bg-purple-50 flex items-center transition cursor-pointer"
                         >
-                            <q-item-section avatar>
-                                <q-icon color="negative" name="mdi-logout" />
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label class="text-negative">
-                                    {{ __("Logout") }}
-                                </q-item-label>
-                            </q-item-section>
-                        </q-item>
-                    </q-list>
-                </q-card>
-            </q-menu>
-        </q-btn>
+                            <i
+                                class="mdi mdi-account-cog text-purple-600 mr-3"
+                            ></i>
+                            {{ __("My account") }}
+                        </a>
+                    </li>
+
+                    <li v-if="!user?.id">
+                        <a
+                            :href="loginRoute"
+                            @click.prevent="goTo(loginRoute)"
+                            class="w-full text-left px-4 py-3 hover:bg-purple-50 flex items-center transition cursor-pointer"
+                        >
+                            <i class="mdi mdi-login text-purple-600 mr-3"></i>
+                            {{ __("Login") }}
+                        </a>
+                    </li>
+
+                    <li v-if="user?.id">
+                        <a
+                            :href="logoutRoute"
+                            @click.prevent="goTo(logoutRoute)"
+                            class="w-full text-left px-4 py-3 hover:bg-red-50 flex items-center text-red-600 transition cursor-pointer"
+                        >
+                            <i class="mdi mdi-logout text-red-600 mr-3"></i>
+                            {{ __("Logout") }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </transition>
     </div>
 </template>
 
 <script>
 export default {
+    data() {
+        return {
+            menuOpen: false,
+        };
+    },
     computed: {
         user() {
             return this.$page.props.user;
         },
+        loginRoute() {
+            return this.$page.props.auth_routes["login"];
+        },
+        logoutRoute() {
+            return this.$page.props.auth_routes["logout"];
+        },
+        userDashboardRoute() {
+            return this.$page.props.user_dashboard?.route || "#";
+        },
     },
-
     methods: {
-        async goTo(url) {
+        toggleMenu() {
+            this.menuOpen = !this.menuOpen;
+        },
+        closeMenu() {
+            this.menuOpen = false;
+        },
+        goTo(url) {
+            this.closeMenu();
             window.location.href = url;
         },
-
         homePage() {
+            this.closeMenu();
             window.location.href = "/";
         },
-
         myAccount() {
-            window.location.href = this.$page.props.user_dashboard["route"];
+            this.closeMenu();
+            window.location.href = this.userDashboardRoute;
         },
+        handleClickOutside(event) {
+            if (
+                this.menuOpen &&
+                this.$refs.menuContainer &&
+                !this.$refs.menuContainer.contains(event.target)
+            ) {
+                this.closeMenu();
+            }
+        },
+    },
+    mounted() {
+        document.addEventListener("click", this.handleClickOutside);
+    },
+    beforeUnmount() {
+        document.removeEventListener("click", this.handleClickOutside);
     },
 };
 </script>

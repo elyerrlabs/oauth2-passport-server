@@ -146,7 +146,7 @@ export default {
                     this.$emit("created", true);
                     this.$q.notify({
                         type: "positive",
-                        message: this.__("A new channel has been created"),
+                        message: __("A new channel has been created"),
                         timeout: 3000,
                     });
                     this.dialog = false;

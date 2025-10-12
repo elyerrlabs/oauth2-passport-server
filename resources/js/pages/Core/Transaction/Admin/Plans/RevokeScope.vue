@@ -21,180 +21,157 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div>
-        <!-- Revoke Scope Button -->
-        <q-btn
-            round
-            color="warning"
+        <button
             @click="dialog = true"
-            icon="mdi-key-remove"
-            size="sm"
-            class="revoke-scope-btn shadow-3"
+            class="flex items-center justify-center w-8 h-8 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+            :title="__('Revoke Scope')"
         >
-            <q-tooltip class="bg-warning">{{ __("Revoke Scope") }}</q-tooltip>
-        </q-btn>
+            <i class="mdi mdi-key-remove text-sm"></i>
+        </button>
 
-        <!-- Revoke Confirmation Dialog -->
-        <q-dialog
-            v-model="dialog"
-            persistent
-            transition-show="scale"
-            transition-hide="scale"
-        >
-            <q-card class="revoke-scope-dialog rounded-borders">
-                <!-- Dialog Header -->
-                <q-card-section class="dialog-header bg-warning text-dark">
-                    <div class="row items-center">
-                        <q-icon
-                            name="mdi-key-minus"
-                            size="28px"
-                            class="q-mr-sm"
-                        />
-                        <div class="text-h5 text-weight-bold">
-                            {{ __("Revoke Access Scope") }}
-                        </div>
-                        <q-space />
-                        <q-btn
-                            icon="close"
-                            flat
-                            round
-                            dense
-                            v-close-popup
-                            class="text-dark"
-                            @click="dialog = false"
-                        />
-                    </div>
-                </q-card-section>
-
-                <!-- Warning Content -->
-                <q-card-section class="warning-section">
-                    <div class="row items-center q-mb-md">
-                        <q-icon
-                            name="mdi-alert"
-                            color="warning"
-                            size="48px"
-                            class="q-mr-md"
-                        />
-                        <div class="text-h6 text-weight-medium">
-                            {{ __("Confirm Scope Revocation") }}
+        <v-modal v-model="dialog" :title="__('Revoke Access Scope')">
+            <template #body>
+                <div class="text-left space-y-6">
+                    <div class="flex items-start gap-4">
+                        <i
+                            class="mdi mdi-alert text-3xl text-yellow-500 mt-1 flex-shrink-0"
+                        ></i>
+                        <div>
+                            <h3
+                                class="text-lg font-semibold text-gray-800 mb-1"
+                            >
+                                {{ __("Confirm Scope Revocation") }}
+                            </h3>
+                            <p class="text-gray-600 text-sm">
+                                {{
+                                    __(
+                                        "You are about to revoke the following access scope. This will remove permissions from the associated plan."
+                                    )
+                                }}
+                            </p>
                         </div>
                     </div>
 
-                    <div class="text-body1 q-mb-lg">
-                        {{
-                            __(
-                                "You are about to revoke the following access scope. This will remove permissions from the associated plan."
-                            )
-                        }}
-                    </div>
+                    <div
+                        class="bg-gray-50 border-l-4 border-yellow-500 border rounded-xl p-4"
+                    >
+                        <h4
+                            class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide"
+                        >
+                            {{ __("Scope Details") }}
+                        </h4>
 
-                    <!-- Scope Details -->
-                    <q-card flat bordered class="bg-grey-2 scope-details-card">
-                        <q-card-section>
-                            <div class="text-subtitle2 text-grey-8 q-mb-sm">
-                                {{ __("Scope Details") }}
+                        <div class="space-y-3 text-sm">
+                            <!-- Role -->
+                            <div class="flex items-center gap-3">
+                                <i
+                                    class="mdi mdi-account-key text-gray-500"
+                                ></i>
+                                <div>
+                                    <span class="font-medium text-gray-700">{{
+                                        __("Role:")
+                                    }}</span>
+                                    <span
+                                        class="ml-2 text-yellow-700 font-bold"
+                                    >
+                                        {{ item.role.name }}
+                                    </span>
+                                </div>
                             </div>
 
-                            <div class="row items-center q-mb-xs">
-                                <q-icon
-                                    name="mdi-account-key"
-                                    size="16px"
-                                    class="q-mr-sm text-grey-6"
-                                />
-                                <span class="text-weight-medium">{{
-                                    __("Role:")
-                                }}</span>
-                                <span
-                                    class="q-ml-sm text-warning text-weight-bold"
-                                    >{{ item.role.name }}</span
-                                >
+                            <!-- Service -->
+                            <div class="flex items-center gap-3">
+                                <i class="mdi mdi-server text-gray-500"></i>
+                                <div>
+                                    <span class="font-medium text-gray-700">{{
+                                        __("Service:")
+                                    }}</span>
+                                    <span class="ml-2 text-gray-900">{{
+                                        item.service.name
+                                    }}</span>
+                                </div>
                             </div>
 
-                            <div class="row items-center q-mb-xs">
-                                <q-icon
-                                    name="mdi-server"
-                                    size="16px"
-                                    class="q-mr-sm text-grey-6"
-                                />
-                                <span class="text-weight-medium">{{
-                                    __("Service:")
-                                }}</span>
-                                <span class="q-ml-sm">{{
-                                    item.service.name
-                                }}</span>
+                            <!-- Group -->
+                            <div class="flex items-center gap-3">
+                                <i
+                                    class="mdi mdi-account-group text-gray-500"
+                                ></i>
+                                <div>
+                                    <span class="font-medium text-gray-700">{{
+                                        __("Group:")
+                                    }}</span>
+                                    <span class="ml-2 text-gray-900">{{
+                                        item.service.group.name
+                                    }}</span>
+                                </div>
                             </div>
 
-                            <div class="row items-center q-mb-xs">
-                                <q-icon
-                                    name="mdi-account-group"
-                                    size="16px"
-                                    class="q-mr-sm text-grey-6"
-                                />
-                                <span class="text-weight-medium">{{
-                                    __("Group:")
-                                }}</span>
-                                <span class="q-ml-sm">{{
-                                    item.service.group.name
-                                }}</span>
-                            </div>
-
+                            <!-- Description -->
                             <div
                                 v-if="item.role.description"
-                                class="row items-start q-mt-sm"
+                                class="flex items-start gap-3"
                             >
-                                <q-icon
-                                    name="mdi-information"
-                                    size="16px"
-                                    class="q-mr-sm text-grey-6 q-mt-xs"
-                                />
-                                <span class="text-weight-medium">{{
-                                    __("Description:")
-                                }}</span>
-                                <span class="q-ml-sm text-caption">{{
-                                    item.role.description
-                                }}</span>
+                                <i
+                                    class="mdi mdi-information text-gray-500 mt-1"
+                                ></i>
+                                <div class="flex-1">
+                                    <span class="font-medium text-gray-700">{{
+                                        __("Description:")
+                                    }}</span>
+                                    <div
+                                        class="ml-2 text-gray-600 text-sm mt-1 bg-white p-2 rounded border border-gray-200"
+                                    >
+                                        {{ item.role.description }}
+                                    </div>
+                                </div>
                             </div>
-                        </q-card-section>
-                    </q-card>
-
-                    <div class="text-caption text-warning q-mt-md">
-                        <q-icon
-                            name="mdi-alert-circle"
-                            size="16px"
-                            class="q-mr-xs"
-                        />
-                        {{
-                            __(
-                                "Users with this plan will lose access to these permissions immediately."
-                            )
-                        }}
+                        </div>
                     </div>
-                </q-card-section>
 
-                <!-- Dialog Actions -->
-                <q-card-actions align="right" class="dialog-actions q-pa-md">
-                    <q-btn
-                        :label="__('Cancel')"
-                        color="grey"
+                    <div
+                        class="flex items-start gap-2 text-sm text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-lg p-3"
+                    >
+                        <i
+                            class="mdi mdi-alert-circle text-yellow-500 mt-0.5 flex-shrink-0"
+                        ></i>
+                        <span>
+                            {{
+                                __(
+                                    "Users with this plan will lose access to these permissions immediately."
+                                )
+                            }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-8">
+                    <button
                         @click="dialog = false"
-                        outline
-                        class="action-btn"
-                        icon="mdi-close"
-                    />
-                    <q-btn
-                        :label="__('Revoke Scope')"
-                        color="warning"
-                        @click="destroy"
-                        class="action-btn"
-                        icon="mdi-key-remove"
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
+                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold"
+                    >
+                        <i class="mdi mdi-close mr-1"></i>
+                        {{ __("Cancel") }}
+                    </button>
+
+                    <button
+                        @click="revoke"
+                        class="px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 text-white font-semibold flex items-center gap-2"
+                    >
+                        <i class="mdi mdi-key-remove"></i>
+                        {{ __("Revoke Scope") }}
+                    </button>
+                </div>
+            </template>
+        </v-modal>
     </div>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+
 export default {
+    components: { VModal },
     emits: ["revoked"],
 
     props: {
@@ -211,28 +188,19 @@ export default {
     },
 
     methods: {
-        async destroy() {
+        async revoke() {
             try {
                 const res = await this.$server.delete(this.item.links.revoke);
 
-                if (res.status == 200) {
-                    this.$emit("revoked", true);
+                if (res.status === 200) {
                     this.dialog = false;
-                    this.$q.notify({
-                        type: "positive",
-                        message: "Scope has been revoked successfully",
-                        timeout: 3000,
-                        icon: "mdi-check-circle",
-                        position: "top-right",
-                    });
+                    this.$emit("revoked", true);
+
+                    $notify.success(__("Scope revoked successfully"));
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e?.response?.data?.message);
                 }
             }
         },
@@ -241,81 +209,11 @@ export default {
 </script>
 
 <style scoped>
-/* CSS Variables for Theme Consistency */
-:root {
-    --color-primary: #1976d2;
-    --color-secondary: #26a69a;
-    --color-warning: #f2c037;
-    --color-negative: #c10015;
-    --color-dark: #1d1d1d;
-    --color-light: #f5f5f5;
-    --border-radius: 12px;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --transition-speed: 0.3s;
+button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-.revoke-scope-btn {
-    transition: transform var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease;
-}
-
-.revoke-scope-btn:hover {
+button:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
-}
-
-.revoke-scope-dialog {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    max-width: 550px;
-    width: 100%;
-}
-
-.dialog-header {
-    padding: 20px 24px;
-}
-
-.warning-section {
-    padding: 24px;
-}
-
-.scope-details-card {
-    border-left: 4px solid var(--color-warning);
-}
-
-.dialog-actions {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    background: var(--color-light);
-}
-
-.action-btn {
-    border-radius: 8px;
-    padding: 8px 20px;
-    font-weight: 500;
-    min-width: 130px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 599px) {
-    .revoke-scope-dialog {
-        max-width: 95vw;
-    }
-
-    .dialog-header .text-h5 {
-        font-size: 1.25rem;
-    }
-
-    .warning-section {
-        padding: 16px;
-    }
-
-    .action-btn {
-        min-width: 110px;
-        padding: 6px 16px;
-    }
-
-    .scope-details-card {
-        margin: 0 -8px;
-    }
+    box-shadow: 0 8px 20px -5px rgba(217, 119, 6, 0.4);
 }
 </style>

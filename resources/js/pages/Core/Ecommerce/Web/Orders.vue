@@ -308,11 +308,11 @@ export default {
                 const res = await this.$server.delete(url);
                 if (res.status == 200) {
                     this.getOrders();
-                    this.$notify.success(res.data.message);
+                     $notify.success(res.data.message);
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },
@@ -322,11 +322,11 @@ export default {
                 const res = await this.$server.delete(url);
                 if (res.status == 200) {
                     this.getOrders();
-                    this.$notify.success(res.data.message);
+                     $notify.success(res.data.message);
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },
@@ -349,7 +349,7 @@ export default {
                 );
 
                 if (res.status == 201) {
-                    this.$notify.success(this.__(res.data.data.message));
+                     $notify.success(__(res.data.data.message));
                     window.location.href = res.data.data.redirect_to;
                 }
             } catch (e) {
@@ -358,7 +358,7 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             } finally {
                 this.disabled = false;
@@ -381,7 +381,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;

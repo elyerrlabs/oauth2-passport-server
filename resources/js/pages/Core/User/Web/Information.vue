@@ -249,11 +249,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VAccountLayout from "../../../Components/VAccountLayout.vue";
-import VInput from "../../../Components/VInput.vue";
-import VPhone from "../../../Components/VPhone.vue";
-import VCountry from "../../../Components/VCountry.vue";
-import VSelect from "../../../Components/VSelect.vue";
+import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import VInput from "@/components/VInput.vue";
+import VPhone from "@/components/VPhone.vue";
+import VCountry from "@/components/VCountry.vue";
+import VSelect from "@/components/VSelect.vue";
 
 export default {
     components: {
@@ -304,7 +304,7 @@ export default {
                 if (res.status === 200) {
                     this.form = res.data.data;
 
-                    this.$notify.success(
+                     $notify.success(
                         __("Information has been updated successfully")
                     );
                 }
@@ -314,7 +314,7 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -338,7 +338,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },

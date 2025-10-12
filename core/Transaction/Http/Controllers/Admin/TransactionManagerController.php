@@ -20,7 +20,7 @@ namespace Core\Transaction\Http\Controllers\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -34,7 +34,7 @@ class TransactionManagerController extends WebController
 {
     /**
      * Repository
-     * @var 
+     * @var
      */
     public $repository;
 
@@ -63,6 +63,6 @@ class TransactionManagerController extends WebController
         return Inertia::render("Core/Transaction/Admin/Transaction/Index", [
             "route" => route('transaction.admin.transactions.index'),
             "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes'))
-        ]);
+        ])->rootView('system');
     }
 }

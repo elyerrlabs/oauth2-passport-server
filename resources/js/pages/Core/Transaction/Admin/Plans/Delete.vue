@@ -20,162 +20,165 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="q-pa-md q-gutter-sm">
+    <div>
         <!-- Delete Button -->
-        <q-btn
-            round
-            color="negative"
+        <button
             @click="dialog = true"
-            icon="mdi-delete"
-            size="sm"
-            class="delete-btn shadow-3"
+            class="group relative flex items-center justify-center w-11 h-11 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300"
         >
-            <q-tooltip class="bg-negative">{{ __("Delete Plan") }}</q-tooltip>
-        </q-btn>
+            <i
+                class="mdi mdi-delete text-lg transition-transform duration-300 group-hover:rotate-12"
+            ></i>
 
-        <!-- Delete Confirmation Dialog -->
-        <q-dialog
-            v-model="dialog"
-            persistent
-            transition-show="scale"
-            transition-hide="scale"
-        >
-            <q-card class="delete-dialog rounded-borders">
-                <!-- Dialog Header -->
-                <q-card-section class="dialog-header bg-negative text-white">
-                    <div class="row items-center">
-                        <q-icon
-                            name="mdi-alert-circle"
-                            size="28px"
-                            class="q-mr-sm"
-                        />
-                        <div class="text-h5 text-weight-bold">
-                            {{ __("Delete Plan") }}
-                        </div>
-                        <q-space />
-                        <q-btn
-                            icon="close"
-                            flat
-                            round
-                            dense
-                            v-close-popup
-                            class="text-white"
-                            @click="dialog = false"
-                        />
-                    </div>
-                </q-card-section>
+            <!-- Tooltip -->
+            <span
+                class="absolute bottom-14 px-2.5 py-1 text-xs rounded-md bg-gray-800 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            >
+                {{ __("Delete Plan") }}
+            </span>
+        </button>
 
-                <!-- Warning Content -->
-                <q-card-section class="warning-section">
-                    <div class="row items-center q-mb-md">
-                        <q-icon
-                            name="mdi-alert"
-                            color="negative"
-                            size="48px"
-                            class="q-mr-md"
-                        />
-                        <div class="text-h6 text-weight-medium">
-                            {{ __("Are you sure?") }}
+        <!-- Confirm Modal -->
+        <VModal v-model="dialog" title="Delete Plan">
+            <template #body>
+                <div class="flex items-center gap-3 text-red-600">
+                    <i class="mdi mdi-alert-circle text-3xl"></i>
+                    <span class="text-xl font-bold">{{
+                        __("Delete Plan")
+                    }}</span>
+                </div>
+
+                <div class="space-y-5">
+                    <div class="flex items-start gap-3">
+                        <i
+                            class="mdi mdi-alert text-3xl text-red-500 flex-shrink-0 mt-0.5"
+                        ></i>
+                        <div>
+                            <h3
+                                class="text-lg font-semibold text-gray-900 mb-1"
+                            >
+                                {{ __("Are you sure?") }}
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                {{ __("You are about to delete the plan") }}
+                                <strong class="text-red-600"
+                                    >"{{ item.name }}"</strong
+                                >.
+                                {{ __("This action cannot be undone.") }}
+                            </p>
                         </div>
                     </div>
 
-                    <div class="text-body1 q-mb-lg">
-                        {{ __("You are about to delete the plan") }}
-                        <strong class="text-negative">"{{ item.name }}"</strong
-                        >.
-                        {{ __("This action cannot be undone.") }}
-                    </div>
-
-                    <!-- Plan Details -->
-                    <q-card flat bordered class="bg-grey-2">
-                        <q-card-section>
-                            <div class="text-subtitle2 text-grey-8 q-mb-xs">
-                                {{ __("Plan Details") }}
-                            </div>
-                            <div class="row items-center q-mb-xs">
-                                <q-icon
-                                    name="mdi-tag"
-                                    size="16px"
-                                    class="q-mr-sm text-grey-6"
-                                />
-                                <span class="text-weight-medium">{{
+                    <!-- Plan Info -->
+                    <div
+                        class="bg-gray-50 border border-gray-200 rounded-xl p-4"
+                    >
+                        <h4
+                            class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3"
+                        >
+                            {{ __("Plan Details") }}
+                        </h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center gap-2">
+                                <i class="mdi mdi-tag text-gray-500"></i>
+                                <span class="text-gray-800 font-medium">{{
                                     __("Name:")
                                 }}</span>
-                                <span class="q-ml-sm">{{ item.name }}</span>
-                            </div>
-                            <div
-                                class="row items-center q-mb-xs"
-                                v-if="item.description"
-                            >
-                                <q-icon
-                                    name="mdi-text"
-                                    size="16px"
-                                    class="q-mr-sm text-grey-6"
-                                />
-                                <span class="text-weight-medium">{{
-                                    __("Description:")
+                                <span class="ml-1 text-gray-700">{{
+                                    item.name
                                 }}</span>
-                                <span
-                                    class="q-ml-sm"
-                                    v-html="item.description"
-                                ></span>
-                            </div>
-                            <div class="row items-center">
-                                <q-icon
-                                    name="mdi-check-circle"
-                                    size="16px"
-                                    :color="item.active ? 'positive' : 'grey-5'"
-                                    class="q-mr-sm"
-                                />
-                                <span class="text-weight-medium">{{
+                            </li>
+
+                            <li
+                                v-if="item.description"
+                                class="flex items-start gap-2"
+                            >
+                                <i class="mdi mdi-text text-gray-500 mt-1"></i>
+                                <div>
+                                    <span class="text-gray-800 font-medium">{{
+                                        __("Description:")
+                                    }}</span>
+                                    <p
+                                        class="ml-1 text-gray-700 text-sm mt-1 line-clamp-2"
+                                        v-html="item.description"
+                                    ></p>
+                                </div>
+                            </li>
+
+                            <li class="flex items-center gap-2">
+                                <i
+                                    class="mdi mdi-check-circle"
+                                    :class="
+                                        item.active
+                                            ? 'text-green-500'
+                                            : 'text-gray-400'
+                                    "
+                                ></i>
+                                <span class="text-gray-800 font-medium">{{
                                     __("Status:")
                                 }}</span>
-                                <span class="q-ml-sm">{{
-                                    item.active ? __("Active") : __("Inactive")
-                                }}</span>
-                            </div>
-                        </q-card-section>
-                    </q-card>
-
-                    <div class="text-caption text-grey-7 q-mt-md">
-                        <q-icon
-                            name="mdi-information"
-                            size="16px"
-                            class="q-mr-xs"
-                        />
-                        {{
-                            __(
-                                "This will permanently remove the plan and all associated data."
-                            )
-                        }}
+                                <span
+                                    class="ml-1 font-semibold"
+                                    :class="
+                                        item.active
+                                            ? 'text-green-600'
+                                            : 'text-gray-500'
+                                    "
+                                >
+                                    {{
+                                        item.active
+                                            ? __("Active")
+                                            : __("Inactive")
+                                    }}
+                                </span>
+                            </li>
+                        </ul>
                     </div>
-                </q-card-section>
 
-                <!-- Dialog Actions -->
-                <q-card-actions align="right" class="dialog-actions q-pa-md">
-                    <q-btn
-                        :label="__('Cancel')"
-                        color="grey"
-                        @click="dialog = false"
-                        outline
-                        class="action-btn"
-                        icon="mdi-close"
-                    />
-                    <q-btn
-                        :label="__('Delete Plan')"
-                        color="negative"
-                        @click="destroy"
-                        class="action-btn"
-                        icon="mdi-delete"
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
+                    <div
+                        class="flex items-center gap-2 text-sm text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-lg p-3"
+                    >
+                        <i
+                            class="mdi mdi-information text-yellow-500 text-lg"
+                        ></i>
+                        <span>
+                            {{
+                                __(
+                                    "This will permanently remove the plan and all related data."
+                                )
+                            }}
+                        </span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-end gap-3 pt-4">
+                        <button
+                            @click="dialog = false"
+                            class="px-5 py-2.5 rounded-xl font-semibold bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all"
+                        >
+                            <i class="mdi mdi-close mr-1"></i>{{ __("Cancel") }}
+                        </button>
+                        <button
+                            @click="destroy"
+                            class="px-5 py-2.5 rounded-xl font-semibold bg-red-600 hover:bg-red-700 text-white transition-all"
+                            :disabled="loading"
+                        >
+                            <i class="mdi mdi-delete mr-1"></i>
+                            <span v-if="!loading">{{ __("Delete") }}</span>
+                            <span v-else>{{ __("Deleting...") }}</span>
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </VModal>
     </div>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+
 export default {
+    components: { VModal },
     emits: ["deleted"],
 
     props: {
@@ -188,107 +191,29 @@ export default {
     data() {
         return {
             dialog: false,
+            loading: false,
         };
     },
 
     methods: {
         async destroy() {
+            this.loading = true;
             try {
                 const res = await this.$server.delete(this.item.links.destroy);
 
-                if (res.status == 200) {
-                    this.$emit("deleted", true);
+                if (res.status === 200) {
                     this.dialog = false;
-                    this.$q.notify({
-                        type: "positive",
-                        message: "Plan has been deleted successfully",
-                        timeout: 3000,
-                        icon: "mdi-check-circle",
-                        position: "top-right",
-                    });
+                    this.$emit("deleted", true);
+                    $notify.success(__("was removed successfully."));
                 }
             } catch (e) {
-              if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                if (e?.response?.data?.message) {
+                    $notify.error(e?.response?.data?.message);
                 }
+            } finally {
+                this.loading = false;
             }
         },
     },
 };
 </script>
-
-<style scoped>
-/* CSS Variables for Theme Consistency */
-:root {
-    --color-primary: #1976d2;
-    --color-secondary: #26a69a;
-    --color-negative: #c10015;
-    --color-warning: #f2c037;
-    --color-dark: #1d1d1d;
-    --color-light: #f5f5f5;
-    --border-radius: 12px;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --transition-speed: 0.3s;
-}
-
-.delete-btn {
-    transition: transform var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease;
-}
-
-.delete-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
-}
-
-.delete-dialog {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    max-width: 500px;
-    width: 100%;
-}
-
-.dialog-header {
-    padding: 20px 24px;
-}
-
-.warning-section {
-    padding: 24px;
-}
-
-.dialog-actions {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    background: var(--color-light);
-}
-
-.action-btn {
-    border-radius: 8px;
-    padding: 8px 20px;
-    font-weight: 500;
-    min-width: 120px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 599px) {
-    .delete-dialog {
-        max-width: 95vw;
-    }
-
-    .dialog-header .text-h5 {
-        font-size: 1.25rem;
-    }
-
-    .warning-section {
-        padding: 16px;
-    }
-
-    .action-btn {
-        min-width: 100px;
-        padding: 6px 16px;
-    }
-}
-</style>

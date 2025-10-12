@@ -22,9 +22,7 @@
 import flatpickr from "flatpickr";
 import "../css/app.css";
 import "@tailwindplus/elements";
-import { $notify } from "./config/notify.js";
-window.$notify = $notify;
-
+import "./config/notify.js";
 import "./config/editor.js";
 
 flatpickr(".date", {

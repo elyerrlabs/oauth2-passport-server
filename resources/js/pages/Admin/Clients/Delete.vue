@@ -205,7 +205,7 @@ export default {
 
         showSuccessNotification() {
             this.$q.notify({
-                message: this.__("OAuth client deleted successfully"),
+                message: __("OAuth client deleted successfully"),
                 color: "positive",
                 icon: "mdi-check-circle",
                 position: "top-right",

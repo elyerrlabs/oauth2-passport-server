@@ -22,366 +22,498 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-admin-transaction-layout>
         <!-- Header Section -->
-        <div class="bg-white q-pa-md shadow-2 rounded-borders">
-            <div class="row items-center justify-between q-mb-md">
-                <div>
-                    <div class="text-h4 text-primary text-weight-bold">
-                        {{ __("Transactions Management") }}
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6"
+            >
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div
+                            class="w-2 h-8 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"
+                        ></div>
+                        <h1
+                            class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent"
+                        >
+                            {{ __("Transactions Management") }}
+                        </h1>
                     </div>
-                    <div class="text-subtitle1 text-grey-7">
+                    <p class="text-gray-600 text-lg ml-5">
                         {{ __("Monitor and manage all transaction records") }}
-                    </div>
+                    </p>
                 </div>
-
-                <!-- Toggle View Mode -->
-                <q-btn-toggle
-                    v-model="viewMode"
-                    dense
-                    toggle-color="primary"
-                    :options="[
-                        {
-                            value: 'list',
-                            icon: 'mdi-format-list-bulleted',
-                            label: __('List'),
-                        },
-                        {
-                            value: 'grid',
-                            icon: 'mdi-view-grid-outline',
-                            label: __('Grid'),
-                        },
-                    ]"
-                    unelevated
-                    class="view-toggle"
-                />
             </div>
 
             <!-- Filter Component -->
-            <v-filter :params="params" @change="searching" class="q-mb-sm" />
+            <div class="bg-gray-50 rounded-xl p-1 border border-gray-200">
+                <v-filter :params="params" @change="searching" />
+            </div>
         </div>
 
         <!-- Statistics Overview -->
         <div
-            class="row q-col-gutter-md q-mb-md q-mt-sm"
             v-if="transactions.length > 0"
-        >
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <q-card flat class="bg-blue-1 text-blue-8">
-                    <q-card-section class="text-center">
-                        <div class="text-h6">
-                            {{ transactions.length }} {{ __("Transaction")
-                            }}{{ transactions.length !== 1 ? "s" : "" }}
-                        </div>
-                        <q-icon name="mdi-receipt" size="md" />
-                    </q-card-section>
-                </q-card>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <q-card flat class="bg-green-1 text-green-8">
-                    <q-card-section class="text-center">
-                        <div class="text-h6">
-                            {{ successfulCount }} {{ __("Successful") }}
-                        </div>
-                        <q-icon name="mdi-check-circle" size="md" />
-                    </q-card-section>
-                </q-card>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <q-card flat class="bg-orange-1 text-orange-8">
-                    <q-card-section class="text-center">
-                        <div class="text-h6">
-                            {{ pendingCount }} {{ __("Pending") }}
-                        </div>
-                        <q-icon name="mdi-clock-outline" size="md" />
-                    </q-card-section>
-                </q-card>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <q-card flat class="bg-red-1 text-red-8">
-                    <q-card-section class="text-center">
-                        <div class="text-h6">
-                            {{ failedCount }} {{ __("Failed") }}
-                        </div>
-                        <q-icon name="mdi-close-circle" size="md" />
-                    </q-card-section>
-                </q-card>
-            </div>
-        </div>
-
-        <!-- Grid View -->
-        <div
-            v-if="viewMode === 'grid' && transactions.length > 0"
-            class="row q-col-gutter-lg q-pa-md"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 my-8"
         >
             <div
-                v-for="(item, index) in transactions"
-                :key="index"
-                class="col-12 col-sm-6 col-md-4 col-lg-3"
+                class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border border-blue-200 p-6 relative overflow-hidden group hover:shadow-lg transition-all duration-300"
             >
-                <q-card bordered class="transaction-card shadow-3">
-                    <q-card-section class="card-header bg-grey-2">
-                        <div class="row items-center justify-between">
-                            <div class="text-h6 text-primary text-weight-bold">
-                                {{ item.billing_period }} {{ __("plan") }}
-                            </div>
-                            <div class="row items-center q-gutter-xs">
-                                <v-activate
-                                    @updated="getTransactions"
-                                    v-if="check(item)"
-                                    :item="item"
-                                />
-                                <v-detail :item="item" />
-                            </div>
-                        </div>
-                    </q-card-section>
-
-                    <q-separator />
-
-                    <q-card-section class="q-pt-md">
-                        <div class="transaction-details">
-                            <div class="detail-item">
-                                <q-icon
-                                    name="mdi-receipt"
-                                    color="blue"
-                                    size="sm"
-                                />
-                                <span class="q-ml-sm"
-                                    ><strong>{{ __("Code:") }}</strong>
-                                    {{ item.code }}</span
-                                >
-                            </div>
-
-                            <div class="detail-item">
-                                <q-icon
-                                    name="mdi-currency-usd"
-                                    color="green"
-                                    size="sm"
-                                />
-                                <span class="q-ml-sm"
-                                    ><strong>{{ __("Price:") }}</strong>
-                                    {{ item.total }} {{ item.currency }}</span
-                                >
-                            </div>
-
-                            <div class="detail-item">
-                                <q-icon
-                                    name="mdi-calendar"
-                                    color="purple"
-                                    size="sm"
-                                />
-                                <span class="q-ml-sm"
-                                    ><strong>{{ __("Created:") }}</strong>
-                                    {{ item.created }}</span
-                                >
-                            </div>
-
-                            <div class="detail-item">
-                                <q-icon
-                                    name="mdi-update"
-                                    color="orange"
-                                    size="sm"
-                                />
-                                <span class="q-ml-sm"
-                                    ><strong>{{ __("Updated:") }}</strong>
-                                    {{ item.updated }}</span
-                                >
-                            </div>
-
-                            <div class="detail-item">
-                                <q-icon
-                                    name="mdi-credit-card"
-                                    color="teal"
-                                    size="sm"
-                                />
-                                <span class="q-ml-sm"
-                                    ><strong>{{ __("Method:") }}</strong>
-                                    {{ item.payment_method }}</span
-                                >
-                            </div>
-
-                            <div class="detail-item">
-                                <q-icon
-                                    name="mdi-check-circle"
-                                    color="green"
-                                    size="sm"
-                                />
-                                <span class="q-ml-sm"
-                                    ><strong>{{ __("Status:") }}</strong></span
-                                >
-                                <q-badge
-                                    :color="getStatusColor(item.status)"
-                                    class="q-ml-sm status-badge"
-                                >
-                                    {{ item.status }}
-                                </q-badge>
-                            </div>
-
-                            <div class="detail-item">
-                                <q-icon
-                                    name="mdi-calendar-check"
-                                    color="blue"
-                                    size="sm"
-                                />
-                                <span class="q-ml-sm"
-                                    ><strong>{{ __("Activated:") }}</strong>
-                                    {{ item.activated }}</span
-                                >
-                            </div>
-                        </div>
-                    </q-card-section>
-                </q-card>
-            </div>
-        </div>
-
-        <!-- Empty State for Grid View -->
-        <div
-            v-else-if="viewMode === 'grid' && transactions.length === 0"
-            class="text-center q-pa-xl"
-        >
-            <q-icon name="mdi-receipt-off" size="xl" color="grey-4" />
-            <div class="text-h6 text-grey-6 q-mt-md">
-                {{ __("No transactions found") }}
-            </div>
-            <div class="text-grey-5">
-                {{ __("Try adjusting your search filters") }}
-            </div>
-        </div>
-
-        <!-- List View -->
-        <q-table
-            v-else
-            :rows="transactions"
-            :columns="columns"
-            row-key="code"
-            flat
-            bordered
-            :loading="loading"
-            :pagination="pagination"
-            hide-pagination
-            class="shadow-1 rounded-borders q-mt-md"
-        >
-            <template v-slot:body="props">
-                <q-tr :props="props" class="q-hoverable">
-                    <q-td key="code" :props="props">
-                        <div class="text-weight-medium text-primary">
-                            {{ props.row.code }}
-                        </div>
-                    </q-td>
-
-                    <q-td key="price" :props="props">
-                        <div class="text-weight-medium">
-                            {{ props.row.total }} {{ props.row.currency }}
-                        </div>
-                    </q-td>
-
-                    <q-td key="billing_period" :props="props">
-                        <div class="text-caption">
-                            {{ props.row.billing_period }} {{ __("plan") }}
-                        </div>
-                    </q-td>
-
-                    <q-td key="created" :props="props">
-                        <div class="text-caption">
-                            {{ props.row.created }}
-                        </div>
-                    </q-td>
-
-                    <q-td key="updated" :props="props">
-                        <div class="text-caption">
-                            {{ props.row.updated }}
-                        </div>
-                    </q-td>
-
-                    <q-td key="payment_method" :props="props">
-                        <div class="text-caption">
-                            {{ props.row.payment_method }}
-                        </div>
-                    </q-td>
-
-                    <q-td key="status" :props="props">
-                        <q-badge
-                            :color="getStatusColor(props.row.status)"
-                            class="status-badge"
-                        >
-                            {{ props.row.status }}
-                        </q-badge>
-                    </q-td>
-
-                    <q-td key="activated" :props="props">
-                        <div class="text-caption">
-                            {{ props.row.activated }}
-                        </div>
-                    </q-td>
-
-                    <q-td key="actions" :props="props" auto-width>
-                        <div class="flex justify-between">
-                            <v-transaction-activate
-                                @updated="getTransactions"
-                                v-if="check(props.row)"
-                                :item="props.row"
-                            />
-                            <v-detail :item="props.row" />
-                        </div>
-                    </q-td>
-                </q-tr>
-            </template>
-
-            <template v-slot:no-data>
-                <div class="full-width row flex-center text-grey-6 q-pa-xl">
-                    <q-icon name="mdi-receipt-off" size="xl" />
-                    <div class="q-ml-sm">
-                        {{ __("No transactions available") }}
+                <div class="relative z-10">
+                    <div class="text-2xl font-bold text-blue-900 mb-2">
+                        {{ transactions.length }}
+                    </div>
+                    <div class="text-blue-700 font-medium text-sm">
+                        {{ __("Total Transactions") }}
                     </div>
                 </div>
-            </template>
+                <i
+                    class="mdi mdi-receipt text-blue-400 text-3xl absolute top-4 right-4 group-hover:scale-110 transition-transform duration-300"
+                ></i>
+            </div>
 
-            <template v-slot:loading>
-                <q-inner-loading showing color="primary" />
-            </template>
-        </q-table>
+            <div
+                class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl border border-green-200 p-6 relative overflow-hidden group hover:shadow-lg transition-all duration-300"
+            >
+                <div class="relative z-10">
+                    <div class="text-2xl font-bold text-green-900 mb-2">
+                        {{ successfulCount }}
+                    </div>
+                    <div class="text-green-700 font-medium text-sm">
+                        {{ __("Successful") }}
+                    </div>
+                </div>
+                <i
+                    class="mdi mdi-check-circle text-green-400 text-3xl absolute top-4 right-4 group-hover:scale-110 transition-transform duration-300"
+                ></i>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl border border-orange-200 p-6 relative overflow-hidden group hover:shadow-lg transition-all duration-300"
+            >
+                <div class="relative z-10">
+                    <div class="text-2xl font-bold text-orange-900 mb-2">
+                        {{ pendingCount }}
+                    </div>
+                    <div class="text-orange-700 font-medium text-sm">
+                        {{ __("Pending") }}
+                    </div>
+                </div>
+                <i
+                    class="mdi mdi-clock-outline text-orange-400 text-3xl absolute top-4 right-4 group-hover:scale-110 transition-transform duration-300"
+                ></i>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl border border-red-200 p-6 relative overflow-hidden group hover:shadow-lg transition-all duration-300"
+            >
+                <div class="relative z-10">
+                    <div class="text-2xl font-bold text-red-900 mb-2">
+                        {{ failedCount }}
+                    </div>
+                    <div class="text-red-700 font-medium text-sm">
+                        {{ __("Failed") }}
+                    </div>
+                </div>
+                <i
+                    class="mdi mdi-close-circle text-red-400 text-3xl absolute top-4 right-4 group-hover:scale-110 transition-transform duration-300"
+                ></i>
+            </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div
+            class="bg-white rounded-2xl shadow-sm border border-gray-200 mt-6 overflow-hidden"
+        >
+            <!-- Table Header -->
+            <div
+                class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200"
+            >
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        {{ __("Transaction Records") }}
+                    </h3>
+                    <div class="text-sm text-gray-500">
+                        {{ transactions.length }} {{ __("records") }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                                {{ __("Transaction") }}
+                            </th>
+                            <th
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                                {{ __("Amount") }}
+                            </th>
+                            <th
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                                {{ __("Status") }}
+                            </th>
+                            <th
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                                {{ __("Actions") }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <template
+                            v-for="(item, index) in transactions"
+                            :key="index"
+                        >
+                            <!-- Main Row -->
+                            <tr
+                                class="hover:bg-gray-50 transition-colors duration-200"
+                            >
+                                <!-- Transaction Info -->
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-shrink-0">
+                                            <div
+                                                class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                                            >
+                                                <i
+                                                    class="mdi mdi-receipt text-blue-600 text-lg"
+                                                ></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <div
+                                                class="text-sm font-semibold text-gray-900 truncate"
+                                            >
+                                                {{ item.code }}
+                                            </div>
+                                            <div
+                                                class="text-xs text-gray-500 mt-1"
+                                            >
+                                                <i
+                                                    class="mdi mdi-calendar-clock mr-1"
+                                                ></i>
+                                                {{ item.created }}
+                                            </div>
+                                            <div
+                                                class="text-xs text-gray-500 mt-1"
+                                            >
+                                                <i
+                                                    class="mdi mdi-credit-card-outline mr-1"
+                                                ></i>
+                                                {{ item.payment_method }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Amount -->
+                                <td class="px-6 py-4">
+                                    <div
+                                        class="text-sm font-semibold text-gray-900"
+                                    >
+                                        {{ item.total }} {{ item.currency }}
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        {{ item.billing_period }}
+                                        {{ __("plan") }}
+                                    </div>
+                                </td>
+
+                                <!-- Status -->
+                                <td class="px-6 py-4">
+                                    <span
+                                        :class="[
+                                            'px-3 py-2 rounded-full text-xs font-bold uppercase tracking-wide',
+                                            getStatusClasses(item.status),
+                                        ]"
+                                    >
+                                        {{ item.status }}
+                                    </span>
+                                    <div
+                                        v-if="item.activated"
+                                        class="text-xs text-gray-500 mt-1"
+                                    >
+                                        <i
+                                            class="mdi mdi-calendar-check mr-1"
+                                        ></i>
+                                        {{ __("Activated") }}:
+                                        {{ item.activated }}
+                                    </div>
+                                </td>
+
+                                <!-- Actions -->
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <v-transaction-activate
+                                            @updated="getTransactions"
+                                            v-if="check(item)"
+                                            :item="item"
+                                        />
+                                        <v-detail :item="item" />
+                                        <button
+                                            @click="toggleRowExpansion(index)"
+                                            class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                            :title="
+                                                expandedRow === index
+                                                    ? __('Collapse details')
+                                                    : __('Expand details')
+                                            "
+                                        >
+                                            <i
+                                                :class="[
+                                                    'mdi transition-transform duration-200',
+                                                    expandedRow === index
+                                                        ? 'mdi-chevron-up'
+                                                        : 'mdi-chevron-down',
+                                                ]"
+                                            ></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Expanded Details Row -->
+                            <tr
+                                v-if="expandedRow === index"
+                                class="bg-blue-50 border-b border-blue-200"
+                            >
+                                <td colspan="4" class="px-6 py-4">
+                                    <div
+                                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                                    >
+                                        <!-- Transaction Details -->
+                                        <div class="space-y-4">
+                                            <h4
+                                                class="text-sm font-semibold text-blue-800 uppercase tracking-wide"
+                                            >
+                                                <i
+                                                    class="mdi mdi-information-outline mr-2"
+                                                ></i>
+                                                {{ __("Transaction Details") }}
+                                            </h4>
+                                            <div class="space-y-3">
+                                                <div
+                                                    class="flex justify-between text-sm"
+                                                >
+                                                    <span class="text-gray-600"
+                                                        >{{
+                                                            __(
+                                                                "Transaction Code"
+                                                            )
+                                                        }}:</span
+                                                    >
+                                                    <span
+                                                        class="font-medium text-gray-900"
+                                                        >{{ item.code }}</span
+                                                    >
+                                                </div>
+                                                <div
+                                                    class="flex justify-between text-sm"
+                                                >
+                                                    <span class="text-gray-600"
+                                                        >{{
+                                                            __("Created Date")
+                                                        }}:</span
+                                                    >
+                                                    <span
+                                                        class="font-medium text-gray-900"
+                                                        >{{
+                                                            item.created
+                                                        }}</span
+                                                    >
+                                                </div>
+                                                <div
+                                                    class="flex justify-between text-sm"
+                                                >
+                                                    <span class="text-gray-600"
+                                                        >{{
+                                                            __(
+                                                                "Activation Date"
+                                                            )
+                                                        }}:</span
+                                                    >
+                                                    <span
+                                                        class="font-medium text-gray-900"
+                                                        >{{
+                                                            item.activated ||
+                                                            __("Not activated")
+                                                        }}</span
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Payment Information -->
+                                        <div class="space-y-4">
+                                            <h4
+                                                class="text-sm font-semibold text-blue-800 uppercase tracking-wide"
+                                            >
+                                                <i
+                                                    class="mdi mdi-credit-card-outline mr-2"
+                                                ></i>
+                                                {{ __("Payment Information") }}
+                                            </h4>
+                                            <div class="space-y-3">
+                                                <div
+                                                    class="flex justify-between text-sm"
+                                                >
+                                                    <span class="text-gray-600"
+                                                        >{{
+                                                            __(
+                                                                "Payment Method"
+                                                            )
+                                                        }}:</span
+                                                    >
+                                                    <span
+                                                        class="font-medium text-gray-900"
+                                                        >{{
+                                                            item.payment_method
+                                                        }}</span
+                                                    >
+                                                </div>
+                                                <div
+                                                    class="flex justify-between text-sm"
+                                                >
+                                                    <span class="text-gray-600"
+                                                        >{{
+                                                            __("Plan Type")
+                                                        }}:</span
+                                                    >
+                                                    <span
+                                                        class="font-medium text-gray-900"
+                                                        >{{
+                                                            item.billing_period
+                                                        }}
+                                                        {{ __("plan") }}</span
+                                                    >
+                                                </div>
+                                                <div
+                                                    class="flex justify-between text-sm"
+                                                >
+                                                    <span class="text-gray-600"
+                                                        >{{
+                                                            __("Currency")
+                                                        }}:</span
+                                                    >
+                                                    <span
+                                                        class="font-medium text-gray-900"
+                                                        >{{
+                                                            item.currency
+                                                        }}</span
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Additional Actions -->
+                                        <div class="space-y-4">
+                                            <h4
+                                                class="text-sm font-semibold text-blue-800 uppercase tracking-wide"
+                                            >
+                                                <i
+                                                    class="mdi mdi-cog-outline mr-2"
+                                                ></i>
+                                                {{ __("Quick Actions") }}
+                                            </h4>
+                                            <div class="flex flex-wrap gap-2">
+                                                <v-transaction-activate
+                                                    @updated="getTransactions"
+                                                    v-if="check(item)"
+                                                    :item="item"
+                                                    class="w-full"
+                                                />
+                                                <v-detail
+                                                    :item="item"
+                                                    class="w-full"
+                                                />
+                                                <button
+                                                    @click="
+                                                        toggleRowExpansion(
+                                                            index
+                                                        )
+                                                    "
+                                                    class="w-full px-4 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-white border border-gray-300 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                                                >
+                                                    <i
+                                                        class="mdi mdi-close"
+                                                    ></i>
+                                                    {{ __("Close Details") }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Loading State -->
+            <div v-if="loading" class="flex justify-center items-center py-16">
+                <div class="text-center">
+                    <div
+                        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
+                    ></div>
+                    <p class="text-gray-600 font-medium">
+                        {{ __("Loading transactions...") }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div
+                v-if="!loading && transactions.length === 0"
+                class="text-center py-16 px-6"
+            >
+                <div class="max-w-md mx-auto">
+                    <div
+                        class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                    >
+                        <i class="mdi mdi-receipt text-gray-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-600 mb-2">
+                        {{ __("No transactions available") }}
+                    </h3>
+                    <p class="text-gray-500">
+                        {{
+                            __("Get started by creating your first transaction")
+                        }}
+                    </p>
+                </div>
+            </div>
+        </div>
 
         <!-- Pagination -->
-        <div class="row justify-center q-my-lg" v-if="pages.total_pages > 1">
-            <q-pagination
-                v-model="search.page"
-                color="primary"
-                :max="pages.total_pages"
-                :max-pages="6"
-                boundary-numbers
-                direction-links
-                ellipses
-                class="q-pa-sm bg-white rounded-borders shadow-1"
-            />
-
-            <q-select
-                v-model="search.per_page"
-                :options="[10, 15, 25, 50]"
-                :label="__('Items per page')"
-                dense
-                outlined
-                class="q-ml-md"
-                style="min-width: 140px"
-                @update:model-value="getTransactions"
-            >
-                <template v-slot:prepend>
-                    <q-icon name="mdi-format-list-numbered" />
-                </template>
-            </q-select>
-        </div>
+        <v-paginate
+            v-model="search.page"
+            :total-pages="pages.total_pages"
+            v-if="pages.total_pages > 1"
+        />
     </v-admin-transaction-layout>
 </template>
 
 <script>
+import VFilter from "@/components/VFilter.vue";
+import VAdminTransactionLayout from "@/layouts/VAdminTransactionLayout.vue";
 import VDetail from "./Detail.vue";
 
 export default {
     components: {
+        VAdminTransactionLayout,
         VDetail,
+        VFilter,
     },
 
     data() {
         return {
             viewMode: "list",
             loading: false,
+            expandedRow: null,
             params: [
                 { key: "code", value: "code" },
                 { key: "session", value: "session_id" },
@@ -397,70 +529,6 @@ export default {
                 page: 1,
                 per_page: 15,
             },
-            pagination: {
-                sortBy: "created",
-                descending: true,
-                page: 1,
-                rowsPerPage: 15,
-            },
-            columns: [
-                {
-                    name: "code",
-                    label: this.__("Transaction Code"),
-                    field: "code",
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "price",
-                    label: this.__("Amount"),
-                    field: (row) => `${row.total} ${row.currency}`,
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "billing_period",
-                    label: this.__("Plan Type"),
-                    field: "billing_period",
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "created",
-                    label: this.__("Created Date"),
-                    field: "created",
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "payment_method",
-                    label: this.__("Payment Method"),
-                    field: "payment_method",
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "status",
-                    label: this.__("Status"),
-                    field: "status",
-                    align: "center",
-                    sortable: true,
-                },
-                {
-                    name: "activated",
-                    label: this.__("Activation Date"),
-                    field: "activated",
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "actions",
-                    label: this.__("Actions"),
-                    field: "actions",
-                    align: "right",
-                    sortable: false,
-                },
-            ],
         };
     },
 
@@ -477,17 +545,22 @@ export default {
             return this.transactions.filter((t) => t.status === "failed")
                 .length;
         },
-    },
+        visiblePages() {
+            const total = this.pages.total_pages;
+            const current = this.search.page;
+            const pages = [];
 
-    watch: {
-        "search.page"(value) {
-            this.getTransactions();
-        },
-        "search.per_page"(value) {
-            if (value) {
-                this.search.per_page = value;
-                this.getTransactions();
+            // Show first page, last page, and pages around current
+            for (let i = 1; i <= total; i++) {
+                if (
+                    i === 1 ||
+                    i === total ||
+                    (i >= current - 2 && i <= current + 2)
+                ) {
+                    pages.push(i);
+                }
             }
+            return pages;
         },
     },
 
@@ -496,16 +569,24 @@ export default {
     },
 
     methods: {
-        getStatusColor(status) {
+        getStatusClasses(status) {
             switch (status) {
                 case "successful":
-                    return "green";
+                    return "bg-green-100 text-green-800 border border-green-200";
                 case "pending":
-                    return "orange";
+                    return "bg-orange-100 text-orange-800 border border-orange-200";
                 case "failed":
-                    return "red";
+                    return "bg-red-100 text-red-800 border border-red-200";
                 default:
-                    return "grey";
+                    return "bg-gray-100 text-gray-800 border border-gray-200";
+            }
+        },
+
+        toggleRowExpansion(index) {
+            if (this.expandedRow === index) {
+                this.expandedRow = null;
+            } else {
+                this.expandedRow = index;
             }
         },
 
@@ -519,6 +600,7 @@ export default {
 
         async getTransactions(param = null) {
             this.loading = true;
+            this.expandedRow = null;
             var params = { ...this.search, ...param };
 
             try {
@@ -531,11 +613,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    console.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -552,49 +630,3 @@ export default {
     },
 };
 </script>
-
-<style lang="css" scoped>
-.transaction-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 12px;
-}
-
-.transaction-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-}
-
-.card-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.transaction-details {
-    display: grid;
-    gap: 0.75rem;
-}
-
-.detail-item {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    background: #fafafa;
-    border-radius: 6px;
-    border: 1px solid #f0f0f0;
-}
-
-.status-badge {
-    font-size: 0.75em;
-    padding: 4px 8px;
-    border-radius: 12px;
-}
-
-.view-toggle {
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.shadow-3 {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-</style>

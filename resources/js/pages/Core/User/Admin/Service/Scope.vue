@@ -493,14 +493,14 @@ export default {
                 await navigator.clipboard.writeText(text);
                 this.$q.notify({
                     type: "positive",
-                    message: this.__("GSR_ID copied to clipboard"),
+                    message: __("GSR_ID copied to clipboard"),
                     icon: "mdi-check-circle",
                     timeout: 2000,
                 });
             } catch (err) {
                 this.$q.notify({
                     type: "negative",
-                    message: this.__("Failed to copy to clipboard"),
+                    message: __("Failed to copy to clipboard"),
                     icon: "mdi-alert-circle",
                     timeout: 2000,
                 });

@@ -151,12 +151,11 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    error: Array,
     disabled: {
         type: Boolean,
         default: false,
     },
-    error: Array,
+    error: { Array, default: [] },
 });
 
 const emit = defineEmits(["update:modelValue", "change"]);

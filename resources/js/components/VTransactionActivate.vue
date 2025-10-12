@@ -130,7 +130,7 @@ export default {
                     this.dialog = false;
                     this.$q.notify({
                         type: "positive",
-                        message: this.__(
+                        message: __(
                             "Transaction has been activated successfully"
                         ),
                         icon: "mdi-check-circle",

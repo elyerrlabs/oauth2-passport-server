@@ -529,8 +529,8 @@ export default {
         selectAddress(item) {
             this.$swal.fire({
                 icon: "success",
-                title: this.__("Success"),
-                text: this.__(
+                title: __("Success"),
+                text: __(
                     "Delivery address has been selected successfully"
                 ),
             });
@@ -547,14 +547,14 @@ export default {
 
         async destroy(item) {
             const confirm = await this.$swal.fire({
-                title: this.__("Confirm Removal"),
-                text: this.__("Are you sure you want to remove this address?"),
+                title: __("Confirm Removal"),
+                text: __("Are you sure you want to remove this address?"),
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
                 showCancelButton: true,
-                confirmButtonText: this.__("Yes, remove it!"),
-                cancelButtonText: this.__("Cancel"),
+                confirmButtonText: __("Yes, remove it!"),
+                cancelButtonText: __("Cancel"),
             });
 
             if (confirm) {
@@ -564,8 +564,8 @@ export default {
                         this.getAddresses();
                         this.$swal.fire({
                             icon: "success",
-                            title: this.__("Success"),
-                            text: this.__(
+                            title: __("Success"),
+                            text: __(
                                 "Delivery address removed successfully"
                             ),
                         });
@@ -579,8 +579,8 @@ export default {
                     if (e?.response?.data?.message) {
                         this.$swal.fire({
                             icon: "error",
-                            title: this.__("Error"),
-                            text: this.__("Delivery address removal failed"),
+                            title: __("Error"),
+                            text: __("Delivery address removal failed"),
                         });
                     }
                 }
@@ -605,7 +605,7 @@ export default {
                 if (e?.response?.data?.message) {
                     this.$swal.fire({
                         icon: "error",
-                        title: this.__("Error"),
+                        title: __("Error"),
                         text: e.response.data.message,
                     });
                 }
@@ -623,10 +623,10 @@ export default {
                     this.getAddresses();
                     this.$swal.fire({
                         icon: "success",
-                        title: this.__("Success"),
+                        title: __("Success"),
                         text: this.form.id
-                            ? this.__("Delivery address updated successfully")
-                            : this.__("Delivery address added successfully"),
+                            ? __("Delivery address updated successfully")
+                            : __("Delivery address added successfully"),
                         color: "positive",
                         position: "top-right",
                         icon: "mdi-check-circle",
@@ -639,7 +639,7 @@ export default {
                 if (e?.response?.data?.message) {
                     this.$swal.fire({
                         icon: "error",
-                        title: this.__("Error"),
+                        title: __("Error"),
                         text: e.response.data.message,
                     });
                 }

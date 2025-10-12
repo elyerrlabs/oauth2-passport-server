@@ -524,7 +524,7 @@ export default {
                 })
                 .catch((e) => {
                     if (e?.response?.data?.message) {
-                        this.$notify(e.response.data.message);
+                         $notify(e.response.data.message);
                     }
                 })
                 .finally(() => {

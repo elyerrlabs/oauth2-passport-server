@@ -295,28 +295,28 @@ export default {
             columns: [
                 {
                     name: "name",
-                    label: this.__("Role"),
+                    label: __("Role"),
                     field: "name",
                     sortable: true,
                     align: "left",
                 },
                 /* {
                     name: "description",
-                    label: this.__("Description"),
+                    label: __("Description"),
                     field: "description",
                     sortable: false,
                     align: "left",
                 },*/
                 {
                     name: "system",
-                    label: this.__("System Role"),
+                    label: __("System Role"),
                     field: "system",
                     sortable: true,
                     align: "center",
                 },
                 {
                     name: "actions",
-                    label: this.__("Actions"),
+                    label: __("Actions"),
                     field: "actions",
                     align: "right",
                     sortable: false,

@@ -368,8 +368,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VAccountLayout from "../../../../Components/VAccountLayout.vue";
-import VPaginate from "../../../../Components/VPaginate.vue";
+import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
 
@@ -414,7 +414,7 @@ export default {
                 })
                 .catch((e) => {
                     if (e?.response?.data?.message) {
-                        this.$notify.error(e.response.data.message);
+                         $notify.error(e.response.data.message);
                     }
                 })
                 .finally(() => {
@@ -476,7 +476,7 @@ export default {
                 })
                 .catch(() => {
                     this.$q.notify.error(
-                        this.__("Failed to copy to clipboard")
+                        __("Failed to copy to clipboard")
                     );
                 });
         },

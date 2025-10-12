@@ -284,7 +284,7 @@ export default {
                 if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
                     this.$q.notify({
-                        message: this.__("Please fix the form errors"),
+                        message: __("Please fix the form errors"),
                         color: "negative",
                         icon: "mdi-alert-circle",
                         position: "top",
@@ -307,7 +307,7 @@ export default {
             try {
                 await navigator.clipboard.writeText(text);
                 this.$q.notify({
-                    message: this.__("Client ID copied to clipboard"),
+                    message: __("Client ID copied to clipboard"),
                     color: "positive",
                     icon: "mdi-check",
                     position: "top-right",
@@ -315,7 +315,7 @@ export default {
                 });
             } catch (err) {
                 this.$q.notify({
-                    message: this.__("Failed to copy to clipboard"),
+                    message: __("Failed to copy to clipboard"),
                     color: "negative",
                     icon: "error",
                     position: "top",

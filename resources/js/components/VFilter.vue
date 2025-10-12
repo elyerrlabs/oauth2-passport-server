@@ -20,112 +20,154 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-card class="q-pa-md shadow-2 rounded-borders">
+    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
         <!-- Header -->
-        <q-card-section
-            class="bg-primary text-white row items-center justify-between q-pa-sm q-gutter-sm rounded-borders"
+        <div
+            class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg px-4 py-3 flex items-center justify-between mb-4"
         >
-            <div class="row items-center">
-                <q-btn
-                    flat
-                    dense
-                    round
-                    icon="mdi-tune"
+            <div class="flex items-center">
+                <button
                     @click="show = !show"
-                    class="q-mr-sm"
+                    class="p-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 mr-3"
                     :aria-label="__('Toggle Filters')"
-                />
-                <span class="text-h6">{{ __("Advanced Filters") }}</span>
+                >
+                    <i class="mdi mdi-tune text-xl"></i>
+                </button>
+                <span class="text-lg font-semibold">{{
+                    __("Advanced Filters")
+                }}</span>
             </div>
 
-            <q-btn
-                flat
-                dense
-                round
-                icon="mdi-broom"
+            <button
                 @click="clean"
+                class="p-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
                 :aria-label="__('Clear Filters')"
-                color="white"
-            />
-        </q-card-section>
+            >
+                <i class="mdi mdi-broom text-xl"></i>
+            </button>
+        </div>
 
         <!-- Filters Section -->
-        <q-slide-transition>
-            <div v-show="show" class="q-pa-md bg-grey-1">
-                <div class="row q-col-gutter-md q-pb-sm">
+        <transition
+            enter-active-class="transition-all duration-300 ease-out"
+            leave-active-class="transition-all duration-200 ease-in"
+            enter-from-class="opacity-0 max-h-0"
+            enter-to-class="opacity-100 max-h-96"
+            leave-from-class="opacity-100 max-h-96"
+            leave-to-class="opacity-0 max-h-0"
+        >
+            <div
+                v-show="show"
+                class="bg-gray-50 rounded-lg p-4 overflow-hidden"
+            >
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-3"
+                >
                     <!-- Search -->
-                    <div class="col-xs-12 col-sm-6 col-md-3">
-                        <q-input
-                            v-model="inputValue"
-                            outlined
-                            dense
-                            debounce="300"
-                            :label="__('Search')"
-                            :placeholder="__('Type to search...')"
-                            clearable
-                            @keyup="emitFilterChange"
-                            @input="emitFilterChange"
-                            :prefix="
-                                selected_parameter
-                                    ? selected_parameter + ':'
-                                    : ''
-                            "
-                        >
-                            <template v-slot:append>
-                                <q-icon name="mdi-magnify" />
-                            </template>
-                        </q-input>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700 block">
+                            {{ __("Search") }}
+                        </label>
+                        <div class="relative">
+                            <input
+                                v-model="inputValue"
+                                type="text"
+                                :placeholder="__('Type to search...')"
+                                @input="emitFilterChange"
+                                @keyup="emitFilterChange"
+                                class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                                :class="selected_parameter ? 'pl-12' : 'pl-3'"
+                            />
+                            <div
+                                v-if="selected_parameter"
+                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                            >
+                                <span class="text-gray-500 text-sm"
+                                    >{{ selected_parameter }}:</span
+                                >
+                            </div>
+                            <div
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                            >
+                                <i class="mdi mdi-magnify text-gray-400"></i>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Search By -->
-                    <div class="col-xs-12 col-sm-6 col-md-3">
-                        <q-select
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700 block">
+                            {{ __("Search By") }}
+                        </label>
+                        <select
                             v-model="selected_parameter"
-                            :options="params"
-                            option-value="value"
-                            option-label="key"
-                            outlined
-                            dense
-                            :label="__('Search By')"
-                            emit-value
-                            map-options
-                            clearable
-                        />
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
+                        >
+                            <option value="">
+                                {{ __("Select field...") }}
+                            </option>
+                            <option
+                                v-for="param in params"
+                                :key="param.value"
+                                :value="param.value"
+                            >
+                                {{ param.key }}
+                            </option>
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+                        >
+                            <i class="mdi mdi-chevron-down"></i>
+                        </div>
                     </div>
 
                     <!-- Order By -->
-                    <div class="col-xs-12 col-sm-6 col-md-3">
-                        <q-select
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700 block">
+                            {{ __("Order By") }}
+                        </label>
+                        <select
                             v-model="order_by"
-                            :options="params"
-                            option-value="value"
-                            option-label="key"
-                            outlined
-                            dense
-                            :label="__('Order By')"
-                            emit-value
-                            map-options
-                            clearable
-                        />
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
+                        >
+                            <option value="">
+                                {{ __("Select field...") }}
+                            </option>
+                            <option
+                                v-for="param in params"
+                                :key="param.value"
+                                :value="param.value"
+                            >
+                                {{ param.key }}
+                            </option>
+                        </select>
                     </div>
 
                     <!-- Order Type -->
-                    <div class="col-xs-12 col-sm-6 col-md-3">
-                        <q-select
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700 block">
+                            {{ __("Order Type") }}
+                        </label>
+                        <select
                             v-model="order_type"
-                            :options="orderTypes"
-                            outlined
-                            dense
-                            :label="__('Order Type')"
-                            emit-value
-                            map-options
-                            clearable
-                        />
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
+                        >
+                            <option value="">
+                                {{ __("Select order...") }}
+                            </option>
+                            <option
+                                v-for="type in orderTypes"
+                                :key="type.value"
+                                :value="type.value"
+                            >
+                                {{ type.label }}
+                            </option>
+                        </select>
                     </div>
                 </div>
             </div>
-        </q-slide-transition>
-    </q-card>
+        </transition>
+    </div>
 </template>
 
 <script>
@@ -184,9 +226,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.rounded-borders {
-    border-radius: 12px;
-}
-</style>

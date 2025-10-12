@@ -21,129 +21,143 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div>
-        <q-btn
+        <button
             @click="dialog = true"
-            color="primary"
-            icon="mdi-eye-outline"
-            round
-            outline
-            size="sm"
+            class="flex items-center cursor-pointer px-4 py-2 justify-center text-blue-600 border border-blue-600 rounded hover:bg-blue-50 transition-colors duration-200"
         >
-            <q-tooltip class="bg-primary">{{
-                __("View Transaction Details")
-            }}</q-tooltip>
-        </q-btn>
+            <i class="mdi mdi-eye-outline text-sm"></i>
+            {{ __("view") }}
+        </button>
 
-        <q-dialog v-model="dialog" persistent>
-            <q-card
-                class="detail-card"
-                style="min-width: 700px; max-width: 90vw"
+        <!-- Dialog -->
+        <div
+            v-if="dialog"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80"
+        >
+            <div
+                class="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden"
             >
-                <q-card-section
-                    class="detail-header bg-primary text-white q-pa-md"
-                >
-                    <div class="row items-center">
-                        <q-icon
-                            name="mdi-file-document-outline"
-                            size="sm"
-                            class="q-mr-sm"
-                        />
-                        <div class="text-h6">
+                <!-- Header -->
+                <div class="bg-blue-600 text-white px-6 py-4">
+                    <div class="flex items-center">
+                        <i
+                            class="mdi mdi-file-document-outline text-lg mr-2"
+                        ></i>
+                        <h2 class="text-xl font-semibold">
                             {{ __("Transaction Details") }}
-                        </div>
-                        <q-space />
-                        <q-btn
-                            icon="close"
-                            flat
-                            round
-                            dense
-                            v-close-popup
-                            class="text-white"
-                        />
-                    </div>
-                </q-card-section>
-
-                <q-card-section class="q-pt-lg scroll" style="max-height: 70vh">
-                    <!-- Main transaction information -->
-                    <div class="info-section q-mb-md">
-                        <div
-                            class="text-subtitle1 text-weight-medium q-mb-sm text-primary"
+                        </h2>
+                        <div class="flex-1"></div>
+                        <button
+                            @click="dialog = false"
+                            class="flex items-center justify-center w-8 h-8 text-white hover:bg-white hover:bg-opacity-20 rounded-full transition-colors duration-200"
                         >
-                            <q-icon name="mdi-information" class="q-mr-xs" />
+                            <i class="mdi mdi-close text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-6 overflow-y-auto max-h-[60vh]">
+                    <!-- Main transaction information -->
+                    <div class="mb-6">
+                        <div
+                            class="flex items-center text-blue-600 font-medium mb-3"
+                        >
+                            <i class="mdi mdi-information mr-2"></i>
                             {{ __("Transaction Information") }}
                         </div>
 
-                        <div class="info-grid">
+                        <div class="space-y-2">
                             <div
                                 v-for="(value, key) in filteredItem"
                                 :key="key"
-                                class="info-item row q-py-xs"
+                                class="flex py-2 border-b border-gray-100 last:border-b-0"
                             >
-                                <div class="info-label col-4 text-grey-8">
+                                <div class="w-1/3 text-gray-600 font-medium">
                                     {{ __(formatKey(key)) }}
                                 </div>
-                                <div
-                                    class="info-value col-8 text-weight-medium"
-                                >
+                                <div class="w-2/3 font-medium text-gray-800">
                                     {{ formatValue(value) }}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <q-separator class="q-my-md" />
+                    <div class="border-t border-gray-200 my-4"></div>
 
                     <!-- JSON Response Section -->
-                    <q-expansion-item
-                        v-if="item.response"
-                        icon="mdi-code-json"
-                        :label="__('JSON Response')"
-                        dense
-                        expand-separator
-                        header-class="text-primary expansion-header"
-                    >
-                        <q-card class="bg-grey-1">
-                            <q-card-section class="q-pa-sm">
-                                <pre class="json-pre">{{
-                                    prettyJSON(item.response)
-                                }}</pre>
-                            </q-card-section>
-                        </q-card>
-                    </q-expansion-item>
+                    <div v-if="item.response" class="mb-4">
+                        <button
+                            @click="toggleExpansion('response')"
+                            class="flex items-center w-full text-left text-blue-600 font-medium py-2 hover:bg-gray-50 rounded-lg px-3 transition-colors duration-200"
+                        >
+                            <i class="mdi mdi-code-json mr-2"></i>
+                            {{ __("JSON Response") }}
+                            <i
+                                :class="[
+                                    'mdi ml-auto transition-transform duration-200',
+                                    expandedSections.response
+                                        ? 'mdi-chevron-up'
+                                        : 'mdi-chevron-down',
+                                ]"
+                            ></i>
+                        </button>
+
+                        <div
+                            v-if="expandedSections.response"
+                            class="mt-2 bg-gray-50 rounded-lg p-4 border border-gray-200"
+                        >
+                            <pre
+                                class="text-sm text-gray-700 whitespace-pre-wrap overflow-x-auto"
+                                >{{ prettyJSON(item.response) }}</pre
+                            >
+                        </div>
+                    </div>
 
                     <!-- Meta Information Section -->
-                    <q-expansion-item
-                        v-if="item.meta"
-                        icon="mdi-database-search"
-                        :label="__('Meta Information')"
-                        dense
-                        expand-separator
-                        header-class="text-primary expansion-header"
-                        class="q-mt-md"
-                    >
-                        <q-card class="bg-grey-1">
-                            <q-card-section class="q-pa-sm">
-                                <pre class="json-pre">{{
-                                    prettyJSON(item.meta)
-                                }}</pre>
-                            </q-card-section>
-                        </q-card>
-                    </q-expansion-item>
-                </q-card-section>
+                    <div v-if="item.meta" class="mb-4">
+                        <button
+                            @click="toggleExpansion('meta')"
+                            class="flex items-center w-full text-left text-blue-600 font-medium py-2 hover:bg-gray-50 rounded-lg px-3 transition-colors duration-200"
+                        >
+                            <i class="mdi mdi-database-search mr-2"></i>
+                            {{ __("Meta Information") }}
+                            <i
+                                :class="[
+                                    'mdi ml-auto transition-transform duration-200',
+                                    expandedSections.meta
+                                        ? 'mdi-chevron-up'
+                                        : 'mdi-chevron-down',
+                                ]"
+                            ></i>
+                        </button>
 
-                <q-separator />
+                        <div
+                            v-if="expandedSections.meta"
+                            class="mt-2 bg-gray-50 rounded-lg p-4 border border-gray-200"
+                        >
+                            <pre
+                                class="text-sm text-gray-700 whitespace-pre-wrap overflow-x-auto"
+                                >{{ prettyJSON(item.meta) }}</pre
+                            >
+                        </div>
+                    </div>
+                </div>
 
-                <q-card-actions align="right" class="q-pa-md">
-                    <q-btn
-                        flat
-                        :label="__('Close')"
-                        color="primary"
-                        v-close-popup
-                        icon="mdi-close"
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
+                <!-- Footer -->
+                <div class="border-t border-gray-200 px-6 py-4">
+                    <div class="flex justify-end">
+                        <button
+                            @click="dialog = false"
+                            class="flex items-center px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-200"
+                        >
+                            <i class="mdi mdi-close mr-2"></i>
+                            {{ __("Close") }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -158,6 +172,10 @@ export default {
     data() {
         return {
             dialog: false,
+            expandedSections: {
+                response: false,
+                meta: false,
+            },
         };
     },
     computed: {
@@ -166,7 +184,7 @@ export default {
             return Object.keys(this.item)
                 .filter((key) => !exclude.includes(key))
                 .reduce((acc, key) => {
-                    acc[__(key)] = this.item[key];
+                    acc[key] = this.item[key];
                     return acc;
                 }, {});
         },
@@ -196,62 +214,36 @@ export default {
                 return jsonData;
             }
         },
+        toggleExpansion(section) {
+            this.expandedSections[section] = !this.expandedSections[section];
+        },
     },
 };
 </script>
 
 <style scoped>
-.detail-card {
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.detail-header {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-}
-
-.info-section {
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    padding: 16px;
-    background-color: #fafafa;
-}
-
-.info-grid {
-    display: grid;
-    grid-gap: 4px;
-}
-
-.info-item {
-    border-bottom: 1px solid #eeeeee;
-}
-
-.info-item:last-child {
-    border-bottom: none;
-}
-
-.info-label {
-    font-weight: 500;
-}
-
-.json-pre {
-    font-size: 12px;
+/* Estilos adicionales para mejorar la legibilidad */
+pre {
+    font-family: "Courier New", Monaco, monospace;
     line-height: 1.4;
-    overflow-x: auto;
-    padding: 12px;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    border-left: 4px solid #027be3;
-    max-height: 300px;
 }
 
-.expansion-header {
-    font-weight: 500;
-    padding: 8px 0;
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 6px;
 }
 
-.expansion-header :deep(.q-item__section--side) {
-    color: inherit;
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 </style>

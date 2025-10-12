@@ -82,7 +82,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },

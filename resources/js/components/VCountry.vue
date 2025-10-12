@@ -1,116 +1,188 @@
+<!--
+Copyright (c) 2025 Elvis Yerel Roman Concha
+
+This file is part of an open source project licensed under the
+"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+
+You may use, study, modify, and redistribute this file for personal,
+educational, or non-commercial research purposes only.
+
+Commercial use is strictly prohibited without prior written consent
+from the author.
+
+Combining this software with any project licensed for commercial use
+(such as AGPL) is not permitted without explicit authorization.
+
+This software supports OAuth 2.0 and OpenID Connect.
+
+Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+-->
 <template>
-    <div>
-        <q-select
-            :model-value="modelValue"
-            dense
-            outlined
-            use-input
-            fill-input
-            hide-selected
-            emit-value
-            map-options
-            input-debounce="300"
-            :options="filteredCountries"
-            :label="__('Country')"
-            :error="!!errors.country"
-            @filter="filterCountries"
-            @update:model-value="updateValue"
-            color="primary"
-            class="input-field"
+    <div class="w-full relative">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+            {{ __("Country") }}
+            <span v-if="required" class="text-red-500"> * </span>
+        </label>
+        <div class="relative">
+            <span
+                class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+            >
+                🌍
+            </span>
+            <input
+                type="text"
+                v-model="search"
+                @input="getCountries"
+                @blur="handleBlur"
+                @focus="open = true"
+                @click="open = true"
+                @keydown.esc="open = false"
+                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                :class="{ 'border-red-500': error.length }"
+                :placeholder="__('Select a country')"
+            />
+            <v-error :error="error" />
+        </div>
+
+        <!-- Dropdown -->
+        <ul
+            v-if="open && countries.length"
+            class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto"
         >
-            <template v-slot:prepend>
-                <q-icon name="mdi-earth" />
-            </template>
-            <template v-slot:error>
-                <v-error :error="errors.country"></v-error>
-            </template>
-            <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps">
-                    <q-item-section avatar>
-                        <span>{{ scope.opt.label.split(" ")[0] }}</span>
-                    </q-item-section>
-                    <q-item-section>
-                        <q-item-label>{{
-                            scope.opt.label.replace(/^.*? /, "")
-                        }}</q-item-label>
-                    </q-item-section>
-                </q-item>
-            </template>
-        </q-select>
+            <li
+                v-for="country in countries"
+                :key="country.id"
+                @click="selectCountry(country)"
+                class="cursor-pointer px-4 py-3 hover:bg-blue-50 border-b border-gray-100 last:border-b-0 transition-colors flex items-center space-x-3"
+            >
+                <span class="text-lg">{{ country.emoji }}</span>
+                <span class="text-gray-700">{{ country.name_en }}</span>
+            </li>
+        </ul>
     </div>
 </template>
 
 <script>
+import VError from "./VError.vue";
 export default {
+    components: { VError },
     props: {
         modelValue: {
             type: String,
             default: "",
         },
-        errors: {
-            type: [Array, Object],
-            default: () => ({}),
+        error: {
+            type: [Array],
+            default: [],
+        },
+        required: {
+            type: Boolean,
+            default: false,
         },
     },
 
     data() {
         return {
             countries: [],
-            filteredCountries: [],
+            search: "",
+            open: false,
+            selectedCountry: null,
         };
     },
 
-    created() {
-        this.getCountries();
+    watch: {
+        modelValue: {
+            immediate: true,
+            handler(newVal) {
+                // Cuando el valor del prop cambia, actualizar el search
+                if (newVal && newVal !== this.search) {
+                    this.search = newVal;
+                    // Opcional: cargar el país seleccionado si es necesario
+                    this.loadSelectedCountry(newVal);
+                }
+            },
+        },
+    },
+
+    mounted() {
+        window.addEventListener("keydown", this.handleEscape);
+        // Si hay un valor inicial, cargarlo en el search
+        if (this.modelValue) {
+            this.search = this.modelValue;
+        }
+    },
+
+    beforeUnmount() {
+        window.removeEventListener("keydown", this.handleEscape);
     },
 
     methods: {
-        async getCountries() {
-            try {
-                const res = await this.$server.get("/api/public/countries", {
-                    params: { order_by: "name_en", order_type: "asc" },
-                });
-                if (res.status === 200) this.countries = res.data;
-            } catch (e) {
-                this.$q.notify({
-                    type: "negative",
-                    message: "Failed to load countries",
-                    position: "top",
-                    icon: "mdi-alert-circle",
-                    timeout: 3000,
-                });
-            }
-
-            this.filteredCountries = this.countries.map((c) => ({
-                label: `${c.emoji} ${c.name_en}`,
-                value: c.name_en,
-            }));
+        handleBlur() {
+            setTimeout(() => {
+                this.open = false;
+            }, 200);
         },
 
-        filterCountries(val, update) {
-            if (!val) {
-                update(() => {
-                    this.filteredCountries = this.countries.map((c) => ({
-                        label: `${c.emoji} ${c.name_en}`,
-                        value: c.name_en,
-                    }));
-                });
+        handleEscape(e) {
+            if (e.key === "Escape") {
+                this.open = false;
+            }
+        },
+
+        async getCountries() {
+            if (this.search.length < 2) {
+                this.countries = [];
                 return;
             }
 
-            const needle = val.toLowerCase();
-            update(() => {
-                this.filteredCountries = this.countries
-                    .filter((c) => c.name_en.toLowerCase().includes(needle))
-                    .map((c) => ({
-                        label: `${c.emoji} ${c.name_en}`,
-                        value: c.name_en,
-                    }));
-            });
+            try {
+                const res = await this.$server.get("/api/public/countries", {
+                    params: {
+                        order_by: "name_en",
+                        order_type: "asc",
+                        name: this.search,
+                    },
+                });
+                if (res.status === 200) {
+                    this.countries = res.data;
+                    this.open = true;
+                }
+            } catch (e) {
+                console.error("Failed to load countries:", e);
+                 $notify.error("Failed to load countries");
+            }
         },
 
-        updateValue(value) {
-            this.$emit("update:modelValue", value);
+        async loadSelectedCountry(countryName) {
+            // Opcional: cargar información del país seleccionado
+            if (countryName && !this.selectedCountry) {
+                try {
+                    const res = await this.$server.get(
+                        "/api/public/countries",
+                        {
+                            params: {
+                                name: countryName,
+                                exact_match: true,
+                            },
+                        }
+                    );
+                    if (res.status === 200 && res.data.length > 0) {
+                        this.selectedCountry = res.data[0];
+                    }
+                } catch (e) {
+                    console.error("Failed to load selected country:", e);
+                }
+            }
+        },
+
+        selectCountry(country) {
+            this.search = country.name_en;
+            this.selectedCountry = country;
+            this.$emit("update:modelValue", country.name_en);
+            this.open = false;
+            this.countries = [];
         },
     },
 };

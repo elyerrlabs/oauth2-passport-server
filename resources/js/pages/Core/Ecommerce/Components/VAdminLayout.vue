@@ -20,258 +20,185 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="admin-layout min-h-screen bg-gray-100 flex">
-        <!-- Header -->
-        <header class="bg-blue-600 text-gray-600 shadow-md fixed w-full z-30">
-            <div class="flex items-center justify-between px-4 py-2">
-                <div class="flex items-center text-white">
-                    <button
-                        class="p-2 rounded-full hover:bg-blue-700 mr-2 focus:outline-none"
-                        @click="toggleLeftDrawer"
-                    >
-                        <i class="fas fa-bars"></i>
-                    </button>
+    <v-layout>
+        <template #aside>
+            <!-- Dashboard -->
+            <a
+                @click="open(menu_dashboard)"
+                :class="{
+                    'bg-blue-50 text-blue-600': isActive(menu_dashboard),
+                    'text-gray-700 hover:bg-gray-100':
+                        !isActive(menu_dashboard),
+                }"
+                class="flex items-center p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200"
+            >
+                <i class="fas fa-tachometer-alt w-6 text-blue-500 mr-3"></i>
+                <span>{{ __(menu_dashboard.name) }}</span>
+            </a>
 
-                    <div class="text-white flex items-center text-xl">
-                        <i class="fas fa-store mr-2"></i>
-                        <span class="font-bold">{{ __("eCommerce") }} </span>
+            <!-- Products Section -->
+            <div class="expansion-item">
+                <div
+                    class="flex items-center justify-between p-3 mx-2 my-1 rounded-lg cursor-pointer hover:bg-gray-100"
+                    @click="toggleExpansion('products')"
+                >
+                    <div class="flex items-center">
+                        <i class="fas fa-box-open w-6 text-blue-500 mr-3"></i>
+                        <span>{{ __("Products") }}</span>
                     </div>
-                </div>
-
-                <div class="flex items-center xs:space-x-2 md:space-x-4">
-                    <!-- Notifications -->
-                    <v-notification />
-
-                    <!-- User menu (hidden on mobile) -->
-                    <v-profile />
-                </div>
-            </div>
-        </header>
-
-        <!-- Sidebar -->
-        <aside
-            class="admin-sidebar fixed left-0 top-0 h-full bg-white border-r border-gray-200 z-20 transition-transform duration-300 pt-14"
-            :class="{
-                'translate-x-0': leftDrawerOpen,
-                '-translate-x-full': !leftDrawerOpen,
-            }"
-            style="width: 280px"
-        >
-            <div class="h-full overflow-y-auto">
-                <div class="sidebar-header p-4 border-b border-gray-200">
-                    <div class="text-xl font-bold">{{ __("Admin Menu") }}</div>
-                    <div class="text-sm text-gray-500">
-                        {{ __("Management Panel") }}
-                    </div>
-                </div>
-
-                <nav class="menu-list py-4">
-                    <!-- Dashboard -->
-                    <a
-                        @click="open(menu_dashboard)"
+                    <i
+                        class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300"
                         :class="{
-                            'bg-blue-50 text-blue-600':
-                                isActive(menu_dashboard),
-                            'text-gray-700 hover:bg-gray-100':
-                                !isActive(menu_dashboard),
+                            'rotate-180': expandedSections.products,
                         }"
-                        class="flex items-center p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200"
+                    ></i>
+                </div>
+
+                <div
+                    class="submenu transition-all duration-300 overflow-hidden"
+                    :class="expandedSections.products ? 'max-h-40' : 'max-h-0'"
+                >
+                    <a
+                        @click="open(menu_category)"
+                        :class="{
+                            'bg-blue-50 text-blue-600': isActive(menu_category),
+                            'text-gray-700 hover:bg-gray-100':
+                                !isActive(menu_category),
+                        }"
+                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
                     >
                         <i
-                            class="fas fa-tachometer-alt w-6 text-blue-500 mr-3"
+                            class="fas fa-shapes w-5 text-blue-400 mr-3 text-sm"
                         ></i>
-                        <span>{{ __(menu_dashboard.name) }}</span>
+                        <span class="text-sm">
+                            {{ __(menu_category.name) }}
+                        </span>
                     </a>
 
-                    <!-- Products Section -->
-                    <div class="expansion-item">
-                        <div
-                            class="flex items-center justify-between p-3 mx-2 my-1 rounded-lg cursor-pointer hover:bg-gray-100"
-                            @click="toggleExpansion('products')"
-                        >
-                            <div class="flex items-center">
-                                <i
-                                    class="fas fa-box-open w-6 text-blue-500 mr-3"
-                                ></i>
-                                <span>{{ __("Products") }}</span>
-                            </div>
-                            <i
-                                class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300"
-                                :class="{
-                                    'rotate-180': expandedSections.products,
-                                }"
-                            ></i>
-                        </div>
-
-                        <div
-                            class="submenu transition-all duration-300 overflow-hidden"
-                            :class="
-                                expandedSections.products
-                                    ? 'max-h-40'
-                                    : 'max-h-0'
-                            "
-                        >
-                            <a
-                                @click="open(menu_category)"
-                                :class="{
-                                    'bg-blue-50 text-blue-600':
-                                        isActive(menu_category),
-                                    'text-gray-700 hover:bg-gray-100':
-                                        !isActive(menu_category),
-                                }"
-                                class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
-                            >
-                                <i
-                                    class="fas fa-shapes w-5 text-blue-400 mr-3 text-sm"
-                                ></i>
-                                <span class="text-sm">
-                                    {{ __(menu_category.name) }}
-                                </span>
-                            </a>
-
-                            <a
-                                @click="open(menu_products)"
-                                :class="{
-                                    'bg-blue-50 text-blue-600':
-                                        isActive(menu_products),
-                                    'text-gray-700 hover:bg-gray-100':
-                                        !isActive(menu_products),
-                                }"
-                                class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
-                            >
-                                <i
-                                    class="fas fa-list-alt w-5 text-blue-400 mr-3 text-sm"
-                                ></i>
-                                <span class="text-sm">
-                                    {{ __(menu_products.name) }}
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Orders Section -->
-                    <div class="expansion-item">
-                        <div
-                            class="flex items-center justify-between p-3 mx-2 my-1 rounded-lg cursor-pointer hover:bg-gray-100"
-                            @click="toggleExpansion('orders')"
-                        >
-                            <div class="flex items-center">
-                                <i
-                                    class="fas fa-shopping-cart w-6 text-blue-500 mr-3"
-                                ></i>
-                                <span>{{ __("Orders") }}</span>
-                            </div>
-                            <i
-                                class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300"
-                                :class="{
-                                    'rotate-180': expandedSections.orders,
-                                }"
-                            ></i>
-                        </div>
-
-                        <div
-                            class="submenu transition-all duration-300 overflow-hidden"
-                            :class="
-                                expandedSections.orders ? 'max-h-40' : 'max-h-0'
-                            "
-                        >
-                            <a
-                                @click="open(menu_orders)"
-                                :class="{
-                                    'bg-blue-50 text-blue-600':
-                                        isActive(menu_orders),
-                                    'text-gray-700 hover:bg-gray-100':
-                                        !isActive(menu_orders),
-                                }"
-                                class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
-                            >
-                                <i
-                                    :class="[
-                                        'mdi',
-                                        menu_orders.icon,
-                                        'w-5 text-blue-400 mr-3 text-sm',
-                                    ]"
-                                ></i>
-                                <span class="text-sm">
-                                    {{ __(menu_orders.name) }}
-                                </span>
-                            </a>
-
-                            <a
-                                @click="open(menu_orders_pending)"
-                                :class="{
-                                    'bg-blue-50 text-blue-600':
-                                        isActive(menu_orders_pending),
-                                    'text-gray-700 hover:bg-gray-100':
-                                        !isActive(menu_orders_pending),
-                                }"
-                                class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
-                            >
-                                <i
-                                    :class="[
-                                        'mdi',
-                                        menu_orders_pending.icon,
-                                        'w-5 text-blue-400 mr-3 text-sm',
-                                    ]"
-                                ></i>
-                                <span class="text-sm">
-                                    {{ menu_orders_pending.name }}
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Customers -->
                     <a
-                        @click="open(menu_orders_customer)"
+                        @click="open(menu_products)"
                         :class="{
-                            'bg-blue-50 text-blue-600':
-                                isActive(menu_orders_customer),
+                            'bg-blue-50 text-blue-600': isActive(menu_products),
                             'text-gray-700 hover:bg-gray-100':
-                                !isActive(menu_orders_customer),
+                                !isActive(menu_products),
                         }"
-                        class="flex items-center p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200"
+                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
+                    >
+                        <i
+                            class="fas fa-list-alt w-5 text-blue-400 mr-3 text-sm"
+                        ></i>
+                        <span class="text-sm">
+                            {{ __(menu_products.name) }}
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div class="expansion-item">
+                <div
+                    class="flex items-center justify-between p-3 mx-2 my-1 rounded-lg cursor-pointer hover:bg-gray-100"
+                    @click="toggleExpansion('orders')"
+                >
+                    <div class="flex items-center">
+                        <i
+                            class="fas fa-shopping-cart w-6 text-blue-500 mr-3"
+                        ></i>
+                        <span>{{ __("Orders") }}</span>
+                    </div>
+                    <i
+                        class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300"
+                        :class="{
+                            'rotate-180': expandedSections.orders,
+                        }"
+                    ></i>
+                </div>
+
+                <div
+                    class="submenu transition-all duration-300 overflow-hidden"
+                    :class="expandedSections.orders ? 'max-h-40' : 'max-h-0'"
+                >
+                    <a
+                        @click="open(menu_orders)"
+                        :class="{
+                            'bg-blue-50 text-blue-600': isActive(menu_orders),
+                            'text-gray-700 hover:bg-gray-100':
+                                !isActive(menu_orders),
+                        }"
+                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
                     >
                         <i
                             :class="[
                                 'mdi',
-                                menu_orders_customer.icon,
-                                'w-6 text-blue-500 mr-3',
+                                menu_orders.icon,
+                                'w-5 text-blue-400 mr-3 text-sm',
                             ]"
                         ></i>
-                        <span>{{ __(menu_orders_customer.name) }}</span>
+                        <span class="text-sm">
+                            {{ __(menu_orders.name) }}
+                        </span>
                     </a>
-                </nav>
-            </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main
-            class="main-content flex-1 transition-all duration-300 pt-14"
-            :class="{ 'md:ml-72': leftDrawerOpen }"
-        >
-            <div class="p-2">
-                <slot />
+                    <a
+                        @click="open(menu_orders_pending)"
+                        :class="{
+                            'bg-blue-50 text-blue-600':
+                                isActive(menu_orders_pending),
+                            'text-gray-700 hover:bg-gray-100':
+                                !isActive(menu_orders_pending),
+                        }"
+                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
+                    >
+                        <i
+                            :class="[
+                                'mdi',
+                                menu_orders_pending.icon,
+                                'w-5 text-blue-400 mr-3 text-sm',
+                            ]"
+                        ></i>
+                        <span class="text-sm">
+                            {{ menu_orders_pending.name }}
+                        </span>
+                    </a>
+                </div>
             </div>
-        </main>
 
-        <!-- Mobile overlay -->
-        <div
-            v-if="leftDrawerOpen"
-            @click="leftDrawerOpen = false"
-            class="fixed inset-0 bg-gray-900 bg-opacity-50 z-10 md:hidden"
-        ></div>
-    </div>
+            <!-- Customers -->
+            <a
+                @click="open(menu_orders_customer)"
+                :class="{
+                    'bg-blue-50 text-blue-600': isActive(menu_orders_customer),
+                    'text-gray-700 hover:bg-gray-100':
+                        !isActive(menu_orders_customer),
+                }"
+                class="flex items-center p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200"
+            >
+                <i
+                    :class="[
+                        'mdi',
+                        menu_orders_customer.icon,
+                        'w-6 text-blue-500 mr-3',
+                    ]"
+                ></i>
+                <span>{{ __(menu_orders_customer.name) }}</span>
+            </a>
+        </template>
+        <template #main>
+            <slot />
+        </template>
+    </v-layout>
 </template>
 
 <script>
 import VNotification from "./VNotification.vue";
 import VProfile from "./VProfile.vue";
+import VLayout from "@/components/VLayout.vue";
 
 export default {
     components: {
         VNotification,
         VProfile,
+        VLayout,
     },
 
     data() {

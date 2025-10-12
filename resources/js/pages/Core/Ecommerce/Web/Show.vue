@@ -670,7 +670,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },
@@ -693,7 +693,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },
@@ -708,8 +708,8 @@ export default {
                 if (res.status == 201) {
                     this.errors = {};
                     this.clean();
-                    this.$notify.success(
-                        this.__(":name added to cart", {
+                     $notify.success(
+                        __(":name added to cart", {
                             ":name": this.product.name,
                         })
                     );
@@ -723,13 +723,13 @@ export default {
                 }
 
                 if (e?.response?.status == 401) {
-                    this.$notify.error(
-                        this.__("To continue the process, Please login first")
+                     $notify.error(
+                        __("To continue the process, Please login first")
                     );
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },

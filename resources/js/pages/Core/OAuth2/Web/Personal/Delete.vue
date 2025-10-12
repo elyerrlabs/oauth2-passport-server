@@ -86,14 +86,14 @@ export default {
         async confirmDelete() {
             if (this.loading) return;
 
-            const result = await this.$swal.fire({
-                title: this.__("Delete API Key?"),
+            const result = await $swal.fire.fire({
+                title: __("Delete API Key?"),
                 html: this.getConfirmationHtml(),
                 icon: "warning",
                 iconColor: "#DC2626",
                 showCancelButton: true,
-                confirmButtonText: this.__("Yes, Delete It"),
-                cancelButtonText: this.__("Cancel"),
+                confirmButtonText: __("Yes, Delete It"),
+                cancelButtonText: __("Cancel"),
                 reverseButtons: true,
                 focusCancel: true,
                 customClass: {
@@ -126,17 +126,17 @@ export default {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
                         </svg>
                         <div class="text-red-800">
-                            <p class="font-medium text-sm">${this.__(
+                            <p class="font-medium text-sm">${__(
                                 "This action cannot be undone"
                             )}</p>
-                            <p class="text-sm mt-1">${this.__(
+                            <p class="text-sm mt-1">${__(
                                 "Applications using this key will immediately lose access"
                             )}</p>
                         </div>
                     </div>
                     
                     <div class="p-3 bg-gray-50 rounded-lg border">
-                        <p class="text-gray-600 text-sm mb-2">${this.__(
+                        <p class="text-gray-600 text-sm mb-2">${__(
                             "You are about to delete:"
                         )}</p>
                         <div class="flex items-center gap-2">
@@ -175,11 +175,11 @@ export default {
                 return false;
             } catch (e) {
                 const message = this.getErrorMessage(e);
-                await this.$swal.fire({
+                await $swal.fire.fire({
                     icon: "error",
-                    title: this.__("Delete Failed"),
+                    title: __("Delete Failed"),
                     text: message,
-                    confirmButtonText: this.__("OK"),
+                    confirmButtonText: __("OK"),
                     customClass: {
                         confirmButton:
                             "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
@@ -192,9 +192,9 @@ export default {
         },
 
         showSuccessMessage() {
-            this.$swal.fire({
+            $swal.fire.fire({
                 icon: "success",
-                title: this.__("Deleted!"),
+                title: __("Deleted!"),
                 html: `
                     <div class="text-center space-y-3">
                         <div class="flex justify-center">
@@ -203,10 +203,10 @@ export default {
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-medium text-gray-900">${this.__(
+                            <h3 class="text-lg font-medium text-gray-900">${__(
                                 "API Key Deleted"
                             )}</h3>
-                            <p class="text-gray-600 mt-1">${this.__(
+                            <p class="text-gray-600 mt-1">${__(
                                 "The API key has been permanently deleted"
                             )}</p>
                         </div>
@@ -226,16 +226,16 @@ export default {
                 return error.response.data.message;
             }
             if (error?.response?.status === 404) {
-                return this.__(
+                return __(
                     "API key not found. It may have been already deleted."
                 );
             }
             if (error?.response?.status === 403) {
-                return this.__(
+                return __(
                     "You don't have permission to delete this API key."
                 );
             }
-            return this.__("Failed to delete API key. Please try again.");
+            return __("Failed to delete API key. Please try again.");
         },
 
         escapeHtml(unsafe) {

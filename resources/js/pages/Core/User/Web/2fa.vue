@@ -588,7 +588,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VAccountLayout from "../../../Components/VAccountLayout.vue";
+import VAccountLayout from "@/layouts/VAccountLayout.vue";
 
 export default {
     components: {
@@ -614,12 +614,12 @@ export default {
                     this.$page.props.user.links.request_2fa_code
                 );
                 if (res.status === 201) {
-                    this.$notify.success(res.data.message);
+                     $notify.success(res.data.message);
                     this.errors = {};
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             } finally {
                 this.sendingCode = false;
@@ -628,7 +628,7 @@ export default {
 
         async activateFactor() {
             if (!this.token && !this.user.m2fa) {
-                this.$notify.error(__("Please enter a verification code"));
+                 $notify.error(__("Please enter a verification code"));
                 return;
             }
 
@@ -645,7 +645,7 @@ export default {
 
                 if (res.status === 201) {
                     this.token = "";
-                    this.$notify.success(res.data.message);
+                     $notify.success(res.data.message);
                     setTimeout(() => {
                         window.location.reload();
                     }, 1500);
@@ -656,7 +656,7 @@ export default {
                 }
 
                 if (err?.response?.data?.message) {
-                    this.$notify.error(err.response.data.message);
+                     $notify.error(err.response.data.message);
                 }
             } finally {
                 this.loading = false;

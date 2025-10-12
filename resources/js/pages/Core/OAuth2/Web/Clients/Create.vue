@@ -422,7 +422,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VError from "../../../../Components/VError.vue";
+import VError from "@/components/VError.vue";
 
 export default {
     emits: ["created"],
@@ -486,7 +486,7 @@ export default {
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
 
-            this.$notify.success("Credentials downloaded successfully");
+             $notify.success("Credentials downloaded successfully");
         },
 
         async create() {
@@ -503,14 +503,14 @@ export default {
                     this.client = res.data.data;
                     this.$emit("created", true);
 
-                    this.$notify.success("OAuth client created successfully");
+                     $notify.success("OAuth client created successfully");
                 }
             } catch (e) {
                 if (e.response && e.response.data.errors) {
                     this.errors = e.response.data.errors;
                 }
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;

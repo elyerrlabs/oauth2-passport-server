@@ -20,486 +20,262 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="q-pa-md q-gutter-sm">
+    <div class="p-4 space-y-4">
         <!-- Add Plan Button -->
-        <q-btn
-            round
-            color="primary"
+        <button
+            class="fixed bottom-5 right-5 z-50 bg-blue-600 cursor-pointer text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors"
             @click="open"
-            icon="mdi-plus"
-            size="md"
-            class="floating-action-btn shadow-5"
         >
-            <q-tooltip class="bg-primary">{{
-                __("Create New Plan")
-            }}</q-tooltip>
-        </q-btn>
+            <i class="mdi mdi-plus text-xl"></i>
+        </button>
 
         <!-- Create Plan Dialog -->
-        <q-dialog v-model="dialog" persistent full-width>
-            <q-card class="create-plan-dialog rounded-borders">
-                <!-- Dialog Header -->
-                <q-card-section class="dialog-header bg-primary text-white">
-                    <div class="row items-center">
-                        <q-icon
-                            name="mdi-plus-circle"
-                            size="28px"
-                            class="q-mr-sm"
-                        />
-                        <div class="text-h5 text-weight-bold">
-                            {{ __("Create New Plan") }}
-                        </div>
-                        <q-space />
-                        <q-btn
-                            icon="close"
-                            flat
-                            round
-                            dense
-                            v-close-popup
-                            class="text-white"
-                            @click="close"
+        <v-modal
+            v-model="dialog"
+            class="fixed inset-0 z-50 flex items-center justify-center p-0 bg-black/80"
+            panel-class="min-w-full m-4 min-h-screen"
+            :title="__('Create New Plan')"
+        >
+            <template #body>
+                <div class="space-y-6">
+                    <!-- Plan Information Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                        <v-input
+                            :label="__('Plan Information')"
+                            v-model="form.name"
+                            :error="errors.name"
+                            :placeholder="__('Vpn pro')"
+                            :required="true"
                         />
                     </div>
-                </q-card-section>
 
-                <!-- Form Content -->
-                <q-card-section class="dialog-content scroll">
-                    <div class="q-gutter-y-lg">
-                        <!-- Plan Information Section -->
-                        <div class="section-container">
-                            <div class="section-title">
-                                <q-icon
-                                    name="mdi-information"
-                                    class="q-mr-sm"
-                                />
-                                {{ __("Plan Information") }}
-                            </div>
+                    <div class="grid grid-cols-1">
+                        <v-editor
+                            v-model="form.description"
+                            :label="__('Description')"
+                            :error="errors.description"
+                            :required="true"
+                        />
+                    </div>
 
-                            <div class="row q-col-gutter-md">
-                                <!-- Plan Name -->
-                                <div class="col-12">
-                                    <q-input
-                                        outlined
-                                        v-model="form.name"
-                                        :label="__('Plan Name')"
-                                        :error="!!errors.name"
-                                        color="primary"
-                                        class="custom-input"
-                                    >
-                                        <template v-slot:prepend>
-                                            <q-icon name="mdi-tag" />
-                                        </template>
-                                        <template v-slot:error>
-                                            <v-error :error="errors.name" />
-                                        </template>
-                                    </q-input>
-                                </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 px-4 gap-4">
+                        <v-switch
+                            :label="__('Active Plan')"
+                            v-model="form.active"
+                            :error="errors.active"
+                        />
 
-                                <!-- Plan Description -->
-                                <div class="col-12">
-                                    <div
-                                        class="text-caption text-weight-medium q-mb-xs"
-                                    >
-                                        <q-icon
-                                            name="mdi-text"
-                                            class="q-mr-xs"
-                                        />
-                                        {{ __("Description") }}
-                                    </div>
-                                    <v-editor
-                                        class="required"
-                                        v-model="form.description"
-                                        :label="__('Plan Description')"
-                                    />
-                                    <v-error :error="errors.description" />
-                                </div>
-                            </div>
-                        </div>
+                        <v-switch
+                            :label="__('Enable Bonus')"
+                            v-model="form.bonus_enabled"
+                            :error="errors.bonus_enabled"
+                        />
 
-                        <!-- Plan Settings Section -->
-                        <div class="section-container">
-                            <div class="section-title">
-                                <q-icon name="mdi-cog" class="q-mr-sm" />
-                                {{ __("Plan Settings") }}
-                            </div>
+                        <v-input
+                            v-if="form.bonus_enabled"
+                            :label="__('Bonus duration')"
+                            v-model="form.bonus_duration"
+                            :error="errors.bonus_duration"
+                            type="number"
+                            :placeholder="__('8')"
+                        />
+                    </div>
 
-                            <div class="row q-col-gutter-md">
-                                <!-- Active Toggle -->
-                                <div class="col-12 col-md-6">
-                                    <q-toggle
-                                        v-model="form.active"
-                                        :label="__('Active Plan')"
-                                        color="positive"
-                                        :error="!!errors.active"
-                                        icon="mdi-check-circle"
-                                        class="custom-toggle"
-                                    >
-                                        <q-tooltip>{{
-                                            __(
-                                                "Make this plan available to users"
-                                            )
-                                        }}</q-tooltip>
-                                    </q-toggle>
-                                    <v-error :error="errors.active" />
-                                </div>
-
-                                <!-- Bonus Settings -->
-                                <div class="col-12 col-md-6">
-                                    <q-toggle
-                                        v-model="form.bonus_enabled"
-                                        :label="__('Enable Bonus')"
-                                        color="accent"
-                                        :error="!!errors.bonus_enabled"
-                                        icon="mdi-gift"
-                                        class="custom-toggle"
-                                    >
-                                        <q-tooltip>{{
-                                            __("Add bonus days to this plan")
-                                        }}</q-tooltip>
-                                    </q-toggle>
-                                    <v-error :error="errors.bonus_enabled" />
-                                </div>
-
-                                <!-- Bonus Duration -->
-                                <div
-                                    class="col-12 col-md-6"
-                                    v-if="form.bonus_enabled"
-                                >
-                                    <q-input
-                                        outlined
-                                        v-model="form.bonus_duration"
-                                        :label="__('Bonus Duration (Days)')"
-                                        type="number"
-                                        :error="!!errors.bonus_duration"
-                                        color="accent"
-                                        class="custom-input"
-                                    >
-                                        <template v-slot:prepend>
-                                            <q-icon name="mdi-calendar" />
-                                        </template>
-                                        <template v-slot:error>
-                                            <v-error
-                                                :error="errors.bonus_duration"
-                                            />
-                                        </template>
-                                    </q-input>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pricing Section -->
-                        <div class="section-container">
-                            <div class="section-title">
-                                <q-icon
-                                    name="mdi-currency-usd"
-                                    class="q-mr-sm"
-                                />
-                                {{ __("Pricing") }}
-                            </div>
-                            <v-error :error="errors.prices" />
-
+                    <!-- Pricing Section -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="text-2xl font-semibold">
+                            {{ __("Pricing") }}
+                        </h3>
+                        <div v-if="form.prices.length">
                             <div
-                                class="row q-col-gutter-md q-mb-md"
                                 v-for="(price, index) in form.prices"
                                 :key="index"
+                                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 items-end"
                             >
                                 <!-- Billing Period -->
-                                <div class="col-12 col-md-3">
-                                    <q-select
-                                        outlined
-                                        v-model="price.billing_period"
-                                        :options="billing_periods"
-                                        emit-value
-                                        map-options
-                                        :label="__('Billing Period')"
-                                        :error="
-                                            !!errors[
-                                                `prices.${index}.billing_period`
-                                            ]
-                                        "
-                                        color="primary"
-                                        class="custom-select"
-                                    >
-                                        <template v-slot:prepend>
-                                            <q-icon
-                                                name="mdi-calendar-refresh"
-                                            />
-                                        </template>
-                                        <template v-slot:error>
-                                            <v-error
-                                                :error="
-                                                    errors[
-                                                        `prices.${index}.billing_period`
-                                                    ]
-                                                "
-                                            />
-                                        </template>
-                                    </q-select>
-                                </div>
+                                <v-select
+                                    :label="__('Billing period')"
+                                    :options="billing_periods"
+                                    label-key="name"
+                                    value-key="id"
+                                    v-model="price.billing_period"
+                                    :error="
+                                        errors?.prices?.[index]?.billing_period
+                                    "
+                                    :required="true"
+                                />
 
                                 <!-- Currency -->
-                                <div class="col-12 col-md-3">
-                                    <q-select
-                                        outlined
-                                        v-model="price.currency"
-                                        :options="currencies"
-                                        emit-value
-                                        :label="__('Currency')"
-                                        :error="
-                                            !!errors[`prices.${index}.currency`]
-                                        "
-                                        color="primary"
-                                        class="custom-select"
-                                    >
-                                        <template v-slot:prepend>
-                                            <q-icon name="mdi-currency-sign" />
-                                        </template>
-                                        <template v-slot:error>
-                                            <v-error
-                                                :error="
-                                                    errors[
-                                                        `prices.${index}.currency`
-                                                    ]
-                                                "
-                                            />
-                                        </template>
-                                    </q-select>
-                                </div>
+                                <v-select
+                                    :label="__('Currency')"
+                                    :options="currencies"
+                                    label-key="name"
+                                    value-key="code"
+                                    v-model="price.currency"
+                                    :error="errors?.prices?.[index]?.currency"
+                                    :required="true"
+                                />
 
                                 <!-- Amount -->
-                                <div class="col-12 col-md-3">
-                                    <q-input
-                                        outlined
-                                        v-model="price.amount"
-                                        :label="__('Amount')"
-                                        mask="#.##"
-                                        fill-mask="0"
-                                        reverse-fill-mask
-                                        :error="
-                                            !!errors[`prices.${index}.amount`]
-                                        "
-                                        color="primary"
-                                        class="custom-input"
-                                    >
-                                        <template v-slot:prepend>
-                                            <q-icon name="mdi-cash" />
-                                        </template>
-                                        <template v-slot:error>
-                                            <v-error
-                                                :error="
-                                                    errors[
-                                                        `prices.${index}.amount`
-                                                    ]
-                                                "
-                                            />
-                                        </template>
-                                    </q-input>
-                                </div>
+                                <v-input
+                                    v-model="price.amount"
+                                    :label="__('Amount')"
+                                    :error="errors?.prices?.[index]?.amount"
+                                    :required="true"
+                                    type="money"
+                                />
 
                                 <!-- Remove Price Button -->
-                                <div
-                                    class="col-12 col-md-3 flex justify-center items-center"
+                                <button
+                                    class="h-[42px] bg-red-600 text-white border border-red-600 rounded-xl flex items-center justify-center gap-2 hover:bg-red-700 transition-colors"
+                                    @click="form.prices.splice(index, 1)"
                                 >
-                                    <q-btn
-                                        icon="mdi-delete"
-                                        color="negative"
-                                        round
-                                        outline
-                                        @click="form.prices.splice(index, 1)"
-                                        class="delete-btn"
-                                    >
-                                        <q-tooltip>{{
-                                            __("Remove this price")
-                                        }}</q-tooltip>
-                                    </q-btn>
-                                </div>
+                                    <i class="mdi mdi-delete text-lg"></i>
+                                    {{ __("Delete") }}
+                                </button>
                             </div>
+                        </div>
+                        <v-error
+                            v-if="!form.prices.length"
+                            :error="errors?.prices"
+                        />
+                        <!-- Add Price Button -->
+                        <button
+                            class="text-white bg-green-500 hover:bg-green-600 cursor-pointer border border-primary rounded-md px-4 py-2 flex items-center transition-colors"
+                            @click="addPrice"
+                        >
+                            <i class="mdi mdi-plus mr-2"></i>
+                            {{ __("Add Price Option") }}
+                        </button>
+                    </div>
 
-                            <!-- Add Price Button -->
-                            <q-btn
-                                color="primary"
-                                icon="mdi-plus"
-                                :label="__('Add Price Option')"
-                                @click="addPrice"
-                                class="add-price-btn"
-                                outline
-                            />
+                    <!-- Scopes Section -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center text-lg font-medium mb-4">
+                            <i class="mdi mdi-key-chain mr-2"></i>
+                            {{ __("Access Scopes") }}
                         </div>
 
-                        <!-- Scopes Section -->
-                        <div class="section-container">
-                            <div class="section-title">
-                                <q-icon name="mdi-key-chain" class="q-mr-sm" />
-                                {{ __("Access Scopes") }}
-                            </div>
-
-                            <!-- Service Selection -->
-                            <q-select
-                                filled
-                                v-model="service"
-                                :options="services"
-                                option-label="name"
-                                :label="__('Select Service')"
-                                color="teal"
-                                clearable
-                                :error="!!errors.scopes"
-                                class="custom-select q-mb-md"
+                        <!-- Service Selection -->
+                        <div class="relative mb-4">
+                            <div
+                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                             >
-                                <template v-slot:prepend>
-                                    <q-icon name="mdi-server" />
-                                </template>
-                                <template v-slot:option="scope">
-                                    <q-item
-                                        v-bind="scope.itemProps"
-                                        class="service-option"
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="teal"
-                                                text-color="white"
-                                                icon="mdi-server"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    scope.opt.name
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{ scope.opt.group.name }} •
-                                                {{
-                                                    scope.opt.group.description
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                    </q-item>
-                                </template>
-                                <template v-slot:selected-item="scope">
-                                    <q-item v-if="scope">
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="teal"
-                                                text-color="white"
-                                                icon="mdi-server"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label>{{
-                                                scope.opt.name
-                                            }}</q-item-label>
-                                        </q-item-section>
-                                    </q-item>
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.scopes" />
-                                </template>
-                            </q-select>
+                                <i class="mdi mdi-server text-gray-500"></i>
+                            </div>
+                            <div>
+                                <v-select
+                                    :label="__('Service')"
+                                    :options="services"
+                                    v-model="service"
+                                    :return-object="true"
+                                    :error="errors?.scopes"
+                                />
+                            </div>
+                        </div>
 
-                            <!-- Scopes List -->
-                            <div v-if="scopes.length" class="scopes-container">
+                        <!-- Scopes List -->
+                        <div v-if="scopes.length" class="scopes-container">
+                            <div class="text-sm font-medium mb-2">
+                                {{ __("Available Roles for") }}
+                                {{ service?.name }}
+                            </div>
+                            <div class="space-y-2">
                                 <div
-                                    class="text-caption text-weight-medium q-mb-sm"
+                                    v-for="(item, index) in scopes"
+                                    :key="index"
+                                    class="flex items-center p-3 border rounded-md transition-colors"
+                                    :class="
+                                        hasScope(item.id)
+                                            ? 'scope-item-selected border-positive bg-green-50'
+                                            : 'border-gray-200'
+                                    "
                                 >
-                                    {{ __("Available Roles for") }}
-                                    {{ service?.name }}
+                                    <div class="flex-shrink-0 mr-3">
+                                        <div
+                                            class="w-10 h-10 rounded-full flex items-center justify-center"
+                                            :class="
+                                                hasScope(item.id)
+                                                    ? 'bg-positive'
+                                                    : 'bg-gray-300'
+                                            "
+                                        >
+                                            <i
+                                                class="mdi mdi-account-key text-gray-800"
+                                            ></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow">
+                                        <div class="font-medium">
+                                            {{ item.role.name }}
+                                        </div>
+                                        <div class="text-sm text-gray-600">
+                                            {{ item.role.description }}
+                                        </div>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <button
+                                            class="border rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+                                            :class="
+                                                hasScope(item.id)
+                                                    ? 'text-positive border-positive hover:bg-green-50'
+                                                    : 'text-primary border-primary hover:bg-blue-50'
+                                            "
+                                            @click="toggleScope(item.id)"
+                                        >
+                                            <i
+                                                :class="
+                                                    hasScope(item.id)
+                                                        ? 'mdi mdi-check'
+                                                        : 'mdi mdi-plus'
+                                                "
+                                            ></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <q-list class="scopes-list">
-                                    <q-item
-                                        v-for="(item, index) in scopes"
-                                        :key="index"
-                                        class="scope-item rounded-borders"
-                                        :class="
-                                            hasScope(item.id)
-                                                ? 'scope-item-selected'
-                                                : ''
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                :color="
-                                                    hasScope(item.id)
-                                                        ? 'positive'
-                                                        : 'grey-4'
-                                                "
-                                                text-color="white"
-                                            >
-                                                <q-icon
-                                                    name="mdi-account-key"
-                                                />
-                                            </q-avatar>
-                                        </q-item-section>
-
-                                        <q-item-section>
-                                            <div class="text-weight-medium">
-                                                {{ item.role.name }}
-                                            </div>
-                                            <div
-                                                class="text-caption text-grey-7"
-                                            >
-                                                {{ item.role.description }}
-                                            </div>
-                                        </q-item-section>
-
-                                        <q-item-section side>
-                                            <q-btn
-                                                :icon="
-                                                    hasScope(item.id)
-                                                        ? 'mdi-check'
-                                                        : 'mdi-plus'
-                                                "
-                                                :color="
-                                                    hasScope(item.id)
-                                                        ? 'positive'
-                                                        : 'primary'
-                                                "
-                                                round
-                                                outline
-                                                dense
-                                                @click="toggleScope(item.id)"
-                                                class="scope-toggle-btn"
-                                            >
-                                                <q-tooltip>
-                                                    {{
-                                                        hasScope(item.id)
-                                                            ? __("Remove scope")
-                                                            : __("Add scope")
-                                                    }}
-                                                </q-tooltip>
-                                            </q-btn>
-                                        </q-item-section>
-                                    </q-item>
-                                </q-list>
                             </div>
                         </div>
                     </div>
-                </q-card-section>
+                </div>
 
                 <!-- Dialog Actions -->
-                <q-card-actions align="right" class="dialog-actions q-pa-md">
-                    <q-btn
-                        :label="__('Cancel')"
-                        color="grey"
+                <div class="flex justify-end p-4 border-t border-gray-200">
+                    <button
+                        class="bg-red-500 hover:bg-red-600 cursor-pointe text-white rounded-md px-4 py-2 mr-2 transition-colors"
                         @click="close"
-                        outline
-                        class="action-btn"
-                    />
-                    <q-btn
-                        :label="__('Create Plan')"
-                        color="primary"
+                    >
+                        {{ __("Cancel") }}
+                    </button>
+                    <button
+                        class="bg-blue-500 text-white rounded-md px-4 py-2 flex items-center hover:bg-blue-700 transition-colors"
                         @click="create"
-                        icon="mdi-check"
-                        class="action-btn"
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
+                    >
+                        <i class="mdi mdi-check mr-2"></i>
+                        {{ __("Create Plan") }}
+                    </button>
+                </div>
+            </template>
+        </v-modal>
     </div>
 </template>
 
 <script>
+import VError from "@/components/VError.vue";
+import VEditor from "@/components/VEditor.vue";
+import VInput from "@/components/VInput.vue";
+import VSwitch from "@/components/VSwitch.vue";
+import VSelect from "@/components/VSelect.vue";
+import VModal from "@/components/VModal.vue";
+
 export default {
+    components: {
+        VError,
+        VEditor,
+        VInput,
+        VSwitch,
+        VSelect,
+        VModal,
+    },
     emits: ["created"],
 
     data() {
@@ -589,17 +365,18 @@ export default {
                     this.clean();
                     this.$emit("created", true);
                     this.dialog = false;
-                    this.$q.notify({
-                        type: "positive",
-                        message: "New plan has been created successfully",
-                        timeout: 3000,
-                        icon: "mdi-check-circle",
-                        position: "top-right",
-                    });
+                    // Show success notification
+                    $notify.success(
+                        __("New plan has been created successfully")
+                    );
                 }
             } catch (e) {
                 if (e.response && e.response.data.errors) {
                     this.errors = e.response.data.errors;
+                }
+
+                if (e?.response?.data?.message) {
+                    $notify.error(e.response.data.message);
                 }
             }
         },
@@ -621,11 +398,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             }
         },
@@ -637,18 +410,11 @@ export default {
                 );
 
                 if (res.status == 200) {
-                    this.billing_periods = res.data.data.map((item) => ({
-                        label: item.name,
-                        value: item.id,
-                    }));
+                    this.billing_periods = res.data.data;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             }
         },
@@ -660,18 +426,11 @@ export default {
                 );
 
                 if (res.status == 200) {
-                    this.currencies = res.data.data.map((item) => ({
-                        label: `${item.code} - ${item.name}`,
-                        value: item.code,
-                    }));
+                    this.currencies = res.data.data;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             }
         },
@@ -696,11 +455,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             }
         },
@@ -722,164 +477,20 @@ export default {
 </script>
 
 <style scoped>
-/* CSS Variables for Theme Consistency */
-:root {
-    --color-primary: #1976d2;
-    --color-secondary: #26a69a;
-    --color-accent: #ff6b35;
-    --color-positive: #21ba45;
-    --color-negative: #c10015;
-    --color-warning: #f2c037;
-    --color-dark: #1d1d1d;
-    --color-light: #f5f5f5;
-    --border-radius: 12px;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --transition-speed: 0.3s;
-}
-
 .floating-action-btn {
-    position: relative;
-    transition: transform var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease;
-}
-
-.floating-action-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
-}
-
-.create-plan-dialog {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    max-height: 90vh;
-}
-
-.dialog-header {
-    padding: 20px 24px;
-}
-
-.dialog-content {
-    padding: 24px;
-    max-height: 65vh;
-}
-
-.dialog-actions {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    background: var(--color-light);
-}
-
-.section-container {
-    padding: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: var(--border-radius);
-    background: white;
-    margin-bottom: 20px;
-}
-
-.section-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--color-primary);
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.06);
-}
-
-.custom-input :deep(.q-field__control) {
-    border-radius: 8px;
-}
-
-.custom-select :deep(.q-field__control) {
-    border-radius: 8px;
-}
-
-.custom-toggle :deep(.q-toggle__label) {
-    font-weight: 500;
-}
-
-.add-price-btn {
-    border-radius: 8px;
-    font-weight: 500;
-}
-
-.delete-btn {
-    transition: transform var(--transition-speed) ease;
-}
-
-.delete-btn:hover {
-    transform: scale(1.1);
-}
-
-.scopes-container {
-    margin-top: 16px;
-}
-
-.scopes-list {
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: var(--border-radius);
-    background: white;
-}
-
-.scope-item {
-    transition: all var(--transition-speed) ease;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.scope-item:last-child {
-    border-bottom: none;
-}
-
-.scope-item:hover {
-    background-color: rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .scope-item-selected {
-    background-color: rgba(25, 118, 210, 0.05);
-    border-left: 4px solid var(--color-primary);
+    background-color: rgba(33, 186, 69, 0.1);
+    border-color: rgba(33, 186, 69, 0.3);
 }
 
-.scope-toggle-btn {
-    transition: all var(--transition-speed) ease;
+.toggle-line {
+    transition: background-color 0.3s ease;
 }
 
-.action-btn {
-    border-radius: 8px;
-    padding: 8px 20px;
-    font-weight: 500;
-    min-width: 100px;
-}
-
-.service-option {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.service-option:last-child {
-    border-bottom: none;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1023px) {
-    .create-plan-dialog {
-        max-width: 95vw !important;
-    }
-
-    .dialog-content {
-        padding: 16px;
-    }
-
-    .section-container {
-        padding: 16px;
-    }
-}
-
-@media (max-width: 599px) {
-    .dialog-header .text-h5 {
-        font-size: 1.25rem;
-    }
-
-    .action-btn {
-        min-width: 80px;
-        padding: 6px 16px;
-    }
+.toggle-dot {
+    transition: transform 0.3s ease;
 }
 </style>

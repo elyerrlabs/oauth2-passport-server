@@ -94,7 +94,7 @@ export default {
                     this.$emit("deleted", true);
                     this.$q.notify({
                         type: "positive",
-                        message: this.__(
+                        message: __(
                             "The channel has been deleted successfully"
                         ),
                         timeout: 3000,

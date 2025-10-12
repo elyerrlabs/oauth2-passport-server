@@ -313,21 +313,21 @@ export default {
             columns: [
                 {
                     name: "name",
-                    label: this.__("Name"),
+                    label: __("Name"),
                     field: (row) => `${row.name} ${row.last_name}`,
                     sortable: true,
                     align: "left",
                 },
                 {
                     name: "email",
-                    label: this.__("Email"),
+                    label: __("Email"),
                     field: "email",
                     sortable: true,
                     align: "left",
                 },
                 {
                     name: "status",
-                    label: this.__("Status"),
+                    label: __("Status"),
                     field: "disabled",
                     sortable: true,
                     align: "center",
@@ -335,7 +335,7 @@ export default {
                 },
                 {
                     name: "actions",
-                    label: this.__("Actions"),
+                    label: __("Actions"),
                     field: "actions",
                     sortable: false,
                     align: "right",

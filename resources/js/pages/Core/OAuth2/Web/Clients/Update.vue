@@ -427,7 +427,7 @@ export default {
                     this.$emit("updated", true);
                     this.dialog = false;
 
-                    this.$notify.success("OAuth client updated successfully");
+                     $notify.success("OAuth client updated successfully");
                 }
             } catch (e) {
                 if (e.response && e.response.status == 422) {
@@ -435,7 +435,7 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -445,9 +445,9 @@ export default {
         async copyToClipboard(text) {
             try {
                 await navigator.clipboard.writeText(text);
-                this.$notify.success("Client ID copied to clipboard");
+                 $notify.success("Client ID copied to clipboard");
             } catch (err) {
-                this.$notify.error("Failed to copy to clipboard");
+                 $notify.error("Failed to copy to clipboard");
             }
         },
     },

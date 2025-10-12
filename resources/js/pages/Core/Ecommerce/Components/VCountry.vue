@@ -125,7 +125,7 @@ export default {
                     this.countries = res.data;
                 }
             } catch (e) {
-                this.$notify.error("Failed to load countries");
+                 $notify.error("Failed to load countries");
             }
         },
 

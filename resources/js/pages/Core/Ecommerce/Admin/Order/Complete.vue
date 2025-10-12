@@ -701,7 +701,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -773,7 +773,7 @@ export default {
 
         copyOrderId(orderCode) {
             navigator.clipboard.writeText(orderCode);
-            this.$notify.success(__("Order ID copied to clipboard"));
+             $notify.success(__("Order ID copied to clipboard"));
         },
     },
 };

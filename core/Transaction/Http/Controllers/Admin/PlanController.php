@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\Transaction\Http\Controllers\Admin;
 
 /**
@@ -19,7 +20,7 @@ namespace Core\Transaction\Http\Controllers\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -76,7 +77,13 @@ class PlanController extends WebController
                 'plans' => route('transaction.admin.plans.index'),
             ],
             "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes'))
-        ]);
+        ])->rootView('system');
+    }
+
+    public function edit(string $id)
+    {
+
+
     }
 
     /**

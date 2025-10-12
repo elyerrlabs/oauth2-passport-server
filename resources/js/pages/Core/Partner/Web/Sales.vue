@@ -21,288 +21,257 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-partner-layout>
-        <div class="sales-dashboard q-pa-lg">
+        <div class="sales-dashboard p-4">
             <!-- Header Section -->
-            <div class="row items-center justify-between q-mb-lg">
-                <div>
-                    <div class="text-h4 text-weight-bold text-primary">
+            <div
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6"
+            >
+                <div class="mb-4 sm:mb-0">
+                    <h1 class="text-2xl font-bold text-gray-900">
                         {{ __("Sales Performance") }}
-                    </div>
-                    <div class="text-subtitle1 text-grey-7">
+                    </h1>
+                    <p class="text-gray-600 text-sm mt-1">
                         {{ __("Track your commissions and sales history") }}
-                    </div>
+                    </p>
                 </div>
-                <div class="row items-center q-gutter-sm">
-                    <q-btn
-                        icon="refresh"
-                        round
-                        dense
-                        color="primary"
+                <div class="flex items-center space-x-3">
+                    <button
                         @click="getSales"
-                        class="q-mr-sm"
+                        class="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                        :title="__('Refresh data')"
                     >
-                        <q-tooltip>{{ __("Refresh data") }}</q-tooltip>
-                    </q-btn>
-                    <q-select
+                        <svg
+                            class="w-5 h-5"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                            />
+                        </svg>
+                    </button>
+                    <select
                         v-model="search.per_page"
-                        :options="[10, 15, 25, 50]"
-                        :label="__('Rows per page')"
-                        dense
-                        outlined
-                        style="min-width: 140px"
-                        @update:model-value="getSales"
-                    />
+                        @change="getSales"
+                        class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[140px]"
+                    >
+                        <option value="10">10 {{ __("rows") }}</option>
+                        <option value="15">15 {{ __("rows") }}</option>
+                        <option value="25">25 {{ __("rows") }}</option>
+                        <option value="50">50 {{ __("rows") }}</option>
+                    </select>
                 </div>
             </div>
 
             <!-- Stats Overview Cards -->
-            <div class="row q-col-gutter-md q-mb-lg">
-                <div class="col-12 col-md-4">
-                    <q-card flat class="stats-card total-sales-card">
-                        <q-card-section>
-                            <div class="row items-center">
-                                <q-avatar
-                                    color="blue-1"
-                                    text-color="primary"
-                                    icon="mdi-cash"
-                                    class="q-mr-md"
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <!-- Total Sales Value -->
+                <div class="bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-50 rounded-lg mr-3">
+                            <svg
+                                class="w-5 h-5 text-blue-600"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91 2.56.62 4.18 1.63 4.18 3.71 0 1.76-1.39 2.83-3.13 3.16z"
                                 />
-                                <div>
-                                    <div class="text-caption text-grey-7">
-                                        {{ __("TOTAL SALES VALUE") }}
-                                    </div>
-                                    <div class="text-h6 text-weight-bold">
-                                        {{ formatCurrency(totalSalesValue) }}
-                                    </div>
-                                </div>
+                            </svg>
+                        </div>
+                        <div>
+                            <div
+                                class="text-xs text-gray-500 uppercase tracking-wide font-medium"
+                            >
+                                {{ __("TOTAL SALES VALUE") }}
                             </div>
-                        </q-card-section>
-                    </q-card>
+                            <div class="text-lg font-bold text-gray-900">
+                                {{ formatCurrency(totalSalesValue) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-12 col-md-4">
-                    <q-card flat class="stats-card total-commission-card">
-                        <q-card-section>
-                            <div class="row items-center">
-                                <q-avatar
-                                    color="green-1"
-                                    text-color="positive"
-                                    icon="mdi-percent"
-                                    class="q-mr-md"
+
+                <!-- Total Commissions -->
+                <div class="bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-green-50 rounded-lg mr-3">
+                            <svg
+                                class="w-5 h-5 text-green-600"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
                                 />
-                                <div>
-                                    <div class="text-caption text-grey-7">
-                                        {{ __("TOTAL COMMISSIONS") }}
-                                    </div>
-                                    <div
-                                        class="text-h6 text-weight-bold text-positive"
-                                    >
-                                        {{ formatCurrency(totalCommissions) }}
-                                    </div>
-                                </div>
+                            </svg>
+                        </div>
+                        <div>
+                            <div
+                                class="text-xs text-gray-500 uppercase tracking-wide font-medium"
+                            >
+                                {{ __("TOTAL COMMISSIONS") }}
                             </div>
-                        </q-card-section>
-                    </q-card>
+                            <div class="text-lg font-bold text-green-600">
+                                {{ formatCurrency(totalCommissions) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-12 col-md-4">
-                    <q-card flat class="stats-card transactions-card">
-                        <q-card-section>
-                            <div class="row items-center">
-                                <q-avatar
-                                    color="orange-1"
-                                    text-color="warning"
-                                    icon="mdi-file-document"
-                                    class="q-mr-md"
+
+                <!-- Total Transactions -->
+                <div class="bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-orange-50 rounded-lg mr-3">
+                            <svg
+                                class="w-5 h-5 text-orange-600"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
                                 />
-                                <div>
-                                    <div class="text-caption text-grey-7">
-                                        {{ __("TOTAL TRANSACTIONS") }}
-                                    </div>
-                                    <div class="text-h6 text-weight-bold">
-                                        {{ sales.length }}
-                                    </div>
-                                </div>
+                            </svg>
+                        </div>
+                        <div>
+                            <div
+                                class="text-xs text-gray-500 uppercase tracking-wide font-medium"
+                            >
+                                {{ __("TOTAL TRANSACTIONS") }}
                             </div>
-                        </q-card-section>
-                    </q-card>
+                            <div class="text-lg font-bold text-gray-900">
+                                {{ sales.length }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Main Data Table -->
-            <q-card flat class="data-card shadow-2">
-                <q-card-section class="card-header">
-                    <div class="text-h6 text-weight-medium">
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+                <!-- Card Header -->
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">
                         {{ __("Sales History") }}
-                    </div>
-                </q-card-section>
+                    </h2>
+                </div>
 
-                <q-table
-                    :rows="sales"
-                    :columns="columns"
-                    row-key="id"
-                    flat
-                    bordered
-                    :loading="loading"
-                    :rows-per-page-options="[0]"
-                    hide-pagination
-                    class="sales-table"
-                >
-                    <template v-slot:loading>
-                        <q-inner-loading showing color="primary" />
-                    </template>
-
-                    <template v-slot:body-cell-currency="props">
-                        <q-td :props="props">
-                            <q-badge
-                                color="blue-1"
-                                text-color="blue-9"
-                                class="currency-badge"
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200">
+                                <th
+                                    v-for="(column, index) in columns"
+                                    :key="index"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    {{ __(column) }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr
+                                v-for="row in sales"
+                                :key="row.id"
+                                class="hover:bg-gray-50"
                             >
-                                {{ props.value }}
-                            </q-badge>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-status="props">
-                        <q-td :props="props">
-                            <q-badge
-                                :color="getStatusColor(props.value)"
-                                class="status-badge"
-                            >
-                                {{ props.value }}
-                            </q-badge>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-total="props">
-                        <q-td :props="props" class="text-right">
-                            <div class="column">
-                                <div class="text-weight-bold text-primary">
-                                    {{
-                                        formatCurrency(
-                                            calculateCommission(props.row)
-                                        )
-                                    }}
-                                </div>
-                                <div class="text-caption text-grey-7">
-                                    {{ __("Commission") }}
-                                </div>
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-created="props">
-                        <q-td :props="props">
-                            <div class="column">
-                                <div>{{ formatDate(props.value) }}</div>
-                                <div class="text-caption text-grey-7">
-                                    {{ formatTime(props.value) }}
-                                </div>
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-updated="props">
-                        <q-td :props="props">
-                            <div class="column">
-                                <div>{{ formatDate(props.value) }}</div>
-                                <div class="text-caption text-grey-7">
-                                    {{ formatTime(props.value) }}
-                                </div>
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:no-data>
-                        <div
-                            class="full-width row flex-center text-grey q-pa-lg"
-                        >
-                            <q-icon
-                                name="mdi-database-remove"
-                                size="2em"
-                                class="q-mr-sm"
-                            />
-                            <span>{{ __("No sales records found") }}</span>
-                        </div>
-                    </template>
-                </q-table>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                >
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                    >
+                                        {{ row.currency }}
+                                    </span>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-center"
+                                >
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                        :class="getStatusClasses(row.status)"
+                                    >
+                                        {{ row.status }}
+                                    </span>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-right"
+                                >
+                                    <div class="flex flex-col items-end">
+                                        <span
+                                            class="font-semibold text-blue-600"
+                                        >
+                                            {{
+                                                formatCurrency(
+                                                    calculateCommission(row)
+                                                )
+                                            }}
+                                        </span>
+                                        <span class="text-xs text-gray-500">
+                                            {{ __("Commission") }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                >
+                                    <div class="flex flex-col">
+                                        <span>{{ row.created }}</span>
+                                        <span class="text-xs text-gray-500">
+                                            {{ row.created }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                >
+                                    <div class="flex flex-col">
+                                        <span>{{ row.updated }}</span>
+                                        <span class="text-xs text-gray-500">
+                                            {{ row.updated }}
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <!-- Pagination -->
-                <div
-                    class="row justify-between items-center q-pa-md"
-                    v-if="pages.total_pages > 1"
-                >
-                    <div class="text-caption text-grey-7">
-                        {{ __("Page") }} {{ search.page }} {{ __("of") }}
-                        {{ pages.total_pages }} • {{ pages.total_count }}
-                        {{ __("total records") }}
-                    </div>
-
-                    <q-pagination
-                        v-model="search.page"
-                        color="primary"
-                        :max="pages.total_pages"
-                        :max-pages="6"
-                        boundary-numbers
-                        direction-links
-                        unelevated
-                    />
-                </div>
-            </q-card>
+                <v-paginate
+                    v-if="sales.length"
+                    :total-pages="pages.total_pages"
+                    v-model="search.page"
+                    @change="getSales"
+                />
+            </div>
         </div>
     </v-partner-layout>
 </template>
 
 <script>
+import VPartnerLayout from "@/layouts/VPartnerLayout.vue";
+import VPaginate from "@/components/VPaginate.vue";
+
 export default {
+    components: {
+        VPartnerLayout,
+        VPaginate,
+    },
     data() {
         return {
             sales: [],
             loading: false,
             columns: [
-                {
-                    name: "currency",
-                    label: this.__("Currency"),
-                    field: "currency",
-                    align: "left",
-                    sortable: true,
-                    headerClasses: "text-weight-bold",
-                },
-                {
-                    name: "status",
-                    label: this.__("Status"),
-                    field: "status",
-                    align: "center",
-                    sortable: true,
-                    headerClasses: "text-weight-bold",
-                },
-                {
-                    name: "total",
-                    label: this.__("Commission"),
-                    field: "total",
-                    align: "right",
-                    sortable: true,
-                    headerClasses: "text-weight-bold",
-                },
-                {
-                    name: "created",
-                    label: this.__("Created Date"),
-                    field: "created",
-                    align: "left",
-                    sortable: true,
-                    headerClasses: "text-weight-bold",
-                },
-                {
-                    name: "updated",
-                    label: this.__("Updated Date"),
-                    field: "updated",
-                    align: "left",
-                    sortable: true,
-                    headerClasses: "text-weight-bold",
-                },
+                "Currency",
+                "Status",
+                "Commission",
+                "Created Date",
+                "Updated Date",
             ],
             pages: {
                 total_pages: 0,
-                total_count: 0,
             },
             search: {
                 page: 1,
@@ -326,30 +295,16 @@ export default {
         },
     },
 
-    watch: {
-        "search.page"(value) {
-            this.getSales();
-        },
-        "search.per_page"(value) {
-            if (value) {
-                this.search.per_page = value;
-                this.getSales();
-            }
-        },
-    },
-
     created() {
         this.getSales();
     },
 
     methods: {
-        async getSales(param = null) {
+        async getSales() {
             this.loading = true;
-            var params = { ...this.search, ...param };
-
             try {
                 const res = await this.$server.get(this.$page.props.route, {
-                    params: params,
+                    params: this.search,
                 });
 
                 if (res.status == 200) {
@@ -361,11 +316,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -389,28 +340,18 @@ export default {
             }).format(value);
         },
 
-        formatDate(dateString) {
-            if (!dateString) return "-";
-            return new Date(dateString).toLocaleDateString();
-        },
-
-        formatTime(dateString) {
-            if (!dateString) return "-";
-            return new Date(dateString).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-            });
-        },
-
-        getStatusColor(status) {
-            const statusColors = {
-                completed: "positive",
-                pending: "warning",
-                failed: "negative",
-                refunded: "info",
-                processing: "blue",
+        getStatusClasses(status) {
+            const statusClasses = {
+                completed: "bg-green-100 text-green-800",
+                pending: "bg-yellow-100 text-yellow-800",
+                failed: "bg-red-100 text-red-800",
+                refunded: "bg-blue-100 text-blue-800",
+                processing: "bg-purple-100 text-purple-800",
             };
-            return statusColors[status.toLowerCase()] || "grey";
+            return (
+                statusClasses[status.toLowerCase()] ||
+                "bg-gray-100 text-gray-800"
+            );
         },
     },
 };
@@ -420,102 +361,5 @@ export default {
 .sales-dashboard {
     max-width: 1400px;
     margin: 0 auto;
-}
-
-.stats-card {
-    border-radius: 12px;
-    border-left: 4px solid;
-    transition: transform 0.3s ease;
-}
-
-.stats-card:hover {
-    transform: translateY(-2px);
-}
-
-.total-sales-card {
-    border-left-color: #1976d2;
-}
-
-.total-commission-card {
-    border-left-color: #4caf50;
-}
-
-.transactions-card {
-    border-left-color: #ff9800;
-}
-
-.data-card {
-    border-radius: 12px;
-}
-
-.card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.sales-table {
-    border-radius: 0 0 12px 12px;
-}
-
-.status-badge {
-    border-radius: 12px;
-    padding: 4px 12px;
-    font-size: 0.8rem;
-}
-
-.currency-badge {
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-weight: 500;
-}
-
-:deep(.q-table__top) {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-:deep(.q-table thead tr) {
-    height: 50px;
-}
-
-:deep(.q-table thead th) {
-    font-size: 0.9rem;
-    font-weight: 600;
-    background-color: #f8f9fa;
-}
-
-:deep(.q-table tbody td) {
-    font-size: 0.9rem;
-    height: 60px;
-}
-
-:deep(.q-pagination .q-btn) {
-    border-radius: 8px;
-    margin: 0 2px;
-}
-
-@media (max-width: 600px) {
-    .sales-dashboard {
-        padding: 12px;
-    }
-
-    .text-h4 {
-        font-size: 1.5rem;
-    }
-
-    .stats-card .text-h6 {
-        font-size: 1.1rem;
-    }
-
-    :deep(.q-table thead th) {
-        font-size: 0.8rem;
-    }
-
-    :deep(.q-table tbody td) {
-        font-size: 0.8rem;
-        padding: 8px 4px;
-    }
 }
 </style>

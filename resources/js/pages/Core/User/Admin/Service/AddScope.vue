@@ -289,7 +289,7 @@ export default {
                 if (res.status == 200) {
                     this.roles = res.data.data.map((item) => ({
                         ...item,
-                        name: this.__(item.name),
+                        name: __(item.name),
                     }));
                 }
             } catch (e) {
@@ -316,8 +316,8 @@ export default {
                     this.$q.notify({
                         type: "positive",
                         message: this.scope
-                            ? this.__("Scope updated successfully")
-                            : this.__("Scope added successfully"),
+                            ? __("Scope updated successfully")
+                            : __("Scope added successfully"),
                         position: "top",
                         icon: "mdi-check-circle",
                         timeout: 3000,

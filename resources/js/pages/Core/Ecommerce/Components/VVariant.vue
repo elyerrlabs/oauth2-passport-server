@@ -359,8 +359,8 @@ export default {
                 description: "",
             });
             this.$emit("update:modelValue", this.modelValue);
-            this.$notify.success(
-                this.__(
+             $notify.success(
+                __(
                     "Nuw variant section has been added, please complete the information"
                 )
             );
@@ -370,16 +370,16 @@ export default {
             const item = this.modelValue[index];
 
             const result = await this.$swal({
-                title: this.__("Are you sure?"),
-                text: this.__(
+                title: __("Are you sure?"),
+                text: __(
                     "You are about to delete this variant. This action cannot be undone."
                 ),
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
                 cancelButtonColor: "#3085d6",
-                confirmButtonText: this.__("Yes, delete it!"),
-                cancelButtonText: this.__("Cancel"),
+                confirmButtonText: __("Yes, delete it!"),
+                cancelButtonText: __("Cancel"),
                 reverseButtons: true,
                 focusCancel: true,
             });
@@ -395,8 +395,8 @@ export default {
 
                 // Show success notification with SweetAlert2
                 await this.$swal({
-                    title: this.__("Deleted!"),
-                    text: this.__("Variant has been deleted successfully."),
+                    title: __("Deleted!"),
+                    text: __("Variant has been deleted successfully."),
                     icon: "success",
                     timer: 2000,
                     showConfirmButton: false,
@@ -415,8 +415,8 @@ export default {
                     this.modelValue.splice(index, 1);
 
                     await this.$swal({
-                        title: this.__("Deleted!"),
-                        text: this.__("Variant has been deleted successfully."),
+                        title: __("Deleted!"),
+                        text: __("Variant has been deleted successfully."),
                         icon: "success",
                         timer: 2000,
                         showConfirmButton: false,
@@ -426,12 +426,12 @@ export default {
                 }
             } catch (e) {
                 await this.$swal({
-                    title: this.__("Error!"),
-                    text: this.__(
+                    title: __("Error!"),
+                    text: __(
                         "There was an error deleting the variant. Please try again."
                     ),
                     icon: "error",
-                    confirmButtonText: this.__("OK"),
+                    confirmButtonText: __("OK"),
                 });
             } finally {
                 this.$emit("update:modelValue", this.modelValue);
@@ -451,7 +451,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },

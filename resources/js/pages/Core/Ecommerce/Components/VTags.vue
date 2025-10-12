@@ -338,8 +338,8 @@ export default {
             if (this.maxTags && this.internalTags.length >= this.maxTags) {
                 this.$swal({
                     icon: "warning",
-                    title: this.__("Maximum Tags Reached"),
-                    text: this.__(
+                    title: __("Maximum Tags Reached"),
+                    text: __(
                         "You can only add up to {maxTags} tags."
                     ).replace("{maxTags}", this.maxTags),
                     timer: 3000,
@@ -386,8 +386,8 @@ export default {
             if (!this.allowDuplicates && this.isDuplicate(name, index)) {
                 this.$swal({
                     icon: "error",
-                    title: this.__("Duplicate Tag"),
-                    text: this.__("This tag already exists."),
+                    title: __("Duplicate Tag"),
+                    text: __("This tag already exists."),
                     timer: 2000,
                     showConfirmButton: false,
                 });
@@ -430,14 +430,14 @@ export default {
             const item = this.internalTags[index];
 
             const result = await this.$swal({
-                title: this.__("Delete Tag?"),
-                text: this.__("Are you sure you want to delete this tag?"),
+                title: __("Delete Tag?"),
+                text: __("Are you sure you want to delete this tag?"),
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
                 cancelButtonColor: "#3085d6",
-                confirmButtonText: this.__("Yes, delete it!"),
-                cancelButtonText: this.__("Cancel"),
+                confirmButtonText: __("Yes, delete it!"),
+                cancelButtonText: __("Cancel"),
                 reverseButtons: true,
             });
 
@@ -453,8 +453,8 @@ export default {
                         this.emitUpdate();
                         this.$swal({
                             icon: "success",
-                            title: this.__("Deleted!"),
-                            text: this.__("Tag has been deleted successfully."),
+                            title: __("Deleted!"),
+                            text: __("Tag has been deleted successfully."),
                             timer: 2000,
                             showConfirmButton: false,
                             toast: true,
@@ -464,11 +464,11 @@ export default {
                 } catch (e) {
                     this.$swal({
                         icon: "error",
-                        title: this.__("Error"),
+                        title: __("Error"),
                         text:
                             e?.response?.data?.message ||
-                            this.__("Failed to delete tag."),
-                        confirmButtonText: this.__("OK"),
+                            __("Failed to delete tag."),
+                        confirmButtonText: __("OK"),
                     });
                 }
             } else {
@@ -476,8 +476,8 @@ export default {
                 this.emitUpdate();
                 this.$swal({
                     icon: "success",
-                    title: this.__("Deleted!"),
-                    text: this.__("Tag has been deleted successfully."),
+                    title: __("Deleted!"),
+                    text: __("Tag has been deleted successfully."),
                     timer: 1500,
                     showConfirmButton: false,
                     toast: true,

@@ -46,16 +46,16 @@ export default {
     methods: {
         openDeleteDialog() {
             this.$swal({
-                title: this.__("Delete product?"),
-                text: `${this.__("Delete")} "${this.item.name}"? ${this.__(
+                title: __("Delete product?"),
+                text: `${__("Delete")} "${this.item.name}"? ${__(
                     "This cannot be undone."
                 )}`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#dc2626",
                 cancelButtonColor: "#6b7280",
-                confirmButtonText: this.__("Delete"),
-                cancelButtonText: this.__("Cancel"),
+                confirmButtonText: __("Delete"),
+                cancelButtonText: __("Cancel"),
             }).then((result) => {
                 if (result.isConfirmed) {
                     this.destroy();
@@ -71,7 +71,7 @@ export default {
                     this.$emit("deleted", true);
                     this.$swal({
                         icon: "success",
-                        title: this.__("Deleted"),
+                        title: __("Deleted"),
                         timer: 1500,
                         showConfirmButton: false,
                     });
@@ -79,9 +79,9 @@ export default {
             } catch (e) {
                 this.$swal({
                     icon: "error",
-                    title: this.__("Error"),
+                    title: __("Error"),
                     text:
-                        e?.response?.data?.message || this.__("Delete failed"),
+                        e?.response?.data?.message || __("Delete failed"),
                 });
             }
         },

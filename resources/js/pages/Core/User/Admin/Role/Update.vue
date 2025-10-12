@@ -212,7 +212,7 @@ export default {
                 if (res.status == 200) {
                     this.$q.notify({
                         type: "positive",
-                        message: this.__("Role updated successfully"),
+                        message: __("Role updated successfully"),
                         position: "top",
                         icon: "mdi-check-circle",
                         timeout: 3000,

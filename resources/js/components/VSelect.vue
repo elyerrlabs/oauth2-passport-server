@@ -15,7 +15,9 @@
             >
                 <span class="truncate py-1">
                     {{
-                        selectedOption ? selectedOption[labelKey] : __(placeholder)
+                        selectedOption
+                            ? selectedOption[labelKey]
+                            : __(placeholder)
                     }}
                 </span>
                 <div class="flex items-center space-x-2">
@@ -120,9 +122,8 @@
 <script>
 import VError from "./VError.vue";
 export default {
-    components: {
-        VError,
-    },
+    components: { VError },
+
     props: {
         modelValue: {
             type: [String, Number, Object, null],
@@ -168,6 +169,11 @@ export default {
             type: Array,
             default: [],
         },
+
+        returnObject: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     emits: ["update:modelValue", "change", "search"],
@@ -182,6 +188,14 @@ export default {
 
     computed: {
         selectedOption() {
+            if (
+                this.returnObject &&
+                typeof this.modelValue === "object" &&
+                this.modelValue !== null
+            ) {
+                return this.modelValue;
+            }
+
             return this.options.find(
                 (opt) => opt[this.valueKey] === this.internalValue
             );
@@ -189,7 +203,6 @@ export default {
 
         filteredOptions() {
             if (!this.searchQuery) return this.options;
-
             const query = this.searchQuery.toLowerCase();
             return this.options.filter((option) =>
                 option[this.labelKey].toLowerCase().includes(query)
@@ -199,7 +212,9 @@ export default {
 
     watch: {
         modelValue(newVal) {
-            this.internalValue = newVal;
+            this.internalValue = this.returnObject
+                ? newVal?.[this.valueKey] ?? null
+                : newVal;
         },
 
         options: {
@@ -220,16 +235,18 @@ export default {
         toggleDropdown() {
             this.isOpen = !this.isOpen;
             if (this.isOpen) {
-                this.$nextTick(() => {
-                    this.$refs.searchInput?.focus();
-                });
+                this.$nextTick(() => this.$refs.searchInput?.focus());
             }
         },
 
         selectOption(option) {
+            const emittedValue = this.returnObject
+                ? option
+                : option[this.valueKey];
+
             this.internalValue = option[this.valueKey];
-            this.$emit("update:modelValue", this.internalValue);
-            this.$emit("change", this.internalValue);
+            this.$emit("update:modelValue", emittedValue);
+            this.$emit("change", emittedValue);
             this.isOpen = false;
             this.searchQuery = "";
         },

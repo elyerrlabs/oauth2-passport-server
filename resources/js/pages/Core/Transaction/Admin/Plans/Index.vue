@@ -21,333 +21,743 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-transaction-layout>
-        <!-- Header Section -->
-        <div class="header-section q-pa-lg bg-primary text-white">
-            <div class="row items-center">
-                <div class="col">
-                    <div class="text-h4 text-weight-bold">
+        <!-- HEADER -->
+        <header
+            class="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-b-3xl shadow-lg"
+        >
+            <div
+                class="flex flex-col md:flex-row md:items-center justify-between"
+            >
+                <div class="flex-1 mb-6 md:mb-0">
+                    <h1 class="text-4xl font-bold mb-2">
                         {{ __("Subscription Plans") }}
-                    </div>
-                    <div class="text-subtitle1 opacity-70">
-                        {{ __("Manage your subscription offerings") }}
-                    </div>
+                    </h1>
+                    <p class="text-blue-100 text-lg opacity-90">
+                        {{
+                            __(
+                                "Create, edit, and manage your subscription offerings"
+                            )
+                        }}
+                    </p>
                 </div>
-                <div class="col-auto">
+                <div class="flex-shrink-0">
                     <v-create @created="getPlans" />
                 </div>
             </div>
-        </div>
+        </header>
 
-        <!-- Plans Grid -->
-        <div class="q-pa-lg">
-            <div class="row q-col-gutter-lg">
-                <div
-                    v-for="plan in plans"
-                    :key="plan.id"
-                    class="col-12 col-md-6 col-lg-4"
-                >
-                    <!-- Plan Card -->
-                    <q-card class="plan-card shadow-5 rounded-borders" flat>
-                        <q-card-section
-                            class="plan-header"
-                            :class="plan.active ? 'bg-active' : 'bg-inactive'"
-                        >
-                            <div class="row items-center no-wrap">
-                                <div class="col">
-                                    <div
-                                        class="text-h6 text-weight-bold ellipsis plan-name"
-                                    >
-                                        {{ plan.name }}
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="row no-wrap q-gutter-xs">
-                                        <v-update
-                                            @updated="getPlans"
-                                            :item="plan"
-                                        />
-                                        <v-delete
-                                            @deleted="getPlans"
-                                            :item="plan"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </q-card-section>
-
-                        <!-- Plan Description -->
-                        <q-card-section class="q-pt-md">
-                            <div
-                                class="plan-description text-body2"
-                                v-html="plan.description"
-                            ></div>
-                        </q-card-section>
-
-                        <!-- Status Indicators -->
-                        <q-card-section class="q-pt-none">
-                            <div class="row q-col-gutter-xs">
-                                <div class="col-auto">
-                                    <q-badge
-                                        :color="
-                                            plan.active ? 'positive' : 'grey-5'
-                                        "
-                                        :text-color="
-                                            plan.active ? 'white' : 'dark'
-                                        "
-                                        class="status-badge"
-                                    >
-                                        <q-icon
-                                            :name="
-                                                plan.active
-                                                    ? 'mdi-check-circle'
-                                                    : 'mdi-close-circle'
-                                            "
-                                            size="16px"
-                                            class="q-mr-xs"
-                                        />
-                                        {{
-                                            plan.active
-                                                ? __("Active")
-                                                : __("Inactive")
-                                        }}
-                                    </q-badge>
-                                </div>
-
-                                <div class="col-auto" v-if="plan.bonus_enabled">
-                                    <q-badge
-                                        color="accent"
-                                        class="status-badge"
-                                    >
-                                        <q-icon
-                                            name="mdi-gift"
-                                            size="16px"
-                                            class="q-mr-xs"
-                                        />
-                                        {{ __("Bonus:") }}
-                                        {{ plan.bonus_duration }}
-                                        {{ __("days") }}
-                                    </q-badge>
-                                </div>
-
-                                <div class="col-auto" v-if="plan.trial_enabled">
-                                    <q-badge
-                                        color="secondary"
-                                        class="status-badge"
-                                    >
-                                        <q-icon
-                                            name="mdi-clock"
-                                            size="16px"
-                                            class="q-mr-xs"
-                                        />
-                                        {{ __("Trial:") }}
-                                        {{ plan.trial_duration }}
-                                        {{ __("days") }}
-                                    </q-badge>
-                                </div>
-                            </div>
-                        </q-card-section>
-
-                        <q-separator />
-
-                        <!-- Scopes Section -->
-                        <q-card-section>
-                            <div
-                                class="text-subtitle2 text-weight-medium section-title q-mb-sm"
-                            >
-                                <q-icon
-                                    name="mdi-key-chain-variant"
-                                    class="q-mr-sm"
-                                />
-                                {{ __("Access Scopes") }}
-                            </div>
-
-                            <div v-if="plan.scopes.length">
-                                <q-list class="scope-list rounded-borders">
-                                    <q-expansion-item
-                                        v-for="(item, index) in plan.scopes"
-                                        :key="index"
-                                        expand-icon-toggle
-                                        switch-toggle-side
-                                        class="scope-item"
-                                        :class="index === 0 ? 'first-item' : ''"
-                                    >
-                                        <template v-slot:header>
-                                            <q-item-section>
-                                                <div class="text-weight-medium">
-                                                    {{
-                                                        item.service.group.name
-                                                    }}
-                                                </div>
-                                                <div class="text-caption">
-                                                    {{ item.service.name }} -
-                                                    {{ item.role.name }}
-                                                </div>
-                                            </q-item-section>
-                                        </template>
-
-                                        <q-card class="bg-section">
-                                            <q-card-section class="q-pa-sm">
-                                                <div
-                                                    class="text-caption text-grey-7 q-mb-xs"
-                                                >
-                                                    {{ item.role.description }}
-                                                </div>
-                                                <v-revoke-scope
-                                                    @revoked="getPlans"
-                                                    :item="item"
-                                                />
-                                            </q-card-section>
-                                        </q-card>
-                                    </q-expansion-item>
-                                </q-list>
-                            </div>
-                            <div v-else class="empty-state text-center q-pa-md">
-                                <q-icon
-                                    name="mdi-key-remove"
-                                    size="32px"
-                                    color="grey-4"
-                                    class="q-mb-sm"
-                                />
-                                <div class="text-grey-6">
-                                    {{ __("No scopes assigned") }}
-                                </div>
-                            </div>
-                        </q-card-section>
-
-                        <q-separator />
-
-                        <!-- Pricing Section -->
-                        <q-card-section>
-                            <div
-                                class="text-subtitle2 text-weight-medium section-title q-mb-sm"
-                            >
-                                <q-icon
-                                    name="mdi-currency-usd"
-                                    class="q-mr-sm"
-                                />
-                                {{ __("Pricing") }}
-                            </div>
-
-                            <div v-if="plan.prices.length">
-                                <div
-                                    v-for="(item, index) in plan.prices"
-                                    :key="index"
-                                    class="price-item row items-center q-pa-sm rounded-borders q-mb-xs"
-                                    :class="
-                                        index % 2 === 0 ? 'bg-even' : 'bg-odd'
-                                    "
+        <!-- PLANS TABLE -->
+        <section class="px-4 py-8 max-w-7xl mx-auto">
+            <div
+                class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200"
+            >
+                <!-- TABLE FOR LARGE SCREENS -->
+                <div class="hidden md:block">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th
+                                    class="py-4 px-6 text-left text-sm font-semibold text-gray-700"
                                 >
-                                    <div class="col-auto">
-                                        <q-badge
-                                            color="primary"
-                                            class="period-badge"
-                                        >
-                                            {{
-                                                formatBillingPeriod(
-                                                    item.billing_period
-                                                )
-                                            }}
-                                        </q-badge>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="row items-center">
+                                    {{ __("Plan") }}
+                                </th>
+                                <th
+                                    class="py-4 px-6 text-left text-sm font-semibold text-gray-700"
+                                >
+                                    {{ __("Status") }}
+                                </th>
+                                <th
+                                    class="py-4 px-6 text-left text-sm font-semibold text-gray-700"
+                                >
+                                    {{ __("Features") }}
+                                </th>
+                                <th
+                                    class="py-4 px-6 text-left text-sm font-semibold text-gray-700"
+                                >
+                                    {{ __("Pricing") }}
+                                </th>
+                                <th
+                                    class="py-4 px-6 text-left text-sm font-semibold text-gray-700"
+                                >
+                                    {{ __("Actions") }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <template v-for="plan in plans" :key="plan.id">
+                                <!-- MAIN ROW -->
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <!-- PLAN NAME -->
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
                                             <div
-                                                class="price-amount text-weight-bold"
+                                                class="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-white"
+                                                :class="
+                                                    plan.active
+                                                        ? 'bg-gradient-to-r from-green-500 to-green-600'
+                                                        : 'bg-gradient-to-r from-gray-500 to-gray-600'
+                                                "
                                             >
-                                                {{ item.amount_format }}
-                                                <span
-                                                    class="text-caption text-grey-7 q-ml-xs"
-                                                    >{{ item.currency }}</span
+                                                <i
+                                                    class="mdi mdi-crown text-lg"
+                                                ></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div
+                                                    class="text-sm font-medium text-gray-900"
                                                 >
+                                                    {{ plan.name }}
+                                                </div>
                                             </div>
                                         </div>
-                                        <div
-                                            v-if="item.expiration"
-                                            class="text-caption text-grey-7"
+                                    </td>
+
+                                    <!-- STATUS -->
+                                    <td class="py-4 px-6">
+                                        <span
+                                            :class="[
+                                                'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border',
+                                                plan.active
+                                                    ? 'bg-green-100 text-green-800 border-green-200'
+                                                    : 'bg-gray-100 text-gray-800 border-gray-200',
+                                            ]"
                                         >
-                                            {{ __("Expires:") }}
-                                            {{ item.expiration }}
+                                            <i
+                                                :class="
+                                                    plan.active
+                                                        ? 'mdi mdi-check-circle'
+                                                        : 'mdi mdi-close-circle'
+                                                "
+                                                class="text-base mr-1"
+                                            ></i>
+                                            {{
+                                                plan.active
+                                                    ? __("Active")
+                                                    : __("Inactive")
+                                            }}
+                                        </span>
+
+                                        <div class="mt-2 flex flex-wrap gap-1">
+                                            <span
+                                                v-if="plan.bonus_enabled"
+                                                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200"
+                                            >
+                                                <i
+                                                    class="mdi mdi-gift text-xs mr-1"
+                                                ></i>
+                                                {{ __("Bonus") }}:
+                                                {{ plan.bonus_duration }}
+                                                {{ __("days") }}
+                                            </span>
+
+                                            <span
+                                                v-if="plan.trial_enabled"
+                                                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200"
+                                            >
+                                                <i
+                                                    class="mdi mdi-clock text-xs mr-1"
+                                                ></i>
+                                                {{ __("Trial") }}:
+                                                {{ plan.trial_duration }}
+                                                {{ __("days") }}
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- ACCESS SCOPES -->
+                                    <td class="py-4 px-6">
+                                        <div class="flex flex-col">
+                                            <div
+                                                class="flex items-center text-blue-600 font-semibold mb-2"
+                                            >
+                                                <i
+                                                    class="mdi mdi-key-chain-variant mr-2 text-sm"
+                                                ></i>
+                                                {{ __("Access Scopes") }}
+                                            </div>
+
+                                            <div
+                                                v-if="plan.scopes.length"
+                                                class="text-sm"
+                                            >
+                                                <div
+                                                    class="flex items-center justify-between mb-1"
+                                                >
+                                                    <span class="text-gray-600"
+                                                        >{{
+                                                            plan.scopes.length
+                                                        }}
+                                                        {{
+                                                            __("scope(s)")
+                                                        }}</span
+                                                    >
+                                                    <button
+                                                        @click="
+                                                            togglePlanExpansion(
+                                                                plan.id,
+                                                                'scopes'
+                                                            )
+                                                        "
+                                                        class="text-blue-500 hover:text-blue-700 text-xs flex items-center"
+                                                    >
+                                                        {{
+                                                            isPlanExpanded(
+                                                                plan.id,
+                                                                "scopes"
+                                                            )
+                                                                ? __("Hide")
+                                                                : __("View")
+                                                        }}
+                                                        <i
+                                                            :class="[
+                                                                'mdi ml-1 transition-transform',
+                                                                isPlanExpanded(
+                                                                    plan.id,
+                                                                    'scopes'
+                                                                )
+                                                                    ? 'mdi-chevron-up'
+                                                                    : 'mdi-chevron-down',
+                                                            ]"
+                                                        ></i>
+                                                    </button>
+                                                </div>
+
+                                                <!-- Expanded scopes content -->
+                                                <div
+                                                    v-if="
+                                                        isPlanExpanded(
+                                                            plan.id,
+                                                            'scopes'
+                                                        )
+                                                    "
+                                                    class="mt-2 border border-gray-200 rounded-lg overflow-hidden"
+                                                >
+                                                    <div
+                                                        v-for="(
+                                                            item, index
+                                                        ) in plan.scopes"
+                                                        :key="`${plan.id}-${index}`"
+                                                        class="border-b border-gray-100 last:border-b-0 bg-white"
+                                                    >
+                                                        <div class="p-3">
+                                                            <div
+                                                                class="font-medium text-gray-800"
+                                                            >
+                                                                {{
+                                                                    item.service
+                                                                        .group
+                                                                        .name
+                                                                }}
+                                                            </div>
+                                                            <div
+                                                                class="text-sm text-gray-600"
+                                                            >
+                                                                {{
+                                                                    item.service
+                                                                        .name
+                                                                }}
+                                                                —
+                                                                {{
+                                                                    item.role
+                                                                        .name
+                                                                }}
+                                                            </div>
+                                                            <div class="mt-2">
+                                                                <v-revoke-scope
+                                                                    :item="item"
+                                                                    @revoked="
+                                                                        getPlans
+                                                                    "
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                v-else
+                                                class="text-center py-2 text-gray-500 text-sm"
+                                            >
+                                                <i
+                                                    class="mdi mdi-key-remove mr-1"
+                                                ></i>
+                                                {{ __("No scopes assigned") }}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- PRICING TOGGLE -->
+                                    <td class="py-4 px-6">
+                                        <div class="flex flex-col">
+                                            <div
+                                                class="flex items-center text-green-600 font-semibold mb-2"
+                                            >
+                                                <i
+                                                    class="mdi mdi-currency-usd mr-2 text-sm"
+                                                ></i>
+                                                {{ __("Pricing") }}
+                                            </div>
+
+                                            <div
+                                                v-if="plan.prices.length"
+                                                class="text-sm"
+                                            >
+                                                <div
+                                                    class="flex items-center justify-between mb-1"
+                                                >
+                                                    <span class="text-gray-600"
+                                                        >{{
+                                                            plan.prices.length
+                                                        }}
+                                                        {{
+                                                            __("price(s)")
+                                                        }}</span
+                                                    >
+                                                    <button
+                                                        @click="
+                                                            togglePricingRow(
+                                                                plan.id
+                                                            )
+                                                        "
+                                                        class="text-blue-500 hover:text-blue-700 text-xs flex items-center"
+                                                    >
+                                                        {{
+                                                            expandedPricing ===
+                                                            plan.id
+                                                                ? __("Hide")
+                                                                : __("View")
+                                                        }}
+                                                        <i
+                                                            :class="[
+                                                                'mdi ml-1 transition-transform',
+                                                                expandedPricing ===
+                                                                plan.id
+                                                                    ? 'mdi-chevron-up'
+                                                                    : 'mdi-chevron-down',
+                                                            ]"
+                                                        ></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                v-else
+                                                class="text-center py-2 text-gray-500 text-sm"
+                                            >
+                                                <i
+                                                    class="mdi mdi-cash-remove mr-1"
+                                                ></i>
+                                                {{ __("No prices configured") }}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- ACTIONS -->
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center gap-2">
+                                            <v-update
+                                                :item="plan"
+                                                @updated="getPlans"
+                                            />
+                                            <v-delete
+                                                :item="plan"
+                                                @deleted="getPlans"
+                                            />
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- EXPANDED PRICING ROW -->
+                                <tr
+                                    v-if="
+                                        plan.prices.length &&
+                                        expandedPricing === plan.id
+                                    "
+                                    class="bg-blue-50 border-b border-blue-200"
+                                >
+                                    <td colspan="5" class="p-6">
+                                        <div
+                                            class="bg-white rounded-lg shadow-sm border border-blue-200"
+                                        >
+                                            <div
+                                                class="flex items-center justify-between mb-4 p-4 border-b border-blue-100"
+                                            >
+                                                <h3
+                                                    class="text-lg font-semibold text-blue-800"
+                                                >
+                                                    <i
+                                                        class="mdi mdi-currency-usd mr-2"
+                                                    ></i>
+                                                    {{
+                                                        __(
+                                                            "Pricing Details for"
+                                                        )
+                                                    }}: {{ plan.name }}
+                                                </h3>
+                                                <button
+                                                    @click="
+                                                        togglePricingRow(
+                                                            plan.id
+                                                        )
+                                                    "
+                                                    class="text-blue-600 hover:text-blue-800 flex items-center text-sm"
+                                                >
+                                                    {{ __("Close") }}
+                                                    <i
+                                                        class="mdi mdi-close ml-1"
+                                                    ></i>
+                                                </button>
+                                            </div>
+
+                                            <div
+                                                class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 p-4"
+                                            >
+                                                <div
+                                                    v-for="(
+                                                        price, index
+                                                    ) in plan.prices"
+                                                    :key="index"
+                                                    class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                                                >
+                                                    <div
+                                                        class="flex items-center justify-between mb-3"
+                                                    >
+                                                        <span
+                                                            class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold"
+                                                        >
+                                                            {{
+                                                                formatBillingPeriod(
+                                                                    price.billing_period
+                                                                )
+                                                            }}
+                                                        </span>
+                                                        <v-delete-price
+                                                            :item="price"
+                                                            @deleted="getPlans"
+                                                        />
+                                                    </div>
+
+                                                    <div class="space-y-2">
+                                                        <div
+                                                            class="flex justify-between items-center"
+                                                        >
+                                                            <span
+                                                                class="text-gray-600 text-sm"
+                                                                >{{
+                                                                    __(
+                                                                        "Amount"
+                                                                    )
+                                                                }}:</span
+                                                            >
+                                                            <span
+                                                                class="font-bold text-lg text-gray-900"
+                                                            >
+                                                                {{
+                                                                    price.amount_format
+                                                                }}
+                                                                <span
+                                                                    class="text-sm text-gray-600 ml-1"
+                                                                    >{{
+                                                                        price.currency
+                                                                    }}</span
+                                                                >
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- CARDS FOR SMALL SCREENS -->
+                <div class="md:hidden">
+                    <div class="divide-y divide-gray-200">
+                        <div v-for="plan in plans" :key="plan.id" class="p-4">
+                            <!-- Plan Header -->
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center">
+                                    <div
+                                        class="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-white"
+                                        :class="
+                                            plan.active
+                                                ? 'bg-gradient-to-r from-green-500 to-green-600'
+                                                : 'bg-gradient-to-r from-gray-500 to-gray-600'
+                                        "
+                                    >
+                                        <i class="mdi mdi-crown text-lg"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <div class="font-medium text-gray-900">
+                                            {{ plan.name }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                plan.active
+                                                    ? __("Active")
+                                                    : __("Inactive")
+                                            }}
                                         </div>
                                     </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <v-update
+                                        :item="plan"
+                                        @updated="getPlans"
+                                    />
+                                    <v-delete
+                                        :item="plan"
+                                        @deleted="getPlans"
+                                    />
+                                </div>
+                            </div>
 
-                                    <div class="col-auto">
-                                        <v-delete-price
-                                            :item="item"
-                                            @deleted="getPlans"
-                                        />
+                            <!-- Features Tags -->
+                            <div class="flex flex-wrap gap-1 mb-3">
+                                <span
+                                    v-if="plan.bonus_enabled"
+                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200"
+                                >
+                                    <i class="mdi mdi-gift text-xs mr-1"></i>
+                                    {{ __("Bonus") }}: {{ plan.bonus_duration }}
+                                    {{ __("days") }}
+                                </span>
+
+                                <span
+                                    v-if="plan.trial_enabled"
+                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200"
+                                >
+                                    <i class="mdi mdi-clock text-xs mr-1"></i>
+                                    {{ __("Trial") }}: {{ plan.trial_duration }}
+                                    {{ __("days") }}
+                                </span>
+                            </div>
+
+                            <!-- Access Scopes -->
+                            <div class="mb-3">
+                                <button
+                                    @click="
+                                        togglePlanExpansion(plan.id, 'scopes')
+                                    "
+                                    class="w-full flex justify-between items-center p-2 bg-gray-50 rounded-lg"
+                                >
+                                    <div
+                                        class="flex items-center text-blue-600 font-medium"
+                                    >
+                                        <i
+                                            class="mdi mdi-key-chain-variant mr-2"
+                                        ></i>
+                                        {{ __("Access Scopes") }}
+                                        <span class="ml-2 text-gray-500 text-sm"
+                                            >({{ plan.scopes.length }})</span
+                                        >
+                                    </div>
+                                    <i
+                                        :class="[
+                                            'mdi transition-transform',
+                                            isPlanExpanded(plan.id, 'scopes')
+                                                ? 'mdi-chevron-up'
+                                                : 'mdi-chevron-down',
+                                        ]"
+                                    ></i>
+                                </button>
+
+                                <div
+                                    v-if="isPlanExpanded(plan.id, 'scopes')"
+                                    class="mt-2 border border-gray-200 rounded-lg overflow-hidden"
+                                >
+                                    <div
+                                        v-for="(item, index) in plan.scopes"
+                                        :key="`${plan.id}-${index}`"
+                                        class="border-b border-gray-100 last:border-b-0 bg-white"
+                                    >
+                                        <div class="p-3">
+                                            <div
+                                                class="font-medium text-gray-800"
+                                            >
+                                                {{ item.service.group.name }}
+                                            </div>
+                                            <div class="text-sm text-gray-600">
+                                                {{ item.service.name }} —
+                                                {{ item.role.name }}
+                                            </div>
+                                            <div class="mt-2">
+                                                <v-revoke-scope
+                                                    :item="item"
+                                                    @revoked="getPlans"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div v-else class="empty-state text-center q-pa-md">
-                                <q-icon
-                                    name="mdi-cash-remove"
-                                    size="32px"
-                                    color="grey-4"
-                                    class="q-mb-sm"
-                                />
-                                <div class="text-grey-6">
-                                    {{ __("No prices configured") }}
+
+                            <!-- Pricing -->
+                            <div>
+                                <button
+                                    @click="togglePricingRowMobile(plan.id)"
+                                    class="w-full flex justify-between items-center p-2 bg-gray-50 rounded-lg"
+                                >
+                                    <div
+                                        class="flex items-center text-green-600 font-medium"
+                                    >
+                                        <i
+                                            class="mdi mdi-currency-usd mr-2"
+                                        ></i>
+                                        {{ __("Pricing") }}
+                                        <span class="ml-2 text-gray-500 text-sm"
+                                            >({{ plan.prices.length }})</span
+                                        >
+                                    </div>
+                                    <i
+                                        :class="[
+                                            'mdi transition-transform',
+                                            expandedPricingMobile === plan.id
+                                                ? 'mdi-chevron-up'
+                                                : 'mdi-chevron-down',
+                                        ]"
+                                    ></i>
+                                </button>
+
+                                <div
+                                    v-if="expandedPricingMobile === plan.id"
+                                    class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4"
+                                >
+                                    <div
+                                        class="flex items-center justify-between mb-3"
+                                    >
+                                        <h4 class="text-blue-800 font-semibold">
+                                            {{ __("Pricing Details") }}
+                                        </h4>
+                                        <button
+                                            @click="
+                                                togglePricingRowMobile(plan.id)
+                                            "
+                                            class="text-blue-600 hover:text-blue-800 text-sm"
+                                        >
+                                            {{ __("Close") }}
+                                        </button>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <div
+                                            v-for="(
+                                                price, index
+                                            ) in plan.prices"
+                                            :key="index"
+                                            class="bg-white border border-gray-200 rounded-lg p-3"
+                                        >
+                                            <div
+                                                class="flex items-center justify-between mb-2"
+                                            >
+                                                <span
+                                                    class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold"
+                                                >
+                                                    {{
+                                                        formatBillingPeriod(
+                                                            price.billing_period
+                                                        )
+                                                    }}
+                                                </span>
+                                                <v-delete-price
+                                                    :item="price"
+                                                    @deleted="getPlans"
+                                                />
+                                            </div>
+                                            <div class="space-y-1">
+                                                <div
+                                                    class="flex justify-between"
+                                                >
+                                                    <span
+                                                        class="text-gray-600 text-sm"
+                                                        >{{
+                                                            __("Amount")
+                                                        }}:</span
+                                                    >
+                                                    <span
+                                                        class="font-bold text-gray-900"
+                                                    >
+                                                        {{
+                                                            price.amount_format
+                                                        }}
+                                                        <span
+                                                            class="text-xs text-gray-600 ml-1"
+                                                            >{{
+                                                                price.currency
+                                                            }}</span
+                                                        >
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    v-if="price.expiration"
+                                                    class="flex justify-between text-xs"
+                                                >
+                                                    <span class="text-gray-600"
+                                                        >{{
+                                                            __("Expires")
+                                                        }}:</span
+                                                    >
+                                                    <span
+                                                        class="text-gray-800"
+                                                        >{{
+                                                            price.expiration
+                                                        }}</span
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </q-card-section>
-
-                        <q-separator />
-
-                        <!-- Timestamps -->
-                        <q-card-section class="timestamp-section">
-                            <div
-                                class="row items-center text-caption text-grey-6 q-mb-xs"
-                            >
-                                <q-icon
-                                    name="mdi-calendar-plus"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{ __("Created:") }} {{ plan.created }}
-                            </div>
-                            <div
-                                class="row items-center text-caption text-grey-6"
-                            >
-                                <q-icon
-                                    name="mdi-calendar-edit"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{ __("Updated:") }} {{ plan.updated }}
-                            </div>
-                        </q-card-section>
-                    </q-card>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Pagination -->
-        <div class="row justify-center q-mt-xl q-mb-lg">
-            <q-pagination
-                v-model="search.page"
-                color="primary"
-                :max="pages.total_pages"
-                :max-pages="6"
-                size="md"
-                boundary-numbers
-                direction-links
-                ellipses
-                class="pagination-control"
-            />
-        </div>
+            <!-- EMPTY STATE -->
+            <div
+                v-if="!plans.length"
+                class="text-center py-24 text-gray-500 border-2 border-dashed border-gray-300 rounded-2xl mt-8"
+            >
+                <i
+                    class="mdi mdi-clipboard-list-outline text-5xl text-gray-300 mb-4"
+                ></i>
+                <p class="text-lg font-semibold">
+                    {{ __("No subscription plans available") }}
+                </p>
+                <p class="text-gray-400 mb-6">
+                    {{ __("Start by creating your first plan") }}
+                </p>
+                <v-create @created="getPlans" />
+            </div>
+        </section>
+
+        <!-- PAGINATION -->
+        <v-paginate
+            v-if="pages.total_pages > 1"
+            :total-pages="pages.total_pages"
+            v-model="search.page"
+            @change="getPlans"
+        />
     </v-admin-transaction-layout>
 </template>
 
 <script>
+import VAdminTransactionLayout from "@/layouts/VAdminTransactionLayout.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
 import VUpdate from "./Updated.vue";
 import VRevokeScope from "./RevokeScope.vue";
 import VDeletePrice from "./DeletePrice.vue";
+import VPaginate from "@/components/VPaginate.vue";
 
 export default {
     components: {
+        VAdminTransactionLayout,
         VCreate,
         VDelete,
         VUpdate,
@@ -356,227 +766,93 @@ export default {
     },
     data() {
         return {
-            pages: {
-                total_pages: 0,
-            },
-            search: {
-                page: 1,
-                per_page: 15,
-            },
             plans: [],
+            expandedPlans: {},
+            expandedPricing: null,
+            expandedPricingMobile: null,
+            search: { page: 1, per_page: 15 },
+            pages: { total_pages: 0 },
         };
-    },
-
-    watch: {
-        "search.page"(value) {
-            this.getPlans();
-        },
-        "search.per_page"(value) {
-            if (value) {
-                this.search.per_page = value;
-                this.getPlans();
-            }
-        },
     },
 
     created() {
         this.getPlans();
     },
-
     methods: {
-        async getPlans(param) {
-            var params = { ...this.search, ...param };
-
+        async getPlans(params) {
             try {
                 const res = await this.$server.get(
                     this.$page.props.route.plans,
                     {
-                        params: params,
+                        params: { ...this.search, ...params },
                     }
                 );
-
-                if (res.status == 200) {
+                if (res.status === 200) {
                     this.plans = res.data.data;
-                    let meta = res.data.meta;
-                    this.pages = meta.pagination;
-                    this.search.current_page = meta.pagination.current_page;
+                    this.pages = res.data.meta.pagination;
+                    this.expandedPlans = {};
+                    this.expandedPricing = null;
+                    this.expandedPricingMobile = null;
                 }
             } catch (e) {
-                if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
-                }
+                console.error(
+                    e?.response?.data?.message || "Failed to load plans"
+                );
+            }
+        },
+
+        togglePlanExpansion(planId, section) {
+            const key = `${planId}-${section}`;
+            this.expandedPlans[key] = !this.expandedPlans[key];
+        },
+
+        isPlanExpanded(planId, section) {
+            return !!this.expandedPlans[`${planId}-${section}`];
+        },
+
+        togglePricingRow(planId) {
+            // If clicking the same row, toggle it
+            // If clicking a different row, close the current one and open the new one
+            if (this.expandedPricing === planId) {
+                this.expandedPricing = null;
+            } else {
+                this.expandedPricing = planId;
+            }
+        },
+
+        togglePricingRowMobile(planId) {
+            if (this.expandedPricingMobile === planId) {
+                this.expandedPricingMobile = null;
+            } else {
+                this.expandedPricingMobile = planId;
             }
         },
 
         formatBillingPeriod(period) {
-            const periodMap = {
-                monthly: "Monthly",
-                yearly: "Yearly",
-                weekly: "Weekly",
-                daily: "Daily",
+            const map = {
+                monthly: this.__("Monthly"),
+                yearly: this.__("Yearly"),
+                weekly: this.__("Weekly"),
+                daily: this.__("Daily"),
             };
-            return periodMap[period] || period;
+            return map[period] || period;
+        },
+        pageBtnClass(disabled) {
+            return [
+                "flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 border",
+                disabled
+                    ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400",
+            ];
+        },
+        pageClass(page) {
+            return [
+                "flex items-center justify-center w-10 h-10 rounded-xl text-sm font-semibold transition-all duration-200 border",
+                this.search.page === page
+                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border-blue-600"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400",
+            ];
         },
     },
 };
 </script>
-
-<style scoped>
-/* CSS Variables for Theme Consistency */
-:root {
-    --color-primary: #1976d2;
-    --color-secondary: #26a69a;
-    --color-accent: #ff6b35;
-    --color-positive: #21ba45;
-    --color-negative: #c10015;
-    --color-warning: #f2c037;
-    --color-dark: #1d1d1d;
-    --color-light: #f5f5f5;
-    --color-section: #f8f9fa;
-    --border-radius: 12px;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --transition-speed: 0.3s;
-}
-
-.header-section {
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
-    margin-bottom: 24px;
-}
-
-.plan-card {
-    border-radius: var(--border-radius);
-    transition: transform var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease;
-    overflow: hidden;
-    height: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.plan-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--card-shadow) !important;
-}
-
-.plan-header {
-    padding: 16px;
-    color: white;
-}
-
-.plan-header.bg-active {
-    background: linear-gradient(135deg, var(--color-primary), #1565c0);
-}
-
-.plan-header.bg-inactive {
-    background: linear-gradient(135deg, #78909c, #546e7a);
-}
-
-.plan-name {
-    font-size: 1.1rem;
-}
-
-.plan-description {
-    line-height: 1.5;
-    min-height: 40px;
-}
-
-.status-badge {
-    border-radius: 16px;
-    padding: 6px 10px;
-    font-size: 0.75rem;
-}
-
-.section-title {
-    color: var(--color-primary);
-    padding-bottom: 8px;
-}
-
-.scope-list {
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 8px;
-}
-
-.scope-item {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.scope-item:last-child {
-    border-bottom: none;
-}
-
-.bg-section {
-    background-color: var(--color-section);
-}
-
-.bg-even {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.bg-odd {
-    background-color: rgba(0, 0, 0, 0.01);
-}
-
-.price-item {
-    transition: background-color var(--transition-speed) ease;
-}
-
-.price-item:hover {
-    background-color: rgba(var(--color-primary-rgb), 0.05);
-}
-
-.period-badge {
-    border-radius: 6px;
-    padding: 4px 8px;
-    font-weight: 600;
-}
-
-.price-amount {
-    font-size: 1.1rem;
-}
-
-.empty-state {
-    border: 2px dashed rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-.timestamp-section {
-    background-color: var(--color-section);
-    padding: 12px 16px;
-}
-
-.pagination-control {
-    background: white;
-    padding: 12px 20px;
-    border-radius: 50px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.opacity-70 {
-    opacity: 0.7;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1023px) {
-    .header-section {
-        border-radius: 0;
-        margin-bottom: 16px;
-    }
-
-    .plan-card {
-        margin-bottom: 16px;
-    }
-}
-
-@media (max-width: 599px) {
-    .header-section .text-h4 {
-        font-size: 1.5rem;
-    }
-
-    .status-badge {
-        margin-bottom: 4px;
-    }
-}
-</style>

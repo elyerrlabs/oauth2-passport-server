@@ -47,26 +47,26 @@ export default {
         async confirmDelete() {
             try {
                 const result = await this.$swal({
-                    title: this.__("Delete Category?"),
+                    title: __("Delete Category?"),
                     html: `
                         <div class="text-left">
-                            <p class="mb-4">${this.__(
+                            <p class="mb-4">${__(
                                 "You are about to delete the category"
                             )} <strong class="text-red-600">"${
                         this.item.name
                     }"</strong>.</p>
-                            <p class="mb-4">${this.__(
+                            <p class="mb-4">${__(
                                 "This action cannot be undone and will remove all associated data."
                             )}</p>
 
                             <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                <h4 class="font-semibold text-gray-800 mb-2">${this.__(
+                                <h4 class="font-semibold text-gray-800 mb-2">${__(
                                     "Category Details"
                                 )}</h4>
                                 <div class="space-y-2 text-sm">
                                     <div class="flex items-center">
                                         <i class="fas fa-tag text-gray-500 mr-2 w-5"></i>
-                                        <span class="font-medium">${this.__(
+                                        <span class="font-medium">${__(
                                             "Name:"
                                         )}</span>
                                         <span class="ml-2">${
@@ -78,7 +78,7 @@ export default {
                                             ? `
                                     <div class="flex items-center">
                                         <i class="fas fa-icons text-gray-500 mr-2 w-5"></i>
-                                        <span class="font-medium">${this.__(
+                                        <span class="font-medium">${__(
                                             "Icon:"
                                         )}</span>
                                         <span class="ml-2">
@@ -97,13 +97,13 @@ export default {
                                                 ? "text-green-500"
                                                 : "text-gray-400"
                                         } mr-2 w-5"></i>
-                                        <span class="font-medium">${this.__(
+                                        <span class="font-medium">${__(
                                             "Status:"
                                         )}</span>
                                         <span class="ml-2">${
                                             this.item.published
-                                                ? this.__("Published")
-                                                : this.__("Hidden")
+                                                ? __("Published")
+                                                : __("Hidden")
                                         }</span>
                                     </div>
                                     <div class="flex items-center">
@@ -112,13 +112,13 @@ export default {
                                                 ? "text-yellow-500"
                                                 : "text-gray-400"
                                         } mr-2 w-5"></i>
-                                        <span class="font-medium">${this.__(
+                                        <span class="font-medium">${__(
                                             "Featured:"
                                         )}</span>
                                         <span class="ml-2">${
                                             this.item.featured
-                                                ? this.__("Yes")
-                                                : this.__("No")
+                                                ? __("Yes")
+                                                : __("No")
                                         }</span>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@ export default {
 
                             <p class="text-red-600 text-sm flex items-center">
                                 <i class="fas fa-exclamation-triangle mr-2"></i>
-                                ${this.__(
+                                ${__(
                                     "Warning: This will permanently delete the category and cannot be recovered."
                                 )}
                             </p>
@@ -136,8 +136,8 @@ export default {
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
                     cancelButtonColor: "#6b7280",
-                    confirmButtonText: this.__("Delete Category"),
-                    cancelButtonText: this.__("Cancel"),
+                    confirmButtonText: __("Delete Category"),
+                    cancelButtonText: __("Cancel"),
                     focusCancel: true,
                     customClass: {
                         popup: "rounded-lg",
@@ -152,10 +152,10 @@ export default {
                 }
             } catch (error) {
                 this.$swal({
-                    title: this.__("Error!"),
-                    text: this.__("Delete cancelled"),
+                    title: __("Error!"),
+                    text: __("Delete cancelled"),
                     icon: "error",
-                    confirmButtonText: this.__("OK"),
+                    confirmButtonText: __("OK"),
                 });
             }
         },
@@ -169,27 +169,27 @@ export default {
 
                     // Success notification
                     this.$swal({
-                        title: this.__("Deleted!"),
-                        text: this.__("Category has been deleted successfully"),
+                        title: __("Deleted!"),
+                        text: __("Category has been deleted successfully"),
                         icon: "success",
                         timer: 2000,
                         showConfirmButton: false,
                     });
                 }
             } catch (e) {
-                let errorMessage = this.__(
+                let errorMessage = __(
                     "An error occurred while deleting the category"
                 );
 
                 if (e?.response?.data?.message) {
-                    errorMessage = this.__(e.response.data.message);
+                    errorMessage = __(e.response.data.message);
                 }
 
                 this.$swal({
-                    title: this.__("Error!"),
+                    title: __("Error!"),
                     text: errorMessage,
                     icon: "error",
-                    confirmButtonText: this.__("OK"),
+                    confirmButtonText: __("OK"),
                 });
             }
         },

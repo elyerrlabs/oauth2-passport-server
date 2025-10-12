@@ -590,15 +590,15 @@ export default {
         async copyToClipboard(text) {
             try {
                 await navigator.clipboard.writeText(text);
-                this.$notify.success(__("API key copied to clipboard"));
+                 $notify.success(__("API key copied to clipboard"));
             } catch (e) {
-                this.$notify.error(__("Failed to copy to clipboard"));
+                 $notify.error(__("Failed to copy to clipboard"));
             }
         },
 
         async create() {
             if (!this.form.name.trim()) {
-                this.errors = { name: this.__("Key name is required") };
+                this.errors = { name: __("Key name is required") };
                 return;
             }
 
@@ -615,7 +615,7 @@ export default {
                 if (res.status == 200) {
                     this.token = res.data;
                     this.$emit("created");
-                    this.$notify.success(__("API key generated successfully"));
+                     $notify.success(__("API key generated successfully"));
                 }
             } catch (e) {
                 if (e?.response?.status == 422) {
@@ -623,7 +623,7 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$notify.success(e.response.data.message);
+                     $notify.success(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -635,7 +635,7 @@ export default {
                 const res = await this.$server.get("/oauth/scopes");
                 this.scopes = res.data;
             } catch (error) {
-                this.$notify.success(__("Failed to load permissions"));
+                 $notify.success(__("Failed to load permissions"));
             }
         },
 

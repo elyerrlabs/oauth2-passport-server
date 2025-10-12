@@ -20,7 +20,7 @@ namespace Core\Transaction\Http\Controllers\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -32,7 +32,6 @@ use Core\Transaction\Repositories\DashboardRepository;
 
 class DashboardController extends WebController
 {
-
     /**
      * Dashboard repository
      * @var DashboardRepository
@@ -56,6 +55,6 @@ class DashboardController extends WebController
             "route" => route("transaction.admin.dashboard"),
             "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes')),
             'status' => route('api.transaction.payments.status')
-        ]);
+        ])->rootView('system');
     }
 }

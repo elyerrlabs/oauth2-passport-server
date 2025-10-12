@@ -20,7 +20,7 @@ namespace Core\Partner\Http\Controllers\Web;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -33,7 +33,6 @@ use Core\Partner\Repositories\DashboardRepository;
 
 class PartnerController extends WebController
 {
-
     /**
      * Dashboard repository
      * @var DashboardRepository
@@ -77,7 +76,7 @@ class PartnerController extends WebController
             "sales" => $meta,
             "route" => route("partner.dashboard"),
             "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
-        ]);
+        ])->rootView('system');
     }
 
 
@@ -93,7 +92,7 @@ class PartnerController extends WebController
             "partner" => $partner,
             "route" => route('partner.generate'),
             "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
-        ]);
+        ])->rootView('system');
     }
 
     /**
@@ -106,7 +105,7 @@ class PartnerController extends WebController
     }
 
     /**
-     * Show the all transactions 
+     * Show the all transactions
      * @param \Illuminate\Http\Request $request
      * @return \Elyerr\ApiResponse\Assets\JsonResponser|\Inertia\Response
      */
@@ -120,6 +119,6 @@ class PartnerController extends WebController
             "route" => route("partner.sales"),
             "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
 
-        ]);
+        ])->rootView('system');
     }
 }

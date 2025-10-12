@@ -399,7 +399,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VAccountLayout from "../../../Components/VAccountLayout.vue";
+import VAccountLayout from "@/layouts/VAccountLayout.vue";
 export default {
     components: {
         VAccountLayout,

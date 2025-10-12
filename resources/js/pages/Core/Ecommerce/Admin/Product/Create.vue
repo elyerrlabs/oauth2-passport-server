@@ -303,7 +303,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },
@@ -319,7 +319,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },
@@ -375,7 +375,7 @@ export default {
 
                 // Redirect after creation product
                 if (res.status == 201) {
-                    this.$notify.success(
+                     $notify.success(
                         __("New product has been created successfully.")
                     );
 
@@ -384,7 +384,7 @@ export default {
 
                 if (res.status == 200) {
                     this.loadData(res.data.data);
-                    this.$notify.success(
+                     $notify.success(
                         __("New product has been updated successfully.")
                     );
                 }
@@ -394,7 +394,7 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             } finally {
                 this.disabled = false;

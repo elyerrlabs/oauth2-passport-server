@@ -432,7 +432,7 @@ export default {
                     },
                 },
                 stroke: { lineCap: "round" },
-                labels: [this.__("Today Sales Goal")],
+                labels: [__("Today Sales Goal")],
             },
 
             todaySalesChartSeries: [],
@@ -482,14 +482,14 @@ export default {
                 },
                 tooltip: {
                     y: {
-                        formatter: (val) => val + " " + this.__("units sold"),
+                        formatter: (val) => val + " " + __("units sold"),
                     },
                 },
             };
 
             this.topProductsChartSeries = [
                 {
-                    name: this.__("Units Sold"),
+                    name: __("Units Sold"),
                     data: this.topProducts.map((item) => item.sold),
                 },
             ];
@@ -530,7 +530,7 @@ export default {
                                 },
                                 total: {
                                     show: true,
-                                    label: this.__("Total Revenue"),
+                                    label: __("Total Revenue"),
                                     formatter: () =>
                                         this.dashboard.currency_symbol +
                                         " " +
@@ -548,7 +548,7 @@ export default {
         renderSales() {
             this.salesChartSeries = [
                 {
-                    name: this.__("Sales"),
+                    name: __("Sales"),
                     data: this.dashboard.transactions.map((item) => item.total),
                 },
             ];

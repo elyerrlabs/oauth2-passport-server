@@ -127,7 +127,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },
@@ -141,13 +141,13 @@ export default {
                     if (notification.link) {
                         window.open(notification.link, "_blank");
                     }
-                    this.$notify.success(
-                        this.__("Notification marked as read")
+                     $notify.success(
+                        __("Notification marked as read")
                     );
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },
@@ -161,13 +161,13 @@ export default {
                 }
                 this.getUnreadNotifications();
                 if (e?.response?.data?.message) {
-                    this.$notify.success(
-                        this.__("All notifications marked as read")
+                     $notify.success(
+                        __("All notifications marked as read")
                     );
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
+                     $notify.error(e.response.data.message);
                 }
             }
         },

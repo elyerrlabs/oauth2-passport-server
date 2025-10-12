@@ -26,14 +26,14 @@ import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { setupI18n, __ } from "./config/locale.js";
-import { $notify } from "./config/notify.js";
-import VueSweetalert2 from "vue-sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
-
+import "./config/notify.js";
 import "./config/editor.js";
 
 //import { $echo } from "./config/echo.js";
 import { $server } from "./config/axios.js";
+
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 //icons https://pictogrammers.com/library/mdi/
 import "@mdi/font/css/materialdesignicons.css";
@@ -59,7 +59,6 @@ createInertiaApp({
     // app.config.globalProperties.$echo = $echo;
     app.config.globalProperties.$server = $server;
     app.config.globalProperties.__ = __;
-    app.config.globalProperties.$notify = $notify;
 
     app.component("VueDatePicker", VueDatePicker);
     app.use(plugin);

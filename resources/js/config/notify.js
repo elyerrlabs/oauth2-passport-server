@@ -40,4 +40,4 @@ const notyf = new Notyf({
   ],
 });
 
-export const $notify = notyf;
+window.$notify = notyf;

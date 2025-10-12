@@ -570,7 +570,7 @@ export default {
 
         selectAddress(item) {
             this.$q.notify({
-                message: this.__(
+                message: __(
                     "Delivery address has been selected successfully"
                 ),
                 color: "positive",
@@ -590,8 +590,8 @@ export default {
             try {
                 this.$q
                     .dialog({
-                        title: this.__("Confirm Removal"),
-                        message: this.__(
+                        title: __("Confirm Removal"),
+                        message: __(
                             "Are you sure you want to remove this address?"
                         ),
                         cancel: true,
@@ -604,7 +604,7 @@ export default {
                         if (res.status == 200) {
                             this.getAddresses();
                             this.$q.notify({
-                                message: this.__(
+                                message: __(
                                     "Address removed successfully"
                                 ),
                                 color: "positive",
@@ -665,8 +665,8 @@ export default {
                     this.getAddresses();
                     this.$q.notify({
                         message: this.form.id
-                            ? this.__("Delivery address updated successfully")
-                            : this.__("Delivery address added successfully"),
+                            ? __("Delivery address updated successfully")
+                            : __("Delivery address added successfully"),
                         color: "positive",
                         position: "top-right",
                         icon: "mdi-check-circle",

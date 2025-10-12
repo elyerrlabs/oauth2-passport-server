@@ -854,12 +854,12 @@ export default {
                 "Actions",
             ],
             filterLabels: {
-                name: this.__("Name"),
-                category: this.__("Category"),
-                model: this.__("Model"),
-                family: this.__("Family"),
-                stock: this.__("Stock"),
-                price: this.__("Price"),
+                name: __("Name"),
+                category: __("Category"),
+                model: __("Model"),
+                family: __("Family"),
+                stock: __("Stock"),
+                price: __("Price"),
             },
             filterFields: [
                 {
@@ -926,8 +926,8 @@ export default {
         filterHeaderText() {
             const count = this.activeFilterCount;
             return count > 0
-                ? `${this.__("Active Filters")} (${count})`
-                : this.__("Filter Products");
+                ? `${__("Active Filters")} (${count})`
+                : __("Filter Products");
         },
         activeFilterCount() {
             return Object.keys(this.activeFilters).length;
@@ -945,10 +945,10 @@ export default {
             return filters;
         },
         filteredResultsText() {
-            if (this.loading) return this.__("Loading...");
+            if (this.loading) return __("Loading...");
             if (this.products.length === 0)
-                return this.__("No products match your filters");
-            return this.__(
+                return __("No products match your filters");
+            return __(
                 `${this.products.length} of ${this.pagination.rowsNumber} products shown`
             );
         },
@@ -1065,7 +1065,7 @@ export default {
                 this.search.page = data.meta.pagination.current_page;
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify(e.response.data.message);
+                     $notify(e.response.data.message);
                 }
             } finally {
                 this.loading = false;

@@ -57,10 +57,10 @@ export default {
 
     methods: {
         openDialog() {
-            this.$swal
+            $swal.fire
                 .fire({
-                    title: this.__("Delete Client"),
-                    text: this.__(
+                    title: __("Delete Client"),
+                    text: __(
                         "This action cannot be undone. Type DELETE to confirm."
                     ),
                     icon: "warning",
@@ -68,12 +68,12 @@ export default {
                     inputPlaceholder: "DELETE",
                     inputValidator: (value) => {
                         if (value !== "DELETE") {
-                            return this.__('Please type "DELETE" to confirm');
+                            return __('Please type "DELETE" to confirm');
                         }
                     },
                     showCancelButton: true,
-                    confirmButtonText: this.__("Delete"),
-                    cancelButtonText: this.__("Cancel"),
+                    confirmButtonText: __("Delete"),
+                    cancelButtonText: __("Cancel"),
                     confirmButtonColor: "#dc2626",
                     cancelButtonColor: "#6b7280",
                     reverseButtons: true,
@@ -101,8 +101,8 @@ export default {
                     return true;
                 }
             } catch (e) {
-                this.$swal.fire({
-                    title: this.__("Error"),
+                $swal.fire.fire({
+                    title: __("Error"),
                     text: e?.response?.data?.message || "Unexpected error",
                     icon: "error",
                     confirmButtonColor: "#dc2626",
@@ -112,9 +112,9 @@ export default {
         },
 
         showSuccessNotification() {
-            this.$swal.fire({
-                title: this.__("Deleted!"),
-                text: this.__("OAuth client deleted successfully."),
+            $swal.fire.fire({
+                title: __("Deleted!"),
+                text: __("OAuth client deleted successfully."),
                 icon: "success",
                 timer: 2000,
                 showConfirmButton: false,

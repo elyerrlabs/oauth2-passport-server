@@ -261,7 +261,7 @@ export default {
                 }
 
                 if (res.status === 200) {
-                    this.$notify.success(__("Category updated successfully"));
+                     $notify.success(__("Category updated successfully"));
 
                     this.loadData(res.data.data);
                 }
@@ -271,7 +271,7 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$notify.error(__(e.response.data.message));
+                     $notify.error(__(e.response.data.message));
                 }
             } finally {
                 this.disabled = false;

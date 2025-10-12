@@ -31,13 +31,11 @@ use App\Http\Controllers\WebController;
 use Core\Partner\Transformer\UserTransformer;
 use Core\Partner\Repositories\PartnerRepository;
 
-
 class PartnerController extends WebController
 {
-
     /**
      * Repository
-     * @var 
+     * @var
      */
     public $repository;
 
@@ -67,7 +65,7 @@ class PartnerController extends WebController
                 'partners' => route('partner.admin.partner.index')
             ],
             "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
-        ]);
+        ])->rootView('system');
     }
 
     /**

@@ -3,6 +3,7 @@ import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import monacoEditorPlugin from "vite-plugin-monaco-editor-esm";
+import path from 'path'
 
 export default defineConfig({
   plugins: [
@@ -21,6 +22,11 @@ export default defineConfig({
     monacoEditorPlugin(),
     vue(),
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "resources/js"),
+    },
+  },
   optimizeDeps: {
     include: ["monaco-editor"],
   },
