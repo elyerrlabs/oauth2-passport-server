@@ -20,11 +20,14 @@ namespace Core\Transaction\Services\Payment\Drivers;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use Elyerr\ApiResponse\Exceptions\ReportError;
+use Illuminate\Support\Str;
+use Core\Transaction\Model\PaymentProvider;
+use Core\Transaction\Model\User;
 use Illuminate\Support\Fluent;
 use Core\Transaction\Model\Transaction;
 use Core\Transaction\Repositories\TransactionRepository;
@@ -52,11 +55,11 @@ class OfflineSubscription implements PaymentMethod
     /**
      * Process data
      * @param array $data
-     * @return  
+     * @return
      */
     public function buy(array $data)
     {
-        $user = auth()->user();
+        $provider = $this->createCustomerId($data);
 
         // Calculate total items
         $result = collect($data['items'])->reduce(function ($carry, $item) {
@@ -68,16 +71,17 @@ class OfflineSubscription implements PaymentMethod
 
         $meta = [
             'id' => $this->repository->generateSessionId(),
+            'customer' => $provider->customer_id,
             'currency' => $result['currency'],
             'amount_total' => $result['total'],
             'payment_intent' => $this->repository->generateIntent(),
             'metadata' => [
-                'user_id' => $user->id,
+                'user_id' => $provider->user->id,
                 'transaction_code' => $data['transaction_code'],
             ],
             'payment_intent_data' => [
                 "metadata" => [
-                    'user_id' => $user->id,
+                    'user_id' => $provider->user->id,
                     'transaction_code' => $data['transaction_code'],
                 ],
             ],
@@ -90,6 +94,7 @@ class OfflineSubscription implements PaymentMethod
         }
 
         $session = new Fluent($meta);
+        $session['provider'] = $provider;
 
         return $session;
     }
@@ -133,4 +138,48 @@ class OfflineSubscription implements PaymentMethod
 
         $this->repository->paymentSuccessfully($response, 'succeed');
     }
+
+    public function createCustomerId(array $data): PaymentProvider
+    {
+        $user = User::findOrFail(auth()->id());
+
+        // Check OFFLINE provider
+        $provider = PaymentProvider::where('name', config('billing.methods.offline.key'))
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$provider) {
+            $customerId = $this->generateUniqueOfflineId();
+
+            $provider = $user->paymentProviders()->create([
+                'name' => config('billing.methods.offline.key'),
+                'customer_id' => $customerId,
+            ]);
+        }
+
+        return $provider;
+    }
+
+    /**
+     * Generate a unique provider offline code
+     * @return string
+     */
+    protected function generateUniqueOfflineId(): string
+    {
+        do {
+
+            $hash = substr(
+                hash('crc32b', uniqid(Str::random(10) . microtime(true), true)),
+                0,
+                16
+            );
+
+            $uniqueCode = 'offline_cus_' . strtolower($hash);
+        } while (
+            PaymentProvider::where('customer_id', $uniqueCode)->exists()
+        );
+
+        return $uniqueCode;
+    }
+
 }
