@@ -20,148 +20,93 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="q-pa-md q-gutter-sm">
-        <q-btn
-            round
-            color="primary"
+    <div class="p-4 space-y-3">
+        <button
             @click="open"
-            icon="mdi-plus-circle"
-            size="md"
-            class="shadow-4"
-            :class="{ 'pulse-animation': !dialog }"
+            class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
+            :class="{ 'animate-pulse': !dialog }"
         >
-            <q-tooltip
-                transition-show="scale"
-                transition-hide="scale"
-                class="bg-primary text-white shadow-6"
-            >
-                {{ __("Add new group") }}
-            </q-tooltip>
-        </q-btn>
+            <i class="mdi mdi-plus-circle text-xl"></i>
+        </button>
 
-        <q-dialog
+        <v-modal
             v-model="dialog"
-            persistent
-            transition-show="jump-up"
-            transition-hide="jump-down"
-            maximized
+            :title="__('Create New Group')"
+            panel-class="w-full lg:w-4xl"
         >
-            <div class="dialog-backdrop flex flex-center">
-                <q-card class="dialog-card shadow-15">
-                    <div class="dialog-header bg-primary text-white">
-                        <q-card-section class="text-center">
-                            <q-icon
-                                name="mdi-account-group"
-                                size="md"
-                                class="q-mb-sm"
-                            />
-                            <div class="text-h6">
-                                {{ __("Create New Group") }}
-                            </div>
-                            <div class="text-caption">
-                                {{
-                                    __(
-                                        "Add a new group to organize your content"
-                                    )
-                                }}
-                            </div>
-                        </q-card-section>
-                    </div>
+            <template #body>
+                <!-- Form -->
+                <div class="p-6 space-y-4">
+                    <v-input
+                        :label="__('Group Name')"
+                        :placeholder="__('name')"
+                        v-model="form.name"
+                        :error="errors.name"
+                        :required="true"
+                    />
 
-                    <q-card-section class="q-pt-lg">
-                        <div class="q-gutter-y-md">
-                            <q-input
-                                v-model="form.name"
-                                :label="__('Group Name')"
-                                dense
-                                outlined
-                                color="primary"
-                                :error="!!errors.name"
-                                class="input-field"
-                                :loading="loading"
-                            >
-                                <template v-slot:prepend>
-                                    <q-icon name="mdi-tag-outline" />
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.name"></v-error>
-                                </template>
-                            </q-input>
+                    <v-textarea
+                        :label="__('Description')"
+                        v-model="form.description"
+                        :error="errors.description"
+                        :placeholder="__('Write short description ...')"
+                        :required="true"
+                    />
 
-                            <q-input
-                                v-model="form.description"
-                                :label="__('Description')"
-                                dense
-                                outlined
-                                color="primary"
-                                :error="!!errors.description"
-                                type="textarea"
-                                rows="3"
-                                class="input-field"
-                                :loading="loading"
-                            >
-                                <template v-slot:prepend>
-                                    <q-icon name="mdi-text-box-outline" />
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.description" />
-                                </template>
-                            </q-input>
+                    <!-- System Group Checkbox -->
+                    <v-switch
+                        :label="__('System Group')"
+                        v-model="form.system"
+                        :placeholder="
+                            __(
+                                'System groups have special permissions and cannot be deleted.'
+                            )
+                        "
+                    />
+                </div>
 
-                            <q-item class="q-pa-none">
-                                <q-item-section avatar>
-                                    <q-checkbox
-                                        v-model="form.system"
-                                        color="orange"
-                                        :error="!!errors.system"
-                                        keep-color
-                                    >
-                                        <template v-slot:error>
-                                            <v-error :error="errors.system" />
-                                        </template>
-                                    </q-checkbox>
-                                </q-item-section>
-                                <q-item-section>
-                                    <q-item-label class="text-weight-medium">
-                                        {{ __("System Group") }}
-                                    </q-item-label>
-                                    <q-item-label caption class="text-grey-7">
-                                        {{
-                                            __(
-                                                "System groups have special permissions and cannot be deleted."
-                                            )
-                                        }}
-                                    </q-item-label>
-                                </q-item-section>
-                            </q-item>
-                        </div>
-                    </q-card-section>
-
-                    <q-card-actions align="right" class="q-pa-md">
-                        <q-btn
-                            flat
-                            color="grey"
-                            :label="__('Cancel')"
-                            @click="close"
-                            class="q-mr-sm"
-                            :disable="loading"
-                        />
-                        <q-btn
-                            color="primary"
-                            :label="__('Create Group')"
-                            @click="create"
-                            :loading="loading"
-                            icon="mdi-check-circle"
-                        />
-                    </q-card-actions>
-                </q-card>
-            </div>
-        </q-dialog>
+                <!-- Actions -->
+                <div
+                    class="flex justify-end space-x-3 p-6 border-t border-gray-200"
+                >
+                    <button
+                        @click="close"
+                        :disabled="loading"
+                        class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {{ __("Cancel") }}
+                    </button>
+                    <button
+                        @click="create"
+                        :disabled="loading"
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg flex items-center space-x-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <i class="mdi mdi-check-circle" v-if="!loading"></i>
+                        <div
+                            v-if="loading"
+                            class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                        ></div>
+                        <span>{{ __("Create Group") }}</span>
+                    </button>
+                </div>
+            </template>
+        </v-modal>
     </div>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+import VInput from "@/components/VInput.vue";
+import VTextarea from "@/components/VTextarea.vue";
+import VSwitch from "@/components/VSwitch.vue";
+
 export default {
+    components: {
+        VModal,
+        VTextarea,
+        VInput,
+        VSwitch,
+    },
     emits: ["created"],
 
     data() {
@@ -178,9 +123,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Clean the form when it is closed
-         */
         close() {
             this.form = {
                 name: null,
@@ -200,9 +142,6 @@ export default {
             this.dialog = true;
         },
 
-        /**
-         * Create a new group
-         */
         async create() {
             this.loading = true;
             this.errors = {};
@@ -214,12 +153,7 @@ export default {
                 );
 
                 if (res.status == 201) {
-                    this.$q.notify({
-                        type: "positive",
-                        message: "Group created successfully",
-                        position: "top",
-                        icon: "mdi-check-circle",
-                    });
+                    this.$notify?.(__("Group created successfully"));
 
                     this.form = {
                         name: null,
@@ -235,11 +169,7 @@ export default {
                     this.errors = e.response.data.errors;
                 }
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -248,53 +178,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.dialog-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-}
-
-.dialog-card {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.dialog-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.input-field {
-    transition: all 0.3s ease;
-}
-
-.input-field:focus-within {
-    transform: translateY(-2px);
-}
-
-.pulse-animation {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(25, 118, 210, 0.7);
-    }
-    70% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 10px rgba(25, 118, 210, 0);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(25, 118, 210, 0);
-    }
-}
-
-.shadow-15 {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
-}
-</style>

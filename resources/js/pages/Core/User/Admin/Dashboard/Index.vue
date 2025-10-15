@@ -21,23 +21,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-layout>
-        <q-page class="admin-dashboard-page">
+        <div class="admin-dashboard-page min-h-screen p-6">
             <!-- Header Section -->
-            <div class="page-header">
-                <div class="header-content">
-                    <q-icon
-                        name="mdi-view-dashboard"
-                        size="36px"
-                        color="primary"
-                        class="header-icon"
-                    />
-                    <q-toolbar-title
-                        class="text-h4 text-weight-bold text-grey-8"
+            <div class="page-header mb-8">
+                <div class="header-content flex items-center space-x-3 mb-2">
+                    <div
+                        class="header-icon w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center"
                     >
+                        <i
+                            class="mdi mdi-view-dashboard text-white text-lg"
+                        ></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-800">
                         {{ __("Admin Dashboard") }}
-                    </q-toolbar-title>
+                    </h1>
                 </div>
-                <div class="text-subtitle1 text-grey-7 q-mt-sm">
+                <div class="text-gray-600 text-lg">
                     {{
                         __(
                             "Monitor your application's performance and user activity"
@@ -47,247 +46,263 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Stats Cards -->
-            <div class="stats-cards row q-col-gutter-md q-mb-xl">
+            <div
+                class="stats-cards grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+            >
                 <div
                     v-for="card in cards"
                     :key="card.label"
-                    class="col-xs-12 col-sm-6 col-md-3"
+                    class="stats-card bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
-                    <q-card class="stats-card q-pa-lg" flat bordered>
-                        <div class="card-content">
-                            <div
-                                class="text-caption text-weight-medium text-uppercase text-grey-7 q-mb-xs"
-                            >
-                                {{ __(card.label) }}
-                            </div>
-                            <div class="row items-center justify-between">
-                                <div
-                                    class="text-h3 text-weight-bold text-primary"
-                                >
-                                    {{ card.value }}
-                                </div>
-                                <q-icon
-                                    :name="card.icon"
-                                    size="42px"
-                                    color="primary"
-                                    class="card-icon"
-                                />
-                            </div>
-                            <q-linear-progress
-                                size="6px"
-                                :value="0.7"
-                                color="primary"
-                                class="q-mt-md"
-                                rounded
-                            />
+                    <div class="card-content">
+                        <div
+                            class="text-xs font-medium uppercase text-gray-500 mb-1"
+                        >
+                            {{ __(card.label) }}
                         </div>
-                    </q-card>
+                        <div class="flex items-center justify-between">
+                            <div class="text-4xl font-bold text-blue-600">
+                                {{ card.value }}
+                            </div>
+                            <div
+                                class="card-icon w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"
+                            >
+                                <i
+                                    :class="card.icon"
+                                    class="text-blue-600 text-xl"
+                                ></i>
+                            </div>
+                        </div>
+                        <div class="progress-bar mt-4">
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div
+                                    class="bg-blue-600 h-1.5 rounded-full w-3/4"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Filters Section -->
-            <q-card flat bordered class="filters-card q-mb-lg">
-                <q-card-section>
-                    <div class="text-h6 text-weight-medium text-grey-8 q-mb-md">
-                        <q-icon name="mdi-filter" class="q-mr-sm" />
+            <div
+                class="filters-card bg-white rounded-lg border border-gray-200 mb-6 shadow-sm"
+            >
+                <div class="p-6">
+                    <div
+                        class="text-xl font-medium text-gray-800 mb-4 flex items-center"
+                    >
+                        <i class="mdi mdi-filter mr-2 text-blue-500"></i>
                         {{ __("Filter Analytics") }}
                     </div>
-                    <div class="row q-col-gutter-md items-end">
-                        <q-input
-                            v-model="params.start"
-                            type="date"
-                            :label="__('Start Date')"
-                            dense
-                            outlined
-                            class="col-12 col-sm-6 col-md-3"
-                            stack-label
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-calendar-start" />
-                            </template>
-                        </q-input>
-                        <q-input
-                            v-model="params.end"
-                            type="date"
-                            :label="__('End Date')"
-                            dense
-                            outlined
-                            class="col-12 col-sm-6 col-md-3"
-                            stack-label
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-calendar-end" />
-                            </template>
-                        </q-input>
-                        <q-select
-                            v-model="params.type"
-                            :options="types"
-                            :label="__('Date Range')"
-                            dense
-                            outlined
-                            class="col-12 col-sm-6 col-md-2"
-                            stack-label
-                            emit-value
-                            map-options
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-calendar-range" />
-                            </template>
-                        </q-select>
-                        <q-select
-                            v-model="chartType"
-                            :options="chartTypes"
-                            :label="__('Chart Type')"
-                            dense
-                            outlined
-                            class="col-12 col-sm-6 col-md-2"
-                            stack-label
-                            emit-value
-                            map-options
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-chart-bar" />
-                            </template>
-                        </q-select>
-                        <div class="col-12 col-sm-6 col-md-2">
-                            <q-btn
-                                :label="__('Apply Filters')"
-                                @click="getData"
-                                color="primary"
-                                icon="mdi-check"
-                                unelevated
-                                class="full-width"
-                                :loading="loading"
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end"
+                    >
+                        <div class="input-group">
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-1"
                             >
-                                <template v-slot:loading>
-                                    <q-spinner-hourglass class="on-left" />
-                                    {{ __("Loading...") }}
-                                </template>
-                            </q-btn>
+                                {{ __("Start Date") }}
+                            </label>
+                            <div class="relative">
+                                <input
+                                    v-model="params.start"
+                                    type="date"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                />
+                                <i
+                                    class="mdi mdi-calendar-start absolute right-3 top-2.5 text-gray-400"
+                                ></i>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                                {{ __("End Date") }}
+                            </label>
+                            <div class="relative">
+                                <input
+                                    v-model="params.end"
+                                    type="date"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                />
+                                <i
+                                    class="mdi mdi-calendar-end absolute right-3 top-2.5 text-gray-400"
+                                ></i>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                                {{ __("Date Range") }}
+                            </label>
+                            <select
+                                v-model="params.type"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                <option
+                                    v-for="type in types"
+                                    :key="type.value"
+                                    :value="type.value"
+                                >
+                                    {{ type.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                                {{ __("Chart Type") }}
+                            </label>
+                            <select
+                                v-model="chartType"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                <option
+                                    v-for="chartType in chartTypes"
+                                    :key="chartType.value"
+                                    :value="chartType.value"
+                                >
+                                    {{ chartType.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <button
+                                @click="getData"
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors flex items-center justify-center"
+                                :disabled="loading"
+                            >
+                                <i class="mdi mdi-check mr-2"></i>
+                                {{ __("Apply Filters") }}
+                                <div v-if="loading" class="ml-2">
+                                    <div
+                                        class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                                    ></div>
+                                </div>
+                            </button>
                         </div>
                     </div>
-                </q-card-section>
-            </q-card>
+                </div>
+            </div>
 
             <!-- Chart and Users Section -->
-            <div class="row q-col-gutter-xl">
+            <div class="grid grid-cols-1 gap-8">
                 <!-- Chart Column -->
-                <div class="col-12">
-                    <q-card flat bordered class="chart-card">
-                        <q-card-section>
-                            <div
-                                class="text-h6 text-weight-medium text-grey-8 q-mb-md"
-                            >
-                                <q-icon name="mdi-chart-line" class="q-mr-sm" />
-                                {{ __("User Growth Analytics") }}
-                            </div>
-                            <apex-charts
-                                width="100%"
-                                height="400"
-                                :type="chartType"
-                                :options="chartOptions"
-                                :series="chartSeries"
-                            />
-                        </q-card-section>
-                    </q-card>
+                <div
+                    class="chart-card bg-white rounded-lg border border-gray-200 shadow-sm"
+                >
+                    <div class="p-6">
+                        <div
+                            class="text-xl font-medium text-gray-800 mb-4 flex items-center"
+                        >
+                            <i
+                                class="mdi mdi-chart-line mr-2 text-blue-500"
+                            ></i>
+                            {{ __("User Growth Analytics") }}
+                        </div>
+                        <apex-charts
+                            width="100%"
+                            height="400"
+                            :type="chartType"
+                            :options="chartOptions"
+                            :series="chartSeries"
+                        />
+                    </div>
                 </div>
 
                 <!-- Recent Users Column -->
-                <div class="col-12">
-                    <q-card flat bordered class="users-card">
-                        <q-card-section>
+                <div
+                    class="users-card bg-white rounded-lg border border-gray-200 shadow-sm"
+                >
+                    <div class="p-6">
+                        <div
+                            class="text-xl font-medium text-gray-800 mb-4 flex items-center"
+                        >
+                            <i
+                                class="mdi mdi-account-group mr-2 text-blue-500"
+                            ></i>
+                            {{ __("Recent Users") }}
+                        </div>
+                        <div class="users-list space-y-2">
                             <div
-                                class="text-h6 text-weight-medium text-grey-8 q-mb-md"
+                                v-for="user in last_users"
+                                :key="user.id"
+                                class="user-item p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-gray-200"
                             >
-                                <q-icon
-                                    name="mdi-account-group"
-                                    class="q-mr-sm"
-                                />
-                                {{ __("Recent Users") }}
-                            </div>
-                            <q-list class="users-list">
-                                <q-item
-                                    v-for="user in last_users"
-                                    :key="user.id"
-                                    clickable
-                                    class="user-item q-py-md"
-                                    v-ripple
-                                >
-                                    <q-item-section avatar>
-                                        <q-avatar
-                                            color="primary"
-                                            text-color="white"
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div
+                                            class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-medium"
                                         >
                                             {{ getUserInitials(user.name) }}
-                                        </q-avatar>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                        <q-item-label
-                                            class="text-weight-medium"
-                                        >
-                                            {{ user.name }}
-                                        </q-item-label>
-                                        <q-item-label
-                                            caption
-                                            class="text-grey-7"
-                                        >
-                                            {{ user.email }}
-                                        </q-item-label>
-                                    </q-item-section>
-
-                                    <q-item-section side>
-                                        <q-badge
-                                            outline
-                                            color="primary"
-                                            class="date-badge"
-                                        >
-                                            <q-icon
-                                                name="mdi-calendar"
-                                                size="14px"
-                                                class="q-mr-xs"
-                                            />
-                                            {{ formatDate(user.created_at) }}
-                                        </q-badge>
-                                    </q-item-section>
-                                </q-item>
-                            </q-list>
-
-                            <div
-                                v-if="last_users.length === 0"
-                                class="text-center q-pa-lg"
-                            >
-                                <q-icon
-                                    name="mdi-account-off"
-                                    size="48px"
-                                    color="grey-4"
-                                />
-                                <div class="text-grey-6 q-mt-md">
-                                    {{ __("No recent users") }}
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="font-medium text-gray-800"
+                                            >
+                                                {{ user.name }}
+                                            </div>
+                                            <div class="text-gray-600 text-sm">
+                                                {{ user.email }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="date-badge border border-blue-200 text-blue-600 px-3 py-1 rounded-full text-sm flex items-center"
+                                    >
+                                        <i
+                                            class="mdi mdi-calendar mr-1 text-sm"
+                                        ></i>
+                                        {{ formatDate(user.created_at) }}
+                                    </div>
                                 </div>
                             </div>
-                        </q-card-section>
-                    </q-card>
+                        </div>
+
+                        <div
+                            v-if="last_users.length === 0"
+                            class="text-center py-8"
+                        >
+                            <div
+                                class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                            >
+                                <i
+                                    class="mdi mdi-account-off text-gray-400 text-2xl"
+                                ></i>
+                            </div>
+                            <div class="text-gray-500">
+                                {{ __("No recent users") }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Auto-refresh Indicator -->
-            <div class="auto-refresh-indicator fixed-bottom-right q-ma-md">
-                <q-badge color="primary" rounded transparent>
-                    <q-icon name="mdi-autorenew" size="16px" class="q-mr-xs" />
+            <div class="fixed bottom-4 right-4">
+                <div
+                    class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center"
+                >
+                    <i class="mdi mdi-autorenew mr-1 text-sm"></i>
                     {{ __("Auto-refresh every 10 seconds") }}
-                </q-badge>
+                </div>
             </div>
-        </q-page>
+        </div>
     </v-admin-layout>
 </template>
 
 <script>
 import ApexCharts from "vue3-apexcharts";
+import VAdminLayout from "@/layouts/VAdminLayout.vue";
 
 export default {
     components: {
         ApexCharts,
+        VAdminLayout,
     },
 
     data() {
@@ -378,15 +393,19 @@ export default {
                 {
                     label: "Groups",
                     value: this.groups,
-                    icon: "mdi-account-group",
+                    icon: "mdi mdi-account-group",
                 },
                 {
                     label: "Roles",
                     value: this.roles,
-                    icon: "mdi-shield-account",
+                    icon: "mdi mdi-shield-account",
                 },
-                { label: "Users", value: this.users, icon: "mdi-account" },
-                { label: "Services", value: this.services, icon: "mdi-cog" },
+                { label: "Users", value: this.users, icon: "mdi mdi-account" },
+                {
+                    label: "Services",
+                    value: this.services,
+                    icon: "mdi mdi-cog",
+                },
             ];
 
             this.renderChart();
@@ -404,7 +423,8 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
+                    // Mantener la notificación de Quasar si es necesario
+                    this.$q?.notify?.({
                         type: "negative",
                         message: e.response.data.message,
                         timeout: 3000,
@@ -529,137 +549,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss" scoped>
-.admin-dashboard-page {
-    background: linear-gradient(135deg, #f8fafc 0%, #e4e8f0 100%);
-    min-height: 100vh;
-    padding: 24px;
-}
-
-.page-header {
-    margin-bottom: 32px;
-
-    .header-content {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 8px;
-    }
-
-    .header-icon {
-        background: rgba(0, 0, 0, 0.05);
-        padding: 16px;
-        border-radius: 50%;
-    }
-}
-
-.stats-cards {
-    .stats-card {
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        background: white;
-
-        &:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .card-content {
-            .text-h3 {
-                font-size: 2.5rem;
-            }
-
-            .card-icon {
-                opacity: 0.8;
-            }
-
-            .q-linear-progress {
-                margin-top: 16px;
-            }
-        }
-    }
-}
-
-.filters-card {
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-
-    .q-card__section {
-        padding: 24px;
-    }
-}
-
-.chart-card,
-.users-card {
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-
-    .q-card__section {
-        padding: 24px;
-    }
-}
-
-.users-list {
-    .user-item {
-        border-radius: 8px;
-        margin-bottom: 8px;
-        transition: all 0.3s ease;
-
-        &:hover {
-            background: rgba(0, 123, 255, 0.05);
-            transform: translateX(4px);
-        }
-
-        .date-badge {
-            padding: 6px 10px;
-            border-radius: 16px;
-            font-size: 0.75rem;
-        }
-    }
-}
-
-.auto-refresh-indicator {
-    z-index: 1000;
-}
-
-// Responsive adjustments
-@media (max-width: 1023px) {
-    .admin-dashboard-page {
-        padding: 16px;
-    }
-
-    .stats-cards {
-        .stats-card {
-            .text-h3 {
-                font-size: 2rem;
-            }
-        }
-    }
-}
-
-@media (max-width: 599px) {
-    .admin-dashboard-page {
-        padding: 12px;
-    }
-
-    .page-header {
-        .text-h4 {
-            font-size: 1.75rem;
-        }
-
-        .header-content {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
-        }
-    }
-
-    .filters-card {
-        .row {
-            flex-direction: column;
-        }
-    }
-}
-</style>

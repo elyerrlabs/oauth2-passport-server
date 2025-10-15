@@ -21,7 +21,6 @@
  */
 import flatpickr from "flatpickr";
 import "../css/app.css";
-import "@tailwindplus/elements";
 import "./config/notify.js";
 import "./config/editor.js";
 

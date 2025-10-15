@@ -20,296 +20,188 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-btn
-        color="primary"
-        outline
-        round
-        icon="mdi-plus"
+    <!-- Create Button -->
+    <button
         @click="open"
-        class="create-user-btn"
-        size="md"
+        class="create-user-btn bg-transparent border border-blue-600 text-blue-600 rounded-full p-3 hover:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        :title="__('Add new user')"
     >
-        <q-tooltip
-            transition-show="scale"
-            transition-hide="scale"
-            class="bg-primary text-white"
-        >
-            {{ __("Add new user") }}
-        </q-tooltip>
-    </q-btn>
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+                fill-rule="evenodd"
+                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                clip-rule="evenodd"
+            />
+        </svg>
+    </button>
 
-    <q-dialog
+    <v-modal
         v-model="dialog"
-        persistent
-        transition-show="jump-up"
-        transition-hide="jump-down"
+        :title="__('Create New User')"
+        panel-class="w-full lg:w-6xl"
     >
-        <div class="dialog-backdrop flex flex-center">
-            <q-card class="user-dialog-card shadow-15">
-                <div class="dialog-header bg-primary text-white">
-                    <q-card-section class="text-center">
-                        <q-icon
-                            name="mdi-account-plus"
-                            size="lg"
-                            class="q-mb-sm"
-                        />
-                        <div class="text-h5">{{ __("Create New User") }}</div>
-                        <div class="text-caption">
-                            {{ __("Add a new user to the system") }}
-                        </div>
-                    </q-card-section>
+        <template #body>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                <v-input
+                    v-model="form.name"
+                    :label="__('Name')"
+                    :error="errors.name"
+                    :required="true"
+                />
+
+                <v-input
+                    v-model="form.last_name"
+                    :label="__('Last Name')"
+                    :error="errors.last_name"
+                    :required="true"
+                />
+
+                <v-input
+                    :label="__('Email')"
+                    v-model="form.email"
+                    :error="errors.email"
+                    :required="true"
+                />
+
+                <v-select
+                    :label="__('Country')"
+                    v-model="form.country"
+                    :error="errors.country"
+                    :options="countries"
+                    :required="true"
+                    label-key="name_en"
+                    value-key="name_en"
+                >
+                    <template #selected="{ option }">
+                        <span class="text-gray-700 p-4">
+                            {{
+                                option
+                                    ? `${option.emoji} - ${option.name_en}`
+                                    : __("select")
+                            }}
+                        </span>
+                    </template>
+                    <template #option="{ option }">
+                        <span class="text-gray-700 p-4">
+                            {{ option.emoji }} - {{ option.name_en }}
+                        </span>
+                    </template>
+                </v-select>
+
+                <v-select
+                    :label="__('Dial code')"
+                    v-model="form.dial_code"
+                    :options="dial_codes"
+                    :error="errors.dial_codes"
+                    :required="true"
+                    label-key="name_en"
+                    value-key="dial_code"
+                >
+                    <template #selected="{ option }">
+                        <span class="text-gray-700 p-4">
+                            {{
+                                option
+                                    ? `${option.emoji} - ${option.name_en}   ${option.dial_code}`
+                                    : __("select")
+                            }}
+                        </span>
+                    </template>
+                    <template #option="{ option }">
+                        <span class="text-gray-700 p-4 m-2">
+                            {{ option.emoji }} - {{ option.name_en }} -
+                            {{ option.dial_code }}
+                        </span>
+                    </template>
+                </v-select>
+
+                <v-input
+                    :label="__('Phone')"
+                    v-model="form.phone"
+                    :error="errors.phone"
+                    :required="true"
+                />
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <svg
+                            class="w-4 h-4 inline mr-1"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                        >
+                            <path
+                                d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"
+                            />
+                            <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                        </svg>
+                        {{ __("Birthday") }}
+                    </label>
+                    <VueDatePicker
+                        v-model="form.birthday"
+                        :enable-time-picker="false"
+                        :max-date="new Date()"
+                        format="yyyy-MM-dd"
+                        model-type="format"
+                        :placeholder="__('Select birthday')"
+                        class="date-picker w-full"
+                    />
+                    <v-error :error="errors.birthday" class="mt-1"></v-error>
                 </div>
-
-                <q-card-section class="q-pt-lg">
-                    <div class="q-gutter-y-lg">
-                        <!-- Personal Information Section -->
-                        <div class="section-header">
-                            <q-icon
-                                name="mdi-account-details"
-                                color="primary"
-                                class="q-mr-sm"
-                            />
-                            <span class="text-subtitle1 text-primary">{{
-                                __("Personal Information")
-                            }}</span>
-                        </div>
-
-                        <div class="row q-col-gutter-md">
-                            <div class="col-12 col-sm-6">
-                                <q-input
-                                    outlined
-                                    v-model="form.name"
-                                    dense
-                                    :label="__('First Name')"
-                                    :error="!!errors.name"
-                                    color="primary"
-                                    class="input-field"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="mdi-account" />
-                                    </template>
-                                    <template v-slot:error>
-                                        <v-error :error="errors.name"></v-error>
-                                    </template>
-                                </q-input>
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <q-input
-                                    outlined
-                                    v-model="form.last_name"
-                                    dense
-                                    :label="__('Last Name')"
-                                    :error="!!errors.last_name"
-                                    color="primary"
-                                    class="input-field"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="mdi-account" />
-                                    </template>
-                                    <template v-slot:error>
-                                        <v-error
-                                            :error="errors.last_name"
-                                        ></v-error>
-                                    </template>
-                                </q-input>
-                            </div>
-                        </div>
-
-                        <!-- Contact Information Section -->
-                        <div class="section-header q-mt-xl">
-                            <q-icon
-                                name="mdi-contact-mail"
-                                color="primary"
-                                class="q-mr-sm"
-                            />
-                            <span class="text-subtitle1 text-primary">{{
-                                __("Contact Information")
-                            }}</span>
-                        </div>
-
-                        <q-input
-                            outlined
-                            v-model="form.email"
-                            dense
-                            :label="__('Email Address')"
-                            :error="!!errors.email"
-                            color="primary"
-                            class="input-field"
-                            type="email"
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-email" />
-                            </template>
-                            <template v-slot:error>
-                                <v-error :error="errors.email"></v-error>
-                            </template>
-                        </q-input>
-
-                        <div class="row q-col-gutter-md">
-                            <div class="col-12 col-sm-6">
-                                <q-select
-                                    v-model="form.country"
-                                    dense
-                                    outlined
-                                    use-input
-                                    fill-input
-                                    hide-selected
-                                    emit-value
-                                    map-options
-                                    input-debounce="300"
-                                    :options="filteredCountries"
-                                    :label="__('Country')"
-                                    :error="!!errors.country"
-                                    @filter="filterCountries"
-                                    color="primary"
-                                    class="input-field"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="mdi-earth" />
-                                    </template>
-                                    <template v-slot:error>
-                                        <v-error
-                                            :error="errors.country"
-                                        ></v-error>
-                                    </template>
-                                    <template v-slot:option="scope">
-                                        <q-item v-bind="scope.itemProps">
-                                            <q-item-section avatar>
-                                                <span>{{
-                                                    scope.opt.label.split(
-                                                        " "
-                                                    )[0]
-                                                }}</span>
-                                            </q-item-section>
-                                            <q-item-section>
-                                                <q-item-label>{{
-                                                    scope.opt.label.replace(
-                                                        /^.*? /,
-                                                        ""
-                                                    )
-                                                }}</q-item-label>
-                                            </q-item-section>
-                                        </q-item>
-                                    </template>
-                                </q-select>
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <q-select
-                                    v-model="form.dial_code"
-                                    dense
-                                    outlined
-                                    use-input
-                                    fill-input
-                                    hide-selected
-                                    emit-value
-                                    map-options
-                                    input-debounce="300"
-                                    :options="filteredDialCodes"
-                                    :label="__('Dial Code')"
-                                    :error="!!errors.dial_code"
-                                    @filter="filterDialCodes"
-                                    color="primary"
-                                    class="input-field"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="mdi-phone" />
-                                    </template>
-                                    <template v-slot:error>
-                                        <v-error
-                                            :error="errors.dial_code"
-                                        ></v-error>
-                                    </template>
-                                </q-select>
-                            </div>
-                        </div>
-
-                        <q-input
-                            outlined
-                            v-model="form.phone"
-                            dense
-                            :label="__('Phone Number')"
-                            :error="!!errors.phone"
-                            color="primary"
-                            class="input-field"
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-phone" />
-                            </template>
-                            <template v-slot:error>
-                                <v-error :error="errors.phone"></v-error>
-                            </template>
-                        </q-input>
-
-                        <!-- Additional Information Section -->
-                        <div class="section-header q-mt-xl">
-                            <q-icon
-                                name="mdi-calendar-account"
-                                color="primary"
-                                class="q-mr-sm"
-                            />
-                            <span class="text-subtitle1 text-primary">{{
-                                __("Additional Information")
-                            }}</span>
-                        </div>
-
-                        <div class="birthday-field">
-                            <label class="field-label">
-                                <q-icon
-                                    name="mdi-cake-variant"
-                                    class="q-mr-sm"
-                                />
-                                {{ __("Birthday") }}
-                            </label>
-                            <VueDatePicker
-                                v-model="form.birthday"
-                                :enable-time-picker="false"
-                                :max-date="new Date()"
-                                format="yyyy-MM-dd"
-                                model-type="format"
-                                :placeholder="__('Select birthday')"
-                                class="date-picker"
-                            />
-                            <v-error :error="errors.birthday"></v-error>
-                        </div>
-
-                        <q-checkbox
-                            v-model="form.verify_email"
-                            :label="__('Mark user email as verified')"
-                            color="primary"
-                            class="verify-checkbox"
-                            :error="!!errors.groups"
-                        >
-                            <template v-slot:error>
-                                <v-error :error="errors.groups"></v-error>
-                            </template>
-                        </q-checkbox>
-                    </div>
-                </q-card-section>
-
-                <q-card-actions align="right" class="q-pa-lg">
-                    <q-btn
-                        :label="__('Cancel')"
-                        icon="mdi-close-circle"
-                        color="grey-7"
-                        @click="dialog = false"
-                        flat
-                        class="q-mr-sm"
-                    />
-                    <q-btn
-                        :label="__('Create User')"
-                        icon="mdi-account-plus"
-                        color="primary"
-                        @click="create"
-                        unelevated
-                    />
-                </q-card-actions>
-            </q-card>
-        </div>
-    </q-dialog>
+            </div>
+            <div
+                class="flex justify-end space-x-3 mt-8 pt-4 border-t border-gray-200"
+            >
+                <button
+                    @click="dialog = false"
+                    class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                >
+                    <svg
+                        class="w-4 h-4 inline mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                    {{ __("Cancel") }}
+                </button>
+                <button
+                    @click="create"
+                    class="px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                >
+                    <svg
+                        class="w-4 h-4 inline mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"
+                        />
+                    </svg>
+                    {{ __("Create User") }}
+                </button>
+            </div>
+        </template>
+    </v-modal>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+import VCountry from "@/components/VCountry.vue";
+import VSelect from "@/components/VSelect.vue";
+import VInput from "@/components/VInput.vue";
+import VError from "@/components/VError.vue";
+
 export default {
+    components: {
+        VModal,
+        VCountry,
+        VSelect,
+        VInput,
+        VError,
+    },
     emits: ["created"],
     data() {
         return {
@@ -325,25 +217,16 @@ export default {
                 groups: [],
                 verify_email: false,
             },
-            selected_groups: [],
             errors: {},
             countries: [],
-            groups: [],
+            dial_codes: [],
             formFields: {
                 name: { label: "Name", type: "text" },
                 last_name: { label: "Last Name", type: "text" },
                 email: { label: "Email", type: "email" },
                 phone: { label: "Phone Number", type: "text" },
             },
-            filteredCountries: [],
-            filteredDialCodes: [],
         };
-    },
-
-    watch: {
-        selected_groups(value) {
-            this.form.groups = value.map((item) => item.value);
-        },
     },
 
     methods: {
@@ -373,54 +256,6 @@ export default {
             this.clean();
         },
 
-        filterCountries(val, update) {
-            if (!val) {
-                update(() => {
-                    this.filteredCountries = this.countries.map((c) => ({
-                        label: `${c.emoji} ${c.name_en}`,
-                        value: c.name_en,
-                    }));
-                });
-                return;
-            }
-
-            const needle = val.toLowerCase();
-            update(() => {
-                this.filteredCountries = this.countries
-                    .filter((c) => c.name_en.toLowerCase().includes(needle))
-                    .map((c) => ({
-                        label: `${c.emoji} ${c.name_en}`,
-                        value: c.name_en,
-                    }));
-            });
-        },
-
-        filterDialCodes(val, update) {
-            if (!val) {
-                update(() => {
-                    this.filteredDialCodes = this.countries.map((c) => ({
-                        label: `${c.emoji} ${c.name_en} (${c.dial_code})`,
-                        value: c.dial_code,
-                    }));
-                });
-                return;
-            }
-
-            const needle = val.toLowerCase();
-            update(() => {
-                this.filteredDialCodes = this.countries
-                    .filter((c) =>
-                        `${c.name_en} ${c.dial_code}`
-                            .toLowerCase()
-                            .includes(needle)
-                    )
-                    .map((c) => ({
-                        label: `${c.emoji} ${c.name_en} (${c.dial_code})`,
-                        value: c.dial_code,
-                    }));
-            });
-        },
-
         async create() {
             try {
                 const res = await this.$server.post(
@@ -429,13 +264,7 @@ export default {
                 );
                 if (res.status === 201) {
                     this.clean();
-                    this.$q.notify({
-                        type: "positive",
-                        message: "User created successfully",
-                        position: "top",
-                        icon: "mdi-check-circle",
-                        timeout: 3000,
-                    });
+                    $notify.success(__("User created successfully"));
                     this.$emit("created", true);
                     this.dialog = false;
                 }
@@ -449,111 +278,39 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             }
         },
+
+        filteredCountries(val) {
+            console.log(val);
+
+            return this.countries.filter(
+                (item) => item.name_en == this.form.name
+            );
+        },
+
+        filteredDialCodes() {},
 
         async getCountries() {
             try {
                 const res = await this.$server.get("/api/public/countries", {
-                    params: { order_by: "name_en", order_type: "asc" },
+                    params: {
+                        order_by: "name_en",
+                        order_type: "asc",
+                    },
                 });
-                if (res.status === 200) this.countries = res.data;
+                if (res.status === 200) {
+                    this.countries = res.data;
+                    this.dial_codes = res.data;
+                }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             }
-
-            this.filteredCountries = this.countries.map((c) => ({
-                label: `${c.emoji} ${c.name_en}`,
-                value: c.name_en,
-            }));
-            this.filteredDialCodes = this.countries.map((c) => ({
-                label: `${c.emoji} ${c.name_en} (${c.dial_code})`,
-                value: c.dial_code,
-            }));
         },
     },
 };
 </script>
-
-<style scoped>
-.dialog-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-}
-
-.user-dialog-card {
-    width: 100%;
-    max-width: 600px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.dialog-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.section-header {
-    display: flex;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 2px solid #f0f0f0;
-    margin-bottom: 16px;
-}
-
-.input-field {
-    transition: all 0.3s ease;
-}
-
-.input-field:focus-within {
-    transform: translateY(-2px);
-}
-
-.birthday-field {
-    margin: 16px 0;
-}
-
-.field-label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #1976d2;
-}
-
-.date-picker {
-    width: 100%;
-}
-
-.verify-checkbox {
-    margin-top: 16px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #fafafa;
-    border: 1px solid #e0e0e0;
-}
-
-.create-user-btn {
-    transition: transform 0.2s ease;
-}
-
-.create-user-btn:hover {
-    transform: scale(1.1);
-}
-
-.shadow-15 {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
-}
-</style>

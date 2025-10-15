@@ -20,155 +20,106 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="q-pa-md q-gutter-sm">
-        <q-btn
-            round
-            color="primary"
-            @click="open"
-            icon="mdi-plus-circle"
-            size="md"
-            class="shadow-4 pulse-animation"
+    <!-- Create Button -->
+    <button
+        @click="open"
+        class="relative group h-12 w-12 rounded-full bg-blue-600 text-white p-3 shadow-lg hover:shadow-xl hover:bg-blue-700 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
+    >
+        <i class="mdi mdi-plus-circle text-xl"></i>
+
+        <!-- Tooltip -->
+        <div
+            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
         >
-            <q-tooltip
-                transition-show="scale"
-                transition-hide="scale"
-                class="bg-primary text-white shadow-6"
-            >
-                {{ __("Add new role") }}
-            </q-tooltip>
-        </q-btn>
+            {{ __("Add new role") }}
+            <div
+                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"
+            ></div>
+        </div>
+    </button>
 
-        <q-dialog
-            v-model="dialog"
-            persistent
-            transition-show="jump-up"
-            transition-hide="jump-down"
-            maximized
-        >
-            <div class="dialog-backdrop flex flex-center">
-                <q-card class="dialog-card shadow-15">
-                    <div class="dialog-header bg-primary text-white">
-                        <q-card-section class="text-center">
-                            <q-icon
-                                name="mdi-account-key"
-                                size="md"
-                                class="q-mb-sm"
-                            />
-                            <div class="text-h6">
-                                {{ __("Create New Role") }}
-                            </div>
-                            <div class="text-caption">
-                                {{
-                                    __(
-                                        "Define a new role with specific permissions"
-                                    )
-                                }}
-                            </div>
-                        </q-card-section>
-                    </div>
-
-                    <q-card-section class="q-pt-lg">
-                        <div class="q-gutter-y-md">
-                            <q-input
-                                v-model="form.name"
-                                :label="__('Role Name')"
-                                outlined
-                                color="primary"
-                                :error="!!errors.name"
-                                class="input-field"
-                                :loading="loading"
-                                :hint="__('Unique identifier for the role')"
-                                :rules="[
-                                    (val) =>
-                                        !!val || __('Role name is required'),
-                                ]"
-                            >
-                                <template v-slot:prepend>
-                                    <q-icon name="mdi-tag-outline" />
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.name"></v-error>
-                                </template>
-                            </q-input>
-
-                            <q-input
-                                v-model="form.description"
-                                :label="__('Description')"
-                                outlined
-                                color="primary"
-                                :error="!!errors.description"
-                                type="textarea"
-                                rows="3"
-                                class="input-field"
-                                :loading="loading"
-                                :hint="
-                                    __(
-                                        'Describe the purpose and permissions of this role'
-                                    )
-                                "
-                            >
-                                <template v-slot:prepend>
-                                    <q-icon name="mdi-text-box-outline" />
-                                </template>
-                                <template v-slot:error>
-                                    <v-error :error="errors.description" />
-                                </template>
-                            </q-input>
-
-                            <q-item class="system-checkbox q-pa-none q-mt-md">
-                                <q-item-section avatar>
-                                    <q-checkbox
-                                        v-model="form.system"
-                                        color="orange"
-                                        :error="!!errors.system"
-                                        keep-color
-                                    >
-                                        <template v-slot:error>
-                                            <v-error :error="errors.system" />
-                                        </template>
-                                    </q-checkbox>
-                                </q-item-section>
-                                <q-item-section>
-                                    <q-item-label class="text-weight-medium">
-                                        {{ __("System Role") }}
-                                    </q-item-label>
-                                    <q-item-label caption class="text-grey-7">
-                                        {{
-                                            __(
-                                                "System roles have special permissions and cannot be modified or deleted."
-                                            )
-                                        }}
-                                    </q-item-label>
-                                </q-item-section>
-                            </q-item>
-                        </div>
-                    </q-card-section>
-
-                    <q-card-actions align="right" class="q-pa-md">
-                        <q-btn
-                            flat
-                            color="grey"
-                            :label="__('Cancel')"
-                            @click="close"
-                            class="q-mr-sm"
-                            :disable="loading"
-                        />
-                        <q-btn
-                            color="primary"
-                            :label="__('Create Role')"
-                            @click="create"
-                            :loading="loading"
-                            icon="mdi-check-circle"
-                        />
-                    </q-card-actions>
-                </q-card>
+    <v-modal
+        v-model="dialog"
+        :title="__('Create New Role')"
+        panel-class="w-full lg:w-4xl"
+    >
+        <template #body>
+            <!-- Form Content -->
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2">
+                <v-input
+                    :label="__('Name')"
+                    v-model="form.name"
+                    :placeholder="__('name')"
+                    :required="true"
+                    :error="errors.name"
+                />
             </div>
-        </q-dialog>
-    </div>
+
+            <div class="p-6 grid grid-cols-1">
+                <v-textarea
+                    :label="__('Description')"
+                    v-model="form.description"
+                    :placeholder="__('description')"
+                    :required="true"
+                    :error="errors.description"
+                />
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2">
+                <v-switch
+                    :label="__('System Group')"
+                    v-model="form.system"
+                    :error="errors.system"
+                    :placeholder="
+                        __(
+                            'System groups have special permissions and cannot be deleted.'
+                        )
+                    "
+                />
+            </div>
+
+            <div
+                class="grid grid-cols-2 justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl"
+            >
+                <button
+                    @click="close"
+                    :disabled="loading"
+                    class="px-6 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {{ __("Cancel") }}
+                </button>
+                <button
+                    @click="create"
+                    :disabled="loading"
+                    :class="[
+                        'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors',
+                        loading
+                            ? 'bg-blue-400 cursor-not-allowed'
+                            : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-200',
+                    ]"
+                >
+                    <i v-if="loading" class="mdi mdi-loading animate-spin"></i>
+                    <i v-else class="mdi mdi-check-circle"></i>
+                    {{ __("Create Role") }}
+                </button>
+            </div>
+        </template>
+    </v-modal>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+import VInput from "@/components/VInput.vue";
+import VTextarea from "@/components/VTextarea.vue";
+import VSwitch from "@/components/VSwitch.vue";
+
 export default {
+    components: {
+        VModal,
+        VInput,
+        VTextarea,
+        VSwitch,
+    },
+
     emits: ["created"],
 
     data() {
@@ -223,13 +174,11 @@ export default {
                 );
 
                 if (res.status == 201) {
-                    this.$q.notify({
-                        type: "positive",
-                        message: "Role created successfully",
-                        position: "top",
-                        icon: "mdi-check-circle",
-                        timeout: 3000,
-                    });
+                    // Reemplazar notificación de Quasar
+                    this.showNotification(
+                        "success",
+                        "Role created successfully"
+                    );
 
                     this.form = {
                         name: null,
@@ -246,14 +195,26 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    this.showNotification("error", e.response.data.message);
                 }
             } finally {
                 this.loading = false;
+            }
+        },
+
+        /**
+         * Mostrar notificación (reemplazo para $q.notify)
+         */
+        showNotification(type, message) {
+            // Aquí puedes integrar tu sistema de notificaciones preferido
+            // Por ejemplo: toast, alerta personalizada, etc.
+            console.log(`${type}: ${message}`);
+
+            // Ejemplo básico con alerta nativa (reemplaza con tu solución preferida)
+            if (type === "success") {
+                alert(`✅ ${message}`);
+            } else {
+                alert(`❌ ${message}`);
             }
         },
     },
@@ -261,58 +222,31 @@ export default {
 </script>
 
 <style scoped>
-.dialog-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+@keyframes pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+            0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+            0 10px 10px -5px rgb(0 0 0 / 0.04);
+    }
 }
 
-.dialog-card {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.dialog-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.input-field {
-    transition: all 0.3s ease;
-}
-
-.input-field:focus-within {
-    transform: translateY(-2px);
-}
-
-.pulse-animation {
+button:first-child {
     animation: pulse 2s infinite;
 }
 
-.system-checkbox {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 8px;
-    margin-top: 16px;
+/* Asegurar que el modal esté por encima de otros elementos */
+.fixed {
+    z-index: 50;
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(25, 118, 210, 0.7);
-    }
-    70% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 10px rgba(25, 118, 210, 0);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(25, 118, 210, 0);
-    }
-}
-
-.shadow-15 {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
+/* Transición de backdrop */
+.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
 }
 </style>

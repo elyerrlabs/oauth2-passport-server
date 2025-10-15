@@ -29,11 +29,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <input
             :type="type === 'money' ? 'text' : type"
             v-model="localValue"
-            :placeholder="placeholder"
+            :placeholder="placeholder ?? label"
             @blur="handleUp"
             @input="change"
             class="mt-1 py-2 px-3 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            :class="{ 'bg-gray-200': disabled }"
+            :class="{ 'bg-gray-200': disabled, 'border-red-600': error.length }"
             :disabled="disabled"
         />
 
@@ -49,7 +49,7 @@ const props = defineProps({
     modelValue: [String, Number],
     label: { type: String, required: true },
     type: { type: String, default: "text" },
-    placeholder: { type: String, default: "" },
+    placeholder: { type: String, default: null },
     required: { type: Boolean, default: false },
     error: { type: Array, default: [] },
     digits: { type: Number, default: 2 },

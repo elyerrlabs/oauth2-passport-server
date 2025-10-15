@@ -22,302 +22,371 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-admin-layout>
         <!-- Header Section -->
-        <div class="page-header">
-            <q-toolbar class="header-toolbar">
-                <q-icon
-                    name="mdi-account-group"
-                    size="32px"
-                    color="primary"
-                    class="header-icon"
-                />
-                <q-toolbar-title class="text-h4 text-weight-bold text-grey-8">
-                    {{ __("Groups Management") }}
-                </q-toolbar-title>
-                <q-space />
-                <div class="header-actions">
+        <div class="page-header mb-4">
+            <div class="header-toolbar flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="header-icon w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center"
+                    >
+                        <i class="mdi mdi-account-group text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-800">
+                        {{ __("Groups Management") }}
+                    </h1>
+                </div>
+                <div class="flex-1"></div>
+                <div class="header-actions flex items-center space-x-3">
                     <v-filter
                         :params="params"
                         @change="searching"
-                        class="q-mr-md"
+                        class="mr-3"
                     />
-                    <v-create @created="getGroups" class="q-mr-md" />
+                    <v-create @created="getGroups" class="mr-3" />
                 </div>
-            </q-toolbar>
-            <div class="text-subtitle1 text-grey-7 q-mt-sm">
+            </div>
+            <div class="text-gray-600 text-lg">
                 {{ __("Manage user groups and permissions") }}
             </div>
         </div>
 
         <!-- Stats Overview -->
-        <div class="stats-overview row q-col-gutter-md q-mb-xl">
-            <div class="col-12 col-sm-6 col-md-3">
-                <q-card flat bordered class="stats-card">
-                    <q-card-section>
-                        <div class="row items-center">
-                            <q-avatar
-                                size="48px"
-                                color="blue-1"
-                                text-color="blue-8"
-                                icon="mdi-account-group"
-                            />
-                            <div class="q-ml-md">
-                                <div
-                                    class="text-h5 text-weight-bold text-blue-8"
-                                >
-                                    {{ groups.length }}
-                                </div>
-                                <div class="text-caption text-grey-7">
-                                    {{ __("Total Groups") }}
-                                </div>
-                            </div>
+        <div class="stats-overview grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div
+                class="stats-card bg-white rounded-lg border border-gray-200 p-4 shadow-sm"
+            >
+                <div class="flex items-center">
+                    <div
+                        class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4"
+                    >
+                        <i
+                            class="mdi mdi-account-group text-blue-600 text-xl"
+                        ></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-blue-600">
+                            {{ groups.length }}
                         </div>
-                    </q-card-section>
-                </q-card>
+                        <div class="text-sm text-gray-600">
+                            {{ __("Total Groups") }}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3">
-                <q-card flat bordered class="stats-card">
-                    <q-card-section>
-                        <div class="row items-center">
-                            <q-avatar
-                                size="48px"
-                                color="green-1"
-                                text-color="green-8"
-                                icon="mdi-shield-account"
-                            />
-                            <div class="q-ml-md">
-                                <div
-                                    class="text-h5 text-weight-bold text-green-8"
-                                >
-                                    {{ systemGroupsCount }}
-                                </div>
-                                <div class="text-caption text-grey-7">
-                                    {{ __("System Groups") }}
-                                </div>
-                            </div>
+            <div
+                class="stats-card bg-white rounded-lg border border-gray-200 p-4 shadow-sm"
+            >
+                <div class="flex items-center">
+                    <div
+                        class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4"
+                    >
+                        <i
+                            class="mdi mdi-shield-account text-green-600 text-xl"
+                        ></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-green-600">
+                            {{ systemGroupsCount }}
                         </div>
-                    </q-card-section>
-                </q-card>
+                        <div class="text-sm text-gray-600">
+                            {{ __("System Groups") }}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3">
-                <q-card flat bordered class="stats-card">
-                    <q-card-section>
-                        <div class="row items-center">
-                            <q-avatar
-                                size="48px"
-                                color="orange-1"
-                                text-color="orange-8"
-                                icon="mdi-account"
-                            />
-                            <div class="q-ml-md">
-                                <div
-                                    class="text-h5 text-weight-bold text-orange-8"
-                                >
-                                    {{ userGroupsCount }}
-                                </div>
-                                <div class="text-caption text-grey-7">
-                                    {{ __("User Groups") }}
-                                </div>
-                            </div>
+            <div
+                class="stats-card bg-white rounded-lg border border-gray-200 p-4 shadow-sm"
+            >
+                <div class="flex items-center">
+                    <div
+                        class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4"
+                    >
+                        <i class="mdi mdi-account text-orange-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-orange-600">
+                            {{ userGroupsCount }}
                         </div>
-                    </q-card-section>
-                </q-card>
+                        <div class="text-sm text-gray-600">
+                            {{ __("User Groups") }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Mode Toggle -->
+        <div class="view-toggle flex justify-end mb-4">
+            <div class="bg-white rounded-lg border border-gray-200 p-1 flex">
+                <button
+                    @click="viewMode = 'grid'"
+                    :class="[
+                        'px-3 py-1 rounded-md text-sm font-medium transition-colors',
+                        viewMode === 'grid'
+                            ? 'bg-blue-500 text-white'
+                            : 'text-gray-600 hover:bg-gray-100',
+                    ]"
+                >
+                    <i class="mdi mdi-view-grid mr-1"></i>
+                    {{ __("Grid") }}
+                </button>
+                <button
+                    @click="viewMode = 'list'"
+                    :class="[
+                        'px-3 py-1 rounded-md text-sm font-medium transition-colors',
+                        viewMode === 'list'
+                            ? 'bg-blue-500 text-white'
+                            : 'text-gray-600 hover:bg-gray-100',
+                    ]"
+                >
+                    <i class="mdi mdi-view-list mr-1"></i>
+                    {{ __("List") }}
+                </button>
             </div>
         </div>
 
         <!-- Grid & List Views -->
         <div
             v-if="viewMode === 'grid'"
-            class="groups-grid row q-col-gutter-xl q-mb-lg"
+            class="groups-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6"
         >
             <div
                 v-for="group in groups"
                 :key="group.id"
-                class="col-12 col-sm-6 col-md-4 col-lg-3"
+                class="group-card bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
             >
-                <q-card flat bordered class="group-card">
-                    <q-card-section class="card-header">
-                        <div class="group-icon">
-                            <q-avatar
-                                size="56px"
-                                color="primary"
-                                text-color="white"
-                                icon="mdi-account-group"
-                            />
-                        </div>
+                <div
+                    class="card-header p-6 text-center border-b border-gray-200"
+                >
+                    <div class="group-icon mb-4">
                         <div
-                            class="group-title text-h6 text-weight-bold text-primary text-center"
+                            class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center mx-auto"
                         >
-                            {{ group.name }}
+                            <i
+                                class="mdi mdi-account-group text-white text-2xl"
+                            ></i>
                         </div>
-                        <div
-                            class="group-slug text-caption text-grey-7 text-center"
-                        >
-                            @{{ group.slug }}
-                        </div>
-                    </q-card-section>
+                    </div>
+                    <div
+                        class="group-title text-xl font-bold text-blue-600 mb-1"
+                    >
+                        {{ group.name }}
+                    </div>
+                    <div class="group-slug text-sm text-gray-500">
+                        @{{ group.slug }}
+                    </div>
+                </div>
 
-                    <q-separator />
+                <div class="card-content p-6">
+                    <div
+                        class="group-description text-gray-700 mb-4 line-clamp-3"
+                    >
+                        {{ group.description || __("No description provided") }}
+                    </div>
 
-                    <q-card-section class="card-content">
+                    <div class="group-meta space-y-2">
                         <div
-                            class="group-description text-body2 text-grey-8 q-mb-md"
+                            class="group-type-badge inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                            :class="
+                                group.system
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : 'bg-gray-100 text-gray-800'
+                            "
                         >
+                            <i
+                                :class="
+                                    group.system
+                                        ? 'mdi mdi-shield-check'
+                                        : 'mdi mdi-account'
+                                "
+                                class="text-sm mr-1"
+                            ></i>
                             {{
-                                group.description ||
-                                __("No description provided")
+                                group.system
+                                    ? __("System Group")
+                                    : __("User Group")
                             }}
                         </div>
 
-                        <div class="group-meta">
-                            <q-badge
-                                :color="group.system ? 'blue' : 'grey'"
-                                :text-color="group.system ? 'white' : 'dark'"
-                                class="group-type-badge"
-                            >
-                                <q-icon
-                                    :name="
-                                        group.system
-                                            ? 'mdi-shield-check'
-                                            : 'mdi-account'
-                                    "
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{
-                                    group.system
-                                        ? __("System Group")
-                                        : __("User Group")
-                                }}
-                            </q-badge>
-
-                            <div class="text-caption text-grey-6 q-mt-xs">
-                                <q-icon
-                                    name="mdi-calendar"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{ __("Created") }}
-                                {{ formatDate(group.created_at) }}
-                            </div>
+                        <div class="text-xs text-gray-500 flex items-center">
+                            <i class="mdi mdi-calendar mr-1 text-sm"></i>
+                            {{ __("Created") }}
+                            {{ formatDate(group.created_at) }}
                         </div>
-                    </q-card-section>
+                    </div>
+                </div>
 
-                    <q-separator />
-
-                    <q-card-actions align="center" class="card-actions">
-                        <v-update
-                            @updated="getGroups"
-                            :item="group"
-                            class="action-btn"
-                        />
-                        <v-delete
-                            v-if="!group.system"
-                            @deleted="getGroups"
-                            :item="group"
-                            class="action-btn"
-                        />
-                    </q-card-actions>
-                </q-card>
+                <div
+                    class="card-actions p-4 border-t border-gray-200 flex justify-center space-x-2"
+                >
+                    <v-update
+                        @updated="getGroups"
+                        :item="group"
+                        class="action-btn"
+                    />
+                    <v-delete
+                        v-if="!group.system"
+                        @deleted="getGroups"
+                        :item="group"
+                        class="action-btn"
+                    />
+                </div>
             </div>
         </div>
 
-        <div v-else class="groups-list q-mb-lg">
-            <q-card flat bordered>
-                <q-table
-                    :rows="groups"
-                    :columns="columns"
-                    row-key="id"
-                    flat
-                    bordered
-                    hide-bottom
-                    :rows-per-page-options="[search.per_page]"
-                    :loading="loading"
-                    class="groups-table"
-                >
-                    <template v-slot:loading>
-                        <q-inner-loading showing color="primary" />
-                    </template>
-
-                    <template v-slot:body-cell-description="props">
-                        <q-td class="description-cell">
-                            <div class="text-body2 line-clamp-2">
-                                {{
-                                    props.row.description ||
-                                    __("No description")
-                                }}
-                            </div>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:body-cell-system="props">
-                        <q-td class="system-cell">
-                            <q-badge
-                                :color="props.row.system ? 'blue-1' : 'grey-3'"
-                                :text-color="
-                                    props.row.system ? 'blue-8' : 'grey-8'
-                                "
-                                class="system-badge"
+        <!-- List View -->
+        <div v-else class="groups-list mb-6">
+            <div
+                class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden"
+            >
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    v-for="(column, index) in columns"
+                                    :key="index"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    {{ __(column) }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="bg-white divide-y divide-gray-200"
+                            v-if="!loading && groups.length > 0"
+                        >
+                            <tr
+                                v-for="group in groups"
+                                :key="group.id"
+                                class="hover:bg-gray-50 transition-colors"
                             >
-                                <q-icon
-                                    :name="
-                                        props.row.system
-                                            ? 'mdi-shield-check'
-                                            : 'mdi-account'
-                                    "
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                {{
-                                    props.row.system ? __("System") : __("User")
-                                }}
-                            </q-badge>
-                        </q-td>
-                    </template>
-
-                    <template v-slot:no-data>
-                        <div class="empty-state text-center q-pa-xl">
-                            <q-icon
-                                name="mdi-account-group-off"
-                                size="64px"
-                                color="grey-4"
-                                class="empty-icon"
-                            />
-                            <div
-                                class="empty-title text-h6 text-grey-7 q-mt-md"
-                            >
-                                {{ __("No groups found") }}
-                            </div>
-                            <div class="empty-subtitle text-grey-5">
-                                {{
-                                    __("Create your first group to get started")
-                                }}
-                            </div>
-                        </div>
-                    </template>
-                </q-table>
-            </q-card>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                                >
+                                    {{ group.name }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                >
+                                    @{{ group.slug }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500">
+                                    <div class="line-clamp-2 max-w-xs">
+                                        {{
+                                            group.description ||
+                                            __("No description")
+                                        }}
+                                    </div>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-center"
+                                >
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                                        :class="
+                                            group.system
+                                                ? 'bg-blue-100 text-blue-800'
+                                                : 'bg-gray-100 text-gray-800'
+                                        "
+                                    >
+                                        <i
+                                            :class="
+                                                group.system
+                                                    ? 'mdi mdi-shield-check'
+                                                    : 'mdi mdi-account'
+                                            "
+                                            class="text-sm mr-1"
+                                        ></i>
+                                        {{
+                                            group.system
+                                                ? __("System")
+                                                : __("User")
+                                        }}
+                                    </span>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
+                                >
+                                    <div class="flex justify-center space-x-2">
+                                        <v-update
+                                            @updated="getGroups"
+                                            :item="group"
+                                            class="action-btn"
+                                        />
+                                        <v-delete
+                                            v-if="!group.system"
+                                            @deleted="getGroups"
+                                            :item="group"
+                                            class="action-btn"
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else-if="loading">
+                            <tr>
+                                <td class="px-6 py-12 text-center">
+                                    <div
+                                        class="flex justify-center items-center"
+                                    >
+                                        <div
+                                            class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+                                        ></div>
+                                        <span class="ml-2 text-gray-600">{{
+                                            __("Loading...")
+                                        }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td class="px-6 py-12 text-center">
+                                    <div class="empty-state">
+                                        <div
+                                            class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                                        >
+                                            <i
+                                                class="mdi mdi-account-group-off text-gray-400 text-2xl"
+                                            ></i>
+                                        </div>
+                                        <div
+                                            class="empty-title text-lg font-medium text-gray-700 mb-2"
+                                        >
+                                            {{ __("No groups found") }}
+                                        </div>
+                                        <div
+                                            class="empty-subtitle text-gray-500"
+                                        >
+                                            {{
+                                                __(
+                                                    "Create your first group to get started"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <!-- Pagination -->
-        <div class="pagination-section row justify-center q-mb-xl">
-            <q-pagination
-                v-model="search.page"
-                color="primary"
-                :max="pages.total_pages"
-                :max-pages="6"
-                size="md"
-                direction-links
-                boundary-numbers
-                unelevated
-                class="custom-pagination"
-            />
-        </div>
+        <v-paginate
+            :total-pages="pages.total_pages"
+            v-model="search.page"
+            @change="getGroups"
+        />
     </v-admin-layout>
 </template>
 
 <script>
+import VAdminLayout from "@/layouts/VAdminLayout.vue";
+import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
 import VUpdate from "./Update.vue";
 import VDelete from "./Delete.vue";
@@ -327,6 +396,8 @@ export default {
         VCreate,
         VUpdate,
         VDelete,
+        VAdminLayout,
+        VPaginate,
     },
 
     data() {
@@ -342,42 +413,7 @@ export default {
                 page: 1,
                 per_page: 15,
             },
-            columns: [
-                {
-                    name: "name",
-                    label: __("Group Name"),
-                    field: "name",
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "slug",
-                    label: __("Slug"),
-                    field: "slug",
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "description",
-                    label: __("Description"),
-                    field: "description",
-                    align: "left",
-                    sortable: false,
-                },
-                {
-                    name: "system",
-                    label: __("Type"),
-                    field: (row) => (row.system ? "System" : "User"),
-                    align: "center",
-                    sortable: true,
-                },
-                {
-                    name: "actions",
-                    label: __("Actions"),
-                    align: "center",
-                    sortable: false,
-                },
-            ],
+            columns: ["Group Name", "Slug", "Description", "Type", "Actions"],
         };
     },
 
@@ -392,18 +428,6 @@ export default {
 
     created() {
         this.getGroups();
-    },
-
-    watch: {
-        "search.page"(value) {
-            this.getGroups();
-        },
-        "search.per_page"(value) {
-            if (value) {
-                this.search.per_page = value;
-                this.getGroups();
-            }
-        },
     },
 
     methods: {
@@ -431,11 +455,7 @@ export default {
                 })
                 .catch((e) => {
                     if (e?.response?.data?.message) {
-                        this.$q.notify({
-                            type: "negative",
-                            message: e.response.data.message,
-                            timeout: 3000,
-                        });
+                        $notify.error(e.response.data.message);
                     }
                 })
                 .finally(() => {
@@ -455,157 +475,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.page-header {
-    margin-bottom: 32px;
-
-    .header-toolbar {
-        padding: 0;
-
-        .header-icon {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 12px;
-            border-radius: 50%;
-            margin-right: 16px;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            .view-toggle {
-                border-radius: 8px;
-            }
-        }
-    }
-}
-
-.stats-overview {
-    .stats-card {
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-
-        &:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-
-        .q-card__section {
-            padding: 20px;
-        }
-    }
-}
-
-.groups-grid {
-    .group-card {
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        height: 100%;
-
-        &:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .card-header {
-            text-align: center;
-            padding: 24px 20px 16px;
-
-            .group-icon {
-                margin-bottom: 16px;
-            }
-
-            .group-title {
-                margin-bottom: 4px;
-            }
-        }
-
-        .card-content {
-            padding: 20px;
-
-            .group-description {
-                line-height: 1.5;
-                min-height: 60px;
-            }
-
-            .group-meta {
-                .group-type-badge {
-                    padding: 6px 10px;
-                    border-radius: 16px;
-                    font-weight: 500;
-                }
-            }
-        }
-
-        .card-actions {
-            padding: 16px 20px;
-
-            .action-btn {
-                margin: 0 4px;
-            }
-        }
-    }
-}
-
-.groups-list {
-    .groups-table {
-        border-radius: 16px;
-        overflow: hidden;
-
-        :deep(.q-table__top) {
-            padding: 20px 24px;
-            background: rgba(0, 0, 0, 0.02);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        }
-
-        :deep(.q-table thead tr) {
-            background: rgba(0, 0, 0, 0.02);
-
-            th {
-                font-weight: 600;
-                font-size: 0.9rem;
-                color: #374151;
-                padding: 16px 12px;
-            }
-        }
-
-        .name-cell {
-            .group-name {
-                display: flex;
-                align-items: center;
-            }
-
-            .group-slug {
-                font-size: 0.75rem;
-            }
-        }
-
-        .description-cell {
-            max-width: 300px;
-        }
-
-        .system-cell {
-            .system-badge {
-                padding: 6px 10px;
-                border-radius: 16px;
-                font-weight: 500;
-            }
-        }
-
-        .actions-cell {
-            .action-buttons {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-            }
-        }
-    }
-}
-
+<style scoped>
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -613,99 +483,46 @@ export default {
     overflow: hidden;
 }
 
-.empty-state {
-    .empty-icon {
-        opacity: 0.5;
-    }
-
-    .empty-title {
-        font-weight: 500;
-    }
-
-    .empty-subtitle {
-        font-size: 0.9rem;
-    }
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-.pagination-section {
-    .custom-pagination {
-        :deep(.q-btn) {
-            border-radius: 8px;
-            margin: 0 4px;
-
-            &.q-btn--active {
-                background: var(--q-primary);
-                color: white;
-            }
-        }
-    }
+/* Transiciones suaves */
+.group-card {
+    transition: all 0.3s ease;
 }
 
-// Responsive adjustments
-@media (max-width: 1023px) {
-    .page-header {
-        .header-toolbar {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 16px;
+.stats-card {
+    transition: all 0.2s ease;
+}
 
-            .header-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-        }
-    }
+.stats-card:hover {
+    transform: translateY(-2px);
+}
 
+/* Asegurar que los iconos de Material Design se vean bien */
+.mdi {
+    font-family: "Material Design Icons";
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
     .groups-grid {
-        .group-card {
-            .card-header {
-                padding: 20px 16px 12px;
-            }
-
-            .card-content {
-                padding: 16px;
-            }
-        }
-    }
-}
-
-@media (max-width: 599px) {
-    .stats-overview {
-        .stats-card {
-            .q-card__section {
-                padding: 16px;
-            }
-        }
+        grid-template-columns: 1fr;
     }
 
-    .groups-table {
-        :deep(.q-table thead) {
-            display: none;
-        }
+    .header-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
 
-        :deep(.q-table tbody tr) {
-            display: block;
-            margin-bottom: 16px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            padding: 16px;
-        }
-
-        :deep(.q-table tbody td) {
-            display: block;
-            text-align: left !important;
-            border: none;
-            padding: 8px 0;
-
-            &:before {
-                content: attr(data-label);
-                font-weight: 600;
-                color: #374151;
-                display: block;
-                margin-bottom: 4px;
-                font-size: 0.8rem;
-            }
-        }
+    .header-actions {
+        width: 100%;
+        justify-content: flex-end;
     }
 }
 </style>

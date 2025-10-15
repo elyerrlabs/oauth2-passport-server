@@ -107,9 +107,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     ]"
                                 ></i>
                             </div>
-                            <span>{{
-                                __("Home")
-                            }}</span>
+                            <span>{{ __("Home") }}</span>
                         </button>
                     </div>
 
@@ -181,7 +179,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 overflow-auto bg-gray-50">
+            <main class="flex-1 overflow-auto">
                 <div class="p-2 sm:p-4 lg:p-8">
                     <slot name="main" />
                 </div>

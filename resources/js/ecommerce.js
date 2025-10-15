@@ -20,8 +20,7 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-import "../css/ecommerce.css";
-import "@tailwindplus/elements";
+import "../css/ecommerce.css"; 
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";

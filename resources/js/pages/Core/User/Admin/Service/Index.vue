@@ -22,296 +22,313 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-admin-layout>
         <!-- Header Section -->
-        <div class="bg-white q-pa-md shadow-2 rounded-borders">
-            <div class="row items-center justify-between q-mb-md">
+        <div class="bg-white p-6 shadow-lg rounded-xl mb-6">
+            <div
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6"
+            >
                 <div>
-                    <div class="text-h4 text-primary text-weight-bold">
+                    <h1 class="text-3xl font-bold text-blue-600">
                         {{ __("Services Management") }}
-                    </div>
-                    <div class="text-subtitle1 text-grey-7">
+                    </h1>
+                    <p class="text-gray-600 mt-1">
                         {{
                             __("Manage and organize your application services")
                         }}
-                    </div>
+                    </p>
                 </div>
 
-                <div class="row items-center q-gutter-sm">
+                <div
+                    class="flex flex-col sm:flex-row items-start sm:items-center gap-3"
+                >
                     <!-- Group Filter -->
-                    <q-select
-                        filled
-                        dense
-                        clearable
-                        :label="__('Filter by Group')"
-                        v-model="group"
-                        use-input
-                        input-debounce="300"
-                        :options="groups"
-                        :option-label="(opt) => __(opt.name)"
-                        option-value="slug"
-                        @update:model-value="filterByGroup"
-                        style="min-width: 200px"
-                        class="filter-select"
-                    >
-                        <template v-slot:prepend>
-                            <q-icon name="mdi-filter" />
-                        </template>
-                    </q-select>
+                    <div class="relative min-w-[200px]">
+                        <v-select
+                            v-model="group"
+                            :options="groups"
+                            value-key="slug"
+                            @change="filterByGroup"
+                        />
+                    </div>
 
                     <!-- Create Button -->
                     <v-create @created="getServices" />
 
                     <!-- View Toggle -->
-                    <q-btn-toggle
-                        v-model="viewMode"
-                        dense
-                        toggle-color="primary"
-                        :options="[
-                            {
-                                value: 'list',
-                                icon: 'mdi-format-list-bulleted',
-                                label: __('List'),
-                            },
-                            {
-                                value: 'grid',
-                                icon: 'mdi-view-grid-outline',
-                                label: __('Grid'),
-                            },
-                        ]"
-                        unelevated
-                        class="view-toggle"
-                    />
+                    <div class="flex bg-gray-100 rounded-lg p-1">
+                        <button
+                            v-for="option in viewOptions"
+                            :key="option.value"
+                            @click="viewMode = option.value"
+                            :class="[
+                                'flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                                viewMode === option.value
+                                    ? 'bg-white text-blue-600 shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-800',
+                            ]"
+                        >
+                            <i :class="option.icon"></i>
+                            <span>{{ option.label }}</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <!-- Filter Component -->
-            <v-filter :params="params" @change="searching" class="q-mb-sm" />
+            <v-filter :params="params" @change="searching" class="mb-4" />
         </div>
 
         <!-- Stats Overview -->
         <div
-            class="row q-col-gutter-md q-mb-md q-mt-sm"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 mt-4"
             v-if="services.length > 0"
         >
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <q-card flat class="bg-blue-1 text-blue-8">
-                    <q-card-section class="text-center">
-                        <div class="text-h6">
-                            {{ services.length }} {{ __("Service")
-                            }}{{ services.length !== 1 ? "s" : "" }}
-                        </div>
-                        <q-icon name="mdi-cog" size="md" />
-                    </q-card-section>
-                </q-card>
+            <div
+                class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center"
+            >
+                <div class="text-xl font-semibold text-blue-700 mb-2">
+                    {{ services.length }} {{ __("Service")
+                    }}{{ services.length !== 1 ? "s" : "" }}
+                </div>
+                <i class="mdi mdi-cog text-2xl text-blue-600"></i>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <q-card flat class="bg-green-1 text-green-8">
-                    <q-card-section class="text-center">
-                        <div class="text-h6">
-                            {{ systemServicesCount }} {{ __("System Service")
-                            }}{{ systemServicesCount !== 1 ? "s" : "" }}
-                        </div>
-                        <q-icon name="mdi-shield-cog" size="md" />
-                    </q-card-section>
-                </q-card>
+
+            <div
+                class="bg-green-50 border border-green-200 rounded-lg p-4 text-center"
+            >
+                <div class="text-xl font-semibold text-green-700 mb-2">
+                    {{ systemServicesCount }} {{ __("System Service")
+                    }}{{ systemServicesCount !== 1 ? "s" : "" }}
+                </div>
+                <i class="mdi mdi-shield-cog text-2xl text-green-600"></i>
             </div>
         </div>
 
         <!-- Grid View -->
         <div
             v-if="viewMode === 'grid' && services.length > 0"
-            class="row q-col-gutter-md q-pa-sm"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-3"
         >
             <div
                 v-for="service in services"
                 :key="service.id"
-                class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+                class="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow"
             >
-                <q-card bordered class="service-card shadow-3">
-                    <q-card-section class="bg-primary text-white">
-                        <div class="row justify-between items-start">
-                            <div>
-                                <div
-                                    class="text-h6 text-weight-bold text-truncate"
-                                >
-                                    {{ __(service.name) }}
-                                </div>
-                                <div class="text-caption opacity-80">
-                                    {{ __(service.group.name) }}
-                                </div>
+                <div class="bg-blue-600 text-white p-4 rounded-t-lg">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-lg truncate">
+                                {{ __(service.name) }}
                             </div>
-                            <v-detail :service="service" />
-                        </div>
-                    </q-card-section>
-
-                    <q-card-section class="q-pt-md">
-                        <div class="text-body2 ellipsis-3-lines q-mb-sm">
-                            {{
-                                __(service.description) ||
-                                __("No description provided")
-                            }}
-                        </div>
-
-                        <div class="row q-gutter-sm q-mb-sm">
-                            <q-badge
-                                :color="service.system ? 'green' : 'orange'"
-                                :icon="
-                                    service.system
-                                        ? 'mdi-shield-check'
-                                        : 'mdi-cog'
-                                "
+                            <div
+                                class="text-blue-100 text-sm opacity-90 truncate"
                             >
-                                {{
-                                    service.system ? __("System") : __("Custom")
-                                }}
-                            </q-badge>
-
-                            <q-badge color="blue" icon="mdi-eye">
-                                {{ __(service.visibility) }}
-                            </q-badge>
+                                {{ __(service.group.name) }}
+                            </div>
                         </div>
-                    </q-card-section>
+                        <v-detail :service="service" />
+                    </div>
+                </div>
 
-                    <q-separator />
+                <div class="p-4">
+                    <div class="text-gray-700 line-clamp-3 mb-3">
+                        {{
+                            __(service.description) ||
+                            __("No description provided")
+                        }}
+                    </div>
 
-                    <q-card-actions align="right" class="q-pa-sm">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span
+                            :class="[
+                                'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium',
+                                service.system
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-orange-100 text-orange-800',
+                            ]"
+                        >
+                            <i
+                                :class="
+                                    service.system
+                                        ? 'mdi mdi-shield-check'
+                                        : 'mdi mdi-cog'
+                                "
+                            ></i>
+                            {{ service.system ? __("System") : __("Custom") }}
+                        </span>
+
+                        <span
+                            class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                        >
+                            <i class="mdi mdi-eye"></i>
+                            {{ __(service.visibility) }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-200 p-3">
+                    <div class="flex justify-end gap-2">
                         <v-update :item="service" @updated="getServices" />
                         <v-delete
                             v-if="!service.system"
                             :item="service"
                             @deleted="getServices"
                         />
-                    </q-card-actions>
-                </q-card>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Empty State for Grid View -->
         <div
             v-else-if="viewMode === 'grid' && services.length === 0"
-            class="text-center q-pa-xl"
+            class="text-center py-16"
         >
-            <q-icon name="mdi-cog-off" size="xl" color="grey-4" />
-            <div class="text-h6 text-grey-6 q-mt-md">
+            <i class="mdi mdi-cog-off text-6xl text-gray-300"></i>
+            <div class="text-xl text-gray-500 mt-4">
                 {{ __("No services found") }}
             </div>
-            <div class="text-grey-5" v-if="group">
+            <div class="text-gray-400" v-if="group">
                 {{ __("Try changing your group filter or") }}
             </div>
-            <div class="text-grey-5">
+            <div class="text-gray-400">
                 {{ __("create your first service to get started") }}
             </div>
         </div>
 
         <!-- List View -->
-        <q-table
+        <div
             v-else
-            :rows="services"
-            :columns="columns"
-            row-key="id"
-            flat
-            bordered
-            :loading="loading"
-            :pagination="pagination"
-            hide-pagination
-            class="shadow-1 rounded-borders"
+            class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
         >
-            <template v-slot:body="props">
-                <q-tr :props="props" class="q-hoverable">
-                    <q-td key="name" :props="props">
-                        <div class="text-weight-bold text-primary">
-                            {{ __(props.row.name) }}
-                        </div>
-                        <div class="text-caption text-grey-7">
-                            {{ __(props.row.group.name) }}
-                        </div>
-                        <q-tooltip>
-                            {{ __(props.row.description) }}
-                        </q-tooltip>
-                    </q-td>
-                    <!--
-                        <q-td key="description" :props="props">
-                            <div class="ellipsis-2-lines">
-                                {{ __(props.row.description) || "—" }}
-                            </div>
-                    </q-td>
-                    -->
+            <!-- Table Header -->
+            <div
+                class="grid grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-200 font-semibold text-gray-700"
+            >
+                <div class="col-span-4">{{ __("Service") }}</div>
+                <div class="col-span-2 text-center">{{ __("System") }}</div>
+                <div class="col-span-3 text-center">{{ __("Visibility") }}</div>
+                <div class="col-span-3 text-right">{{ __("Actions") }}</div>
+            </div>
 
-                    <q-td key="system" :props="props">
-                        <q-badge
-                            :color="props.row.system ? 'green' : 'orange'"
-                            :icon="
-                                props.row.system
-                                    ? 'mdi-shield-check'
-                                    : 'mdi-cog'
-                            "
+            <!-- Loading State -->
+            <div v-if="loading" class="p-8 text-center">
+                <div
+                    class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+                ></div>
+                <p class="text-gray-500 mt-2">{{ __("Loading...") }}</p>
+            </div>
+
+            <!-- Table Rows -->
+            <div v-else>
+                <div
+                    v-for="service in services"
+                    :key="service.id"
+                    class="grid grid-cols-12 gap-4 p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                >
+                    <div class="col-span-4">
+                        <div class="font-semibold text-blue-600">
+                            {{ __(service.name) }}
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            {{ __(service.group.name) }}
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 flex justify-center">
+                        <span
+                            :class="[
+                                'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium',
+                                service.system
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-orange-100 text-orange-800',
+                            ]"
                         >
-                            {{ props.row.system ? __("Yes") : __("No") }}
-                        </q-badge>
-                    </q-td>
+                            <i
+                                :class="
+                                    service.system
+                                        ? 'mdi mdi-shield-check'
+                                        : 'mdi mdi-cog'
+                                "
+                            ></i>
+                            {{ service.system ? __("Yes") : __("No") }}
+                        </span>
+                    </div>
 
-                    <q-td key="visibility" :props="props">
-                        <q-badge color="blue" icon="mdi-eye">
-                            {{ __(props.row.visibility) }}
-                        </q-badge>
-                    </q-td>
+                    <div class="col-span-3 flex justify-center">
+                        <span
+                            class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                        >
+                            <i class="mdi mdi-eye"></i>
+                            {{ __(service.visibility) }}
+                        </span>
+                    </div>
 
-                    <q-td key="actions" :props="props" auto-width>
-                        <div class="row q-gutter-xs justify-end">
-                            <v-detail :service="props.row" />
-                            <v-update
-                                :item="props.row"
-                                @updated="getServices"
-                            />
+                    <div class="col-span-3">
+                        <div class="flex justify-end gap-2">
+                            <v-detail :service="service" />
+                            <v-update :item="service" @updated="getServices" />
                             <v-delete
-                                v-if="!props.row.system"
-                                :item="props.row"
+                                v-if="!service.system"
+                                :item="service"
                                 @deleted="getServices"
                             />
                         </div>
-                    </q-td>
-                </q-tr>
-            </template>
-
-            <template v-slot:no-data>
-                <div class="full-width row flex-center text-grey-6 q-pa-xl">
-                    <q-icon name="mdi-cog-off" size="xl" />
-                    <div class="q-ml-sm">{{ __("No services available") }}</div>
+                    </div>
                 </div>
-            </template>
-        </q-table>
+
+                <!-- Empty State for List View -->
+                <div v-if="services.length === 0" class="text-center py-16">
+                    <i class="mdi mdi-cog-off text-5xl text-gray-300"></i>
+                    <div class="text-gray-500 mt-4 text-lg">
+                        {{ __("No services available") }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Pagination -->
-        <div class="row justify-center q-my-lg" v-if="pages.total_pages > 1">
-            <q-pagination
-                v-model="search.page"
-                color="primary"
-                :max="pages.total_pages"
-                :max-pages="6"
-                boundary-numbers
-                direction-links
-                ellipses
-                class="q-pa-sm bg-white rounded-borders shadow-1"
-            />
+        <div
+            class="flex flex-col sm:flex-row items-center justify-between gap-4 my-8"
+            v-if="pages.total_pages > 1"
+        >
+            <!-- Items per page -->
+            <div class="flex items-center gap-3">
+                <label class="text-sm text-gray-600">{{
+                    __("Items per page")
+                }}</label>
+                <div class="relative">
+                    <select
+                        v-model="search.per_page"
+                        @change="getServices"
+                        class="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                    >
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <i
+                        class="mdi mdi-format-list-numbered absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    ></i>
+                    <i
+                        class="mdi mdi-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+                    ></i>
+                </div>
+            </div>
 
-            <q-select
-                v-model="search.per_page"
-                :options="[10, 15, 25, 50]"
-                :label="__('Items per page')"
-                dense
-                outlined
-                class="q-ml-md"
-                style="min-width: 140px"
-                @update:model-value="getServices"
-            >
-                <template v-slot:prepend>
-                    <q-icon name="mdi-format-list-numbered" />
-                </template>
-            </q-select>
+            <!-- Pagination Numbers -->
+            <v-paginate
+                v-model="search.page"
+                :total-pages="pages.total_pages"
+                @change="getServices"
+            />
         </div>
     </v-admin-layout>
 </template>
 
 <script>
+import VAdminLayout from "@/layouts/VAdminLayout.vue";
+import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
 import VUpdate from "./Update.vue";
 import VDelete from "./Delete.vue";
@@ -323,6 +340,8 @@ export default {
         VUpdate,
         VDelete,
         VDetail,
+        VAdminLayout,
+        VPaginate,
     },
 
     data() {
@@ -346,47 +365,16 @@ export default {
             },
             groups: [],
             group: null,
-            pagination: {
-                sortBy: "name",
-                descending: false,
-                page: 1,
-                rowsPerPage: 15,
-            },
-            columns: [
+            viewOptions: [
                 {
-                    name: "name",
-                    label: __("Service"),
-                    field: "name",
-                    sortable: true,
-                    align: "left",
-                },
-                /*{
-                    name: "description",
-                    label: __("Description"),
-                    field: "description",
-                    sortable: false,
-                    align: "left",
-                },*/
-                {
-                    name: "system",
-                    label: __("System"),
-                    field: "system",
-                    sortable: true,
-                    align: "center",
+                    value: "list",
+                    icon: "mdi mdi-format-list-bulleted",
+                    label: __("List"),
                 },
                 {
-                    name: "visibility",
-                    label: __("Visibility"),
-                    field: "visibility",
-                    sortable: true,
-                    align: "center",
-                },
-                {
-                    name: "actions",
-                    label: __("Actions"),
-                    field: "actions",
-                    align: "right",
-                    sortable: false,
+                    value: "grid",
+                    icon: "mdi mdi-view-grid-outline",
+                    label: __("Grid"),
                 },
             ],
         };
@@ -403,21 +391,9 @@ export default {
         this.getGroups();
     },
 
-    watch: {
-        "search.page"(value) {
-            this.getServices();
-        },
-        "search.per_page"(value) {
-            if (value) {
-                this.search.per_page = value;
-                this.getServices();
-            }
-        },
-    },
-
     methods: {
-        filterByGroup(value) {
-            this.search.group = value?.name || null;
+        filterByGroup() {
+            this.search.group = this.group?.name || null;
             this.getServices();
         },
 
@@ -439,7 +415,9 @@ export default {
                     this.groups = res.data.data;
                 }
             } catch (err) {
-                console.error("Error fetching groups:", err);
+                if (e?.response?.data?.message) {
+                    $notify.error(e.response.data.message);
+                }
             }
         },
 
@@ -462,11 +440,7 @@ export default {
                 })
                 .catch((e) => {
                     if (e?.response?.data?.message) {
-                        this.$q.notify({
-                            type: "negative",
-                            message: e.response.data.message,
-                            timeout: 3000,
-                        });
+                        $notify.error(e.response.data.message);
                     }
                 })
                 .finally(() => {
@@ -477,41 +451,24 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
-.ellipsis-2-lines {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.ellipsis-3-lines {
+<style scoped>
+.line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.service-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-radius: 12px;
+.animate-spin {
+    animation: spin 1s linear infinite;
 }
 
-.service-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.15) !important;
-}
-
-.view-toggle {
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.filter-select {
-    border-radius: 8px;
-}
-
-.opacity-80 {
-    opacity: 0.8;
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 </style>

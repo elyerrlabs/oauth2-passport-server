@@ -67,7 +67,7 @@ class PersonalAccessTokenController extends WebController
             return $this->showAllByBuilder($tokens, PersonalTokenTransformer::class);
         }
 
-        return Inertia::render("Core/OAuth2/Web/Personal/Index", [
+        return Inertia::render("OAuth2/Web/Personal/Index", [
             'route' => route('passport.personal.tokens.index')
         ])->rootView('system');
     }

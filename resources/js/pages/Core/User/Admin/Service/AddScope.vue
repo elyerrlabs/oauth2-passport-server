@@ -20,211 +20,169 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-btn
-        outline
-        :round="scope ? true : false"
-        color="primary"
+    <!-- Button -->
+    <button
         @click="open"
-        :icon="icon"
-        size="sm"
-        class="q-mr-xs"
-        :class="{ 'text-white': !scope }"
+        :class="[
+            'flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors',
+            scope
+                ? 'rounded-full p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700'
+                : 'rounded-lg border border-blue-600 px-4 py-2 text-blue-600 hover:bg-blue-600 hover:text-white',
+        ]"
     >
+        <i :class="icon"></i>
         <span v-if="!scope">{{ __("Add new scope") }}</span>
-        <q-tooltip
+
+        <!-- Tooltip for scope mode -->
+        <div
             v-if="scope"
-            transition-show="scale"
-            transition-hide="scale"
-            class="bg-primary"
+            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-blue-600 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
         >
             {{ __("Update scope") }}
-        </q-tooltip>
-    </q-btn>
+            <div
+                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-600"
+            ></div>
+        </div>
+    </button>
 
-    <q-dialog
+    <v-modal
         v-model="dialog"
-        persistent
-        transition-show="jump-up"
-        transition-hide="jump-down"
+        :title="scope ? __('Update Scope') : __('Add New Scope')"
+        panel-class="w-full lg:w-4xl"
+        z-index="z-90"
     >
-        <div class="dialog-backdrop flex flex-center">
-            <q-card class="scope-dialog-card shadow-15">
-                <div class="dialog-header bg-primary text-white">
-                    <q-card-section class="text-center">
-                        <q-icon
-                            :name="
-                                scope
-                                    ? 'mdi-lock-clock'
-                                    : 'mdi-lock-open-plus-outline'
-                            "
-                            size="lg"
-                            class="q-mb-sm"
+        <template #body>
+            <!-- Form Content -->
+            <div class="p-6 space-y-6">
+                <!-- Role Select -->
+                <div class="space-y-2">
+                    <label
+                        class="flex items-center gap-2 text-sm font-medium text-gray-700"
+                    >
+                        <i class="mdi mdi-account-key text-gray-500"></i>
+                        {{ __("Role") }}
+                    </label>
+                    <div class="relative">
+                        <v-select
+                            :label="__('Select role')"
+                            v-model="form.role_id"
+                            :error="errors.role_id"
+                            :options="roles"
+                            :required="true"
                         />
-                        <div class="text-h6">
-                            {{
-                                scope ? __("Update Scope") : __("Add New Scope")
-                            }}
-                        </div>
-                        <div class="text-caption">
-                            {{
-                                __("Manage access permissions for this service")
-                            }}
-                        </div>
-                    </q-card-section>
+                    </div>
                 </div>
 
-                <q-card-section class="q-pt-lg">
-                    <div class="q-gutter-y-md">
-                        <q-select
-                            v-model="form.role_id"
-                            :label="__('Role')"
-                            :options="roles"
-                            option-label="name"
-                            option-value="id"
-                            outlined
-                            color="primary"
-                            filter
-                            emit-value
-                            map-options
-                            :error="!!errors.role_id"
-                            :loading="loadingRoles"
-                            :hint="__('Select the role to assign permissions')"
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-account-key" />
-                            </template>
-                            <template v-slot:error>
-                                <v-error :error="errors.role_id" />
-                            </template>
-                            <template v-slot:no-option>
-                                <q-item>
-                                    <q-item-section class="text-grey">
-                                        {{ __("No roles available") }}
-                                    </q-item-section>
-                                </q-item>
-                            </template>
-                        </q-select>
+                <!-- Permissions Section -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-medium text-gray-800">
+                        {{ __("Permissions") }}
+                    </h4>
 
-                        <div class="permissions-section">
-                            <div class="text-subtitle2 text-grey-8 q-mb-sm">
-                                {{ __("Permissions") }}
-                            </div>
-
-                            <q-item class="permission-item q-pa-none q-mb-sm">
-                                <q-item-section avatar>
-                                    <q-checkbox
-                                        v-model="form.api_key"
-                                        color="blue"
-                                        :error="!!errors.api_key"
-                                        keep-color
-                                    >
-                                        <template v-slot:error>
-                                            <v-error :error="errors.api_key" />
-                                        </template>
-                                    </q-checkbox>
-                                </q-item-section>
-                                <q-item-section>
-                                    <q-item-label class="text-weight-medium">
-                                        {{ __("API Key Access") }}
-                                    </q-item-label>
-                                    <q-item-label caption class="text-grey-7">
-                                        {{
-                                            __(
-                                                "Allow access via API keys for automated systems"
-                                            )
-                                        }}
-                                    </q-item-label>
-                                </q-item-section>
-                            </q-item>
-
-                            <q-item class="permission-item q-pa-none q-mb-sm">
-                                <q-item-section avatar>
-                                    <q-checkbox
-                                        v-model="form.active"
-                                        color="green"
-                                        :error="!!errors.active"
-                                        keep-color
-                                    >
-                                        <template v-slot:error>
-                                            <v-error :error="errors.active" />
-                                        </template>
-                                    </q-checkbox>
-                                </q-item-section>
-                                <q-item-section>
-                                    <q-item-label class="text-weight-medium">
-                                        {{ __("Active") }}
-                                    </q-item-label>
-                                    <q-item-label caption class="text-grey-7">
-                                        {{
-                                            __(
-                                                "Enable this scope for immediate use"
-                                            )
-                                        }}
-                                    </q-item-label>
-                                </q-item-section>
-                            </q-item>
-
-                            <q-item class="permission-item q-pa-none">
-                                <q-item-section avatar>
-                                    <q-checkbox
-                                        v-model="form.public"
-                                        color="orange"
-                                        :error="!!errors.public"
-                                        keep-color
-                                    >
-                                        <template v-slot:error>
-                                            <v-error :error="errors.public" />
-                                        </template>
-                                    </q-checkbox>
-                                </q-item-section>
-                                <q-item-section>
-                                    <q-item-label class="text-weight-medium">
-                                        {{ __("Public Access") }}
-                                    </q-item-label>
-                                    <q-item-label caption class="text-grey-7">
-                                        {{
-                                            __(
-                                                "Make available to all users without authentication"
-                                            )
-                                        }}
-                                    </q-item-label>
-                                </q-item-section>
-                            </q-item>
-                        </div>
+                    <!-- API Key Access -->
+                    <div
+                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg"
+                    >
+                        <v-switch
+                            v-model="form.api_key"
+                            :label="__('API Key Access')"
+                            :error="errors.api_key"
+                            :required="true"
+                            :placeholder="
+                                __(
+                                    'Allow access via API keys for automated systems'
+                                )
+                            "
+                        />
                     </div>
-                </q-card-section>
 
-                <q-card-actions align="right" class="q-pa-md">
-                    <q-btn
-                        flat
-                        color="grey-7"
-                        :label="__('Cancel')"
-                        @click="dialog = false"
-                        class="q-mr-sm"
-                        :disable="loading"
-                    />
-                    <q-btn
-                        color="primary"
-                        :label="scope ? __('Update Scope') : __('Add Scope')"
-                        @click="addScopes"
-                        :loading="loading"
-                        :icon="scope ? 'mdi-update' : 'mdi-plus'"
-                    />
-                </q-card-actions>
-            </q-card>
-        </div>
-    </q-dialog>
+                    <!-- Active -->
+                    <div
+                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg"
+                    >
+                        <v-switch
+                            v-model="form.active"
+                            :label="__('Active')"
+                            :error="errors.active"
+                            :required="true"
+                            :placeholder="
+                                __('Enable this scope for immediate use')
+                            "
+                        />
+                    </div>
+
+                    <!-- Public Access -->
+                    <div
+                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg"
+                    >
+                        <v-switch
+                            v-model="form.public"
+                            :label="__('Public Access')"
+                            :error="errors.public"
+                            :required="true"
+                            :placeholder="
+                                __(
+                                    'Make available to all users without authentication'
+                                )
+                            "
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div
+                class="flex justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl"
+            >
+                <button
+                    @click="dialog = false"
+                    :disabled="loading"
+                    class="px-6 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {{ __("Cancel") }}
+                </button>
+                <button
+                    @click="addScopes"
+                    :disabled="loading"
+                    :class="[
+                        'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors',
+                        loading
+                            ? 'bg-blue-400 cursor-not-allowed'
+                            : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-200',
+                    ]"
+                >
+                    <i v-if="loading" class="mdi mdi-loading animate-spin"></i>
+                    <i
+                        v-else
+                        :class="scope ? 'mdi mdi-update' : 'mdi mdi-plus'"
+                    ></i>
+                    {{ scope ? __("Update Scope") : __("Add Scope") }}
+                </button>
+            </div>
+        </template>
+    </v-modal>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+import VInput from "@/components/VInput.vue";
+import VSelect from "@/components/VSelect.vue";
+import VSwitch from "@/components/VSwitch.vue";
+
 export default {
+    components: {
+        VModal,
+        VInput,
+        VSelect,
+        VSwitch,
+    },
     emits: ["created"],
 
     props: {
         icon: {
             required: false,
             type: String,
-            default: "mdi-lock-open-plus-outline",
+            default: "mdi mdi-lock-open-plus-outline",
         },
         scope: {
             required: false,
@@ -287,18 +245,11 @@ export default {
                 );
 
                 if (res.status == 200) {
-                    this.roles = res.data.data.map((item) => ({
-                        ...item,
-                        name: __(item.name),
-                    }));
+                    this.roles = res.data.data;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loadingRoles = false;
@@ -313,15 +264,11 @@ export default {
                 const res = await this.$server.post(this.link, this.form);
 
                 if (res.status == 201) {
-                    this.$q.notify({
-                        type: "positive",
-                        message: this.scope
+                    $notify.success(
+                        this.scope
                             ? __("Scope updated successfully")
-                            : __("Scope added successfully"),
-                        position: "top",
-                        icon: "mdi-check-circle",
-                        timeout: 3000,
-                    });
+                            : __("Scope added successfully")
+                    );
                     this.$emit("created");
                     this.dialog = false;
                 }
@@ -331,11 +278,7 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.success(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -344,43 +287,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.dialog-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-}
-
-.scope-dialog-card {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.dialog-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.permissions-section {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 16px;
-    margin-top: 16px;
-}
-
-.permission-item {
-    border-bottom: 1px solid #f0f0f0;
-    padding: 8px 0;
-}
-
-.permission-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.shadow-15 {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
-}
-</style>

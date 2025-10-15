@@ -20,194 +20,112 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-btn
-        round
-        flat
-        color="primary"
+    <!-- Edit Button -->
+    <button
         @click="open(item)"
-        icon="mdi-pencil"
-        size="sm"
-        class="q-mr-xs"
+        class="relative w-12 h-12 gap-2 border border-blue-600 px-4 py-2 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200"
     >
-        <q-tooltip
-            transition-show="scale"
-            transition-hide="scale"
-            class="bg-primary"
+        <i class="mdi mdi-pencil text-lg"></i>
+
+        <!-- Tooltip -->
+        <div
+            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-blue-600 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
         >
             {{ __("Edit service") }}
-        </q-tooltip>
-    </q-btn>
-
-    <q-dialog
-        v-model="dialog"
-        persistent
-        transition-show="jump-up"
-        transition-hide="jump-down"
-    >
-        <div class="dialog-backdrop flex flex-center">
-            <q-card class="edit-dialog-card shadow-15">
-                <div class="dialog-header bg-primary text-white">
-                    <q-card-section class="text-center">
-                        <q-icon name="mdi-cog-edit" size="lg" class="q-mb-sm" />
-                        <div class="text-h6">{{ __("Update Service") }}</div>
-                        <div class="text-caption">
-                            {{ __("Modify service details") }}
-                        </div>
-                    </q-card-section>
-                </div>
-
-                <q-card-section class="q-pt-lg">
-                    <div
-                        class="text-subtitle1 text-weight-medium q-mb-md text-grey-8"
-                    >
-                        {{ __("Editing:") }}
-                        <span class="text-blue-8">"{{ form.name }}"</span>
-                    </div>
-
-                    <div class="q-gutter-y-md">
-                        <q-input
-                            v-model="form.name"
-                            :label="__('Service Name')"
-                            outlined
-                            color="primary"
-                            :error="!!errors.name"
-                            class="input-field"
-                            :loading="loading"
-                            :readonly="system"
-                            :hint="
-                                system
-                                    ? __(
-                                          'System service name cannot be modified'
-                                      )
-                                    : __('Unique identifier for the service')
-                            "
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-tag-outline" />
-                            </template>
-                            <template v-slot:error>
-                                <v-error :error="errors.name"></v-error>
-                            </template>
-                        </q-input>
-
-                        <q-input
-                            v-model="form.description"
-                            :label="__('Description')"
-                            outlined
-                            color="primary"
-                            :error="!!errors.description"
-                            type="textarea"
-                            rows="3"
-                            class="input-field"
-                            :loading="loading"
-                            :hint="
-                                __(
-                                    'Describe the purpose and functionality of this service'
-                                )
-                            "
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-text-box-outline" />
-                            </template>
-                            <template v-slot:error>
-                                <v-error :error="errors.description" />
-                            </template>
-                        </q-input>
-
-                        <q-select
-                            v-model="form.visibility"
-                            :options="visibilityOptions"
-                            :label="__('Visibility')"
-                            outlined
-                            color="primary"
-                            :error="!!errors.visibility"
-                            :hint="
-                                __('Set the visibility level for this service')
-                            "
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-eye" />
-                            </template>
-                            <template v-slot:error>
-                                <v-error :error="errors.visibility" />
-                            </template>
-                        </q-select>
-
-                        <div class="row items-center q-gutter-sm q-mt-md">
-                            <q-icon
-                                name="mdi-account-group"
-                                color="blue"
-                                size="sm"
-                            />
-                            <span class="text-caption text-grey-7">
-                                {{ __("Group:") }}
-                                <strong>{{
-                                    form.group?.name || __("N/A")
-                                }}</strong>
-                            </span>
-                        </div>
-
-                        <div class="row items-center q-gutter-sm">
-                            <q-icon
-                                :name="system ? 'mdi-shield-check' : 'mdi-cog'"
-                                :color="system ? 'orange' : 'green'"
-                                size="sm"
-                            />
-                            <span class="text-caption text-grey-7">
-                                {{ __("Type:") }}
-                                <strong>{{
-                                    system
-                                        ? __("System Service")
-                                        : __("Custom Service")
-                                }}</strong>
-                            </span>
-                        </div>
-
-                        <div
-                            v-if="system"
-                            class="bg-orange-1 text-orange-8 rounded-borders q-pa-md"
-                        >
-                            <div class="row items-center">
-                                <q-icon
-                                    name="mdi-alert"
-                                    size="sm"
-                                    class="q-mr-sm"
-                                />
-                                <span class="text-caption">{{
-                                    __(
-                                        "This is a system service. Some properties cannot be modified."
-                                    )
-                                }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </q-card-section>
-
-                <q-card-actions align="right" class="q-pa-md">
-                    <q-btn
-                        flat
-                        color="grey-7"
-                        :label="__('Cancel')"
-                        @click="close"
-                        class="q-mr-sm"
-                        icon="mdi-close-circle"
-                        :disable="loading"
-                    />
-                    <q-btn
-                        color="primary"
-                        :label="__('Update Service')"
-                        @click="updateService"
-                        :loading="loading"
-                        icon="mdi-content-save"
-                    />
-                </q-card-actions>
-            </q-card>
+            <div
+                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-600"
+            ></div>
         </div>
-    </q-dialog>
+    </button>
+
+    <v-modal
+        v-model="dialog"
+        :title="__('Update Service')"
+        panel-class="w-full lg:w-4xl"
+    >
+        <template #body>
+            <div class="grid grid-cols-1 lg:grid-cols-2 mb-4 gap-4">
+                <v-input
+                    v-model="form.name"
+                    :error="errors.name"
+                    :required="true"
+                    :label="__('Name')"
+                />
+
+                <v-switch
+                    v-model="form.system"
+                    :error="errors.system"
+                    :label="__('System Service')"
+                    :required="true"
+                />
+            </div>
+
+            <div class="grid grid-cols-1 mb-4">
+                <v-textarea
+                    v-model="form.description"
+                    :error="errors.description"
+                    :label="__('Description')"
+                    :required="true"
+                />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 mb-4">
+                <v-select
+                    v-model="form.visibility"
+                    :label="__('Select visibility')"
+                    :options="visibilityOptions"
+                    :placeholder="
+                        __('Set the visibility level for this service')
+                    "
+                    :required="true"
+                    :error="errors.visibility"
+                />
+            </div>
+
+            <div
+                class="flex justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl"
+            >
+                <button
+                    @click="close"
+                    :disabled="loading"
+                    class="flex items-center gap-2 px-6 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <i class="mdi mdi-close-circle"></i>
+                    {{ __("Cancel") }}
+                </button>
+                <button
+                    @click="updateService"
+                    :disabled="loading"
+                    :class="[
+                        'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors',
+                        loading
+                            ? 'bg-blue-400 cursor-not-allowed'
+                            : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-200',
+                    ]"
+                >
+                    <i v-if="loading" class="mdi mdi-loading animate-spin"></i>
+                    <i v-else class="mdi mdi-content-save"></i>
+                    {{ __("Update Service") }}
+                </button>
+            </div>
+        </template>
+    </v-modal>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+import VInput from "@/components/VInput.vue";
+import VTextarea from "@/components/VTextarea.vue";
+import VSwitch from "@/components/VSwitch.vue";
+import VSelect from "@/components/VSelect.vue";
 export default {
+    components: {
+        VModal,
+        VInput,
+        VTextarea,
+        VSwitch,
+        VSelect,
+    },
     emits: ["updated"],
 
     props: {
@@ -219,12 +137,14 @@ export default {
 
     data() {
         return {
-            visibilityOptions: ["private", "public"],
+            visibilityOptions: [
+                { name: __("private"), id: "private" },
+                { name: __("public"), id: "public" },
+            ],
             errors: {},
             form: {},
             dialog: false,
             loading: false,
-            system: false,
         };
     },
 
@@ -234,13 +154,10 @@ export default {
             this.errors = {};
             this.dialog = false;
             this.loading = false;
-            this.system = false;
         },
 
         open(item) {
-            const { system, ...form } = item;
-            this.form = { ...form };
-            this.system = system;
+            this.form = item;
             this.errors = {};
             this.dialog = true;
         },
@@ -256,13 +173,7 @@ export default {
                 );
 
                 if (res.status == 200) {
-                    this.$q.notify({
-                        type: "positive",
-                        message: "Service updated successfully",
-                        position: "top",
-                        icon: "mdi-check-circle",
-                        timeout: 3000,
-                    });
+                    $notify.error(__("Service updated successfully"));
                     this.$emit("updated", true);
                     this.errors = {};
                     this.dialog = false;
@@ -273,11 +184,7 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -286,34 +193,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.dialog-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-}
-
-.edit-dialog-card {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.dialog-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.input-field {
-    transition: all 0.3s ease;
-}
-
-.input-field:focus-within {
-    transform: translateY(-2px);
-}
-
-.shadow-15 {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
-}
-</style>

@@ -19,33 +19,31 @@
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
+import "../css/app.css";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { setupI18n, __ } from "./config/locale.js";
+import "./config/notify.js";
+import "./config/editor.js";
 
-import { customComponents } from "./config/customComponents.js";
 //import { $echo } from "./config/echo.js";
 import { $server } from "./config/axios.js";
-import { layouts } from "./config/layouts.js";
 
-//Quasar
-import { Quasar, Ripple, ClosePopup, Notify, Dialog, Loading } from "quasar";
-import "quasar/dist/quasar.css";
-import "@quasar/extras/material-icons/material-icons.css";
-import { QComponents } from "./config/quasar.js";
-
-//Vue date picker
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-//import iconSet from "quasar/icon-set/material-icons.js";
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 //icons https://pictogrammers.com/library/mdi/
 import "@mdi/font/css/materialdesignicons.css";
 
-const i18n = setupI18n();
+//Vue date picker
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+
+setupI18n();
 window.__ = __;
+window.$notify = $notify;
+window.$server = $server;
 
 createInertiaApp({
   resolve: (name) =>
@@ -56,37 +54,13 @@ createInertiaApp({
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) });
 
-    customComponents.forEach((index) => {
-      app.component(index[0], index[1]);
-    });
-
-    layouts.forEach((index) => {
-      app.component(index[0], index[1]);
-    });
-
-    app.use(Quasar, {
-      plugins: {
-        Notify,
-        Dialog,
-        Loading,
-      },
-      directives: {
-        Ripple,
-        ClosePopup,
-      },
-      //iconSet: iconSet,
-    });
-
-    QComponents.forEach((item) => {
-      app.component(item.name, item);
-    });
-
     // app.config.globalProperties.$echo = $echo;
     app.config.globalProperties.$server = $server;
     app.config.globalProperties.__ = __;
 
     app.component("VueDatePicker", VueDatePicker);
     app.use(plugin);
+    app.use(VueSweetalert2);
     //  app.use(i18n);
     app.mount(el);
   },

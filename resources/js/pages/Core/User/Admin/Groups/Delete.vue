@@ -20,73 +20,47 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-btn
-        round
-        flat
-        color="negative"
-        @click="dialog = true"
-        icon="mdi-delete-outline"
-        size="sm"
-        class="q-mr-xs"
-    >
-        <q-tooltip
-            transition-show="scale"
-            transition-hide="scale"
-            class="bg-negative"
+    <div>
+        <!-- Delete Button -->
+        <button
+            @click="dialog = true"
+            class="w-8 h-8 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
         >
-            {{ __("Delete group") }}
-        </q-tooltip>
-    </q-btn>
+            <i class="mdi mdi-delete-outline text-lg"></i>
+        </button>
 
-    <q-dialog
-        v-model="dialog"
-        persistent
-        transition-show="jump-up"
-        transition-hide="jump-down"
-    >
-        <div class="dialog-backdrop flex flex-center">
-            <q-card class="delete-dialog-card shadow-15">
-                <div class="dialog-header bg-negative text-white">
-                    <q-card-section class="text-center">
-                        <q-icon
-                            name="mdi-alert-circle-outline"
-                            size="lg"
-                            class="q-mb-sm"
-                        />
-                        <div class="text-h6">{{ __("Confirm Deletion") }}</div>
-                        <div class="text-caption">
-                            {{ __("This action cannot be undone") }}
-                        </div>
-                    </q-card-section>
-                </div>
-
-                <q-card-section class="q-pt-lg text-center">
-                    <div class="text-body1 q-mb-md">
+        <v-modal
+            v-model="dialog"
+            :title="__('Confirm Deletion')"
+            panel-class="w-full lg:w-4xl"
+        >
+            <template #body>
+                <!-- Content -->
+                <div class="p-6 text-center">
+                    <p class="text-gray-700 mb-4">
                         {{ __("Are you sure you want to delete the group") }}
-                        <span class="text-weight-bold text-blue-8"
-                            >"{{ item.name }}"</span
+                        <span class="font-bold text-blue-600">
+                            "{{ item.name }}" </span
                         >?
-                    </div>
+                    </p>
 
-                    <div class="flex justify-center q-gutter-sm q-mb-md">
-                        <q-chip
-                            color="blue-1"
-                            text-color="blue-8"
-                            icon="mdi-identifier"
-                            class="q-pa-sm"
+                    <div class="flex justify-center mb-4">
+                        <span
+                            class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium flex items-center"
                         >
+                            <i class="mdi mdi-identifier mr-1 text-sm"></i>
                             {{ __("ID") }}: {{ item.id }}
-                        </q-chip>
+                        </span>
                     </div>
 
-                    <div class="bg-red-1 text-red-8 rounded-borders q-pa-md">
-                        <div class="row items-center">
-                            <q-icon
-                                name="mdi-alert"
-                                size="sm"
-                                class="q-mr-sm"
-                            />
-                            <span class="text-caption">
+                    <div
+                        class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4"
+                    >
+                        <div class="flex items-start">
+                            <i
+                                class="mdi mdi-alert text-red-500 mt-0.5 mr-2"
+                            ></i>
+                            <span class="text-sm">
                                 {{
                                     __(
                                         "Warning: This will permanently remove the group and all associated data."
@@ -95,32 +69,44 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </span>
                         </div>
                     </div>
-                </q-card-section>
+                </div>
 
-                <q-card-actions align="center" class="q-pa-md">
-                    <q-btn
-                        flat
-                        color="grey-7"
-                        :label="__('Cancel')"
+                <!-- Actions -->
+                <div
+                    class="flex justify-center space-x-3 p-6 border-t border-gray-200"
+                >
+                    <button
                         @click="dialog = false"
-                        class="q-mr-md"
-                        icon="mdi-close-circle"
-                    />
-                    <q-btn
-                        color="negative"
-                        :label="__('Delete Group')"
+                        class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200"
+                    >
+                        <i class="mdi mdi-close-circle"></i>
+                        <span>{{ __("Cancel") }}</span>
+                    </button>
+                    <button
                         @click="destroy"
-                        icon="mdi-delete-forever"
-                        class="q-px-md"
-                    />
-                </q-card-actions>
-            </q-card>
-        </div>
-    </q-dialog>
+                        :disabled="loading"
+                        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <i class="mdi mdi-delete-forever"></i>
+                        <span>{{ __("Delete Group") }}</span>
+                        <div
+                            v-if="loading"
+                            class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                        ></div>
+                    </button>
+                </div>
+            </template>
+        </v-modal>
+    </div>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+
 export default {
+    components: {
+        VModal,
+    },
     emits: ["deleted"],
 
     props: {
@@ -144,7 +130,7 @@ export default {
                 const res = await this.$server.delete(this.item.links.destroy);
 
                 if (res.status == 200) {
-                    this.$q.notify({
+                    this.$q?.notify?.({
                         type: "positive",
                         message: "Group deleted successfully",
                         position: "top",
@@ -155,11 +141,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    this.$notify.success(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -168,26 +150,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.dialog-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-}
-
-.delete-dialog-card {
-    width: 100%;
-    max-width: 450px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.dialog-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.shadow-15 {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
-}
-</style>

@@ -20,56 +20,75 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <nav class="flex items-center justify-center mt-6">
-        <ul class="inline-flex items-center space-x-1">
-            <li>
-                <button
-                    @click="goToPage(currentPage - 1)"
-                    :disabled="currentPage === 1"
-                    class="px-3 py-1 rounded-lg border text-sm font-medium cursor-pointer"
-                    :class="
-                        currentPage === 1
-                            ? 'text-gray-400 border-gray-200 cursor-not-allowed'
-                            : 'text-gray-700 border-gray-300 hover:bg-gray-100'
-                    "
-                >
-                    «
-                </button>
-            </li>
+    <nav class="flex items-center justify-center mt-8" aria-label="Pagination">
+        <div
+            class="flex items-center gap-2 bg-white rounded-xl shadow-sm border border-gray-200 p-2"
+        >
+            <!-- Previous Button -->
+            <button
+                @click="goToPage(currentPage - 1)"
+                :disabled="currentPage === 1"
+                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                :class="
+                    currentPage === 1
+                        ? 'text-gray-400 cursor-not-allowed'
+                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm'
+                "
+                aria-label="Previous page"
+            >
+                <i class="mdi mdi-chevron-left text-lg"></i>
+            </button>
 
-            <li v-for="page in pagesToShow" :key="page">
+            <!-- Page Numbers -->
+            <div class="flex items-center gap-1">
                 <button
-                    v-if="page !== '...'"
+                    v-for="page in pagesToShow"
+                    :key="page"
                     @click="goToPage(page)"
+                    :aria-current="currentPage === page ? 'page' : null"
+                    :aria-label="`Go to page ${page}`"
+                    class="flex items-center justify-center min-w-10 h-10 rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     :class="[
-                        'px-3 py-1 rounded-lg border text-sm font-medium cursor-pointer',
-                        currentPage === page
-                            ? 'bg-primary-600 text-white border-primary-600'
-                            : 'text-gray-700 border-gray-300 hover:bg-gray-100',
+                        page === '...'
+                            ? 'text-gray-400 cursor-default px-2'
+                            : currentPage === page
+                            ? 'bg-blue-600 text-white shadow-md shadow-blue-200 hover:bg-blue-700 scale-105'
+                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm border border-transparent',
                     ]"
+                    :disabled="page === '...'"
                 >
-                    {{ page }}
+                    <template v-if="page !== '...'">
+                        {{ page }}
+                    </template>
+                    <template v-else>
+                        <i class="mdi mdi-dots-horizontal"></i>
+                    </template>
                 </button>
-                <span v-else class="px-3 py-1 text-gray-500 select-none">
-                    ...
-                </span>
-            </li>
+            </div>
 
-            <li>
-                <button
-                    @click="goToPage(currentPage + 1)"
-                    :disabled="currentPage === totalPages"
-                    class="px-3 py-1 rounded-lg border text-sm font-medium cursor-pointer"
-                    :class="
-                        currentPage === totalPages
-                            ? 'text-gray-400 border-gray-200 cursor-not-allowed'
-                            : 'text-gray-700 border-gray-300 hover:bg-gray-100'
-                    "
-                >
-                    »
-                </button>
-            </li>
-        </ul>
+            <!-- Next Button -->
+            <button
+                @click="goToPage(currentPage + 1)"
+                :disabled="currentPage === totalPages"
+                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                :class="
+                    currentPage === totalPages
+                        ? 'text-gray-400 cursor-not-allowed'
+                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm'
+                "
+                aria-label="Next page"
+            >
+                <i class="mdi mdi-chevron-right text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Page Info (Mobile) -->
+        <div class="ml-4 text-sm text-gray-500 hidden sm:block">
+            {{ __("Page") }}
+            <span class="font-semibold text-gray-700">{{ currentPage }}</span>
+            {{ __("of") }}
+            <span class="font-semibold text-gray-700">{{ totalPages }}</span>
+        </div>
     </nav>
 </template>
 
@@ -87,7 +106,7 @@ export default {
         },
         maxVisible: {
             type: Number,
-            default: 20,
+            default: 7,
         },
     },
     computed: {
@@ -101,43 +120,76 @@ export default {
         },
         pagesToShow() {
             const total = this.totalPages;
-            const max = Math.min(this.maxVisible, 20);
+            const max = Math.min(this.maxVisible, 7);
             const current = this.currentPage;
-            let pages = [];
 
             if (total <= max) {
-                //
-                for (let i = 1; i <= total; i++) {
-                    pages.push(i);
-                }
-            } else {
-                pages.push(1);
-
-                let start = Math.max(2, current - Math.floor((max - 4) / 2));
-                let end = Math.min(
-                    total - 1,
-                    current + Math.floor((max - 4) / 2)
-                );
-
-                if (start > 2) pages.push("...");
-                for (let i = start; i <= end; i++) {
-                    pages.push(i);
-                }
-                if (end < total - 1) pages.push("...");
-
-                pages.push(total);
+                return Array.from({ length: total }, (_, i) => i + 1);
             }
+
+            let pages = [1];
+            const sidePages = Math.floor((max - 3) / 2);
+
+            let start = Math.max(2, current - sidePages);
+            let end = Math.min(total - 1, current + sidePages);
+
+            if (current <= sidePages + 1) {
+                end = max - 1;
+            }
+
+            if (current >= total - sidePages) {
+                start = total - max + 2;
+            }
+
+            if (start > 2) pages.push("...");
+
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+
+            if (end < total - 1) pages.push("...");
+
+            pages.push(total);
+
             return pages;
         },
     },
     methods: {
         goToPage(page) {
-            if (page >= 1 && page <= this.totalPages) {
+            if (page >= 1 && page <= this.totalPages && page !== "...") {
                 this.currentPage = page;
-
                 this.$emit("change", page);
             }
         },
     },
 };
 </script>
+
+<style scoped>
+button:not(:disabled) {
+    transition: all 0.2s ease-in-out;
+}
+
+@keyframes gentle-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+button[aria-current="page"] {
+    animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+button:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+button:not(:disabled):not(.cursor-default):hover {
+    transform: translateY(-1px);
+}
+</style>

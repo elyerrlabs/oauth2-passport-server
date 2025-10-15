@@ -20,7 +20,7 @@ namespace App\Http\Controllers\Web\Admin\OAuth;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -64,7 +64,7 @@ class ClientAdminController extends WebController
             return $this->repository->searchClientsForAdmin($request);
         }
 
-        return Inertia::render("Admin/Clients/Index", [
+        return Inertia::render("OAuth2/Admin/Index", [
             "routes" => [
                 'clients' => route("admin.clients.index"),
                 'personal' => route("admin.clients.personal.store")

@@ -20,120 +20,94 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-btn
-        round
-        flat
-        color="primary"
+    <!-- Edit Button -->
+    <button
         @click="open(item)"
-        icon="mdi-pencil"
-        size="sm"
-        class="q-mr-xs"
+        class="w-8 h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-full flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
     >
-        <q-tooltip
-            transition-show="scale"
-            transition-hide="scale"
-            class="bg-primary"
-        >
-            {{ __("Edit group") }}
-        </q-tooltip>
-    </q-btn>
+        <i class="mdi mdi-pencil text-lg"></i>
+    </button>
 
-    <q-dialog
+    <v-modal
         v-model="dialog"
-        persistent
-        transition-show="jump-up"
-        transition-hide="jump-down"
+        :title="__('Update Group')"
+        panel-class="w-full lg:w-4xl"
     >
-        <div class="dialog-backdrop flex flex-center">
-            <q-card class="edit-dialog-card shadow-15">
-                <div class="dialog-header bg-primary text-white">
-                    <q-card-section class="text-center">
-                        <q-icon
-                            name="mdi-pencil-box-outline"
-                            size="lg"
-                            class="q-mb-sm"
-                        />
-                        <div class="text-h6">{{ __("Update Group") }}</div>
-                        <div class="text-caption">
-                            {{ __("Modify group details") }}
-                        </div>
-                    </q-card-section>
-                </div>
+        <template #body>
+            <!-- Content -->
+            <div class="p-6 space-y-4">
+                <v-input
+                    :label="__('Group Name')"
+                    :placeholder="__('name')"
+                    v-model="form.name"
+                    :error="errors.name"
+                    :required="true"
+                    :disabled="true"
+                />
 
-                <q-card-section class="q-pt-lg">
+                <v-textarea
+                    :label="__('Description')"
+                    v-model="form.description"
+                    :error="errors.description"
+                    :placeholder="__('Write short description ...')"
+                    :required="true"
+                />
+
+                <!-- System Group Checkbox -->
+                <v-switch
+                    :label="__('System Group')"
+                    v-model="form.system"
+                    :disabled="true"
+                    :placeholder="
+                        __(
+                            'System groups have special permissions and cannot be deleted.'
+                        )
+                    "
+                />
+            </div>
+
+            <!-- Actions -->
+            <div
+                class="flex justify-end space-x-3 p-6 border-t border-gray-200"
+            >
+                <button
+                    @click="close"
+                    :disabled="loading"
+                    class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg flex items-center space-x-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <i class="mdi mdi-close-circle"></i>
+                    <span>{{ __("Cancel") }}</span>
+                </button>
+                <button
+                    @click="updateGroup"
+                    :disabled="loading"
+                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg flex items-center space-x-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <i class="mdi mdi-content-save" v-if="!loading"></i>
                     <div
-                        class="text-subtitle1 text-weight-medium q-mb-md text-grey-8"
-                    >
-                        {{ __("Editing") }}:
-                        <span class="text-blue-8">"{{ form.name }}"</span>
-                    </div>
-
-                    <div class="q-gutter-y-md">
-                        <q-input
-                            v-model="form.name"
-                            :label="__('Group Name')"
-                            dense
-                            outlined
-                            color="primary"
-                            :error="!!errors.name"
-                            class="input-field"
-                            :loading="loading"
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-tag-outline" />
-                            </template>
-                            <template v-slot:error>
-                                <v-error :error="errors.name"></v-error>
-                            </template>
-                        </q-input>
-
-                        <q-input
-                            v-model="form.description"
-                            :label="__('Description')"
-                            dense
-                            outlined
-                            color="primary"
-                            :error="!!errors.description"
-                            type="textarea"
-                            rows="3"
-                            class="input-field"
-                            :loading="loading"
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-text-box-outline" />
-                            </template>
-                            <template v-slot:error>
-                                <v-error :error="errors.description" />
-                            </template>
-                        </q-input>
-                    </div>
-                </q-card-section>
-
-                <q-card-actions align="right" class="q-pa-md">
-                    <q-btn
-                        flat
-                        color="grey-7"
-                        :label="__('Cancel')"
-                        @click="close"
-                        class="q-mr-sm"
-                        icon="mdi-close-circle"
-                        :disable="loading"
-                    />
-                    <q-btn
-                        color="primary"
-                        :label="__('Update Group')"
-                        @click="updateGroup"
-                        :loading="loading"
-                        icon="mdi-content-save"
-                    />
-                </q-card-actions>
-            </q-card>
-        </div>
-    </q-dialog>
+                        v-if="loading"
+                        class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                    ></div>
+                    <span>{{ __("Update Group") }}</span>
+                </button>
+            </div>
+        </template>
+    </v-modal>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+import VInput from "@/components/VInput.vue";
+import VTextarea from "@/components/VTextarea.vue";
+import VSwitch from "@/components/VSwitch.vue";
+
 export default {
+    components: {
+        VModal,
+        VTextarea,
+        VInput,
+        VSwitch,
+    },
     emits: ["updated"],
 
     props: {
@@ -175,7 +149,7 @@ export default {
                 );
 
                 if (res.status == 200) {
-                    this.$q.notify({
+                    this.$q?.notify?.({
                         type: "positive",
                         message: "Group updated successfully",
                         position: "top",
@@ -190,7 +164,7 @@ export default {
                     this.errors = e.response.data.errors;
                 }
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
+                    this.$q?.notify?.({
                         type: "negative",
                         message: e.response.data.message,
                         timeout: 3000,
@@ -203,34 +177,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.dialog-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-}
-
-.edit-dialog-card {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.dialog-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.input-field {
-    transition: all 0.3s ease;
-}
-
-.input-field:focus-within {
-    transform: translateY(-2px);
-}
-
-.shadow-15 {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
-}
-</style>

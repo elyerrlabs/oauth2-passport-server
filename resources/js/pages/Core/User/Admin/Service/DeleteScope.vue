@@ -20,152 +20,154 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <q-btn
-        outline
-        round
-        color="negative"
+    <!-- Delete Button -->
+    <button
         @click="dialog = true"
-        icon="mdi-trash-can-outline"
-        size="sm"
-        class="q-mr-xs"
+        class="relative group rounded-full p-2 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-200"
     >
-        <q-tooltip
-            transition-show="scale"
-            transition-hide="scale"
-            class="bg-negative"
-        >
-            Delete scope
-        </q-tooltip>
-    </q-btn>
+        <i class="mdi mdi-trash-can-outline text-lg"></i>
 
-    <q-dialog
+        <!-- Tooltip -->
+        <div
+            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-red-600 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
+        >
+            {{ __("Delete scope") }}
+            <div
+                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-red-600"
+            ></div>
+        </div>
+    </button>
+
+    <v-modal
         v-model="dialog"
-        persistent
-        transition-show="jump-up"
-        transition-hide="jump-down"
+        :title="__('Revoke Scope')"
+        panel-class="w-full lg:w-5xl"
     >
-        <div class="dialog-backdrop flex flex-center">
-            <q-card class="delete-dialog-card shadow-15">
-                <div class="dialog-header bg-negative text-white">
-                    <q-card-section class="text-center">
-                        <q-icon
-                            name="mdi-lock-remove"
-                            size="lg"
-                            class="q-mb-sm"
-                        />
-                        <div class="text-h6">Revoke Scope</div>
-                        <div class="text-caption">This action is permanent</div>
-                    </q-card-section>
+        <template #body>
+            <!-- Header -->
+            <div class="bg-red-600 text-white rounded-t-2xl p-6 text-center">
+                <i class="mdi mdi-lock-remove text-4xl mb-3"></i>
+                <h3 class="text-xl font-bold"></h3>
+                <p class="text-red-100 mt-1 text-sm">
+                    {{ __("This action is permanent") }}
+                </p>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6 space-y-4 text-center">
+                <!-- Confirmation Message -->
+                <p class="text-gray-700">
+                    {{
+                        __("Are you sure you want to revoke the scope for role")
+                    }}
+                    <span class="font-bold text-blue-600"
+                        >"{{ __(scope.role?.name) }}"</span
+                    >?
+                </p>
+
+                <!-- Role Info -->
+                <div class="flex justify-center">
+                    <span
+                        class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                    >
+                        <i class="mdi mdi-identifier"></i>
+                        {{ __("Role ID") }}: {{ scope.role?.id }}
+                    </span>
                 </div>
 
-                <q-card-section class="q-pt-lg text-center">
-                    <div class="text-body1 q-mb-md">
-                        Are you sure you want to revoke the scope for role
-                        <span class="text-weight-bold text-blue-8"
-                            >"{{ __(scope.role?.name) }}"</span
-                        >?
+                <!-- Permissions Summary -->
+                <div class="p-4 bg-gray-100 rounded-lg">
+                    <div class="text-sm font-medium text-gray-700 mb-2">
+                        {{ __("Current Permissions:") }}
                     </div>
-
-                    <div class="flex justify-center q-gutter-sm q-mb-md">
-                        <q-chip
-                            color="blue-1"
-                            text-color="blue-8"
-                            icon="mdi-identifier"
-                            class="q-pa-sm"
+                    <div class="flex justify-center gap-2 flex-wrap">
+                        <span
+                            v-if="scope.api_key"
+                            class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs"
                         >
-                            Role ID: {{ scope.role?.id }}
-                        </q-chip>
+                            <i class="mdi mdi-key"></i>
+                            {{ __("API Key Access") }}
+                        </span>
+                        <span
+                            v-if="scope.active"
+                            class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs"
+                        >
+                            <i class="mdi mdi-check-circle"></i>
+                            {{ __("Active") }}
+                        </span>
+                        <span
+                            v-if="scope.public"
+                            class="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs"
+                        >
+                            <i class="mdi mdi-earth"></i>
+                            {{ "Public" }}
+                        </span>
+                        <span
+                            v-if="
+                                !scope.api_key && !scope.active && !scope.public
+                            "
+                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs"
+                        >
+                            {{ __("No permissions set") }}
+                        </span>
                     </div>
+                </div>
 
-                    <div
-                        class="permissions-summary bg-grey-2 rounded-borders q-pa-md"
-                    >
-                        <div class="text-caption text-weight-medium q-mb-xs">
-                            Current Permissions:
-                        </div>
-                        <div class="row justify-center q-gutter-sm">
-                            <q-badge
-                                v-if="scope.api_key"
-                                color="blue"
-                                icon="mdi-key"
-                                class="q-px-sm"
-                            >
-                                API Key Access
-                            </q-badge>
-                            <q-badge
-                                v-if="scope.active"
-                                color="green"
-                                icon="mdi-check-circle"
-                                class="q-px-sm"
-                            >
-                                Active
-                            </q-badge>
-                            <q-badge
-                                v-if="scope.public"
-                                color="orange"
-                                icon="mdi-earth"
-                                class="q-px-sm"
-                            >
-                                Public
-                            </q-badge>
-                            <q-badge
-                                v-if="
-                                    !scope.api_key &&
-                                    !scope.active &&
-                                    !scope.public
-                                "
-                                color="grey"
-                                class="q-px-sm"
-                            >
-                                No permissions set
-                            </q-badge>
-                        </div>
+                <!-- Warning Message -->
+                <div
+                    class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg"
+                >
+                    <div class="flex items-start gap-2">
+                        <i class="mdi mdi-alert mt-0.5 flex-shrink-0"></i>
+                        <span class="text-sm text-left">
+                            {{
+                                __(
+                                    "Warning: This will permanently remove access permissions. Users with this role will lose access to the associated service."
+                                )
+                            }}
+                        </span>
                     </div>
+                </div>
+            </div>
 
-                    <div
-                        class="bg-red-1 text-red-8 rounded-borders q-pa-md q-mt-md"
-                    >
-                        <div class="row items-center">
-                            <q-icon
-                                name="mdi-alert"
-                                size="sm"
-                                class="q-mr-sm"
-                            />
-                            <span class="text-caption">
-                                Warning: This will permanently remove access
-                                permissions. Users with this role will lose
-                                access to the associated service.
-                            </span>
-                        </div>
-                    </div>
-                </q-card-section>
-
-                <q-card-actions align="center" class="q-pa-md">
-                    <q-btn
-                        flat
-                        color="grey-7"
-                        label="Cancel"
-                        @click="dialog = false"
-                        class="q-mr-md"
-                        icon="mdi-close-circle"
-                        :disable="loading"
-                    />
-                    <q-btn
-                        color="negative"
-                        label="Revoke Scope"
-                        @click="destroy"
-                        icon="mdi-trash-can-outline"
-                        class="q-px-md"
-                        :loading="loading"
-                    />
-                </q-card-actions>
-            </q-card>
-        </div>
-    </q-dialog>
+            <!-- Actions -->
+            <div
+                class="flex justify-center gap-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl"
+            >
+                <button
+                    @click="dialog = false"
+                    :disabled="loading"
+                    class="flex items-center gap-2 px-6 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <i class="mdi mdi-close-circle"></i>
+                    Cancel
+                </button>
+                <button
+                    @click="destroy"
+                    :disabled="loading"
+                    :class="[
+                        'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors',
+                        loading
+                            ? 'bg-red-400 cursor-not-allowed'
+                            : 'bg-red-600 hover:bg-red-700 focus:ring-red-200',
+                    ]"
+                >
+                    <i v-if="loading" class="mdi mdi-loading animate-spin"></i>
+                    <i v-else class="mdi mdi-trash-can-outline"></i>
+                    {{ __("Revoke Scope") }}
+                </button>
+            </div>
+        </template>
+    </v-modal>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+
 export default {
+    components: {
+        VModal,
+    },
     emits: ["deleted"],
 
     props: {
@@ -189,23 +191,13 @@ export default {
                 const res = await this.$server.delete(this.scope.links.revoke);
 
                 if (res.status == 200) {
-                    this.$q.notify({
-                        type: "positive",
-                        message: "Scope revoked successfully",
-                        position: "top",
-                        icon: "mdi-check-circle",
-                        timeout: 3000,
-                    });
+                    $notify.success(__("Scope revoked successfully"));
                     this.$emit("deleted");
                     this.dialog = false;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -214,30 +206,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.dialog-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-}
-
-.delete-dialog-card {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.dialog-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-.permissions-summary {
-    border: 1px solid #e0e0e0;
-}
-
-.shadow-15 {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.15);
-}
-</style>

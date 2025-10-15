@@ -1,6 +1,6 @@
 <template>
     <TransitionRoot appear :show="isOpen" as="template">
-        <Dialog as="div" class="relative z-80">
+        <Dialog as="div" :class="['relative', zIndex]">
             <TransitionChild
                 as="template"
                 enter="duration-300 ease-out"
@@ -26,7 +26,7 @@
                     >
                         <DialogPanel
                             :class="[
-                                'transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all',
+                                'transform  rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all',
                                 panelClass,
                             ]"
                         >
@@ -43,9 +43,7 @@
                                     X
                                 </button>
                             </DialogTitle>
-                            <div
-                                class="p-6 overflow-y-auto text-gray-700 flex-grow"
-                            >
+                            <div class="p-6 text-gray-700 flex-grow">
                                 <slot name="body" />
                             </div>
                         </DialogPanel>
@@ -78,6 +76,10 @@ const props = defineProps({
     panelClass: {
         type: String,
         default: "w-full max-w-md",
+    },
+    zIndex: {
+        type: String,
+        default: "z-80",
     },
 });
 
