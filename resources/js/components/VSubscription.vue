@@ -20,59 +20,130 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="q-pa-md" v-if="period?.id && plan?.id">
-        <div class="text-h5 q-mb-md">{{ label }}</div>
+    <div class="p-4" v-if="period?.id && plan?.id">
+        <div class="text-xl font-medium mb-4">{{ label }}</div>
 
-        <div class="q-gutter-md row items-start">
+        <div class="flex flex-wrap gap-4 items-start">
             <div v-for="(method, key) in methods" :key="key">
-                <q-card
+                <div
                     v-if="method.enable"
                     @click="selectMethod(key)"
-                    flat
-                    bordered
-                    class="my-card cursor-pointer"
+                    class="border border-gray-300 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md"
                     :class="{
-                        'bg-primary text-white': selected_method === key,
+                        'bg-blue-600 text-white': selected_method === key,
+                        'bg-white text-gray-900': selected_method !== key,
                     }"
                 >
-                    <q-card-section class="text-center">
-                        <q-icon
-                            color="positive"
-                            :name="method.icon"
-                            size="40px"
-                            class="q-mb-sm"
-                        />
-                        <div class="text-subtitle3">{{ method.name }}</div>
-                    </q-card-section>
-                </q-card>
+                    <div class="p-4 text-center">
+                        <div class="flex justify-center mb-2">
+                            <div
+                                class="w-10 h-10 flex items-center justify-center"
+                            >
+                                <!-- Iconos de métodos de pago -->
+                                <svg
+                                    v-if="method.icon === 'credit_card'"
+                                    class="w-8 h-8"
+                                    :class="
+                                        selected_method === key
+                                            ? 'text-white'
+                                            : 'text-green-500'
+                                    "
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                                    />
+                                </svg>
+                                <svg
+                                    v-else-if="method.icon === 'paypal'"
+                                    class="w-8 h-8"
+                                    :class="
+                                        selected_method === key
+                                            ? 'text-white'
+                                            : 'text-green-500'
+                                    "
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                                    />
+                                </svg>
+                                <svg
+                                    v-else
+                                    class="w-8 h-8"
+                                    :class="
+                                        selected_method === key
+                                            ? 'text-white'
+                                            : 'text-green-500'
+                                    "
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="text-sm font-medium">{{ method.name }}</div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="q-mt-lg">
-            <q-banner v-if="selected_method >= 0" class="q-pa-md">
-                <div class="text-h6 q-mb-sm">{{ __("Summary") }}</div>
-                <div class="text-body2">
-                    <strong>{{ __("Plan:") }}</strong> {{ plan?.name }} <br />
-                    <strong>{{ __("Billing Period:") }}</strong>
-                    {{ period?.billing_period }} <br />
-                    <strong>{{ __("Amount:") }}</strong>
-                    {{ period?.currency }} {{ period?.amount_format }} <br />
-                    <strong>{{ __("Expires:") }}</strong>
-                    {{ period?.expiration }} <br />
-                    <strong>{{ __("Payment Method:") }}</strong>
-                    {{ methods[selected_method]?.name }}
+
+        <div class="mt-6">
+            <div
+                v-if="selected_method >= 0"
+                class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+            >
+                <div class="text-lg font-medium mb-2">{{ __("Summary") }}</div>
+                <div class="text-sm space-y-1">
+                    <div>
+                        <strong>{{ __("Plan:") }}</strong> {{ plan?.name }}
+                    </div>
+                    <div>
+                        <strong>{{ __("Billing Period:") }}</strong>
+                        {{ period?.billing_period }}
+                    </div>
+                    <div>
+                        <strong>{{ __("Amount:") }}</strong>
+                        {{ period?.currency }} {{ period?.amount_format }}
+                    </div>
+                    <div>
+                        <strong>{{ __("Expires:") }}</strong>
+                        {{ period?.expiration }}
+                    </div>
+                    <div>
+                        <strong>{{ __("Payment Method:") }}</strong>
+                        {{ methods[selected_method]?.name }}
+                    </div>
                 </div>
-            </q-banner>
+            </div>
         </div>
 
-        <div class="q-mt-md">
-            <q-btn
+        <div class="mt-4">
+            <button
                 v-if="selected_method >= 0"
                 :disabled="disabled"
-                color="primary"
-                :label="__('Continue to Payment')"
                 @click="payment"
-                class="full-width"
-            />
+                class="w-full bg-blue-600 text-white py-2 px-4 rounded font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            >
+                {{ __("Continue to Payment") }}
+            </button>
         </div>
     </div>
 </template>
@@ -244,11 +315,10 @@ export default {
 </script>
 
 <style scoped>
-.my-card {
-    width: 150px;
-    transition: 0.3s;
+.cursor-pointer {
+    transition: transform 0.3s;
 }
-.my-card:hover {
+.cursor-pointer:hover {
     transform: scale(1.05);
 }
 </style>

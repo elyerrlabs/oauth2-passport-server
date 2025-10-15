@@ -21,264 +21,388 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-guest-layout>
-        <template #body>
-            <q-page class="pricing-page">
-                <!-- Hero Section -->
-                <div class="hero-section text-center q-pb-xl">
-                    <div
-                        class="text-h2 text-weight-bold text-primary hero-title"
-                    >
-                        {{ __("Choose Your Plan") }}
-                    </div>
-                    <div class="text-h6 text-grey-7 hero-subtitle q-mt-md">
-                        {{
-                            __(
-                                "Select the perfect plan that fits your needs and budget"
-                            )
-                        }}
-                    </div>
-                    <div
-                        class="hero-description text-body1 text-grey-6 q-mt-lg"
-                    >
-                        {{
-                            __(
-                                "All plans include our core features with flexible pricing options"
-                            )
-                        }}
-                    </div>
-                </div>
+        <div
+            class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 py-8"
+        >
+            <!-- Hero Section -->
+            <div class="text-center mb-16 px-4">
+                <h1
+                    class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-4"
+                >
+                    {{ __("Choose Your Plan") }}
+                </h1>
+                <p class="text-xl text-slate-600 mb-4 max-w-2xl mx-auto">
+                    {{
+                        __(
+                            "Select the perfect plan that fits your needs and budget."
+                        )
+                    }}
+                </p>
+                <p class="text-lg text-slate-500 max-w-2xl mx-auto">
+                    {{
+                        __(
+                            "All plans include our core features with flexible pricing options."
+                        )
+                    }}
+                </p>
+            </div>
 
-                <!-- Plans Grid -->
-                <div class="plans-container">
-                    <div class="row q-col-gutter-xl justify-center">
+            <!-- Plans Grid -->
+            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+                >
+                    <div v-for="plan in plans" :key="plan.id" class="flex">
                         <div
-                            v-for="plan in plans"
-                            :key="plan.id"
-                            class="col-12 col-sm-6 col-md-4 col-lg-3"
+                            class="bg-white rounded-3xl shadow-lg border border-slate-200/60 flex-1 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] backdrop-blur-sm flex flex-col relative"
+                            :class="{
+                                'ring-4 ring-blue-500/30 shadow-2xl scale-[1.02]':
+                                    plan.featured,
+                            }"
                         >
-                            <q-card
-                                class="plan-card"
-                                flat
-                                :class="{ 'featured-card': plan.featured }"
+                            <!-- Featured Badge -->
+                            <div
+                                v-if="plan.featured"
+                                class="absolute -top-2 -right-2"
                             >
-                                <!-- Plan Header -->
                                 <div
-                                    class="plan-header"
-                                    :class="{
-                                        'featured-header': plan.featured,
-                                    }"
+                                    class="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-6 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg rotate-12"
                                 >
-                                    <div
-                                        class="plan-badge"
-                                        v-if="plan.bonus_enabled"
+                                    {{ __("Most Popular") }}
+                                </div>
+                            </div>
+
+                            <!-- Plan Header -->
+                            <div
+                                class="rounded-t-3xl p-8 relative overflow-hidden"
+                                :class="{
+                                    'bg-gradient-to-br from-blue-600 to-violet-700':
+                                        plan.featured,
+                                    'bg-gradient-to-br from-slate-900 to-slate-800':
+                                        !plan.featured,
+                                }"
+                            >
+                                <div
+                                    v-if="plan.bonus_enabled"
+                                    class="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10"
+                                >
+                                    <span
+                                        class="bg-gradient-to-r from-emerald-500 to-green-600 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-xl border-2 border-white/20"
                                     >
-                                        <q-badge
-                                            color="warning"
-                                            text-color="dark"
-                                            class="bonus-badge"
-                                        >
-                                            +{{ plan.bonus_duration }}
-                                            {{ __("days free") }}
-                                        </q-badge>
-                                    </div>
-                                    <div
-                                        class="text-h5 text-weight-bold text-white text-center q-pt-lg"
-                                    >
-                                        {{ plan.name }}
-                                    </div>
-                                    <div
-                                        class="text-subtitle2 text-white text-center q-pb-sm plan-tagline"
-                                    >
-                                        {{ plan.tagline }}
-                                    </div>
+                                        🔥 +{{ plan.bonus_duration }} days free
+                                    </span>
                                 </div>
 
-                                <!-- Plan Content -->
-                                <q-card-section class="plan-content">
-                                    <!-- Description -->
+                                <div class="text-center pt-6 pb-2">
+                                    <h3
+                                        class="text-2xl font-bold text-white mb-3"
+                                    >
+                                        {{ plan.name }}
+                                    </h3>
+                                    <p
+                                        class="text-blue-100/80 text-sm font-medium"
+                                    >
+                                        {{ plan.tagline }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Plan Content -->
+                            <div class="p-8 flex-1">
+                                <div class="mb-6">
                                     <div
-                                        class="plan-description text-body2 text-grey-8 q-mb-lg"
-                                        v-html="plan.description"
-                                    ></div>
+                                        class="text-slate-700 text-sm leading-relaxed font-medium line-clamp-3"
+                                    >
+                                        <div v-html="plan.description"></div>
+                                    </div>
+                                    <button
+                                        @click="openPlanDetails(plan)"
+                                        class="text-blue-600 hover:text-blue-700 text-sm font-medium mt-2 flex items-center space-x-1 transition-colors duration-200"
+                                    >
+                                        <span>View details</span>
+                                        <i
+                                            class="mdi mdi-chevron-right text-base"
+                                        ></i>
+                                    </button>
+                                </div>
 
-                                    <q-separator class="q-mb-lg" />
+                                <hr class="mb-6 border-slate-200/60" />
 
-                                    <!-- Pricing Options -->
-                                    <div class="pricing-section">
-                                        <div
-                                            class="text-subtitle1 text-center text-primary q-mb-md text-weight-medium pricing-title"
-                                        >
-                                            {{ __("Pricing Options") }}
+                                <!-- Pricing Options -->
+                                <h4
+                                    class="text-lg font-bold text-slate-900 text-center mb-6"
+                                >
+                                    {{ __("Pricing Options") }}
+                                </h4>
+                                <div class="space-y-4">
+                                    <div
+                                        v-for="(price, index) in plan.prices"
+                                        :key="index"
+                                        class="flex items-center p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 group hover:border-blue-400/50 hover:bg-blue-50/50 hover:shadow-md"
+                                        :class="{
+                                            'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50/50 shadow-lg scale-[1.02]':
+                                                selected_period === price,
+                                            'border-slate-200/80 bg-white/80':
+                                                selected_period !== price,
+                                        }"
+                                        @click="selectPrice(plan, price)"
+                                    >
+                                        <div class="flex-shrink-0 mr-4">
+                                            <span
+                                                class="bg-gradient-to-r from-blue-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md"
+                                            >
+                                                {{ price.billing_period_name }}
+                                            </span>
                                         </div>
-                                        <div class="price-options">
-                                            <q-item
-                                                v-for="(
-                                                    price, index
-                                                ) in plan.prices"
-                                                :key="index"
-                                                class="price-item rounded-borders q-mb-sm"
-                                                clickable
-                                                v-ripple
-                                                @click="
-                                                    selectPrice(plan, price)
-                                                "
+
+                                        <div class="flex-grow">
+                                            <div
+                                                class="font-bold text-slate-900 text-lg mb-1"
+                                            >
+                                                {{ price.currency }}
+                                                {{ price.amount_format }}
+                                            </div>
+                                            <div
+                                                class="text-xs text-slate-500 flex items-center"
+                                            >
+                                                <i
+                                                    class="mdi mdi-calendar text-slate-400 mr-1.5"
+                                                ></i>
+                                                {{
+                                                    formatDate(price.expiration)
+                                                }}
+                                            </div>
+                                        </div>
+
+                                        <div class="flex-shrink-0 ml-4">
+                                            <div
+                                                class="w-7 h-7 rounded-full border-3 flex items-center justify-center transition-all duration-300 shadow-inner"
                                                 :class="{
-                                                    'selected-price':
+                                                    'border-blue-600 bg-blue-600 shadow-blue-200':
                                                         selected_period ===
+                                                        price,
+                                                    'border-slate-300 bg-white group-hover:border-blue-400':
+                                                        selected_period !==
                                                         price,
                                                 }"
                                             >
-                                                <q-item-section side>
-                                                    <q-badge
-                                                        color="primary"
-                                                        class="period-badge"
-                                                    >
-                                                        {{
-                                                            price.billing_period_name
-                                                        }}
-                                                    </q-badge>
-                                                </q-item-section>
-
-                                                <q-item-section>
-                                                    <div
-                                                        class="text-weight-bold text-body1 price-amount"
-                                                    >
-                                                        {{ price.currency }}
-                                                        {{
-                                                            price.amount_format
-                                                        }}
-                                                    </div>
-                                                    <div
-                                                        class="text-caption text-grey expiration-date"
-                                                    >
-                                                        <q-icon
-                                                            name="event"
-                                                            size="14px"
-                                                            class="q-mr-xs"
-                                                        />
-                                                        {{
-                                                            formatDate(
-                                                                price.expiration
-                                                            )
-                                                        }}
-                                                    </div>
-                                                </q-item-section>
-
-                                                <q-item-section side>
-                                                    <q-radio
-                                                        :val="price"
-                                                        v-model="
-                                                            selected_period
-                                                        "
-                                                        color="primary"
-                                                        @click="
-                                                            selectPrice(
-                                                                plan,
-                                                                price
-                                                            )
-                                                        "
-                                                    />
-                                                </q-item-section>
-                                            </q-item>
+                                                <div
+                                                    v-if="
+                                                        selected_period ===
+                                                        price
+                                                    "
+                                                    class="w-2 h-2 rounded-full bg-white"
+                                                ></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </q-card-section>
+                                </div>
+                            </div>
 
-                                <!-- Plan Footer -->
-                                <q-card-actions class="plan-actions">
-                                    <q-btn
-                                        :label="__('Select Plan')"
-                                        color="primary"
-                                        unelevated
-                                        class="select-btn full-width"
-                                        @click="selectPlan(plan)"
-                                        :disable="!selected_period"
+                            <!-- Plan Footer -->
+                            <div class="px-8 pb-8">
+                                <button
+                                    @click="selectPlan(plan)"
+                                    :disabled="!selected_period"
+                                    class="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white py-4 px-8 rounded-2xl font-bold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-lg group"
+                                >
+                                    <span
+                                        class="flex items-center justify-center space-x-3"
                                     >
-                                        <q-tooltip v-if="!selected_period">{{
-                                            __(
-                                                "Please select a pricing option first"
-                                            )
-                                        }}</q-tooltip>
-                                    </q-btn>
-                                </q-card-actions>
-                            </q-card>
+                                        <span class="text-lg">Select Plan</span>
+                                        <i
+                                            v-if="selected_period"
+                                            class="mdi mdi-arrow-right text-lg group-hover:translate-x-1 transition-transform"
+                                        ></i>
+                                        <i
+                                            v-else
+                                            class="mdi mdi-lock-outline text-lg opacity-70"
+                                        ></i>
+                                    </span>
+                                </button>
+
+                                <div
+                                    v-if="!selected_period"
+                                    class="text-xs text-slate-500 text-center mt-3 font-medium"
+                                >
+                                    {{ __("Select a pricing option first") }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Pagination -->
-                <div class="pagination-section row justify-center q-my-xl">
-                    <q-pagination
-                        v-model="search.page"
-                        color="primary"
-                        :max="pages.total_pages"
-                        :max-pages="6"
-                        boundary-numbers
-                        direction-links
-                        unelevated
-                        input
-                        class="custom-pagination"
-                    />
-                </div>
+            <!-- Pagination -->
+            <div class="mt-16 flex justify-center">
+                <v-paginate
+                    v-model="search.page"
+                    :total-pages="pages.total_pages"
+                    @change="getPlans"
+                />
+            </div>
 
-                <!-- Subscription Sidebar -->
-                <q-drawer
-                    v-model="showSidebar"
-                    side="right"
-                    :width="450"
-                    bordered
-                    overlay
-                    class="subscription-drawer"
-                    behavior="mobile"
-                >
-                    <div class="drawer-header">
-                        <div class="text-h5 text-weight-bold">
-                            {{ __("Complete Subscription") }}
+            <!-- Subscription Modal -->
+            <v-modal v-model="showSidebar" panel-class="w-full lg:w-7xl">
+                <template #body>
+                    <div
+                        class="bg-gradient-to-r from-blue-600 to-violet-600 px-6 py-5 flex items-center justify-between"
+                    >
+                        <div>
+                            <DialogTitle class="text-2xl font-bold text-white">
+                                {{ __("Complete Subscription") }}
+                            </DialogTitle>
+                            <p class="text-blue-100/80 text-sm">
+                                {{ __("Finalize your plan selection") }}
+                            </p>
                         </div>
-                        <q-btn
-                            icon="close"
-                            color="grey"
-                            round
-                            flat
-                            dense
-                            class="close-btn"
+                        <button
                             @click="showSidebar = false"
-                        />
+                            class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-200"
+                        >
+                            <i class="mdi mdi-close text-lg"></i>
+                        </button>
                     </div>
 
-                    <v-subscription
-                        :plan="selected_plan"
-                        :period="selected_period"
-                        @close="showSidebar = false"
-                    />
-                </q-drawer>
-            </q-page>
-        </template>
+                    <div class="flex-1 overflow-y-auto bg-slate-50/40">
+                        <div
+                            class="px-6 py-4 border-b border-slate-200 bg-white/70"
+                        >
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-600 font-medium"
+                                    >{{ __("Selected Plan") }}:</span
+                                >
+                                <span class="text-slate-900 font-bold">{{
+                                    selected_plan?.name
+                                }}</span>
+                            </div>
+                            <div class="flex justify-between text-sm mt-2">
+                                <span class="text-slate-600 font-medium"
+                                    >{{ __("Amount") }}:</span
+                                >
+                                <span class="text-green-600 font-bold">
+                                    {{ selected_period?.currency }}
+                                    {{ selected_period?.amount_format }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <v-subscription
+                                :plan="selected_plan"
+                                :period="selected_period"
+                                @close="showSidebar = false"
+                            />
+                        </div>
+                    </div>
+
+                    <div
+                        class="border-t border-slate-200/60 px-6 py-4 bg-slate-50/70 text-center text-xs text-slate-500"
+                    >
+                        {{ __("Your payment is secure and encrypted.") }}
+                    </div>
+                </template>
+            </v-modal>
+
+            <!-- Plan Details Modal -->
+            <v-modal v-model="showPlanDetails" panel-class="w-full lg:w-7xl">
+                <template #body>
+                    <!-- Header -->
+                    <div
+                        class="bg-gradient-to-r from-slate-800 to-slate-900 px-6 py-5 flex items-center justify-between"
+                    >
+                        <div>
+                            <DialogTitle class="text-2xl font-bold text-white">
+                                {{ selected_plan_details?.name }}
+                            </DialogTitle>
+                            <p class="text-blue-100/80 text-sm">
+                                {{ selected_plan_details?.tagline }}
+                            </p>
+                        </div>
+                        <button
+                            @click="showPlanDetails = false"
+                            class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-200"
+                        >
+                            <i class="mdi mdi-close text-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="overflow-y-auto bg-white/70 p-6 max-h-[80vh]">
+                        <div
+                            class="prose max-w-none text-slate-700 leading-relaxed"
+                            v-html="selected_plan_details?.description"
+                        ></div>
+
+                        <div
+                            v-if="selected_plan_details?.features?.length"
+                            class="mt-8"
+                        >
+                            <h3 class="text-lg font-bold text-slate-900 mb-4">
+                                {{ __("Included Features") }}
+                            </h3>
+                            <ul class="grid sm:grid-cols-2 gap-3">
+                                <li
+                                    v-for="(
+                                        feature, index
+                                    ) in selected_plan_details.features"
+                                    :key="index"
+                                    class="flex items-center space-x-2 text-slate-700"
+                                >
+                                    <i
+                                        class="mdi mdi-check-circle text-green-500 text-lg"
+                                    ></i>
+                                    <span>{{ feature }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div
+                        class="border-t border-slate-200/60 px-6 py-4 bg-slate-50/70 text-center"
+                    >
+                        <button
+                            @click="showPlanDetails = false"
+                            class="bg-gradient-to-r from-blue-600 to-violet-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-transform hover:scale-[1.02]"
+                        >
+                            {{ __("Close") }}
+                        </button>
+                    </div>
+                </template>
+            </v-modal>
+        </div>
     </v-guest-layout>
 </template>
 
 <script>
+import VGuestLayout from "@/layouts/VGuestLayout.vue";
+import VPaginate from "@/components/VPaginate.vue";
+import VSubscription from "@/components/VSubscription.vue";
+import VModal from "@/components/VModal.vue";
+
 export default {
+    components: {
+        VGuestLayout,
+        VPaginate,
+        VSubscription,
+        VModal,
+    },
     data() {
         return {
             plans: [],
             selected_plan: null,
             selected_period: null,
+            selected_plan_details: null,
             showSidebar: false,
-            search: {
-                page: 1,
-                per_page: 100,
-            },
-            pages: {
-                total_pages: 0,
-            },
+            showPlanDetails: false,
+            search: { page: 1, per_page: 100 },
+            pages: { total_pages: 0 },
         };
     },
-
     mounted() {
         this.getPlans();
     },
-
     methods: {
         formatDate(date) {
             if (!date) return "No expiration";
@@ -288,35 +412,21 @@ export default {
                 day: "numeric",
             });
         },
-
         selectPrice(plan, price) {
             this.selected_plan = plan;
             this.selected_period = price;
         },
-
         selectPlan(plan) {
-            if (!this.selected_period) {
-                this.$q.notify({
-                    message: __("Please select a pricing option first"),
-                    color: "warning",
-                    icon: "warning",
-                    position: "top",
-                    timeout: 2000,
-                });
-                return;
-            }
+            if (!this.selected_period)
+                return alert("Please select a pricing option first.");
             this.selected_plan = plan;
             this.showSidebar = true;
         },
-
+        openPlanDetails(plan) {
+            this.selected_plan_details = plan;
+            this.showPlanDetails = true;
+        },
         async getPlans() {
-            const query = new URLSearchParams(window.location.search);
-            const query_data = {};
-            for (const [key, value] of query.entries()) {
-                query_data[key] = value;
-            }
-            Object.assign(this.search, query_data);
-
             try {
                 const res = await this.$server.get(
                     this.$page.props.routes["plans"],
@@ -324,303 +434,33 @@ export default {
                         params: this.search,
                     }
                 );
-
                 if (res.status === 200) {
                     this.plans = res.data.data;
                     this.pages = res.data.meta.pagination;
                 }
             } catch (e) {
-                if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
-                }
+                console.error(e);
             }
         },
     },
 };
 </script>
 
-<style lang="scss" scoped>
-.pricing-page {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    min-height: 100vh;
-    padding: 40px 24px;
-}
-
-.hero-section {
-    max-width: 800px;
-    margin: 0 auto;
-
-    .hero-title {
-        font-size: 3rem;
-        line-height: 1.2;
-        margin-bottom: 16px;
-    }
-
-    .hero-subtitle {
-        font-size: 1.25rem;
-    }
-
-    .hero-description {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-}
-
-.plans-container {
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.plan-card {
-    border-radius: 16px;
-    background: white;
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border: 2px solid transparent;
-    position: relative;
+<style scoped>
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-
-    &:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        border-color: var(--q-primary);
-    }
-
-    &.featured-card {
-        border-color: var(--q-primary);
-        transform: scale(1.02);
-
-        &:hover {
-            transform: scale(1.02) translateY(-8px);
-        }
-    }
 }
-
-.plan-header {
-    background: linear-gradient(135deg, var(--q-primary) 0%, #3a7bd5 100%);
-    color: white;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-    padding: 24px 20px;
-    position: relative;
-
-    &.featured-header {
-        background: linear-gradient(135deg, var(--q-primary) 0%, #2c5282 100%);
-    }
-
-    .plan-badge {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-
-        .bonus-badge {
-            font-weight: 600;
-            font-size: 0.75rem;
-            padding: 4px 8px;
-        }
-    }
-
-    .plan-tagline {
-        opacity: 0.9;
-    }
+.overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
 }
-
-.plan-content {
-    padding: 24px;
-    flex-grow: 1;
-
-    .plan-description {
-        line-height: 1.6;
-        min-height: 80px;
-    }
-
-    .pricing-section {
-        .pricing-title {
-            font-size: 1.1rem;
-        }
-
-        .price-options {
-            .price-item {
-                border: 2px solid transparent;
-                border-radius: 12px;
-                padding: 16px;
-                transition: all 0.3s ease;
-
-                &:hover {
-                    border-color: var(--q-primary);
-                    background: rgba(0, 123, 255, 0.05);
-                    transform: translateX(4px);
-                }
-
-                &.selected-price {
-                    border-color: var(--q-primary);
-                    background: rgba(0, 123, 255, 0.1);
-
-                    .period-badge {
-                        background: var(--q-primary) !important;
-                    }
-                }
-
-                .period-badge {
-                    font-weight: 600;
-                    padding: 4px 8px;
-                }
-
-                .price-amount {
-                    color: var(--q-primary);
-                    font-size: 1.1rem;
-                }
-
-                .expiration-date {
-                    display: flex;
-                    align-items: center;
-                }
-            }
-        }
-    }
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
 }
-
-.plan-actions {
-    padding: 20px 24px;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-
-    .select-btn {
-        height: 48px;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 1rem;
-        text-transform: none;
-        letter-spacing: 0.5px;
-    }
-}
-
-.pagination-section {
-    .custom-pagination {
-        :deep(.q-btn) {
-            border-radius: 8px;
-            margin: 0 4px;
-
-            &.q-btn--active {
-                background: var(--q-primary);
-                color: white;
-            }
-        }
-    }
-}
-
-.subscription-drawer {
-    .drawer-header {
-        background: white;
-        padding: 24px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        position: sticky;
-        top: 0;
-        z-index: 1;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .close-btn {
-            margin-right: -8px;
-        }
-    }
-}
-
-// Responsive Design
-@media (max-width: 1023px) {
-    .pricing-page {
-        padding: 32px 16px;
-    }
-
-    .hero-title {
-        font-size: 2.5rem !important;
-    }
-
-    .hero-subtitle {
-        font-size: 1.1rem !important;
-    }
-}
-
-@media (max-width: 767px) {
-    .pricing-page {
-        padding: 24px 12px;
-    }
-
-    .hero-title {
-        font-size: 2rem !important;
-    }
-
-    .plan-card {
-        margin-bottom: 24px;
-
-        &:hover {
-            transform: translateY(-4px);
-        }
-
-        &.featured-card {
-            transform: none;
-
-            &:hover {
-                transform: translateY(-4px);
-            }
-        }
-    }
-
-    .plan-content {
-        padding: 20px;
-    }
-
-    .price-item {
-        padding: 12px !important;
-    }
-}
-
-@media (max-width: 599px) {
-    .hero-title {
-        font-size: 1.75rem !important;
-    }
-
-    .plan-header {
-        padding: 20px 16px;
-    }
-
-    .subscription-drawer {
-        width: 100% !important;
-    }
-}
-
-// Animation for card entrance
-.plan-card {
-    animation: fadeInUp 0.6s ease forwards;
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-// Stagger animation for cards
-.plan-card:nth-child(1) {
-    animation-delay: 0.1s;
-}
-.plan-card:nth-child(2) {
-    animation-delay: 0.2s;
-}
-.plan-card:nth-child(3) {
-    animation-delay: 0.3s;
-}
-.plan-card:nth-child(4) {
-    animation-delay: 0.4s;
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 </style>
