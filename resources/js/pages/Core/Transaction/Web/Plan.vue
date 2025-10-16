@@ -312,9 +312,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="bg-gradient-to-r from-slate-800 to-slate-900 px-6 py-5 flex items-center justify-between"
                     >
                         <div>
-                            <DialogTitle class="text-2xl font-bold text-white">
+                            <h3 class="text-2xl font-bold text-white">
                                 {{ selected_plan_details?.name }}
-                            </DialogTitle>
+                            </h3>
                             <p class="text-blue-100/80 text-sm">
                                 {{ selected_plan_details?.tagline }}
                             </p>
@@ -400,7 +400,7 @@ export default {
             pages: { total_pages: 0 },
         };
     },
-    mounted() {
+    created() {
         this.getPlans();
     },
     methods: {
@@ -418,7 +418,7 @@ export default {
         },
         selectPlan(plan) {
             if (!this.selected_period)
-                return alert("Please select a pricing option first.");
+                return $notify.error("Please select a pricing option first.");
             this.selected_plan = plan;
             this.showSidebar = true;
         },
@@ -439,7 +439,9 @@ export default {
                     this.pages = res.data.meta.pagination;
                 }
             } catch (e) {
-                console.error(e);
+                if (e?.response?.data?.message) {
+                    $notify.error(e.response.data.message);
+                }
             }
         },
     },

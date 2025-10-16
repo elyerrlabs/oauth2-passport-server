@@ -39,7 +39,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 class="w-10 h-10 flex items-center justify-center"
                             >
-                                <!-- Iconos de métodos de pago -->
                                 <svg
                                     v-if="method.icon === 'credit_card'"
                                     class="w-8 h-8"
@@ -206,20 +205,12 @@ export default {
         async payment() {
             if (!this.user?.id) {
                 this.guest = true;
-                this.$q.notify({
-                    type: "negative",
-                    message: "Please login and try again",
-                    timeout: 3000,
-                });
+                $notify.error(__("Please login and try again"));
                 return;
             }
 
             if (!this.user?.id) {
-                this.$q.notify({
-                    type: "negative",
-                    message: "Please select the plan to continue ...",
-                    timeout: 3000,
-                });
+                $notify.error(__("Please select the plan to continue ..."));
                 return;
             }
 
@@ -232,8 +223,6 @@ export default {
 
         async continuePayment() {
             this.disabled = true;
-            console.log(this.$page.props.routes["subscription"]);
-
             try {
                 const res = await this.$server.post(
                     this.$page.props.routes["subscription"],
@@ -250,11 +239,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
 
                 this.disabled = false;
@@ -280,11 +265,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
 
                 this.disabled = false;
@@ -302,11 +283,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             }
         },

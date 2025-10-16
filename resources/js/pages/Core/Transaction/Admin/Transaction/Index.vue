@@ -500,6 +500,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <script>
 import VFilter from "@/components/VFilter.vue";
 import VAdminTransactionLayout from "@/layouts/VAdminTransactionLayout.vue";
+import VTransactionActivate from "@/components/VTransactionActivate.vue";
 import VDetail from "./Detail.vue";
 
 export default {
@@ -507,6 +508,7 @@ export default {
         VAdminTransactionLayout,
         VDetail,
         VFilter,
+        VTransactionActivate,
     },
 
     data() {
@@ -544,23 +546,6 @@ export default {
         failedCount() {
             return this.transactions.filter((t) => t.status === "failed")
                 .length;
-        },
-        visiblePages() {
-            const total = this.pages.total_pages;
-            const current = this.search.page;
-            const pages = [];
-
-            // Show first page, last page, and pages around current
-            for (let i = 1; i <= total; i++) {
-                if (
-                    i === 1 ||
-                    i === total ||
-                    (i >= current - 2 && i <= current + 2)
-                ) {
-                    pages.push(i);
-                }
-            }
-            return pages;
         },
     },
 

@@ -86,7 +86,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ __("TOTAL SALES VALUE") }}
                             </div>
                             <div class="text-lg font-bold text-gray-900">
-                                {{ formatCurrency(totalSalesValue) }}
+                                {{ totalSalesValue }}
                             </div>
                         </div>
                     </div>
@@ -113,7 +113,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ __("TOTAL COMMISSIONS") }}
                             </div>
                             <div class="text-lg font-bold text-green-600">
-                                {{ formatCurrency(totalCommissions) }}
+                                {{ totalCommissions }}
                             </div>
                         </div>
                     </div>
@@ -182,6 +182,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
                                     >
+                                        {{ row.total }}
+                                    </span>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                >
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                    >
                                         {{ row.currency }}
                                     </span>
                                 </td>
@@ -203,9 +212,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             class="font-semibold text-blue-600"
                                         >
                                             {{
-                                                formatCurrency(
-                                                    calculateCommission(row)
-                                                )
+                                                calculateCommission(
+                                                    row
+                                                ).toFixed(2)
                                             }}
                                         </span>
                                         <span class="text-xs text-gray-500">
@@ -264,6 +273,7 @@ export default {
             sales: [],
             loading: false,
             columns: [
+                "Amount",
                 "Currency",
                 "Status",
                 "Commission",
@@ -288,10 +298,9 @@ export default {
             );
         },
         totalCommissions() {
-            return this.sales.reduce(
-                (sum, sale) => sum + this.calculateCommission(sale),
-                0
-            );
+            return this.sales
+                .reduce((sum, sale) => sum + this.calculateCommission(sale), 0)
+                .toFixed(2);
         },
     },
 
@@ -329,15 +338,6 @@ export default {
                     parseFloat(row.partner_commission_rate || 0)) /
                 100
             );
-        },
-
-        formatCurrency(value) {
-            return new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            }).format(value);
         },
 
         getStatusClasses(status) {

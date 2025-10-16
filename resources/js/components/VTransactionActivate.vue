@@ -20,89 +20,110 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div>
-        <q-btn
-            outline
-            icon="mdi-power"
-            color="warning"
-            @click="dialog = true"
-            size="sm"
+    <button
+        @click="dialog = true"
+        class="inline-flex items-center px-4 py-2 border border-orange-500 text-orange-600 rounded-lg font-medium hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors duration-200"
+    >
+        <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
         >
-            {{ __("Activate transaction") }}
-        </q-btn>
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+        </svg>
+        {{ __("Activate transaction") }}
+    </button>
 
-        <q-dialog
-            v-model="dialog"
-            persistent
-            transition-show="scale"
-            transition-hide="scale"
-        >
-            <q-card class="dialog-card">
-                <q-card-section class="dialog-header bg-primary text-white">
-                    <div class="text-h6">{{ __("Activate Transaction") }}</div>
-                    <q-space />
-                    <q-btn
-                        icon="close"
-                        flat
-                        round
-                        dense
-                        v-close-popup
-                        class="text-white"
-                    />
-                </q-card-section>
-
-                <q-card-section class="q-pt-lg dialog-content">
-                    <div class="row items-center q-mb-md">
-                        <q-icon
-                            name="mdi-alert-circle-outline"
-                            color="warning"
-                            size="24px"
-                            class="q-mr-sm"
+    <v-modal
+        v-model="dialog"
+        panel-class="w-full lg:w-6xl"
+        :title="__('Activate Transaction')"
+    >
+        <template #body>
+            <!-- Content -->
+            <div class="p-6">
+                <div class="flex items-start mb-4">
+                    <svg
+                        class="w-6 h-6 text-orange-500 mr-3 mt-0.5 flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
                         />
-                        <span class="text-subtitle1">
-                            {{
-                                __(
-                                    "Are you sure you want to activate this transaction?"
-                                )
-                            }}
-                        </span>
+                    </svg>
+                    <span class="text-gray-900 font-medium leading-relaxed">
+                        {{
+                            __(
+                                "Are you sure you want to activate this transaction?"
+                            )
+                        }}
+                    </span>
+                </div>
+
+                <hr class="my-4 border-gray-200" />
+
+                <div v-if="item.description" class="bg-gray-50 rounded-lg p-4">
+                    <div class="text-sm text-gray-600 font-medium mb-1">
+                        {{ __("Transaction details:") }}
                     </div>
-
-                    <q-separator class="q-my-md" />
-
-                    <div v-if="item.description" class="transaction-details">
-                        <div class="text-caption text-grey-7">
-                            {{ __("Transaction details:") }}
-                        </div>
-                        <div class="text-body2">{{ item.description }}</div>
+                    <div class="text-gray-800">
+                        {{ item.description }}
                     </div>
-                </q-card-section>
+                </div>
+            </div>
 
-                <q-card-actions class="dialog-actions">
-                    <q-btn
-                        flat
-                        :label="__('Cancel')"
-                        color="grey"
-                        @click="dialog = false"
-                        class="q-px-md"
-                    />
-                    <q-space />
-                    <q-btn
-                        :label="__('Activate')"
-                        color="positive"
-                        @click="activate"
-                        icon="mdi-power"
-                        :disable="disable"
-                        class="q-px-lg activate-action-btn"
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
-    </div>
+            <!-- Actions -->
+            <div
+                class="flex justify-between items-center px-6 py-4 bg-gray-50 rounded-b-2xl border-t border-gray-200"
+            >
+                <button
+                    @click="dialog = false"
+                    class="px-6 py-2 text-gray-700 hover:text-gray-900 font-medium rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200"
+                >
+                    {{ __("Cancel") }}
+                </button>
+                <button
+                    @click="activate"
+                    :disabled="disable"
+                    class="inline-flex items-center px-6 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                >
+                    <svg
+                        class="w-4 h-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                    </svg>
+                    {{ __("Activate") }}
+                </button>
+            </div>
+        </template>
+    </v-modal>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
 export default {
+    components: {
+        VModal,
+    },
     emits: ["updated"],
 
     props: {
@@ -128,26 +149,19 @@ export default {
 
                 if (res.status == 200) {
                     this.dialog = false;
-                    this.$q.notify({
-                        type: "positive",
-                        message: __(
-                            "Transaction has been activated successfully"
-                        ),
-                        icon: "mdi-check-circle",
-                        position: "top-right",
-                        timeout: 2500,
-                    });
+
+                    $notify.success(
+                        __("Transaction has been activated successfully")
+                    );
+
                     this.$emit("updated");
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             } finally {
+                this.disable = false;
                 this.dialog = false;
             }
         },
@@ -156,44 +170,7 @@ export default {
 </script>
 
 <style scoped>
-.dialog-card {
-    min-width: 400px;
-    border-radius: 8px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.dialog-header {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    padding: 16px;
-}
-
-.dialog-content {
-    padding: 20px 24px;
-}
-
-.dialog-actions {
-    padding: 16px 24px;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.activate-btn {
-    transition: all 0.3s ease;
-}
-
-.activate-btn:hover {
-    transform: scale(1.05);
-    background-color: rgba(0, 150, 0, 0.1);
-}
-
-.activate-action-btn {
-    font-weight: 600;
-}
-
-.transaction-details {
-    background-color: #f9f9f9;
-    padding: 12px;
-    border-radius: 6px;
-    margin-top: 12px;
+.transform {
+    transition: transform 0.2s ease-in-out;
 }
 </style>
