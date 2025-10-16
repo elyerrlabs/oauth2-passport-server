@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\Partner\Repositories;
 
 /**
@@ -19,7 +20,7 @@ namespace Core\Partner\Repositories;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -38,13 +39,13 @@ class PartnerRepository implements Contracts
 
     /**
      * Transformer
-     * @var 
+     * @var
      */
     public $transformer = PartnerTransformer::class;
 
     /**
      * Model
-     * @var 
+     * @var
      */
     public $model;
 
@@ -75,10 +76,12 @@ class PartnerRepository implements Contracts
 
         $data = $this->transaction->query();
 
+        $partner = User::find(auth()->user()->id)->partner;
+
         $data = $this->transaction->whereHas(
             'partner',
-            function ($query) {
-                $query->where('code', auth()->user()->partner->code ?? null);
+            function ($query) use ($partner) {
+                $query->where('code', $partner->code ?? null);
             }
         );
 
@@ -173,7 +176,7 @@ class PartnerRepository implements Contracts
 
     /**
      * Delete specific resource
-     * @param string $id 
+     * @param string $id
      * @return void
      */
     public function delete(string $id)
