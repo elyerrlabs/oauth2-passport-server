@@ -75,6 +75,7 @@ class TransactionTransformer extends TransformerAbstract
             'created' => $this->format_date($transaction->created_at),
             'updated' => $this->format_date($transaction->updated_at),
             'payment_method_id' => $transaction->payment_method_id,
+            'partner_commission_rate' => $transaction->partner_commission_rate,
             'links' => [
                 'index' => route('transaction.admin.transactions.index'),
                 'activate' => route('transaction.transactions.activate', ['transaction' => $transaction->id]),
