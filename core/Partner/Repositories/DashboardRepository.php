@@ -25,6 +25,7 @@ namespace Core\Partner\Repositories;
  */
 
 use Illuminate\Http\Request;
+use Core\Partner\Model\User;
 use Elyerr\ApiResponse\Assets\Asset;
 use Core\Transaction\Model\Transaction;
 use Core\Partner\Transformer\DataTransformer;
@@ -43,7 +44,7 @@ class DashboardRepository
     public function partner(Request $request)
     {
         //Retrieve the user partner code
-        $partnerCode = auth()->user()->partner->code ?? null;
+        $partnerCode = User::find(auth()->user()->id)->partner->code ?? null;
 
         //type of filter by day , month or year
         $type = $request->type ?? 'day';
@@ -52,13 +53,16 @@ class DashboardRepository
         //Generate a transaction query
         $data = Transaction::query();
 
-        //Retrieve transactions by partner code
-        $data->whereHas('partner', function ($query) use ($partnerCode) {
-            $query->where('code', $partnerCode);
-        });
-
         //Filter by only status is successfully
-        $data->where('status', config('billing.status.successful.name'));
+        $data->where('status', config('billing.status.successful.id'));
+
+        //Retrieve transactions by partner code
+        $data->whereHas(
+            'partner',
+            function ($query) use ($partnerCode) {
+                $query->where('code', $partnerCode);
+            }
+        );
 
         //Apply filter between days
         if ($request->has('start') && $request->has('end')) {
