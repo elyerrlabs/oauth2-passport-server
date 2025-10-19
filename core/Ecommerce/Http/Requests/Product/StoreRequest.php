@@ -109,6 +109,7 @@ class StoreRequest extends FormRequest
                 }
             ],
             'variants.*.description' => ['required', 'max:800'],
+            'parent_id' => ['nullable', 'exists:categories,id']
         ];
     }
 }

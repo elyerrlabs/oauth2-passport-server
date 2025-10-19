@@ -26,7 +26,6 @@ namespace Core\Ecommerce\Http\Requests\Category;
 
 
 use App\Rules\BooleanRule;
-use Core\Ecommerce\Model\Product;
 use Illuminate\Support\Str;
 use App\Rules\UndefinedValues;
 use App\Models\Common\Category;
@@ -95,6 +94,7 @@ class StoreRequest extends FormRequest
                 'array'
             ],
             'images.*' => ['image', 'mimes:webp,jpg,jpeg,bmp,png', 'max:2048'],
+            'parent_id' => ['nullable', 'exists:categories,id']
         ];
     }
 }
