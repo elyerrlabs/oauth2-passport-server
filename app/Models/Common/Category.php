@@ -27,14 +27,12 @@ namespace App\Models\Common;
 
 use App\Models\Master;
 use App\Models\Common\Icon;
-use Core\Ecommerce\Model\Product;
 use Illuminate\Support\Collection;
 use App\Transformers\File\FileTransformer;
-use App\Transformers\Common\IconTransformer;
 
 class Category extends Master
 {
-    
+
     public $tag = 'common_category';
 
     /**
@@ -53,7 +51,8 @@ class Category extends Master
         'tag',
         'description',
         'featured',
-        'published'
+        'published',
+        'parent_id'
     ];
 
 
@@ -70,6 +69,24 @@ class Category extends Master
     public function getNameAttribute($value)
     {
         return ucfirst($value);
+    }
+
+    /**
+     * Has children
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Category, Category>
+     */
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    /**
+     * Parent
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Category, Category>
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     /**
