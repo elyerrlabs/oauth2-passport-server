@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Core\Ecommerce\Transformer\Admin;
 
 /**
@@ -43,6 +42,7 @@ class VariantTransformer extends TransformerAbstract
             'id' => $variant->id,
             'name' => $variant->name,
             'stock' => filter_var($variant->stock, FILTER_VALIDATE_INT),
+            'stock_temp' => filter_var($variant->stock, FILTER_VALIDATE_INT),
             'description' => $variant->description,
             'price' => $variant->price->amount,
             'currency' => $variant->price->currency,
