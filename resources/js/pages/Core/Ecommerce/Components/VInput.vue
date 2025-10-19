@@ -56,7 +56,7 @@ const props = defineProps({
     disabled: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "input"]);
 
 const localValue = ref("");
 
@@ -79,12 +79,12 @@ const handleUp = () => {
     if (props.type === "money") {
         const num = Number(localValue.value);
         if (!isNaN(num)) {
-            // guarda en centavos
+            // Save in cents
             emit(
                 "update:modelValue",
                 Math.round(num * Math.pow(10, props.digits))
             );
-            // re-formatea la vista (ej. 300.9 → 300.90)
+            // transform view (ej. 300.9 → 300.90)
             localValue.value = num.toFixed(props.digits);
         } else {
             emit("update:modelValue", null);
@@ -98,6 +98,7 @@ const handleUp = () => {
 const change = () => {
     if (props.type != "money") {
         emit("update:modelValue", localValue.value);
+        emit("input", localValue.value);
     }
 };
 </script>
