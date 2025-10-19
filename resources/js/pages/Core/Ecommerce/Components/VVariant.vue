@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-6xl mx-auto p-6">
+    <div class="max-w-7xl mx-auto p-6">
         <!-- Component Description -->
         <div
             class="mb-6 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl shadow-sm"
@@ -220,11 +220,32 @@
                             v-model="variant.stock"
                             :required="true"
                             type="number"
+                            :disabled="variant?.id ? true : false"
                         />
                         <v-error
                             v-if="error[index]"
                             :error="error[index]['stock']"
                         />
+                    </div>
+
+                    <div v-if="variant?.id">
+                        <div class="grid grid-cols-2 gap-4">
+                            <v-input
+                                :label="__('Update Stock')"
+                                v-model="variant.adjustment"
+                                type="number"
+                                @input="calculateStock(variant)"
+                            />
+                            <v-switch
+                                v-model="variant.decrease"
+                                :label="__('Decrease')"
+                                @change="calculateStock(variant)"
+                            />
+                        </div>
+                        <span class="font-semibold text-gray-800">
+                            {{ __("Current stock") }} :
+                            {{ variant.stock_temp }}
+                        </span>
                     </div>
                     <div>
                         <v-input
@@ -305,6 +326,7 @@ import VInput from "./VInput.vue";
 import VSelect from "./VSelect.vue";
 import VTextarea from "./VTextarea.vue";
 import VError from "./VError.vue";
+import VSwitch from "./VSwitch.vue";
 
 export default {
     components: {
@@ -312,6 +334,7 @@ export default {
         VSelect,
         VTextarea,
         VError,
+        VSwitch,
     },
     props: {
         modelValue: {
@@ -328,28 +351,33 @@ export default {
         return {
             errors: {},
             currencies: [],
+            current_stock: 0,
+            update_stock: 0,
+            decrease: false,
         };
-    },
-
-    watch: {
-        calculateStock() {
-            let stock = Number(this.form.stock);
-            const adjustment = Number(this.update_stock) || 0;
-
-            if (this.decrease) {
-                stock -= adjustment;
-            } else {
-                stock += adjustment;
-            }
-
-            this.current_stock = Math.max(0, stock);
-        },
     },
 
     created() {
         this.getCurrencies();
     },
     methods: {
+        calculateStock(variant) {
+            if (!variant?.id) {
+                return;
+            }
+
+            let stock = Number(variant.stock_temp);
+            const adjustment = Number(variant.adjustment) || 0;
+
+            if (variant.decrease) {
+                stock -= adjustment;
+            } else {
+                stock += adjustment;
+            }
+
+            variant.stock = Math.max(0, stock);
+        },
+
         addVariant() {
             this.modelValue.push({
                 name: "",
@@ -359,7 +387,7 @@ export default {
                 description: "",
             });
             this.$emit("update:modelValue", this.modelValue);
-             $notify.success(
+            $notify.success(
                 __(
                     "Nuw variant section has been added, please complete the information"
                 )
@@ -451,7 +479,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
             }
         },
