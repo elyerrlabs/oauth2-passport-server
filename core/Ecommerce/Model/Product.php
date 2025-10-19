@@ -60,6 +60,7 @@ class Product extends Master
         'featured',
         'published',
         'category_id',
+        'parent_id'
     ];
 
     /**
@@ -81,6 +82,25 @@ class Product extends Master
     public function setFeaturedAttribute($value)
     {
         $this->attributes['featured'] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
+
+
+    /**
+     * Has children
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product, Product>
+     */
+    public function children()
+    {
+        return $this->hasMany(Product::class, 'parent_id');
+    }
+
+    /**
+     * Parent 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Product, Product>
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Product::class);
     }
 
     /**
