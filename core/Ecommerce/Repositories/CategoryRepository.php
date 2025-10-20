@@ -72,6 +72,9 @@ class CategoryRepository implements Contracts, Tag
     {
         $query = $this->model->query();
 
+        // Only product categories
+        $query->where('tag', (new Product())->tag);
+
         $query->with([
             'parent',
             'children',
