@@ -3,7 +3,7 @@ import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import monacoEditorPlugin from "vite-plugin-monaco-editor-esm";
-import path from 'path'
+import path from "path";
 
 export default defineConfig({
   plugins: [
@@ -20,7 +20,14 @@ export default defineConfig({
       refresh: true,
     }),
     monacoEditorPlugin(),
-    vue(),
+    vue({
+      template: {
+        transformAssetUrls: {
+          base: null,
+          includeAbsolute: false,
+        },
+      },
+    }),
   ],
   resolve: {
     alias: {
