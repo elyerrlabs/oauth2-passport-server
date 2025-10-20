@@ -6,7 +6,9 @@
             class="block text-sm font-medium text-gray-700 mb-1"
         >
             {{ label }} <span v-if="required" class="text-red-500">*</span>
-            <small v-if="description" class="block text-blue-700">{{ description }}</small>
+            <small v-if="description" class="block text-blue-700">{{
+                description
+            }}</small>
         </label>
 
         <!-- Select container -->
@@ -77,6 +79,17 @@
 
                 <!-- Options -->
                 <div class="overflow-y-auto max-h-48">
+                    <div
+                        v-if="clearable"
+                        @click="clearSelection"
+                        class="flex items-center justify-between px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-50 border-b border-gray-100"
+                    >
+                        <span class="truncate italic">{{
+                            __("Sin seleccionar")
+                        }}</span>
+                        <i class="mdi mdi-close text-sm"></i>
+                    </div>
+
                     <div
                         v-if="!filteredOptions.length && !loading"
                         class="px-4 py-3 text-sm text-gray-500 text-center"
@@ -256,6 +269,12 @@ export default {
     },
 
     methods: {
+        clearSelection() {
+            this.internalValue = '';
+            this.$emit("update:modelValue", '');
+            this.$emit("change", '');
+            this.isOpen = false;
+        },
         toggleDropdown() {
             this.isOpen = !this.isOpen;
             if (this.isOpen)

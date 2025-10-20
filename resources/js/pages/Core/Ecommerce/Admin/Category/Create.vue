@@ -117,6 +117,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         "
                                         :options="categories"
                                         v-model="form.parent_id"
+                                        clearable
                                     >
                                         <template #selected="{ option }">
                                             <div v-if="option?.icon">
