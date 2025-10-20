@@ -94,7 +94,7 @@ class StoreRequest extends FormRequest
                 'array'
             ],
             'images.*' => ['image', 'mimes:webp,jpg,jpeg,bmp,png', 'max:2048'],
-            'parent_id' => ['nullable', 'exists:categories,id']
+            'parent_id' => ['nullable']
         ];
     }
 }

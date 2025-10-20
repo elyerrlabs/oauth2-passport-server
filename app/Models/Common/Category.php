@@ -69,6 +69,18 @@ class Category extends Master
         return ucfirst($value);
     }
 
+    
+    public function setParentIdAttribute($value)
+    {
+        try {
+            $value = static::find($value)->id;
+        } catch (\Throwable $th) {
+            $value = null;
+        }
+
+        $this->attributes["parent_id"] = $value;
+    }
+
     /**
      * Has children
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<Category, Category>
