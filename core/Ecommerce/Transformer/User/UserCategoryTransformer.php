@@ -63,8 +63,10 @@ class UserCategoryTransformer extends TransformerAbstract
             'description' => $category->description,
             'featured' => $category->featured ? true : false,
             'published' => $category->published ? true : false,
-            'icon' => $category->getIcon($category->icon, UserIconTransformer::class),
-            'images' => $category->getImages($category->files, UserFileTransformer::class),
+            'icon' => fractal($category->icon, UserIconTransformer::class)->toArray()['data'] ?? [],
+            'images' => fractal($category->files, UserFileTransformer::class)->toArray()['data'] ?? [],
+            'parent' => fractal($category->parent, UserCategoryParentTransformer::class)->toArray()['data'] ?? [],
+            'children' => fractal($category->children, UserCategoryChildrenTransformer::class)->toArray()['data'] ?? [],
             'links' => [
                 'index' => route('ecommerce.category', [
                     'category' => $category->slug

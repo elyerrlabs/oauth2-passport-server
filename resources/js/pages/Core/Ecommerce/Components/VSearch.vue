@@ -20,30 +20,36 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="hidden md:flex flex-1 mx-6 max-w-2xl relative">
+    <div class="hidden md:flex flex-1 mx-2 max-w-2xl relative">
         <div class="flex w-full">
             <!-- Categories Dropdown Button -->
             <div class="relative">
                 <button
-                    class="bg-primary-700 text-white py-2 px-4 rounded-l-lg hover:bg-primary-800 transition flex items-center"
+                    class="bg-primary-700 cursor-pointer text-white py-1 px-1 rounded-l-lg hover:bg-primary-800 transition flex items-center"
                     @click="toggleCategories"
-                    @blur="closeCategories"
                 >
-                    <span class="hidden lg:inline">{{ __("Categories") }}</span>
                     <span class="lg:hidden">
                         <i class="mdi mdi-format-list-bulleted"></i>
                     </span>
-                    <i class="mdi mdi-chevron-down ml-2 text-sm"></i>
+                    <i class="mdi mdi-menu ml-2 text-4xl"></i>
                 </button>
 
                 <div
-                    class="absolute left-0 top-full mt-2 w-64 bg-white rounded-lg shadow-lg py-2 z-50"
+                    class="absolute left-0 top-full mt-2 w-full lg:w-4xl overflow-auto bg-white rounded-lg shadow-lg z-50"
                     v-if="categoriesOpen"
                 >
-                    <div class="px-4 py-3 border-b border-gray-200">
+                    <div
+                        class="px-4 py-2 border-b border-gray-200 flex justify-between"
+                    >
                         <h3 class="font-semibold text-lg">
                             {{ __("All Categories") }}
                         </h3>
+                        <button
+                            @click="toggleCategories"
+                            class="text-gray-700 font-bold rounded-full w-8 h-8 hover:bg-red-500 hover:text-white cursor-pointer"
+                        >
+                            X
+                        </button>
                     </div>
                     <v-categories />
                 </div>
@@ -221,7 +227,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
             }
         },

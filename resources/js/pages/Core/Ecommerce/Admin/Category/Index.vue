@@ -77,56 +77,51 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <thead class="bg-gray-50">
                             <tr>
                                 <th
-                                    v-for="col in columns"
-                                    :key="col.name"
+                                    v-for="(label, index) in columns"
+                                    :key="index"
                                     class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    {{ __(col.label) }}
+                                    {{ __(label) }}
                                 </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <tr
-                                v-for="group in groups"
-                                :key="group.id"
+                                v-for="category in categories"
+                                :key="category.id"
                                 class="hover:bg-gray-50 transition-colors duration-150"
                             >
                                 <!-- Name Column -->
                                 <td class="px-4 md:px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <i
-                                            v-if="group.icon?.icon"
-                                            :class="`mdi ${group.icon.icon} text-blue-600 mr-2 text-lg`"
+                                            v-if="category.icon?.icon"
+                                            :class="`mdi ${category.icon.icon} text-blue-600 mr-2 text-lg`"
                                         ></i>
                                         <span class="font-medium text-gray-900">
-                                            {{ group.name }}
+                                            {{ category.name }}
                                         </span>
                                     </div>
-                                </td>
-
-                                <!-- Slug Column -->
-                                <td
-                                    class="px-4 md:px-6 py-4 whitespace-nowrap text-center"
-                                >
                                     <span
+                                        v-if="category.parent?.id"
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
                                     >
-                                        {{ group.slug }}
+                                        <i
+                                            :class="[
+                                                'p-2 mdi',
+                                                category.parent?.icon?.icon,
+                                            ]"
+                                        ></i>
+                                        {{ category.parent?.name }}
                                     </span>
                                 </td>
 
-                                <!-- Icon Column -->
-                                <td
-                                    class="px-4 md:px-6 py-4 whitespace-nowrap text-center"
-                                >
-                                    <i
-                                        v-if="group.icon?.icon"
-                                        :class="`mdi ${group.icon.icon} text-blue-600 text-xl`"
-                                    ></i>
-                                    <i
-                                        v-else
-                                        class="fas fa-question-circle text-gray-300 text-xl"
-                                    ></i>
+                                <td class="px-4 md:px-6 py-4 text-center">
+                                    <span
+                                        class="font-medium bg-green-700 py-1 px-3 rounded-full text-white"
+                                    >
+                                        {{ category.children.length }}
+                                    </span>
                                 </td>
 
                                 <!-- Published Column -->
@@ -135,20 +130,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 >
                                     <span
                                         :class="`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                            group.published
+                                            category.published
                                                 ? 'bg-green-100 text-green-800'
                                                 : 'bg-gray-100 text-gray-800'
                                         }`"
                                     >
                                         <i
                                             :class="`fas ${
-                                                group.published
+                                                category.published
                                                     ? 'fa-check-circle'
                                                     : 'fa-times-circle'
                                             } mr-1`"
                                         ></i>
                                         {{
-                                            group.published
+                                            category.published
                                                 ? __("Published")
                                                 : "Hidden"
                                         }}
@@ -161,20 +156,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 >
                                     <span
                                         :class="`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                            group.featured
+                                            category.featured
                                                 ? 'bg-yellow-100 text-yellow-800'
                                                 : 'bg-gray-100 text-gray-800'
                                         }`"
                                     >
                                         <i
                                             :class="`fas ${
-                                                group.featured
+                                                category.featured
                                                     ? 'fa-star'
                                                     : 'fa-star-o'
                                             } mr-1`"
                                         ></i>
                                         {{
-                                            group.featured
+                                            category.featured
                                                 ? __("Featured")
                                                 : "Standard"
                                         }}
@@ -189,14 +184,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="flex items-center justify-end space-x-2"
                                     >
                                         <a
-                                            :href="group?.links.edit"
+                                            :href="category?.links.edit"
                                             class="py-2 px-4 cursor-pointer bg-green-500 text-gray-100 rounded-full font-medium"
                                         >
                                             <span class="mdi mdi-plus"></span>
                                             {{ __("Edit") }}
                                         </a>
                                         <v-delete
-                                            :item="group"
+                                            :item="category"
                                             @deleted="getCategories"
                                             class="action-btn"
                                         />
@@ -205,7 +200,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </tr>
 
                             <!-- Empty State -->
-                            <tr v-if="groups.length === 0 && !loading">
+                            <tr v-if="categories.length === 0 && !loading">
                                 <td
                                     :colspan="columns.length"
                                     class="px-6 py-12 text-center"
@@ -247,30 +242,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Mobile Cards View -->
             <div class="md:hidden space-y-4">
                 <div
-                    v-for="group in groups"
-                    :key="group.id"
+                    v-for="category in categories"
+                    :key="category.id"
                     class="bg-white rounded-lg shadow-md p-4"
                 >
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center">
                             <i
-                                v-if="group.icon?.icon"
-                                :class="`mdi ${group.icon.icon} text-blue-600 mr-2 text-lg`"
+                                v-if="category.icon?.icon"
+                                :class="`mdi ${category.icon.icon} text-blue-600 mr-2 text-lg`"
                             ></i>
                             <span class="font-medium text-gray-900">
-                                {{ group.name }}
+                                {{ category.name }}
                             </span>
                         </div>
                         <div class="flex items-center space-x-2">
                             <a
-                                :href="group?.links.edit"
+                                :href="category?.links.edit"
                                 class="py-2 px-4 cursor-pointer bg-green-500 text-gray-100 rounded-full font-medium"
                             >
                                 <span class="mdi mdi-plus"></span>
                                 {{ __("Edit") }}
                             </a>
                             <v-delete
-                                :item="group"
+                                :item="category"
                                 @deleted="getCategories"
                                 class="action-btn"
                             />
@@ -280,7 +275,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="grid grid-cols-2 gap-3 text-sm">
                         <div class="flex flex-col">
                             <span class="text-gray-500">{{ __("Slug") }}</span>
-                            <span class="font-medium">{{ group.slug }}</span>
+                            <span class="font-medium">{{ category.slug }}</span>
                         </div>
 
                         <div class="flex flex-col">
@@ -289,20 +284,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </span>
                             <span
                                 :class="`inline-flex items-center ${
-                                    group.published
+                                    category.published
                                         ? 'text-green-600'
                                         : 'text-gray-600'
                                 }`"
                             >
                                 <i
                                     :class="`fas ${
-                                        group.published
+                                        category.published
                                             ? 'fa-check-circle'
                                             : 'fa-times-circle'
                                     } mr-1`"
                                 ></i>
                                 {{
-                                    group.published ? __("Published") : "Hidden"
+                                    category.published
+                                        ? __("Published")
+                                        : "Hidden"
                                 }}
                             </span>
                         </div>
@@ -313,17 +310,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </span>
                             <span
                                 :class="`inline-flex items-center ${
-                                    group.featured
+                                    category.featured
                                         ? 'text-yellow-600'
                                         : 'text-gray-600'
                                 }`"
                             >
                                 <i
                                     :class="`fas ${
-                                        group.featured ? 'fa-star' : 'fa-star-o'
+                                        category.featured
+                                            ? 'fa-star'
+                                            : 'fa-star-o'
                                     } mr-1`"
                                 ></i>
-                                {{ group.featured ? "Yes" : "No" }}
+                                {{ category.featured ? "Yes" : "No" }}
                             </span>
                         </div>
 
@@ -331,8 +330,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <span class="text-gray-500">{{ __("Icon") }}</span>
                             <span>
                                 <i
-                                    v-if="group.icon?.icon"
-                                    :class="`mdi ${group.icon.icon} text-blue-600`"
+                                    v-if="category.icon?.icon"
+                                    :class="`mdi ${category.icon.icon} text-blue-600`"
                                 ></i>
                                 <i
                                     v-else
@@ -345,7 +344,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Empty State for Mobile -->
                 <div
-                    v-if="groups.length === 0 && !loading"
+                    v-if="categories.length === 0 && !loading"
                     class="bg-white rounded-lg shadow-md p-6 text-center"
                 >
                     <div class="flex flex-col items-center text-gray-400">
@@ -382,7 +381,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Results Count -->
             <div class="flex justify-center mt-4">
                 <p class="text-xs md:text-sm text-gray-500">
-                    {{ __("Showing") }} {{ groups.length }} {{ __("of") }}
+                    {{ __("Showing") }} {{ categories.length }} {{ __("of") }}
                     {{ pages.total || 0 }} {{ __("categories") }}
                 </p>
             </div>
@@ -394,7 +393,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
 import VAdminLayout from "../../Components/VAdminLayout.vue";
-import VPaginate from "../../Components/VPaginate.vue";
+import VPaginate from "@/components/VPaginate.vue";
 
 export default {
     components: {
@@ -406,7 +405,7 @@ export default {
 
     data() {
         return {
-            groups: [],
+            categories: [],
             loading: false,
             searchTerm: "",
             pages: {
@@ -417,119 +416,39 @@ export default {
                 page: 1,
                 per_page: 15,
             },
-            columns: [
-                {
-                    name: "name",
-                    label: "Category Name",
-                    field: "name",
-                    align: "left",
-                    sortable: true,
-                },
-                {
-                    name: "slug",
-                    label: "Slug",
-                    field: "slug",
-                    align: "center",
-                    sortable: true,
-                },
-                {
-                    name: "icon",
-                    label: "Icon",
-                    field: (row) => row.icon?.icon,
-                    align: "center",
-                },
-                {
-                    name: "published",
-                    label: "Status",
-                    field: (row) => (row.published ? "Yes" : "No"),
-                    align: "center",
-                    sortable: true,
-                },
-                {
-                    name: "featured",
-                    label: "Featured",
-                    field: (row) => (row.featured ? "Yes" : "No"),
-                    align: "center",
-                    sortable: true,
-                },
-                {
-                    name: "actions",
-                    label: "Actions",
-                    align: "center",
-                    sortable: false,
-                },
-            ],
+            columns: ["Name", "Children", "Status", "Featured", "Actions"],
         };
     },
-
-    computed: {
-        visiblePages() {
-            const current = this.search.page;
-            const total = this.pages.total_pages;
-            const range = 2; // Show 2 pages before and after current
-
-            let start = Math.max(1, current - range);
-            let end = Math.min(total, current + range);
-
-            // Adjust if we're near the start or end
-            if (current - range <= 1) {
-                end = Math.min(total, 1 + range * 2);
-            }
-            if (current + range >= total) {
-                start = Math.max(1, total - range * 2);
-            }
-
-            const pages = [];
-            for (let i = start; i <= end; i++) {
-                pages.push(i);
-            }
-            return pages;
-        },
-    },
-
+    
     created() {
         this.getCategories();
     },
 
-    watch: {
-        "search.page"(value) {
-            this.getCategories();
-        },
-        "search.per_page"(value) {
-            this.getCategories();
-        },
-    },
-
     methods: {
         handleSearch() {
-            clearTimeout(this.searchTimeout);
-            this.searchTimeout = setTimeout(() => {
-                this.getCategories({ search: this.searchTerm });
-            }, 300);
+            this.search.name = this.searchTerm;
+            this.getCategories();
         },
 
-        getCategories(param = null) {
+        async getCategories() {
             this.loading = true;
-            const params = { ...this.search, ...param };
-
-            this.$server
-                .get(this.$page.props.routes.index, {
-                    params: params,
-                })
-                .then((res) => {
-                    this.groups = res.data.data;
-                    let meta = res.data.meta;
-                    this.pages = meta.pagination;
-                    this.search.page = meta.pagination.current_page;
-                })
-                .catch((e) => {
-                    if (e?.response?.data?.message) {
-                         $notify(e.response.data.message);
-                    }
-                })
-                .finally(() => {
-                    this.loading = false;
+            try {
+                const res = await $server.get(this.$page.props.routes.index, {
+                    params: this.search,
                 });
+
+                if (res.status == 200) {
+                    const values = res.data;
+                    this.categories = values.data;
+                    this.pages = values.meta.pagination;
+                }
+            } catch (error) {
+                if (e?.response?.data?.message) {
+                    $notify.error(e.response.data.message);
+                }
+            } finally {
+                this.loading = false;
+            }
         },
     },
 };

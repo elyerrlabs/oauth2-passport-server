@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Transformer\Admin;
+namespace Core\Ecommerce\Transformer\User;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -20,16 +20,16 @@ namespace Core\Ecommerce\Transformer\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- *
+ * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Transformers\File\FileTransformer;
-use Core\Ecommerce\Model\Category;
-use Core\Ecommerce\Transformer\User\UserIconTransformer;
-use League\Fractal\TransformerAbstract;
 
-class CategoryTransformer extends TransformerAbstract
+use App\Models\Common\Category;
+use League\Fractal\TransformerAbstract;
+use Core\Ecommerce\Transformer\User\UserFileTransformer;
+
+class UserCategoryParentTransformer extends TransformerAbstract
 {
     /**
      * List of resources to automatically include
@@ -54,7 +54,7 @@ class CategoryTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform($category)
+    public function transform(Category $category)
     {
         return [
             'id' => $category->id,
@@ -64,16 +64,15 @@ class CategoryTransformer extends TransformerAbstract
             'featured' => $category->featured ? true : false,
             'published' => $category->published ? true : false,
             'icon' => fractal($category->icon, UserIconTransformer::class)->toArray()['data'] ?? [],
-            'images' => fractal($category->files, FileTransformer::class)->toArray()['data'] ?? [],
-            'parent' => fractal($category->parent, CategoryParentTransformer::class)->toArray()['data'] ?? [],
-            'children' => fractal($category->children, CategoryChildrenTransformer::class)->toArray()['data'] ?? [],
+            'images' => fractal($category->files, UserFileTransformer::class)->toArray()['data'] ?? [],
             'links' => [
-                'index' => route('ecommerce.admin.categories.index'),
-                'create' => route('ecommerce.admin.categories.store'),
-                'store' => route('ecommerce.admin.categories.store'),
-                'edit' => route('ecommerce.admin.categories.edit', ['category' => $category->id]),
-                'destroy' => route('ecommerce.admin.categories.destroy', ['category' => $category->id]),
-            ]
+                'index' => route('ecommerce.category', [
+                    'category' => $category->slug
+                ]),
+                'index_api' => route('api.ecommerce.category.show', [
+                    'category' => $category->slug
+                ]),
+            ],
         ];
     }
 }

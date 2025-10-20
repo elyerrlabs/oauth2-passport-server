@@ -24,8 +24,9 @@ namespace Core\Ecommerce\Repositories;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Model\Product;
 use Illuminate\Http\Request;
-use App\Models\Common\Category;
+use Core\Ecommerce\Model\Category;
 use App\Repositories\Contracts\Tag;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\Contracts\Contracts;
@@ -71,6 +72,13 @@ class CategoryRepository implements Contracts, Tag
     {
         $query = $this->model->query();
 
+        $query->with([
+            'parent',
+            'children',
+            'icon',
+            'files'
+        ]);
+
         if ($request->filled('name')) {
             $query->whereRaw(
                 "LOWER(name) LIKE ?",
@@ -86,13 +94,6 @@ class CategoryRepository implements Contracts, Tag
             $query->where('published', $request->featured);
         }
 
-        if ($request->filled('tag')) {
-            $query->whereRaw(
-                "LOWER(tag) LIKE ?",
-                ['%' . strtolower($request->tag) . '%']
-            );
-        }
-
         return $query;
     }
 
@@ -106,8 +107,31 @@ class CategoryRepository implements Contracts, Tag
     public function searchForUser(Request $request)
     {
         $query = $this->model->query();
+
+        $query->where('tag', (new Product())->tag);
+
+        $query->with([
+            'parent',
+            'children',
+            'icon',
+            'files'
+        ]);
+
+        // Show only published
         $query->where('published', true);
 
+        //Retrieve the latest categories added
+        if ($request->filled('latest')) {
+            $date = now()->subDays(filter_var($request->latest, FILTER_VALIDATE_INT))->format('Y-m-d');
+            $query->where('created_at', '>=', $date);
+        }
+
+        //Do not display submenus as a main menu
+        if ($request->has('parent')) {
+            $query->whereNull('parent_id');
+        }
+
+        // Filter by name
         if ($request->filled('name')) {
             $query->whereRaw(
                 "LOWER(name) LIKE ?",
@@ -115,17 +139,12 @@ class CategoryRepository implements Contracts, Tag
             );
         }
 
+        // Filter by featured
         if ($request->filled('featured')) {
             $query->where('featured', $request->featured);
         }
 
-        if ($request->filled('tag')) {
-            $query->whereRaw(
-                "LOWER(tag) LIKE ?",
-                ['%' . strtolower($request->tag) . '%']
-            );
-        }
-
+        // Filter as random values
         if ($request->filled('random')) {
             $query->inRandomOrder();
         }

@@ -106,6 +106,52 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :error="errors.featured"
                                     />
                                 </div>
+
+                                <div class="space-y-4">
+                                    <v-select
+                                        :label="__('Add to the parent menu')"
+                                        :description="
+                                            __(
+                                                'When you assign a parent menu, this item will automatically become a submenu under it.'
+                                            )
+                                        "
+                                        :options="categories"
+                                        v-model="form.parent_id"
+                                    >
+                                        <template #selected="{ option }">
+                                            <div v-if="option?.icon">
+                                                <span
+                                                    :class="[
+                                                        'mdi',
+                                                        option.icon?.icon,
+                                                    ]"
+                                                ></span>
+                                                <span class="text-gray-700 p-4">
+                                                    {{ option.name }}
+                                                </span>
+                                            </div>
+                                            <span
+                                                v-else
+                                                class="text-gray-700 p-4"
+                                            >
+                                                {{ __("Select ") }}
+                                            </span>
+                                        </template>
+                                        <template #option="{ option }">
+                                            <div class="p-4">
+                                                <span
+                                                    :class="[
+                                                        'mdi',
+                                                        option.icon?.icon,
+                                                    ]"
+                                                ></span>
+                                                <span class="text-gray-700 p-4">
+                                                    {{ option.name }}
+                                                </span>
+                                            </div>
+                                        </template>
+                                    </v-select>
+                                </div>
                             </div>
                         </div>
 
@@ -180,12 +226,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import VAdminLayout from "../../Components/VAdminLayout.vue";
-import VEditor from "../../Components/VEditor.vue";
+import VEditor from "@/components/VEditor.vue";
 import VFileUploader from "../../Components/VFileUploader.vue";
-import VInput from "../../Components/VInput.vue";
-import VSwitch from "../../Components/VSwitch.vue";
+import VInput from "@/components/VInput.vue";
+import VSwitch from "@/components/VSwitch.vue";
 import VFileViewer from "../../Components/VFileViewer.vue";
-import VError from "../../Components/VError.vue";
+import VError from "@/components/VError.vue";
+import VSelect from "@/components/VSelect.vue";
 
 export default {
     components: {
@@ -196,6 +243,7 @@ export default {
         VSwitch,
         VFileViewer,
         VError,
+        VSelect,
     },
 
     data() {
@@ -208,14 +256,18 @@ export default {
                 published: false,
                 featured: false,
                 images: [],
+                parent_id: "",
             },
             errors: {},
             current_images: [],
             disabled: false,
+            categories: [],
+            category_name: "",
         };
     },
 
     created() {
+        this.getCategories();
         this.loadData(this.$page.props.model);
     },
 
@@ -225,6 +277,7 @@ export default {
                 this.form = { ...model, images: [] };
                 this.current_images = model.images;
                 this.form.icon = model.icon.icon;
+                this.form.parent_id = model.parent?.id;
             }
         },
 
@@ -238,6 +291,7 @@ export default {
             payload.append("icon", this.form.icon);
             payload.append("featured", this.form.featured ? 1 : 0);
             payload.append("published", this.form.published ? 1 : 0);
+            payload.append("parent_id", this.form.parent_id);
 
             if (this.form?.images?.length > 0) {
                 this.form.images.forEach((file) => {
@@ -261,7 +315,7 @@ export default {
                 }
 
                 if (res.status === 200) {
-                     $notify.success(__("Category updated successfully"));
+                    $notify.success(__("Category updated successfully"));
 
                     this.loadData(res.data.data);
                 }
@@ -271,10 +325,29 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                     $notify.error(__(e.response.data.message));
+                    $notify.error(__(e.response.data.message));
                 }
             } finally {
                 this.disabled = false;
+            }
+        },
+
+        async getCategories() {
+            try {
+                const res = await $server.get(this.$page.props.routes.index, {
+                    params: {
+                        name: this.category_name,
+                        per_page: 30,
+                    },
+                });
+
+                if (res.status == 200) {
+                    this.categories = res.data.data;
+                }
+            } catch (error) {
+                if (e?.response?.data?.message) {
+                    $notify(e.response.data.message);
+                }
             }
         },
     },

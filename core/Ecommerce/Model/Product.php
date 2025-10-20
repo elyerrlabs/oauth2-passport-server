@@ -25,12 +25,12 @@ namespace Core\Ecommerce\Model;
  */
 
 use App\Models\Master;
+use Core\Ecommerce\Model\Category;
 use App\Models\Common\Variant;
 use App\Models\Common\Tag;
 use App\Models\Common\File;
 use App\Models\Common\Order;
 use App\Models\Common\Price;
-use App\Models\Common\Category;
 use App\Models\Common\Attribute;
 use App\Transformers\File\FileTransformer;
 use Illuminate\Database\Eloquent\Collection;

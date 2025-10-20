@@ -1,5 +1,7 @@
 <?php
 
+namespace Core\Ecommerce\Model;
+
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
  *
@@ -22,7 +24,16 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-return [
-    (new \Core\Ecommerce\Model\Product())->tag => \Core\Ecommerce\Model\Product::class,
-    (new \Core\Ecommerce\Model\Category())->tag => \Core\Ecommerce\Model\Category::class,
-];
+use Core\Ecommerce\Model\Product;
+
+class Category extends \App\Models\Common\Category
+{
+    /**
+     * Has products
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product, Category>
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id');
+    }
+}

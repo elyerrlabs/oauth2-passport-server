@@ -27,8 +27,6 @@ namespace App\Models\Common;
 
 use App\Models\Master;
 use App\Models\Common\Icon;
-use Illuminate\Support\Collection;
-use App\Transformers\File\FileTransformer;
 
 class Category extends Master
 {
@@ -77,7 +75,7 @@ class Category extends Master
      */
     public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(static::class, 'parent_id');
     }
 
     /**
@@ -86,7 +84,7 @@ class Category extends Master
      */
     public function parent()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(static::class);
     }
 
     /**
@@ -99,15 +97,6 @@ class Category extends Master
     }
 
     /**
-     * Has products
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product, Category>
-     */
-    public function products()
-    {
-        return $this->hasMany(Product::class, 'category_id');
-    }
-
-    /**
      * Has icon
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne<Icon, Category>
      */
@@ -116,32 +105,4 @@ class Category extends Master
         return $this->morphOne(Icon::class, 'iconable');
     }
 
-    /**
-     * Retrieve the all images
-     * @param \Illuminate\Database\Eloquent\Collection $collection
-     */
-    public function getImages(Collection $collection, $transformer = FileTransformer::class)
-    {
-        return fractal($collection, $transformer)->toArray()['data'] ?? [];
-    }
-
-    /**
-     * Retrieve the Icon
-     * @param mixed $icon
-     */
-    public function getIcon($icon, $transformer)
-    {
-        return fractal($icon, $transformer)->toArray()['data'] ?? [];
-    }
-
-
-    // protected static function boot()
-    // {
-    //     parent::boot();
-    //     static::creating(function ($category) {
-    //         if (!$category->tag && isset($category->model_source)) {
-    //             $category->tag = strtolower(class_basename($category->model_source));
-    //         }
-    //     });
-    // }
 }
