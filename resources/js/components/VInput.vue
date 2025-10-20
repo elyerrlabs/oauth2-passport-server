@@ -56,7 +56,7 @@ const props = defineProps({
     disabled: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "input"]);
 
 const localValue = ref("");
 
@@ -98,6 +98,7 @@ const handleUp = () => {
 const change = () => {
     if (props.type != "money") {
         emit("update:modelValue", localValue.value);
+        emit("input", localValue.value);
     }
 };
 </script>

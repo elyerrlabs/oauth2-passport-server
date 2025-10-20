@@ -6,6 +6,7 @@
             class="block text-sm font-medium text-gray-700 mb-1"
         >
             {{ label }} <span v-if="required" class="text-red-500">*</span>
+            <small v-if="description" class="block text-blue-700">{{ description }}</small>
         </label>
 
         <!-- Select container -->
@@ -197,6 +198,7 @@ export default {
         error: Array,
         returnObject: Boolean,
         panelClass: String,
+        description: String,
     },
 
     emits: ["update:modelValue", "change", "search"],
