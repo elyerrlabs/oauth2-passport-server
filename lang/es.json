@@ -2743,5 +2743,21 @@
   "Demo environment active for preview purposes": "Entorno de desarrollo activo solo para propositos de visualizar el sistema en su totalidad con una cuenta demo",
   "Allow visitors view the landing page": "Permite a los visitantes ver el landing page o pagina de inicio",
   "Landing page": "Pagina de inicio",
-  "Allow users to log in with demo credentials.": "Permite a los usuarios iniciar sección con credenciales de demostracion"
+  "Allow users to log in with demo credentials.": "Permite a los usuarios iniciar sección con credenciales de demostracion",
+  "All notifications marked as read": "Todas las notificaciones marcadas como leídas",
+  "Notifications refreshed": "Notificaciones actualizadas",
+  "Line Chart": "Gráfico de líneas",
+  "Bar Chart": "Gráfico de barras",
+  "Area Chart": "Gráfico de área",
+  "Daily": "Diario",
+  "name": "nombre",
+  "Write short description ...": "Escribe una breve descripción ...",
+  "Group created successfully": "Grupo creado correctamente",
+  "Group deleted successfully": "Grupo eliminado correctamente",
+  "Group updated successfully": "Grupo actualizado correctamente",
+  "Role created successfully": "Rol creado correctamente",
+  "Current stock": "Inventario actual",
+  "Add to the parent menu": "Agregar como menu principal",
+  "When you assign a parent menu, this item will automatically become a submenu under it.": "Cuando asignes un menú padre, este elemento se convertirá automáticamente en un submenú dentro de él.",
+  "Children": "Hijos"
 }
