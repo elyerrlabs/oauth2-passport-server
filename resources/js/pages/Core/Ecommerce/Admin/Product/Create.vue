@@ -88,7 +88,66 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :label="__('Categories')"
                                     :required="true"
                                     :error="errors.category"
-                                />
+                                    searchable
+                                    @search="searchCategories"
+                                >
+                                    <!-- Selected items -->
+                                    <template #selected="{ option }">
+                                        <div
+                                            v-if="option.name"
+                                            class="flex items-center"
+                                        >
+                                            <div
+                                                class="font-semibold text-gray-800"
+                                            >
+                                                <i
+                                                    v-if="option.icon?.icon"
+                                                    :class="[
+                                                        'mdi me-3',
+                                                        option.icon.icon,
+                                                    ]"
+                                                ></i>
+                                                <span>{{ option?.name }}</span>
+                                            </div>
+                                        </div>
+
+                                        <span
+                                            v-else
+                                            class="font-semibold text-gray-800 block"
+                                        >
+                                            {{ __("Select menu") }}
+                                        </span>
+                                    </template>
+
+                                    <!-- Option list -->
+                                    <template #option="{ option }">
+                                        <div
+                                            class="flex items-center gap-3 p-4"
+                                        >
+                                            <div>
+                                                <span
+                                                    class="font-semibold text-gray-800 block"
+                                                >
+                                                    {{ option.name }}
+                                                </span>
+                                                <div
+                                                    class="flex items-center gap-2 text-sm text-gray-500"
+                                                >
+                                                    <i
+                                                        v-if="option.icon?.icon"
+                                                        :class="[
+                                                            'mdi',
+                                                            option.icon.icon,
+                                                        ]"
+                                                    ></i>
+                                                    <span>{{
+                                                        option?.name
+                                                    }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </v-select>
                             </div>
                         </div>
 
@@ -104,6 +163,156 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :label="__('Featured')"
                                 :error="errors.featured"
                             />
+                        </div>
+
+                        <div class="space-y-6">
+                            <!-- Title -->
+                            <div>
+                                <h1
+                                    class="text-2xl font-bold text-gray-800 mb-2"
+                                >
+                                    {{ __("Add Related Products") }}
+                                </h1>
+                                <p class="text-gray-500 text-sm">
+                                    {{
+                                        __(
+                                            "Select one or more products to associate as related items."
+                                        )
+                                    }}
+                                </p>
+                            </div>
+
+                            <!-- Product Selector -->
+                            <v-select
+                                clearable
+                                searchable
+                                :multiple="true"
+                                :options="products"
+                                v-model="form.children_id"
+                                @search="searchProduct"
+                                :placeholder="__('Search products...')"
+                                class="w-full"
+                            >
+                                <!-- Option list -->
+                                <template #option="{ option }">
+                                    <div
+                                        v-if="option.name"
+                                        class="flex items-center justify-between gap-4 p-3 hover:bg-gray-50 transition-colors rounded-md"
+                                    >
+                                        <div class="flex items-center gap-3">
+                                            <img
+                                                class="w-10 h-10 rounded"
+                                                :src="option.images[0]?.url"
+                                                :alt="option.name"
+                                            />
+                                            <div>
+                                                <span
+                                                    class="font-semibold text-gray-800 block"
+                                                >
+                                                    {{ option.name }}
+                                                </span>
+                                                <div
+                                                    class="flex items-center gap-2 text-sm text-gray-500"
+                                                >
+                                                    <i
+                                                        v-if="
+                                                            option.category
+                                                                ?.icon?.icon
+                                                        "
+                                                        :class="[
+                                                            'mdi',
+                                                            option.category.icon
+                                                                .icon,
+                                                        ]"
+                                                    ></i>
+                                                    <span>{{
+                                                        option.category?.name
+                                                    }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="font-bold text-blue-600 whitespace-nowrap"
+                                        >
+                                            {{ option.symbol }}
+                                            {{ option.format_price }}
+                                        </span>
+                                    </div>
+                                </template>
+                            </v-select>
+
+                            <!-- Related Products List -->
+                            <div v-if="form.children.length" class="mt-6">
+                                <h2
+                                    class="text-lg font-semibold text-gray-700 mb-3"
+                                >
+                                    {{ __("Selected Related Products") }}
+                                </h2>
+
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                                >
+                                    <div
+                                        v-for="(item, index) in form.children"
+                                        :key="item.id"
+                                        class="flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-200 hover:shadow-md transition-all"
+                                    >
+                                        <div class="flex items-center gap-3">
+                                            <img
+                                                :src="item.images[0]?.url"
+                                                :alt="item.name"
+                                                class="w-12 h-12 rounded"
+                                            />
+                                            <div>
+                                                <p
+                                                    class="font-semibold text-gray-800"
+                                                >
+                                                    {{ item.name }}
+                                                </p>
+                                                <p
+                                                    class="text-blue-600 font-bold text-sm"
+                                                >
+                                                    {{ item.symbol }}
+                                                    {{ item.format_price }}
+                                                </p>
+                                                <div
+                                                    v-if="item.category"
+                                                    class="flex items-center gap-2 text-sm text-gray-500"
+                                                >
+                                                    <i
+                                                        v-if="
+                                                            item.category.icon
+                                                                ?.icon
+                                                        "
+                                                        :class="[
+                                                            'mdi',
+                                                            item.category.icon
+                                                                .icon,
+                                                        ]"
+                                                    ></i>
+                                                    <span>{{
+                                                        item.category.name
+                                                    }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button
+                                            @click="
+                                                deleteRelatedProduct(
+                                                    item,
+                                                    index
+                                                )
+                                            "
+                                            class="flex items-center justify-center w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-sm transition-colors"
+                                            title="Remove"
+                                        >
+                                            <i
+                                                class="mdi mdi-delete text-lg"
+                                            ></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -211,14 +420,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import VAdminLayout from "../../Components/VAdminLayout.vue";
-import VSwitch from "../../Components/VSwitch.vue";
-import VInput from "../../Components/VInput.vue";
-import VEditor from "../../Components/VEditor.vue";
+import VSwitch from "@/components/VSwitch.vue";
+import VInput from "@/components/VInput.vue";
+import VEditor from "@/components/VEditor.vue";
+import VSelect from "@/components/VSelect.vue";
 import VAttributes from "../../Components/VAttributes.vue";
 import VTags from "../../Components/VTags.vue";
 import VFileUploader from "../../Components/VFileUploader.vue";
 import VFileViewer from "../../Components/VFileViewer.vue";
-import VSelect from "../../Components/VSelect.vue";
 import VVariant from "../../Components/VVariant.vue";
 
 export default {
@@ -260,9 +469,13 @@ export default {
                 tags: [],
                 images: [],
                 variants: [],
+                children_id: [],
+                children: [],
             },
             current_images: [],
             categories: [],
+            searchTermCategory: "",
+            searchTermProduct: "",
             products: [],
             errors: {},
             disabled: false,
@@ -272,8 +485,11 @@ export default {
     created() {
         this.getCategories();
         this.getCurrencies();
-
         this.loadData(this.$page.props.model);
+    },
+
+    mounted() {
+        this.getProducts();
     },
 
     methods: {
@@ -290,6 +506,16 @@ export default {
             }
         },
 
+        searchCategories(val) {
+            this.searchTermCategory = val;
+            this.getCategories();
+        },
+
+        searchProduct(val) {
+            this.searchTermProduct = val;
+            this.getProducts();
+        },
+
         async getCurrencies() {
             try {
                 const res = await this.$server.get(
@@ -303,7 +529,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
             }
         },
@@ -312,14 +538,20 @@ export default {
         async getCategories() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes.categories
+                    this.$page.props.routes.categories,
+                    {
+                        params: {
+                            name: this.searchTermCategory,
+                            per_page: 20,
+                        },
+                    }
                 );
                 if (res.status === 200) {
                     this.categories = res.data.data;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
             }
         },
@@ -364,6 +596,11 @@ export default {
                 });
             });
 
+            // add related products
+            this.form.children_id.forEach((item) => {
+                payload.append("children_id[]", item);
+            });
+
             try {
                 const res = await this.$server.post(
                     this.$page.props.routes.store,
@@ -375,7 +612,7 @@ export default {
 
                 // Redirect after creation product
                 if (res.status == 201) {
-                     $notify.success(
+                    $notify.success(
                         __("New product has been created successfully.")
                     );
 
@@ -384,7 +621,8 @@ export default {
 
                 if (res.status == 200) {
                     this.loadData(res.data.data);
-                     $notify.success(
+                    this.getProducts();
+                    $notify.success(
                         __("New product has been updated successfully.")
                     );
                 }
@@ -394,10 +632,76 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
             } finally {
                 this.disabled = false;
+            }
+        },
+
+        async getProducts() {
+            const except_ids = await this.form.children.map((item) => item.id);
+            try {
+                const res = await this.$server.get(
+                    this.$page.props.routes["products"],
+                    {
+                        params: {
+                            name: this.searchTermProduct,
+                            per_page: 20,
+                            except_id: except_ids,
+                        },
+                    }
+                );
+
+                if (res.status == 200) {
+                    this.products = res.data.data;
+                }
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    $notify.error(e.response.data.message);
+                }
+                console.log(e);
+            }
+        },
+
+        async deleteRelatedProduct(item, index) {
+            try {
+                const result = await this.$swal({
+                    title: __("Are you sure?"),
+                    text: __(
+                        "This related product will be permanently removed."
+                    ),
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: __("Yes, delete it"),
+                    cancelButtonText: "Cancel",
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                });
+
+                if (result.isConfirmed) {
+                    const res = await $server.delete(item.links.delete);
+
+                    if (res.status === 200) {
+                        this.form.children.splice(index, 1);
+                        this.getProducts();
+                        this.$swal({
+                            title: __("Deleted!"),
+                            text: __(
+                                "The related product has been successfully removed."
+                            ),
+                            icon: __("success"),
+                            timer: 1500,
+                            showConfirmButton: false,
+                        });
+                    }
+                }
+            } catch (e) {
+                this.$swal({
+                    title: "Error",
+                    text: e?.response?.data?.message,
+                    icon: "error",
+                });
             }
         },
     },

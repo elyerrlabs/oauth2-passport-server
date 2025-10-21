@@ -79,9 +79,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Content -->
-            <div class="p-8">
+            <div class="p-2">
                 <!-- Empty State -->
-                <div v-if="modelValue.length === 0" class="text-center py-16">
+                <div v-if="modelValue.length === 0" class="text-center py-4">
                     <div
                         class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner"
                     >
@@ -111,7 +111,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Attributes Grid -->
-                <div v-else class="space-y-6">
+                <div v-else class="space-y-2">
                     <div
                         v-for="(attr, index) in modelValue"
                         :key="index"

@@ -805,7 +805,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
 import VAdminLayout from "../../Components/VAdminLayout.vue";
-import VPaginate from "../../Components/VPaginate.vue";
+import VPaginate from "@/components/VPaginate.vue";
 
 export default {
     components: {
@@ -958,13 +958,6 @@ export default {
         this.getProducts();
     },
 
-    watch: {
-        "search.per_page"(val) {
-            this.search.page = 1;
-            this.getProducts();
-        },
-    },
-
     methods: {
         getStockBadgeClass(stock) {
             if (stock === null || stock === undefined)
@@ -1065,7 +1058,7 @@ export default {
                 this.search.page = data.meta.pagination.current_page;
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
