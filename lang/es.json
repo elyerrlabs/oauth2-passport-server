@@ -2759,5 +2759,13 @@
   "Current stock": "Inventario actual",
   "Add to the parent menu": "Agregar como menu principal",
   "When you assign a parent menu, this item will automatically become a submenu under it.": "Cuando asignes un menú padre, este elemento se convertirá automáticamente en un submenú dentro de él.",
-  "Children": "Hijos"
+  "Children": "Hijos",
+  "Select menu": "Seleccionar categoría",
+  "Add Related Products": "Agregar productos relacionados",
+  "Select one or more products to associate as related items.": "Selecciona uno o más productos para asociarlos como relacionados.",
+  "Selected Related Products": "Productos relacionados seleccionados",
+  "This related product will be permanently removed.": "Este producto relacionado será eliminado permanentemente.",
+  "Yes, delete it": "Sí, eliminar",
+  "The related product has been successfully removed.": "El producto relacionado se ha eliminado correctamente.",
+  "success": "éxito"
 }
