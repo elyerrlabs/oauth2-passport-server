@@ -26,20 +26,26 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->uuid('parent_id')->nullable()->index();
+        Schema::create('related_products', function (Blueprint $table) {
+            $table->uuid('parent_id')->index();
+            $table->uuid('children_id')->index();
+            $table->primary(['parent_id', 'children_id']);
 
             $table->foreign('parent_id')
                 ->references('id')
                 ->on('products')
                 ->onDelete('RESTRICT');
 
+            $table->foreign('children_id')
+                ->references('id')
+                ->on('products')
+                ->onDelete('RESTRICT');
         });
     }
 
@@ -48,8 +54,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('parent_id');
-        });
+        Schema::dropIfExists('related_products');
     }
 };

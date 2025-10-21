@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Transformer\Admin;
+namespace Core\Ecommerce\Transformer\User;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -20,17 +20,18 @@ namespace Core\Ecommerce\Transformer\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- *
+ * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Transformers\File\FileTransformer;
 use Core\Ecommerce\Model\Product;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
-use Core\Ecommerce\Transformer\Admin\CategoryTransformer;
+use Core\Ecommerce\Transformer\User\UserFileTransformer;
+use Core\Ecommerce\Transformer\User\UserCategoryTransformer;
+use Core\Ecommerce\Transformer\User\UserProductTagTransformer;
 
-class ProductTransformer extends TransformerAbstract
+class UserProductChildrenTransformer extends TransformerAbstract
 {
     use Asset;
 
@@ -59,6 +60,7 @@ class ProductTransformer extends TransformerAbstract
      */
     public function transform(Product $product)
     {
+
         $variant = count($product->variants) ? $product->variants[0] : null;
 
         return [
@@ -72,21 +74,24 @@ class ProductTransformer extends TransformerAbstract
             'format_price' => !empty($variant) ? $this->formatMoney($variant->price->amount) : 0,
             'currency' => !empty($variant) ? $variant->price->currency : '',
             'symbol' => !empty($variant) ? getCurrencySymbol($variant->price->currency) : '',
+            'category' => fractal($product->category, UserCategoryTransformer::class)->toArray()['data'] ?? [],
+            'images' => fractal($product->files, UserFileTransformer::class)->toArray()['data'] ?? [],
+            'tags' => fractal($product->tags, new UserProductTagTransformer($product))->toArray()['data'] ?? [],
+            //'attributes' => $product->getAttrCollection($product->attributes, UserProductAttributeTransformer::class),
+            'variants' => fractal($product->variants, VariantTransformer::class)->toArray()['data'] ?? [],
             'short_description' => $product->short_description,
             'description' => $product->description,
             'specification' => $product->specification,
-            'category' => fractal($product->category, CategoryTransformer::class)->toArray()['data'],
-            'images' => fractal($product->files, FileTransformer::class)->toArray()['data'] ?? [],
-            'tags' => fractal($product->tags, new ProductTagTransformer($product))->toArray()['data'] ?? [],
-            'attributes' => fractal($product->attributes, new ProductAttributeTransformer($product))->toArray()['data'] ?? [],
-            'variants' => fractal($product->variants, VariantTransformer::class)->toArray()['data'],
-            'children' => fractal($product->children, new ProductChildrenTransformer($product))->toArray()['data'] ?? [],
             'links' => [
-                'index' => route('ecommerce.admin.products.index'),
-                'store' => route('ecommerce.admin.products.store'),
-                'edit' => route('ecommerce.admin.products.edit', ['product' => $product->id]),
-                'destroy' => route('ecommerce.admin.products.destroy', ['product' => $product->id]),
-            ]
+                'show' => route('ecommerce.products.show', [
+                    'category' => $product->category->slug,
+                    'product' => $product->slug
+                ]),
+                'show_api' => route('api.ecommerce.products.show', [
+                    'category' => $product->category->slug,
+                    'product' => $product->slug
+                ]),
+            ],
         ];
     }
 

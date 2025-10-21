@@ -96,8 +96,13 @@ final class ProductRepository implements Contracts
             'tags',
             'attributes',
             'variants',
-            'variants.price'
+            'variants.price',
+            'children'
         ]);
+
+        if ($request->filled('except_id')) {
+            $query->whereNotIn('id', $request->except_id);
+        }
 
         if ($request->filled('category')) {
             $query->whereHas(
@@ -153,7 +158,14 @@ final class ProductRepository implements Contracts
 
         $query = $this->model->query();
 
-        $query->with('files', 'tags', 'attributes', 'variants', 'variants.price');
+        $query->with(
+            'files',
+            'tags',
+            'attributes',
+            'variants',
+            'variants.price',
+            'children'
+        );
 
         $query->where('published', true);
 
@@ -287,11 +299,11 @@ final class ProductRepository implements Contracts
                 'variants.price'
             ]
         )->whereHas(
-            'category',
-            function ($query) use ($category) {
-                $query->where('slug', $category);
-            }
-        )->where('slug', $product)->firstOrFail();
+                'category',
+                function ($query) use ($category) {
+                    $query->where('slug', $category);
+                }
+            )->where('slug', $product)->firstOrFail();
     }
 
     /**
@@ -310,11 +322,29 @@ final class ProductRepository implements Contracts
             $this->createImage($model, $data);
             $this->createAttributes($model, $data);
             $this->createTags($model, $data);
-
+            $this->addChildren($model, $data);
             return $model;
         });
 
         return $this->find($model->id);
+    }
+
+    /**
+     * Add children to the product
+     * @param \Core\Ecommerce\Model\Product $product
+     * @param array $data
+     * @return void
+     */
+    public function addChildren(product $product, array $data)
+    {
+        if (!empty($data['children_id'])) {
+            try {
+                $product->children()->syncWithoutDetaching($data['children_id']);
+
+            } catch (\Throwable $th) {
+                Log::error($th->getMessage(), $th->getTrace());
+            }
+        }
     }
 
     /**
@@ -525,7 +555,7 @@ final class ProductRepository implements Contracts
             $this->createImage($model, $data);
             $this->createAttributes($model, $data);
             $this->createTags($model, $data);
-
+            $this->addChildren($model, $data);
             return $model;
         });
 
@@ -608,5 +638,19 @@ final class ProductRepository implements Contracts
         $variant->delete();
 
         return $variant;
+    }
+
+    /**
+     * Delete the child product from the product parent
+     * @param string $product_id
+     * @param string $children_id
+     * @return Product|null
+     */
+    public function deleteProductRelated(string $product_id, string $children_id)
+    {
+        $parent = $this->find($product_id);
+        $parent->children()->detach($children_id);
+
+        return $parent;
     }
 }

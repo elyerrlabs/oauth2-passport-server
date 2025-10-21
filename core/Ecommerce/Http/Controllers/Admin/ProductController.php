@@ -40,12 +40,6 @@ final class ProductController extends WebController
     private $repository;
 
     /**
-     * Category
-     * @var
-     */
-    private $repositoryCategory;
-
-    /**
      * Summary of __construct
      * @param  ProductRepository $productRepository
      */
@@ -153,7 +147,8 @@ final class ProductController extends WebController
             'featured' => $request->input('featured'),
             'attributes' => $request->input('attributes') ?? [],
             'tags' => $request->input('tags') ?? [],
-            'variants' => $request->input('variants', [])
+            'variants' => $request->input('variants', []),
+            'children_id' => $request->input('children_id', [])
         ];
 
         if (!empty($request->filled('id')) && $this->repository->find($request->id)) {

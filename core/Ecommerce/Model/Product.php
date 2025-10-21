@@ -84,23 +84,32 @@ class Product extends Master
         $this->attributes['featured'] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
     }
 
-
     /**
-     * Has children
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product, Product>
-     */
-    public function children()
-    {
-        return $this->hasMany(Product::class, 'parent_id');
-    }
-
-    /**
-     * Parent 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Product, Product>
+     * Parent
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Product, Product, \Illuminate\Database\Eloquent\Relations\Pivot>
      */
     public function parent()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsToMany(
+            static::class,
+            'related_products',
+            'children_id',
+            'parent_id'
+        );
+    }
+
+    /**
+     * Has children
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Product, Product, \Illuminate\Database\Eloquent\Relations\Pivot>
+     */
+    public function children()
+    {
+        return $this->belongsToMany(
+            static::class,
+            'related_products',
+            'parent_id',
+            'children_id'
+        );
     }
 
     /**
@@ -132,16 +141,6 @@ class Product extends Master
     }
 
     /**
-     * Retrieve the all images
-     * @param \Illuminate\Database\Eloquent\Collection $collection
-     * @param mixed $transformer
-     */
-    public function getImages(Collection $collection, $transformer = FileTransformer::class)
-    {
-        return fractal($collection, $transformer)->toArray()['data'] ?? [];
-    }
-
-    /**
      * Attributes
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany<Attribute, Product>
      */
@@ -158,34 +157,6 @@ class Product extends Master
     {
         return $this->morphToMany(Tag::class, 'taggable');
     }
-
-
-    /**
-     * Retrieve the tags
-     * @param \Illuminate\Database\Eloquent\Collection $collection
-     * @param mixed $transformer
-     */
-    public function getTags(Collection $collection, $transformer = ProductTagTransformer::class)
-    {
-        return fractal(
-            $collection,
-            new $transformer($this)
-        )->toArray()['data'] ?? [];
-    }
-
-
-    /**
-     * Retrieve the tags
-     * @param \Illuminate\Database\Eloquent\Collection $collection
-     */
-    public function getAttr(Collection $collection, $transformer = ProductAttributeTransformer::class)
-    {
-        return fractal(
-            $collection,
-            new $transformer($this)
-        )->toArray()['data'] ?? [];
-    }
-
 
     public function getAttrCollection(Collection $collection, $transformer = ProductAttributeTransformer::class)
     {

@@ -30,9 +30,16 @@ use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 use Core\Ecommerce\Transformer\Admin\CategoryTransformer;
 
-class ProductTransformer extends TransformerAbstract
+class ProductChildrenTransformer extends TransformerAbstract
 {
     use Asset;
+
+    private $parent;
+
+    public function __construct(Product $product)
+    {
+        $this->parent = $product;
+    }
 
     /**
      * List of resources to automatically include
@@ -75,17 +82,16 @@ class ProductTransformer extends TransformerAbstract
             'short_description' => $product->short_description,
             'description' => $product->description,
             'specification' => $product->specification,
-            'category' => fractal($product->category, CategoryTransformer::class)->toArray()['data'],
+            'category' => fractal($product->category, CategoryTransformer::class)->toArray()['data'] ?? [],
             'images' => fractal($product->files, FileTransformer::class)->toArray()['data'] ?? [],
             'tags' => fractal($product->tags, new ProductTagTransformer($product))->toArray()['data'] ?? [],
             'attributes' => fractal($product->attributes, new ProductAttributeTransformer($product))->toArray()['data'] ?? [],
-            'variants' => fractal($product->variants, VariantTransformer::class)->toArray()['data'],
-            'children' => fractal($product->children, new ProductChildrenTransformer($product))->toArray()['data'] ?? [],
+            'variants' => fractal($product->variants, VariantTransformer::class)->toArray()['data'] ?? [],
             'links' => [
-                'index' => route('ecommerce.admin.products.index'),
-                'store' => route('ecommerce.admin.products.store'),
-                'edit' => route('ecommerce.admin.products.edit', ['product' => $product->id]),
-                'destroy' => route('ecommerce.admin.products.destroy', ['product' => $product->id]),
+                'delete' => route('ecommerce.admin.products.children.destroy', [
+                    'product' => $this->parent->id,
+                    'child' => $product->id,
+                ])
             ]
         ];
     }

@@ -23,6 +23,7 @@
  */
 
 use Core\Ecommerce\Http\Controllers\Admin\CustomerController;
+use Core\Ecommerce\Http\Controllers\Admin\ProductChildrenController;
 use Core\Ecommerce\Http\Controllers\Admin\OrderController;
 use Core\Ecommerce\Http\Controllers\Admin\ProductController;
 use Core\Ecommerce\Http\Controllers\Admin\CategoryController;
@@ -40,6 +41,7 @@ Route::middleware(['throttle:ecommerce:admin'])->group(function () {
     Route::resource('products.tags', ProductTagController::class)->only('destroy');
     Route::resource('products.attributes', ProductAttributeController::class)->only('destroy');
     Route::resource('products.variants', ProductVariantController::class)->only('destroy');
+    Route::resource('products.children', ProductChildrenController::class)->only('destroy');
 
     Route::get('orders', [OrderController::class, 'complete'])->name('orders.complete');
     Route::get('orders/pending', [OrderController::class, 'pending'])->name('orders.pending');
