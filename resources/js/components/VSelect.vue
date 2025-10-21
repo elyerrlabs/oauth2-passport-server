@@ -6,9 +6,9 @@
             class="block text-sm font-medium text-gray-700 mb-1"
         >
             {{ label }} <span v-if="required" class="text-red-500">*</span>
-            <small v-if="description" class="block text-blue-700">{{
-                description
-            }}</small>
+            <small v-if="description" class="block text-blue-700">
+                {{ description }}
+            </small>
         </label>
 
         <!-- Select container -->
@@ -25,16 +25,40 @@
                     <template v-if="$slots.selected">
                         <slot
                             name="selected"
-                            :option="selectedOption"
-                            :placeholder="__(placeholder)"
+                            :option="selectedOptions"
+                            :placeholder="placeholder"
                         />
                     </template>
                     <template v-else>
-                        {{
-                            selectedOption
-                                ? selectedOption[labelKey]
-                                : __(placeholder)
-                        }}
+                        <template v-if="multiple">
+                            <span
+                                v-if="selectedOptions.length"
+                                class="flex flex-wrap gap-1"
+                            >
+                                <span
+                                    v-for="(opt, i) in selectedOptions"
+                                    :key="i"
+                                    class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs flex items-center space-x-1"
+                                >
+                                    <span>{{ opt[labelKey] }}</span>
+                                    <i
+                                        class="mdi mdi-close cursor-pointer text-[10px]"
+                                        @click.stop="selectOptions(opt)"
+                                    ></i>
+                                </span>
+                            </span>
+                            <span v-else class="text-gray-400">{{
+                                __(placeholder)
+                            }}</span>
+                        </template>
+
+                        <template v-else>
+                            {{
+                                selectedOptions[0]
+                                    ? selectedOptions[0][labelKey]
+                                    : __(placeholder)
+                            }}
+                        </template>
                     </template>
                 </span>
 
@@ -84,9 +108,9 @@
                         @click="clearSelection"
                         class="flex items-center justify-between px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-50 border-b border-gray-100"
                     >
-                        <span class="truncate italic">{{
-                            __("Sin seleccionar")
-                        }}</span>
+                        <span class="truncate italic">
+                            {{ __("Not selected") }}
+                        </span>
                         <i class="mdi mdi-close text-sm"></i>
                     </div>
 
@@ -182,7 +206,10 @@ export default {
     components: { VError },
 
     props: {
-        modelValue: [String, Number, Object, null],
+        modelValue: {
+            type: [String, Number, Object, Array, null],
+            default: null,
+        },
         options: {
             type: Array,
             default: () => [],
@@ -212,26 +239,38 @@ export default {
         returnObject: Boolean,
         panelClass: String,
         description: String,
+        multiple: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     emits: ["update:modelValue", "change", "search"],
 
     data() {
         return {
-            internalValue: null,
+            internalValue: this.multiple ? [] : null,
             isOpen: false,
             searchQuery: "",
         };
     },
 
     computed: {
-        selectedOption() {
-            if (!this.internalValue || !this.options?.length) return null;
-            return (
-                this.options.find(
-                    (opt) => opt[this.valueKey] === this.internalValue
-                ) || null
+        selectedOptions() {
+            if (!this.options?.length) return [];
+
+            if (this.multiple == true) {
+                return this.options.filter(
+                    (opt) =>
+                        Array.isArray(this.internalValue) &&
+                        this.internalValue.includes(opt[this.valueKey])
+                );
+            }
+
+            const selected = this.options.find(
+                (opt) => opt[this.valueKey] === this.internalValue
             );
+            return selected ? selected : {};
         },
 
         filteredOptions() {
@@ -243,14 +282,20 @@ export default {
                     .includes(query)
             );
         },
+
+        hasSelection() {
+            return this.multiple
+                ? this.internalValue.length > 0
+                : !!this.internalValue;
+        },
     },
 
     watch: {
         modelValue: {
             immediate: true,
             handler(newVal) {
-                if (this.returnObject && newVal && typeof newVal === "object") {
-                    this.internalValue = newVal[this.valueKey];
+                if (this.multiple) {
+                    this.internalValue = Array.isArray(newVal) ? newVal : [];
                 } else {
                     this.internalValue = newVal ?? null;
                 }
@@ -269,12 +314,6 @@ export default {
     },
 
     methods: {
-        clearSelection() {
-            this.internalValue = '';
-            this.$emit("update:modelValue", '');
-            this.$emit("change", '');
-            this.isOpen = false;
-        },
         toggleDropdown() {
             this.isOpen = !this.isOpen;
             if (this.isOpen)
@@ -283,20 +322,34 @@ export default {
 
         selectOption(option) {
             const value = option[this.valueKey];
-            this.internalValue = value;
 
-            const emitted = this.returnObject ? option : value;
-            this.$emit("update:modelValue", emitted);
-            this.$emit("change", emitted);
+            if (this.multiple) {
+                const exists = this.internalValue.includes(value);
 
-            this.isOpen = false;
+                if (exists) {
+                    this.internalValue = this.internalValue.filter(
+                        (id) => id !== value
+                    );
+                } else {
+                    this.internalValue = [...this.internalValue, value];
+                }
+
+                this.$emit("update:modelValue", [...this.internalValue]);
+                this.$emit("change", [...this.internalValue]);
+            } else {
+                this.internalValue = value;
+                this.$emit("update:modelValue", value);
+                this.$emit("change", value);
+                this.isOpen = false;
+            }
+
             this.searchQuery = "";
         },
 
         clearSelection() {
-            this.internalValue = null;
-            this.$emit("update:modelValue", null);
-            this.$emit("change", null);
+            this.internalValue = this.multiple ? [] : null;
+            this.$emit("update:modelValue", this.multiple ? [] : null);
+            this.$emit("change", this.multiple ? [] : null);
             this.isOpen = false;
         },
 
@@ -305,7 +358,10 @@ export default {
         },
 
         isSelected(option) {
-            return option[this.valueKey] === this.internalValue;
+            const value = option[this.valueKey];
+            return this.multiple
+                ? this.internalValue.includes(value)
+                : value === this.internalValue;
         },
 
         onSearch() {
