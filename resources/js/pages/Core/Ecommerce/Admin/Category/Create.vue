@@ -334,10 +334,12 @@ export default {
         },
 
         async getCategories() {
+            const except_id = await this.$page.props.model?.id;
             try {
                 const res = await $server.get(this.$page.props.routes.index, {
                     params: {
                         name: this.category_name,
+                        except_id: except_id,
                         per_page: 30,
                     },
                 });

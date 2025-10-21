@@ -82,6 +82,10 @@ class CategoryRepository implements Contracts, Tag
             'files'
         ]);
 
+        if ($request->filled('except_id')) {
+            $query->where('id', "!=", $request->except_id);
+        }
+
         if ($request->filled('name')) {
             $query->whereRaw(
                 "LOWER(name) LIKE ?",
