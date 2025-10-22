@@ -20,7 +20,7 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import VError from "./VError.vue";
+import VError from "@/components/VError.vue";
 
 const props = defineProps({
     modelValue: [String, Number],

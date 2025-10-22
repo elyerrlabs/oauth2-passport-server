@@ -43,11 +43,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script setup>
 import { ref, watch } from "vue";
-import VError from "./VError.vue";
+import VError from "@/components/VError.vue";
 
 const props = defineProps({
     modelValue: [String, Number],
-    label: { type: String, required: true },
+    label: String,
     type: { type: String, default: "text" },
     placeholder: { type: String, default: null },
     required: { type: Boolean, default: false },

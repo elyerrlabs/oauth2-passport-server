@@ -437,6 +437,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ __("Payment Method") }}
                             </label>
                             <v-payment-method v-model="form.payment_method" />
+
                             <v-error :error="errors.payment_method" />
                         </div>
 
@@ -494,8 +495,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <script>
 import VHeader from "../Components/VHeader.vue";
 import VPaymentMethod from "../Components/VPaymentMethod.vue";
-import VError from "../Components/VError.vue";
-import VDeliveryAddress from "../Components/VDeliveryAddress.vue";
+import VError from "@/components/VError.vue";
+import VDeliveryAddress from "@/components/VDeliveryAddress.vue";
 import VLoader from "../Components/VLoader.vue";
 
 export default {

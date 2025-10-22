@@ -1,552 +1,498 @@
+<!--
+Copyright (c) 2025 Elvis Yerel Roman Concha
+
+This file is part of an open source project licensed under the
+"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+
+You may use, study, modify, and redistribute this file for personal,
+educational, or non-commercial research purposes only.
+
+Commercial use is strictly prohibited without prior written consent
+from the author.
+
+Combining this software with any project licensed for commercial use
+(such as AGPL) is not permitted without explicit authorization.
+
+This software supports OAuth 2.0 and OpenID Connect.
+
+Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+-->
 <template>
-    <div class="address-selector-container">
-        <!-- Select Address Button -->
-        <q-btn
-            color="primary"
-            icon="mdi-map-marker-outline"
-            :label="__('Choose delivery address')"
-            @click="show_dialog = true"
-            class="select-address-btn q-mb-md"
-            unelevated
-            rounded
-        />
+    <div class="w-full">
+        <button
+            @click="showDialog = true"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 shadow hover:bg-blue-700 transition"
+        >
+            <i class="mdi mdi-map-marker-outline"></i>
+            <span>{{ __("Choose delivery address") }}</span>
+        </button>
 
-        <!-- Selected Address Display -->
-        <div v-if="selected" class="selected-address-wrapper">
-            <q-card class="selected-address-card" flat bordered>
-                <div class="row items-center q-pa-md">
-                    <div class="col-grow">
-                        <div
-                            class="text-subtitle2 text-uppercase text-weight-medium selected-label"
-                        >
-                            {{ __("Selected Delivery Address") }}
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <q-btn
-                            flat
-                            round
-                            dense
-                            icon="mdi-pencil"
-                            color="primary"
-                            @click="show_dialog = true"
-                            size="sm"
-                        />
-                    </div>
+        <div v-if="selected" class="mt-4">
+            <div
+                class="bg-white rounded-xl border border-gray-300 shadow-sm hover:shadow-md transition"
+            >
+                <div
+                    class="flex items-center justify-between px-4 py-3 border-b border-b-gray-300"
+                >
+                    <h3 class="text-sm uppercase font-medium text-blue-600">
+                        {{ __("Selected Delivery Address") }}
+                    </h3>
+                    <button
+                        class="text-blue-600 hover:text-blue-800"
+                        @click="showDialog = true"
+                    >
+                        <i class="mdi mdi-pencil"></i>
+                    </button>
                 </div>
 
-                <q-separator />
-
-                <div class="q-pa-md address-details">
-                    <div class="row q-col-gutter-md">
-                        <div
-                            v-if="selected.full_name"
-                            class="col-12 col-md-6 col-lg-4"
-                        >
-                            <div
-                                class="text-caption text-uppercase text-weight-medium detail-label"
-                            >
-                                {{ __("Full name") }}
-                            </div>
-                            <div
-                                class="text-body1 text-weight-medium detail-value"
-                            >
-                                {{ selected.full_name }}
-                            </div>
+                <div
+                    class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm"
+                >
+                    <div v-if="selected.full_name">
+                        <div class="uppercase text-gray-500 text-xs mb-1">
+                            {{ __("Full name") }}
                         </div>
+                        <div class="font-medium">{{ selected.full_name }}</div>
+                    </div>
 
-                        <div
-                            v-if="selected.address || selected.address_line_2"
-                            class="col-12 col-md-6 col-lg-4"
-                        >
-                            <div
-                                class="text-caption text-uppercase text-weight-medium detail-label"
-                            >
-                                {{ __("Address") }}
-                            </div>
-                            <div class="detail-value">
-                                {{ selected.address }}
-                            </div>
-                            <div
-                                v-if="selected.address_line_2"
-                                class="detail-value"
-                            >
-                                {{ selected.address_line_2 }}
-                            </div>
+                    <div v-if="selected.address || selected.address_line_2">
+                        <div class="uppercase text-gray-500 text-xs mb-1">
+                            {{ __("Address") }}
                         </div>
-
-                        <div
-                            v-if="
-                                selected.city ||
-                                selected.state ||
-                                selected.district
-                            "
-                            class="col-12 col-md-6 col-lg-4"
-                        >
-                            <div
-                                class="text-caption text-uppercase text-weight-medium detail-label"
-                            >
-                                {{ __("Location") }}
-                            </div>
-                            <div class="detail-value">
-                                <span v-if="selected.city">
-                                    {{ selected.city }}
-                                </span>
-                                <span v-if="selected.state"
-                                    >, {{ selected.state }}</span
-                                >
-                                <span v-if="selected.district"
-                                    >, {{ selected.district }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div
-                            v-if="selected.country || selected.postal_code"
-                            class="col-12 col-md-6 col-lg-4"
-                        >
-                            <div
-                                class="text-caption text-uppercase text-weight-medium detail-label"
-                            >
-                                {{ __("Country") }} / {{ __("Postal Code") }}
-                            </div>
-                            <div class="detail-value">
-                                <span v-if="selected.country">{{
-                                    selected.country
-                                }}</span>
-                                <span v-if="selected.postal_code">
-                                    - {{ selected.postal_code }}</span
-                                >
-                            </div>
-                        </div>
-
-                        <div
-                            v-if="selected.phone"
-                            class="col-12 col-md-6 col-lg-4"
-                        >
-                            <div
-                                class="text-caption text-uppercase text-weight-medium detail-label"
-                            >
-                                {{ __("Primary phone") }}
-                            </div>
-                            <div class="detail-value">{{ selected.phone }}</div>
-                        </div>
-
-                        <div
-                            v-if="selected.secondary_phone"
-                            class="col-12 col-md-6 col-lg-4"
-                        >
-                            <div
-                                class="text-caption text-uppercase text-weight-medium detail-label"
-                            >
-                                {{ __("Secondary phone") }}
-                            </div>
-                            <div class="detail-value">
-                                {{ selected.secondary_phone }}
-                            </div>
-                        </div>
-
-                        <div
-                            v-if="selected.references"
-                            class="col-12 col-md-6 col-lg-4"
-                        >
-                            <div
-                                class="text-caption text-uppercase text-weight-medium detail-label"
-                            >
-                                {{ __("References") }}
-                            </div>
-                            <div class="detail-value">
-                                {{ selected.references }}
-                            </div>
+                        <div>{{ selected.address }}</div>
+                        <div v-if="selected.address_line_2">
+                            {{ selected.address_line_2 }}
                         </div>
                     </div>
+
+                    <div
+                        v-if="
+                            selected.city || selected.state || selected.district
+                        "
+                    >
+                        <div class="uppercase text-gray-500 text-xs mb-1">
+                            {{ __("Location") }}
+                        </div>
+                        <div>
+                            <span v-if="selected.city">{{
+                                selected.city
+                            }}</span>
+                            <span v-if="selected.state"
+                                >, {{ selected.state }}</span
+                            >
+                            <span v-if="selected.district"
+                                >, {{ selected.district }}</span
+                            >
+                        </div>
+                    </div>
+
+                    <div v-if="selected.country || selected.postal_code">
+                        <div class="uppercase text-gray-500 text-xs mb-1">
+                            {{ __("Country") }} / {{ __("Postal Code") }}
+                        </div>
+                        <div>
+                            <span v-if="selected.country">{{
+                                selected.country
+                            }}</span>
+                            <span v-if="selected.postal_code">
+                                - {{ selected.postal_code }}</span
+                            >
+                        </div>
+                    </div>
+
+                    <div v-if="selected.phone">
+                        <div class="uppercase text-gray-500 text-xs mb-1">
+                            {{ __("Primary phone") }}
+                        </div>
+                        <div>{{ selected.phone }}</div>
+                    </div>
+
+                    <div v-if="selected.secondary_phone">
+                        <div class="uppercase text-gray-500 text-xs mb-1">
+                            {{ __("Secondary phone") }}
+                        </div>
+                        <div>{{ selected.secondary_phone }}</div>
+                    </div>
+
+                    <div v-if="selected.references">
+                        <div class="uppercase text-gray-500 text-xs mb-1">
+                            {{ __("References") }}
+                        </div>
+                        <div>{{ selected.references }}</div>
+                    </div>
                 </div>
-            </q-card>
+            </div>
         </div>
 
-        <!-- Address Selection Dialog -->
-        <q-dialog v-model="show_dialog" persistent maximized>
-            <q-card class="address-dialog">
-                <q-bar class="dialog-header bg-primary text-white">
-                    <div class="text-h6">{{ __("Delivery Addresses") }}</div>
-                    <q-space />
-                    <q-btn dense flat icon="mdi-close" v-close-popup>
-                        <q-tooltip>{{ __("Close") }}</q-tooltip>
-                    </q-btn>
-                </q-bar>
-
-                <q-card-section class="dialog-content q-pt-none">
-                    <div class="row q-col-gutter-lg">
-                        <!-- Add New Address Form -->
-                        <div class="col-12 col-md-6">
-                            <q-card class="form-card" flat bordered>
-                                <q-card-section
-                                    class="form-header bg-primary text-white"
-                                >
-                                    <div class="text-h6">
-                                        {{ __("Add New Address") }}
-                                    </div>
-                                </q-card-section>
-
-                                <q-card-section>
-                                    <div class="column q-gutter-md">
-                                        <q-input
-                                            v-model="form.full_name"
-                                            :label="__('Full Name')"
-                                            filled
-                                            dense
-                                            :error="!!errors.full_name"
-                                            class="custom-input"
-                                        >
-                                            <template v-slot:prepend>
-                                                <q-icon name="mdi-account" />
-                                            </template>
-                                            <template v-slot:error>
-                                                <v-error
-                                                    :error="errors.full_name"
-                                                />
-                                            </template>
-                                        </q-input>
-
-                                        <v-country
-                                            v-model="form.country"
-                                            :errors="errors"
-                                            class="custom-input"
-                                        />
-
-                                        <v-phone
-                                            v-model="form.phone"
-                                            :errors="errors"
-                                        />
-
-                                        <q-input
-                                            v-model="form.state"
-                                            :label="__('State / Province')"
-                                            filled
-                                            dense
-                                            :error="!!errors.state"
-                                            class="custom-input"
-                                        >
-                                            <template v-slot:prepend>
-                                                <q-icon name="mdi-map-marker" />
-                                            </template>
-                                            <template v-slot:error>
-                                                <v-error
-                                                    :error="errors.state"
-                                                />
-                                            </template>
-                                        </q-input>
-
-                                        <q-input
-                                            v-model="form.city"
-                                            :label="__('City')"
-                                            filled
-                                            dense
-                                            :error="!!errors.city"
-                                            class="custom-input"
-                                        >
-                                            <template v-slot:prepend>
-                                                <q-icon name="mdi-city" />
-                                            </template>
-                                            <template v-slot:error>
-                                                <v-error :error="errors.city" />
-                                            </template>
-                                        </q-input>
-
-                                        <q-input
-                                            v-model="form.district"
-                                            :label="__('District')"
-                                            filled
-                                            dense
-                                            :error="!!errors.district"
-                                            class="custom-input"
-                                        >
-                                            <template v-slot:prepend>
-                                                <q-icon name="mdi-home-city" />
-                                            </template>
-                                            <template v-slot:error>
-                                                <v-error
-                                                    :error="errors.district"
-                                                />
-                                            </template>
-                                        </q-input>
-
-                                        <q-input
-                                            v-model="form.address"
-                                            :label="__('Address')"
-                                            filled
-                                            dense
-                                            :error="!!errors.address"
-                                            class="custom-input"
-                                        >
-                                            <template v-slot:prepend>
-                                                <q-icon name="mdi-home" />
-                                            </template>
-                                            <template v-slot:error>
-                                                <v-error
-                                                    :error="errors.address"
-                                                />
-                                            </template>
-                                        </q-input>
-
-                                        <q-input
-                                            v-model="form.address_line_2"
-                                            :label="__('Address Line 2')"
-                                            filled
-                                            dense
-                                            :error="!!errors.address_line_2"
-                                            class="custom-input"
-                                        >
-                                            <template v-slot:prepend>
-                                                <q-icon name="mdi-home-plus" />
-                                            </template>
-                                            <template v-slot:error>
-                                                <v-error
-                                                    :error="
-                                                        errors.address_line_2
-                                                    "
-                                                />
-                                            </template>
-                                        </q-input>
-
-                                        <q-input
-                                            v-model="form.postal_code"
-                                            :label="__('Postal Code')"
-                                            filled
-                                            dense
-                                            :error="!!errors.postal_code"
-                                            class="custom-input"
-                                        >
-                                            <template v-slot:prepend>
-                                                <q-icon name="mdi-post" />
-                                            </template>
-                                            <template v-slot:error>
-                                                <v-error
-                                                    :error="errors.postal_code"
-                                                />
-                                            </template>
-                                        </q-input>
-
-                                        <q-input
-                                            v-model="form.references"
-                                            :label="__('References')"
-                                            type="textarea"
-                                            filled
-                                            dense
-                                            :error="!!errors.references"
-                                            class="custom-input"
-                                        >
-                                            <template v-slot:prepend>
-                                                <q-icon
-                                                    name="mdi-information"
-                                                />
-                                            </template>
-                                            <template v-slot:error>
-                                                <v-error
-                                                    :error="errors.references"
-                                                />
-                                            </template>
-                                        </q-input>
-                                    </div>
-                                </q-card-section>
-
-                                <q-card-actions class="q-px-md q-pb-md">
-                                    <q-btn
-                                        type="submit"
-                                        color="primary"
-                                        :label="
-                                            form.id
-                                                ? __('Update Address')
-                                                : __('Save Address')
-                                        "
-                                        @click="saveAddress"
-                                        class="full-width save-btn"
-                                        unelevated
-                                    />
-                                </q-card-actions>
-                            </q-card>
+        <v-modal
+            v-model="showDialog"
+            panel-class="w-full xl:w-7xl"
+            :title="__('Delivery Addresses')"
+        >
+            <template #body>
+                <div class="p-1 grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div class="bg-white rounded-xl shadow-sm">
+                        <div
+                            class="bg-blue-600 text-white px-4 py-3 rounded-t-xl"
+                        >
+                            <h4 class="text-base">
+                                {{ __("Add New Address") }}
+                            </h4>
                         </div>
+                        <div class="p-4 space-y-4">
+                            <div>
+                                <v-input
+                                    v-model="form.full_name"
+                                    :error="errors.full_name"
+                                    :label="__('Full Name')"
+                                    :placeholder="__('John Doe')"
+                                />
+                            </div>
 
-                        <!-- Existing Addresses List -->
-                        <div class="col-12 col-md-6">
-                            <q-card class="address-list-card" flat bordered>
-                                <q-card-section
-                                    class="list-header bg-primary text-white"
+                            <div>
+                                <v-select
+                                    :label="__('Country')"
+                                    v-model="form.country"
+                                    :error="errors.country"
+                                    :options="countries"
+                                    :required="true"
+                                    label-key="name_en"
+                                    value-key="name_en"
+                                    searchable
                                 >
-                                    <div class="text-h6">
-                                        {{ __("Your Addresses") }}
+                                    <template #selected="{ option }">
+                                        <span v-if="option">
+                                            {{ option.emoji }} -
+                                            {{ option.name_en }}
+                                        </span>
+                                        <span v-else>
+                                            {{ __("Select country") }}</span
+                                        >
+                                    </template>
+
+                                    <template #option="{ option }">
+                                        <span class="text-gray-700 p-4">
+                                            {{ option.emoji }} -
+                                            {{ option.name_en }}
+                                        </span>
+                                    </template>
+                                </v-select>
+                            </div>
+
+                            <div>
+                                <v-input
+                                    v-model="form.state"
+                                    :error="errors.state"
+                                    :label="__('State')"
+                                    :placeholder="__('Enter your state')"
+                                />
+                            </div>
+                            <div>
+                                <v-input
+                                    v-model="form.city"
+                                    :error="errors.city"
+                                    :label="__('City')"
+                                    :required="true"
+                                    :placeholder="__('Enter your city')"
+                                />
+                            </div>
+
+                            <div>
+                                <v-input
+                                    v-model="form.zip"
+                                    :error="errors.zip"
+                                    :label="__('Zip Code')"
+                                    :placeholder="__('Enter your zip code')"
+                                />
+                            </div>
+
+                            <div>
+                                <v-input
+                                    v-model="form.district"
+                                    :error="errors.district"
+                                    :label="__('District')"
+                                    :required="true"
+                                    :placeholder="__('Enter your district')"
+                                />
+                            </div>
+
+                            <div>
+                                <v-input
+                                    v-model="form.address"
+                                    :error="errors.address"
+                                    :label="__('Address')"
+                                    :required="true"
+                                    :placeholder="__('Enter your address')"
+                                />
+                            </div>
+
+                            <div>
+                                <v-input
+                                    v-model="form.address_line_2"
+                                    :error="errors.address_line_2"
+                                    :label="__('Address line 2')"
+                                    :placeholder="
+                                        __('Apt, suite, etc (optional)')
+                                    "
+                                />
+                            </div>
+
+                            <div>
+                                <v-input
+                                    v-model="form.postal_code"
+                                    :error="errors.postal_code"
+                                    :label="__('Postal Code')"
+                                    :placeholder="__('Enter your postal code')"
+                                />
+                            </div>
+
+                            <div>
+                                <span class="text-gray-700">
+                                    {{ __("Primary phone") }}
+                                    <i class="text-red-500">*</i>
+                                </span>
+                                <div class="flex gap-2">
+                                    <div class="w-60">
+                                        <v-select
+                                            v-model="primary_phone.dial_code"
+                                            :options="countries"
+                                            :required="true"
+                                            label-key="name_en"
+                                            value-key="dial_code"
+                                            searchable
+                                        >
+                                            <template #selected="{ option }">
+                                                <span v-if="option">
+                                                    {{ option.emoji }}
+                                                    {{ option.dial_code }}
+                                                </span>
+                                                <span v-else>
+                                                    {{
+                                                        __("Select code")
+                                                    }}</span
+                                                >
+                                            </template>
+
+                                            <template #option="{ option }">
+                                                <span class="text-gray-700 p-4">
+                                                    {{ option.emoji }} -
+                                                    {{ option.name_en }}
+                                                </span>
+                                            </template>
+                                        </v-select>
                                     </div>
-                                </q-card-section>
+                                    <div class="flex-1">
+                                        <v-input
+                                            v-model="primary_phone.number"
+                                            :required="true"
+                                        />
+                                    </div>
+                                </div>
+                                <v-error :error="errors.phone" />
+                            </div>
 
-                                <q-card-section class="q-pa-none">
-                                    <q-scroll-area class="address-scroll-area">
-                                        <q-list class="address-list" separator>
-                                            <q-item
-                                                v-for="address in addresses"
-                                                :key="address.id"
-                                                class="address-item q-pa-md"
-                                                :class="{
-                                                    'selected-address-item':
-                                                        selected?.id ===
-                                                        address.id,
-                                                }"
-                                            >
-                                                <q-item-section>
-                                                    <div
-                                                        class="row items-center"
-                                                    >
-                                                        <q-icon
-                                                            name="mdi-map-marker"
-                                                            size="20px"
-                                                            class="q-mr-sm text-primary"
-                                                            v-if="
-                                                                selected?.id ===
-                                                                address.id
-                                                            "
-                                                        />
-                                                        <div
-                                                            class="text-body1 text-weight-medium"
-                                                        >
-                                                            {{
-                                                                address.full_name
-                                                            }}
-                                                            -
-                                                            {{
-                                                                address.country
-                                                            }}
-                                                            -
-                                                            {{ address.city }} -
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        class="text-caption text-grey-7 q-mt-xs"
-                                                    >
-                                                        {{ address.address }}
-                                                        <span
-                                                            v-if="
-                                                                address.address_line_2
-                                                            "
-                                                            >,
-                                                            {{
-                                                                address.address_line_2
-                                                            }}</span
-                                                        >
-                                                    </div>
+                            <div>
+                                <span class="text-gray-700">
+                                    {{ __("Secondary phone") }}
+                                </span>
+                                <div class="flex gap-2">
+                                    <div class="w-60">
+                                        <v-select
+                                            v-model="secondary_phone.dial_code"
+                                            :options="countries"
+                                            label-key="name_en"
+                                            value-key="dial_code"
+                                            searchable
+                                        >
+                                            <template #selected="{ option }">
+                                                <span v-if="option">
+                                                    {{ option.emoji }}
+                                                    {{ option.dial_code }}
+                                                </span>
+                                                <span v-else>
+                                                    {{
+                                                        __("Select code")
+                                                    }}</span
+                                                >
+                                            </template>
 
-                                                    <div
-                                                        class="row items-center q-mt-xs"
-                                                    >
-                                                        <q-icon
-                                                            name="mdi-phone"
-                                                            size="16px"
-                                                            class="q-mr-xs text-grey-7"
-                                                        />
-                                                        <span
-                                                            class="text-caption"
-                                                            >{{
-                                                                address.phone
-                                                            }}</span
-                                                        >
-                                                    </div>
-                                                </q-item-section>
+                                            <template #option="{ option }">
+                                                <span class="text-gray-700 p-4">
+                                                    {{ option.emoji }} -
+                                                    {{ option.name_en }}
+                                                </span>
+                                            </template>
+                                        </v-select>
+                                    </div>
+                                    <div class="flex-1">
+                                        <v-input
+                                            v-model="secondary_phone.number"
+                                        />
+                                    </div>
+                                </div>
+                                <v-error :error="errors.secondary_phone" />
+                            </div>
 
-                                                <q-item-section side top>
-                                                    <div
-                                                        class="column q-gutter-xs"
-                                                    >
-                                                        <q-btn
-                                                            dense
-                                                            flat
-                                                            color="primary"
-                                                            icon="mdi-check"
-                                                            :label="
-                                                                selected?.id ===
-                                                                address.id
-                                                                    ? __(
-                                                                          'Selected'
-                                                                      )
-                                                                    : __(
-                                                                          'Select'
-                                                                      )
-                                                            "
-                                                            @click="
-                                                                selectAddress(
-                                                                    address
-                                                                )
-                                                            "
-                                                            class="action-btn"
-                                                            size="sm"
-                                                        />
-
-                                                        <q-btn
-                                                            dense
-                                                            flat
-                                                            color="secondary"
-                                                            icon="mdi-pencil"
-                                                            :label="__('Edit')"
-                                                            @click="
-                                                                edit(address)
-                                                            "
-                                                            class="action-btn"
-                                                            size="sm"
-                                                        />
-
-                                                        <q-btn
-                                                            dense
-                                                            flat
-                                                            color="negative"
-                                                            icon="mdi-delete"
-                                                            :label="
-                                                                __('Remove')
-                                                            "
-                                                            @click="
-                                                                destroy(address)
-                                                            "
-                                                            class="action-btn"
-                                                            size="sm"
-                                                        />
-                                                    </div>
-                                                </q-item-section>
-                                            </q-item>
-                                        </q-list>
-                                    </q-scroll-area>
-                                </q-card-section>
-                            </q-card>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700"
+                                >
+                                    {{ __("References") }}
+                                </label>
+                                <textarea
+                                    v-model="form.references"
+                                    :error="errors.references"
+                                    type="text"
+                                    class="mt-1 py-2 px-3 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                ></textarea>
+                            </div>
+                        </div>
+                        <div class="px-4 py-3">
+                            <button
+                                @click="saveAddress"
+                                class="w-full bg-blue-600 cursor-pointer hover:bg-blue-700 text-white py-3 rounded-lg"
+                            >
+                                {{
+                                    form.id
+                                        ? __("Update Address")
+                                        : __("Save Address")
+                                }}
+                            </button>
                         </div>
                     </div>
-                </q-card-section>
 
-                <q-card-actions align="right" class="dialog-actions q-pa-md">
-                    <q-btn
-                        flat
-                        :label="__('Close')"
-                        color="grey"
-                        v-close-popup
-                        class="close-btn"
-                    />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
+                    <div class="bg-white rounded-xl shadow-sm">
+                        <div
+                            class="bg-blue-600 text-white px-4 py-3 rounded-t-xl"
+                        >
+                            <h4 class="text-base">
+                                {{ __("Your Addresses") }}
+                            </h4>
+                        </div>
+                        <div class="p-4 max-h-[60vh] overflow-y-auto divide-y">
+                            <div
+                                v-for="address in addresses"
+                                :key="address.id"
+                                class="py-3 flex justify-between items-start"
+                                :class="{
+                                    'bg-blue-50 border-l-4 border-blue-600':
+                                        selected?.id === address.id,
+                                }"
+                            >
+                                <div>
+                                    <div class="font-medium">
+                                        {{ address.full_name }}
+                                        -
+                                        {{ address.country }} -
+                                        {{ address.city }}
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        {{ address.address }}
+                                        <span v-if="address.address_line_2"
+                                            >,
+                                            {{ address.address_line_2 }}</span
+                                        >
+                                    </div>
+                                    <div
+                                        class="flex items-center text-sm text-gray-600 mt-1"
+                                    >
+                                        <i class="mdi mdi-phone mr-1"></i>
+                                        {{ address.phone }}
+                                    </div>
+                                </div>
+                                <div class="flex flex-col space-y-1">
+                                    <button
+                                        class="text-blue-600 hover:underline text-sm"
+                                        @click="selectAddress(address)"
+                                    >
+                                        {{
+                                            selected?.id === address.id
+                                                ? __("Selected")
+                                                : __("Select")
+                                        }}
+                                    </button>
+                                    <button
+                                        class="text-gray-600 hover:underline text-sm"
+                                        @click="edit(address)"
+                                    >
+                                        {{ __("Edit") }}
+                                    </button>
+                                    <button
+                                        class="text-red-600 hover:underline text-sm"
+                                        @click="destroy(address)"
+                                    >
+                                        {{ __("Remove") }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="flex justify-end px-6 py-4">
+                    <button
+                        class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100"
+                        @click="showDialog = false"
+                    >
+                        {{ __("Close") }}
+                    </button>
+                </div>
+            </template>
+        </v-modal>
     </div>
 </template>
 
 <script>
+import VCountry from "@/components/VCountry.vue";
+import VPhone from "@/components/VPhone.vue";
+import VInput from "@/components/VInput.vue";
+import VModal from "@/components/VModal.vue";
+import VSelect from "@/components/VSelect.vue";
+import VError from "@/components/VError.vue";
+
 export default {
-    emits: ["selected"],
+    components: {
+        VCountry,
+        VPhone,
+        VInput,
+        VModal,
+        VSelect,
+        VError,
+    },
 
     data() {
         return {
-            show_dialog: false,
+            showDialog: false,
             addresses: [],
-            form: {},
-            errors: {},
             selected: null,
+            errors: {},
+            countries: [],
+            primary_phone: {},
+            secondary_phone: {},
+            form: {
+                id: "",
+                full_name: "",
+                country: "",
+                state: "",
+                city: "",
+                district: "",
+                address: "",
+                address_line_2: "",
+                postal_code: "",
+                phone: "",
+                secondary_phone: "",
+                references: "",
+            },
         };
     },
 
     created() {
         this.open();
         this.getAddresses();
+        this.getCountries();
     },
 
     methods: {
@@ -565,66 +511,107 @@ export default {
                 secondary_phone: "",
                 references: "",
             };
+            this.primary_phone = {};
+            this.secondary_phone = {};
             this.errors = {};
         },
 
         selectAddress(item) {
-            this.$q.notify({
-                message: __(
-                    "Delivery address has been selected successfully"
-                ),
-                color: "positive",
-                position: "top-right",
-                icon: "mdi-check-circle",
+            this.$swal.fire({
+                icon: "success",
+                title: __("Success"),
+                text: __("Delivery address has been selected successfully"),
             });
             this.selected = item;
-            this.show_dialog = false;
+            this.showDialog = false;
+            this.open();
             this.$emit("selected", this.selected.id);
         },
 
         edit(item) {
             this.form = { ...item };
+
+            // Primary phone
+            if (item.phone) {
+                const [dial_code, ...numberParts] = item.phone.split(" ");
+                this.primary_phone = {
+                    dial_code: dial_code || "",
+                    number: numberParts.join(" ") || "",
+                };
+            } else {
+                this.primary_phone = { dial_code: "", number: "" };
+            }
+
+            // Secondary phone
+            if (item.secondary_phone) {
+                const [dial_code, ...numberParts] =
+                    item.secondary_phone.split(" ");
+                this.secondary_phone = {
+                    dial_code: dial_code || "",
+                    number: numberParts.join(" ") || "",
+                };
+            } else {
+                this.secondary_phone = { dial_code: "", number: "" };
+            }
+
+            this.errors = {};
         },
 
         async destroy(item) {
-            try {
-                this.$q
-                    .dialog({
-                        title: __("Confirm Removal"),
-                        message: __(
-                            "Are you sure you want to remove this address?"
-                        ),
-                        cancel: true,
-                        persistent: true,
-                    })
-                    .onOk(async () => {
-                        const res = await this.$server.delete(
-                            item.links.delete
-                        );
-                        if (res.status == 200) {
-                            this.getAddresses();
-                            this.$q.notify({
-                                message: __(
-                                    "Address removed successfully"
-                                ),
-                                color: "positive",
-                                position: "top-right",
-                                icon: "mdi-check-circle",
-                            });
+            const confirm = await this.$swal.fire({
+                title: __("Confirm Removal"),
+                text: __("Are you sure you want to remove this address?"),
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                showCancelButton: true,
+                confirmButtonText: __("Yes, remove it!"),
+                cancelButtonText: __("Cancel"),
+            });
 
-                            // If the removed address was selected, clear selection
-                            if (this.selected?.id === item.id) {
-                                this.selected = null;
-                            }
+            if (confirm) {
+                try {
+                    const res = await this.$server.delete(item.links.delete);
+                    if (res.status == 200) {
+                        this.getAddresses();
+                        this.$swal.fire({
+                            icon: "success",
+                            title: __("Success"),
+                            text: __("Delivery address removed successfully"),
+                        });
+
+                        // If the removed address was selected, clear selection
+                        if (this.selected?.id === item.id) {
+                            this.selected = null;
                         }
-                    });
+                    }
+                } catch (e) {
+                    if (e?.response?.data?.message) {
+                        this.$swal.fire({
+                            icon: "error",
+                            title: __("Error"),
+                            text: __("Delivery address removal failed"),
+                        });
+                    }
+                }
+            }
+        },
+
+        async getCountries() {
+            try {
+                const res = await this.$server.get("/api/public/countries", {
+                    params: {
+                        order_by: "name_en",
+                        order_type: "asc",
+                    },
+                });
+                if (res.status === 200) {
+                    this.countries = res.data;
+                    this.dial_codes = res.data;
+                }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             }
         },
@@ -645,16 +632,26 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
+                    this.$swal.fire({
+                        icon: "error",
+                        title: __("Error"),
+                        text: e.response.data.message,
                     });
                 }
             }
         },
 
         async saveAddress() {
+            this.form.phone =
+                this.primary_phone?.dial_code && this.primary_phone?.number
+                    ? `${this.primary_phone.dial_code} ${this.primary_phone.number}`
+                    : null;
+
+            this.form.secondary_phone =
+                this.secondary_phone?.dial_code && this.secondary_phone?.number
+                    ? `${this.secondary_phone.dial_code} ${this.secondary_phone.number}`
+                    : null;
+
             try {
                 const res = await this.$server.post(
                     this.$page.props.delivery_address.route,
@@ -663,8 +660,10 @@ export default {
 
                 if (res.status === 201 || res.status === 200) {
                     this.getAddresses();
-                    this.$q.notify({
-                        message: this.form.id
+                    this.$swal.fire({
+                        icon: "success",
+                        title: __("Success"),
+                        text: this.form.id
                             ? __("Delivery address updated successfully")
                             : __("Delivery address added successfully"),
                         color: "positive",
@@ -677,10 +676,10 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
+                    this.$swal.fire({
+                        icon: "error",
+                        title: __("Error"),
+                        text: e.response.data.message,
                     });
                 }
 
@@ -692,182 +691,3 @@ export default {
     },
 };
 </script>
-
-<style>
-/* Color variables for theming */
-.address-selector-container {
-    --color-primary: #1976d2;
-    --color-primary-dark: #1565c0;
-    --color-secondary: #26a69a;
-    --color-accent: #9c27b0;
-    --color-positive: #21ba45;
-    --color-negative: #c10015;
-    --color-warning: #f2c037;
-    --color-info: #31ccec;
-    --color-dark: #1d1d1d;
-    --color-light: #f5f5f5;
-    --color-background: #fafafa;
-    --color-card: #ffffff;
-    --color-text-primary: rgba(0, 0, 0, 0.87);
-    --color-text-secondary: rgba(0, 0, 0, 0.6);
-    --color-border: rgba(0, 0, 0, 0.12);
-    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-medium: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-.address-selector-container {
-    width: 100%;
-}
-
-.select-address-btn {
-    font-weight: 500;
-    padding: 8px 16px;
-}
-
-.selected-address-wrapper {
-    margin-top: 16px;
-}
-
-.selected-address-card {
-    border-radius: 12px;
-    box-shadow: var(--shadow-soft);
-    transition: box-shadow 0.3s ease;
-}
-
-.selected-address-card:hover {
-    box-shadow: var(--shadow-medium);
-}
-
-.selected-label {
-    color: var(--color-primary);
-    letter-spacing: 0.5px;
-    font-size: 0.75rem;
-}
-
-.address-details .detail-label {
-    color: var(--color-text-secondary);
-    margin-bottom: 4px;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    font-weight: 500;
-}
-
-.address-details .detail-value {
-    color: var(--color-text-primary);
-    word-break: break-word;
-}
-
-.address-dialog {
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.address-dialog .dialog-header {
-    height: 60px;
-}
-
-.address-dialog .dialog-content {
-    background-color: var(--color-background);
-    padding: 24px;
-}
-
-.address-dialog .dialog-actions {
-    border-top: 1px solid var(--color-border);
-}
-
-.form-card,
-.address-list-card {
-    border-radius: 12px;
-    box-shadow: var(--shadow-soft);
-}
-
-.form-card .form-header,
-.address-list-card .list-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    padding: 16px;
-}
-
-.custom-input .q-field__control {
-    border-radius: 8px;
-    height: 48px;
-}
-
-.custom-input .q-field__label {
-    font-weight: 500;
-}
-
-.save-btn {
-    border-radius: 8px;
-    height: 48px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.address-scroll-area {
-    height: 60vh;
-}
-
-.address-list .address-item {
-    border-bottom: 1px solid var(--color-border);
-    transition: background-color 0.2s ease;
-}
-
-.address-list .address-item:last-child {
-    border-bottom: none;
-}
-
-.address-list .address-item:hover {
-    background-color: rgba(25, 118, 210, 0.04);
-}
-
-.address-list .selected-address-item {
-    background-color: rgba(25, 118, 210, 0.08);
-    border-left: 4px solid var(--color-primary);
-}
-
-.action-btn {
-    border-radius: 6px;
-    padding: 4px 8px;
-}
-
-.close-btn {
-    border-radius: 8px;
-    padding: 8px 16px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1023px) {
-    .address-scroll-area {
-        height: 40vh;
-    }
-}
-
-@media (max-width: 767px) {
-    .address-dialog .dialog-content {
-        padding: 16px;
-    }
-
-    .address-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .address-item .q-item__section--side {
-        margin-top: 12px;
-        align-items: flex-start;
-    }
-}
-
-@media (max-width: 599px) {
-    .selected-address-card .row {
-        flex-direction: column;
-    }
-
-    .form-card,
-    .address-list-card {
-        margin-bottom: 16px;
-    }
-}
-</style>

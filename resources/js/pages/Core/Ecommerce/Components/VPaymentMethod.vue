@@ -25,9 +25,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             {{ __("Choose your payment method") }}
         </div>
 
-        <div
-            class="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
-        >
+        <div class="flex gap-4">
             <div
                 v-for="(method, key) in filteredMethods"
                 :key="key"
@@ -95,7 +93,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="text-base">
                     {{ __("Selected method") }}:
                     <span class="font-semibold">
-                        {{ methods[selected_method]?.name }}
+                        {{  selected_method   }}
                     </span>
                 </div>
             </div>
@@ -162,7 +160,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(__(e.response.data.message));
+                    $notify.error(__(e.response.data.message));
                 }
             }
         },

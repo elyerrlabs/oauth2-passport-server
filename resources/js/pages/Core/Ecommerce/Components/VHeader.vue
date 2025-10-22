@@ -148,9 +148,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VNotification from "./VNotification.vue";
+import VNotification from "@/components/VNotification.vue";
 import VCart from "./VCart.vue";
-import VProfile from "./VProfile.vue";
+import VProfile from "@/components/VProfile.vue";
 import VSearch from "./VSearch.vue";
 import VCategories from "./VCategories.vue";
 

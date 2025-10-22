@@ -598,7 +598,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import VAdminLayout from "../../Components/VAdminLayout.vue";
-import VPaginate from "../../Components/VPaginate.vue";
+import VPaginate from "@/components/VPaginate.vue";
 
 export default {
     components: {

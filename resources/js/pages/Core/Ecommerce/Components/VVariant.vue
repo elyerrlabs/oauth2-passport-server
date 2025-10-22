@@ -322,11 +322,11 @@
 </template>
 
 <script>
-import VInput from "./VInput.vue";
-import VSelect from "./VSelect.vue";
-import VTextarea from "./VTextarea.vue";
-import VError from "./VError.vue";
-import VSwitch from "./VSwitch.vue";
+import VInput from "@/components/VInput.vue";
+import VSelect from"@/components/VSelect.vue";
+import VTextarea from"@/components/VTextarea.vue";
+import VError from "@/components/VError.vue";
+import VSwitch from "@/components/VSwitch.vue";
 
 export default {
     components: {

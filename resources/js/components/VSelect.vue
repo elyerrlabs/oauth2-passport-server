@@ -54,8 +54,8 @@
 
                         <template v-else>
                             {{
-                                selectedOptions[0]
-                                    ? selectedOptions[0][labelKey]
+                                selectedOptions
+                                    ? selectedOptions[labelKey]
                                     : __(placeholder)
                             }}
                         </template>
@@ -199,7 +199,7 @@
 </template>
 
 <script>
-import VError from "./VError.vue";
+import VError from "@/components/VError.vue";
 
 export default {
     name: "VSelect",
@@ -270,7 +270,7 @@ export default {
             const selected = this.options.find(
                 (opt) => opt[this.valueKey] === this.internalValue
             );
-            return selected ? selected : {};
+            return selected ? selected : null;
         },
 
         filteredOptions() {

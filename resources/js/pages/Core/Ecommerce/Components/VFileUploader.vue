@@ -179,7 +179,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </div>
 </template>
 <script setup>
-import VError from "./VError.vue";
+import VError from "@/components/VError.vue";
 import { ref, computed, watch } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);

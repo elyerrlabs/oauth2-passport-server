@@ -332,7 +332,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import VHeader from "../Components/VHeader.vue";
-import VPaginate from "../Components/VPaginate.vue";
+import VPaginate from "@/components/VPaginate.vue";
 import VLoader from "../Components/VLoader.vue";
 import VFilters from "../Components/VFilters.vue";
 

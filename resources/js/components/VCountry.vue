@@ -65,7 +65,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VError from "./VError.vue";
+import VError from "@/components/VError.vue";
 export default {
     components: { VError },
     props: {

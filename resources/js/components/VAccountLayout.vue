@@ -230,8 +230,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VProfile from "./VProfile.vue";
-import VNotification from "./VNotification.vue";
+import VProfile from"@/components/VProfile.vue";
+import VNotification from "@/components/VNotification.vue";
 
 export default {
     components: {

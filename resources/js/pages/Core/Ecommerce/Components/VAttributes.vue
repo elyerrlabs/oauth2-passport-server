@@ -253,10 +253,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VError from "./VError.vue";
-import VInput from "./VInput.vue";
-import VSelect from "./VSelect.vue";
-import VSwitch from "./VSwitch.vue";
+import VError from "@/components/VError.vue";
+import VInput from "@/components/VInput.vue";
+import VSelect from "@/components/VSelect.vue";
+import VSwitch from "@/components/VSwitch.vue";
 
 export default {
     components: {
@@ -356,9 +356,7 @@ export default {
 
                     await this.$swal({
                         title: __("Deleted!"),
-                        text: __(
-                            "Attribute has been deleted successfully."
-                        ),
+                        text: __("Attribute has been deleted successfully."),
                         icon: "success",
                         timer: 2000,
                         showConfirmButton: false,
