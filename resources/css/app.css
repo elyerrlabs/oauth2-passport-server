@@ -1,5 +1,6 @@
 @import "flatpickr";
 @import 'tailwindcss';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 /*
 :root {
     --color-primary: rgb(79 70 229);
