@@ -1,332 +1,350 @@
-<footer id="footer" class="bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)] py-12 mt-0">
-    <div class="container mx-auto px-4">
-        <!-- Main Footer Content -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-            <!-- Brand & Description -->
-            <div class="lg:col-span-1">
-                <div class="flex items-center mb-4">
-                    <div class="w-10 h-10 bg-[var(--color-primary)] rounded-lg flex items-center justify-center mr-3">
-                        <i class="mdi mdi-security-network text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-[var(--color-text-primary)]">{{ __('OAuth2 Passport Server') }}
-                    </h3>
-                </div>
-                <p class="text-[var(--color-text-secondary)] mb-4 text-sm">
-                    {{ __('Enterprise-grade authentication system with OAuth2 and OpenID Connect support. Secure, scalable, and modular.') }}
-                </p>
-                <div class="flex space-x-3">
-                    <a href="mailto:yerel9212@yahoo.es"
-                        class="w-10 h-10 bg-[var(--color-bg-tertiary)] hover:bg-[var(--color-primary)] text-[var(--color-text-secondary)] hover:text-white rounded-lg flex items-center justify-center transition-all duration-300"
-                        title="{{ __('Send email') }}">
-                        <i class="mdi mdi-email-outline"></i>
-                    </a>
-                    <a href="https://github.com/elyerr" target="_blank" rel="noopener noreferrer"
-                        class="w-10 h-10 bg-[var(--color-bg-tertiary)] hover:bg-[var(--color-primary)] text-[var(--color-text-secondary)] hover:text-white rounded-lg flex items-center justify-center transition-all duration-300"
-                        title="{{ __('GitHub Profile') }}">
-                        <i class="mdi mdi-github"></i>
-                    </a>
-                    <a href="https://gitlab.com/elyerr" target="_blank" rel="noopener noreferrer"
-                        class="w-10 h-10 bg-[var(--color-bg-tertiary)] hover:bg-[var(--color-primary)] text-[var(--color-text-secondary)] hover:text-white rounded-lg flex items-center justify-center transition-all duration-300"
-                        title="{{ __('GitLab Profile') }}">
-                        <i class="mdi mdi-gitlab"></i>
-                    </a>
-                    <a href="https://t.me/elyerr" target="_blank" rel="noopener noreferrer"
-                        class="w-10 h-10 bg-[var(--color-bg-tertiary)] hover:bg-[var(--color-primary)] text-[var(--color-text-secondary)] hover:text-white rounded-lg flex items-center justify-center transition-all duration-300"
-                        title="{{ __('Telegram') }}">
-                        <i class="mdi mdi-send-circle-outline"></i>
-                    </a>
-                </div>
-            </div>
+@push('css')
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg,
+                    #5f1596 0%, #9c20bf 50%, #2b0c80 100%);
+            background-size: 200% 200%;
+            animation: gentleGradient 20s ease infinite;
+        }
 
-            <!-- Quick Links -->
-            <div>
-                <h4
-                    class="text-lg font-semibold text-[var(--color-text-primary)] mb-4 pb-2 border-b border-[var(--color-border)]">
-                    {{ __('Quick Links') }}</h4>
-                <ul class="space-y-2">
-                    @if (Route::has('documentation.index'))
-                        <li>
-                            <a href="{{ route('documentation.index') }}"
-                                class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
-                                <i class="mdi mdi-book-open-page-variant mr-2 text-sm"></i>
-                                {{ __('Documentation') }}
-                            </a>
-                        </li>
-                    @endif
-                    @if (Route::has('passport.clients.index'))
-                        <li>
-                            <a href="{{ route('passport.clients.index') }}"
-                                class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
-                                <i class="mdi mdi-shield-key mr-2 text-sm"></i>
-                                {{ __('OAuth2 Clients') }}
-                            </a>
-                        </li>
-                    @endif
-                    @if (Route::has('passport.personal.tokens.index'))
-                        <li>
-                            <a href="{{ route('passport.personal.tokens.index') }}"
-                                class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
-                                <i class="mdi mdi-key-chain-variant mr-2 text-sm"></i>
-                                {{ __('API Keys') }}
-                            </a>
-                        </li>
-                    @endif
-                    <li>
-                        <a href="{{ route('user.admin.dashboard') }}"
-                            class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
-                            <i class="mdi mdi-cog-outline mr-2 text-sm"></i>
-                            {{ __('Admin Panel') }}
-                        </a>
-                    </li>
-                </ul>
-            </div>
+        @keyframes gentleGradient {
 
-            <!-- Resources -->
-            <div>
-                <h4
-                    class="text-lg font-semibold text-[var(--color-text-primary)] mb-4 pb-2 border-b border-[var(--color-border)]">
-                    {{ __('Resources') }}</h4>
-                <ul class="space-y-2">
-                    <li>
-                        <a href="https://oauth.net/2/" target="_blank"
-                            class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
-                            <i class="mdi mdi-open-in-new mr-2 text-sm"></i>
-                            {{ __('OAuth2 Specification') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://openid.net/connect/" target="_blank"
-                            class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
-                            <i class="mdi mdi-open-in-new mr-2 text-sm"></i>
-                            {{ __('OpenID Connect') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://documenter.getpostman.com/view/5625104/2sB2xBDq6o"
-                            class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
-                            <i class="mdi mdi-api mr-2 text-sm"></i>
-                            {{ __('API Reference') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.youtube.com/@elyerr"
-                            class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors flex items-center">
-                            <i class="mdi mdi-school-outline mr-2 text-sm"></i>
-                            {{ __('Tutorials') }}
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
 
-            <!-- Repository Stats -->
-            <div>
-                <h4
-                    class="text-lg font-semibold text-[var(--color-text-primary)] mb-4 pb-2 border-b border-[var(--color-border)]">
-                    {{ __('Repository') }}
-                </h4>
-                <div class="mb-4">
-                    <div class="flex items-center justify-between text-sm mb-1">
-                        <span class="text-[var(--color-text-secondary)]">{{ __('License') }}</span>
-                        <a href="https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/LICENSE.md?ref_type=heads"
-                            target="_blank" class="text-[var(--color-success)] hover:underline">
-                            {{ __('NON-COMMERCIAL USE LICENSE') }}
-                        </a>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-[var(--color-text-secondary)]">{{ __('Status') }}</span>
-                        <span class="inline-flex items-center text-[var(--color-success)]">
-                            <i class="mdi mdi-check-circle-outline mr-1"></i>
-                            {{ __('Active') }}
-                        </span>
-                    </div>
-                </div>
-                <div class="mb-4 flex flex-col space-y-2">
-                    <a href="https://gitlab.com/elyerr/oauth2-passport-server" target="_blank"
-                        class="inline-flex items-center bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white px-4 py-2 rounded-lg transition-colors text-sm">
-                        <i class="mdi mdi-star-circle-outline mr-2"></i>
-                        {{ __('Star on GitLab') }}
-                    </a>
+            50% {
+                background-position: 100% 50%;
+            }
+        }
 
-                    <a href="https://github.com/elyerr/oauth2-passport-server" target="_blank"
-                        class="inline-flex items-center bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white px-4 py-2 rounded-lg transition-colors text-sm">
-                        <i class="mdi mdi-star-circle-outline mr-2"></i>
-                        {{ __('Star on GitHub') }}
-                    </a>
-                </div>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
 
-            </div>
-        </div>
+        .subtle-hover {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
 
-        <!-- Donations Section -->
-        <div class="bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg p-6 mb-10">
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
-                <div class="mb-4 md:mb-0">
-                    <h4 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center">
-                        <i class="mdi mdi-heart-outline text-red-400 mr-2"></i>
-                        {{ __('Support this Project') }}
-                    </h4>
-                    <p class="text-[var(--color-text-secondary)] text-sm mt-1">
-                        {{ __('Your donations help maintain and improve this open-source project.') }}
-                    </p>
-                </div>
-                <div class="flex flex-wrap gap-3">
-                    <!-- Crypto Wallet -->
-                    <button data-action="toggle-wallet"
-                        class="flex items-center text-white bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] px-4 py-2 rounded-lg transition-colors text-sm">
-                        <i class="mdi mdi-wallet-outline mr-2 text-[var(--color-primary)]"></i>
-                        {{ __('Crypto Donation') }}
-                    </button>
+        .subtle-hover:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
 
-                    <!-- PayPal -->
-                    <a href="https://paypal.me/elyerr" target="_blank"
-                        class="flex items-center text-white bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] px-4 py-2 rounded-lg transition-colors text-sm">
-                        <i class="mdi mdi-paypal mr-2 text-blue-400"></i>
-                        PayPal
-                    </a>
-                </div>
-            </div>
-        </div>
+        .social-subtle {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
 
-        <!-- Copyright -->
-        <div class="border-t border-[var(--color-border)] pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p class="text-[var(--color-text-secondary)] text-sm mb-4 md:mb-0">
-                &copy; {{ now()->format('Y') }} {{ config('app.org_name') }}. {{ __('All rights reserved.') }}
-            </p>
-            <div class="flex items-center space-x-6 text-sm">
-                <span class="text-[var(--color-text-secondary)] flex items-center">
-                    {{ __('Made with') }} <i class="mdi mdi-heart text-red-400 mx-1"></i> {{ __('by Elyerr') }}
-                </span>
-            </div>
-        </div>
+        .social-subtle:hover {
+            transform: translateY(-2px) scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .text-subtle {
+            color: #e2e8f0;
+        }
+
+        .border-subtle {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .icon-glow {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+    </style>
+@endpush
+
+<footer id="footer" class="gradient-bg text-white pt-16 pb-8 relative overflow-hidden {{ $hidden ?? '' }}">
+    <!-- Background Elements Sutiles -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-20 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-10 w-40 h-40 bg-purple-200 rounded-full blur-3xl"></div>
     </div>
 
-    <!-- Wallet Modal -->
-    <div id="walletModal"
-        class="fixed inset-0 bg-black/80 bg-opacity-70 flex items-center justify-center z-50 hidden">
-        <div
-            class="bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-xl w-full max-w-md mx-4 max-h-[90vh] overflow-hidden flex flex-col">
-            <div
-                class="flex justify-between items-center p-6 border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
-                <div class="flex items-center">
-                    <div class="w-10 h-10 bg-[var(--color-primary)] rounded-lg flex items-center justify-center mr-3">
-                        <i class="mdi mdi-wallet-outline text-white"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-[var(--color-text-primary)]">{{ __('Crypto Donations') }}
-                    </h3>
+    <div class="container mx-auto px-6 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+            <!-- Organization Information -->
+            <div class="lg:col-span-5">
+                <div class="flex items-center mb-8">
+                    @if (config('app.org_name'))
+                        <div class="relative group">
+                            <div
+                                class="w-14 h-14 glass-effect rounded-xl flex items-center justify-center mr-4 subtle-hover">
+                                <i class="mdi mdi-domain text-white text-xl icon-glow"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold text-white mb-1">
+                                {{ config('app.org_name') }}
+                            </h3>
+                            @if (config('app.name') && config('app.name') != config('app.org_name'))
+                                <p class="text-blue-100 text-sm opacity-80">{{ config('app.name') }}</p>
+                            @endif
+                        </div>
+                    @endif
                 </div>
-                <button data-action="toggle-wallet"
-                    class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] p-1 rounded-full hover:bg-[var(--color-bg-tertiary)] transition-colors">
-                    <i class="mdi mdi-close text-2xl"></i>
-                </button>
+
+                @if (config('app.description'))
+                    <p class="text-subtle leading-relaxed text-base mb-8 opacity-90">
+                        {{ config('app.description') }}
+                    </p>
+                @endif
+
+                <!-- Mission & Vision Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @if (config('app.mission'))
+                        <div class="glass-effect rounded-xl p-4 border-subtle subtle-hover group">
+                            <div class="flex items-center mb-3">
+                                <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="mdi mdi-bullseye-arrow text-emerald-300 text-sm"></i>
+                                </div>
+                                <h4 class="font-medium text-emerald-200 text-sm">{{ __('Our Mission') }}</h4>
+                            </div>
+                            <p
+                                class="text-subtle text-xs leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity">
+                                {{ config('app.mission') }}
+                            </p>
+                        </div>
+                    @endif
+
+                    @if (config('app.vision'))
+                        <div class="glass-effect rounded-xl p-4 border-subtle subtle-hover group">
+                            <div class="flex items-center mb-3">
+                                <div class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="mdi mdi-eye-outline text-purple-300 text-sm"></i>
+                                </div>
+                                <h4 class="font-medium text-purple-200 text-sm">{{ __('Our Vision') }}</h4>
+                            </div>
+                            <p
+                                class="text-subtle text-xs leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity">
+                                {{ config('app.vision') }}
+                            </p>
+                        </div>
+                    @endif
+                </div>
             </div>
 
-            <div class="overflow-y-auto flex-1 p-6">
-                <p class="text-[var(--color-text-secondary)] text-center mb-6">
-                    {{ __('Thank you for considering a donation. Your support helps maintain and improve this open-source project.') }}
-                </p>
+            <!-- Contact Information -->
+            <div class="lg:col-span-3">
+                <div class="flex items-center mb-6">
+                    <div class="w-6 h-0.5 bg-cyan-400 rounded-full mr-3"></div>
+                    <h4 class="text-lg font-medium text-white">{{ __('Contact Us') }}</h4>
+                </div>
 
-                <!-- TRX Address -->
-                <div class="bg-[var(--color-bg-secondary)] p-4 rounded-lg border border-[var(--color-border)] mb-4">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center">
-                            <div class="w-8 h-8 bg-orange-400 rounded-md flex items-center justify-center mr-3">
-                                <i class="mdi mdi-currency-usd text-white text-sm"></i>
+                <div class="space-y-3">
+                    @if (config('app.address'))
+                        <div class="flex items-start group subtle-hover glass-effect rounded-lg p-3 border-subtle">
+                            <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mr-3 mt-0.5">
+                                <i class="mdi mdi-map-marker-outline text-blue-300 text-sm"></i>
                             </div>
-                            <div>
-                                <h4 class="text-[var(--color-text-primary)] font-medium">TRX (TRON)</h4>
-                                <p class="text-[var(--color-text-secondary)] text-xs">{{ __('Native TRON currency') }}
-                                </p>
-                            </div>
+                            <p class="text-subtle text-sm flex-1 opacity-90 group-hover:opacity-100 transition-opacity">
+                                {{ config('app.address') }}
+                            </p>
                         </div>
-                        <button data-action="copy-wallet" data-wallet="TU1z3998ku34hf2Cg9B7z6mZcvT5DmaSXj"
-                            class="text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] p-2 rounded-md hover:bg-[var(--color-bg-tertiary)] transition-colors"
-                            title="{{ __('Copy address') }}">
-                            <i class="mdi mdi-content-copy"></i>
-                        </button>
+                    @endif
+
+                    @if (config('app.phone_dial_code') && config('app.phone_number'))
+                        <div class="flex items-center group subtle-hover glass-effect rounded-lg p-3 border-subtle">
+                            <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center mr-3">
+                                <i class="mdi mdi-phone-outline text-green-300 text-sm"></i>
+                            </div>
+                            <a href="tel:{{ config('app.phone_dial_code') }}{{ config('app.phone_number') }}"
+                                class="text-subtle hover:text-white transition-colors text-sm font-normal opacity-90 group-hover:opacity-100 flex-1">
+                                {{ config('app.phone_dial_code') }} {{ config('app.phone_number') }}
+                            </a>
+                        </div>
+                    @endif
+
+                    @if (config('app.email'))
+                        <div class="flex items-center group subtle-hover glass-effect rounded-lg p-3 border-subtle">
+                            <div class="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center mr-3">
+                                <i class="mdi mdi-email-outline text-orange-300 text-sm"></i>
+                            </div>
+                            <a href="mailto:{{ config('app.email') }}"
+                                class="text-subtle hover:text-white transition-colors text-sm font-normal opacity-90 group-hover:opacity-100 flex-1">
+                                {{ config('app.email') }}
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Legal & Social Media -->
+            <div class="lg:col-span-4">
+                <div class="flex items-center mb-6">
+                    <div class="w-6 h-0.5 bg-pink-400 rounded-full mr-3"></div>
+                    <h4 class="text-lg font-medium text-white">{{ __('Legal & Social') }}</h4>
+                </div>
+
+                <!-- Legal Links -->
+                <div class="grid grid-cols-1 gap-2 mb-6">
+                    <a href="{{ route('admin.policies.terms-and-conditions') }}"
+                        class="group subtle-hover glass-effect rounded-lg p-3 border-subtle flex items-center">
+                        <div class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center mr-3">
+                            <i class="mdi mdi-file-document-outline text-amber-300 text-sm"></i>
+                        </div>
+                        <span
+                            class="text-subtle group-hover:text-white transition-colors text-sm font-normal opacity-90 group-hover:opacity-100 flex-1">
+                            {{ __('Terms & Conditions') }}
+                        </span>
+                        <i
+                            class="mdi mdi-chevron-right text-subtle text-xs group-hover:text-amber-300 group-hover:translate-x-0.5 transition-all duration-300"></i>
+                    </a>
+
+                    <a href="{{ route('admin.policies.policies-of-privacy') }}"
+                        class="group subtle-hover glass-effect rounded-lg p-3 border-subtle flex items-center">
+                        <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mr-3">
+                            <i class="mdi mdi-shield-account-outline text-blue-300 text-sm"></i>
+                        </div>
+                        <span
+                            class="text-subtle group-hover:text-white transition-colors text-sm font-normal opacity-90 group-hover:opacity-100 flex-1">
+                            {{ __('Privacy Policy') }}
+                        </span>
+                        <i
+                            class="mdi mdi-chevron-right text-subtle text-xs group-hover:text-blue-300 group-hover:translate-x-0.5 transition-all duration-300"></i>
+                    </a>
+
+                    <a href="{{ route('admin.policies.policies-of-cookies') }}"
+                        class="group subtle-hover glass-effect rounded-lg p-3 border-subtle flex items-center">
+                        <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center mr-3">
+                            <i class="mdi mdi-cookie-outline text-emerald-300 text-sm"></i>
+                        </div>
+                        <span
+                            class="text-subtle group-hover:text-white transition-colors text-sm font-normal opacity-90 group-hover:opacity-100 flex-1">
+                            {{ __('Cookie Policy') }}
+                        </span>
+                        <i
+                            class="mdi mdi-chevron-right text-subtle text-xs group-hover:text-emerald-300 group-hover:translate-x-0.5 transition-all duration-300"></i>
+                    </a>
+                </div>
+
+                <!-- Social Media Links -->
+                <div>
+                    <h5 class="text-sm font-medium mb-3 text-cyan-200 opacity-90 flex items-center">
+                        <i class="mdi mdi-share-variant mr-2 text-xs"></i>
+                        {{ __('Connect With Us') }}
+                    </h5>
+                    <div class="grid grid-cols-5 gap-2">
+                        @php
+                            $socials = [
+                                'facebook' => [
+                                    'color' => 'bg-blue-500/20',
+                                    'icon' => 'mdi mdi-facebook',
+                                    'hover' => 'text-blue-300',
+                                ],
+                                'instagram' => [
+                                    'color' => 'bg-purple-500/20',
+                                    'icon' => 'mdi mdi-instagram',
+                                    'hover' => 'text-purple-300',
+                                ],
+                                'twitter' => [
+                                    'color' => 'bg-sky-500/20',
+                                    'icon' => 'mdi mdi-twitter',
+                                    'hover' => 'text-sky-300',
+                                ],
+                                'linkedin' => [
+                                    'color' => 'bg-blue-600/20',
+                                    'icon' => 'mdi mdi-linkedin',
+                                    'hover' => 'text-blue-400',
+                                ],
+                                'whatsapp' => [
+                                    'color' => 'bg-green-500/20',
+                                    'icon' => 'mdi mdi-whatsapp',
+                                    'hover' => 'text-green-300',
+                                ],
+                                'telegram' => [
+                                    'color' => 'bg-blue-400/20',
+                                    'icon' => 'mdi mdi-send-variant',
+                                    'hover' => 'text-blue-300',
+                                ],
+                                'tiktok' => [
+                                    'color' => 'bg-gray-700/20',
+                                    'icon' => 'fa-brands fa-tiktok',
+                                    'hover' => 'text-gray-300',
+                                ],
+                                'youtube' => [
+                                    'color' => 'bg-red-500/20',
+                                    'icon' => 'mdi mdi-youtube',
+                                    'hover' => 'text-red-300',
+                                ],
+                                'pinterest' => [
+                                    'color' => 'bg-red-400/20',
+                                    'icon' => 'mdi mdi-pinterest',
+                                    'hover' => 'text-red-300',
+                                ],
+                            ];
+                        @endphp
+
+                        @foreach ($socials as $name => $data)
+                            @if (config("app.$name"))
+                                <a href="{{ config("app.$name") }}" target="_blank" rel="noopener"
+                                    class="w-8 h-8 {{ $data['color'] }} rounded-lg flex items-center justify-center social-subtle group"
+                                    title="{{ ucfirst($name) }}">
+                                    <i
+                                        class="  {{ $data['icon'] }} text-subtle text-xs group-hover:{{ $data['hover'] }} transition-colors"></i>
+                                </a>
+                            @endif
+                        @endforeach
                     </div>
-                    <div class="bg-[var(--color-bg-primary)] p-3 rounded-md border border-[var(--color-border)]">
-                        <p class="text-[var(--color-text-secondary)] text-xs font-mono break-all mb-2">
-                            TU1z3998ku34hf2Cg9B7z6mZcvT5DmaSXj
-                        </p>
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-[var(--color-text-muted)]">Network: TRON (TRC20)</span>
-                            <span class="text-[var(--color-success)] flex items-center">
-                                <i class="mdi mdi-check-circle-outline mr-1"></i> {{ __('Active') }}
-                            </span>
-                        </div>
+                </div>
+            </div>
+        </div>
+
+        @if (config('app.values'))
+            <div class="border-t border-white/10 pt-8 mb-8">
+                <div class="text-center max-w-3xl mx-auto">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-8 h-0.5 bg-amber-400 rounded-full mr-3"></div>
+                        <h4 class="text-base font-medium text-amber-200">{{ __('Our Values') }}</h4>
+                        <div class="w-8 h-0.5 bg-amber-400 rounded-full ml-3"></div>
+                    </div>
+                    <p
+                        class="text-subtle text-sm italic leading-relaxed glass-effect rounded-lg p-4 border-subtle opacity-90">
+                        "{{ config('app.values') }}"
+                    </p>
+                </div>
+            </div>
+        @endif
+
+        <!-- Bottom Bar -->
+        <div class="border-t border-white/10 pt-6 flex flex-col lg:flex-row justify-between items-center">
+            <div class="text-subtle text-xs mb-3 lg:mb-0 text-center lg:text-left opacity-80">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-4 space-y-1 lg:space-y-0">
+                    <span>
+                        &copy; {{ date('Y') }}
+                        <span class="font-medium text-white">
+                            {{ config('app.org_name', config('app.name', __('Our Company'))) }}
+                        </span>
+                        . {{ __('All rights reserved.') }}
+                    </span>
+
+                    @if (config('app.tax_id'))
+                        <span class="hidden lg:inline text-white/60">•</span>
+                        <span class="flex items-center justify-center lg:justify-start text-blue-200">
+                            <i class="mdi mdi-card-account-details-outline mr-1 text-xs"></i>
+                            {{ config('app.tax_id') }}
+                        </span>
+                    @endif
+                </div>
+            </div>
+
+            <div class="flex items-center text-subtle text-xs opacity-80">
+                <span class="mr-2">{{ __('Powered by') }}</span>
+                <div class="glass-effect rounded-full px-3 py-1 border-subtle subtle-hover">
+                    <div class="flex items-center">
+                        <i class="mdi mdi-heart text-rose-300 mr-1 text-xs"></i>
+                        <a class="font-medium text-white" href="https://t.me/elyerr">
+                            @Elyerr
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </footer>
-
-@push('js')
-    <script nonce="{{ $nonce }}">
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('walletModal');
-
-            document.addEventListener('click', (e) => {
-                const action = e.target.closest('[data-action]')?.dataset.action;
-
-                if (action === 'toggle-wallet') {
-                    modal.classList.toggle('hidden');
-                    document.body.style.overflow = modal.classList.contains('hidden') ? '' : 'hidden';
-                }
-
-                if (action === 'copy-wallet') {
-                    const wallet = e.target.closest('[data-action]').dataset.wallet;
-                    navigator.clipboard.writeText(wallet).then(() => {
-                        showToast('Wallet address copied!');
-                    }).catch(() => {
-                        showToast('Failed to copy', 'error');
-                    });
-                }
-            });
-
-            function showToast(message, type = 'success') {
-                const existing = document.getElementById('copyToast');
-                if (existing) existing.remove();
-
-                const toast = document.createElement('div');
-                toast.id = 'copyToast';
-                toast.className = `fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-y-10 opacity-0 ${
-            type === 'success' ? 'bg-[var(--color-success)] text-white' : 'bg-[var(--color-danger)] text-white'
-        }`;
-                toast.innerHTML = `
-            <div class="flex items-center">
-                <i class="mdi mdi-${type === 'success' ? 'check-circle' : 'alert-circle'} mr-2"></i>
-                <span>${message}</span>
-            </div>
-        `;
-                document.body.appendChild(toast);
-
-                setTimeout(() => {
-                    toast.classList.remove('translate-y-10', 'opacity-0');
-                    toast.classList.add('translate-y-0', 'opacity-100');
-                }, 10);
-
-                setTimeout(() => {
-                    toast.classList.remove('translate-y-0', 'opacity-100');
-                    toast.classList.add('translate-y-10', 'opacity-0');
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
-            }
-        });
-    </script>
-@endpush
-
-@push('css')
-    <style nonce="{{ $nonce }}">
-        #walletModal {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        #walletModal:not(.hidden) {
-            opacity: 1;
-            pointer-events: auto;
-        }
-    </style>
-@endpush

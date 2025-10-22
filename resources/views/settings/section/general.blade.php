@@ -3,55 +3,53 @@
 @section('form')
     <div class="flex flex-col lg:flex-row gap-8 items-start p-1 md:p-6 bg-gray-100 rounded-2xl shadow-sm">
 
-        <!-- Sidebar/Info Section -->
+        <!-- Sidebar -->
         <div class="w-full lg:w-1/4 sticky top-4 space-y-4">
-
             <div class="bg-indigo-600 text-white p-5 rounded-2xl shadow-md">
                 <div class="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mb-4">
-                    <i class="mdi mdi-cog-outline text-2xl"></i>
+                    <i class="mdi mdi-domain text-2xl"></i>
                 </div>
-                <h2 class="text-xl font-bold">{{ __('General Settings') }}</h2>
-                <p class="text-sm opacity-90 mt-2">{{ __('Configure global application parameters below.') }}</p>
+                <h2 class="text-xl font-bold">{{ __('Organization Settings') }}</h2>
+                <p class="text-sm opacity-90 mt-2">
+                    {{ __('Define the company information and descriptions used throughout the site.') }}
+                </p>
             </div>
 
             <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-200">
                 <h3 class="text-sm font-semibold text-gray-900 flex items-center">
-                    <i class="mdi mdi-information-outline mr-2 text-blue-600"></i>
-                    {{ __('Quick Tips') }}
+                    <i class="mdi mdi-lightbulb-on-outline mr-2 text-blue-600"></i>
+                    {{ __('Tips') }}
                 </h3>
                 <ul class="mt-2 space-y-2 text-xs text-gray-500">
                     <li class="flex items-start">
                         <i class="mdi mdi-check-circle-outline text-green-600 mr-2 mt-0.5"></i>
-                        {{ __('Use complete URLs including https://') }}
+                        {{ __('This information will appear in the footer and contact pages.') }}
                     </li>
                     <li class="flex items-start">
                         <i class="mdi mdi-check-circle-outline text-green-600 mr-2 mt-0.5"></i>
-                        {{ __('Changes take effect immediately after saving') }}
+                        {{ __('Keep mission and vision concise and inspiring.') }}
                     </li>
                 </ul>
             </div>
         </div>
 
-        <!-- Form Fields Section -->
+        <!-- Main Form -->
         <div class="w-full lg:w-3/4 space-y-6">
 
-            {{-- Organization Name --}}
-            <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
+            <!-- Organization Name -->
+            <div class="p-5 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
                 <div class="flex items-center mb-3">
-                    <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-lg mr-3">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                         <i class="mdi mdi-office-building-outline text-blue-600"></i>
                     </div>
-                    <label for="org_name"
-                        class="block text-sm font-semibold text-gray-900">{{ __('Organization Name') }}</label>
+                    <label class="text-sm font-semibold text-gray-900">{{ __('Organization Name') }}</label>
                 </div>
-                <input id="org_name" type="text" name="app[org_name]"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-colors duration-300"
+                <input type="text" name="app[org_name]"
+                    class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition"
                     placeholder="{{ __('Enter the organization name') }}" value="{{ config('app.org_name') }}">
-                <small class="block mt-2 text-sm text-gray-500">
-                    <i
-                        class="mdi mdi-information-outline mr-1"></i>{{ __('This field specifies the name of the organization.') }}
-                </small>
+                <p class="text-sm text-gray-500 mt-2">
+                    <i class="mdi mdi-information-outline mr-1"></i>{{ __('Official name of your organization.') }}
+                </p>
             </div>
 
             {{-- Application Name --}}
@@ -73,90 +71,207 @@
                 </small>
             </div>
 
-            {{-- Home Page URL 
-            <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
+            <!-- Tax Identifier -->
+            <div class="p-5 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
                 <div class="flex items-center mb-3">
-                    <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-lg mr-3">
-                        <i class="mdi mdi-home-outline text-blue-600"></i>
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="mdi mdi-card-account-details-outline text-blue-600"></i>
                     </div>
-                    <label for="home_page"
-                        class="block text-sm font-semibold text-gray-900">{{ __('Home Page URL') }}</label>
+                    <label class="text-sm font-semibold text-gray-900">{{ __('Tax Identifier') }}</label>
                 </div>
-                <input id="home_page" type="text" name="system[home_page]"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-colors duration-300"
-                    placeholder="https://example.com" value="{{ config('system.home_page') }}">
-                <small class="block mt-2 text-sm text-gray-500">
+                <input type="text" name="app[tax_id]"
+                    class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition"
+                    placeholder="{{ __('Enter company tax ID (RUC, CIF, EIN, etc.)') }}"
+                    value="{{ config('app.tax_id') }}">
+                <p class="text-sm text-gray-500 mt-2">
                     <i
-                        class="mdi mdi-information-outline mr-1"></i>{{ __('This field specifies the URL of the home page of the application.') }}
-                </small>
-            </div> --}}
+                        class="mdi mdi-information-outline mr-1"></i>{{ __('Unique tax registration number depending on the country.') }}
+                </p>
+            </div>
 
-            {{-- Legal Documents Header 
-            <div class="mt-8 mb-4 border-b border-gray-200 pb-2">
-                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                    <i class="mdi mdi-file-document-outline mr-2 text-blue-600"></i>{{ __('Legal Documents') }}
-                </h3>
-                <p class="text-sm text-gray-500 mt-1">{{ __('URLs for your legal policies and terms') }}</p>
-            </div> --}}
-
-            {{-- Terms URL 
-            <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
+            <!-- Phones -->
+            <div class="p-5 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
                 <div class="flex items-center mb-3">
-                    <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-lg mr-3">
-                        <i class="mdi mdi-file-document-check-outline text-blue-600"></i>
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="mdi mdi-phone-outline text-blue-600"></i>
                     </div>
-                    <label for="terms_url"
-                        class="block text-sm font-semibold text-gray-900">{{ __('Terms and Conditions URL') }}</label>
+                    <label class="text-sm font-semibold text-gray-900">{{ __('Contact Phones') }}</label>
                 </div>
-                <input id="terms_url" type="url" name="system[terms_url]"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-colors duration-300"
-                    placeholder="https://example.com/terms" value="{{ config('system.terms_url') }}">
-                <small class="block mt-2 text-sm text-gray-500">
-                    <i
-                        class="mdi mdi-information-outline mr-1"></i>{{ __('Provide the URL where users can read the full Terms and Conditions. This document outlines the rules, obligations, and rights of users when using your website or service, including acceptable behavior, limitations of liability, and other legal agreements.') }}
-                </small>
-            </div> --}}
 
-            {{-- Privacy Policy URL 
-            <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
-                <div class="flex items-center mb-3">
-                    <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-lg mr-3">
-                        <i class="mdi mdi-shield-account-outline text-blue-600"></i>
+                <!-- Primary -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-gray-600">{{ __('Primary: Dial Code') }}</label>
+                        <input type="text" name="app[phone_dial_code]"
+                            class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-1 focus:ring-blue-100 transition"
+                            placeholder="+51" value="{{ config('app.phone_dial_code') }}">
                     </div>
-                    <label for="privacy_url"
-                        class="block text-sm font-semibold text-gray-900">{{ __('Privacy Policy URL') }}</label>
+                    <div>
+                        <label class="text-xs text-gray-600">{{ __('Primary: Number') }}</label>
+                        <input type="text" name="app[phone_number]"
+                            class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-1 focus:ring-blue-100 transition"
+                            placeholder="987 654 321" value="{{ config('app.phone_number') }}">
+                    </div>
                 </div>
-                <input id="privacy_url" type="url" name="system[privacy_url]"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-colors duration-300"
-                    placeholder="https://example.com/privacy" value="{{ config('system.privacy_url') }}">
-                <small class="block mt-2 text-sm text-gray-500">
-                    <i
-                        class="mdi mdi-information-outline mr-1"></i>{{ __('Provide the URL where users can read your Privacy Policy. This document explains how personal data is collected, used, stored, and protected, including user rights, cookies usage, third-party sharing, and compliance with privacy regulations such as GDPR or CCPA.') }}
-                </small>
-            </div> --}}
 
-            {{-- Cookies Policy URL 
-            <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
-                <div class="flex items-center mb-3">
-                    <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-lg mr-3">
-                        <i class="mdi mdi-cookie-outline text-blue-600"></i>
+                <hr class="my-4 border-gray-200">
+
+                <!-- Secondary -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-gray-600">{{ __('Secondary: Dial Code') }}</label>
+                        <input type="text" name="app[secondary_phone_dial_code]"
+                            class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-1 focus:ring-blue-100 transition"
+                            placeholder="+1" value="{{ config('app.secondary_phone_dial_code') }}">
                     </div>
-                    <label for="policy_cookies"
-                        class="block text-sm font-semibold text-gray-900">{{ __('Cookies Policy URL') }}</label>
+                    <div>
+                        <label class="text-xs text-gray-600">{{ __('Secondary: Number') }}</label>
+                        <input type="text" name="app[secondary_phone_number]"
+                            class="w-full px-3 py-2 border  border-gray-200 rounded-lg focus:border-blue-600 focus:ring-1 focus:ring-blue-100 transition"
+                            placeholder="555 123 4567" value="{{ config('app.secondary_phone_number') }}">
+                    </div>
                 </div>
-                <input id="policy_cookies" type="url" name="system[policy_cookies]"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-colors duration-300"
-                    placeholder="https://example.com/cookies" value="{{ config('system.policy_cookies') }}">
-                <small class="block mt-2 text-sm text-gray-500">
+
+                <p class="text-sm text-gray-500 mt-2">
                     <i
-                        class="mdi mdi-information-outline mr-1"></i>{{ __('Provide the URL where users can read your Cookies Policy. This page details the types of cookies used, their purpose, and how users can manage or opt-out of cookies, ensuring transparency and compliance with relevant privacy laws.') }}
+                        class="mdi mdi-information-outline mr-1"></i>{{ __('Separate the dial code for easier formatting.') }}
+                </p>
+            </div>
+
+            <!-- Address -->
+            <div class="p-5 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
+                <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="mdi mdi-map-marker-outline text-blue-600"></i>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-900">{{ __('Address') }}</label>
+                </div>
+                <textarea name="app[address]" rows="2"
+                    class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition"
+                    placeholder="{{ __('Enter full company address') }}">{{ config('app.address') }}</textarea>
+                <p class="text-sm text-gray-500 mt-2"><i
+                        class="mdi mdi-information-outline mr-1"></i>{{ __('Used in invoices and footer.') }}</p>
+            </div>
+
+            <!-- Mission -->
+            <div class="p-5 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
+                <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="mdi mdi-bullseye-arrow text-blue-600"></i>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-900">{{ __('Mission') }}</label>
+                </div>
+                <textarea name="app[mission]" rows="3"
+                    class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition"
+                    placeholder="{{ __('Describe the mission of your company') }}">{{ config('app.mission') }}</textarea>
+            </div>
+
+            <!-- Vision -->
+            <div
+                class="p-5 bg-white rounded-xl shadow-sm border border-gray-200 border-gray-200 hover:shadow-md transition">
+                <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="mdi mdi-eye-outline text-blue-600"></i>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-900">{{ __('Vision') }}</label>
+                </div>
+                <textarea name="app[vision]" rows="3"
+                    class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition"
+                    placeholder="{{ __('Describe the vision of your company') }}">{{ config('app.vision') }}</textarea>
+            </div>
+
+            <!-- Values -->
+            <div class="p-5 bg-white rounded-xl shadow-sm border  border-gray-200 hover:shadow-md transition">
+                <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="mdi mdi-heart-outline text-blue-600"></i>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-900">{{ __('Values') }}</label>
+                </div>
+                <textarea name="app[values]" rows="3"
+                    class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition"
+                    placeholder="{{ __('List company core values (e.g., Integrity, Innovation, Respect)') }}">{{ config('app.values') }}</textarea>
+            </div>
+
+            <!-- Description -->
+            <div class="p-5 bg-white rounded-xl shadow-sm border  border-gray-200 hover:shadow-md transition">
+                <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="mdi mdi-text-box-outline text-blue-600"></i>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-900">{{ __('Short Description') }}</label>
+                </div>
+                <textarea name="app[description]" rows="3"
+                    class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition"
+                    placeholder="{{ __('Brief description for footer or SEO') }}">{{ config('app.description') }}</textarea>
+            </div>
+
+            <!-- Social Links -->
+            <div class="p-5 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
+                <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="mdi mdi-web text-blue-600"></i>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-900">{{ __('Social Media & Communication') }}</label>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Facebook -->
+                    <input type="url" name="app[facebook]"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-1 focus:ring-blue-100 transition"
+                        placeholder="Facebook URL" value="{{ config('app.facebook') }}">
+
+                    <!-- Instagram -->
+                    <input type="url" name="app[instagram]"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-1 focus:ring-blue-100 transition"
+                        placeholder="Instagram URL" value="{{ config('app.instagram') }}">
+
+                    <!-- Twitter / X -->
+                    <input type="url" name="app[twitter]"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-1 focus:ring-blue-100 transition"
+                        placeholder="Twitter / X URL" value="{{ config('app.twitter') }}">
+
+                    <!-- LinkedIn -->
+                    <input type="url" name="app[linkedin]"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-600 focus:ring-1 focus:ring-blue-100 transition"
+                        placeholder="LinkedIn URL" value="{{ config('app.linkedin') }}">
+
+                    <!-- WhatsApp -->
+                    <input type="url" name="app[whatsapp]"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-green-600 focus:ring-1 focus:ring-green-100 transition"
+                        placeholder="WhatsApp URL o número (+51...)" value="{{ config('app.whatsapp') }}">
+
+                    <!-- Telegram -->
+                    <input type="url" name="app[telegram]"
+                        class="w-full px-3 py-2 border-gray-200 rounded-lg focus:border-sky-600 focus:ring-1 focus:ring-sky-100 transition"
+                        placeholder="Telegram URL" value="{{ config('app.telegram') }}">
+
+                    <!-- TikTok -->
+                    <input type="url" name="app[tiktok]"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-pink-600 focus:ring-1 focus:ring-pink-100 transition"
+                        placeholder="TikTok URL" value="{{ config('app.tiktok') }}">
+
+                    <!-- YouTube -->
+                    <input type="url" name="app[youtube]"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-red-600 focus:ring-1 focus:ring-red-100 transition"
+                        placeholder="YouTube Channel URL" value="{{ config('app.youtube') }}">
+
+                    <!-- Pinterest -->
+                    <input type="url" name="app[pinterest]"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-rose-600 focus:ring-1 focus:ring-rose-100 transition"
+                        placeholder="Pinterest URL" value="{{ config('app.pinterest') }}">
+
+                    <!-- Threads -->
+                    <input type="url" name="app[threads]"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-black focus:ring-1 focus:ring-gray-200 transition"
+                        placeholder="Threads URL" value="{{ config('app.threads') }}">
+                </div>
+
+                <small class="block mt-3 text-sm text-gray-500">
+                    <i class="mdi mdi-information-outline mr-1"></i>
+                    {{ __('Add links to your company’s official social media and communication platforms. These can be displayed in the website footer or contact sections.') }}
                 </small>
             </div>
---}}
         </div>
     </div>
 @endsection
