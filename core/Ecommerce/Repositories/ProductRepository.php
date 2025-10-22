@@ -150,7 +150,7 @@ final class ProductRepository implements Contracts
      * @param string $category
      * @return \Illuminate\Database\Eloquent\Builder<Product>
      */
-    public function searchForUsers(Request $request, string $category = null)
+    public function searchForUsers(Request $request, string $category = '')
     {
         if ($category) {
             $request->merge(['category' => $category]);
@@ -164,10 +164,34 @@ final class ProductRepository implements Contracts
             'attributes',
             'variants',
             'variants.price',
+            'variants.orders',
             'children'
         );
 
         $query->where('published', true);
+
+        if ($request->filled("featured")) {
+            $query->where('featured', $request->featured);
+        }
+
+        if ($request->filled('latest')) {
+            $date = now()->subDays(filter_var($request->latest, FILTER_VALIDATE_INT))->format('Y-m-d');
+            $query->where('created_at', '>=', $date);
+        }
+
+        if ($request->filled('latest_seller')) {
+            $query->whereHas(
+                'variants',
+                function ($query) {
+                    $query->whereHas(
+                        'orders',
+                        function ($query) {
+                            $query->whereNotNull('checkout_id');
+                        }
+                    );
+                }
+            );
+        }
 
         if ($request->filled('category')) {
             $query->whereHas(
@@ -176,6 +200,8 @@ final class ProductRepository implements Contracts
                     $search = strtolower($request->category);
                     $query->whereRaw("LOWER(name) LIKE ?", ["%{$search}%"])
                         ->orWhereRaw("LOWER(slug) LIKE ?", ["%{$search}%"]);
+
+                    $query->orWhereHas('children');
                 }
             );
         }
@@ -262,7 +288,6 @@ final class ProductRepository implements Contracts
             });
         }
 
-
         // Search by price
         if ($request->filled('price')) {
             $query->whereHas(
@@ -276,7 +301,9 @@ final class ProductRepository implements Contracts
             );
         }
 
-        $query->inRandomOrder();
+        if ($request->has('random')) {
+            $query->inRandomOrder();
+        }
 
         return $query;
     }
@@ -477,13 +504,9 @@ final class ProductRepository implements Contracts
                     'unit_id' => $value['unit_id'] ?? null,
                 ];
 
-                Attribute::updateOrCreate($data);
-                /*
-                $product->attributes()->syncWithoutDetaching([
-                    $attribute->id => [
-                        'stock' => $value['stock'] ?? 0
-                    ]
-                ]);*/
+                $attribute = Attribute::updateOrCreate($data);
+
+                $product->attributes()->syncWithoutDetaching($attribute->id);
             }
         }
     }
