@@ -21,7 +21,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <aside
-        class="w-full md:w-80 bg-white rounded-2xl shadow-lg p-3 md:p-6 space-y-6"
+        class="w-full md:w-80 bg-white rounded-2xl shadow-lg p-3 md:p-6 space-y-2"
     >
         <div class="flex justify-between md:justify-start">
             <h2 class="text-xl font-semibold text-gray-800">
@@ -182,6 +182,93 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
         </div>
 
+        <!-- Static Filters Section -->
+        <div class="space-y-4 md:block" :class="{ hidden: !toggle }">
+            <div
+                class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-5 shadow-sm border border-gray-100"
+            >
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-gray-700 text-lg">
+                        {{ __("Product Status") }}
+                    </h3>
+                    <i class="fas fa-bolt text-purple-500 text-xl"></i>
+                </div>
+
+                <!-- Latest Products Filter -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ __("Latest Products") }}
+                    </label>
+                    <div class="flex items-center space-x-3">
+                        <select
+                            v-model="staticFilters.latest"
+                            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent bg-white text-sm"
+                        >
+                            <option value="">
+                                {{ __("Show all products") }}
+                            </option>
+                            <option value="1">{{ __("Last 1 day") }}</option>
+                            <option value="3">{{ __("Last 3 days") }}</option>
+                            <option value="7">{{ __("Last 7 days") }}</option>
+                            <option value="15">{{ __("Last 15 days") }}</option>
+                            <option value="30">{{ __("Last 30 days") }}</option>
+                        </select>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">
+                        {{ __("Filter by product creation date") }}
+                    </p>
+                </div>
+
+                <!-- Latest Sellers Filter -->
+                <div class="mb-4">
+                    <label
+                        class="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 hover:border-purple-400 transition-colors cursor-pointer bg-white"
+                    >
+                        <input
+                            type="checkbox"
+                            v-model="staticFilters.latest_seller"
+                            true-value="true"
+                            false-value=""
+                            class="text-purple-600 focus:ring-purple-500 rounded"
+                        />
+                        <div class="flex-1">
+                            <span class="text-gray-700 font-medium text-sm">
+                                {{ __("Best Sellers") }}
+                            </span>
+                            <p class="text-xs text-gray-500 mt-1">
+                                {{ __("Show only top selling products") }}
+                            </p>
+                        </div>
+                        <i class="fas fa-crown text-yellow-500"></i>
+                    </label>
+                </div>
+
+                <!-- Featured Products Filter -->
+                <div class="mb-2">
+                    <label
+                        class="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 hover:border-purple-400 transition-colors cursor-pointer bg-white"
+                    >
+                        <input
+                            type="checkbox"
+                            v-model="staticFilters.featured"
+                            true-value="true"
+                            false-value=""
+                            class="text-purple-600 focus:ring-purple-500 rounded"
+                        />
+                        <div class="flex-1">
+                            <span class="text-gray-700 font-medium text-sm">
+                                {{ __("Featured Products") }}
+                            </span>
+                            <p class="text-xs text-gray-500 mt-1">
+                                {{ __("Show only featured products") }}
+                            </p>
+                        </div>
+                        <i class="fas fa-star text-purple-500"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <!-- Dynamic Filters from API -->
         <div
             v-for="filter in filters"
@@ -255,7 +342,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         v-model="selectedFilters[filter.slug]"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white"
                     >
-                        <option value="">Select {{ filter.name }}</option>
+                        <option value="">
+                            {{ __("Select") }} {{ filter.name }}
+                        </option>
                         <option
                             v-for="value in filter.values"
                             :key="value"
@@ -305,6 +394,11 @@ export default {
             ],
             filters: [],
             selectedFilters: {},
+            staticFilters: {
+                latest: "",
+                latest_seller: "",
+                featured: "",
+            },
             toggle: false,
         };
     },
@@ -379,16 +473,32 @@ export default {
 
         applyAllFilters() {
             const attrsEntries = Object.entries(this.selectedFilters).filter(
-                ([, v]) => v !== null && v !== undefined && v !== ""
+                ([, v]) =>
+                    v !== null &&
+                    v !== undefined &&
+                    v !== "" &&
+                    (!Array.isArray(v) || v.length > 0)
             );
 
             const attrsStr = attrsEntries
-                .map(([k, v]) => `${k}=${v}`)
+                .map(([k, v]) => {
+                    if (Array.isArray(v)) {
+                        return `${k}=${v.join(",")}`;
+                    }
+                    return `${k}=${v}`;
+                })
                 .join(",");
 
             const filters = {
                 price: `${this.priceMin},${this.priceMax}`,
             };
+
+            // Add static filters
+            Object.entries(this.staticFilters).forEach(([key, value]) => {
+                if (value !== "" && value !== null && value !== undefined) {
+                    filters[key] = value;
+                }
+            });
 
             if (attrsStr) {
                 filters.attrs = attrsStr;
@@ -409,6 +519,13 @@ export default {
                     this.selectedFilters[key] = null;
                 }
             });
+
+            // Clear static filters
+            this.staticFilters = {
+                latest: "",
+                latest_seller: "",
+                featured: "",
+            };
 
             this.applyAllFilters();
         },

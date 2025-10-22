@@ -500,6 +500,7 @@ export default {
                     ...model,
                     category: model.category.id,
                     images: [],
+                    children_id: [],
                 };
 
                 this.errors = {};

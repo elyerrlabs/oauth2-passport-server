@@ -5,9 +5,17 @@
             class="flex items-center px-4 pb-1 hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
         >
             <div
-                class="flex items-center flex-1"
+                class="flex items-center flex-1 p-3"
                 @click="goTo(item.links?.index)"
             >
+                <img
+                    class="w-8 h-8 rounded"
+                    :src="item.images[0].url"
+                    :alt="item.name"
+                />
+                <span class="text-gray-700 text-sm mx-2">
+                    {{ item.name }}
+                </span>
                 <i
                     :class="[
                         'mdi',
@@ -15,8 +23,6 @@
                         'mr-3 text-primary-600 text-lg',
                     ]"
                 ></i>
-
-                <span class="text-gray-700 text-sm">{{ item.name }}</span>
             </div>
 
             <!-- Toggle arrow -->
