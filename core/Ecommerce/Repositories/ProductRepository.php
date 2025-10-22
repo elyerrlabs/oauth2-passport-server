@@ -201,7 +201,7 @@ final class ProductRepository implements Contracts
                     $query->whereRaw("LOWER(name) LIKE ?", ["%{$search}%"])
                         ->orWhereRaw("LOWER(slug) LIKE ?", ["%{$search}%"]);
 
-                    $query->orWhereHas('children');
+                    $query->orWhereHas('parent');
                 }
             );
         }
