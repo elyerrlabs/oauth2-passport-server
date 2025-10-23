@@ -25,10 +25,12 @@ namespace App\Models\Common;
  */
 
 use App\Models\Master;
-use Core\Ecommerce\Model\Product;
+use App\Repositories\Contracts\Dynamic; 
 
 class Tag extends Master
 {
+    use Dynamic;
+
     public $tag = "common_tag";
 
     /**
@@ -47,13 +49,4 @@ class Tag extends Master
         'name',
         'slug'
     ];
-
-    /**
-     * Products
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany<Product, Tag>
-     */
-    public function products()
-    {
-        return $this->morphedByMany(Product::class, 'taggable');
-    }
 }

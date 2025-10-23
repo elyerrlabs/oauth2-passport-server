@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Common;
+namespace App\Repositories\Contracts;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,29 +24,15 @@ namespace App\Models\Common;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Models\Master;
-use App\Repositories\Contracts\Dynamic;
-
-class Unit extends Master
+trait Dynamic
 {
+    public function getMorphClass()
+    {
+        if (property_exists($this, 'tag') && $this->tag) {
+            return $this->tag;
+        }
 
-    use Dynamic;
-
-    public $tag = 'common_unit';
-
-    /**
-     * Table name
-     * @var string
-     */
-    protected $table = "units";
-
-    /**
-     * Fillable attribute
-     * @var array
-     */
-    protected $fillable = [
-        'name',
-        'value'
-    ];
+        return parent::getMorphClass();
+    }
 
 }

@@ -26,13 +26,14 @@ namespace App\Models\Common;
 
 
 use App\Models\Master;
-use Core\Ecommerce\Model\Product; 
+use App\Repositories\Contracts\Dynamic;
 
 class Attribute extends Master
 {
+     use Dynamic;
 
     public $tag = 'common_attribute';
-    
+
     /**
      * Table name
      * @var string
@@ -105,23 +106,5 @@ class Attribute extends Master
     public function setMultipleAttribute($value)
     {
         $this->attributes['multiple'] = filter_var($value, FILTER_VALIDATE_BOOL);
-    }
-
-    /**
-     * Has unit
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<Unit, Attribute>
-     */
-    public function unit()
-    {
-        return $this->hasOne(Unit::class);
-    }
-
-    /**
-     * Products
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany<Product, Attribute>
-     */
-    public function products()
-    {
-        return $this->morphedByMany(Product::class, 'attributable');
     }
 }

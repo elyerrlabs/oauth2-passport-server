@@ -26,10 +26,12 @@ namespace App\Models\Common;
 
 
 use App\Models\Master;
+use App\Repositories\Contracts\Dynamic;
 use App\Models\Common\Icon;
 
 class Category extends Master
 {
+    use Dynamic;
 
     public $tag = 'common_category';
 
@@ -69,7 +71,7 @@ class Category extends Master
         return ucfirst($value);
     }
 
-    
+
     public function setParentIdAttribute($value)
     {
         try {

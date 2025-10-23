@@ -25,13 +25,16 @@ namespace App\Models\Common;
  */
 
 use App\Models\Master;
+use App\Repositories\Contracts\Dynamic;
 use Illuminate\Database\Eloquent\Model;
 
 class Icon extends Master
 {
 
-    public $tag = 'common_icon';
+    use Dynamic;
     
+    public $tag = 'common_icon';
+
     /**
      * Table name
      * @var string

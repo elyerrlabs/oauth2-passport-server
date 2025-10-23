@@ -26,11 +26,14 @@ namespace App\Models\Common;
 
 
 use App\Models\Master;
+use App\Repositories\Contracts\Dynamic;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class File extends Master
 {
+
+    use Dynamic;
 
     public $tag = 'common_files';
 

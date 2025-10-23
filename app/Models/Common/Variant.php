@@ -26,9 +26,12 @@ namespace App\Models\Common;
 
 use App\Models\Master;
 use App\Models\Common\Order;
+use App\Repositories\Contracts\Dynamic;
 
 class Variant extends Master
 {
+    use Dynamic;
+    
     public $tag = 'common_variant';
 
     /**
@@ -74,8 +77,8 @@ class Variant extends Master
     }
 
     /**
-     * has price
-     * @return \Illuminate\Database\Eloquent\Relations\MorphOne<Price, Product>
+     * Summary of price
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
     public function price()
     {

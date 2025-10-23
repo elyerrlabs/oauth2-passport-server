@@ -25,6 +25,7 @@ namespace App\Models\Common;
  */
 
 use App\Models\Master;
+use App\Repositories\Contracts\Dynamic;
 use Core\Partner\Model\User;
 use Core\Transaction\Model\Checkout;
 
