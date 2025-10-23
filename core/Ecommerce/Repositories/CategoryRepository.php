@@ -55,7 +55,7 @@ class CategoryRepository implements Contracts, Tag
 
     /**
      * Construct
-     * @param \App\Models\Common\Category $category
+     * @param \Core\Ecommerce\Model\Category $category
      */
     public function __construct(Category $category)
     {
@@ -176,7 +176,7 @@ class CategoryRepository implements Contracts, Tag
 
     /**
      * Create icon
-     * @param \App\Models\Common\Category $category
+     * @param \Core\Ecommerce\Model\Category $category
      * @param array $data
      * @return void
      */
@@ -198,8 +198,8 @@ class CategoryRepository implements Contracts, Tag
     }
 
     /**
-     * create image
-     * @param \App\Models\Common\Category $model
+     * Create image
+     * @param \Core\Ecommerce\Model\Category $model
      * @param array $data
      * @return void
      */

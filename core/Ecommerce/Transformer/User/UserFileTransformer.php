@@ -24,8 +24,8 @@ namespace Core\Ecommerce\Transformer\User;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Models\Common\File;
 use Illuminate\Support\Facades\Storage;
+use Core\Ecommerce\Model\File;
 use League\Fractal\TransformerAbstract;
 
 class UserFileTransformer extends TransformerAbstract
@@ -53,7 +53,7 @@ class UserFileTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(File $file)
+    public function transform($file)
     {
         return [
             'name' => $file->name,

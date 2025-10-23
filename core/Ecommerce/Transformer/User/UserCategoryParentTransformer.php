@@ -24,9 +24,9 @@ namespace Core\Ecommerce\Transformer\User;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-
-use App\Models\Common\Category;
+ 
 use League\Fractal\TransformerAbstract;
+use Core\Ecommerce\Model\Category;
 use Core\Ecommerce\Transformer\User\UserFileTransformer;
 
 class UserCategoryParentTransformer extends TransformerAbstract

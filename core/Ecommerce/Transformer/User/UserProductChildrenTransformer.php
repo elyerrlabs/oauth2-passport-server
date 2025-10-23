@@ -27,9 +27,6 @@ namespace Core\Ecommerce\Transformer\User;
 use Core\Ecommerce\Model\Product;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
-use Core\Ecommerce\Transformer\User\UserFileTransformer;
-use Core\Ecommerce\Transformer\User\UserCategoryTransformer;
-use Core\Ecommerce\Transformer\User\UserProductTagTransformer;
 
 class UserProductChildrenTransformer extends TransformerAbstract
 {

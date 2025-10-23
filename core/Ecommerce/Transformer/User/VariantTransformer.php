@@ -24,6 +24,7 @@ namespace Core\Ecommerce\Transformer\User;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Model\Variant;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
@@ -36,7 +37,7 @@ class VariantTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform($variant)
+    public function transform(Variant $variant)
     {
         return [
             'id' => $variant->id,

@@ -25,7 +25,6 @@ namespace Core\Ecommerce\Transformer\User;
  */
 
 
-use App\Models\Common\Order;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 use Core\Ecommerce\Transformer\User\UserFileTransformer;
@@ -57,7 +56,7 @@ class UserOrderTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(Order $order)
+    public function transform($order)
     {
         return [
             'id' => $order->id,

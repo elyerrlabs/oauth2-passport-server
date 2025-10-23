@@ -23,8 +23,7 @@ namespace Core\Ecommerce\Transformer\User;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use App\Models\Common\Attribute;
+ 
 use League\Fractal\TransformerAbstract;
 
 class UserAttributeTransformer extends TransformerAbstract

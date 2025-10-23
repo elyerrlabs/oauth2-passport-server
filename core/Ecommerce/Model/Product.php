@@ -25,16 +25,12 @@ namespace Core\Ecommerce\Model;
  */
 
 use App\Models\Master;
+use Core\Ecommerce\Model\Variant; 
+use Core\Ecommerce\Model\Tag;
+use Core\Ecommerce\Model\Attribute;
+use Core\Ecommerce\Model\File;
 use Core\Ecommerce\Model\Category;
-use App\Models\Common\Variant;
-use App\Models\Common\Tag;
-use App\Models\Common\File;
-use App\Models\Common\Order;
-use App\Models\Common\Price;
-use App\Models\Common\Attribute;
-use App\Transformers\File\FileTransformer;
 use Illuminate\Database\Eloquent\Collection;
-use Core\Ecommerce\Transformer\Admin\ProductTagTransformer;
 use Core\Ecommerce\Transformer\Admin\ProductAttributeTransformer;
 
 class Product extends Master
@@ -177,15 +173,6 @@ class Product extends Master
             $result,
             new $transformer($this)
         )->toArray()['data'] ?? [];
-    }
-
-    /**
-     * has price
-     * @return \Illuminate\Database\Eloquent\Relations\MorphOne<Price, Product>
-     */
-    public function price()
-    {
-        return $this->morphOne(Price::class, 'priceable');
     }
 
     /**

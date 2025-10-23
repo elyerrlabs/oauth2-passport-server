@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Transformer\User;
+namespace Core\Ecommerce\Model;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -20,45 +20,12 @@ namespace Core\Ecommerce\Transformer\User;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-
-
-use League\Fractal\TransformerAbstract;
-use Core\Ecommerce\Model\Icon;
-
-class UserIconTransformer extends TransformerAbstract
+class Variant extends \App\Models\Common\Variant
 {
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected array $defaultIncludes = [
-        //
-    ];
 
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected array $availableIncludes = [
-        //
-    ];
 
-    /**
-     * A Fractal transformer.
-     *
-     * @return array
-     */
-    public function transform($icon)
-    {
-        return [
-            'icon' => $icon->class,
-            'origin' => $icon->origin
-        ];
-    }
 }

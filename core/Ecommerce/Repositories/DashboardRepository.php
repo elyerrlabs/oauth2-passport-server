@@ -24,10 +24,9 @@ namespace Core\Ecommerce\Repositories;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use App\Models\Common\Category;
-use App\Models\Common\Variant;
+ 
 use Illuminate\Support\Facades\Storage;
+use Core\Ecommerce\Model\Variant;
 use Core\Ecommerce\Transformer\Admin\TotalTransformer;
 use Core\Ecommerce\Model\Product;
 use Core\Transaction\Model\Checkout;

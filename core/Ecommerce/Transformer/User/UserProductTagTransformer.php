@@ -25,8 +25,8 @@ namespace Core\Ecommerce\Transformer\User;
  */
 
 
-use App\Models\Common\Tag;
 use Core\Ecommerce\Model\Product;
+use Core\Ecommerce\Model\Tag;
 use League\Fractal\TransformerAbstract;
 
 class UserProductTagTransformer extends TransformerAbstract

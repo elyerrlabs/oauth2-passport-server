@@ -25,8 +25,8 @@ namespace Core\Ecommerce\Transformer\User;
  */
 
 
-use App\Models\Common\Category;
 use League\Fractal\TransformerAbstract;
+use Core\Ecommerce\Model\Category;
 use Core\Ecommerce\Transformer\User\UserFileTransformer;
 
 class UserCategoryChildrenTransformer extends TransformerAbstract

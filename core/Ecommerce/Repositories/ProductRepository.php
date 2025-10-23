@@ -23,10 +23,10 @@ namespace Core\Ecommerce\Repositories;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use App\Models\Common\Attribute;
-use App\Models\Common\Variant;
+ 
 use Elyerr\ApiResponse\Exceptions\ReportError;
+use Core\Ecommerce\Model\Variant;
+use Core\Ecommerce\Model\Attribute;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Core\Ecommerce\Model\Product;

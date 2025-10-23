@@ -23,10 +23,10 @@ namespace Core\Ecommerce\Repositories;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use App\Models\Common\Order;
+ 
 use Core\Ecommerce\Transformer\Admin\VariantTransformer;
-use App\Models\Common\Variant;
+use Core\Ecommerce\Model\Variant;
+use Core\Ecommerce\Model\Order; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -45,7 +45,7 @@ class OrderRepository implements Contracts
 
     /**
      * Construct
-     * @param \App\Models\Common\Order $order
+     * @param \Core\Ecommerce\Model\Order $order
      * @param \Core\Ecommerce\Repositories\ProductRepository $productRepository
      */
     public function __construct(Order $order, ProductRepository $productRepository)

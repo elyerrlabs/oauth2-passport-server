@@ -23,10 +23,9 @@ namespace Core\Ecommerce\Repositories;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use App\Models\Common\Variant;
-use Core\Transaction\Model\Transaction;
+ 
 use Core\Transaction\Model\User;
+use Core\Ecommerce\Model\Variant;
 use Core\Transaction\Model\DeliveryAddress;
 use Core\Transaction\Repositories\TransactionRepository;
 use Illuminate\Support\Str;
