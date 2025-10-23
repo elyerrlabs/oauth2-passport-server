@@ -25,6 +25,7 @@ namespace Core\User\Model;
 
 use App\Models\Common\Order;
 use App\Models\Auth;
+use App\Repositories\Contracts\Dynamic;
 use Illuminate\Http\Request;
 use App\Models\Setting\Terminal;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +33,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Auth
 {
-    use SoftDeletes;
+    use SoftDeletes, Dynamic;
 
     public $tag = "user";
 
