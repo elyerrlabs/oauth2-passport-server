@@ -25,7 +25,7 @@ namespace Core\Ecommerce\Model;
  */
 
 use App\Models\Master;
-use Core\Ecommerce\Model\Variant; 
+use Core\Ecommerce\Model\Variant;
 use Core\Ecommerce\Model\Tag;
 use Core\Ecommerce\Model\Attribute;
 use Core\Ecommerce\Model\File;
@@ -142,7 +142,7 @@ class Product extends Master
      */
     public function attributes()
     {
-        return $this->morphToMany(Attribute::class, 'attributable')->withPivot('stock');
+        return $this->morphToMany(Attribute::class, 'attributable');
     }
 
     /**
@@ -157,13 +157,11 @@ class Product extends Master
     public function getAttrCollection(Collection $collection, $transformer = ProductAttributeTransformer::class)
     {
         $result = $collection
-            ->where('pivot.stock', '>', 0)
             ->groupBy('name')
             ->map(function ($items, $key) {
                 return [
                     'name' => $key,
                     'slug' => $items->first()['slug'],
-                    //'stock' => $items->sum('pivot.stock'),
                     'value' => $items->pluck('value')->all(),
                 ];
             })

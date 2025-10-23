@@ -30,7 +30,7 @@ use App\Repositories\Contracts\Dynamic;
 
 class Attribute extends Master
 {
-     use Dynamic;
+    use Dynamic;
 
     public $tag = 'common_attribute';
 
@@ -53,7 +53,6 @@ class Attribute extends Master
         'value',
         'widget',
         'multiple',
-        'unit_id'
     ];
 
     protected $casts = [

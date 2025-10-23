@@ -48,7 +48,6 @@ class MorphServiceProvider extends ServiceProvider
             (new \App\Models\Common\Attribute)->tag => \App\Models\Common\Attribute::class,
             (new \App\Models\Common\Icon())->tag => \App\Models\Common\Icon::class,
             (new \App\Models\Common\Tag())->tag => \App\Models\Common\Tag::class,
-            (new \App\Models\Common\Unit())->tag => \App\Models\Common\Unit::class,
             (new \App\Models\Common\Order())->tag => \App\Models\Common\Order::class,
             (new \App\Models\Common\Variant())->tag => \App\Models\Common\Variant::class
         ];
