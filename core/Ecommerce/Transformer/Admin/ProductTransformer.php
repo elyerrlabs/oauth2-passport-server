@@ -67,7 +67,7 @@ class ProductTransformer extends TransformerAbstract
             'slug' => $product->slug,
             'published' => $product->published ? true : false,
             'featured' => $product->featured ? true : false,
-            'stock' => !empty($variant) ? $variant->sum('stock') : 0,
+            'stock' => !empty($variant) ? $product->variants->sum('stock') : 0,
             'price' => !empty($variant) ? $variant->price->amount : 0,
             'format_price' => !empty($variant) ? $this->formatMoney($variant->price->amount) : 0,
             'currency' => !empty($variant) ? $variant->price->currency : '',
