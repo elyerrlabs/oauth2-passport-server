@@ -1,668 +1,578 @@
 <template>
     <v-guest-layout>
-        <template #body>
-            <div class="q-pa-lg documentation-container">
-                <!-- Header Section -->
-                <div class="row items-center q-mb-lg">
-                    <q-icon
-                        name="mdi-book-open-page-variant"
-                        size="32px"
-                        color="primary"
-                        class="q-mr-md"
-                    />
-                    <div class="text-h4 text-weight-bold text-primary">
-                        {{ __("Documentation & Resources") }}
+        <div class="max-w-7xl mx-auto p-6 documentation-container">
+            <!-- Header Section -->
+            <div class="flex items-center mb-8">
+                <span
+                    class="mdi mdi-book-open-page-variant w-8 h-8 text-blue-600 mr-4"
+                ></span>
+                <h1 class="text-3xl font-bold text-blue-600">
+                    {{ __("Documentation & Resources") }}
+                </h1>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Source Code Section -->
+                <div class="col-span-1">
+                    <div
+                        class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 doc-card"
+                    >
+                        <div
+                            class="bg-blue-600 text-white rounded-t-xl p-5 card-header"
+                        >
+                            <div class="flex items-center">
+                                <span
+                                    class="mdi mdi-code-braces w-6 h-6 text-white mr-2"
+                                ></span>
+                                <h2 class="text-xl font-bold">
+                                    {{ __("Source Code") }}
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="space-y-3 doc-list">
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://github.com/elyerr/oauth2-passport-server'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
+                                    >
+                                        <span
+                                            class="mdi mdi-github w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{ __("GitHub Repository") }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Main code repository on GitHub"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
+                                    >
+                                        <span
+                                            class="mdi mdi-gitlab w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{ __("GitLab Repository") }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Main code repository on GitLab"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/LICENSE.txt'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
+                                    >
+                                        <span
+                                            class="mdi mdi-scale-balance w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{ __("License") }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Project license information"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/CHANGELOG.md'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
+                                    >
+                                        <span
+                                            class="mdi mdi-format-list-bulleted w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{ __("Changelog") }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Project version history and changes"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Main Content Grid -->
-                <div class="row q-col-gutter-lg">
-                    <!-- Source Code Section -->
-                    <div class="col-12 col-md-6">
-                        <q-card class="doc-card shadow-3 rounded-borders">
-                            <q-card-section
-                                class="card-header bg-primary text-white"
-                            >
-                                <div class="row items-center">
-                                    <q-icon
-                                        name="mdi-code-braces"
-                                        size="24px"
-                                        class="q-mr-sm"
-                                    />
-                                    <div class="text-h6 text-weight-bold">
-                                        {{ __("Source Code") }}
+                <!-- API Documentation Section -->
+                <div class="col-span-1">
+                    <div
+                        class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 doc-card"
+                    >
+                        <div
+                            class="bg-purple-600 text-white rounded-t-xl p-5 card-header"
+                        >
+                            <div class="flex items-center">
+                                <span
+                                    class="mdi mdi-api w-6 h-6 text-white mr-2"
+                                ></span>
+                                <h2 class="text-xl font-bold">
+                                    {{ __("API Documentation") }}
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="space-y-3 doc-list">
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://documenter.getpostman.com/view/5625104/2sB2xBDq6o'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
+                                    >
+                                        <span
+                                            class="mdi mdi-post w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{ __("Postman Documentation") }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Complete API reference with examples"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
                                     </div>
                                 </div>
-                            </q-card-section>
-
-                            <q-card-section>
-                                <q-list class="doc-list">
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://github.com/elyerr/oauth2-passport-server'
-                                            )
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="blue-grey-1"
-                                                text-color="dark"
-                                                icon="mdi-github"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __("GitHub Repository")
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Main code repository on GitHub"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server'
-                                            )
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="orange-1"
-                                                text-color="dark"
-                                                icon="mdi-gitlab"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __("GitLab Repository")
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Main code repository on GitLab"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/LICENSE.txt'
-                                            )
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="green-1"
-                                                text-color="dark"
-                                                icon="mdi-scale-balance"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __("License")
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Project license information"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/CHANGELOG.md'
-                                            )
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="purple-1"
-                                                text-color="dark"
-                                                icon="mdi-format-list-bulleted"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __("Changelog")
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Project version history and changes"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-                                </q-list>
-                            </q-card-section>
-                        </q-card>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <!-- API Documentation Section -->
-                    <div class="col-12 col-md-6">
-                        <q-card class="doc-card shadow-3 rounded-borders">
-                            <q-card-section
-                                class="card-header bg-secondary text-white"
-                            >
-                                <div class="row items-center">
-                                    <q-icon
-                                        name="mdi-api"
-                                        size="24px"
-                                        class="q-mr-sm"
-                                    />
-                                    <div class="text-h6 text-weight-bold">
-                                        {{ __("API Documentation") }}
+                <!-- Wiki & Guides Section -->
+                <div class="col-span-1">
+                    <div
+                        class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 doc-card"
+                    >
+                        <div
+                            class="bg-teal-600 text-white rounded-t-xl p-5 card-header"
+                        >
+                            <div class="flex items-center">
+                                <span
+                                    class="mdi mdi-book-open-variant w-6 h-6 text-white mr-2"
+                                ></span>
+                                <h2 class="text-xl font-bold">
+                                    {{ __("Wiki & Guides") }}
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="space-y-3 doc-list">
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/wikis/home'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
+                                    >
+                                        <span
+                                            class="mdi mdi-home w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{ __("Main Wiki") }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Project overview and main documentation"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
                                     </div>
                                 </div>
-                            </q-card-section>
 
-                            <q-card-section>
-                                <q-list class="doc-list">
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://documenter.getpostman.com/view/5625104/2sB2xBDq6o'
-                                            )
-                                        "
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/wikis/home/prompts-supported'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
                                     >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="blue-1"
-                                                text-color="dark"
-                                                icon="mdi-post"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __("Postman Documentation")
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Complete API reference with examples"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-                                </q-list>
-                            </q-card-section>
-                        </q-card>
+                                        <span
+                                            class="mdi mdi-comment-question w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{ __("Supported Prompts") }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Available authentication prompts"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/wikis/home/connect-applications'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
+                                    >
+                                        <span
+                                            class="mdi mdi-connection w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{ __("Connect Applications") }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "How to integrate applications"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/wikis/home/autorizacion'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
+                                    >
+                                        <span
+                                            class="mdi mdi-shield-account w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{ __("Authorization Guide") }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Authorization processes and flows"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <!-- Wiki & Guides Section -->
-                    <div class="col-12 col-md-6">
-                        <q-card class="doc-card shadow-3 rounded-borders">
-                            <q-card-section
-                                class="card-header bg-accent text-white"
-                            >
-                                <div class="row items-center">
-                                    <q-icon
-                                        name="mdi-book-open-variant"
-                                        size="24px"
-                                        class="q-mr-sm"
-                                    />
-                                    <div class="text-h6 text-weight-bold">
-                                        {{ __("Wiki & Guides") }}
+                <!-- Development & Deployment Section -->
+                <div class="col-span-1">
+                    <div
+                        class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 doc-card"
+                    >
+                        <div
+                            class="bg-cyan-600 text-white rounded-t-xl p-5 card-header"
+                        >
+                            <div class="flex items-center">
+                                <span
+                                    class="mdi mdi-rocket-launch w-6 h-6 text-white mr-2"
+                                ></span>
+                                <h2 class="text-xl font-bold">
+                                    {{ __("Development & Deployment") }}
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="space-y-3 doc-list">
+                                <!-- English Documentation -->
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/docs/dev/developers_en.md?ref_type=heads'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
+                                    >
+                                        <span
+                                            class="mdi mdi-developer-board w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{
+                                                __("Developer Guide (English)")
+                                            }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Development documentation in English"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
                                     </div>
                                 </div>
-                            </q-card-section>
 
-                            <q-card-section>
-                                <q-list class="doc-list">
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/wikis/home'
-                                            )
-                                        "
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/docs/deploy/deploy_en.md?ref_type=heads'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
                                     >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="teal-1"
-                                                text-color="dark"
-                                                icon="mdi-home"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __("Main Wiki")
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Project overview and main documentation"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/wikis/home/prompts-supported'
-                                            )
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="amber-1"
-                                                text-color="dark"
-                                                icon="mdi-comment-question"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __("Supported Prompts")
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Available authentication prompts"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/wikis/home/connect-applications'
-                                            )
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="indigo-1"
-                                                text-color="dark"
-                                                icon="mdi-connection"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __("Connect Applications")
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "How to integrate applications"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/wikis/home/autorizacion'
-                                            )
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="red-1"
-                                                text-color="dark"
-                                                icon="mdi-shield-account"
-                                            />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __("Authorization Guide")
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Authorization processes and flows"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-                                </q-list>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-
-                    <!-- Development & Deployment Section -->
-                    <div class="col-12 col-md-6">
-                        <q-card class="doc-card shadow-3 rounded-borders">
-                            <q-card-section
-                                class="card-header bg-info text-white"
-                            >
-                                <div class="row items-center">
-                                    <q-icon
-                                        name="mdi-rocket-launch"
-                                        size="24px"
-                                        class="q-mr-sm"
-                                    />
-                                    <div class="text-h6 text-weight-bold">
-                                        {{ __("Development & Deployment") }}
+                                        <span
+                                            class="mdi mdi-cloud-upload w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{
+                                                __("Deployment Guide (English)")
+                                            }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Deployment instructions in English"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
                                     </div>
                                 </div>
-                            </q-card-section>
 
-                            <q-card-section>
-                                <q-list class="doc-list">
-                                    <!-- English Documentation -->
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/docs/dev/developers_en.md?ref_type=heads'
-                                            )
-                                        "
+                                <!-- Spanish Documentation -->
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/docs/dev/developers_es.md?ref_type=heads'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
                                     >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="green-1"
-                                                text-color="dark"
-                                            >
-                                                <q-icon
-                                                    name="mdi-developer-board"
-                                                />
-                                            </q-avatar>
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __(
-                                                        "Developer Guide (English)"
-                                                    )
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Development documentation in English"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
+                                        <span
+                                            class="mdi mdi-developer-board w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{
+                                                __("Developer Guide (Spanish)")
+                                            }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Development documentation in Spanish"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
+                                    </div>
+                                </div>
 
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/docs/deploy/deploy_en.md?ref_type=heads'
-                                            )
-                                        "
+                                <div
+                                    class="flex items-center p-4 rounded-lg border border-transparent hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all duration-200 doc-item"
+                                    @click="
+                                        openLink(
+                                            'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/docs/deploy/deploy_es.md?ref_type=heads'
+                                        )
+                                    "
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-gray-800 mr-4"
                                     >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="blue-1"
-                                                text-color="dark"
-                                            >
-                                                <q-icon
-                                                    name="mdi-cloud-upload"
-                                                />
-                                            </q-avatar>
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __(
-                                                        "Deployment Guide (English)"
-                                                    )
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Deployment instructions in English"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-
-                                    <!-- Spanish Documentation -->
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/docs/dev/developers_es.md?ref_type=heads'
-                                            )
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="orange-1"
-                                                text-color="dark"
-                                            >
-                                                <q-icon
-                                                    name="mdi-developer-board"
-                                                />
-                                            </q-avatar>
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __(
-                                                        "Developer Guide (Spanish)"
-                                                    )
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Development documentation in Spanish"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-
-                                    <q-item
-                                        class="doc-item"
-                                        clickable
-                                        v-ripple
-                                        @click="
-                                            openLink(
-                                                'https://gitlab.com/elyerr/oauth2-passport-server/-/blob/main/docs/deploy/deploy_es.md?ref_type=heads'
-                                            )
-                                        "
-                                    >
-                                        <q-item-section avatar>
-                                            <q-avatar
-                                                color="purple-1"
-                                                text-color="dark"
-                                            >
-                                                <q-icon
-                                                    name="mdi-cloud-upload"
-                                                />
-                                            </q-avatar>
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label
-                                                class="text-weight-medium"
-                                                >{{
-                                                    __(
-                                                        "Deployment Guide (Spanish)"
-                                                    )
-                                                }}</q-item-label
-                                            >
-                                            <q-item-label caption>
-                                                {{
-                                                    __(
-                                                        "Deployment instructions in Spanish"
-                                                    )
-                                                }}
-                                            </q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-icon
-                                                name="mdi-open-in-new"
-                                                color="grey-6"
-                                            />
-                                        </q-item-section>
-                                    </q-item>
-                                </q-list>
-                            </q-card-section>
-                        </q-card>
+                                        <span
+                                            class="mdi mdi-cloud-upload w-6 h-6"
+                                        ></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">
+                                            {{
+                                                __("Deployment Guide (Spanish)")
+                                            }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{
+                                                __(
+                                                    "Deployment instructions in Spanish"
+                                                )
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <span
+                                            class="mdi mdi-open-in-new w-5 h-5"
+                                        ></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </template>
+        </div>
     </v-guest-layout>
 </template>
 
 <script>
+import VGuestLayout from "@/layouts/VGuestLayout.vue";
+
 export default {
     name: "DocumentationLinks",
+    components: {
+        VGuestLayout,
+    },
     methods: {
         openLink(url) {
             window.open(url, "_blank", "noopener,noreferrer");
@@ -690,7 +600,6 @@ export default {
 .card-header {
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
-    padding: 16px 20px;
 }
 
 .doc-list {
@@ -699,7 +608,6 @@ export default {
 
 .doc-item {
     border-radius: 8px;
-    margin-bottom: 8px;
     transition: background-color 0.2s ease;
     border: 1px solid transparent;
 }
@@ -709,23 +617,19 @@ export default {
     border-color: #e9ecef;
 }
 
-.doc-item:last-child {
-    margin-bottom: 0;
-}
-
 /* Responsive adjustments */
 @media (max-width: 1024px) {
     .documentation-container {
         padding: 16px;
     }
 
-    .text-h4 {
+    .text-3xl {
         font-size: 1.75rem;
     }
 }
 
 @media (max-width: 600px) {
-    .text-h4 {
+    .text-3xl {
         font-size: 1.5rem;
     }
 

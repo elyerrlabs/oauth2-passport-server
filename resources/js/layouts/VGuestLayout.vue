@@ -61,8 +61,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Navigation Actions -->
                     <div class="flex items-center space-x-3">
-                        <v-theme />
-
                         <!-- Plan Button -->
                         <button
                             v-if="plan?.name"
