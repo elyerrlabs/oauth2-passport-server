@@ -264,12 +264,14 @@
                                     @endif
                                     <td class="date">{{ $log['date'] }}</td>
                                     <td class="text">
-                                        @if ($log['stack'])
-                                            <button type="button"
-                                                class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
-                                                data-display="stack{{ $key }}">
-                                                <span class="fa fa-search"></span>
-                                            </button>
+                                        @if (auth()->user()->hasAccess(['administrator:logs:full']) && auth()->user()->email != config('system.demo.email'))
+                                            @if ($log['stack'])
+                                                <button type="button"
+                                                    class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
+                                                    data-display="stack{{ $key }}">
+                                                    <span class="fa fa-search"></span>
+                                                </button>
+                                            @endif
                                         @endif
                                         {{ $log['text'] }}
                                         @if (isset($log['in_file']))
@@ -289,30 +291,32 @@
                     </table>
                 @endif
                 <div class="p-3">
-                    @if ($current_file)
-                        <a
-                            href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
-                            <span class="fa fa-download"></span> {{ __('Download file') }}
-                        </a>
-                        -
-                        <a id="clean-log"
-                            href="?clean={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
-                            <span class="fa fa-sync"></span> {{ __('Clean file') }}
-                        </a>
-                        -
-                        <a id="delete-log"
-                            href="?del={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
-                            <span class="fa fa-trash"></span> {{ __('Delete file') }}
-                        </a>
-                        @if (count($files) > 1)
-                            -
-                            <a id="delete-all-log"
-                                href="?delall=true{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
-                                <span class="fa fa-trash-alt"></span> {{ __('Delete all files') }}
+                    @if (auth()->user()->hasAccess(['administrator:logs:full']) && auth()->user()->email != config('system.demo.email'))
+                        @if ($current_file)
+                            <a
+                                href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
+                                <span class="fa fa-download"></span> {{ __('Download file') }}
                             </a>
+                            -
+                            <a id="clean-log"
+                                href="?clean={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
+                                <span class="fa fa-sync"></span> {{ __('Clean file') }}
+                            </a>
+                            -
+                            <a id="delete-log"
+                                href="?del={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
+                                <span class="fa fa-trash"></span> {{ __('Delete file') }}
+                            </a>
+                            @if (count($files) > 1)
+                                -
+                                <a id="delete-all-log"
+                                    href="?delall=true{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
+                                    <span class="fa fa-trash-alt"></span> {{ __('Delete all files') }}
+                                </a>
+                            @endif
                         @endif
-                    @endif
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -350,26 +354,27 @@
             });
 
             // end darkmode js 
+            @if (auth()->user()->hasAccess(['administrator:logs:full']) && auth()->user()->email != config('system.demo.email'))
 
-            $('.table-container tr').on('click', function() {
-                $('#' + $(this).data('display')).toggle();
-            });
-            $('#table-log').DataTable({
-                "order": [$('#table-log').data('orderingIndex'), 'desc'],
-                "stateSave": true,
-                "stateSaveCallback": function(settings, data) {
-                    window.localStorage.setItem("datatable", JSON.stringify(data));
-                },
-                "stateLoadCallback": function(settings) {
-                    var data = JSON.parse(window.localStorage.getItem("datatable"));
-                    if (data) data.start = 0;
-                    return data;
-                }
-            });
-            $('#delete-log, #clean-log, #delete-all-log').click(function() {
-                return confirm('Are you sure?');
-            });
-
+                $('.table-container tr').on('click', function() {
+                    $('#' + $(this).data('display')).toggle();
+                });
+                $('#table-log').DataTable({
+                    "order": [$('#table-log').data('orderingIndex'), 'desc'],
+                    "stateSave": true,
+                    "stateSaveCallback": function(settings, data) {
+                        window.localStorage.setItem("datatable", JSON.stringify(data));
+                    },
+                    "stateLoadCallback": function(settings) {
+                        var data = JSON.parse(window.localStorage.getItem("datatable"));
+                        if (data) data.start = 0;
+                        return data;
+                    }
+                });
+                $('#delete-log, #clean-log, #delete-all-log').click(function() {
+                    return confirm('Are you sure?');
+                });
+            @endif
         });
     </script>
 </body>
