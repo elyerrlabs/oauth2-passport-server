@@ -791,6 +791,7 @@
 
 <script>
 import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import VSubscription from "@/components/VSubscription.vue";
 import VCancel from "./Cancel.vue";
 import VTransactionActivate from "@/components/VTransactionActivate.vue";
 export default {
@@ -798,6 +799,7 @@ export default {
         VCancel,
         VAccountLayout,
         VTransactionActivate,
+        VSubscription
     },
 
     data() {
