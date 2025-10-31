@@ -545,6 +545,15 @@ export default {
         this.getOrders();
     },
 
+    mounted() {
+        this.$nextTick(() => {
+            const footer = document.getElementById("footer");
+            if (footer) {
+                footer.style.display = "block";
+            }
+        });
+    },
+
     methods: {
         increaseQuantity(item) {
             item.quantity++;

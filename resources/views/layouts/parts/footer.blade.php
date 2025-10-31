@@ -99,7 +99,7 @@
     </style>
 @endpush
 
-<footer id="footer" class="universal-gradient text-white pt-16 pb-8 relative overflow-hidden {{ $hidden ?? '' }}">
+<footer class="universal-gradient text-white pt-16 pb-8 relative overflow-hidden   ">
     <!-- Background Elements Sutiles -->
     <div class="absolute inset-0 opacity-5">
         <div class="absolute top-20 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>

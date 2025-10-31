@@ -4,10 +4,20 @@
     @vite(['resources/js/ecommerce.js'])
 @endpush
 
+@push('css')
+    <style nonce="{{ $nonce }}">
+        #footer {
+            display: none;
+        }
+    </style>
+@endpush
+
 @section('content')
     @inertia
 @endsection
 
 @section('footer')
-    @include('layouts.parts.footer', ['hidden' => 'hidden'])
+    <div id="footer">
+        @include('layouts.parts.footer', ['hidden' => 'hidden'])
+    </div>
 @endsection

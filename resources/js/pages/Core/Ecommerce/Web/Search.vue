@@ -380,7 +380,14 @@ export default {
     mounted() {
         // Initialize image indexes for all products
         this.products.forEach((product) => {
-            this.$set(this.currentImageIndex, product.id, 0);
+            this.currentImageIndex[product.id] = 0;
+        });
+
+        this.$nextTick(() => {
+            const footer = document.getElementById("footer");
+            if (footer) {
+                footer.style.display = "block";
+            }
         });
     },
 

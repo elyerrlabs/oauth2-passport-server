@@ -57,7 +57,5 @@ createInertiaApp({
     app.use(VueSweetalert2);
     app.use(plugin);
     app.mount(el);
-
-    document.getElementById("footer").classList.remove("hidden");
   },
 });

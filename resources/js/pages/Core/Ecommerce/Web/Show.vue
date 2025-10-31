@@ -1014,6 +1014,16 @@ export default {
         this.getProduct();
     },
 
+
+    mounted() {
+        this.$nextTick(() => {
+            const footer = document.getElementById("footer");
+            if (footer) {
+                footer.style.display = "block";
+            }
+        });
+    },
+    
     methods: {
         increaseQuantity() {
             if (this.form.quantity < this.maxQuantity) {

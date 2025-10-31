@@ -863,6 +863,13 @@ export default {
         this.carouselInterval = setInterval(() => {
             this.nextSlide();
         }, 5000);
+
+        this.$nextTick(() => {
+            const footer = document.getElementById("footer");
+            if (footer) {
+                footer.style.display = "block";
+            }
+        });
     },
 
     methods: {
