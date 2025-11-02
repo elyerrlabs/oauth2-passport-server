@@ -62,6 +62,7 @@ class ScopeTransformer extends TransformerAbstract
             'public' => $data->public ? true : false,
             'active' => $data->active ? true : false,
             'api_key' => $data->api_key ? true : false,
+            'web' => $data->web ? true : false,
             'gsr_id' => $data->getGsrId(),
             'service' => [
                 'id' => $data->service->id,

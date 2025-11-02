@@ -66,7 +66,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Statistics -->
                 <div
                     v-if="scopesCount > 0"
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+                    class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8"
                 >
                     <div
                         class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center"
@@ -102,6 +102,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div class="text-sm text-orange-600">
                             {{ __("API Key Access") }}
+                        </div>
+                        <i class="mdi mdi-key text-orange-500 text-xl mt-2"></i>
+                    </div>
+
+                    <div
+                        class="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center"
+                    >
+                        <div class="text-2xl font-bold text-orange-700">
+                            {{ webScopesCount }}
+                        </div>
+                        <div class="text-sm text-orange-600">
+                            {{ __("Web Access") }}
                         </div>
                         <i class="mdi mdi-key text-orange-500 text-xl mt-2"></i>
                     </div>
@@ -199,6 +211,39 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     >
                                         {{
                                             item.api_key
+                                                ? __("Enabled")
+                                                : __("Disabled")
+                                        }}
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <i
+                                            :class="
+                                                item.web
+                                                    ? 'mdi mdi-web text-blue-500'
+                                                    : 'mdi mdi-web-off text-gray-400'
+                                            "
+                                        ></i>
+                                        <span class="text-sm">
+                                            {{
+                                                __(
+                                                    "Web Access (Login Required)"
+                                                )
+                                            }}
+                                        </span>
+                                    </div>
+                                    <span
+                                        :class="
+                                            item.web
+                                                ? 'bg-blue-100 text-blue-800'
+                                                : 'bg-gray-100 text-gray-600'
+                                        "
+                                        class="px-2 py-1 rounded-full text-xs"
+                                    >
+                                        {{
+                                            item.web
                                                 ? __("Enabled")
                                                 : __("Disabled")
                                         }}
@@ -355,6 +400,10 @@ export default {
         },
         publicScopesCount() {
             return this.scopes.filter((scope) => scope.public).length;
+        },
+
+        webScopesCount() {
+            return this.scopes.filter((scope) => scope.web).length;
         },
     },
 

@@ -264,7 +264,7 @@ class PackageRepository implements Contracts
         }
 
         Cache::forget(CacheKeys::userScopes($user->id));
-        Cache::forget(CacheKeys::userScopesApiKey($user->id));
+        // Cache::forget(CacheKeys::userScopesApiKey($user->id));
         Cache::forget(CacheKeys::userAdmin($user->id));
         Cache::forget(CacheKeys::userScopeList($user->id));
         Cache::forget(CacheKeys::userAuth($user->id));

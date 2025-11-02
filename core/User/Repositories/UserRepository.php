@@ -309,6 +309,7 @@ class UserRepository implements Contracts
 
         Cache::forget($cacheKey);
         Cache::forget(CacheKeys::userAuth($id));
+        Cache::forget(CacheKeys::userScopes($id));
 
         $model = $this->model->find($id);
 
@@ -424,10 +425,10 @@ class UserRepository implements Contracts
         Cache::forget(CacheKeys::userScopes($user_id));
         Cache::forget(CacheKeys::userGroups($user_id));
         Cache::forget(CacheKeys::userAdmin($user_id));
-        Cache::forget(CacheKeys::userScopesApiKey($user_id));
+     //   Cache::forget(CacheKeys::userScopesApiKey($user_id));
         Cache::forget(CacheKeys::userScopeList($user_id));
         Cache::forget(CacheKeys::userScopeList($user_id));
-        Cache::forget(CacheKeys::userAuth($user_id));
+        Cache::forget(CacheKeys::userAuth($user_id)); 
 
         DB::transaction(function () use ($user_id, $data) {
 
@@ -510,7 +511,7 @@ class UserRepository implements Contracts
             Cache::forget(CacheKeys::userScopes($user_id));
             Cache::forget(CacheKeys::userGroups($user_id));
             Cache::forget(CacheKeys::userAdmin($user_id));
-            Cache::forget(CacheKeys::userScopesApiKey($user_id));
+          //  Cache::forget(CacheKeys::userScopesApiKey($user_id));
             Cache::forget(CacheKeys::userScopeList($user_id));
             Cache::forget(CacheKeys::userAuth($user_id));
         }

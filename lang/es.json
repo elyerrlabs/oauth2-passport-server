@@ -2931,5 +2931,6 @@
   "Connect With Us": "Conéctate con Nosotros",
   "Our Values": "Nuestros Valores",
   "Our Company": "Nuestra Empresa",
-  "Powered by": "Desarrollado por"
+  "Powered by": "Desarrollado por",
+  "Make available for web routes (requires login)": "Habilitar para rutas web protegidas (requiere inicio de sesión)"
 }

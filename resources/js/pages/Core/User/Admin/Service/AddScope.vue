@@ -48,8 +48,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-modal
         v-model="dialog"
         :title="scope ? __('Update Scope') : __('Add New Scope')"
-        panel-class="w-full lg:w-4xl"
-        z-index="z-90"
+        panel-class="w-full lg:w-6xl"
     >
         <template #body>
             <!-- Form Content -->
@@ -78,11 +77,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <h4 class="text-lg font-medium text-gray-800">
                         {{ __("Permissions") }}
                     </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 space-y-4">
+                        <!-- API Key Access -->
 
-                    <!-- API Key Access -->
-                    <div
-                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg"
-                    >
                         <v-switch
                             v-model="form.api_key"
                             :label="__('API Key Access')"
@@ -94,12 +91,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 )
                             "
                         />
-                    </div>
 
-                    <!-- Active -->
-                    <div
-                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg"
-                    >
+                        <!-- Web routes -->
+
+                        <v-switch
+                            v-model="form.web"
+                            :label="__('Web')"
+                            :error="errors.web"
+                            :required="true"
+                            :placeholder="
+                                __(
+                                    'Make available for web routes (requires login)'
+                                )
+                            "
+                        />
+
+                        <!-- Active -->
+
                         <v-switch
                             v-model="form.active"
                             :label="__('Active')"
@@ -109,12 +117,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 __('Enable this scope for immediate use')
                             "
                         />
-                    </div>
 
-                    <!-- Public Access -->
-                    <div
-                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg"
-                    >
+                        <!-- Public Access -->
+
                         <v-switch
                             v-model="form.public"
                             :label="__('Public Access')"
@@ -202,6 +207,7 @@ export default {
             roles: [],
             form: {
                 api_key: false,
+                web: false,
                 active: false,
                 public: false,
                 role_id: "",
@@ -214,6 +220,7 @@ export default {
         async open() {
             this.form = {
                 api_key: false,
+                web: false,
                 active: false,
                 public: false,
                 role_id: "",

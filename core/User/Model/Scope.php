@@ -24,7 +24,7 @@ namespace Core\User\Model;
  */
 
 use App\Models\Master;
-use Core\User\Model\Role; 
+use Core\User\Model\Role;
 use Core\User\Model\UserScope;
 use Core\Transaction\Model\Plan;
 use Core\User\Transformer\Admin\ScopeTransformer;
@@ -47,7 +47,8 @@ class Scope extends Master
         'role_id',
         'public',
         'active',
-        'api_key'
+        'api_key',
+        'web'
     ];
 
     protected $appends = [
@@ -61,7 +62,8 @@ class Scope extends Master
     protected $casts = [
         'public' => 'boolean',
         'active' => 'boolean',
-        'api_key' => 'boolean'
+        'api_key' => 'boolean',
+        'web' => 'boolean'
     ];
 
     /**
@@ -119,5 +121,21 @@ class Scope extends Master
         $service = $this->service->slug;
         $role = $this->role->slug;
         return "{$group}:{$service}:{$role}";
+    }
+
+    /**
+     * Getter
+     */
+    public function isApi()
+    {
+        return $this->api_key;
+    }
+
+    /**
+     * Getter
+     */
+    public function isWeb()
+    {
+        return $this->web;
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-namespace Core\User\Http\Requests;
-
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
  *
@@ -20,36 +18,32 @@ namespace Core\User\Http\Requests;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Rules\BooleanRule;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class ServiceScopeStoreRequest extends FormRequest
-{
+return new class extends Migration {
     /**
-     * Determine if the user is authorized to make this request.
+     * Run the migrations.
      */
-    public function authorize(): bool
+    public function up(): void
     {
-        return true;
+        Schema::table('scopes', function (Blueprint $table) {
+            $table->boolean('web')->default(true)->index()->after('api_key');
+        });
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Reverse the migrations.
      */
-    public function rules(): array
+    public function down(): void
     {
-        return [
-            'role_id' => ['required', 'exists:roles,id'],
-            'public' => ['required', 'boolean'],
-            'active' => ['required', 'boolean'],
-            'api_key' => ['required', 'boolean'],
-            'web' => ['required', 'boolean'],
-        ];
+        Schema::table('scopes', function (Blueprint $table) {
+            $table->dropColumn('web');
+        });
     }
-}
+};

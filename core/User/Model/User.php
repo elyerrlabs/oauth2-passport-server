@@ -24,6 +24,7 @@ namespace Core\User\Model;
  */
 
 use App\Models\Common\Order;
+use App\Models\Common\Refund;
 use App\Models\Auth;
 use App\Repositories\Contracts\Dynamic;
 use Illuminate\Http\Request;
@@ -117,5 +118,23 @@ class User extends Auth
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Get all refunds owned by the user.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Refund, User>
+     */
+    public function ownedRefunds()
+    {
+        return $this->hasMany(Refund::class, 'user_id');
+    }
+
+    /**
+     * Get all refunds handled or processed by the admin user.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Refund, User>
+     */
+    public function handledRefunds()
+    {
+        return $this->hasMany(Refund::class, 'handled_id');
     }
 }

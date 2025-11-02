@@ -264,6 +264,7 @@ class ServiceRepository implements Contracts
                     'public' => $data['public'] ?? false,
                     'active' => $data['active'] ?? false,
                     'api_key' => $data['api_key'] ?? false,
+                    'web' => $data['web'] ?? false,
                 ]
             );
 

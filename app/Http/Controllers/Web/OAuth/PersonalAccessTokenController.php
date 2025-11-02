@@ -125,6 +125,6 @@ class PersonalAccessTokenController extends WebController
      */
     public function listScopesForApiToken()
     {
-        return $this->scopes();
+        return $this->scopes(true, false);
     }
 }

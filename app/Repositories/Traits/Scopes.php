@@ -44,17 +44,29 @@ trait Scopes
      * @param bool $api_key Whether to limit the results to API key-compatible scopes.
      * @return \Illuminate\Support\Collection<int, \Laravel\Passport\Scope>
      */
-    public function scopes($api_key = true)
+    public function scopes($api_key = true, $web = true)
     {
-        $user = Auth::user();
-        $cacheKey = CacheKeys::userScopes($user->id);
+        $user = Auth::user(); // Get user Current User 
+        $cacheKey = CacheKeys::userScopes($user->id); // Recovery cache key
 
         $query = ModelScope::query();
-        $query->where('active', true)->with('role');
 
-        if ($api_key) {
-            $cacheKey = CacheKeys::userScopesApiKey($user->id);
+        // With eager loading
+        $query->with([
+            'role',
+            'scopeUsers',
+            'scopeUsers.user',
+            'service',
+        ]);
+
+        // Search by active scopes
+        $query->where('active', true);
+
+        // Scopes for api key web
+        if ($api_key && !$web) {
             $query->where('api_key', true);
+        } elseif ($web && !$api_key) {
+            $query->where('web', true);
         }
 
         return Cache::remember(
@@ -62,24 +74,29 @@ trait Scopes
             now()->addDays(intval(config('cache.expires', 90))),
             function () use ($user, $query) {
 
+                // Admin users
                 if ($user->isAdmin()) {
                     return $query->get()
                         ->map(fn($scope) => new Scope($scope->gsr_id, $scope->role->description))
                         ->values();
                 }
 
-                $userScopes = UserScope::where('user_id', auth()->user()->id)
-                    ->where(function ($query) {
-                        $query->whereNull('end_date')
-                            ->orWhere('end_date', '>', now());
-                    })->whereHas('scope', function ($query) {
-                        $query->where('active', true)->orWhere('public', true);
-                    });
+                // Non admin users 
+    
+                $query->whereHas(
+                    'scopeUsers',
+                    function ($query) use ($user) {
+                        //By users
+                        $query->where('user_id', $user->id);
 
-                return $userScopes->get()
-                    ->map(fn($scope) => new Scope($scope->gsr_id, $scope->scope->role->description))
+                        // Search by expiration date
+                        $query->whereNull('end_date')->orWhere('end_date', '>', now());
+                    }
+                );
+
+                return $query->get()
+                    ->map(fn($scope) => new Scope($scope->gsr_id, $scope->role->description))
                     ->values();
-
             }
         );
     }

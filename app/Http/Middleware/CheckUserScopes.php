@@ -64,7 +64,7 @@ class CheckUserScopes
                 Cache::forget(CacheKeys::userScopes($user->id));
                 Cache::forget(CacheKeys::userGroups($user->id));
                 Cache::forget(CacheKeys::userAdmin($user->id));
-                Cache::forget(CacheKeys::userScopesApiKey($user->id));
+               // Cache::forget(CacheKeys::userScopesApiKey($user->id));
                 Cache::forget(CacheKeys::userScopeList($user->id));
             }
         }
