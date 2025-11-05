@@ -225,35 +225,33 @@ return [
             'name' => 'Cancelled',
             'message' => 'The payment was canceled before processing.',
         ],
-        'refunded' => [
-            'id' => 'refunded',
-            'name' => 'Refunded',
-            'message' => 'The payment was fully refunded to the user.',
-        ],
-        'partially_refunded' => [
-            'id' => 'partially_refunded',
-            'name' => 'Partially refunded',
-            'message' => 'Only a portion of the payment was refunded.',
-        ],
-        'disputed' => [
-            'id' => 'disputed',
-            'name' => 'Disputed',
-            'message' => 'The payment is under dispute (e.g., suspected fraud).',
-        ],
-        'chargeback' => [
-            'id' => 'chargeback',
-            'name' => 'Chargeback',
-            'message' => 'The payment was reversed by the bank or payment processor.',
-        ],
         'expired' => [
             'id' => 'expired',
             'name' => 'Expired',
             'message' => 'The payment was not completed before the expiration deadline.',
         ],
-        'on_hold' => [
-            'id' => 'on_hold',
-            'name' => 'On hold',
-            'message' => 'The payment is temporarily on hold for manual review or fraud prevention.',
+    ],
+
+    'types' => [
+        'payment' => [
+            'id' => 'payment',
+            'name' => 'Payment',
+            'description' => 'A normal user payment.',
+        ],
+        'refund' => [
+            'id' => 'refund',
+            'name' => 'Refund',
+            'description' => 'A transaction that returns funds to the user.',
+        ],
+        'chargeback' => [
+            'id' => 'chargeback',
+            'name' => 'Chargeback',
+            'description' => 'Funds were reversed by the bank or payment processor.',
+        ],
+        'dispute' => [
+            'id' => 'dispute',
+            'name' => 'Dispute',
+            'description' => 'The transaction is being reviewed due to a claim or suspected issue.',
         ],
     ],
 
