@@ -291,6 +291,17 @@ if (!function_exists('billing_statuses')) {
     }
 }
 
+if (!function_exists('billings_types')) {
+    /**
+     * billing status
+     * @return array
+     */
+    function billings_types()
+    {
+        return array_values(config('billing.types'));
+    }
+}
+
 
 if (!function_exists('searchByDate')) {
     /**
