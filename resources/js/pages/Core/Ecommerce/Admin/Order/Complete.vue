@@ -266,11 +266,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <i
                                                     class="fas fa-calendar-alt mr-2 text-blue-500"
                                                 ></i>
-                                                {{
-                                                    formatCompactDate(
-                                                        order.created_at
-                                                    )
-                                                }}
+                                                {{ order.created_at }}
                                             </p>
                                         </div>
                                     </div>
@@ -311,156 +307,271 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 v-if="expandedOrders[order.id]"
                                 class="p-6 bg-gray-50/50"
                             >
-                                <div
-                                    class="grid grid-cols-1 lg:grid-cols-3 gap-6"
-                                >
-                                    <!-- Transaction Details -->
+                                <div class="space-y-6">
+                                    <!-- Transaction and Delivery Info -->
                                     <div
-                                        class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                                        class="grid grid-cols-1 lg:grid-cols-2 gap-6"
                                     >
-                                        <div class="flex items-center mb-4">
-                                            <i
-                                                class="fas fa-receipt text-blue-500 mr-3"
-                                            ></i>
-                                            <h4
-                                                class="font-semibold text-gray-900"
-                                            >
-                                                {{ __("Transaction Details") }}
-                                            </h4>
-                                        </div>
-                                        <div class="space-y-3">
-                                            <div
-                                                class="flex justify-between items-center"
-                                            >
-                                                <span
-                                                    class="text-sm text-gray-600"
-                                                    >{{ __("Status") }}</span
-                                                >
-                                                <span
-                                                    :class="
-                                                        getStatusTextClass(
-                                                            order.transaction
-                                                                .status
-                                                        )
-                                                    "
+                                        <!-- Transaction Details -->
+                                        <div
+                                            class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                                        >
+                                            <div class="flex items-center mb-4">
+                                                <i
+                                                    class="fas fa-receipt text-blue-500 mr-3"
+                                                ></i>
+                                                <h4
+                                                    class="font-semibold text-gray-900"
                                                 >
                                                     {{
                                                         __(
-                                                            order.transaction
-                                                                .status
+                                                            "Transaction Details"
                                                         )
                                                     }}
-                                                </span>
+                                                </h4>
                                             </div>
-                                            <div
-                                                class="flex justify-between items-center"
-                                            >
-                                                <span
-                                                    class="text-sm text-gray-600"
-                                                    >{{
-                                                        __("Payment Method")
-                                                    }}</span
-                                                >
-                                                <span
-                                                    class="text-sm font-medium text-gray-900"
-                                                    >{{
-                                                        order.transaction
-                                                            .payment_method
-                                                    }}</span
-                                                >
-                                            </div>
-                                            <div
-                                                class="flex justify-between items-center"
-                                            >
-                                                <span
-                                                    class="text-sm text-gray-600"
-                                                    >{{
-                                                        __("Total Amount")
-                                                    }}</span
-                                                >
-                                                <span
-                                                    class="text-lg font-bold text-green-600"
-                                                >
-                                                    {{
-                                                        order.transaction.total
-                                                    }}
-                                                    {{
-                                                        order.transaction
-                                                            .currency
-                                                    }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Delivery Address -->
-                                    <div
-                                        class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
-                                    >
-                                        <div class="flex items-center mb-4">
-                                            <i
-                                                class="fas fa-truck text-green-500 mr-3"
-                                            ></i>
-                                            <h4
-                                                class="font-semibold text-gray-900"
-                                            >
-                                                {{ __("Delivery Address") }}
-                                            </h4>
-                                        </div>
-                                        <div class="space-y-2">
-                                            <p
-                                                class="font-medium text-gray-900"
-                                            >
-                                                {{
-                                                    order.delivery_address
-                                                        .full_name
-                                                }}
-                                            </p>
-                                            <p class="text-sm text-gray-600">
-                                                {{
-                                                    order.delivery_address
-                                                        .address
-                                                }}
-                                            </p>
-                                            <p class="text-sm text-gray-600">
-                                                {{
-                                                    order.delivery_address.city
-                                                }},
-                                                {{
-                                                    order.delivery_address
-                                                        .country
-                                                }}
-                                            </p>
-                                            <div
-                                                class="flex items-center justify-between mt-3"
-                                            >
+                                            <div class="space-y-3">
                                                 <div
-                                                    class="flex items-center text-sm text-gray-600"
+                                                    class="flex justify-between items-center"
                                                 >
-                                                    <i
-                                                        class="fas fa-phone mr-2"
-                                                    ></i>
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __("Status")
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        :class="
+                                                            getStatusTextClass(
+                                                                order
+                                                                    .transaction
+                                                                    .status
+                                                            )
+                                                        "
+                                                    >
+                                                        {{
+                                                            __(
+                                                                order
+                                                                    .transaction
+                                                                    .status
+                                                            )
+                                                        }}
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    class="flex justify-between items-center"
+                                                >
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __("Payment Method")
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        class="text-sm font-medium text-gray-900"
+                                                        >{{
+                                                            order.transaction
+                                                                .payment_method
+                                                        }}</span
+                                                    >
+                                                </div>
+                                                <div
+                                                    class="flex justify-between items-center"
+                                                >
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __("Total Amount")
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        class="text-lg font-bold text-green-600"
+                                                    >
+                                                        {{
+                                                            order.transaction
+                                                                .total
+                                                        }}
+                                                        {{
+                                                            order.transaction
+                                                                .currency
+                                                        }}
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    v-if="
+                                                        order.transaction
+                                                            .payment_intent_id
+                                                    "
+                                                    class="flex justify-between items-center"
+                                                >
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __("Payment Intent")
+                                                        }}</span
+                                                    >
+                                                    <div
+                                                        class="flex items-center space-x-2"
+                                                    >
+                                                        <code
+                                                            class="text-xs bg-gray-100 px-2 py-1 rounded"
+                                                        >
+                                                            {{
+                                                                order
+                                                                    .transaction
+                                                                    .payment_intent_id
+                                                            }}
+                                                        </code>
+                                                        <button
+                                                            @click="
+                                                                copyToClipboard(
+                                                                    order
+                                                                        .transaction
+                                                                        .payment_intent_id,
+                                                                    'Payment Intent ID'
+                                                                )
+                                                            "
+                                                            class="text-gray-500 hover:text-blue-600 transition-colors"
+                                                            title="Copy Payment Intent ID"
+                                                        >
+                                                            <i
+                                                                class="fas fa-copy text-sm"
+                                                            ></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    v-if="
+                                                        order.transaction.code
+                                                    "
+                                                    class="flex justify-between items-center"
+                                                >
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __(
+                                                                "Transaction Code"
+                                                            )
+                                                        }}</span
+                                                    >
+                                                    <div
+                                                        class="flex items-center space-x-2"
+                                                    >
+                                                        <code
+                                                            class="text-xs bg-gray-100 px-2 py-1 rounded"
+                                                        >
+                                                            {{
+                                                                order
+                                                                    .transaction
+                                                                    .code
+                                                            }}
+                                                        </code>
+                                                        <button
+                                                            @click="
+                                                                copyToClipboard(
+                                                                    order
+                                                                        .transaction
+                                                                        .code,
+                                                                    'Transaction Code'
+                                                                )
+                                                            "
+                                                            class="text-gray-500 hover:text-blue-600 transition-colors"
+                                                            title="Copy Transaction Code"
+                                                        >
+                                                            <i
+                                                                class="fas fa-copy text-sm"
+                                                            ></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Delivery Address -->
+                                        <div
+                                            class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                                        >
+                                            <div class="flex items-center mb-4">
+                                                <i
+                                                    class="fas fa-truck text-green-500 mr-3"
+                                                ></i>
+                                                <h4
+                                                    class="font-semibold text-gray-900"
+                                                >
+                                                    {{ __("Delivery Address") }}
+                                                </h4>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <p
+                                                    class="font-medium text-gray-900"
+                                                >
                                                     {{
                                                         order.delivery_address
-                                                            .phone
+                                                            .full_name
                                                     }}
-                                                </div>
-                                                <a
-                                                    v-if="
-                                                        order.delivery_address
-                                                            .whatsapp
-                                                    "
-                                                    :href="
-                                                        order.delivery_address
-                                                            .whatsapp
-                                                    "
-                                                    target="_blank"
-                                                    class="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-colors"
+                                                </p>
+                                                <p
+                                                    class="text-sm text-gray-600"
                                                 >
-                                                    <i
-                                                        class="fab fa-whatsapp text-sm"
-                                                    ></i>
-                                                </a>
+                                                    {{
+                                                        order.delivery_address
+                                                            .address
+                                                    }}
+                                                </p>
+                                                <p
+                                                    class="text-sm text-gray-600"
+                                                >
+                                                    {{
+                                                        order.delivery_address
+                                                            .city
+                                                    }},
+                                                    {{
+                                                        order.delivery_address
+                                                            .district
+                                                    }}
+                                                </p>
+                                                <p
+                                                    class="text-sm text-gray-600"
+                                                >
+                                                    {{
+                                                        order.delivery_address
+                                                            .country
+                                                    }}
+                                                </p>
+                                                <div
+                                                    class="flex items-center justify-between mt-3"
+                                                >
+                                                    <div
+                                                        class="flex items-center text-sm text-gray-600"
+                                                    >
+                                                        <i
+                                                            class="fas fa-phone mr-2"
+                                                        ></i>
+                                                        {{
+                                                            order
+                                                                .delivery_address
+                                                                .phone
+                                                        }}
+                                                    </div>
+                                                    <a
+                                                        v-if="
+                                                            order
+                                                                .delivery_address
+                                                                .whatsapp
+                                                        "
+                                                        :href="
+                                                            order
+                                                                .delivery_address
+                                                                .whatsapp
+                                                        "
+                                                        target="_blank"
+                                                        class="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-colors"
+                                                    >
+                                                        <i
+                                                            class="fab fa-whatsapp text-sm"
+                                                        ></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -470,7 +581,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
                                     >
                                         <div
-                                            class="flex items-center justify-between mb-4"
+                                            class="flex items-center justify-between mb-6"
                                         >
                                             <div class="flex items-center">
                                                 <i
@@ -483,50 +594,106 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 </h4>
                                             </div>
                                             <span
-                                                class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-medium"
+                                                class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium"
                                             >
-                                                {{ order.items.length }}
+                                                {{ order.orders.length }}
                                                 {{ __("items") }}
                                             </span>
                                         </div>
                                         <div
-                                            class="space-y-3 max-h-48 overflow-y-auto"
+                                            class="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-4"
                                         >
                                             <div
-                                                v-for="item in order.items"
+                                                v-for="item in order.orders"
                                                 :key="item.id"
-                                                class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50"
+                                                class="flex items-center space-x-4 p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
                                             >
                                                 <img
-                                                    :src="item.image"
-                                                    :alt="item.name"
-                                                    class="w-10 h-10 rounded-lg object-cover"
+                                                    v-if="
+                                                        item.images &&
+                                                        item.images.length > 0
+                                                    "
+                                                    :src="
+                                                        getImageUrl(
+                                                            item.images[0].url
+                                                        )
+                                                    "
+                                                    :alt="item.meta.name"
+                                                    class="w-16 h-16 rounded-lg object-cover flex-shrink-0"
                                                 />
+                                                <div
+                                                    v-else
+                                                    class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"
+                                                >
+                                                    <i
+                                                        class="fas fa-image text-gray-400 text-xl"
+                                                    ></i>
+                                                </div>
                                                 <div class="flex-1 min-w-0">
                                                     <p
-                                                        class="text-sm font-medium text-gray-900 truncate"
+                                                        class="text-base font-semibold text-gray-900 truncate"
                                                     >
-                                                        {{ item.name }}
+                                                        {{ item.meta.name }}
                                                     </p>
                                                     <p
-                                                        class="text-xs text-gray-600"
+                                                        v-if="item.meta.variant"
+                                                        class="text-sm text-gray-600 mt-1"
                                                     >
-                                                        {{ __("Qty") }}:
-                                                        {{ item.quantity }}
+                                                        <strong
+                                                            >{{
+                                                                __("Variant")
+                                                            }}:</strong
+                                                        >
+                                                        {{
+                                                            item.meta.variant
+                                                                .name
+                                                        }}
                                                     </p>
+                                                    <div
+                                                        class="flex items-center space-x-4 mt-2"
+                                                    >
+                                                        <p
+                                                            class="text-sm text-gray-600"
+                                                        >
+                                                            <strong
+                                                                >{{
+                                                                    __("Qty")
+                                                                }}:</strong
+                                                            >
+                                                            {{ item.quantity }}
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-600"
+                                                        >
+                                                            <strong
+                                                                >{{
+                                                                    __(
+                                                                        "Unit Price"
+                                                                    )
+                                                                }}:</strong
+                                                            >
+                                                            {{
+                                                                item.format_price
+                                                            }}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div class="text-right">
+                                                <div
+                                                    class="text-right flex-shrink-0"
+                                                >
                                                     <p
-                                                        class="text-sm font-semibold text-gray-900"
+                                                        class="text-lg font-bold text-green-600"
                                                     >
-                                                        {{ item.total }}
-                                                        {{ item.currency }}
+                                                        {{
+                                                            calculateItemTotal(
+                                                                item
+                                                            )
+                                                        }}
                                                     </p>
                                                     <p
-                                                        class="text-xs text-gray-600"
+                                                        class="text-xs text-gray-500 mt-1"
                                                     >
-                                                        {{ item.unitPrice }}
-                                                        {{ __("each") }}
+                                                        {{ __("Total") }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -554,6 +721,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     >
                                         <i class="fas fa-copy"></i>
                                         <span>{{ __("Copy Order ID") }}</span>
+                                    </button>
+
+                                    <button
+                                        v-if="order.transaction.code"
+                                        @click="
+                                            copyToClipboard(
+                                                order.transaction.code,
+                                                'Transaction Code'
+                                            )
+                                        "
+                                        class="px-4 py-2 bg-purple-500 cursor-pointer hover:bg-purple-600 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                                    >
+                                        <i class="fas fa-copy"></i>
+                                        <span>{{
+                                            __("Copy Transaction Code")
+                                        }}</span>
                                     </button>
                                 </div>
                             </div>
@@ -661,68 +844,46 @@ export default {
                     { params: this.search }
                 );
                 if (res.status === 200) {
-                    this.orders = Object.values(res.data.data).map(
-                        (checkout) => {
-                            const transaction = checkout.transaction;
+                    const values = res.data;
 
-                            const items = checkout.orders.map((o) => ({
-                                id: o.id,
-                                name: o.meta.name,
-                                quantity: o.quantity,
-                                unitPrice: (o.meta.price.amount / 100).toFixed(
-                                    2
-                                ),
-                                total: (
-                                    (o.quantity * o.meta.price.amount) /
-                                    100
-                                ).toFixed(2),
-                                currency: o.currency || transaction.currency,
-                                image: o.images?.[0]?.url
-                                    ? o.images[0].url
-                                    : "https://via.placeholder.com/150?text=" +
-                                      encodeURIComponent(o.meta.name),
-                            }));
+                    // Manejar la estructura de datos anidada
+                    if (values.data && typeof values.data === "object") {
+                        // Si los datos vienen como objeto con claves numéricas
+                        this.orders = Object.values(values.data);
+                    } else {
+                        this.orders = values.data || [];
+                    }
 
-                            return {
-                                id: checkout.id,
-                                code: checkout.code,
-                                transaction_code: checkout.transaction_code,
-                                transaction,
-                                delivery_address: checkout.delivery_address,
-                                items,
-                                created_at: checkout.created_at,
-                            };
-                        }
-                    );
-
-                    this.pages = res.data.meta.pagination;
-                    this.search.current_page =
-                        res.data.meta.pagination.current_page;
+                    this.pages = values.meta?.pagination || { total_pages: 0 };
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
             }
         },
 
-        formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-            });
+        getImageUrl(imagePath) {
+            // Si la URL ya es completa, devolverla tal cual
+            if (imagePath.startsWith("http")) {
+                return imagePath;
+            }
+            // Si es una ruta relativa, construir la URL completa
+            return `${window.location.origin}${imagePath}`;
         },
 
-        formatCompactDate(dateString) {
-            return new Date(dateString).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
+        calculateItemTotal(item) {
+            // Calcular el total del item (precio * cantidad)
+            const price = parseFloat(item.price) || 0;
+            const quantity = item.quantity || 0;
+            const total = price * quantity;
+
+            // Formatear el total similar al formato_price
+            return total.toLocaleString("es-PE", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
             });
         },
 
@@ -773,7 +934,12 @@ export default {
 
         copyOrderId(orderCode) {
             navigator.clipboard.writeText(orderCode);
-             $notify.success(__("Order ID copied to clipboard"));
+            $notify.success(__("Order ID copied to clipboard"));
+        },
+
+        copyToClipboard(text, label = "Text") {
+            navigator.clipboard.writeText(text);
+            $notify.success(`${label} ${__("copied to clipboard")}`);
         },
     },
 };
