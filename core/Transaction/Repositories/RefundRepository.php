@@ -24,11 +24,7 @@ namespace Core\Transaction\Repositories;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Transaction\Jobs\ProcessRefundJob;
 use Core\Transaction\Model\Refund;
-use Illuminate\Http\Request;
-use Core\Transaction\Model\Transaction;
-use Elyerr\ApiResponse\Exceptions\ReportError;
 
 class RefundRepository
 {
@@ -48,11 +44,10 @@ class RefundRepository
     }
 
     /**
-     * Search data for admins
-     * @param \Illuminate\Http\Request $request
+     * Query
      * @return \Illuminate\Database\Eloquent\Builder<Refund>
      */
-    public function search(Request $request)
+    public function query()
     {
         $query = $this->model->query();
 
@@ -61,176 +56,58 @@ class RefundRepository
                 'transactions',
                 'appeal',
                 'refund',
-                'customer',
+                'user',
                 'handledBy'
             ]
         );
 
-        if ($request->filled('name')) {
-            $query->whereHas(
-                'customer',
-                function ($query) use ($request) {
-                    $query->whereRaw("LOWER(name) like", ["%" . strtolower($request->name) . "%"]);
-                }
-            );
-        }
-
-        if ($request->filled('email')) {
-            $query->whereHas(
-                'customer',
-                function ($query) use ($request) {
-                    $query->whereRaw("LOWER(email) like", ["%" . strtolower($request->email) . "%"]);
-                }
-            );
-        }
-
-        // Search by transaction code
-        if ($request->filled('code')) {
-            $query->whereHas(
-                'transaction',
-                function ($query) use ($request) {
-                    $query->whereRaw("LOWER(code) like ?", ["%" . strtolower($request->code) . "%"]);
-                }
-            );
-        }
-
         return $query;
     }
 
-    /**
-     * Search for users
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Database\Eloquent\Builder<Refund>
-     */
-    public function searchForUser(Request $request)
-    {
-        $query = $this->model->query();
-
-        $query->where('customer_id', auth()->user()->id);
-
-        $query->with(
-            [
-                'transactions',
-                'appeal',
-                'refund',
-                'customer',
-                'handledBy'
-            ]
-        );
-
-
-        // Search by transaction code
-        if ($request->filled('code')) {
-            $query->whereHas(
-                'transaction',
-                function ($query) use ($request) {
-                    $query->whereRaw("LOWER(code) like ?", ["%" . strtolower($request->code) . "%"]);
-                }
-            );
-        }
-
-        return $query;
-    }
 
     /**
-     * Find specific resource
+     * Find specific  resource
      * @param string $id
-     * @return Refund
+     * @return Refund|TValue|null
      */
     public function find(string $id)
     {
-        return $this->model->find($id);
+        return $this->query()->where('id', $id)->first();
     }
 
     /**
-     * Create
-     * @param array $data
-     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
-     * @return Refund
+     * Find refund for user
+     * @param string $id
+     * @return Refund|TValue|null
      */
-    public function createForUser(array $data)
+    public function findForUser(string $id)
     {
-        if (empty($data['transaction_code'])) {
-            throw new ReportError(__('Transaction code does not exists'), 404);
-        }
-
-        $transaction = Transaction::with(['refund'])
-            ->where('code', $data['transaction_code'])
+        return $this->query()->where('id', $id)
             ->where('user_id', auth()->user()->id)
             ->first();
-
-        if (empty($transaction)) {
-            throw new ReportError(__('No transaction found for this refund request.'), 404);
-        }
-
-        if (!empty($transaction->refund)) {
-            throw new ReportError(__('A refund has already been issued for this transaction.'), 409);
-        }
-
-        $data['currency'] = $transaction->currency;
-
-        $data = $transaction->refund()->create($data);
-
-        return $data;
     }
 
     /**
-     * Update refund
+     * Create new resource
+     * @param array $data
+     * @return Refund|TModel|\Illuminate\Database\Eloquent\Model
+     */
+    public function create(array $data)
+    {
+        return $this->model->create($data);
+    }
+
+    /**
+     * Update resources
      * @param string $id
      * @param array $data
-     * @return Refund
+     * @return Refund|TValue|null
      */
     public function update(string $id, array $data)
     {
         $model = $this->find($id);
 
-        // Stop updated
-        if (in_array($model->status, ["rejected", "canceled"])) {
-            throw new ReportError(__('This refund request has already been closed and cannot be modified.'), 409);
-        }
-
-        $model->fill($data);
-
-        if ($model->isDirty('status')) {
-            $model->handled_id = auth()->user()->id;
-            $model->push();
-        }
-
-        if ($model->status == 'refunding') {
-            ProcessRefundJob::dispatch($model->refundable->code);
-        }
-
-        return $model;
-    }
-
-    /**
-     * Cancel
-     * @param string $id
-     * @return Refund
-     */
-    public function cancel(string $id)
-    {
-        $model = $this->find($id);
-        $model->status = "rejected";
-        $model->push();
-
-        // send notification
-
-        return $model;
-    }
-
-    /**
-     * Reject
-     * @param string $id
-     * @return Refund
-     */
-    public function reject(string $id)
-    {
-        $model = $this->find($id);
-        $model->status = "rejected";
-        $model->push();
-
-        // send notification
+        $model->update($data);
 
         return $model;
     }

@@ -26,7 +26,7 @@ namespace Core\Transaction\Http\Controllers\Api\Web;
 
 use App\Http\Controllers\ApiController;
 use Core\Transaction\Http\Requests\RefundStoreRequest;
-use Core\Transaction\Repositories\RefundRepository;
+use Core\Transaction\Services\Payment\RefundService;
 use Core\Transaction\Transformer\User\UserRefundTransformer;
 use Illuminate\Http\Request;
 
@@ -34,18 +34,18 @@ class RefundController extends ApiController
 {
     /**
      * Repository
-     * @var
+     * @var RefundService
      */
-    private $repository;
+    private $refundService;
 
     /**
-     * Construct
-     * @param \Core\Transaction\Repositories\RefundRepository $refundRepository
+     * Refund service
+     * @param \Core\Transaction\Services\Payment\RefundService $refundService
      */
-    public function __construct(RefundRepository $refundRepository)
+    public function __construct(RefundService $refundService)
     {
         parent::__construct();
-        $this->repository = $refundRepository;
+        $this->refundService = $refundService;
     }
 
     /**
@@ -55,7 +55,7 @@ class RefundController extends ApiController
      */
     public function index(Request $request)
     {
-        $query = $this->repository->searchForUser($request);
+        $query = $this->refundService->searchForUser($request);
 
         return $this->showAllByBuilder($query, UserRefundTransformer::class);
     }
@@ -66,13 +66,13 @@ class RefundController extends ApiController
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function store(RefundStoreRequest $request)
-    {   
+    {
         // Add current user as customer id
         $request->merge([
-            'customer_id' => auth()->user()->id
+            'user_id' => auth()->user()->id
         ]);
-        
-        $model = $this->repository->createForUser($request->toArray());
+
+        $model = $this->refundService->createForUser($request->toArray());
 
         return $this->showOne($model, UserRefundTransformer::class);
     }

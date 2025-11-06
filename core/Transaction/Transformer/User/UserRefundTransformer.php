@@ -41,9 +41,9 @@ class UserRefundTransformer extends TransformerAbstract
             'type' => $refund->type, // 'refund','appeal'
             'status' => $refund->status, //'pending', 'under_review', 'approved', 'waiting_for_return','processing','completed','rejected','canceled'
             'customer' => [
-                'name' => $refund->customer->name,
-                'last_name' => $refund->customer->last_name,
-                'email' => $refund->customer->email,
+                'name' => $refund->user->name,
+                'last_name' => $refund->user->last_name,
+                'email' => $refund->user->email,
             ],
             'appeal' => fractal($refund->children, static::class)->toArray()['data'] ?? [],
             'links' => [

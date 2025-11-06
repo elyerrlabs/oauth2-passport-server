@@ -24,6 +24,7 @@ namespace Core\Transaction\Services;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Repositories\RefundRepository;
 use Core\Transaction\Transformer\Admin\PackageTransformer;
 use Exception;
 use Core\Transaction\Notifications\ProcessRefundNotification;
@@ -91,9 +92,12 @@ class TransactionService
 
     /**
      * Partner repository
-     * @var
+     * @var PartnerRepository
      */
     private $partnerRepository;
+
+
+    private $refundRepository;
 
     /**
      * Construct
@@ -108,6 +112,7 @@ class TransactionService
         $this->packageService = app(PackageService::class);
         $this->planRepository = app(PlanRepository::class);
         $this->partnerRepository = app(PartnerRepository::class);
+        $this->refundRepository = app(RefundRepository::class);
     }
 
     /**
@@ -678,7 +683,7 @@ class TransactionService
     public function generateTransactionRefund($refund)
     {
         // Find refund and create transaction
-        Refund::find($refund->metadata->refund_id)
+        $this->refundRepository->find($refund->metadata->refund_id)
             ->transactions()->create([
                     'total' => $refund->amount,
                     'currency' => $refund->currency,

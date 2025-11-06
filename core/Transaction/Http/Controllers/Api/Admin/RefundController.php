@@ -26,6 +26,7 @@ namespace Core\Transaction\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\ApiController;
 use Core\Transaction\Http\Requests\RefundUpdateRequest;
+use Core\Transaction\Services\Payment\RefundService;
 use Core\Transaction\Transformer\Admin\RefundTransformer;
 use Illuminate\Http\Request;
 use Core\Transaction\Repositories\RefundRepository;
@@ -34,20 +35,20 @@ class RefundController extends ApiController
 {
     /**
      * Repository
-     * @var
+     * @var RefundService
      */
-    private $repository;
+    private $refundService;
 
     /**
      * Construct
-     * @param \Core\Transaction\Repositories\RefundRepository $repository
+     * @param \Core\Transaction\Services\Payment\RefundService $refundService
      */
-    public function __construct(RefundRepository $repository)
+    public function __construct(RefundService $refundService)
     {
         parent::__construct();
         $this->middleware('scope:administrator:transactions:full,administrator:transactions:view')->only('index');
         $this->middleware('scope:administrator:transactions:full,administrator:transactions:update')->only('update');
-        $this->repository = $repository;
+        $this->refundService = $refundService;
     }
 
 
@@ -58,7 +59,7 @@ class RefundController extends ApiController
      */
     public function index(Request $request)
     {
-        $query = $this->repository->search($request);
+        $query = $this->refundService->search($request);
 
         return $this->showAllByBuilder($query, RefundTransformer::class);
     }
@@ -71,7 +72,7 @@ class RefundController extends ApiController
      */
     public function update(RefundUpdateRequest $request, string $id)
     {
-        $data = $this->repository->update($id, $request->toArray());
+        $data = $this->refundService->updateStatus($id, $request->toArray());
 
         return $this->showOne($data, RefundTransformer::class);
     }
