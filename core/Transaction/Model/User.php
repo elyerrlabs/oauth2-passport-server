@@ -52,4 +52,22 @@ class User extends \Core\User\Model\User
     {
         return $this->hasMany(Checkout::class);
     }
+
+    /**
+     * Get all transactions activated or executed by the user
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Transaction, User>
+     */
+    public function activatedTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'user_id');
+    }
+
+    /**
+     * Get all transactions owned by the users 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Transaction, User>
+     */
+    public function ownedTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'owner_id');
+    }
 }

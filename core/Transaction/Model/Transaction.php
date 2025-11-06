@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\Transaction\Model;
 
 /**
@@ -19,26 +20,33 @@ namespace Core\Transaction\Model;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use App\Models\Master;
+use App\Repositories\Contracts\Dynamic;
 use Core\User\Model\User;
 use Core\Partner\Model\Partner;
+use Core\Transaction\Model\Refund;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Core\Transaction\Transformer\Admin\TransactionTransformer;
 
 class Transaction extends Master
 {
-    use HasFactory;
+    use HasFactory, Dynamic;
 
     public $table = "transactions";
 
-    public $transformer = TransactionTransformer::class;
+    /**
+     * tag
+     * @var string
+     */
+    public $tag = 'transactions';
 
     protected $fillable = [
         'currency',
+        'type',
         'status',
         'total',
         'payment_method',
@@ -52,6 +60,7 @@ class Transaction extends Master
         'meta', //save package
         'code', // unique code
         'partner_id', // if of the partner
+        'owner_id',
         'partner_commission_rate',
         'payment_method_id'
     ];
@@ -63,12 +72,22 @@ class Transaction extends Master
     ];
 
     /**
-     * User
+     * Get the user who activated or execute the transaction
+     * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Get the owner of the transaction
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, Transaction>
+     */
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     /**
@@ -86,5 +105,10 @@ class Transaction extends Master
     public function partner()
     {
         return $this->belongsTo(Partner::class);
+    }
+
+    public function refund()
+    {
+        return $this->morphOne(Refund::class, 'refundable');
     }
 }
