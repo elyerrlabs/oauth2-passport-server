@@ -35,7 +35,7 @@ return new class extends Migration {
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropIndex(["user_id"]);
             $table->dropIndex(["owner_id"]);
-           
+
             $table->dropForeign(['user_id']);
             $table->dropForeign(['owner_id']);
         });
@@ -60,34 +60,31 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
+            $table->dropIndex(['activated_by']);
+            $table->dropIndex(['user_id']);
 
-            Schema::table('transactions', function (Blueprint $table) {
-                $table->dropIndex(['activated_by']);
-                $table->dropIndex(['user_id']);
-                
-                $table->dropForeign(['activated_by']);
-                $table->dropForeign(['user_id']);
-            });
+            $table->dropForeign(['activated_by']);
+            $table->dropForeign(['user_id']);
+        });
 
-            Schema::table('transactions', function (Blueprint $table) {
-                $table->renameColumn('user_id', 'owner_id');
-                $table->renameColumn('activated_by', 'user_id');
-            });
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->renameColumn('user_id', 'owner_id');
+            $table->renameColumn('activated_by', 'user_id');
+        });
 
-            Schema::table('transactions', function (Blueprint $table) {
-                $table->index('owner_id');
-                $table->index('user_id');
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->index('owner_id');
+            $table->index('user_id');
 
-                $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('RESTRICT');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('RESTRICT');
 
-                $table->foreign('owner_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('RESTRICT');
-            });
+            $table->foreign('owner_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('RESTRICT');
         });
     }
 };

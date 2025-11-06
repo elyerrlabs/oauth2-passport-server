@@ -44,7 +44,7 @@ class Refund extends Master
         'currency',
         'type', // 'refund','appeal'
         'status', //'pending', 'under_review', 'approved', 'waiting_for_return','processing',            'completed',                'rejected',                'canceled'
-        'customer_id',
+        'user_id',
         'handled_id',
         'parent_id'
     ];
@@ -126,9 +126,9 @@ class Refund extends Master
      * Get the user who owns the refund.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, Refund>
      */
-    public function customer()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'customer_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
