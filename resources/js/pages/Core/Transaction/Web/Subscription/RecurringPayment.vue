@@ -52,35 +52,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </span>
     </button>
 
-    <v-modal v-model="dialog">
+    <v-modal
+        v-model="dialog"
+        :title="__(dialogTitle)"
+        panel-class="w-full lg:w-4xl"
+    >
         <template #body>
-            <!-- Header -->
-            <div
-                class="flex items-center justify-between p-6 border-b border-gray-200"
-            >
-                <h3 class="text-lg font-semibold text-gray-900">
-                    {{ __(dialogTitle) }}
-                </h3>
-                <button
-                    @click="dialog = false"
-                    class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                >
-                    <svg
-                        class="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
-                </button>
-            </div>
-
             <!-- Content -->
             <div class="p-6">
                 <p class="text-gray-700">
@@ -109,78 +86,60 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-modal>
 </template>
 
-<script>
+<script setup>
 import VModal from "@/components/VModal.vue";
-export default {
-    components: {
-        VModal,
-    },
-    emits: ["success"],
+import { ref, computed } from "vue";
 
-    props: {
-        item: {
-            type: Object,
-            required: true,
-            default: () => ({}),
-        },
-    },
+const emits = defineEmits(["success"]);
 
-    data() {
-        return {
-            dialog: false,
-        };
+const props = defineProps({
+    item: {
+        type: Object,
+        required: true,
+        default: () => ({}),
     },
+});
 
-    computed: {
-        buttonLabel() {
-            return this.item?.is_recurring
-                ? "Cancel recurring payment"
-                : "Enable recurring payment";
-        },
-        buttonIcon() {
-            return this.item?.is_recurring ? "mdi-cart-off" : "mdi-autorenew";
-        },
-        buttonColor() {
-            return this.item?.is_recurring ? "negative" : "positive";
-        },
-        dialogTitle() {
-            return this.item?.is_recurring
-                ? "Cancel recurring payment"
-                : "Enable recurring payment";
-        },
-        dialogMessage() {
-            return this.item?.is_recurring
-                ? "Are you sure you want to cancel the recurring payment?"
-                : "Do you want to enable recurring payment for this item?";
-        },
-        buttonClasses() {
-            return this.item?.is_recurring
-                ? "border-red-600 text-red-600 hover:bg-red-50 focus:ring-red-500"
-                : "border-green-600 text-green-600 hover:bg-green-50 focus:ring-green-500";
-        },
-    },
+const dialog = ref(false);
 
-    methods: {
-        async recurringPayment() {
-            try {
-                const res = await this.$server.put(this.item.links.recurring);
+const buttonLabel = computed(() => {
+    return props.item?.is_recurring
+        ? "Cancel recurring payment"
+        : "Enable recurring payment";
+});
 
-                if (res.status === 200) {
-                    // Replace with your notification system
-                    console.log(res.data.message);
-                    // Example: this.$notify.success(res.data.message);
-                    this.$emit("success");
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    // Replace with your notification system
-                    console.error(e.response.data.message);
-                    // Example: this.$notify.error(e.response.data.message);
-                }
-            } finally {
-                this.dialog = false;
-            }
-        },
-    },
+const dialogTitle = computed(() => {
+    return props.item?.is_recurring
+        ? "Cancel recurring payment"
+        : "Enable recurring payment";
+});
+
+const dialogMessage = computed(() => {
+    return props.item?.is_recurring
+        ? "Are you sure you want to cancel the recurring payment?"
+        : "Do you want to enable recurring payment for this item?";
+});
+
+const buttonClasses = computed(() => {
+    return props.item?.is_recurring
+        ? "border-red-600 text-red-600 hover:bg-red-50 focus:ring-red-500"
+        : "border-green-600 text-green-600 hover:bg-green-50 focus:ring-green-500";
+});
+
+const recurringPayment = async () => {
+    try {
+        const res = await $server.put(props.item.links.recurring);
+
+        if (res.status === 200) {
+            $notify.success(res.data.message);
+            emits("success");
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        dialog.value = false;
+    }
 };
 </script>

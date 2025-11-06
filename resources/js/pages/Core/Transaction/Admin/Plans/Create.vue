@@ -167,9 +167,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <v-select
                                     :label="__('Service')"
                                     :options="services"
-                                    v-model="service"
-                                    :return-object="true"
+                                    label-key="name"
+                                    value-key="id"
+                                    v-model="selectedServiceId"
                                     :error="errors?.scopes"
+                                    :clearable="true"
+                                    @change="onServiceChange"
                                 />
                             </div>
                         </div>
@@ -178,7 +181,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div v-if="scopes.length" class="scopes-container">
                             <div class="text-sm font-medium mb-2">
                                 {{ __("Available Roles for") }}
-                                {{ service?.name }}
+                                {{
+                                    selectedService?.name || "Selected Service"
+                                }}
                             </div>
                             <div class="space-y-2">
                                 <div
@@ -207,10 +212,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </div>
                                     <div class="flex-grow">
                                         <div class="font-medium">
-                                            {{ item.role.name }}
+                                            {{ item.role?.name || "No name" }}
                                         </div>
                                         <div class="text-sm text-gray-600">
-                                            {{ item.role.description }}
+                                            {{
+                                                item.role?.description ||
+                                                "No description"
+                                            }}
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0">
@@ -234,6 +242,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div v-else-if="loadingScopes" class="text-center py-4">
+                            <i
+                                class="mdi mdi-loading mdi-spin text-2xl text-blue-500"
+                            ></i>
+                            <p class="text-gray-600 mt-2">
+                                {{ __("Loading scopes...") }}
+                            </p>
+                        </div>
+
+                        <!-- No Scopes State -->
+                        <div
+                            v-else-if="selectedServiceId && !scopes.length"
+                            class="text-center py-4 text-gray-500"
+                        >
+                            <i class="mdi mdi-information-outline text-2xl"></i>
+                            <p class="mt-2">
+                                {{ __("No scopes available for this service") }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -295,19 +324,21 @@ export default {
             errors: {},
             scopes: [],
             services: [],
-            service: null,
+            selectedServiceId: null,
+            loadingScopes: false,
             currencies: [],
             billing_periods: [],
         };
     },
 
-    watch: {
-        service(value) {
-            if (value) {
-                this.getServicesScope();
-            } else {
-                this.scopes = [];
-            }
+    computed: {
+        selectedService() {
+            if (!this.selectedServiceId) return null;
+            return (
+                this.services.find(
+                    (service) => service.id === this.selectedServiceId
+                ) || null
+            );
         },
     },
 
@@ -330,8 +361,9 @@ export default {
                 prices: [],
             };
             this.errors = {};
-            this.service = null;
+            this.selectedServiceId = null;
             this.scopes = [];
+            this.loadingScopes = false;
         },
 
         open() {
@@ -345,11 +377,9 @@ export default {
         addPrice() {
             this.form.prices.push({
                 billing_period: this.billing_periods.length
-                    ? this.billing_periods[0].value
+                    ? this.billing_periods[0].id
                     : "",
-                currency: this.currencies.length
-                    ? this.currencies[0].value
-                    : "",
+                currency: this.currencies.length ? this.currencies[0].code : "",
                 amount: null,
             });
         },
@@ -395,8 +425,10 @@ export default {
 
                 if (res.status == 200) {
                     this.services = res.data.data;
+                    console.log("Services loaded:", this.services); // Debug log
                 }
             } catch (e) {
+                console.error("Error loading services:", e);
                 if (e?.response?.data?.message) {
                     $notify.error(e.response.data.message);
                 }
@@ -435,16 +467,30 @@ export default {
             }
         },
 
-        async getServicesScope() {
-            if (
-                !this.service ||
-                !this.service.links ||
-                !this.service.links.scopes
-            )
+        async onServiceChange(serviceId) {
+            this.scopes = [];
+            this.form.scopes = []; // Clear previous scopes when service changes
+
+            if (!serviceId) {
                 return;
+            }
+
+            await this.getServicesScope(serviceId);
+        },
+
+        async getServicesScope(serviceId) {
+            if (!serviceId) return;
+
+            const service = this.services.find((s) => s.id === serviceId);
+            if (!service || !service.links || !service.links.scopes) {
+                console.warn("Service or scopes link not found:", service);
+                return;
+            }
+
+            this.loadingScopes = true;
 
             try {
-                const res = await this.$server.get(this.service.links.scopes, {
+                const res = await this.$server.get(service.links.scopes, {
                     params: {
                         per_page: 500,
                     },
@@ -452,11 +498,19 @@ export default {
 
                 if (res.status == 200) {
                     this.scopes = res.data.data;
+                    console.log(
+                        "Scopes loaded for service:",
+                        serviceId,
+                        this.scopes
+                    ); // Debug log
                 }
             } catch (e) {
+                console.error("Error loading scopes:", e);
                 if (e?.response?.data?.message) {
                     $notify.error(e.response.data.message);
                 }
+            } finally {
+                this.loadingScopes = false;
             }
         },
 
