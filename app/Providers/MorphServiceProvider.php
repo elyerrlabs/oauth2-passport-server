@@ -49,7 +49,8 @@ class MorphServiceProvider extends ServiceProvider
             (new \App\Models\Common\Icon())->tag => \App\Models\Common\Icon::class,
             (new \App\Models\Common\Tag())->tag => \App\Models\Common\Tag::class,
             (new \App\Models\Common\Order())->tag => \App\Models\Common\Order::class,
-            (new \App\Models\Common\Variant())->tag => \App\Models\Common\Variant::class
+            (new \App\Models\Common\Variant())->tag => \App\Models\Common\Variant::class,
+            (new \App\Models\Common\Refund())->tag => \App\Models\Common\Refund::class
         ];
 
         Relation::morphMap(array_merge(
