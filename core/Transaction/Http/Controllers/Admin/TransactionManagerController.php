@@ -25,6 +25,8 @@ namespace Core\Transaction\Http\Controllers\Admin;
  */
 
 
+use Core\Transaction\Services\TransactionService;
+use Core\Transaction\Transformer\Admin\TransactionTransformer;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
@@ -34,18 +36,18 @@ class TransactionManagerController extends WebController
 {
     /**
      * Repository
-     * @var
+     * @var TransactionService
      */
-    public $repository;
+    public $transactionService;
 
     /**
-     * Constructor
-     * @param \ Core\Transaction\Repositories\TransactionRepository $transactionRepository
+     * Construct
+     * @param \Core\Transaction\Services\TransactionService $transactionService
      */
-    public function __construct(TransactionRepository $transactionRepository)
+    public function __construct(TransactionService $transactionService)
     {
         parent::__construct();
-        $this->repository = $transactionRepository;
+        $this->transactionService = $transactionService;
         $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:view')->only('index');
     }
 
@@ -56,13 +58,19 @@ class TransactionManagerController extends WebController
      */
     public function index(Request $request)
     {
-        if (request()->wantsJson()) {
-            return $this->repository->search($request);
-        }
+        // Apply pagination
+        $per_page = $request->filled("per_page") ? $request->per_page : 15;
 
-        return Inertia::render("Core/Transaction/Admin/Transaction/Index", [
-            "route" => route('transaction.admin.transactions.index'),
-            "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes'))
-        ])->rootView('system');
+        // Retrieve data using the transaction service
+        $data = $this->transactionService->search($request)->paginate($per_page);
+        
+        return Inertia::render(
+            "Core/Transaction/Admin/Transaction/Index",
+            [
+                "data" => fractal($data, TransactionTransformer::class)->toArray() ?? [],
+                "route" => route('transaction.admin.transactions.index'),
+                "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes')),
+            ]
+        )->rootView('system');
     }
 }

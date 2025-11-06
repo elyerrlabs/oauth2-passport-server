@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Transaction\Http\Controllers\Web;
+namespace Core\Transaction\Jobs;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -25,40 +25,36 @@ namespace Core\Transaction\Http\Controllers\Web;
  */
 
 use Core\Transaction\Services\TransactionService;
-use Illuminate\Http\Request;
-use App\Http\Controllers\WebController;
-use Core\Transaction\Repositories\TransactionRepository;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
 
-
-class CheckoutController extends WebController
+class ExpiresPaymentJob implements ShouldQueue
 {
+    use Queueable;
 
     /**
-     * Repository
-     * @var TransactionService
+     * Transaction code
+     * @var array
      */
-    private $transactionService;
-
+    public $meta;
 
     /**
      * Construct
+     * @param string $meta
      */
-    public function __construct()
+    public function __construct(array $meta)
     {
-        parent::__construct();
-        $this->transactionService = app(TransactionService::class);
+        $this->meta = $meta;
+        $this->onQueue('payments');
     }
 
     /**
-     * Show the transaction view
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * Execute the job.
      */
-    public function success(Request $request)
+    public function handle(): void
     {
-        $data = $this->transactionService->retrieveTransactionForUser($request->code);
+        $service = new TransactionService();
 
-        return view('payment.success', ['transaction' => $data]);
+        $service->handledExpiresPayment($this->meta);
     }
-
 }

@@ -40,7 +40,7 @@ class PaymentManager
      * Resolve instance
      * @param string $method
      * @throws \Exception
-     * @return mixed|\Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application
+     * @return StripeSubscription|OfflineSubscription
      */
     public function resolve(string $method)
     {
@@ -89,6 +89,16 @@ class PaymentManager
     public function cancel(string $method, Transaction $transaction)
     {
         return $this->resolve($method)->cancel($transaction);
+    }
+
+    /**
+     * Refund
+     * @param string $method
+     * @param array $transaction
+     */
+    public function refund(string $method, array $transaction)
+    {
+        return $this->resolve($method)->refund($transaction);
     }
 }
 

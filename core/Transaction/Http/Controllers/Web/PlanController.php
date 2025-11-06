@@ -64,7 +64,7 @@ class PlanController extends WebController
                 'billing_period' => route('api.transaction.payments.billing-period'),
                 'currencies' => route('api.transaction.payments.currencies'),
                 'methods' => route('api.transaction.payments.methods'),
-                'services' => route('api.transaction.services.services'),
+                'services' => route('api.transaction.services.list'),
                 'subscription' => route('transaction.subscriptions.pay')
             ],
         ]);

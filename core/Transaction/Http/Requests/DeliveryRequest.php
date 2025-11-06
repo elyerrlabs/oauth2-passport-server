@@ -24,16 +24,10 @@ namespace Core\Transaction\Http\Requests;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Rules\BooleanRule;
-use Core\Transaction\Model\Plan;
-use App\Repositories\Traits\Generic;
-use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeliveryRequest extends FormRequest
 {
-    use Generic;
-    use Asset;
 
     /**
      * Determine if the user is authorized to make this request.

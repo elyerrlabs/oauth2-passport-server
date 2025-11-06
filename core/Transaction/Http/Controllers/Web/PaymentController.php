@@ -24,6 +24,7 @@ namespace Core\Transaction\Http\Controllers\Web;
  */
 
 
+use Core\Transaction\Model\Refund;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Core\User\Repositories\ServiceRepository;
@@ -86,5 +87,23 @@ class PaymentController extends Controller
     public function services(Request $request)
     {
         return $this->repository->searchForGuest($request);
+    }
+
+    /**
+     * List status for refund or appeal
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function listRefundStatus()
+    {
+        return $this->data(['data' => Refund::statuses()]);
+    }
+
+    /**
+     * Payment types
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function paymentTypes()
+    {
+        return $this->data(['data' => billings_types()]);
     }
 }

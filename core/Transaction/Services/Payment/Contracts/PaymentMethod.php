@@ -20,9 +20,9 @@ namespace Core\Transaction\Services\Payment\Contracts;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
- */ 
+ */
 
 use Core\Transaction\Model\Transaction;
 
@@ -30,7 +30,7 @@ interface PaymentMethod
 {
     /**
      * Process a one-time payment
-     * 
+     *
      * @param array $data Payment data
      * @return mixed Result of payment process (e.g. session object, confirmation)
      */
@@ -45,7 +45,7 @@ interface PaymentMethod
 
     /**
      * Cancel a subscription or payment process
-     * 
+     *
      * @param Transaction $transaction Transaction model instance
      * @return mixed Result of cancellation process
      */
@@ -57,4 +57,11 @@ interface PaymentMethod
      * @return void
      */
     public function forceActivation(array $response);
+
+    /**
+     * Summary of refund 
+     * @param array $transaction
+     * @return void
+     */
+    public function refund(array $transaction);
 }

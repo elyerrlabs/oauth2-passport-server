@@ -182,4 +182,20 @@ class OfflineSubscription implements PaymentMethod
         return $uniqueCode;
     }
 
+    /**
+     * Summary of refund 
+     * @param array $transaction
+     * @return void
+     */
+    public function refund(array $transaction)
+    {
+        if (
+            !auth()->user()->hasAccess([
+                'administrator:transactions:full',
+                'administrator:transactions:update'
+            ])
+        ) {
+            throw new ReportError(__("You don’t have permission to perform this action"), 403);
+        }
+    }
 }

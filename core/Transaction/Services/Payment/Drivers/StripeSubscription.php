@@ -20,16 +20,19 @@ namespace Core\Transaction\Services\Payment\Drivers;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Services\TransactionService;
 use Stripe\Charge;
 use Stripe\Stripe;
 use Stripe\Customer;
 use Stripe\PaymentIntent;
 use Stripe\Checkout\Session;
 use Core\Transaction\Model\User;
+use Stripe\Refund as StripeRefund;
+use Illuminate\Support\Facades\Log;
 use Core\Transaction\Model\Transaction;
 use Core\Transaction\Model\PaymentProvider;
 use Stripe\Exception\InvalidRequestException;
@@ -39,7 +42,6 @@ use Core\Transaction\Services\Payment\Contracts\PaymentMethod;
 
 class StripeSubscription implements PaymentMethod
 {
-
     /**
      * Provider name
      * @var string
@@ -48,9 +50,10 @@ class StripeSubscription implements PaymentMethod
 
 
     /**
-     * Repository
+     * Service
+     * @var TransactionService
      */
-    public $repository;
+    public $transactionService;
 
     /**
      * Billing period supported by stripe
@@ -67,10 +70,10 @@ class StripeSubscription implements PaymentMethod
         'biannual' => ['interval' => 'year', 'interval_count' => 2]
     ];
 
-    public function __construct(TransactionRepository $transactionRepository)
+    public function __construct()
     {
         Stripe::setApiKey(config('services.stripe.secret'));
-        $this->repository = $transactionRepository;
+        $this->transactionService = app(TransactionService::class);
     }
 
     /**
@@ -82,7 +85,7 @@ class StripeSubscription implements PaymentMethod
     {
         $provider = $this->createCustomerId($data);
 
-        //Create metadata 
+        //Create metadata
         $meta = [
             'mode' => 'payment',
             'customer' => $provider->customer_id,
@@ -128,7 +131,7 @@ class StripeSubscription implements PaymentMethod
     public function chargeRecurringPayment(array $package): void
     {
         //Generate new transaction code
-        $code = $this->repository->generateTransactionCode();
+        $code = $this->transactionService->generateTransactionCode();
 
         // Retrieve provider by user id and payment method
         $provider = PaymentProvider::where('user_id', $package['user']['id'])
@@ -151,7 +154,7 @@ class StripeSubscription implements PaymentMethod
         ]);
 
         //Create new transaction for this payment intent
-        $this->repository->createStripeRecurringPayment($intent, $package);
+        $this->transactionService->createRecurringPayment($intent, $package);
     }
 
     /**
@@ -171,7 +174,6 @@ class StripeSubscription implements PaymentMethod
      */
     public function forceActivation(array $response)
     {
-
         switch ($response['object']) {
             case 'payment_intent':
                 $session = (object) [
@@ -201,7 +203,7 @@ class StripeSubscription implements PaymentMethod
         // Retrieve the last charge succeeded
         $last_charge = Charge::retrieve($payment_intent->latest_charge);
 
-        $this->repository->paymentSuccessfully($last_charge->toArray(), 'succeed');
+        $this->transactionService->HandledSuccessfullyPayment($last_charge->toArray(), 'succeed');
     }
 
     /**
@@ -233,5 +235,28 @@ class StripeSubscription implements PaymentMethod
         }
 
         return $provider;
+    }
+
+    /**
+     * Transaction refund
+     * @param array $transaction
+     * @return \Stripe\Refund
+     */
+    public function refund(array $transaction)
+    {
+        //Generate a new payment intent to renew package
+        return StripeRefund::create([
+            'payment_intent' => $transaction['payment_intent_id'],
+            'amount' => $transaction['refund']['amount'],
+            //'reason' => $transaction['refund']['reason'],
+            //'description' => $transaction['refund']['description'],
+            'metadata' => [
+                'transaction_code' => $this->transactionService->generateTransactionCode(),
+                'owner_id' => $transaction['owner']['id'],
+                'method' => config('billing.methods.stripe.key'),
+                'type' => 'refund',
+                'refund_id' => $transaction['refund']['id'],
+            ],
+        ]);
     }
 }

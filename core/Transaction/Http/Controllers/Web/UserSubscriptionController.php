@@ -20,43 +20,38 @@ namespace Core\Transaction\Http\Controllers\Web;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Services\TransactionService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
 use Core\Transaction\Http\Requests\UserRenewRequest;
 use Core\Transaction\Http\Requests\UserStoreRequest;
 use Core\Transaction\Repositories\PackageRepository;
-use Core\Transaction\Repositories\TransactionRepository;
 
 class UserSubscriptionController extends WebController
 {
-
     /**
      * Transaction repository
-     * @var 
+     * @var TransactionService
      */
-    public $transactionRepository;
+    private $transactionService;
 
     /**
      * Package repository
-     * @var 
+     * @var
      */
-    public $packageRepository;
+    private $packageRepository;
 
-    /**
-     * 
-     * @param \Core\Transaction\Repositories\TransactionRepository $transactionRepository
-     * @param \Core\Transaction\Repositories\PackageRepository $packageRepository
-     */
-    public function __construct(TransactionRepository $transactionRepository, PackageRepository $packageRepository)
+
+    public function __construct()
     {
         parent::__construct();
-        $this->transactionRepository = $transactionRepository;
-        $this->packageRepository = $packageRepository;
+        $this->transactionService = app(TransactionService::class);
+        $this->packageRepository = app(PackageRepository::class);
     }
 
     /**
@@ -94,7 +89,7 @@ class UserSubscriptionController extends WebController
                 'billing_period' => route('api.transaction.payments.billing-period'),
                 'currencies' => route('api.transaction.payments.currencies'),
                 'methods' => route('api.transaction.payments.methods'),
-                'services' => route('api.transaction.services.services'),
+                'services' => route('api.transaction.services.list'),
                 'subscription' => route('transaction.subscriptions.pay'),
                 'renew_package' => route('transaction.subscriptions.renew')
             ],
@@ -108,7 +103,11 @@ class UserSubscriptionController extends WebController
      */
     public function subscription(UserStoreRequest $request)
     {
-        return $this->transactionRepository->subscription($request->toArray());
+        $request->merge([
+            'owner_id' => auth()->user()->id,
+        ]);
+
+        return $this->transactionService->subscription($request->toArray());
     }
 
     /**
@@ -118,7 +117,9 @@ class UserSubscriptionController extends WebController
      */
     public function cancel(string $transaction_id)
     {
-        return $this->transactionRepository->cancel($transaction_id);
+        $this->transactionService->cancelPayment($transaction_id);
+
+        return $this->message(__("Transaction has been cancelled"));
     }
 
     /**
@@ -128,7 +129,10 @@ class UserSubscriptionController extends WebController
      */
     public function renew(UserRenewRequest $request)
     {
-        return $this->transactionRepository->renewByUser($request);
+        $request->merge([
+            'owner_id' => auth()->user()->id,
+        ]);
+        return $this->transactionService->renewByUser($request);
     }
 
     /**
@@ -149,6 +153,9 @@ class UserSubscriptionController extends WebController
      */
     public function activate(string $id)
     {
-        return $this->transactionRepository->activate($id);
+        $this->transactionService->activate($id);
+
+        return $this->message("Transaction activated successfully");
+
     }
 }

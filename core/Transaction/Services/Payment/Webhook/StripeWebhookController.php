@@ -24,6 +24,10 @@ namespace Core\Transaction\Services\Payment\Webhook;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Jobs\ExpiresPaymentJob;
+use Core\Transaction\Jobs\FailedPaymentJob;
+use Core\Transaction\Jobs\SuccessfullyPaymentJob;
+use Core\Transaction\Jobs\SuccessfullyRefundJob;
 use Stripe\Stripe;
 use Stripe\Webhook;
 use Illuminate\Http\Request;
@@ -64,11 +68,9 @@ class StripeWebhookController extends Controller
         Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
-            $event = Webhook::constructEvent(
-                $payload,
-                $sigHeader,
-                $secret
-            );
+
+            $event = Webhook::constructEvent($payload, $sigHeader, $secret);
+
         } catch (\UnexpectedValueException $e) {
             Log::error($e);
             http_response_code(400);
@@ -79,33 +81,39 @@ class StripeWebhookController extends Controller
             exit();
         }
 
+        // Recovery metadata
+        $metadata = $event->data->object->toArray();
+
         // Handle the event
         switch ($event->type) {
+
             case 'checkout.session.completed':
-                $metadata = $event->data->object->toArray();
-                $this->repository->paymentSuccessfully($metadata);
+                SuccessfullyPaymentJob::dispatch($metadata);
                 break;
 
             case 'payment_intent.payment_failed':
-                $metadata = $event->data->object->toArray();
                 $sessions = Session::all([
                     'limit' => 1,
                     'payment_intent' => $metadata['id'],
                 ]);
-
                 $metadata['session'] = $sessions->data[0]->toArray();
                 Log::info("payment_intent.payment_failed : ", $metadata);
-                $this->repository->paymentFailed($metadata);
+                FailedPaymentJob::dispatch($metadata);
                 break;
 
             case "checkout.session.expired":
-                $metadata = $event->data->object->toArray();
-                $this->repository->paymentExpires($metadata);
+                Log::info("checkout.session.expired : ", $metadata);
+                ExpiresPaymentJob::dispatch($metadata);
                 break;
 
             case "charge.succeeded":
-                $metadata = $event->data->object->toArray();
-                $this->repository->paymentSuccessfully($metadata, 'succeed');
+                SuccessfullyPaymentJob::dispatch($metadata, 'succeed');
+                break;
+
+            case "charge.refunded":
+                SuccessfullyRefundJob::dispatch($metadata);
+                break;
+
             default:
                 Log::info("Listen unknown event : ", $event->toArray());
         }
