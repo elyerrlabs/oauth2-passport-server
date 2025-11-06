@@ -42,7 +42,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
     <v-modal
         v-model="dialog"
-        panel-class="w-full lg:w-6xl"
+        panel-class="w-full lg:w-3xl"
         :title="__('Activate Transaction')"
     >
         <template #body>
@@ -94,7 +94,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     {{ __("Cancel") }}
                 </button>
                 <button
-                    @click="activate"
+                    @click="activateTransaction"
                     :disabled="disable"
                     class="inline-flex items-center px-6 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 >
@@ -118,54 +118,43 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-modal>
 </template>
 
-<script>
+<script setup>
 import VModal from "@/components/VModal.vue";
-export default {
-    components: {
-        VModal,
+import { ref } from "vue";
+
+const emits = defineEmits(["updated"]);
+
+const props = defineProps({
+    item: {
+        type: Object,
+        required: true,
     },
-    emits: ["updated"],
+});
 
-    props: {
-        item: {
-            type: Object,
-            required: true,
-        },
-    },
+const dialog = ref(false);
+const disable = ref(false);
 
-    data() {
-        return {
-            dialog: false,
-            disable: false,
-        };
-    },
+const activateTransaction = async () => {
+    disable.value = true;
 
-    methods: {
-        async activate() {
-            this.disable = true;
+    try {
+        const res = await $server.put(props.item.links.activate);
 
-            try {
-                const res = await this.$server.put(this.item.links.activate);
+        if (res.status == 200) {
+            dialog.value = false;
 
-                if (res.status == 200) {
-                    this.dialog = false;
+            $notify.success(__("Transaction has been activated successfully"));
 
-                    $notify.success(
-                        __("Transaction has been activated successfully")
-                    );
-
-                    this.$emit("updated");
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.disable = false;
-                this.dialog = false;
-            }
-        },
-    },
+            emits("updated");
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        disable.value = false;
+        dialog.value = false;
+    }
 };
 </script>
 
