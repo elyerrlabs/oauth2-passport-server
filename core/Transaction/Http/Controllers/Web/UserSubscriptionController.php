@@ -24,13 +24,14 @@ namespace Core\Transaction\Http\Controllers\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Services\PackageService;
 use Core\Transaction\Services\TransactionService;
+use Core\Transaction\Transformer\User\UserPackageTransformer;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
 use Core\Transaction\Http\Requests\UserRenewRequest;
 use Core\Transaction\Http\Requests\UserStoreRequest;
-use Core\Transaction\Repositories\PackageRepository;
 
 class UserSubscriptionController extends WebController
 {
@@ -42,32 +43,36 @@ class UserSubscriptionController extends WebController
 
     /**
      * Package repository
-     * @var
+     * @var PackageService
      */
-    private $packageRepository;
+    private $packageService;
 
 
     public function __construct()
     {
         parent::__construct();
         $this->transactionService = app(TransactionService::class);
-        $this->packageRepository = app(PackageRepository::class);
+        $this->packageService = app(PackageService::class);
     }
 
     /**
      * Show the package for the user
      * @param \Illuminate\Http\Request $request
-     * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
+     * @return \Inertia\Response
      */
     public function index(Request $request)
     {
-        if (request()->wantsJson()) {
-            return $this->packageRepository->searchForUser($request);
-        }
+        $page = $request->filled('per_page') ? $request->per_page : 15;
 
-        return Inertia::render("Core/Transaction/Web/Subscription/Index", [
-            'route' => route('transaction.subscriptions.index')
-        ]);
+        $data = $this->packageService->searchForUser($request)->paginate($page);
+
+        return Inertia::render(
+            "Core/Transaction/Web/Subscription/Index",
+            [
+                'data' => fractal($data, UserPackageTransformer::class)->toArray() ?? [],
+                'route' => route('transaction.subscriptions.index')
+            ]
+        );
     }
 
     /**
@@ -78,12 +83,10 @@ class UserSubscriptionController extends WebController
      */
     public function show(Request $request, string $transaction_code)
     {
-        if ($request->wantsJson()) {
-
-            return $this->packageRepository->findByTransactionCode($transaction_code);
-        }
+        $data = $this->packageService->findByTransactionCode($transaction_code);
 
         return Inertia::render('Core/Transaction/Web/Subscription/Detail', [
+            'data' => fractal($data, UserPackageTransformer::class)->toArray()['data'] ?? [],
             'routes' => [
                 'plans' => route('transaction.plans.index'),
                 'billing_period' => route('api.transaction.payments.billing-period'),
@@ -117,9 +120,10 @@ class UserSubscriptionController extends WebController
      */
     public function cancel(string $transaction_id)
     {
-        $this->transactionService->cancelPayment($transaction_id);
+        // $this->transactionService->cancelPayment($transaction_id);
 
-        return $this->message(__("Transaction has been cancelled"));
+        //return $this->message(__("Transaction has been cancelled"));
+        return $this->message(__("This function is currently disabled for maintenance."));
     }
 
     /**
@@ -132,6 +136,7 @@ class UserSubscriptionController extends WebController
         $request->merge([
             'owner_id' => auth()->user()->id,
         ]);
+
         return $this->transactionService->renewByUser($request);
     }
 
@@ -142,7 +147,9 @@ class UserSubscriptionController extends WebController
      */
     public function recurringPayment(string $package_id)
     {
-        return $this->packageRepository->recurringPaymentEnableOrDisable($package_id);
+        $this->packageService->recurringPaymentEnableOrDisable($package_id);
+
+        return $this->message(__('Recurring payment for this package has been updated successfully'), );
     }
 
     /**

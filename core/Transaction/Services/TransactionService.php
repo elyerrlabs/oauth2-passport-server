@@ -25,6 +25,9 @@ namespace Core\Transaction\Services;
  */
 
 use Exception;
+use Core\Transaction\Notifications\ProcessRefundNotification;
+use App\Notifications\Subscription\PaymentFailed;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Core\Ecommerce\Model\Order;
@@ -47,7 +50,6 @@ use Core\Transaction\Notifications\SuccessfullyRefundNotification;
 
 class TransactionService
 {
-
     use JsonResponser;
 
     /**
@@ -78,7 +80,7 @@ class TransactionService
      * Package repository
      * @var PackageRepository
      */
-    private $packageRepository;
+    private $packageService;
 
     /**
      * Plan repository
@@ -88,7 +90,7 @@ class TransactionService
 
     /**
      * Partner repository
-     * @var 
+     * @var
      */
     private $partnerRepository;
 
@@ -102,7 +104,7 @@ class TransactionService
         $this->repository = app(TransactionRepository::class);
         $this->paymentManager = app(PaymentManager::class);
         $this->userRepository = app(UserRepository::class);
-        $this->packageRepository = app(PackageRepository::class);
+        $this->packageService = app(PackageService::class);
         $this->planRepository = app(PlanRepository::class);
         $this->partnerRepository = app(PartnerRepository::class);
     }
@@ -184,11 +186,14 @@ class TransactionService
 
                 } else {// Only for subscription
                     //Dispatch only renew packages
-                    $redirect_to = route('transaction.subscriptions.show', ['transaction_code' => $meta['metadata']['transaction_code']]);
+                    $redirect_to = route(
+                        'transaction.subscriptions.show',
+                        ['transaction_code' => $meta['metadata']['transaction_code']]
+                    );
 
                     if ($transaction->renew) {
 
-                        $this->packageRepository->RenewSuccessfully(
+                        $this->packageService->RenewSuccessfully(
                             $transaction->transactionable,
                             $transaction->code
                         );
@@ -197,7 +202,7 @@ class TransactionService
                         $customer->notify(new RenewSuccessfully($redirect_to));
 
                     } else {// Dispatch only buy packages
-                        $this->packageRepository->paymentSuccessfully($transaction->transactionable);
+                        $this->packageService->paymentSuccessfully($transaction->transactionable);
 
                         //Dispatch notification
                         $customer->notify(new PaymentSuccessfully($redirect_to));
@@ -416,8 +421,8 @@ class TransactionService
     public function renewByUser(Request $request)
     {
         // Search for a package  to renew
-        $current_package = $this->packageRepository->find($request->package);
-        $this->packageRepository->lastGracePeriodCheck($current_package);
+        $current_package = $this->packageService->find($request->package);
+        $this->packageService->lastGracePeriodCheck($current_package);
         $package = $current_package->toArray();
 
         //Generate unique transaction code
@@ -448,12 +453,6 @@ class TransactionService
             'code' => $code,
             'response' => $package['payment_manager'],
         ]);
-
-        // Send request notification
-        /* auth()->user()->notify(new RequestSubscription(
-             route('transaction.subscriptions.show', ['transaction_code' => $code]),
-             $code
-         ));*/
 
         return $this->data([
             'data' => [
@@ -539,7 +538,7 @@ class TransactionService
             $provider = $paymentManager->provider;
 
             //Register package
-            $package = $this->packageRepository->create([
+            $package = $this->packageService->create([
                 'status' => config("billing.status.pending.id"),
                 'is_recurring' => config('billing.period.one_time.id') != $plan['price']['billing_period'],
                 'transaction_code' => $plan['transaction_code'],
@@ -590,9 +589,6 @@ class TransactionService
 
             $package->transactions()->create($transaction);
         });
-
-        // Send request notification
-        //auth()->user()->notify(new RequestSubscription(route('transaction.subscriptions.index'), $code));
 
         return $this->data(
             collect([
@@ -645,9 +641,6 @@ class TransactionService
             $checkout->transactions()->create($transaction);
         });
 
-        // Send request notification
-        //auth()->user()->notify(new RequestSubscription(route('transaction.subscriptions.index'), $data['transaction_code']));
-
         return $this->data(
             collect([
                 'data' => [
@@ -661,28 +654,30 @@ class TransactionService
 
     /**
      * Create new transaction for stripe provider
-     * @param mixed $paymentIntent
+     * @param array $paymentIntent
      * @param array $data
      * @return \Core\Transaction\Repositories\TModel
      */
-    public function createRecurringPayment($paymentIntent, array $data)
+    public function createRecurringPayment(array $paymentIntent, array $data)
     {
-        return $this->repository->create([
-            'total' => $paymentIntent->amount,
-            'currency' => $data['meta']['price']['currency'],
-            'status' => config("billing.status.pending.id"),
-            'billing_period' => $data['meta']['price']['billing_period'],
-            'session_id' => null,
-            'payment_method' => $data['transaction']['payment_method'],
-            'payment_intent_id' => $paymentIntent->id,
-            'payment_url' => null,
-            'renew' => true,
-            'code' => $paymentIntent->metadata->transaction_code,
-            'payment_method_id' => $paymentIntent->payment_method,
-            'response' => $paymentIntent->toArray(),
-            'package_id' => $data['id'],
-            'owner_id' => $data['owner_id']
-        ]);
+        return $this->packageService->find($data['id'])
+            ->transactions()
+            ->create([
+                'total' => $paymentIntent['amount'],
+                'currency' => $paymentIntent['currency'],
+                'type' => config("billing.types.payment.id"),
+                'status' => config("billing.status.pending.id"),
+                'billing_period' => $data['meta']['price']['billing_period'],
+                'session_id' => null,
+                'payment_url' => null,
+                'renew' => true,
+                'response' => $paymentIntent,
+                'payment_intent_id' => $paymentIntent['id'],
+                'payment_method' => $paymentIntent['metadata']['method'],
+                'payment_method_id' => $paymentIntent['payment_method'],
+                'code' => $paymentIntent['metadata']['transaction_code'],
+                'owner_id' => $paymentIntent['metadata']['user_id']
+            ]);
     }
 
 

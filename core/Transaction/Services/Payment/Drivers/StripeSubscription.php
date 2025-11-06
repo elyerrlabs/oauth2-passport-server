@@ -36,8 +36,7 @@ use Illuminate\Support\Facades\Log;
 use Core\Transaction\Model\Transaction;
 use Core\Transaction\Model\PaymentProvider;
 use Stripe\Exception\InvalidRequestException;
-use Elyerr\ApiResponse\Exceptions\ReportError;
-use Core\Transaction\Repositories\TransactionRepository;
+use Elyerr\ApiResponse\Exceptions\ReportError; 
 use Core\Transaction\Services\Payment\Contracts\PaymentMethod;
 
 class StripeSubscription implements PaymentMethod
@@ -130,9 +129,6 @@ class StripeSubscription implements PaymentMethod
      */
     public function chargeRecurringPayment(array $package): void
     {
-        //Generate new transaction code
-        $code = $this->transactionService->generateTransactionCode();
-
         // Retrieve provider by user id and payment method
         $provider = PaymentProvider::where('user_id', $package['user']['id'])
             ->where('name', $package['transaction']['payment_method'])
@@ -147,14 +143,18 @@ class StripeSubscription implements PaymentMethod
             'off_session' => true,
             'confirm' => true,
             'metadata' => [
-                'transaction_code' => $code,
+                'transaction_code' => $this->transactionService->generateTransactionCode(),
                 'user_id' => $package['user']['id'],
+                'method' => config('billing.methods.stripe.key'),
                 'renew' => true
             ],
         ]);
 
         //Create new transaction for this payment intent
-        $this->transactionService->createRecurringPayment($intent, $package);
+        $this->transactionService->createRecurringPayment(
+            $intent->toArray(),
+            $package
+        );
     }
 
     /**
