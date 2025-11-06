@@ -59,6 +59,7 @@ class TransactionTransformer extends TransformerAbstract
         return [
             'id' => $transaction->id,
             'currency' => strtoupper($transaction->currency),
+            'type' => $transaction->type,
             'status' => $transaction->status,
             'total' => $this->formatMoney($transaction->total),
             'payment_method' => $transaction->payment_method,
@@ -76,6 +77,8 @@ class TransactionTransformer extends TransformerAbstract
             'updated' => $this->format_date($transaction->updated_at),
             'payment_method_id' => $transaction->payment_method_id,
             'partner_commission_rate' => $transaction->partner_commission_rate,
+            'owner' => $this->owner($transaction->owner),
+            'refund' => $this->refund($transaction->refund),
             'links' => [
                 'index' => route('transaction.admin.transactions.index'),
                 'activate' => route('transaction.transactions.activate', ['transaction' => $transaction->id]),
@@ -84,7 +87,11 @@ class TransactionTransformer extends TransformerAbstract
         ];
     }
 
-
+    /**
+     * Get original attributes
+     * @param mixed $index
+     * @return string|null
+     */
     public static function getOriginalAttributes($index)
     {
         $attributes = [
@@ -107,5 +114,46 @@ class TransactionTransformer extends TransformerAbstract
         ];
 
         return isset($attributes[$index]) ? $attributes[$index] : null;
+    }
+
+    /**
+     * Retrieve the owner
+     * @param mixed $owner
+     * @return array|array{email: mixed, id: mixed, last_name: mixed, name: mixed}
+     */
+    private function owner($owner)
+    {
+        if (empty($owner)) {
+            return [];
+        }
+
+        return [
+            'id' => $owner->id,
+            'name' => $owner->name,
+            'last_name' => $owner->last_name,
+            'email' => $owner->email,
+        ];
+    }
+
+
+    /**
+     * Return refund
+     * @param mixed $refund
+     * @return array|array{amount: mixed, currency: mixed, description: mixed, reason: mixed, status: mixed, type: mixed}
+     */
+    private function refund($refund)
+    {
+        if (empty($refund)) {
+            return [];
+        }
+
+        return [
+            'reason' => $refund->reason,
+            'description' => $refund->description,
+            'amount' => $this->formatMoney($refund->amount),
+            'currency' => strtoupper($refund->currency),
+            'type' => $refund->type,
+            'status' => $refund->status,
+        ];
     }
 }

@@ -22,6 +22,8 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Http\Controllers\Api\Web\RefundController as UserRefundController;
+use Core\Transaction\Http\Controllers\Api\Admin\RefundController as AdminRefundController;
 use Core\Transaction\Http\Controllers\Web\PaymentController;
 
 Route::middleware(['throttle:transaction:api'])->group(function () {
@@ -30,6 +32,26 @@ Route::middleware(['throttle:transaction:api'])->group(function () {
     Route::get('/payments/currencies', [PaymentController::class, 'currencies'])->name('payments.currencies');
     Route::get('/payments/methods', [PaymentController::class, 'methods'])->name('payments.methods');
     Route::get('/payments/statuses', [PaymentController::class, 'paymentStatus'])->name('payments.status');
-    Route::get('/services/list', [PaymentController::class, 'services'])->name('services.services');
+    Route::get('/payments/types', [PaymentController::class, 'paymentTypes'])->name('payments.status');
+    Route::get('/services/list', [PaymentController::class, 'services'])->name('services.list');
+    Route::get('/refunds/statuses', [PaymentController::class, 'listRefundStatus'])->name('refund.status');
 
+
+    Route::group([
+        'prefix' => 'users',
+        'as' => 'users.'
+    ], function () {
+
+        Route::get("/refund", [UserRefundController::class, 'index'])->name('refund.index');
+        Route::post("/refund", [UserRefundController::class, 'store'])->name('refund.store');
+    });
+
+    Route::group([
+        'prefix' => 'admin',
+        'as' => 'admin.'
+    ], function () {
+
+        Route::get("/refund", [AdminRefundController::class, 'index'])->name('refund.index');
+        Route::put("/refund/{id}", [AdminRefundController::class, 'update'])->name('refund.update');
+    });
 });
