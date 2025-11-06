@@ -23,15 +23,15 @@ namespace Core\Ecommerce\Repositories;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
-use Core\Transaction\Model\User;
-use Core\Ecommerce\Model\Variant;
-use Core\Transaction\Model\DeliveryAddress;
-use Core\Transaction\Repositories\TransactionRepository;
+
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Core\Transaction\Model\User;
+use Core\Ecommerce\Model\Variant;
 use Core\Transaction\Model\Checkout;
 use App\Repositories\Contracts\Contracts;
+use Core\Transaction\Model\DeliveryAddress;
+use Core\Transaction\Services\TransactionService; 
 
 class CheckoutRepository implements Contracts
 {
@@ -53,19 +53,22 @@ class CheckoutRepository implements Contracts
      */
     private $productRepository;
 
-
-    private $transactionRepository;
+    /**
+     * TransactionService
+     * @var TransactionService
+     */
+    private $transactionService;
 
     /**
      * Construct
      * @param \Core\Transaction\Model\Checkout $checkout
      */
-    public function __construct(Checkout $checkout, OrderRepository $orderRepository, ProductRepository $productRepository, TransactionRepository $transactionRepository)
+    public function __construct(Checkout $checkout, OrderRepository $orderRepository, ProductRepository $productRepository, transactionService $transactionService)
     {
         $this->model = $checkout;
         $this->orderRepository = $orderRepository;
         $this->productRepository = $productRepository;
-        $this->transactionRepository = $transactionRepository;
+        $this->transactionService = app(TransactionService::class);
     }
     /**
      * Search resources
@@ -221,9 +224,11 @@ class CheckoutRepository implements Contracts
         $checkout['checkout_code'] = $checkout_code;
         $checkout['billing_period'] = config('billing.period.one_time.id');
         $checkout['payment_method'] = $data['payment_method'];
+        $checkout['owner_id'] = auth()->user()->id;
+
         unset($checkout['code']);
 
-        return $this->transactionRepository->buy($checkout);
+        return $this->transactionService->buy($checkout);
     }
 
     /**
