@@ -2932,5 +2932,17 @@
   "Our Values": "Nuestros Valores",
   "Our Company": "Nuestra Empresa",
   "Powered by": "Desarrollado por",
-  "Make available for web routes (requires login)": "Habilitar para rutas web protegidas (requiere inicio de sesión)"
+  "Make available for web routes (requires login)": "Habilitar para rutas web protegidas (requiere inicio de sesión)",
+  "Your refund has been processed successfully": "Tu reembolso se ha procesado con éxito",
+  "Hello!": "¡Hola!",
+  "We’re writing to let you know that your refund has been successfully processed.": "Te informamos que tu reembolso se ha procesado correctamente.",
+  "Here are the details of your transaction:": "Aquí tienes los detalles de tu transacción:",
+  "Transaction Code: :code": "Código de transacción: :code",
+  "Type: :type": "Tipo: :type",
+  "Status: :status": "Estado: :status",
+  "Total Refunded: :currency :total": "Total reembolsado: :currency :total",
+  "Cancellation Date: :date": "Fecha de cancelación: :date",
+  "View Transaction": "Ver transacción",
+  "If you have any questions regarding this refund, please don’t hesitate to contact our support team.": "Si tienes alguna pregunta sobre este reembolso, no dudes en contactar a nuestro equipo de soporte.",
+  "Thank you for trusting us!": "¡Gracias por confiar en nosotros!"
 }
