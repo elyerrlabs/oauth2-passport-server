@@ -107,7 +107,7 @@ class UserSubscriptionController extends WebController
     public function subscription(UserStoreRequest $request)
     {
         $request->merge([
-            'owner_id' => auth()->user()->id,
+            'user_id' => auth()->user()->id,
         ]);
 
         return $this->transactionService->subscription($request->toArray());
@@ -134,7 +134,7 @@ class UserSubscriptionController extends WebController
     public function renew(UserRenewRequest $request)
     {
         $request->merge([
-            'owner_id' => auth()->user()->id,
+            'user_id' => auth()->user()->id,
         ]);
 
         return $this->transactionService->renewByUser($request);
@@ -163,6 +163,5 @@ class UserSubscriptionController extends WebController
         $this->transactionService->activate($id);
 
         return $this->message("Transaction activated successfully");
-
     }
 }

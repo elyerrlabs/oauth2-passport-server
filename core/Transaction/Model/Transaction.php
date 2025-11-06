@@ -60,9 +60,10 @@ class Transaction extends Master
         'meta', //save package
         'code', // unique code
         'partner_id', // if of the partner
-        'owner_id',
+        'user_id',
+        'activated_by',
         'partner_commission_rate',
-        'payment_method_id'
+        'payment_method_id',
     ];
 
     protected $casts = [
@@ -72,22 +73,32 @@ class Transaction extends Master
     ];
 
     /**
+     * Currency setter
+     * @param mixed $value
+     * @return void
+     */
+    public function setCurrencyAttribute($value)
+    {
+        $this->attributes['currency'] = strtolower($value);
+    }
+
+    /**
      * Get the user who activated or execute the transaction
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function activatedBy()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'activated_by');
     }
 
     /**
      * Get the owner of the transaction
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, Transaction>
      */
-    public function owner()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**

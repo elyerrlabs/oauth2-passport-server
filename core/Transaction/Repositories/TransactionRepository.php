@@ -50,7 +50,17 @@ class TransactionRepository
      */
     public function query()
     {
-        return $this->model->query();
+        $query = $this->model->query();
+
+        $query->with([
+            'transactionable',
+            'activatedBy',
+            'user',
+            'partner',
+            'refund'
+        ]);
+
+        return $query;
     }
 
     /**
@@ -60,13 +70,7 @@ class TransactionRepository
      */
     public function findByCode(string $code): Transaction|null
     {
-        return $this->model->with([
-            'transactionable',
-            'owner',
-            'user',
-            'partner',
-            'refund'
-        ])->where('code', $code)->first();
+        return $this->query()->where('code', $code)->first();
     }
 
     /**
@@ -76,51 +80,35 @@ class TransactionRepository
      */
     public function find(string $id): Transaction|null
     {
-        return $this->model->with([
-            'transactionable',
-            'owner',
-            'user',
-            'partner',
-            'refund'
-        ])->find($id);
+        return $this->query()->where('id', $id)->first();
     }
 
     /**
      * Search transaction for user 
      * @param string $id
      * @param string $user_id
-     * @return \Illuminate\Database\Eloquent\Builder<Transaction>
+     * @return Transaction|TValue|null
      */
     public function findForUser(string $id, string $user_id)
     {
-        return $this->model->with([
-            'transactionable',
-            'owner',
-            'user',
-            'partner',
-            'refund'
-        ])
+        return $this->query()
             ->where('id', $id)
-            ->where('user_id', $user_id);
+            ->where('user_id', $user_id)
+            ->first();
     }
 
     /**
      * Find transaction for user by code
      * @param string $code
      * @param string $user_id
-     * @return \Illuminate\Database\Eloquent\Builder<Transaction>
+     * @return Transaction|TValue|null
      */
     public function findByCodeForUser(string $code, string $user_id)
     {
-        return $this->model->with([
-            'transactionable',
-            'owner',
-            'user',
-            'partner',
-            'refund'
-        ])
+        return $this->query()
             ->where('code', $code)
-            ->where('user_id', $user_id);
+            ->where('user_id', $user_id)
+            ->first();
     }
 
     /**

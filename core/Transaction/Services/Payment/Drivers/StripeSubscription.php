@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 use Core\Transaction\Model\Transaction;
 use Core\Transaction\Model\PaymentProvider;
 use Stripe\Exception\InvalidRequestException;
-use Elyerr\ApiResponse\Exceptions\ReportError; 
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Core\Transaction\Services\Payment\Contracts\PaymentMethod;
 
 class StripeSubscription implements PaymentMethod
@@ -248,11 +248,9 @@ class StripeSubscription implements PaymentMethod
         return StripeRefund::create([
             'payment_intent' => $transaction['payment_intent_id'],
             'amount' => $transaction['refund']['amount'],
-            //'reason' => $transaction['refund']['reason'],
-            //'description' => $transaction['refund']['description'],
             'metadata' => [
                 'transaction_code' => $this->transactionService->generateTransactionCode(),
-                'owner_id' => $transaction['owner']['id'],
+                'user_id' => $transaction['owner']['id'],
                 'method' => config('billing.methods.stripe.key'),
                 'type' => 'refund',
                 'refund_id' => $transaction['refund']['id'],

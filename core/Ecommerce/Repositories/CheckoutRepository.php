@@ -224,7 +224,7 @@ class CheckoutRepository implements Contracts
         $checkout['checkout_code'] = $checkout_code;
         $checkout['billing_period'] = config('billing.period.one_time.id');
         $checkout['payment_method'] = $data['payment_method'];
-        $checkout['owner_id'] = auth()->user()->id;
+        $checkout['user_id'] = auth()->user()->id;
 
         unset($checkout['code']);
 

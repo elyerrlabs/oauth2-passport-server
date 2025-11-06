@@ -24,6 +24,7 @@ namespace Core\Transaction\Services;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Transformer\Admin\PackageTransformer;
 use Exception;
 use Core\Transaction\Notifications\ProcessRefundNotification;
 use App\Notifications\Subscription\PaymentFailed;
@@ -145,18 +146,17 @@ class TransactionService
         //Search customer
         $customer = $this->userRepository->find($meta['metadata']['user_id']);
 
-        //Search auth user
-        $auth_user = auth()->user();
+        //Set user id
+        $transaction->user_id = $meta['metadata']['user_id'];
 
-        //Page to redirect after payment
+        // Assign the ID of the authenticated user who activated the package
+        $transaction->activated_by = auth()->user() ? auth()->user()->id : null;
 
         switch ($mode) {
             case 'session':
                 $transaction->payment_intent_id = $meta['payment_intent'];
                 $transaction->session_id = $meta['id'];
-                $transaction->user_id = $auth_user ? $auth_user->id : null;
                 $transaction->push();
-
                 break;
 
             case "succeed":
@@ -165,7 +165,6 @@ class TransactionService
                 $transaction->response = $meta;
                 $transaction->status = config('billing.status.successful.id');
                 $transaction->payment_url = $meta["receipt_url"];
-                $transaction->user_id = $auth_user ? $auth_user->id : null;
 
                 if (isset($meta['metadata']['checkout_code']) && !empty($meta['metadata']['checkout_code'])) {
 
@@ -209,7 +208,7 @@ class TransactionService
                     }
                 }
 
-                //Set the package metadata
+                //Set the package metadata 
                 $package_meta = $transaction->transactionable->meta();
                 unset($package_meta['transactions']);
                 unset($package_meta['transaction']);
@@ -240,7 +239,7 @@ class TransactionService
 
         $transaction->push();
 
-        $this->userRepository->find($transaction->owner_id)
+        $this->userRepository->find($transaction->user_id)
             ->notify(new SuccessfullyRefundNotification($transaction->toArray()));
     }
 
@@ -329,15 +328,6 @@ class TransactionService
     {
         // Prepare query
         $query = $this->repository->query();
-
-        // Eager loading
-        $query->with([
-            'user',
-            'owner',
-            'transactionable',
-            'partner',
-            'refund'
-        ]);
 
         $query->orderByDesc("created_at");
 
@@ -448,7 +438,7 @@ class TransactionService
             'session_id' => $package['payment_manager']['id'],
             'payment_intent_id' => $package['payment_manager']['payment_intent'],
             'payment_url' => $package['payment_manager']['url'],
-            'owner_id' => $request->owner_id,
+            'user_id' => $request->user_id,
             'renew' => true,
             'code' => $code,
             'response' => $package['payment_manager'],
@@ -555,7 +545,7 @@ class TransactionService
                 'billing_period' => $plan['price']['billing_period'],
                 'renew' => false,
                 'code' => $plan['transaction_code'],
-                'owner_id' => $data['owner_id'],
+                'user_id' => $data['user_id'],
                 'response' => $paymentManager->toArray(),// save payment manager response
             ];
 
@@ -634,7 +624,7 @@ class TransactionService
                 'billing_period' => $data['billing_period'],
                 'renew' => false,
                 'code' => $data['transaction_code'],
-                'owner_id' => $data['owner_id'],
+                'user_id' => $data['user_id'],
                 'response' => $paymentManager->toArray(),// save payment manager response
             ];
 
@@ -676,7 +666,7 @@ class TransactionService
                 'payment_method' => $paymentIntent['metadata']['method'],
                 'payment_method_id' => $paymentIntent['payment_method'],
                 'code' => $paymentIntent['metadata']['transaction_code'],
-                'owner_id' => $paymentIntent['metadata']['user_id']
+                'user_id' => $paymentIntent['metadata']['user_id']
             ]);
     }
 
@@ -701,11 +691,11 @@ class TransactionService
                     'payment_method' => $refund->metadata->method,
                     'payment_intent_id' => $refund->payment_intent,
                     'code' => $refund->metadata->transaction_code,
-                    'owner_id' => $refund->metadata->owner_id
+                    'user_id' => $refund->metadata->user_id
                 ]);
 
         // Notification to the user about the process
-        $this->userRepository->find($refund->metadata->owner_id)
+        $this->userRepository->find($refund->metadata->user_id)
             ->notify(new ProcessRefundNotification($refund->metadata->transaction_code));
     }
 

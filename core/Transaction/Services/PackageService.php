@@ -25,6 +25,8 @@ namespace Core\Transaction\Services;
  */
 
 use App\Support\CacheKeys;
+use Core\Transaction\Transformer\Admin\PackageTransformer;
+use Core\Transaction\Transformer\User\UserPackageTransformer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Core\Transaction\Model\Package;
@@ -126,7 +128,7 @@ final class PackageService
     {
         $package = $this->packageRepository->find($id);
 
-        $data = $package->meta();
+        $data = $package->meta(PackageTransformer::class);
         $paymentManager = new PaymentManager();
 
         $paymentManager->chargeRecurringPayment(

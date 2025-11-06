@@ -26,8 +26,7 @@ namespace Core\Transaction\Jobs;
 
 use Core\Transaction\Services\PackageService;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
-use Log;
+use Illuminate\Foundation\Queue\Queueable; 
 
 class ProcessRecurringPaymentJob implements ShouldQueue
 {

@@ -24,7 +24,6 @@ namespace Core\Transaction\Model;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Models\Common\Order;
 use Core\Transaction\Model\DeliveryAddress;
 use Core\Transaction\Model\PaymentProvider;
 
@@ -57,17 +56,17 @@ class User extends \Core\User\Model\User
      * Get all transactions activated or executed by the user
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<Transaction, User>
      */
-    public function activatedTransactions()
+    public function activatedByTransactions()
     {
-        return $this->hasMany(Transaction::class, 'user_id');
+        return $this->hasMany(Transaction::class, 'activated_by');
     }
 
     /**
      * Get all transactions owned by the users 
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<Transaction, User>
      */
-    public function ownedTransactions()
+    public function transactions()
     {
-        return $this->hasMany(Transaction::class, 'owner_id');
+        return $this->hasMany(Transaction::class, 'user_id');
     }
 }

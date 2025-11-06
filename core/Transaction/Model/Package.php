@@ -47,7 +47,7 @@ class Package extends Master
      * @var 
      */
     public $transformer = PackageTransformer::class;
-
+ 
     /**
      * Fillable
      * @var array

@@ -156,7 +156,7 @@ class RefundRepository
 
         $transaction = Transaction::with(['refund'])
             ->where('code', $data['transaction_code'])
-            ->where('owner_id', auth()->user()->id)
+            ->where('user_id', auth()->user()->id)
             ->first();
 
         if (empty($transaction)) {
