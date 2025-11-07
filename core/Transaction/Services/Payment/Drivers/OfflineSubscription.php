@@ -24,13 +24,13 @@ namespace Core\Transaction\Services\Payment\Drivers;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Transaction\Services\TransactionService;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Support\Str;
 use Core\Transaction\Model\PaymentProvider;
 use Core\Transaction\Model\User;
 use Illuminate\Support\Fluent;
-use Core\Transaction\Model\Transaction;
-use Core\Transaction\Repositories\TransactionRepository;
+use Core\Transaction\Model\Transaction; 
 use Core\Transaction\Services\Payment\Contracts\PaymentMethod;
 
 class OfflineSubscription implements PaymentMethod
@@ -41,15 +41,16 @@ class OfflineSubscription implements PaymentMethod
      */
     protected $method = "offline";
 
-
     /**
-     * Repository of the transaction
+     * Transaction service
+     * @var TransactionService
      */
-    public $repository;
+    private $serviceTransaction;
 
-    public function __construct(TransactionRepository $transactionRepository)
+
+    public function __construct()
     {
-        $this->repository = $transactionRepository;
+        $this->serviceTransaction = app(TransactionService::class);
     }
 
     /**
@@ -70,11 +71,11 @@ class OfflineSubscription implements PaymentMethod
         }, ['currency' => null, 'total' => 0]);
 
         $meta = [
-            'id' => $this->repository->generateSessionId(),
+            'id' => $this->serviceTransaction->generateSessionId(),
             'customer' => $provider->customer_id,
             'currency' => $result['currency'],
             'amount_total' => $result['total'],
-            'payment_intent' => $this->repository->generateIntent(),
+            'payment_intent' => $this->serviceTransaction->generateIntent(),
             'metadata' => [
                 'user_id' => $provider->user->id,
                 'transaction_code' => $data['transaction_code'],
@@ -136,9 +137,14 @@ class OfflineSubscription implements PaymentMethod
         $response["status"] = config('billing.status.successful.name');
         $response["receipt_url"] = route('transaction.checkout.success') . "?code={$response['metadata']['transaction_code']}";
 
-        $this->repository->paymentSuccessfully($response, 'succeed');
+        $this->serviceTransaction->HandledSuccessfullyPayment($response, 'succeed');
     }
 
+    /**
+     * Create customer id
+     * @param array $data
+     * @return PaymentProvider|TModel|TValue|\Illuminate\Database\Eloquent\Model
+     */
     public function createCustomerId(array $data): PaymentProvider
     {
         $user = User::findOrFail(auth()->id());
