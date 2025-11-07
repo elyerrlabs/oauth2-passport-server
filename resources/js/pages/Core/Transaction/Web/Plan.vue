@@ -22,219 +22,275 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-guest-layout>
         <div
-            class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 py-8"
+            class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 py-2"
         >
-            <!-- Hero Section -->
-            <div class="text-center mb-16 px-4">
-                <h1
-                    class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-4"
-                >
-                    {{ __("Choose Your Plan") }}
+            <!-- Header Compacto -->
+            <div class="text-center mb-4 px-2">
+                <h1 class="text-2xl font-bold text-slate-800 mb-2">
+                    {{ __("Available Plans") }}
                 </h1>
-                <p class="text-xl text-slate-600 mb-4 max-w-2xl mx-auto">
-                    {{
-                        __(
-                            "Select the perfect plan that fits your needs and budget."
-                        )
-                    }}
-                </p>
-                <p class="text-lg text-slate-500 max-w-2xl mx-auto">
-                    {{
-                        __(
-                            "All plans include our core features with flexible pricing options."
-                        )
-                    }}
+                <p class="text-slate-600 max-w-md mx-auto text-sm">
+                    {{ __("Choose the plan that fits your needs") }}
                 </p>
             </div>
 
-            <!-- Plans Grid -->
-            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Filtros -->
+            <div class="w-full max-w-6xl mx-auto px-4 mb-6">
                 <div
-                    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 p-4"
                 >
-                    <div v-for="plan in plans" :key="plan.id" class="flex">
-                        <div
-                            class="bg-white rounded-3xl shadow-lg border border-slate-200/60 flex-1 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] backdrop-blur-sm flex flex-col relative"
-                            :class="{
-                                'ring-4 ring-blue-500/30 shadow-2xl scale-[1.02]':
-                                    plan.featured,
-                            }"
+                    <div class="flex flex-col sm:flex-row gap-3 items-center">
+                        <!-- Buscar -->
+                        <div class="flex-1 min-w-0">
+                            <div class="relative">
+                                <i
+                                    class="mdi mdi-magnify absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm"
+                                ></i>
+                                <input
+                                    v-model="search.name"
+                                    type="text"
+                                    :placeholder="__('Search plans...')"
+                                    class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 cursor-text"
+                                    @input="debouncedSearch"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Filtro Periodo -->
+                        <div class="w-full sm:w-48">
+                            <select
+                                v-model="search.period"
+                                @change="getPlans"
+                                class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+                            >
+                                <option value="">
+                                    {{ __("All Billing Periods") }}
+                                </option>
+                                <option
+                                    v-for="period in availablePeriods"
+                                    :key="period"
+                                    :value="period"
+                                >
+                                    {{ formatPeriodName(period) }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Reset -->
+                        <button
+                            @click="resetFilters"
+                            class="px-4 py-2 text-sm border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap cursor-pointer"
                         >
-                            <!-- Featured Badge -->
-                            <div
-                                v-if="plan.featured"
-                                class="absolute -top-2 -right-2"
-                            >
-                                <div
-                                    class="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-6 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg rotate-12"
-                                >
-                                    {{ __("Most Popular") }}
-                                </div>
-                            </div>
+                            {{ __("Clear Filters") }}
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-                            <!-- Plan Header -->
-                            <div
-                                class="rounded-t-3xl p-8 relative overflow-hidden"
-                                :class="{
-                                    'bg-gradient-to-br from-blue-600 to-violet-700':
-                                        plan.featured,
-                                    'bg-gradient-to-br from-slate-900 to-slate-800':
-                                        !plan.featured,
-                                }"
-                            >
-                                <div
-                                    v-if="plan.bonus_enabled"
-                                    class="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10"
+            <!-- Grid de Planes -->
+            <div class="w-full max-w-6xl mx-auto px-4">
+                <!-- Loading -->
+                <div v-if="loading" class="flex justify-center py-8">
+                    <div
+                        class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"
+                    ></div>
+                </div>
+
+                <!-- Empty State -->
+                <div v-else-if="!plans.length" class="text-center py-12">
+                    <i
+                        class="mdi mdi-magnify-remove-outline text-4xl text-slate-300 mb-3"
+                    ></i>
+                    <p class="text-slate-500 text-sm">
+                        {{ __("No plans found") }}
+                    </p>
+                </div>
+
+                <!-- Planes -->
+                <div
+                    v-else
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                >
+                    <div
+                        v-for="plan in plans"
+                        :key="plan.id"
+                        class="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200"
+                        :class="{
+                            'ring-2 ring-blue-500 border-blue-300':
+                                selectedPlans[plan.id]?.selected,
+                        }"
+                    >
+                        <!-- Header del Plan - Área NO clickeable para detalles -->
+                        <div class="p-4 border-b border-slate-100">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3
+                                    class="font-semibold text-slate-800 text-base"
                                 >
+                                    {{ plan.name }}
+                                </h3>
+                                <div class="flex gap-2">
                                     <span
-                                        class="bg-gradient-to-r from-emerald-500 to-green-600 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-xl border-2 border-white/20"
+                                        v-if="plan.bonus_enabled"
+                                        class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium"
                                     >
-                                        🔥 +{{ plan.bonus_duration }} days free
+                                        +{{ plan.bonus_duration }}d
                                     </span>
-                                </div>
-
-                                <div class="text-center pt-6 pb-2">
-                                    <h3
-                                        class="text-2xl font-bold text-white mb-3"
-                                    >
-                                        {{ plan.name }}
-                                    </h3>
-                                    <p
-                                        class="text-blue-100/80 text-sm font-medium"
-                                    >
-                                        {{ plan.tagline }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Plan Content -->
-                            <div class="p-8 flex-1">
-                                <div class="mb-6">
-                                    <div
-                                        class="text-slate-700 text-sm leading-relaxed font-medium line-clamp-3"
-                                    >
-                                        <div v-html="plan.description"></div>
-                                    </div>
+                                    <!-- Botón para ver detalles -->
                                     <button
                                         @click="openPlanDetails(plan)"
-                                        class="text-blue-600 hover:text-blue-700 text-sm font-medium mt-2 flex items-center space-x-1 transition-colors duration-200"
+                                        class="text-blue-600 hover:text-blue-700 text-xs font-medium cursor-pointer flex items-center space-x-1"
                                     >
-                                        <span>View details</span>
                                         <i
-                                            class="mdi mdi-chevron-right text-base"
+                                            class="mdi mdi-information-outline text-sm"
                                         ></i>
+                                        <span>Details</span>
                                     </button>
                                 </div>
+                            </div>
+                            <p
+                                class="text-slate-600 text-sm line-clamp-2"
+                                v-html="plan.description"
+                            ></p>
+                        </div>
 
-                                <hr class="mb-6 border-slate-200/60" />
-
-                                <!-- Pricing Options -->
-                                <h4
-                                    class="text-lg font-bold text-slate-900 text-center mb-6"
+                        <!-- Servicios Incluidos -->
+                        <div class="p-3 bg-slate-50 border-b border-slate-100">
+                            <div class="flex flex-wrap gap-1">
+                                <span
+                                    v-for="(scope, index) in getUniqueServices(
+                                        plan.scopes
+                                    )"
+                                    :key="index"
+                                    class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium"
                                 >
-                                    {{ __("Pricing Options") }}
-                                </h4>
-                                <div class="space-y-4">
-                                    <div
-                                        v-for="(price, index) in plan.prices"
-                                        :key="index"
-                                        class="flex items-center p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 group hover:border-blue-400/50 hover:bg-blue-50/50 hover:shadow-md"
-                                        :class="{
-                                            'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50/50 shadow-lg scale-[1.02]':
-                                                selected_period === price,
-                                            'border-slate-200/80 bg-white/80':
-                                                selected_period !== price,
-                                        }"
-                                        @click="selectPrice(plan, price)"
-                                    >
-                                        <div class="flex-shrink-0 mr-4">
-                                            <span
-                                                class="bg-gradient-to-r from-blue-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md"
-                                            >
-                                                {{ price.billing_period_name }}
-                                            </span>
-                                        </div>
+                                    <i
+                                        class="mdi mdi-check-circle text-xs mr-1"
+                                    ></i>
+                                    {{ scope.service.name }}
+                                </span>
+                            </div>
+                        </div>
 
-                                        <div class="flex-grow">
+                        <!-- Precios con Selección -->
+                        <div class="p-4">
+                            <div class="space-y-2 mb-3">
+                                <div
+                                    v-for="price in getDisplayPrices(
+                                        plan.prices
+                                    )"
+                                    :key="price.id"
+                                    class="flex justify-between items-center p-2 rounded-lg border transition-all duration-200 cursor-pointer"
+                                    :class="{
+                                        'border-blue-500 bg-blue-50':
+                                            selectedPlans[plan.id]?.priceId ===
+                                            price.id,
+                                        'border-slate-200 hover:border-blue-300 hover:bg-blue-50/50':
+                                            selectedPlans[plan.id]?.priceId !==
+                                            price.id,
+                                    }"
+                                    @click="selectPrice(plan, price)"
+                                >
+                                    <div class="flex items-center space-x-2">
+                                        <!-- Radio Button Visual -->
+                                        <div
+                                            class="flex items-center justify-center w-4 h-4 rounded-full border-2 transition-all"
+                                            :class="{
+                                                'border-blue-500 bg-blue-500':
+                                                    selectedPlans[plan.id]
+                                                        ?.priceId === price.id,
+                                                'border-slate-400':
+                                                    selectedPlans[plan.id]
+                                                        ?.priceId !== price.id,
+                                            }"
+                                        >
                                             <div
-                                                class="font-bold text-slate-900 text-lg mb-1"
-                                            >
-                                                {{ price.currency }}
-                                                {{ price.amount_format }}
-                                            </div>
-                                            <div
-                                                class="text-xs text-slate-500 flex items-center"
-                                            >
-                                                <i
-                                                    class="mdi mdi-calendar text-slate-400 mr-1.5"
-                                                ></i>
-                                                {{
-                                                    formatDate(price.expiration)
-                                                }}
-                                            </div>
+                                                v-if="
+                                                    selectedPlans[plan.id]
+                                                        ?.priceId === price.id
+                                                "
+                                                class="w-1.5 h-1.5 rounded-full bg-white"
+                                            ></div>
                                         </div>
-
-                                        <div class="flex-shrink-0 ml-4">
-                                            <div
-                                                class="w-7 h-7 rounded-full border-3 flex items-center justify-center transition-all duration-300 shadow-inner"
-                                                :class="{
-                                                    'border-blue-600 bg-blue-600 shadow-blue-200':
-                                                        selected_period ===
-                                                        price,
-                                                    'border-slate-300 bg-white group-hover:border-blue-400':
-                                                        selected_period !==
-                                                        price,
-                                                }"
-                                            >
-                                                <div
-                                                    v-if="
-                                                        selected_period ===
-                                                        price
-                                                    "
-                                                    class="w-2 h-2 rounded-full bg-white"
-                                                ></div>
-                                            </div>
-                                        </div>
+                                        <span
+                                            class="text-slate-600 text-sm capitalize"
+                                        >
+                                            {{
+                                                formatPeriodName(
+                                                    price.billing_period
+                                                )
+                                            }}
+                                        </span>
                                     </div>
+                                    <span
+                                        class="font-semibold text-slate-800 text-sm"
+                                    >
+                                        {{ price.currency }}
+                                        {{ price.amount_format }}
+                                    </span>
                                 </div>
                             </div>
 
-                            <!-- Plan Footer -->
-                            <div class="px-8 pb-8">
+                            <!-- Ver más precios -->
+                            <div
+                                v-if="plan.prices.length > 3"
+                                class="mb-3 pt-2 border-t border-slate-100"
+                            >
                                 <button
-                                    @click="selectPlan(plan)"
-                                    :disabled="!selected_period"
-                                    class="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white py-4 px-8 rounded-2xl font-bold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-lg group"
+                                    class="text-blue-600 hover:text-blue-700 text-xs font-medium cursor-pointer"
+                                    @click="openPlanDetails(plan)"
                                 >
-                                    <span
-                                        class="flex items-center justify-center space-x-3"
-                                    >
-                                        <span class="text-lg">Select Plan</span>
-                                        <i
-                                            v-if="selected_period"
-                                            class="mdi mdi-arrow-right text-lg group-hover:translate-x-1 transition-transform"
-                                        ></i>
-                                        <i
-                                            v-else
-                                            class="mdi mdi-lock-outline text-lg opacity-70"
-                                        ></i>
-                                    </span>
+                                    +{{ plan.prices.length - 3 }}
+                                    {{ __("more options") }}
                                 </button>
+                            </div>
 
-                                <div
-                                    v-if="!selected_period"
-                                    class="text-xs text-slate-500 text-center mt-3 font-medium"
+                            <!-- CTA Principal -->
+                            <button
+                                @click="selectPlan(plan)"
+                                :disabled="!selectedPlans[plan.id]"
+                                class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-medium text-sm transition-all duration-200 cursor-pointer disabled:transform-none hover:scale-[1.02] active:scale-[0.98]"
+                            >
+                                <span
+                                    class="flex items-center justify-center space-x-2"
                                 >
-                                    {{ __("Select a pricing option first") }}
-                                </div>
+                                    <span>{{ __("Select Plan") }}</span>
+                                    <i
+                                        v-if="selectedPlans[plan.id]"
+                                        class="mdi mdi-arrow-right text-sm"
+                                    ></i>
+                                    <i
+                                        v-else
+                                        class="mdi mdi-lock-outline text-sm"
+                                    ></i>
+                                </span>
+                            </button>
+
+                            <!-- Estado de selección -->
+                            <div
+                                v-if="selectedPlans[plan.id]"
+                                class="mt-2 text-center"
+                            >
+                                <span
+                                    class="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium"
+                                >
+                                    <i
+                                        class="mdi mdi-check-circle text-xs mr-1"
+                                    ></i>
+                                    {{
+                                        formatPeriodName(
+                                            selectedPlans[plan.id].billingPeriod
+                                        )
+                                    }}
+                                    selected
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Pagination -->
-            <div class="mt-16 flex justify-center">
+            <!-- Paginación -->
+            <div class="mt-8 flex justify-center">
                 <v-paginate
                     v-model="search.page"
                     :total-pages="pages.total_pages"
@@ -242,132 +298,292 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 />
             </div>
 
-            <!-- Subscription Modal -->
-            <v-modal v-model="showSidebar" panel-class="w-full lg:w-7xl">
-                <template #body>
-                    <div
-                        class="bg-gradient-to-r from-blue-600 to-violet-600 px-6 py-5 flex items-center justify-between"
-                    >
-                        <div>
-                            <DialogTitle class="text-2xl font-bold text-white">
-                                {{ __("Complete Subscription") }}
-                            </DialogTitle>
-                            <p class="text-blue-100/80 text-sm">
-                                {{ __("Finalize your plan selection") }}
-                            </p>
-                        </div>
-                        <button
-                            @click="showSidebar = false"
-                            class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-200"
-                        >
-                            <i class="mdi mdi-close text-lg"></i>
-                        </button>
-                    </div>
-
-                    <div class="flex-1 overflow-y-auto bg-slate-50/40">
-                        <div
-                            class="px-6 py-4 border-b border-slate-200 bg-white/70"
-                        >
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-600 font-medium"
-                                    >{{ __("Selected Plan") }}:</span
-                                >
-                                <span class="text-slate-900 font-bold">{{
-                                    selected_plan?.name
-                                }}</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-slate-600 font-medium"
-                                    >{{ __("Amount") }}:</span
-                                >
-                                <span class="text-green-600 font-bold">
-                                    {{ selected_period?.currency }}
-                                    {{ selected_period?.amount_format }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="p-6">
-                            <v-subscription
-                                :plan="selected_plan"
-                                :period="selected_period"
-                                @close="showSidebar = false"
-                            />
-                        </div>
-                    </div>
-
-                    <div
-                        class="border-t border-slate-200/60 px-6 py-4 bg-slate-50/70 text-center text-xs text-slate-500"
-                    >
-                        {{ __("Your payment is secure and encrypted.") }}
-                    </div>
-                </template>
-            </v-modal>
-
-            <!-- Plan Details Modal -->
-            <v-modal v-model="showPlanDetails" panel-class="w-full lg:w-7xl">
+            <!-- Modal Detalles del Plan -->
+            <v-modal
+                v-model="showPlanDetails"
+                panel-class="w-full lg:w-7xl overflow-y-auto max-h-screen"
+            >
                 <template #body>
                     <!-- Header -->
                     <div
-                        class="bg-gradient-to-r from-slate-800 to-slate-900 px-6 py-5 flex items-center justify-between"
+                        class="bg-slate-800 px-6 py-4 flex justify-between items-center rounded"
                     >
                         <div>
-                            <h3 class="text-2xl font-bold text-white">
+                            <h3 class="text-xl font-bold text-white">
                                 {{ selected_plan_details?.name }}
                             </h3>
-                            <p class="text-blue-100/80 text-sm">
-                                {{ selected_plan_details?.tagline }}
+                            <p class="text-slate-300 text-sm mt-1">
+                                {{ __("Plan details and pricing") }}
                             </p>
                         </div>
                         <button
                             @click="showPlanDetails = false"
-                            class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-200"
+                            class="text-slate-300 hover:text-white transition-colors cursor-pointer"
                         >
                             <i class="mdi mdi-close text-lg"></i>
                         </button>
                     </div>
 
-                    <!-- Body -->
-                    <div class="overflow-y-auto bg-white/70 p-6 max-h-[80vh]">
-                        <div
-                            class="prose max-w-none text-slate-700 leading-relaxed"
-                            v-html="selected_plan_details?.description"
-                        ></div>
+                    <!-- Contenido -->
+                    <div class="p-6">
+                        <!-- Descripción -->
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-slate-800 mb-2">
+                                {{ __("Description") }}
+                            </h4>
+                            <div
+                                class="text-slate-600 text-sm leading-relaxed"
+                                v-html="selected_plan_details?.description"
+                            ></div>
+                        </div>
 
-                        <div
-                            v-if="selected_plan_details?.features?.length"
-                            class="mt-8"
-                        >
-                            <h3 class="text-lg font-bold text-slate-900 mb-4">
-                                {{ __("Included Features") }}
-                            </h3>
-                            <ul class="grid sm:grid-cols-2 gap-3">
-                                <li
-                                    v-for="(
-                                        feature, index
-                                    ) in selected_plan_details.features"
-                                    :key="index"
-                                    class="flex items-center space-x-2 text-slate-700"
+                        <!-- Servicios y Roles -->
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-slate-800 mb-3">
+                                {{ __("Included Services") }}
+                            </h4>
+                            <div class="space-y-3">
+                                <div
+                                    v-for="scope in selected_plan_details?.scopes"
+                                    :key="scope.id"
+                                    class="border border-slate-200 rounded-lg p-3"
                                 >
-                                    <i
-                                        class="mdi mdi-check-circle text-green-500 text-lg"
-                                    ></i>
-                                    <span>{{ feature }}</span>
-                                </li>
-                            </ul>
+                                    <div
+                                        class="flex justify-between items-start mb-2"
+                                    >
+                                        <span
+                                            class="font-medium text-slate-800"
+                                            >{{ __(scope.service.name) }}</span
+                                        >
+                                        <span
+                                            class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
+                                        >
+                                            {{ __(scope.role.name) }}
+                                        </span>
+                                    </div>
+                                    <p class="text-slate-600 text-xs">
+                                        {{ __(scope.role.description) }}
+                                    </p>
+                                    <p class="text-slate-500 text-xs mt-1">
+                                        {{ __(scope.service.description) }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Todos los Precios con Selección Mejorada -->
+                        <div>
+                            <h4 class="font-semibold text-slate-800 mb-3">
+                                {{ __("Pricing Options") }}
+                            </h4>
+                            <div class="space-y-3">
+                                <div
+                                    v-for="price in selected_plan_details?.prices"
+                                    :key="price.id"
+                                    class="p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer"
+                                    :class="{
+                                        'border-blue-500 bg-blue-50 shadow-md scale-[1.02]':
+                                            selected_period?.id === price.id,
+                                        'border-slate-200 hover:border-blue-300 hover:bg-blue-50/50':
+                                            selected_period?.id !== price.id,
+                                    }"
+                                    @click="selectPriceFromModal(price)"
+                                >
+                                    <div
+                                        class="flex items-center justify-between mb-2"
+                                    >
+                                        <div
+                                            class="flex items-center space-x-3"
+                                        >
+                                            <!-- Radio Button Grande -->
+                                            <div
+                                                class="flex items-center justify-center w-5 h-5 rounded-full border-2 transition-all"
+                                                :class="{
+                                                    'border-blue-500 bg-blue-500':
+                                                        selected_period?.id ===
+                                                        price.id,
+                                                    'border-slate-400':
+                                                        selected_period?.id !==
+                                                        price.id,
+                                                }"
+                                            >
+                                                <div
+                                                    v-if="
+                                                        selected_period?.id ===
+                                                        price.id
+                                                    "
+                                                    class="w-2 h-2 rounded-full bg-white"
+                                                ></div>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="font-semibold text-slate-800 capitalize text-lg"
+                                                >
+                                                    {{
+                                                        formatPeriodName(
+                                                            price.billing_period
+                                                        )
+                                                    }}
+                                                </div>
+                                                <div
+                                                    class="text-slate-500 text-xs"
+                                                >
+                                                    {{ __("Expires") }}:
+                                                    {{
+                                                        formatDate(
+                                                            price.expiration
+                                                        )
+                                                    }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div
+                                                class="font-bold text-slate-800 text-xl"
+                                            >
+                                                {{ price.currency }}
+                                                {{ price.amount_format }}
+                                            </div>
+                                            <div
+                                                class="text-green-600 text-sm font-medium"
+                                            >
+                                                {{ __("Available") }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Badge de selección -->
+                                    <div
+                                        v-if="selected_period?.id === price.id"
+                                        class="flex justify-center mt-2"
+                                    >
+                                        <span
+                                            class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                                        >
+                                            <i
+                                                class="mdi mdi-check-circle text-xs mr-1"
+                                            ></i>
+                                            {{ __("Selected") }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bonificación -->
+                        <div
+                            v-if="selected_plan_details?.bonus_enabled"
+                            class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg"
+                        >
+                            <div class="flex items-center">
+                                <i
+                                    class="mdi mdi-gift text-green-600 text-lg mr-3"
+                                ></i>
+                                <div>
+                                    <div
+                                        class="font-semibold text-green-800 text-sm"
+                                    >
+                                        {{ __("Special Bonus") }}
+                                    </div>
+                                    <div class="text-green-700 text-xs">
+                                        {{ __("Get") }} +{{
+                                            selected_plan_details.bonus_duration
+                                        }}
+                                        {{ __("extra days") }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Footer -->
                     <div
-                        class="border-t border-slate-200/60 px-6 py-4 bg-slate-50/70 text-center"
+                        class="border-t border-slate-200 px-6 py-4 bg-slate-50"
                     >
-                        <button
-                            @click="showPlanDetails = false"
-                            class="bg-gradient-to-r from-blue-600 to-violet-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-transform hover:scale-[1.02]"
-                        >
-                            {{ __("Close") }}
-                        </button>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div
+                                    v-if="selected_period"
+                                    class="text-sm text-slate-600"
+                                >
+                                    <span class="font-semibold text-slate-800"
+                                        >{{ selected_period.currency }}
+                                        {{
+                                            selected_period.amount_format
+                                        }}</span
+                                    >
+                                    ·
+                                    {{
+                                        formatPeriodName(
+                                            selected_period.billing_period
+                                        )
+                                    }}
+                                </div>
+                                <div v-else class="text-sm text-slate-500">
+                                    {{ __("Select a pricing option") }}
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button
+                                    @click="showPlanDetails = false"
+                                    class="px-4 py-2 text-sm border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                                >
+                                    {{ __("Close") }}
+                                </button>
+                                <button
+                                    @click="proceedWithSelectedPlan"
+                                    :disabled="!selected_period"
+                                    class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                >
+                                    {{ __("Continue") }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </v-modal>
+
+            <!-- Modal de Suscripción -->
+            <v-modal
+                v-model="showSubscription"
+                panel-class="w-full lg:w-5xl"
+                :title="__('Complete Subscription')"
+            >
+                <template #body>
+                    <div class="p-6">
+                        <div class="text-center mb-6">
+                            <i
+                                class="mdi mdi-lock-check-outline text-3xl text-blue-600 mb-3"
+                            ></i>
+                            <p class="text-slate-600 text-sm">
+                                {{ __("You are about to subscribe to") }}
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-lg p-4 mb-6">
+                            <div class="text-center">
+                                <div class="font-bold text-slate-800 text-lg">
+                                    {{ selected_plan?.name }}
+                                </div>
+                                <div class="text-slate-600 text-sm mb-2">
+                                    {{
+                                        formatPeriodName(
+                                            selected_period?.billing_period
+                                        )
+                                    }}
+                                </div>
+                                <div class="text-2xl font-bold text-green-600">
+                                    {{ selected_period?.currency }}
+                                    {{ selected_period?.amount_format }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <v-subscription
+                            :plan="selected_plan"
+                            :period="selected_period"
+                            @close="showSubscription = false"
+                        />
                     </div>
                 </template>
             </v-modal>
@@ -375,94 +591,194 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-guest-layout>
 </template>
 
-<script>
+<script setup>
 import VGuestLayout from "@/layouts/VGuestLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VSubscription from "@/components/VSubscription.vue";
 import VModal from "@/components/VModal.vue";
+import { ref, onMounted, computed } from "vue";
+import { useForm } from "@inertiajs/vue3";
 
-export default {
-    components: {
-        VGuestLayout,
-        VPaginate,
-        VSubscription,
-        VModal,
+const props = defineProps({
+    data: {
+        type: Object,
+        default: [],
     },
-    data() {
-        return {
-            plans: [],
-            selected_plan: null,
-            selected_period: null,
-            selected_plan_details: null,
-            showSidebar: false,
-            showPlanDetails: false,
-            search: { page: 1, per_page: 100 },
-            pages: { total_pages: 0 },
+    routes: {
+        type: Object,
+    },
+});
+
+const plans = ref([]);
+const selected_plan = ref(null);
+const selected_plan_details = ref(null);
+const selected_period = ref(null);
+const selectedPlans = ref({}); // Track selected prices for each plan
+const showPlanDetails = ref(false);
+const showSubscription = ref(false);
+const loading = ref(false);
+
+const search = useForm({
+    page: 1,
+    per_page: 9,
+    name: "",
+    period: "",
+});
+
+const pages = ref({ total_pages: 0 });
+let searchTimeout = null;
+
+// Computed
+const availablePeriods = computed(() => {
+    const periods = new Set();
+    plans.value.forEach((plan) => {
+        plan.prices.forEach((price) => {
+            periods.add(price.billing_period);
+        });
+    });
+    return Array.from(periods);
+});
+
+onMounted(() => {
+    const values = props.data;
+    plans.value = values.data;
+    pages.value = values.meta.pagination;
+});
+
+// Methods
+const formatPeriodName = (period) => {
+    const names = {
+        daily: "Daily",
+        weekly: "Weekly",
+        biweekly: "Bi-Weekly",
+        monthly: "Monthly",
+        quarterly: "Quarterly",
+        yearly: "Yearly",
+        one_time: "One Time",
+    };
+    return names[period] || period;
+};
+
+const formatDate = (date) => {
+    if (!date) return __("No expiration");
+    return new Date(date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+    });
+};
+
+const getUniqueServices = (scopes) => {
+    if (!scopes) return [];
+    const servicesMap = new Map();
+    scopes.forEach((scope) => {
+        if (!servicesMap.has(scope.service.id)) {
+            servicesMap.set(scope.service.id, scope);
+        }
+    });
+    return Array.from(servicesMap.values());
+};
+
+const getDisplayPrices = (prices) => {
+    return prices.slice(0, 3);
+};
+
+const selectPrice = (plan, price) => {
+    selectedPlans.value[plan.id] = {
+        selected: true,
+        priceId: price.id,
+        billingPeriod: price.billing_period,
+        price: price,
+    };
+};
+
+const openPlanDetails = (plan) => {
+    selected_plan_details.value = plan;
+    // Set current selection if exists
+    if (selectedPlans.value[plan.id]) {
+        selected_period.value = selectedPlans.value[plan.id].price;
+    } else {
+        selected_period.value = null;
+    }
+    showPlanDetails.value = true;
+};
+
+const selectPriceFromModal = (price) => {
+    selected_period.value = price;
+    // Update the selection state for the plan
+    if (selected_plan_details.value) {
+        selectedPlans.value[selected_plan_details.value.id] = {
+            selected: true,
+            priceId: price.id,
+            billingPeriod: price.billing_period,
+            price: price,
         };
-    },
-    created() {
-        this.getPlans();
-    },
-    methods: {
-        formatDate(date) {
-            if (!date) return "No expiration";
-            return new Date(date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-            });
+    }
+};
+
+const proceedWithSelectedPlan = () => {
+    if (!selected_period.value) {
+        $notify.error(__("Please select a pricing option"));
+        return;
+    }
+    selected_plan.value = selected_plan_details.value;
+    showPlanDetails.value = false;
+    showSubscription.value = true;
+};
+
+const selectPlan = (plan) => {
+    if (!selectedPlans.value[plan.id]) {
+        $notify.error(__("Please select a pricing option first"));
+        return;
+    }
+    selected_plan.value = plan;
+    selected_period.value = selectedPlans.value[plan.id].price;
+    showSubscription.value = true;
+};
+
+const getPlans = () => {
+    loading.value = true;
+    search.get(props.routes.plans, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (page) => {
+            const values = page.data;
+            plans.value = values.data;
+            pages.value = values.meta.pagination;
         },
-        selectPrice(plan, price) {
-            this.selected_plan = plan;
-            this.selected_period = price;
-        },
-        selectPlan(plan) {
-            if (!this.selected_period)
-                return $notify.error("Please select a pricing option first.");
-            this.selected_plan = plan;
-            this.showSidebar = true;
-        },
-        openPlanDetails(plan) {
-            this.selected_plan_details = plan;
-            this.showPlanDetails = true;
-        },
-        async getPlans() {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes["plans"],
-                    {
-                        params: this.search,
-                    }
-                );
-                if (res.status === 200) {
-                    this.plans = res.data.data;
-                    this.pages = res.data.meta.pagination;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
+        onError: (e) => {
+            loading.value = false;
+            if (e?.response?.data?.message) {
+                $notify.error(e.response.data.message);
             }
         },
-    },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
+};
+
+const debouncedSearch = () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        search.page = 1;
+        getPlans();
+    }, 300);
+};
+
+const resetFilters = () => {
+    search.name = "";
+    search.period = "";
+    search.page = 1;
+    getPlans();
 };
 </script>
 
 <style scoped>
-.line-clamp-3 {
+.line-clamp-2 {
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-}
-.overflow-y-auto::-webkit-scrollbar {
-    width: 6px;
-}
-.overflow-y-auto::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 3px;
-}
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
 }
 </style>
