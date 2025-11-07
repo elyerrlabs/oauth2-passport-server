@@ -25,6 +25,8 @@ namespace Core\Transaction\Http\Controllers\Web;
  */
 
 
+use Core\Transaction\Services\PlanService;
+use Core\Transaction\Transformer\User\UserPlanTransformer;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
@@ -34,17 +36,17 @@ class PlanController extends WebController
 {
     /**
      * Plan repository
-     * @var
+     * @var PlanService
      */
-    public $repository;
+    public $planService;
 
     /**
      * Construct
-     * @param \Core\Transaction\Repositories\PlanRepository $planRepository
+     * @param \Core\Transaction\Services\PlanService $planService
      */
-    public function __construct(PlanRepository $planRepository)
+    public function __construct(PlanService $planService)
     {
-        $this->repository = $planRepository;
+        $this->planService = $planService;
     }
 
     /**
@@ -54,11 +56,12 @@ class PlanController extends WebController
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-            return $this->repository->searchPlanForGuest($request);
-        }
+        $per_page = $request->filled('per_page') ? $request->per_page : 15;
+
+        $data = $this->planService->searchPlanForGuest($request)->paginate($per_page);
 
         return Inertia::render('Core/Transaction/Web/Plan', [
+            'data' => fractal($data, UserPlanTransformer::class)->toArray() ?? [],
             'routes' => [
                 'plans' => route('transaction.plans.index'),
                 'billing_period' => route('api.transaction.payments.billing-period'),

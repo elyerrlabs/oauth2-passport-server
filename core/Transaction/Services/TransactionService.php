@@ -86,9 +86,9 @@ class TransactionService
 
     /**
      * Plan repository
-     * @var PlanRepository
+     * @var PlanService
      */
-    private $planRepository;
+    private $planService;
 
     /**
      * Partner repository
@@ -96,7 +96,10 @@ class TransactionService
      */
     private $partnerRepository;
 
-
+    /**
+     * Refund service
+     * @var RefundRepository
+     */
     private $refundRepository;
 
     /**
@@ -110,7 +113,7 @@ class TransactionService
         $this->paymentManager = app(PaymentManager::class);
         $this->userRepository = app(UserRepository::class);
         $this->packageService = app(PackageService::class);
-        $this->planRepository = app(PlanRepository::class);
+        $this->planService = app(PlanService::class);
         $this->partnerRepository = app(PartnerRepository::class);
         $this->refundRepository = app(RefundRepository::class);
     }
@@ -213,7 +216,7 @@ class TransactionService
                     }
                 }
 
-                //Set the package metadata 
+                //Set the package metadata
                 $package_meta = $transaction->transactionable->meta();
                 unset($package_meta['transactions']);
                 unset($package_meta['transaction']);
@@ -500,7 +503,7 @@ class TransactionService
         $code = $this->generateTransactionCode();
 
         //Generate metadata
-        $plan = $this->planRepository->processPlan(
+        $plan = $this->planService->processPlan(
             $data['plan'],
             $data['billing_period']
         );

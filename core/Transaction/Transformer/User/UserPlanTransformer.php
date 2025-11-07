@@ -24,7 +24,7 @@ namespace Core\Transaction\Transformer\User;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Transaction\Transformer\Admin\PlanPriceTransformer;
+use Core\Transaction\Transformer\User\UserPlanPriceTransformer;
 use Core\Transaction\Model\Plan;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
@@ -60,7 +60,7 @@ class UserPlanTransformer extends TransformerAbstract
     {
         return [
             'id' => $plan->id,
-            'name' => $plan->name,
+            'name' => ucfirst($plan->name),
             'description' => $plan->description,
             'bonus_enabled' => $plan->bonus_enabled ? true : false,
             'bonus_duration' => $plan->bonus_duration,
@@ -68,7 +68,8 @@ class UserPlanTransformer extends TransformerAbstract
             'trial_duration' => $plan->trial_duration,
             'created' => $this->format_date($plan->created_at),
             'updated' => $this->format_date($plan->updated_at),
-            'prices' => $plan->transform($plan->prices, PlanPriceTransformer::class),
+            'prices' => fractal($plan->prices, UserPlanPriceTransformer::class)->toArray()['data'] ?? [],
+            'scopes' => fractal($plan->scopes, UserPlanScopeTransformer::class)->toArray()['data'] ?? []
         ];
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Transaction\Transformer\Admin;
+namespace Core\Transaction\Transformer\User;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -23,26 +23,14 @@ namespace Core\Transaction\Transformer\Admin;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use Core\Transaction\Model\Plan;
+ 
 use Core\User\Model\Scope;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
-class PlanScopeTransformer extends TransformerAbstract
+class UserPlanScopeTransformer extends TransformerAbstract
 {
     use Asset;
-
-    /**
-     * Plan 
-     * @var 
-     */
-    public $plan;
-
-    public function __construct(Plan $plan)
-    {
-        $this->plan = $plan;
-    }
 
     /**
      * List of resources to automatically include
@@ -71,11 +59,7 @@ class PlanScopeTransformer extends TransformerAbstract
     {
         return [
             'id' => $scope->id,
-            'public' => $scope->public ? true : false,
-            'active' => $scope->active ? true : false,
             'gsr_id' => $scope->getGsrId(),
-            'api_key' => $scope->api_key,
-            'web' => $scope->web,
             'service' => [
                 'id' => $scope->service->id,
                 'name' => $scope->service->name,
@@ -94,11 +78,6 @@ class PlanScopeTransformer extends TransformerAbstract
                 'slug' => $scope->role->slug,
                 'description' => $scope->role->description
             ],
-            'created' => $this->format_date($scope->created_at),
-            'updated' => $this->format_date($scope->updated_at),
-            'links' => [
-                'revoke' => route('transaction.admin.plans.scopes.revoke', ['plan' => $this->plan->id, 'scope' => $scope->id]),
-            ]
         ];
     }
 }

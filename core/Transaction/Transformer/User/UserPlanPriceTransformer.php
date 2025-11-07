@@ -28,7 +28,7 @@ use App\Models\Common\Price;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
-class PlanPriceTransformer extends TransformerAbstract
+class UserPlanPriceTransformer extends TransformerAbstract
 {
     use Asset;
 

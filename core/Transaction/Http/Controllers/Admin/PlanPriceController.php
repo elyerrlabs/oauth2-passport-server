@@ -25,7 +25,7 @@ namespace Core\Transaction\Http\Controllers\Admin;
 
 
 use App\Models\Common\Price;
-use Core\Transaction\Model\Plan; 
+use Core\Transaction\Model\Plan;
 use App\Http\Controllers\WebController;
 use Core\Transaction\Repositories\PlanRepository;
 
@@ -45,13 +45,15 @@ class PlanPriceController extends WebController
     }
 
     /**
-     * destroy price
-     * @param Plan $plan
-     * @param Price $price
+     * Delete price of the plan
+     * @param \Core\Transaction\Model\Plan $plan
+     * @param \App\Models\Common\Price $price
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function destroy(Plan $plan, Price $price)
     {
-        return $this->repository->deletePrice($plan->id, $price->id);
+        $this->repository->deletePrice($plan->id, $price->id);
+
+        return $this->message(__('Price has been deleted successfully'), 200);
     }
 }

@@ -51,13 +51,15 @@ class PlanScopeController extends WebController
     }
 
     /**
-     * Revoke scopes 
-     * @param \ Core\Transaction\Model\Plan $plan
+     * Delete scopes
+     * @param \Core\Transaction\Model\Plan $plan
      * @param \Core\User\Model\Scope $scope
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function revoke(Plan $plan, Scope $scope)
     {
-        return $this->repository->deleteScope($plan->id, $scope->id);
+        $this->repository->deleteScope($plan->id, $scope->id);
+
+        return $this->message(__('Scopes revoked successfully'), 200);
     }
 }
