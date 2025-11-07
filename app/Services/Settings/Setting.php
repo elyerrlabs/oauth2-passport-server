@@ -49,6 +49,11 @@ class Setting
         try {
             $settings = \App\Models\Setting\Setting::all(['key', 'value']);
             foreach ($settings as $key => $item) {
+
+                if (filter_var($item->value, FILTER_VALIDATE_INT) == true) {
+                    $item->value = intval($item->value);
+                }
+
                 Config::set($item->key, $item->value);
             }
         } catch (\Throwable $th) {
