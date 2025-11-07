@@ -47,6 +47,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -   Added **automatic retry mechanism** for failed webhook deliveries
 -   Optimized **background jobs with queues**, improving payment and transaction performance
 -   Added **foundational support for external service registration**, enabling integration with third-party apps (e.g., Nextcloud)
+- docker configuration updated
 
 ## 🚀 [v3.0.4]
 
