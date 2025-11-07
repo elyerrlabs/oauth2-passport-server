@@ -46,7 +46,7 @@ services:
             - .env:/root/.env
             - app-secrets:/var/www/secrets
             - files:/var/www/storage/app
-        command: sh -c "/usr/local/bin/laravel-scripts.sh"
+        command: sh -c "/usr/local/bin/entrypoint.sh"
         networks:
             - internal-net
             - public-net

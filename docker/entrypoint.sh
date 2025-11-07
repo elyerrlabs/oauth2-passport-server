@@ -46,7 +46,7 @@ chown -R www-data:www-data /var/lib/nginx
 php artisan storage:link
 
 echo "🚀 Starting PHP-FPM..."
-php-fpm83 -D
+php-fpm84 -D
 
 echo "🌐 Starting Nginx..."
 nginx -g "daemon off;" &   
