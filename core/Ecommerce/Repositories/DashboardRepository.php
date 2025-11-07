@@ -124,7 +124,7 @@ class DashboardRepository
 
         // Top Products
         //$data['top_products'] = Product::limit(25)->with(['category', 'orders', 'price'])
-        $data['top_products'] = Variant::limit(25)->with([
+        $data['top_products'] = Variant::limit(8)->with([
             'variantable.category',
             'orders',
             'price'
