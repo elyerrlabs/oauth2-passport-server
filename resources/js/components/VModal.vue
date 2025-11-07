@@ -30,7 +30,7 @@
                                 panelClass,
                             ]"
                         >
-                            <DialogTitle as="div" class="flex justify-between">
+                            <DialogTitle as="div" class="flex justify-between" v-if="title">
                                 <h1 class="font-semibold text-3xl mx-2">
                                     {{ title }}
                                 </h1>
