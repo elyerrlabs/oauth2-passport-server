@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Language;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -30,6 +31,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            \App\Http\Middleware\Lang::class,
             \App\Http\Middleware\SecureHeaders::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -37,14 +39,17 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            //   \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
+            \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
+            \App\Http\Middleware\VerifyDemoUser::class,
             \App\Http\Middleware\VerifyAccount::class,
-            \App\Http\Middleware\HandleInertiaRequests::class
+            \App\Http\Middleware\HandleInertiaRequests::class,
         ],
 
         'api' => [
+            \App\Http\Middleware\Lang::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\VerifyAccount::class,
+            \App\Http\Middleware\VerifyDemoUser::class,
         ],
     ];
 
@@ -66,7 +71,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-        'transform.request' => \Elyerr\ApiResponse\Middleware\TransformRequest::class,
         'client' => \App\Http\Middleware\CheckClientCredentials::class,
         'scopes' => \App\Http\Middleware\CheckScopes::class,
         'scope' => \App\Http\Middleware\CheckForAnyScope::class,
@@ -78,5 +82,6 @@ class Kernel extends HttpKernel
         'reactive.account' => \App\Http\Middleware\ReactiveAccount::class,
         'userCanAny' => \App\Http\Middleware\UserCanAny::class,
         'captcha' => \App\Http\Middleware\VerifyCaptcha::class,
+        'demo' => \App\Http\Middleware\VerifyDemoUser::class,
     ];
 }

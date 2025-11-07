@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Web\Admin\Setting;
 
 /**
@@ -19,12 +20,13 @@ namespace App\Http\Controllers\Web\Admin\Setting;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 
 use App\Support\CacheKeys;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Models\Setting\Setting;
 use Illuminate\Support\Facades\Cache;
@@ -32,7 +34,6 @@ use App\Http\Controllers\WebController;
 
 class SettingController extends WebController
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -52,7 +53,7 @@ class SettingController extends WebController
     /**
      * Update settings
      * @param \Illuminate\Http\Request $request
-     * @return 
+     * @return
      */
     public function update(Request $request)
     {
@@ -92,19 +93,20 @@ class SettingController extends WebController
 
     /**
      * Reload cache for settings
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Setting\Setting $setting
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function reloadCache(Request $request, Setting $setting)
     {
         $settings = $setting::all();
 
         foreach ($settings as $setting) {
-            
+
             $cache_key = CacheKeys::settings($setting->key);
-            
+
             Cache::forget($cache_key);
-            
+
             Cache::put(
                 $cache_key,
                 $setting->value,
@@ -134,7 +136,7 @@ class SettingController extends WebController
     }
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function routes()
@@ -143,7 +145,7 @@ class SettingController extends WebController
     }
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function redis()
@@ -152,7 +154,7 @@ class SettingController extends WebController
     }
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function queues()
@@ -171,7 +173,7 @@ class SettingController extends WebController
 
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function filesystem()
@@ -181,7 +183,7 @@ class SettingController extends WebController
 
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function payment()
@@ -190,7 +192,7 @@ class SettingController extends WebController
     }
 
     /**
-     * Show the view of 
+     * Show the view of
      * @return \Illuminate\Contracts\View\View
      */
     public function session()
@@ -205,5 +207,43 @@ class SettingController extends WebController
     public function security()
     {
         return view('settings.section.security');
+    }
+
+    /**
+     * Summary of security
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function rateLimit()
+    {
+        return view('settings.section.rate_limit');
+    }
+
+    /**
+     * Summary of security
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function modules()
+    {
+        $modulesPath = base_path('core');
+
+        $keys = [];
+
+        foreach (File::directories($modulesPath) as $modulePath) {
+            $moduleName = basename($modulePath);
+            $configPath = $modulePath . '/config';
+
+            $module = $configPath . "/module.php";
+            if (file_exists($module)) {
+                $config = include $module;
+
+                if (isset($config['name']) && isset($config['module_enabled'])) {
+                    $data = $this->transformRequest($config);
+                    $keys[strtolower($moduleName)][] = 'module.' . strtolower($moduleName) . '.module.name';
+                    $keys[strtolower($moduleName)][] = 'module.' . strtolower($moduleName) . '.module.module_enabled';
+                }
+            }
+        }
+
+        return view('settings.section.modules', compact('keys'));
     }
 }

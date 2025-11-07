@@ -78,9 +78,35 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
+        if ($e instanceof ValidationException) {
+            $errors = $errors = $e->errors();
+
+            $formatted = [];
+
+            foreach ($errors as $field => $messages) {
+
+                foreach ($messages as $key => &$value) {
+                    $value = preg_replace('/\.\d+\./', ' ', $value);
+                    $value = preg_replace('/\.\d+/', ' ', $value);
+                }
+
+                data_set($formatted, $field, $messages);
+            }
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'errors' => $formatted
+                ], 422);
+            }
+        }
+
+        if ($e instanceof NotFoundHttpException && request()->acceptsHtml() && request()->path() == '/') {
+            return redirect()->route('login');
+        }
 
         if ($e instanceof ModelNotFoundException) {
-            throw new ReportError(__("Not Found"), 404);
+            throw new ReportError(__("Model not be found"), 404);
         }
 
         if ($e instanceof TokenMismatchException) {
@@ -112,7 +138,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof AccessDeniedHttpException) {
-            throw new ReportError(__("Unauthorized"), 401);
+            throw new ReportError(__("You haven't logged in yet. Please log in to unlock all features."), 401);
         }
 
         $e = $this->prepareException($this->mapException($e));

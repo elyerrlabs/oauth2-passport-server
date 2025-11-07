@@ -1,0 +1,748 @@
+<?php
+
+namespace Core\User\Repositories;
+
+/**
+ * Copyright (c) 2025 Elvis Yerel Roman Concha
+ *
+ * This file is part of an open source project licensed under the
+ * "NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+ *
+ * You may use, study, modify, and redistribute this file for personal,
+ * educational, or non-commercial research purposes only.
+ *
+ * Commercial use is strictly prohibited without prior written consent
+ * from the author.
+ *
+ * Combining this software with any project licensed for commercial use
+ * (such as AGPL) is not permitted without explicit authorization.
+ *
+ * This software supports OAuth 2.0 and OpenID Connect.
+ *
+ * Author Contact: yerel9212@yahoo.es
+ *
+ * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+ */
+
+use DateTime;
+use Exception;
+use DateInterval;
+use Core\User\Model\User;
+use App\Support\CacheKeys;
+use Core\User\Model\Group;
+use Illuminate\Http\Request;
+use Core\User\Model\UserScope;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Elyerr\ApiResponse\Assets\Asset;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
+use App\Repositories\Contracts\Contracts;
+use App\Notifications\User\UserUpdatedEmail;
+use Elyerr\ApiResponse\Assets\JsonResponser;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\User\UserCreatedAccount;
+use App\Notifications\User\UserDisableAccount;
+use Elyerr\ApiResponse\Exceptions\ReportError;
+use Core\User\Transformer\User\AuthTransformer;
+use Core\User\Transformer\Admin\UserTransformer;
+use App\Notifications\User\UserReactivateAccount;
+use App\Notifications\Member\MemberCreatedAccount;
+use App\Repositories\OAuth\Server\Grant\OAuthSessionTokenRepository;
+
+class UserRepository implements Contracts
+{
+    use JsonResponser;
+    use Asset;
+
+    /**
+     * User model
+     * @var User
+     */
+    public $model;
+
+    /**
+     * Transformer
+     * @var
+     */
+    public $transformer = UserTransformer::class;
+
+    /**
+     * User scope model
+     * @var UserScope
+     */
+    public $userScope;
+
+    /**
+     * Group model
+     * @var Group
+     */
+    public $group;
+
+
+    /**
+     * Oauth token repository
+     * @var OAuthSessionTokenRepository
+     */
+    public $oauthSessionTokenRepository;
+
+    /**
+     *
+     * @param \Core\User\Model\User $user
+     * @param \Core\User\Model\UserScope $userScope
+     * @param \Core\User\Model\Group $group
+     * @param \App\Repositories\OAuth\Server\Grant\OAuthSessionTokenRepository $oAuthSessionTokenRepository
+     */
+    public function __construct(
+        User $user,
+        UserScope $userScope,
+        Group $group,
+        OAuthSessionTokenRepository $oAuthSessionTokenRepository
+    ) {
+        $this->model = $user;
+        $this->userScope = $userScope;
+        $this->group = $group;
+        $this->oauthSessionTokenRepository = $oAuthSessionTokenRepository;
+    }
+
+    /**
+     * Search the user resources
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function search(Request $request)
+    {
+        // Retrieve params of request
+        $params = $this->filter_transform($this->transformer);
+
+        // Prepare query
+        $data = $this->model->query();
+
+        // Add users trashed
+        $data = $data->withTrashed()->orderByDesc('created_at');
+
+        // Search by params
+        $data = $this->searchByBuilder($data, $params);
+
+        return $this->showAllByBuilder($data, $this->transformer);
+    }
+
+    /**
+     * Create new resource of the user
+     * @param array $data
+     * @return JsonResponser
+     */
+    public function create(array $data)
+    {
+        $temp_password = $this->passwordTempGenerate();
+
+        $user = $this->model->create([
+            'name' => $data['name'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($temp_password),
+            'country' => $data['country'] ?? null,
+            'city' => $data['city'] ?? null,
+            'address' => $data['address'] ?? null,
+            'dial_code' => $data['dial_code'] ?? null,
+            'phone' => $data['phone'] ?? null,
+            'birthday' => $data['birthday'] ?? null,
+            'verified_at' => $data['verify_email'] ? now() : null,
+            'accept_terms' => $data['accept_terms'] ?? true,
+            'accept_cookies' => $data['accept_cookies'] ?? true,
+        ]);
+
+        Cache::put(CacheKeys::user($user->id), $user);
+
+        Notification::send(
+            $user,
+            new UserCreatedAccount($temp_password)
+        );
+
+        return $this->showOne($user, $user->transformer, 201);
+    }
+
+    /**
+     * Find the user
+     * @param string $id
+     * @return User
+     */
+    public function find(string $id)
+    {
+        $cacheKey = CacheKeys::user($id);
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
+        $model = $this->model->withTrashed()->with([
+            'userScopes',
+            'groups'
+        ])->find($id);
+
+        if (!empty($model)) {
+            Cache::put($cacheKey, $model, now()->addDays(intval(config('cache.expires', 90))));
+        }
+
+        return $model;
+    }
+
+    /**
+     * Show details of the user
+     * @param string $user_id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function details(string $user_id)
+    {
+        $cacheKey = CacheKeys::user($user_id);
+
+        $user = Cache::has($cacheKey) ? Cache::get($cacheKey) : $this->find($user_id);
+
+        return $this->showOne($user, $user->transformer);
+    }
+
+    /**
+     * Update specific resource
+     * @param string $id
+     * @param array $data
+     * @return JsonResponser
+     */
+    public function update(string $id, array $data)
+    {
+        $cacheKey = CacheKeys::user($id);
+
+        Cache::forget($cacheKey);
+        Cache::forget(CacheKeys::userAuth($id));
+
+        $model = $this->model->find($id);
+        $can_update = false;
+        $updated_email = false;
+
+        if (!empty($data['name']) && strtolower($model->name) != strtolower($data['name'])) {
+            $can_update = true;
+            $model->name = $data['name'];
+        }
+
+        if (!empty($model->verified_at) && strtolower($data['verify_email'])) {
+            $can_update = true;
+            $model->verified_at = now();
+        }
+
+        if (!empty($data['last_name']) && $model->last_name != $data['last_name']) {
+            $can_update = true;
+            $model->last_name = $data['last_name'];
+        }
+
+        if (!empty($data['email']) && $model->email != $data['email']) {
+            $updated_email = true;
+            $can_update = true;
+            $model->email = $data['email'];
+        }
+
+        if (!empty($data['country']) && $model->country != $data['country']) {
+            $can_update = true;
+            $model->country = $data['country'];
+        }
+
+        if (!empty($data['dial_code']) && $model->dial_code != $data['dial_code']) {
+            $can_update = true;
+            $model->dial_code = $data['dial_code'];
+        }
+
+        if (!empty($data['city']) && $model->city != $data['city']) {
+            $can_update = true;
+            $model->city = $data['city'];
+        }
+
+        if (!empty($data['address']) && $model->address != $data['address']) {
+            $can_update = true;
+            $model->address = $data['address'];
+        }
+
+        if (!empty($data['birthday']) && $model->birthday != $data['birthday']) {
+            $can_update = true;
+            $model->birthday = $data['birthday'];
+        }
+
+        if (!empty($data['phone']) && $model->phone != $data['phone']) {
+            $can_update = true;
+            $model->phone = $data['phone'];
+        }
+
+        if ($can_update) {
+            $model->push();
+
+            Cache::put(CacheKeys::user($id), $model, now()->addDays(intval(config('cache.expires', 90))));
+        }
+
+        if ($updated_email) {
+            Notification::send($model, new UserUpdatedEmail());
+        }
+
+        return $this->showOne($model, $this->transformer, 200);
+    }
+
+    /**
+     * Delete specific resource
+     * @param string $id
+     * @return void
+     */
+    public function delete(string $id)
+    {
+        if (auth()->user()->id == $id) {
+            throw new ReportError(__('This action cannot be done'), 400);
+        }
+    }
+
+    /**
+     * Disable users  and destroy all sessions
+     * @param string $id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function disable(string $id)
+    {
+        if (auth()->user()->id == $id) {
+            throw new ReportError(__('This action cannot be done'), 400);
+        }
+
+        $cacheKey = CacheKeys::user($id);
+
+        Cache::forget($cacheKey);
+        Cache::forget(CacheKeys::userAuth($id));
+        Cache::forget(CacheKeys::userScopes($id));
+
+        $model = $this->model->find($id);
+
+        $tokens = $model->tokens;
+
+        foreach ($tokens as $token) {
+
+            if ($token->oauthSessionToken->session_id ?? false) {
+                $this->oauthSessionTokenRepository->destroyTokenSession($token->oauthSessionToken->session_id);
+            }
+
+            $token->revoke();
+        }
+
+        $model->delete();
+
+        Cache::put($cacheKey, $model, now()->addDays(intval(config('cache.expires', 90))));
+
+        Notification::send($model, new UserDisableAccount());
+
+        return $this->showOne($model, $this->transformer);
+    }
+
+    /**
+     * Enable disabled users
+     * @param string $id
+     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function enable(string $id)
+    {
+        try {
+
+            $cacheKey = CacheKeys::user($id);
+
+            Cache::forget($cacheKey);
+            Cache::forget(CacheKeys::userAuth($id));
+
+            $user = $this->model->onlyTrashed()->find($id);
+
+            $user->restore();
+
+            Cache::put($cacheKey, $user, now()->addDays(intval(config('cache.expires', 90))));
+
+            Notification::send($user, new UserReactivateAccount());
+
+            return $this->showOne($user, $user->transformer);
+
+        } catch (Exception $e) {
+            throw new ReportError(__("The server cannot find the requested resource"), 404);
+        }
+    }
+
+    /**
+     * Search the all scopes available for the user
+     * @param string $user_id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function searchScopesForUser(string $user_id)
+    {
+        $userScopes = $this->userScope->query();
+
+        $userScopes->with([
+            'scope.service.group',
+            'scope',
+            'scope.service',
+            'scope.role'
+        ])
+            ->where('user_id', $user_id)
+            ->where(function ($query) {
+                $query->where('end_date', '>', now())
+                    ->orWhereNull('end_date');
+            })
+            ->whereHas('scope', function ($query) {
+                $query->where('active', '!=', false);
+            });
+
+        return $this->showAllByBuilder($userScopes, $this->userScope->transformer);
+    }
+
+    /**
+     * Retrieve the all groups for the user
+     * @param string $user_id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function searchGroupsForUser(string $user_id)
+    {
+        return Cache::remember(
+            CacheKeys::userGroups($user_id),
+            now()->addDays(intval(config('cache.expires', 90))),
+            function ($user_id) {
+
+                $groups = $this->group->query();
+
+                $groups->whereHas('users', function ($query) use ($user_id) {
+                    $query->where('id', $user_id);
+                });
+
+                return $this->showAllByBuilder($groups, UserGroupTransformer::class);
+            }
+        );
+    }
+
+    /**
+     * Assign scope for the user
+     * @param string $user_id
+     * @param array $data
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function assignScopeForUser(string $user_id, array $data)
+    {
+
+        Cache::forget(CacheKeys::userScopes($user_id));
+        Cache::forget(CacheKeys::userGroups($user_id));
+        Cache::forget(CacheKeys::userAdmin($user_id));
+     //   Cache::forget(CacheKeys::userScopesApiKey($user_id));
+        Cache::forget(CacheKeys::userScopeList($user_id));
+        Cache::forget(CacheKeys::userScopeList($user_id));
+        Cache::forget(CacheKeys::userAuth($user_id)); 
+
+        DB::transaction(function () use ($user_id, $data) {
+
+            foreach ($data['scopes'] as $id) {
+
+                $userScope = $this->userScope->query();
+
+                $us = $userScope->whereNull('package_id')
+                    ->where(function ($query) {
+                        $query->whereNull('end_date')
+                            ->orWhere('end_date', '>', now());
+                    })
+                    ->where('scope_id', $id)
+                    ->where('user_id', $user_id)
+                    ->updateOrCreate([
+                        'scope_id' => $id,
+                        'user_id' => $user_id,
+                        'end_date' => $data['end_date'] ?? null
+                    ]);
+
+                //sync groups by scopes
+                $this->model->find($user_id)->groups()->sync($us->scope->service->group->id);
+            }
+        });
+
+        return $this->message(__("Scopes have been assigned successfully"), 201);
+    }
+
+    /**
+     * Assign groups to the user
+     * @param string $user_id
+     * @param array $data
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function assignGroupForUser(string $user_id, array $data)
+    {
+        Cache::forget(CacheKeys::userGroups($user_id));
+
+        $user = $this->model->find($user_id);
+
+        $user->groups()->syncWithoutDetaching($data['groups']);
+
+        return $this->message(__('Groups assigned successfully'), 201);
+    }
+
+    /**
+     * Revoke scopes to the user
+     * @param string $user_id
+     * @param string $scope_id
+     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function revokeScopeForUser(string $user_id, string $id)
+    {
+        $scope = $this->userScope
+            ->where('id', $id) // by id
+            ->where('user_id', $user_id) //by user id
+            ->first();
+
+        // package is null
+        if (!empty($scope->package_id)) {
+            throw new ReportError(
+                __('This scope cannot be deleted because it is associated with a paid plan. Please contact support if you believe this is an error.'),
+                400
+            );
+        }
+
+        if ($user_id == auth()->user()->id || $user_id != $scope->user_id) {
+            throw new ReportError(
+                __('You cannot remove your own permissions. Please contact an administrator if you require changes to your access.'),
+                400
+            );
+        }
+
+        // Set expiration date for the scopes
+        if (empty($scope->end_date) || $scope->end_date >= now()) {
+            $scope->end_date = now();
+            $scope->push();
+
+            Cache::forget(CacheKeys::userScopes($user_id));
+            Cache::forget(CacheKeys::userGroups($user_id));
+            Cache::forget(CacheKeys::userAdmin($user_id));
+          //  Cache::forget(CacheKeys::userScopesApiKey($user_id));
+            Cache::forget(CacheKeys::userScopeList($user_id));
+            Cache::forget(CacheKeys::userAuth($user_id));
+        }
+
+        return $this->message(__("Scopes have been revoked successfully"), 200);
+    }
+
+    /**
+     * Revoke group for the user
+     * @param mixed $user_id
+     * @param string $group_id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function revokeGroupForUser($user_id, string $group_id)
+    {
+        $model = $this->model->find($user_id);
+
+        $model->groups()->detach($group_id);
+
+        Cache::forget(CacheKeys::userGroups($user_id));
+
+        return $this->message(__('Groups revoked successfully'), 200);
+    }
+
+    /**
+     * Show the history the all scopes assigner for the user
+     * @param string $user_id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function searchScopeHistoryForUser(string $user_id)
+    {
+        $scopes = $this->userScope->query();
+        $scopes->where('user_id', $user_id);
+
+        return $this->showAllByBuilder($scopes, $this->userScope->transformer);
+    }
+
+    /**
+     * Update personal user information
+     * @param array $data
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function updatePersonalInformation(array $data)
+    {
+        $user = $this->model->find(auth()->user()->id);
+
+        Cache::forget(CacheKeys::user($user->id));
+        Cache::forget(CacheKeys::userAuth($user->id));
+
+        if (!empty($data['name'])) {
+            $user->name = $data['name'];
+        }
+
+        if (!empty($data['last_name'])) {
+            $user->last_name = $data['last_name'];
+        }
+
+        if (!empty($data['email'])) {
+            $user->email = $data['email'];
+        }
+
+        if (!empty($data['country'])) {
+            $user->country = $data['country'];
+        }
+
+        if (!empty($data['city'])) {
+            $user->city = $data['city'];
+        }
+
+        if (!empty($data['address'])) {
+            $user->address = $data['address'];
+        }
+
+        if (!empty($data['dial_code'])) {
+            $user->dial_code = $data['dial_code'];
+        }
+
+        if (!empty($data['phone'])) {
+            $user->phone = $data['phone'];
+        }
+
+        if (!empty($data['birthday'])) {
+            $user->birthday = $data['birthday'];
+        }
+
+        $user->push();
+
+        Cache::put(CacheKeys::user($user->id), $user, now()->addDays(intval(config('cache.expires', 90))));
+
+        return $this->showOne($user, AuthTransformer::class);
+    }
+
+    /**
+     * Update personal password for the user
+     * @param array $data
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function updatePersonalPassword(array $data)
+    {
+        $user = auth()->user();
+
+        $user->password = Hash::make($data['password']);
+        $user->push();
+
+        return $this->message(__("password changed successfully"), 200);
+    }
+
+    /**
+     * Register new users (customers)
+     * @param array $data
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function registerCustomer(array $data)
+    {
+        $group = Group::where('slug', 'member')->first();
+
+        if (empty($group)) {
+            return back()->with('error', __('The registration could not be completed successfully. Our team has been notified of the issue and is working to resolve it. We appreciate your patience and encourage you to try again later'));
+        }
+
+        DB::transaction(function () use ($data, $group) {
+
+            $user = $this->model->create([
+                'name' => $data['name'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'birthday' => $data['birthday'] ?? null,
+                'accept_terms' => $data['accept_terms'],
+                'accept_cookies' => $data['accept_cookies']
+            ]);
+
+            if (!empty($data['referral_code']) && class_exists(\Core\Partner\Model\Partner::class)) {
+
+                $partner = \Core\Partner\Model\Partner::where('code', $data['referral_code'])->first();
+
+                if ($partner) {
+                    $user->partner_id = $partner->id;
+                    $user->push();
+                }
+            }
+
+
+            $user->groups()->attach($group->id);
+
+            $user->notify(new MemberCreatedAccount());
+
+            Cache::put(CacheKeys::user($user->id), $user, now()->addDays(intval(config('cache.expires', 90))));
+        });
+
+        return redirect()->route('login')->with('status', __('Your account has been registered successfully. A verification email has been sent to your inbox.'));
+    }
+
+    /**
+     * Verify user accounts
+     * @param array $data
+     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
+     * @return mixed|\Illuminate\Http\RedirectResponse
+     */
+    public function verifyUserAccount(array $data)
+    {
+        try {
+            // Verify the auth user and incoming use are the same
+            if (auth()->check() && auth()->user()->email !== $data['email']) {
+                // Destroy token
+                DB::table('password_resets')->where('email', '=', $data['email'])->delete();
+                // Logout user
+                auth()->logout();
+            }
+
+            // Verify the user has activated account
+            if (auth()->check() && auth()->user()->verified_at) {
+                return redirectToHome();
+            }
+
+            // Retrieve the token
+            $token = DB::table('password_resets')->where([
+                'token' => $data['token'],
+                'email' => $data['email'],
+            ])->first();
+
+            // Calculate time valid token
+            $now = new DateTime($token->created_at);
+            $now->add(new DateInterval("PT" . config("system.verify_account_time", 5) . "M"));
+            $date = $now->format("Y-m-d H:i:s");
+
+            // Destroy current token
+            DB::table('password_resets')->where('email', '=', $token->email)->delete();
+
+            // Retrieve the user object
+            $user = $this->model->where('email', $token->email)->first();
+
+            // Validate expiration token
+            if (date('Y-m-d H:i:s', strtotime(now())) > $date) {
+                return redirect()->route('login')
+                    ->with(
+                        'error',
+                        __("Time's up to activate the account, please login and try again.")
+                    );
+            }
+
+            $user->verified_at = now();
+            $user->save();
+
+            // Authenticate the user
+            if (!auth()->check()) {
+                auth()->login($user);
+            }
+
+            return redirect()->route('user.verified.account')
+                ->with(
+                    [
+                        'status' =>
+                            __('Your account has been activated.'),
+                        'token' => uniqid()
+                    ]
+                );
+
+        } catch (Exception $e) {
+
+            Log::error("verifyUserAccount : " . $e->getMessage());
+
+            if (auth()->check()) {
+                auth()->logout();
+            }
+
+            return redirect()->route('login')->with(
+                'error',
+                __("Something is wrong, please login and tray again")
+            );
+        }
+    }
+
+}

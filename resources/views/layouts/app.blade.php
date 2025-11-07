@@ -8,26 +8,28 @@
     <link rel="icon" href="{{ config('app.url') }}/favicon.png" type="image/png">
 
     <title>{{ config('app.name', 'Oauth2 Server') }}</title>
-
-    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
-    <link rel="stylesheet" href="{{ mix('/css/tailwind.css') }}">
-
-    @inertiaHead
+    
+    <link nonce={{ $nonce }} rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
+    <script nonce={{ $nonce }} src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
+    @include('layouts.parts.translation')
     @stack('head')
+    @inertiaHead
     @stack('css')
 </head>
 
-<body>
+<body class="bg-gray-50 font-sans min-h-screen">
 
     @yield('header')
+
+    @include('layouts.parts.alerts')
 
     @yield('content')
 
     @yield('footer')
 
-    <!-- Scripts -->
-    <script src="{{ mix('/js/app.js') }}"></script>
+    <x-privacy />
     @stack('js')
     @stack('modals')
 </body>
+
 </html>

@@ -1,4 +1,55 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 @import "flatpickr";
+@import 'tailwindcss';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+/*
+:root {
+    --color-primary: rgb(79 70 229);
+    --color-primary-hover: rgb(67 56 202);
+    --color-primary-light: rgb(199 210 254);
+    --color-secondary: rgb(99 102 241);
+    --color-success: rgb(16 185 129);
+    --color-success-hover: rgb(5 150 105);
+    --color-danger: rgb(220 38 38);
+    --color-danger-hover: rgb(185 28 28);
+    --color-warning: rgb(245 158 11);
+    --color-info: rgb(59 130 246);
+
+    --color-text-primary: rgb(17 24 39);
+    --color-text-secondary: rgb(107 114 128);
+    --color-text-muted: rgb(156 163 175);
+
+    --color-bg-primary: rgb(255 255 255);
+    --color-bg-secondary: rgb(249 250 251);
+    --color-bg-tertiary: rgb(243 244 246);
+
+    --color-border: rgb(229 231 235);
+    --color-border-hover: rgb(209 213 219);
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+}
+
+ 
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--radius-md);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-hover);
+}*/

@@ -63,7 +63,7 @@ class UserDisableAccount extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject(__('Account Deactivation Notice'))
-            ->greeting(__('Hello ') . $notifiable->name . ' ' . $notifiable->last_name . ',')
+            ->greeting(__('Hello :name :last_name', ['name' => $notifiable->name, 'last_name' => $notifiable->last_name]))
             ->line(__('We are writing to inform you that your account has been successfully deactivated.'))
             ->line(__('If this was a mistake or you wish to regain access, you can reactivate your account at any time by logging back in.'))
             ->action(__('Visit ') . config('app.name'), url(env('FRONTEND_URL')))

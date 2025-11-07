@@ -2,12 +2,51 @@
 @use "@mdi/font";
 
 .notyf__toast {
-    font-size: 16px;
-    border-radius: 8px;
+  font-size: 16px;
+  border-radius: 8px;
 }
 .notyf__toast--success {
-    background: #31ac4e;
+  background: #31ac4e;
 }
 .notyf__toast--error {
-    background: #c03e4b;
+  background: #c03e4b;
+}
+
+.is-demo::after {
+  content: "DEMO DEMO DEMO DEMO DEMO DEMO DEMO DEMO DEMO DEMO DEMO DEMO";
+  white-space: nowrap;
+  position: fixed;
+  top: 50%;
+  left: -100%;
+  width: 300%;
+  font: 900 6vw/1 system-ui, sans-serif;
+  color: rgba(0, 0, 0, 0.07);
+  transform: rotate(-30deg);
+  z-index: 9999;
+  pointer-events: none;
+  animation: scroll-demo 20s linear infinite;
+}
+
+@keyframes scroll-demo {
+  0% {
+    transform: rotate(-30deg) translateX(0);
+  }
+  100% {
+    transform: rotate(-30deg) translateX(-50%);
+  }
+}
+
+.required::after {
+  content: "!";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  font-size: 12px;
+  font-weight: bold;
+  color: red;
+  border: 1px solid red;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 14px;
+  padding: 1px;
 }

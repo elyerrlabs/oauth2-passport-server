@@ -27,7 +27,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Support\CacheKeys;
 use Illuminate\Http\Request;
-use App\Models\User\UserScope;
+use Core\User\Model\UserScope;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -64,7 +64,7 @@ class CheckUserScopes
                 Cache::forget(CacheKeys::userScopes($user->id));
                 Cache::forget(CacheKeys::userGroups($user->id));
                 Cache::forget(CacheKeys::userAdmin($user->id));
-                Cache::forget(CacheKeys::userScopesApiKey($user->id));
+               // Cache::forget(CacheKeys::userScopesApiKey($user->id));
                 Cache::forget(CacheKeys::userScopeList($user->id));
             }
         }

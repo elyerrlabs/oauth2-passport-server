@@ -92,9 +92,9 @@ if (!function_exists('billing_get_status_name')) {
      * @param string $status
      * @return string|null
      */
-    function billing_get_status_name(string $status)
+    function billing_get_status_name(string $period)
     {
-        return config('billing.status.' . $status . '.name', $status);
+        return config('billing.period.' . $period . '.name', $period);
     }
 }
 
@@ -125,9 +125,9 @@ if (!function_exists('billing_get_expiration_date')) {
      * Get the expiration date by adding the billing period to the current date and time.
      *
      * @param string $periodKey
-     * @return \Carbon\Carbon|null
+     * @return mixed
      */
-    function billing_get_expiration_date(string $periodKey): ?\Carbon\Carbon
+    function billing_get_expiration_date(string $periodKey)
     {
         $period = billing_get_period($periodKey);
 
@@ -288,6 +288,17 @@ if (!function_exists('billing_statuses')) {
     function billing_statuses()
     {
         return array_values(config('billing.status'));
+    }
+}
+
+if (!function_exists('billings_types')) {
+    /**
+     * billing status
+     * @return array
+     */
+    function billings_types()
+    {
+        return array_values(config('billing.types'));
     }
 }
 

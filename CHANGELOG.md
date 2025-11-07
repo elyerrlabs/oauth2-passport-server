@@ -24,91 +24,111 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 ## 🛠️ Unrealized
 
-- Added support for module creation
-- Added Artisan command to install modules 
-- Added license header to source files
-- Declared SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
-- Documented `/modules` license exception and third-party ownership terms in [LICENSE.md](./LICENSE.md)
-- Clarified that modules are supported but subject to individual licenses
-- Updated price input to accept decimal format for better readability (stored internally as integer)
-- Disabled trial functionality (not yet available)
-- Renamed "Client registered" to "Secret client" for confidential clients
-
+-   Added support for module creation
+-   Introduced Artisan command for module installation
+-   Added license headers to source files
+-   Declared `SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project`
+-   Documented `/modules` license exception and third-party ownership terms in [LICENSE.md](./LICENSE.md)
+-   Clarified that modules are supported but remain subject to their individual licenses
+-   Improved price input: now accepts decimal format for readability (still stored internally as integer)
+-   Disabled trial functionality (feature not yet available)
+-   Renamed **"Client registered"** to **"Secret client"** for confidential client handling
+-   Added core modules
+-   Improved user interface
+-   Enhanced rate limit implementation
+-   Improved polymorphism support
+-   Introduced e-commerce module
+-   Migrated to Vite.js from Laravel Mix
+-   Changed Transaction to polymorphic table
+-   Added Tags support for polymorphic relation instead of model location
+-   Added support for Spanish language
+-   Added support for demo user
+-   Integrated **queue-based event dispatching** to ensure reliable and asynchronous processing
+-   Added **automatic retry mechanism** for failed webhook deliveries
+-   Optimized **background jobs with queues**, improving payment and transaction performance
+-   Added **foundational support for external service registration**, enabling integration with third-party apps (e.g., Nextcloud)
+- docker configuration updated
 
 ## 🚀 [v3.0.4]
 
-- Removed orphaned fields to improve data integrity
-- Fixed docker deployment
-- 🔒 Changed license to custom non-commercial license
+-   Removed orphaned fields to improve data integrity
+-   Fixed docker deployment
+-   🔒 Changed license to custom non-commercial license
 
-----
+---
 
 ## 🚀 [v3.0.3]
-- Improved Docker deployment configuration for enhanced security and consistency.
-- Fixed cache issue affecting system settings persistence.
+
+-   Improved Docker deployment configuration for enhanced security and consistency.
+-   Fixed cache issue affecting system settings persistence.
 
 ## 🚀 [v3.0.2]
 
 ### 🐛 Fixes
 
-- Resolved issue where the OpenID Connect endpoint returned static user claims. Now returns dynamic, authenticated user data.
+-   Resolved issue where the OpenID Connect endpoint returned static user claims. Now returns dynamic, authenticated user data.
 
 ## 🚀 [v3.0.1]
 
 ### 👥 Users
--🔧 Fix and properly define the relationship with the Partner model (belongsTo, hasOne, etc.), ensuring it aligns with the business logic. 
 
+-🔧 Fix and properly define the relationship with the Partner model (belongsTo, hasOne, etc.), ensuring it aligns with the business logic.
 
 ## 🚀 [v3.0.0]
 
 ### 🗄️ Database
-- 🏷️ Prefixed all table names with `ops_`
-- ⚙️ Optimized migration structure and logic
-- ❌ Removed `tax` fields from the `transactions` table
-- ❌ Removed `stripe_customer_id` from the `users` table
-- 🆕 Added new migration to manage multiple payment providers
+
+-   🏷️ Prefixed all table names with `ops_`
+-   ⚙️ Optimized migration structure and logic
+-   ❌ Removed `tax` fields from the `transactions` table
+-   ❌ Removed `stripe_customer_id` from the `users` table
+-   🆕 Added new migration to manage multiple payment providers
 
 ### 💳 Payment
-- 🛠️ Fixed support for multiple payment providers
-- 🔒 Fixed issue with forced activation of payment methods
+
+-   🛠️ Fixed support for multiple payment providers
+-   🔒 Fixed issue with forced activation of payment methods
 
 ### 👥 Users
-- 🐞 Fixed partner registration with referral code
+
+-   🐞 Fixed partner registration with referral code
 
 ### 🧩 Middleware
-- 🔁 Fixed redirect logic for unauthenticated (guest) users
+
+-   🔁 Fixed redirect logic for unauthenticated (guest) users
 
 ### 🔐 Login
-- 🧭 Fixed redirect behavior after first failed login attempt
+
+-   🧭 Fixed redirect behavior after first failed login attempt
 
 ### 🧰 Services
-- 🔄 Moved `Menu` class from `Models` to `Services`
-- 🧹 Refactored `Settings` to follow separation of concerns and moved to `Services`
 
+-   🔄 Moved `Menu` class from `Models` to `Services`
+-   🧹 Refactored `Settings` to follow separation of concerns and moved to `Services`
 
 ## [v2.0.2]
 
 ### ⚡️ Cache
 
-* Added cache support for **user scopes**, **menus**, and **configurations**.
-* The section **Admin → Settings → Cache** allows manual management of cached keys.
-* Automatic cache invalidation implemented when scopes expire or related data changes.
+-   Added cache support for **user scopes**, **menus**, and **configurations**.
+-   The section **Admin → Settings → Cache** allows manual management of cached keys.
+-   Automatic cache invalidation implemented when scopes expire or related data changes.
 
 ### 👮‍♂️ isAdmin (Fix)
 
-* Fixed `isAdmin` logic to prevent false positives when a user does not belong to an admin group.
-* Now strictly checks against valid groups assigned to the authenticated user.
+-   Fixed `isAdmin` logic to prevent false positives when a user does not belong to an admin group.
+-   Now strictly checks against valid groups assigned to the authenticated user.
 
 ### 👥 User Groups (Refactor)
 
-* Unified logic for retrieving all user groups, combining both:
-    - Directly assigned groups (with or without services).
-    - Groups linked through active scopes and services.
+-   Unified logic for retrieving all user groups, combining both:
+    -   Directly assigned groups (with or without services).
+    -   Groups linked through active scopes and services.
 
 ### 🚦 Rate Limiting
 
-* Implemented rate limiting on critical routes to improve security.
-* Added configurable rate limit settings in **Admin → Settings → Security**.
+-   Implemented rate limiting on critical routes to improve security.
+-   Added configurable rate limit settings in **Admin → Settings → Security**.
 
 ### 🔐 OAuth2
 
@@ -116,15 +136,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 ### 📄 Log Viewer
 
-* Added an integrated **log viewer** accessible from the admin panel.
-* Enables direct viewing of application logs without accessing the server manually.
+-   Added an integrated **log viewer** accessible from the admin panel.
+-   Enables direct viewing of application logs without accessing the server manually.
 
 ### ⚙️ Setting (Fix)
 
-* Moved `SCHEMA_HTTPS` from dynamic settings to the environment file for better consistency.
-* Fixed deployment issues when running in environments without HTTPS (i.e., HTTP-only setups).
+-   Moved `SCHEMA_HTTPS` from dynamic settings to the environment file for better consistency.
+-   Fixed deployment issues when running in environments without HTTPS (i.e., HTTP-only setups).
 
-------
+---
 
 ## [v2.0.1]
 
@@ -132,7 +152,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 -   Enhance OAuth2 token validation middleware to strictly verify token integrity and associated client existence, preventing 500 errors when tokens remain active but related clients have been deleted or are missing.
 
--------
+---
 
 ## [v2.0.0]
 

@@ -46,6 +46,6 @@ class DenyGrantType
             return $next($request);
         }
 
-        throw new ReportError("grant type denied", 422);
+        throw new ReportError(__("grant type denied"), 422);
     }
 }

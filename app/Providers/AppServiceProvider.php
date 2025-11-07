@@ -20,23 +20,22 @@ namespace App\Providers;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use App\Guard\TokenGuard;
-use Laravel\Passport\Passport; 
+use Laravel\Passport\Passport;
 use App\Services\Settings\Setting;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\ClientRepository;
 use Illuminate\Support\ServiceProvider;
 use League\OAuth2\Server\ResourceServer;
-use Laravel\Passport\PassportUserProvider; 
+use Laravel\Passport\PassportUserProvider;
 use App\Models\OAuth\Bridge\AuthCodeRepository;
 use App\Models\OAuth\Bridge\AccessTokenRepository;
-use App\Http\Controllers\Web\OAuth\OpenId\DiscoveryController;
 use Laravel\Passport\Bridge\AuthCodeRepository as LaravelAuthCodeRepository;
-use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository; 
+use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -52,9 +51,6 @@ class AppServiceProvider extends ServiceProvider
         //Override AuthCodeRepository  and AccessTokenRepository
         $this->app->bind(LaravelAuthCodeRepository::class, AuthCodeRepository::class);
         $this->app->bind(LaravelAccessTokenRepository::class, AccessTokenRepository::class);
-
-        //openID
-        $this->app->bind(\OpenIDConnect\Laravel\DiscoveryController::class, DiscoveryController::class);
     }
 
     /**

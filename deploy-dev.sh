@@ -28,7 +28,7 @@ COMPOSE_FILE="docker-compose-dev.yml"
 ENV_FILE=".env"
 
 echo "Downloading image ..."
-docker pull $IMAGE
+#docker pull $IMAGE
 
 # Required environment variables
 required_keys=(

@@ -8,17 +8,13 @@
 
     @include('layouts.parts.favicon')
 
-    <link rel="stylesheet" href="{{ mix('/css/pages.css') }}">
-    <link rel="stylesheet" href="{{ mix('/css/tailwind.css') }}">
-
-    <!-- Notyf-->
-    <link nonce={{ $nonce }} rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
-    <script nonce={{ $nonce }} src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
+    @vite(['resources/js/pages.js'])
+    
     @stack('head')
     @stack('css')
 </head>
 
-<body class="bg-gray-100 text-gray-800 flex flex-col justify-around min-h-screen">
+<body>
 
     @yield('header')
 
@@ -27,10 +23,10 @@
     @yield('content')
 
     @yield('footer')
-
-    <script src="{{ mix('/js/pages.js') }}"></script>
+    <x-privacy />
     @stack('js')
     @stack('modals')
+
 </body>
 
 </html>

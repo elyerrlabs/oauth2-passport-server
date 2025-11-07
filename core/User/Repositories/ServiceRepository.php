@@ -1,0 +1,300 @@
+<?php
+namespace Core\User\Repositories;
+
+/**
+ * Copyright (c) 2025 Elvis Yerel Roman Concha
+ *
+ * This file is part of an open source project licensed under the
+ * "NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+ *
+ * You may use, study, modify, and redistribute this file for personal,
+ * educational, or non-commercial research purposes only.
+ *
+ * Commercial use is strictly prohibited without prior written consent
+ * from the author.
+ *
+ * Combining this software with any project licensed for commercial use
+ * (such as AGPL) is not permitted without explicit authorization.
+ *
+ * This software supports OAuth 2.0 and OpenID Connect.
+ *
+ * Author Contact: yerel9212@yahoo.es
+ * 
+ * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+ */
+
+use App\Support\CacheKeys;
+use Core\User\Model\Service;
+use Illuminate\Http\Request;
+use Elyerr\ApiResponse\Assets\Asset;
+use Illuminate\Support\Facades\Cache;
+use App\Repositories\Contracts\Contracts;
+use Elyerr\ApiResponse\Assets\JsonResponser;
+use Elyerr\ApiResponse\Exceptions\ReportError;
+use Core\User\Transformer\Admin\ServiceTransformer;
+use Core\User\Transformer\User\ServiceUserTransformer; 
+use Core\User\Transformer\Admin\ServiceScopeTransformer; 
+use Illuminate\Database\UniqueConstraintViolationException;
+
+class ServiceRepository implements Contracts
+{
+
+    use JsonResponser, Asset;
+
+    /**
+     * Model
+     * @var Service
+     */
+    public $model;
+
+    /**
+     * Transformer of class
+     * @var 
+     */
+    public $transformer = ServiceTransformer::class;
+
+
+    /**
+     * Scope repository
+     */
+    public $scopeRepository;
+
+    /**
+     * Construct
+     * @param \Core\User\Model\Service $service
+     */
+    public function __construct(Service $service, ScopeRepository $scopeRepository)
+    {
+        $this->model = $service;
+        $this->scopeRepository = $scopeRepository;
+    }
+
+    /**
+     * Search resources
+     * @param \Illuminate\Http\Request $request
+     * @return JsonResponser
+     */
+    public function search(Request $request)
+    {
+        // Retrieve params of the request
+        $params = $this->filter_transform($this->transformer);
+
+        // Prepare query
+        $data = $this->model->query();
+
+        // Eager loading
+        $data = $data->with(['group', 'scopes', 'scopes.role']);
+
+        if ($request->group) {
+            $data->whereHas(
+                'group',
+                function ($query) use ($request) {
+                    $query->whereRaw("LOWER(name) LIKE ?", ['%' . strtolower($request->group) . '%']);
+                }
+            );
+        }
+
+        // Filter by visibility
+        if ($request->visibility) {
+            $data->where('visibility', $request->visibility);
+        }
+
+        // Search data with the param request
+        $data = $this->searchByBuilder($data, $params);
+
+        // Order by
+        $data = $this->orderByBuilder($data, $this->transformer);
+
+        return $this->showAllByBuilder($data, $this->transformer);
+    }
+
+    /**
+     * Search service for guest
+     * @param \Illuminate\Http\Request $request
+     * @return JsonResponser
+     */
+    public function searchForGuest(Request $request)
+    {
+        // Prepare query
+        $data = $this->model->query();
+
+        $data->where('visibility', 'public');
+
+        if ($request->group) {
+
+            $data->whereRaw("LOWER(name) LIKE ?", ['%' . strtolower($request->service) . '%']);
+        }
+
+        return $this->showAllByBuilder($data, ServiceUserTransformer::class);
+    }
+
+    /**
+     * Create ne resource
+     * @param array $data
+     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function create(array $data)
+    {
+        try {
+            $service = $this->model->create([
+                'name' => $data['name'],
+                'slug' => $data['name'],
+                'description' => $data['description'],
+                'group_id' => $data['group_id'],
+                'system' => $data['system'] ?? false,
+                'visibility' => $data['visibility']
+            ]);
+
+            return $this->showOne($service, $this->transformer, 201);
+
+        } catch (UniqueConstraintViolationException $th) {
+            throw new ReportError(__("This service cannot be registered, as it is already associated with this group."), 400);
+        }
+    }
+
+    /**
+     * Search specific resource
+     * @param string $id
+     * @return Service
+     */
+    public function find(string $id)
+    {
+        return $this->model->with(['group', 'scopes', 'scopes.role'])->find($id);
+    }
+
+    /**
+     * Show service details
+     * @param string $id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function details(string $id)
+    {
+        $model = $this->find($id);
+
+        return $this->showOne($model, $this->transformer, 200);
+    }
+
+    /**
+     * Update specific resource
+     * @param string $id
+     * @param array $data
+     * @return JsonResponser
+     */
+    public function update(string $id, array $data)
+    {
+        $service = $this->find($id);
+
+        $update = false;
+
+        if ($data['description'] && $service->description != $data['description']) {
+            $update = true;
+            $service->description = $data['description'];
+        }
+
+        if ($data['name'] && $service->name != $data['name']) {
+            $update = true;
+            $service->name = $data['name'];
+        }
+
+        if ($data['visibility'] && $service->visibility != $data['visibility']) {
+            $update = true;
+            $service->visibility = $data['visibility'];
+        }
+
+        if ($update) {
+            $service->push();
+        }
+
+        return $this->showOne($service, $this->transformer);
+    }
+
+    /**
+     * Delete specific resource
+     * @param string $id 
+     * @return JsonResponser
+     */
+    public function delete(string $id)
+    {
+        $model = $this->find($id);
+
+        throw_if(
+            $model->system,
+            new ReportError(__("This action cannot be completed because this service is a system service and cannot be deleted."), 403)
+        );
+
+        throw_if(
+            $model->scopes()->count() > 0,
+            new ReportError(__("This action can't be done"), 400)
+        );
+
+        $model->delete();
+
+        return $this->showOne($model, $this->transformer);
+    }
+
+    /**
+     * Show the all scopes for service
+     * @param string $service_id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function searchScopes(string $service_id)
+    {
+
+        $model = $this->find($service_id);
+
+        return $this->showAll($model->scopes, ServiceScopeTransformer::class);
+    }
+
+    /**
+     * Assign or update scope
+     * @param string $service_id
+     * @param array $data
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function assignOrUpdateScopes(string $service_id, array $data)
+    {
+        $this->model->find($service_id)
+            ->scopes()->updateOrCreate(
+                [
+                    'role_id' => $data['role_id'],
+                ],
+                [
+                    'role_id' => $data['role_id'],
+                    'public' => $data['public'] ?? false,
+                    'active' => $data['active'] ?? false,
+                    'api_key' => $data['api_key'] ?? false,
+                    'web' => $data['web'] ?? false,
+                ]
+            );
+
+        Cache::forget(CacheKeys::passportScopes());
+        return $this->message(__('Role has been added successfully'), 201);
+    }
+
+    /**
+     * Revoke scope 
+     * @param string $service_id
+     * @param string $scope_id
+     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function revokeScope(string $service_id, string $scope_id)
+    {
+        $scope = $this->scopeRepository->searchScopeByService($scope_id, $service_id);
+
+        if (empty($scope)) {
+            throw new ReportError(__("This action is invalid"), 400);
+        }
+
+        try {
+            $scope->delete();
+        } catch (\Throwable $th) {
+            throw new ReportError(__("This resource cannot be deleted because it is being used by another resource."), 400);
+        }
+
+        Cache::forget(CacheKeys::passportScopes());
+
+        return $this->message(__('Role has been revoked successfully'), 200);
+    }
+}

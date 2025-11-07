@@ -24,7 +24,7 @@ namespace App\Repositories;
  */
 
 use Illuminate\Http\Request;
-use App\Models\Subscription\Group;
+use Core\User\Model\Group;
 use Elyerr\ApiResponse\Assets\Asset;
 use App\Repositories\Contracts\Contracts;
 use Elyerr\ApiResponse\Assets\JsonResponser;
@@ -43,7 +43,7 @@ class GroupRepository implements Contracts
 
     /**
      * 
-     * @param \App\Models\Subscription\Group $group
+     * @param \Core\User\Model\Group $group
      */
     public function __construct(Group $group)
     {

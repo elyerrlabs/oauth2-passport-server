@@ -14,7 +14,7 @@ final class DiscoveryController extends \OpenIDConnect\Laravel\DiscoveryControll
         $response = [
             'issuer' => IssuedByGetter::get($currentRequestService, config('openid.issuedBy', 'laravel')),
             'authorization_endpoint' => route('passport.authorizations.authorize'),
-            'token_endpoint' => route('oauth.passport.token'),
+            'token_endpoint' => route('api.oauth.passport.token'),
             'grant_types_supported' => $this->getSupportedGrantTypes(),
             'response_types_supported' => $this->getSupportedResponseTypes(),
             'subject_types_supported' => [

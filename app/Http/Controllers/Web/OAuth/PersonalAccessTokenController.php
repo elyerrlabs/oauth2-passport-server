@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Web\OAuth;
 
 /**
@@ -19,11 +20,11 @@ namespace App\Http\Controllers\Web\OAuth;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Inertia\Inertia; 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Repositories\Traits\Scopes;
@@ -35,7 +36,8 @@ use App\Transformers\OAuth\PersonalTokenTransformer;
 
 class PersonalAccessTokenController extends WebController
 {
-    use Scopes, JsonResponser;
+    use Scopes;
+    use JsonResponser;
 
     /**
      * Token repository name
@@ -65,9 +67,9 @@ class PersonalAccessTokenController extends WebController
             return $this->showAllByBuilder($tokens, PersonalTokenTransformer::class);
         }
 
-        return Inertia::render("OAuth/Personal/Index", [
+        return Inertia::render("OAuth2/Web/Personal/Index", [
             'route' => route('passport.personal.tokens.index')
-        ]);
+        ])->rootView('system');
     }
 
     /**
@@ -94,7 +96,7 @@ class PersonalAccessTokenController extends WebController
     }
 
     /**
-     * Destroy token 
+     * Destroy token
      * @param \Illuminate\Http\Request $request
      * @param string $tokenId
      * @throws \Elyerr\ApiResponse\Exceptions\ReportError
@@ -123,6 +125,6 @@ class PersonalAccessTokenController extends WebController
      */
     public function listScopesForApiToken()
     {
-        return $this->scopes();
+        return $this->scopes(true, false);
     }
 }

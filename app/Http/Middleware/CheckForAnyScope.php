@@ -58,7 +58,7 @@ class CheckForAnyScope extends middleware
                 return $next($request);
             }
 
-            throw new ReportError("You do not have the necessary permissions", 403);
+            throw new ReportError(__("You do not have the necessary permissions"), 403);
         }
 
         // Check the user is admin set top level access

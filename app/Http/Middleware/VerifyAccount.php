@@ -20,7 +20,7 @@ namespace App\Http\Middleware;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -40,9 +40,9 @@ class VerifyAccount
     public function handle(Request $request, Closure $next)
     {
         $except = [
-            'users.verification.email',
-            'users.check.account',
-            'users.verify.account'
+            'user.verification.email',
+            'user.check.account',
+            'user.verify.account'
         ];
 
         if (auth()->check() && !in_array(Route::currentRouteName(), $except) && !auth()->user()->verified_at) {
@@ -51,7 +51,7 @@ class VerifyAccount
                 return response()->json(['message' => __("Your Account is unverified")]);
             }
 
-            return redirect()->route('users.check.account');
+            return redirect()->route('user.check.account');
         }
 
         return $next($request);

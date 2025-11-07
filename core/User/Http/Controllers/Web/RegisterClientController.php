@@ -1,0 +1,169 @@
+<?php
+
+namespace Core\User\Http\Controllers\Web;
+
+/**
+ * Copyright (c) 2025 Elvis Yerel Roman Concha
+ *
+ * This file is part of an open source project licensed under the
+ * "NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+ *
+ * You may use, study, modify, and redistribute this file for personal,
+ * educational, or non-commercial research purposes only.
+ *
+ * Commercial use is strictly prohibited without prior written consent
+ * from the author.
+ *
+ * Combining this software with any project licensed for commercial use
+ * (such as AGPL) is not permitted without explicit authorization.
+ *
+ * This software supports OAuth 2.0 and OpenID Connect.
+ *
+ * Author Contact: yerel9212@yahoo.es
+ *
+ * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+ */
+
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\WebController;
+use Core\User\Repositories\UserRepository;
+use App\Http\Requests\User\RegisterRequest;
+use Core\User\Http\Requests\UserRegisterRequest;
+use App\Notifications\Member\MemberCreatedAccount;
+
+class RegisterClientController extends WebController
+{
+    /**
+     * User repository
+     * @var UserRepository
+     */
+    public $repository;
+
+
+    /**
+     * Construct
+     * @param \Core\User\Repositories\UserRepository $userRepository
+     */
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->repository = $userRepository;
+        $this->middleware('auth')->except('register', 'store', 'verifyAccount');
+    }
+
+    /**
+     * Show view to register users
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function register(Request $request)
+    {
+        // If the request has a redirect_to parameter, store it in the session
+        if (!empty($request->input('redirect_to'))) {
+            session()->put('redirect_to', $request->input('redirect_to'));
+        }
+
+        if (request()->user()) {
+            return redirect('/');
+        }
+        return view('client.register');
+    }
+
+    /**
+     * Register new customers
+     * @param  RegisterRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(UserRegisterRequest $request)
+    {
+        $this->recoveryReferralCode($request);
+        return $this->repository->registerCustomer($request->toArray());
+    }
+
+    /**
+     * Verify user account
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\RedirectResponse
+     */
+    public function verifyAccount(Request $request)
+    {
+        return $this->repository->verifyUserAccount($request->toArray());
+    }
+
+    /**
+     * Show form to verify user email account
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function formVerifyAccount()
+    {
+        if (auth()->user()->verified_at) {
+            return redirectToHome();
+        }
+
+        return view("auth.verify-account");
+    }
+
+    /**
+     * Send verification email to the user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function sendVerificationEmail()
+    {
+        if (!auth()->user()->verified_at) {
+
+            auth()->user()->notify(new MemberCreatedAccount());
+
+            return back()->with("status", "we're sent an a new email to verify your account");
+        }
+
+        return redirectToHome();
+    }
+
+    /**
+     * Redirect to the user after activate your account
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function verifiedAccount()
+    {
+        $redirect_to = session()->get('redirect_to');
+
+        if (!empty($redirect_to)) {
+            session()->forget('redirect_to');
+            return redirect($redirect_to);
+        }
+
+        if (session('token')) {
+            session()->forget('token');
+            return view('auth.verified-account');
+        }
+
+        return redirectToHome();
+    }
+
+    /**
+     * Recovery referral code from the redirect_to session
+     * This method extracts the referral code from the redirect_to URL if it exists.
+     * It checks if the redirect_to session variable is set, parses the URL,
+     * and retrieves the referral_code from the query parameters.
+     * If a referral code is found, it merges it into the request.
+     * @return void
+     */
+    private function recoveryReferralCode(Request $request): void
+    {
+        $redirect_to = session()->get('redirect_to');
+        $referral_code = null;
+
+        if ($redirect_to) {
+            $parsedUrl = parse_url($redirect_to);
+
+            if (isset($parsedUrl['query'])) {
+                parse_str($parsedUrl['query'], $query_params);
+                $referral_code = $query_params['referral_code'] ?? null;
+            }
+
+            if ($referral_code) {
+                $request->merge(['referral_code' => $referral_code]);
+            }
+        }
+    }
+}

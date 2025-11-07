@@ -24,7 +24,7 @@ namespace App\Repositories\OAuth\OpenID;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Models\User\User; 
+use Core\User\Model\User; 
 class IdentityEntity extends \OpenIDConnect\Entities\IdentityEntity
 {
     public function getClaims(array $scopes = []): array

@@ -67,9 +67,14 @@ class MemberCreatedAccount extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject(__('Welcome to Our Platform'))
-            ->greeting(__("Hello " . $notifiable->name . " " . $notifiable->last_name . ","))
-            ->line(__("We’re excited to have you with us! To complete your registration and verify your identity, please follow the instructions provided."))
-            ->line(__("You have a maximum of ") . config('system.verify_account_time', 5) . __(" minutes to verify your account. If the verification is not completed within this time, your information will be permanently deleted, and you’ll need to register again."))
+            ->greeting(__('Hello :name :last_name,', [
+                'name' => $notifiable->name,
+                'last_name' => $notifiable->last_name
+            ]))
+            ->line(__('We’re excited to have you with us! To complete your registration and verify your identity, please follow the instructions provided.'))
+            ->line(__('You have a maximum of :time minutes to verify your account. If the verification is not completed within this time, your information will be permanently deleted, and you’ll need to register again.', [
+                'time' => config('system.verify_account_time', 5)
+            ]))
             ->action(__('Verify Your Account'), url($link))
             ->line(__('Thank you for choosing us. We’re here to support you every step of the way.'));
     }
@@ -115,6 +120,6 @@ class MemberCreatedAccount extends Notification implements ShouldQueue
             );
         });
 
-        return route('users.verify.account') . "?$query";
+        return route('user.verify.account') . "?$query";
     }
 }

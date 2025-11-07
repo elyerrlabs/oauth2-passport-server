@@ -70,8 +70,8 @@ class CodeNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject(__("Two Factor verification"))
             ->line(__("We have received a login application using the 2FA."))
-            ->line(__("Code" . " : " . $this->code))
-            ->line(__("This code has a maximum limit of life, it expires in") . " " . config('system.code_2fa_email_expires', 5) . " " . __("minutes."))
+            ->line(__("Code : :code", ['code' => $this->code]))
+            ->line(__("This code has a maximum limit of life, it expires in :time minutes.", ['time' => config('system.code_2fa_email_expires', 5)]))
             ->line(__("If you were not, omit this message and for security changes your password that has been violated"))
             ->line('Thanks for using our services!');
     }

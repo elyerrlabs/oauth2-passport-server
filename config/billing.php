@@ -37,53 +37,124 @@ return [
     'currency' => [
         'USD' => [
             'code' => 'USD',
-            'name' => 'United States',
+            'name' => 'United States Dollar',
+            'symbol' => '$',
         ],
         'EUR' => [
             'code' => 'EUR',
-            'name' => 'Eurozone',
+            'name' => 'Euro',
+            'symbol' => '€',
+        ],
+        'JPY' => [
+            'code' => 'JPY',
+            'name' => 'Japanese Yen',
+            'symbol' => '¥',
+        ],
+        'GBP' => [
+            'code' => 'GBP',
+            'name' => 'British Pound',
+            'symbol' => '£',
+        ],
+        'AUD' => [
+            'code' => 'AUD',
+            'name' => 'Australian Dollar',
+            'symbol' => 'A$',
+        ],
+        'CAD' => [
+            'code' => 'CAD',
+            'name' => 'Canadian Dollar',
+            'symbol' => 'C$',
+        ],
+        'BRL' => [
+            'code' => 'BRL',
+            'name' => 'Brazilian Real',
+            'symbol' => 'R$',
+        ],
+        'ARS' => [
+            'code' => 'ARS',
+            'name' => 'Argentine Peso',
+            'symbol' => '$',
+        ],
+        'CLP' => [
+            'code' => 'CLP',
+            'name' => 'Chilean Peso',
+            'symbol' => '$',
+        ],
+        'COP' => [
+            'code' => 'COP',
+            'name' => 'Colombian Peso',
+            'symbol' => '$',
+        ],
+        'MXN' => [
+            'code' => 'MXN',
+            'name' => 'Mexican Peso',
+            'symbol' => '$',
+        ],
+        'PEN' => [
+            'code' => 'PEN',
+            'name' => 'Peruvian Sol',
+            'symbol' => 'S/',
+        ],
+        'UYU' => [
+            'code' => 'UYU',
+            'name' => 'Uruguayan Peso',
+            'symbol' => '$U',
         ],
     ],
 
     'period' => [
+        'one_time' => [
+            'interval' => 0,
+            'unit' => null,
+            'id' => 'one_time',
+            'name' => 'One time',
+        ],
         'daily' => [
             'interval' => 1,
             'unit' => 'days',
-            'name' => 'daily',
+            'id' => 'daily',
+            'name' => 'Daily',
         ],
         'weekly' => [
             'interval' => 1,
             'unit' => 'weeks',
-            'name' => 'weekly',
+            'id' => 'weekly',
+            'name' => 'Weekly',
         ],
         'biweekly' => [
             'interval' => 2,
             'unit' => 'weeks',
-            'name' => 'biweekly',
+            'id' => 'biweekly',
+            'name' => 'Biweekly',
         ],
         'monthly' => [
             'interval' => 1,
             'unit' => 'months',
-            'name' => 'monthly',
+            'id' => 'monthly',
+            'name' => 'Monthly',
         ],
         'quarterly' => [
             'interval' => 3,
             'unit' => 'months',
-            'name' => 'quarterly',
+            'id' => 'quarterly',
+            'name' => 'Quarterly',
         ],
         'semiannual' => [
             'interval' => 6,
             'unit' => 'months',
-            'name' => 'semiannual',
+            'id' => 'semiannual',
+            'name' => 'Semiannual',
         ],
         'annual' => [
             'interval' => 1,
             'unit' => 'years',
-            'name' => 'annual',
+            'id' => 'annual',
+            'name' => 'Annual',
         ],
         'biannual' => [
             'interval' => 2,
             'unit' => 'years',
+            'id' => 'biannual',
             'name' => 'Biannual',
         ],
     ],
@@ -130,48 +201,57 @@ return [
 
     'status' => [
         'pending' => [
-            'name' => 'pending',
+            'id' => 'pending',
+            'name' => 'Pending',
             'message' => 'The payment has been initiated but not yet confirmed.',
         ],
         'processing' => [
-            'name' => 'processing',
+            'id' => 'processing',
+            'name' => 'Processing',
             'message' => 'The payment is currently being processed.',
         ],
         'successful' => [
-            'name' => 'successful',
+            'id' => 'successful',
+            'name' => 'Successful',
             'message' => 'The payment was completed successfully.',
         ],
         'failed' => [
-            'name' => 'failed',
+            'id' => 'failed',
+            'name' => 'Failed',
             'message' => 'The payment failed due to an error (insufficient funds, network issue, etc.).',
         ],
         'cancelled' => [
-            'name' => 'cancelled',
+            'id' => 'cancelled',
+            'name' => 'Cancelled',
             'message' => 'The payment was canceled before processing.',
         ],
-        'refunded' => [
-            'name' => 'refunded',
-            'message' => 'The payment was fully refunded to the user.',
-        ],
-        'partially_refunded' => [
-            'name' => 'partially_refunded',
-            'message' => 'Only a portion of the payment was refunded.',
-        ],
-        'disputed' => [
-            'name' => 'disputed',
-            'message' => 'The payment is under dispute (e.g., suspected fraud).',
-        ],
-        'chargeback' => [
-            'name' => 'chargeback',
-            'message' => 'The payment was reversed by the bank or payment processor.',
-        ],
         'expired' => [
-            'name' => 'expired',
+            'id' => 'expired',
+            'name' => 'Expired',
             'message' => 'The payment was not completed before the expiration deadline.',
         ],
-        'on_hold' => [
-            'name' => 'on_hold',
-            'message' => 'The payment is temporarily on hold for manual review or fraud prevention.',
+    ],
+
+    'types' => [
+        'payment' => [
+            'id' => 'payment',
+            'name' => 'Payment',
+            'description' => 'A normal user payment.',
+        ],
+        'refund' => [
+            'id' => 'refund',
+            'name' => 'Refund',
+            'description' => 'A transaction that returns funds to the user.',
+        ],
+        'chargeback' => [
+            'id' => 'chargeback',
+            'name' => 'Chargeback',
+            'description' => 'Funds were reversed by the bank or payment processor.',
+        ],
+        'dispute' => [
+            'id' => 'dispute',
+            'name' => 'Dispute',
+            'description' => 'The transaction is being reviewed due to a claim or suspected issue.',
         ],
     ],
 

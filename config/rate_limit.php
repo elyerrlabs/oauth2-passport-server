@@ -27,24 +27,44 @@ return [
      */
     'general' => [
         'api' => [
-            'limit' => 60,
-            'block_time' => 60
+            'limit' => 300,
+            'block_time' => 120,
+            'name' => 'Rate Limit for API'
         ],
         'gateway' => [
             'limit' => 300,
-            'block_time' => 60
+            'block_time' => 120,
+            'name' => 'Rate Limit for Gateway'
         ],
-        'passport-token' => [
+        'token' => [
+            'limit' => 300,
+            'block_time' => 120,
+            'name' => 'Rate Limit Oauth2 and OpenID Connect'
+        ],
+        'passport' => [
             'limit' => 30,
-            'block_time' => 60
-        ],
-        'default' => [
-            'limit' => 60,
-            'block_time' => 60
+            'block_time' => 60,
+            'name' => 'Rate Limit for passport routes'
         ],
         'broadcast' => [
             'limit' => 300,
-            'block_time' => 60
+            'block_time' => 120,
+            'name' => "Rate Limit for Broadcasting"
         ],
-    ]
+        'settings' => [
+            'limit' => 300,
+            'block_time' => 120,
+            'name' => "Rate Limit for Settings"
+        ],
+        'auth' => [
+            'limit' => 300,
+            'block_time' => 120,
+            'name' => "Rate Limit for Auth routes"
+        ],
+        'public' => [
+            'limit' => 300,
+            'block_time' => 120,
+            'name' => "Rate Limit for Public routes"
+        ],
+    ],
 ];

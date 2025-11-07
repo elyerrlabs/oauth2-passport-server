@@ -63,10 +63,13 @@ class MemberDestroyAccount extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject(__("Deleted account."))
-            ->greeting(__("We're sorry to see you go") . " " . $notifiable->name . " " . $notifiable->last_name)
+            ->greeting(__(
+                "We're sorry to see you go :name  :last_name ",
+                ['name' => $notifiable->name, 'last_name' => $notifiable->last_name]
+            ))
             ->line(__('Your account has been eliminated from our system'))
             ->line(__('All your data will be deleted'))
-            ->action(__('Go to') . " " . config('ap.name'), url(env('FRONTEND_URL')))
+            ->action(__('Go to :app_name', ['app_name' => config('ap.name')]), url(env('FRONTEND_URL')))
             ->line(__('We appreciate your instance and thank you very much for having used our services'));
     }
 

@@ -1,98 +1,229 @@
 @extends('layouts.pages')
 
 @section('title')
-    @include('layouts.parts.title', ['title' => __('Payment successfully')])
-@endsection
-
-@section('header')
-    <nav class="bg-indigo-600 text-white py-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center ">
-            <a href="{{ route('users.dashboard') }}" class="text-lg font-semibold">
-                <i class="mdi mdi-home text-2xl"></i>
-                {{ __('Dashboard') }}
-            </a>
-        </div>
-    </nav>
+    @include('layouts.parts.title', ['title' => __('Payment Successful')])
 @endsection
 
 @section('content')
-    <div class="container mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-lg p-8">
-            <div class="text-center mb-8">
-                <div class="text-green-500 text-6xl mb-4">
-                    <span class="mdi mdi-check-circle-outline"></span>
+    <div class="container mx-auto px-4 py-8 max-w-3xl">
+        <!-- Success Confetti Animation -->
+        <div class="confetti-container"></div>
+
+        <div class="  rounded-xl shadow-xl overflow-hidden border border-gray-200">
+            <!-- Success Header -->
+            <div class="bg-gradient-to-r from-green-600 to-emerald-700   py-10 px-6 text-center">
+                <div class="flex justify-center mb-5">
+                    <div class="  p-4 rounded-full shadow-lg animate-pulse">
+                        <i class="mdi mdi-check-circle-outline text-6xl text-white"></i>
+                    </div>
                 </div>
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ __('Payment Successful!') }}</h1>
-                <p class="text-gray-600">
-                    {{ __('Thank you for your purchase. Your transaction has been completed successfully.') }}</p>
+                <h1 class="text-4xl font-bold text-white mb-3">{{ __('Payment Successful!') }}</h1>
+                <p class="text-green-100 text-xl font-medium max-w-2xl mx-auto">
+                    {{ __('Thank you for your purchase. Your transaction has been completed successfully.') }}
+                </p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
-                <!-- User Info -->
-                <div>
-                    <h2 class="text-lg font-semibold mb-2 border-b pb-1">👤 User Info</h2>
-                    <p><span class="font-medium">Name:</span> {{ $transaction['package']['user']['name'] }}
-                        {{ $transaction['package']['user']['last_name'] }}</p>
-                    <p><span class="font-medium">Email:</span> {{ $transaction['package']['user']['email'] }}</p>
-                    <p><span class="font-medium">Verified At:</span> {{ $transaction['package']['user']['verified_at'] }}
-                    </p>
+            <!-- Transaction Info -->
+            <div class="p-8 bg-gray-50">
+                <h2 class="text-2xl font-bold text-gray-900 mb-7 pb-3 border-b border-gray-300 flex items-center">
+                    <i class="mdi mdi-receipt text-indigo-600 mr-3 text-2xl"></i>
+                    {{ __('Transaction Details') }}
+                </h2>
+
+                <div class="space-y-5   p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-semibold text-gray-800 text-lg flex items-center">
+                            <i class="mdi mdi-barcode mr-2 text-indigo-500"></i>
+                            {{ __('Transaction Code') }}
+                        </span>
+                        <span class="font-mono text-indigo-700 font-bold text-lg">{{ $transaction->code }}</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-semibold text-gray-800 text-lg flex items-center">
+                            <i class="mdi mdi-status-up mr-2 text-indigo-500"></i>
+                            {{ __('Status') }}
+                        </span>
+                        <span class="px-4 py-2 bg-green-100 text-green-800 font-semibold rounded-full capitalize text-md">
+                            {{ $transaction->status }}
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-semibold text-gray-800 text-lg flex items-center">
+                            <i class="mdi mdi-currency-sign mr-2 text-indigo-500"></i>
+                            {{ __('Currency') }}
+                        </span>
+                        <span class="font-medium text-gray-900 text-lg">{{ strtoupper($transaction->currency) }}</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-semibold text-gray-800 text-lg flex items-center">
+                            <i class="mdi mdi-credit-card mr-2 text-indigo-500"></i>
+                            {{ __('Payment Method') }}
+                        </span>
+                        <span class="font-medium text-gray-900 text-lg">{{ ucfirst($transaction->payment_method) }}</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-semibold text-gray-800 text-lg flex items-center">
+                            <i class="mdi mdi-calendar-clock mr-2 text-indigo-500"></i>
+                            {{ __('Billing Period') }}
+                        </span>
+                        <span
+                            class="font-medium text-gray-900 text-lg">{{ billing_get_period($transaction->billing_period)['name'] }}</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-semibold text-gray-800 text-lg flex items-center">
+                            <i class="mdi mdi-autorenew mr-2 text-indigo-500"></i>
+                            {{ __('Auto Renewal') }}
+                        </span>
+                        <span
+                            class="font-medium text-gray-900 text-lg">{{ $transaction->renew ? __('Yes') : __('No') }}</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-semibold text-gray-800 text-lg flex items-center">
+                            <i class="mdi mdi-clock-outline mr-2 text-indigo-500"></i>
+                            {{ __('Date & Time') }}
+                        </span>
+                        <span class="js-local-datetime" data-datetime="{{ $transaction->created_at->toIso8601String() }}">
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3">
+                        <span class="font-semibold text-gray-800 text-lg flex items-center">
+                            <i class="mdi mdi-cash mr-2 text-indigo-500"></i>
+                            {{ __('Total Amount') }}
+                        </span>
+                        <span class="text-3xl font-bold text-indigo-700">
+                            {{ number_format($transaction->total / 100, 2) }} {{ strtoupper($transaction->currency) }}
+                        </span>
+                    </div>
                 </div>
 
-                <!-- Transaction Info -->
-                <div>
-                    <h2 class="text-lg font-semibold mb-2 border-b pb-1">💳 Transaction Info</h2>
-                    <p><span class="font-medium">Code:</span> {{ $transaction['code'] }}</p>
-                    <p><span class="font-medium">Status:</span>
-                        <span class="text-green-600 font-semibold capitalize">{{ $transaction['status'] }}</span>
-                    </p>
-                    <p><span class="font-medium">Currency:</span> {{ $transaction['currency'] }}</p>
-                    <p><span class="font-medium">Total:</span> ${{ number_format($transaction['total'] / 100, 2) }}</p>
-                    <p><span class="font-medium">Recipient:</span> {{ $transaction['recipient'] ?? 'N/A' }}</p>
-                    <p><span class="font-medium">Billing Period:</span> {{ ucfirst($transaction['billing_period']) }}</p>
-                    <p><span class="font-medium">Payment Method:</span> {{ ucfirst($transaction['payment_method']) }}</p>
-                    <p><span class="font-medium">Created At:</span>
-                        {{ \Carbon\Carbon::parse($transaction['created_at'])->toDayDateTimeString() }}</p>
-                    @if (!empty($transaction['payment_url']))
-                        <div
-                            class="bg-blue-50 border border-blue-300 text-blue-800 p-4 rounded-md mb-6 flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <span class="mdi mdi-receipt text-3xl"></span>
+                <!-- Receipt -->
+                @if ($transaction->payment_url)
+                    <div class="mt-8 p-4 bg-blue-50 border border-blue-300 rounded-xl p-7 shadow-sm">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <i class="mdi mdi-receipt text-blue-600 text-5xl mr-5"></i>
                                 <div>
-                                    <p class="font-semibold text-base">Payment Receipt Available</p>
-                                    <p class="text-sm text-blue-600">You can view and download your receipt for this
-                                        transaction.</p>
+                                    <p class="font-bold text-blue-900 text-xl">{{ __('Payment Receipt Available') }}</p>
+                                    <p class="text-blue-700 font-medium">
+                                        {{ __('You can view and download your receipt.') }}</p>
                                 </div>
                             </div>
-                            <a href="{{ $transaction['payment_url'] }}" target="_blank"
-                                class="inline-flex items-center bg-blue-600 text-white text-sm px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                                <span class="mdi mdi-open-in-new mr-2"></span> View Receipt
+                            <a href="{{ $transaction->payment_url }}" target="_blank"
+                                class="inline-flex items-center bg-blue-700 hover:bg-blue-800 text-white  font-semibold px-6 py-3 rounded-lg transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                <i class="mdi mdi-open-in-new mr-2 text-lg"></i>
+                                {{ __('View Receipt') }}
                             </a>
                         </div>
-                    @endif
-                </div>
-
-                <!-- Package Info -->
-                <div class="md:col-span-2">
-                    <h2 class="text-lg font-semibold mb-2 border-b pb-1">📦 Package Info</h2>
-                    <p><span class="font-medium">Name:</span> {{ $transaction['package']['meta']['name'] }}</p>
-                    <p><span class="font-medium">Description:</span> {!! $transaction['package']['meta']['description'] !!}</p>
-                    <p><span class="font-medium">Start At:</span>
-                        {{ \Carbon\Carbon::parse($transaction['package']['start_at'])->toDayDateTimeString() }}</p>
-                    <p><span class="font-medium">End At:</span>
-                        {{ \Carbon\Carbon::parse($transaction['package']['end_at'])->toDayDateTimeString() }}</p>
-                    <p><span class="font-medium">Recurring:</span>
-                        {{ $transaction['package']['is_recurring'] ? 'Yes' : 'No' }}</p>
-                    <p><span class="font-medium">Price:</span>
-                        ${{ $transaction['package']['meta']['price']['amount_format'] }}</p>
-                </div>
+                    </div>
+                @endif
             </div>
 
-            <div class="text-center mt-8">
-                <a href="{{ route('users.dashboard') }}"
-                    class="inline-block bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
-                    <span class="mdi mdi-view-dashboard-outline mr-1"></span> {{ __('Go to Dashboard') }}
+            <!-- Action Buttons -->
+            <div class="px-8 py-8 flex flex-col sm:flex-row gap-5 justify-center border-t border-gray-300">
+                <a href="{{ route('user.dashboard') }}"
+                    class="inline-flex items-center justify-center text-white bg-indigo-700 hover:bg-indigo-800   font-semibold px-8 py-4 rounded-lg transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <i class="mdi mdi-home-outline mr-3 text-xl"></i>
+                    {{ __('Back to Dashboard') }}
                 </a>
+
             </div>
         </div>
+
+
     </div>
 @endsection
+
+@push('css')
+    <style nonce="{{ $nonce }}">
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            opacity: 0;
+            animation: confetti-fall 5s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                opacity: 1;
+                transform: translateY(-100px) rotate(0deg);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        /* Improved readability */
+        body {
+            color: #1f2937;
+            /* gray-800 */
+            /* gray-50 */
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        a:focus,
+        button:focus {
+            outline: 2px solid #4f46e5;
+            /* indigo-600 */
+            outline-offset: 2px;
+        }
+    </style>
+@endpush
+
+@push('js')
+    <script nonce="{{ $nonce }}">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create confetti animation
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9c74f', '#ffafcc', '#83e377'];
+            const container = document.querySelector('.confetti-container');
+
+            for (let i = 0; i < 80; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.width = Math.random() * 12 + 8 + 'px';
+                confetti.style.height = Math.random() * 12 + 8 + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                container.appendChild(confetti);
+            }
+
+            document.querySelectorAll(".js-local-datetime").forEach(el => {
+                const iso = el.dataset.datetime;
+                const date = new Date(iso);
+                const lang = navigator.language || 'en-US';
+
+                el.textContent = date.toLocaleString(lang, {
+                    weekday: "short",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                });
+            });
+        });
+    </script>
+@endpush

@@ -20,12 +20,13 @@ namespace App\Http\Controllers\Web\OAuth;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebController;
 use App\Http\Requests\Client\StoreRequest;
 use App\Http\Requests\Client\UpdateRequest;
@@ -61,9 +62,9 @@ class ClientController extends WebController
             return $this->repository->findClientsForUser($request);
         }
 
-        return Inertia::render("OAuth/Clients/Index", [
-            'route' => route('passport.clients.index')
-        ]);
+        return Inertia::render("OAuth2/Web/Clients/Index", [
+            'route' => Route::has('passport.clients.index') ? route('passport.clients.index') : ''
+        ])->rootView('system');
     }
 
     /**

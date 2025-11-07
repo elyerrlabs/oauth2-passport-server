@@ -25,6 +25,7 @@ namespace App\Http\Middleware;
  */
 
 use Closure;
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Http\Request;
 use App\Repositories\Traits\Scopes;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,11 +50,18 @@ class UserCanAny
         }
 
         $userScopes = $this->scopes(false)->pluck('id') ?? [];
+        
+        // Clean spaces
+        $scopes = array_map('trim', $scopes);
 
         if (count($userScopes) && array_intersect($userScopes->toArray(), $scopes)) {
             return $next($request);
         }
 
-        return redirect()->route('users.dashboard');
+        if ($request->wantsJson()) {
+            throw new ReportError(__("You do not have the necessary permissions"), 403);
+        }
+
+        return redirect()->route('user.dashboard')->with('error', __("You don’t have permission to perform this action"));
     }
 }

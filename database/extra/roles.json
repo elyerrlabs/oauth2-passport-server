@@ -8,6 +8,10 @@
         "description": "View and access the details of the resource."
     },
     {
+        "name": "read",
+        "description": "Read and access the details of the resource."
+    },
+    {
         "name": "create",
         "description": "Create new instances of the resource."
     },

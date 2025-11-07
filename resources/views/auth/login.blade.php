@@ -4,70 +4,314 @@
     @include('layouts.parts.title', ['title' => __('Login')])
 @endsection
 
+@push('css')
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .card-shadow {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+
+        .floating-label {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .floating-input {
+            border: 0;
+            border-bottom: 2px solid #cbd5e1;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .floating-input:focus {
+            border-bottom: 2px solid #4f46e5;
+        }
+
+        .floating-label label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            color: #64748b;
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .floating-input:focus~label,
+        .floating-input:not(:placeholder-shown)~label {
+            top: -20px;
+            left: 0;
+            font-size: 12px;
+            color: #4f46e5;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+@endpush
+
 @section('content')
+    <div class="gradient-bg min-h-screen flex items-center justify-center p-4">
 
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
-        <div class="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">
-                    {{ config('app.name', 'Oauth2 Server') }}
-                </h1>
-                <p class="text-sm text-gray-500 mt-2">Welcome back! Please sign in to your account.</p>
-            </div>
-
-            <form action="{{ route('login') }}" method="POST" class="space-y-6">
-                @csrf
-                <!-- Email -->
-                <div>
-                    <input type="email" name="email" placeholder="{{ __('Email') }}"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                    @if ($errors->has('email'))
-                        @foreach ($errors->get('email') as $item)
-                            <span class="text-red-500 text-xs mt-1 block">{{ $item }}</span>
-                        @endforeach
-                    @endif
+        <div class="w-full max-w-4xl bg-white rounded-2xl overflow-hidden card-shadow flex flex-col md:flex-row">
+            <!-- Panel de Login -->
+            <div class="w-full md:w-1/2 p-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800">
+                        <i class="mdi mdi-lock text-indigo-600 mr-2"></i>
+                        {{ __(config('app.name', 'Oauth2 Server')) }}
+                    </h1>
+                    <p class="text-sm text-gray-500 mt-2">{{ __('Sign in to your account') }}</p>
                 </div>
 
-                <!-- Password -->
-                <div>
-                    <input type="password" name="password" placeholder="{{ __('Password') }}"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                    @if ($errors->has('password'))
-                        @foreach ($errors->get('password') as $item)
-                            <span class="text-red-500 text-xs mt-1 block">{{ $item }}</span>
-                        @endforeach
-                    @endif
+                {{-- Demo Mode Card --}}
+                @if (config('system.demo.enabled'))
+                    <div class="mb-6 p-4 rounded-xl bg-yellow-50 border border-yellow-300 shadow-sm text-sm text-yellow-800">
+                        <div class="flex items-center mb-2">
+                            <i class="mdi mdi-monitor-eye text-yellow-600 text-xl mr-2"></i>
+                            <span class="font-semibold">{{ __('Demo Mode Active') }}</span>
+                        </div>
+                        <p class="mb-1">{{ __('You can log in using the demo credentials:') }}</p>
+                        <div class="bg-white border border-yellow-200 rounded-lg p-3 text-gray-700 text-xs space-y-2">
+                            <div class="flex items-center justify-between">
+                                <p>
+                                    <strong>{{ __('Email') }}:</strong>
+                                    <span id="demo-email">{{ config('system.demo.email') }}</span>
+                                </p>
+                                <button type="button" id="copy-email"
+                                    class="ml-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center">
+                                    <i class="mdi mdi-content-copy mr-1"></i>{{ __('Copy') }}
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p>
+                                    <strong>{{ __('Password') }}:</strong>
+                                    <span id="demo-password">{{ config('system.demo.password') }}</span>
+                                </p>
+                                <button type="button" id="copy-password"
+                                    class="ml-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center">
+                                    <i class="mdi mdi-content-copy mr-1"></i>{{ __('Copy') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
-                    <div class="text-right mt-2">
-                        <a href="{{ route('forgot-password') }}" class="text-sm text-blue-500 hover:underline">
-                            {{ __('Forgot your password?') }}
-                        </a>
+                @if (config('system.demo.domain.enabled', false))
+                    <div class="mb-6 p-3 text-center border border-yellow-300 rounded-xl">
+                        <div
+                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl pb-3  bg-yellow-50/60 text-yellow-800/90 shadow-sm backdrop-blur-sm">
+                            <i class="mdi mdi-eye-outline text-yellow-600 text-lg"></i>
+                            <span class="text-sm font-medium text-gray-800">
+                                {{ __('Demo environment active for preview purposes') }}
+                            </span>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-500 p-4">
+                            <a href="{{ config('system.demo.domain.url') }}" target="_blank"
+                                class="hover:text-yellow-700 hover:bg-blue-700 cursor-pointer font-medium transition rounded-2xl bg-blue-600 text-white p-3">
+                                {{ config('system.demo.domain.url') }}
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
+                <form action="{{ route('login') }}" method="POST" class="space-y-6">
+                    <div class="floating-label">
+                        <input type="email" id="email" name="email"
+                            class="floating-input w-full px-4 py-3 rounded-lg bg-gray-50" placeholder=" " required>
+                        <label for="email">{{ __('Email') }}</label>
+                        @if ($errors->has('email'))
+                            @foreach ($errors->get('email') as $item)
+                                <span class="text-red-500 text-xs mt-1 block">{{ $item }}</span>
+                            @endforeach
+                        @endif
+                    </div>
+
+                    <div class="floating-label relative">
+                        <input type="password" id="password" name="password"
+                            class="floating-input w-full px-4 py-3 rounded-lg bg-gray-50" placeholder=" " required>
+                        <label for="password">{{ __('Password') }}</label>
+                        <span class="toggle-password" id="toggle-password">
+                            <i class="mdi mdi-eye"></i>
+                        </span>
+                        @if ($errors->has('password'))
+                            @foreach ($errors->get('password') as $item)
+                                <span class="text-red-500 text-xs mt-1 block">{{ $item }}</span>
+                            @endforeach
+                        @endif
+                    </div>
+
+                    <div class="flex flex-col items-start justify-between">
+                        <x-captcha />
+                        <div class="flex items-end">
+                            <a href="{{ route('forgot-password') }}" class="text-sm text-indigo-600 hover:underline">
+                                {{ __('Forgot your password') }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg transition duration-200 font-semibold shadow-sm flex items-center justify-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        {{ __('Sign In') }}
+                    </button>
+
+                    @if (Route::has('register'))
+                        <div class="text-center text-sm text-gray-600">
+                            {{ __("Don't have an account?") }}
+                            <a href="{{ route('register') }}" class="text-indigo-600 hover:underline">
+                                {{ __('Sign up') }}
+                            </a>
+                        </div>
+                    @endif
+                </form>
+            </div>
+
+            <div class="info-card w-full md:w-1/2 text-white p-8 flex flex-col justify-center">
+                <h2 class="text-2xl font-bold mb-6">{{ __('Authorization Server') }}</h2>
+
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="feature-icon mr-4">
+                            <i class="mdi mdi-shield"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">{{ __('Secure Authentication') }}</h3>
+                            <p class="text-sm mt-1 text-indigo-100">
+                                {{ __('Protect your applications with our advanced authentication system.') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="feature-icon mr-4">
+                            <i class="mdi mdi-connection"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">{{ __('Universal Connectivity') }}</h3>
+                            <p class="text-sm mt-1 text-indigo-100">
+                                {{ __('Supports secure connectivity with any external application.') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="feature-icon mr-4">
+                            <i class="mdi mdi-code-braces"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">{{ __('OpenID Connect & OAuth2') }}</h3>
+                            <p class="text-sm mt-1 text-indigo-100">
+                                {{ __('Implement the most widely used authorization protocols in the industry.') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="feature-icon mr-4">
+                            <i class="mdi mdi-server"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">{{ __('Service-based Control') }}</h3>
+                            <p class="text-sm mt-1 text-indigo-100">
+                                {{ __('Advanced service-driven system for maximum scalability.') }}
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <x-captcha />
+                @if (Route::has('welcome'))
+                    <div class="mt-8 pt-6 border-t border-indigo-400">
+                        <p class="text-sm text-indigo-100">
+                        <div class="text-center">
+                            <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
+                                {{ config('app.org_name') }}
+                            </a>
+                        </div>
 
-                <!-- Submit -->
-                <div>
-                    <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl transition duration-200 font-semibold shadow-sm">
-                        {{ __('Sign in') }}
-                    </button>
-                </div>
-
-                <!-- Register link -->
-                @if (config('routes.guest.register', true))
-                    <p class="text-center text-sm text-gray-600">
-                        {{ __("Don't have an account?") }}
-                        <a href="{{ route('register') }}" class="text-blue-600 hover:underline">
-                            {{ __('Sign up.') }}
-                        </a>
-                    </p>
+                        {{-- 
+                        {{ __('Need help?') }} <a href="#"
+                        class="font-semibold hover:underline">{{ __('Contact our team') }}</a>
+                        --}}
+                        </p>
+                    </div>
                 @endif
-            </form>
+            </div>
         </div>
     </div>
-
 @endsection
+
+@push('js')
+    <script nonce="{{ $nonce }}">
+        document.addEventListener("DOMContentLoaded", (event) => {
+
+            const demoPassword = document.getElementById("copy-password");
+            const demoEmail = document.getElementById("copy-email");
+            const showPassword = document.getElementById('toggle-password')
+
+            showPassword.addEventListener("click", function() {
+
+                const passwordInput = document.getElementById('password');
+                const eyeIcon = document.querySelector('.toggle-password i');
+
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeIcon.classList.remove('mdi-eye');
+                    eyeIcon.classList.add('mdi-eye-off');
+                } else {
+                    passwordInput.type = 'password';
+                    eyeIcon.classList.remove('mdi-eye-off');
+                    eyeIcon.classList.add('mdi-eye');
+                }
+            })
+
+
+            demoPassword.addEventListener("click", function() {
+                const password = document.getElementById('demo-password').innerText
+                navigator.clipboard.writeText(password).then((res) => {
+                    $notify.success("{{ __('Demo password copied') }}");
+                }).catch(e => {
+                    console.log(e);
+
+                })
+            });
+
+            demoEmail.addEventListener("click", function() {
+                const email = document.getElementById('demo-email').innerText
+                navigator.clipboard.writeText(email).then((res) => {
+                    $notify.success("{{ __('Demo email copied') }}");
+                }).catch(e => {
+                    console.log(e);
+
+                })
+            });
+        });
+    </script>
+@endpush

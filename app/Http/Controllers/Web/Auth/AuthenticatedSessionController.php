@@ -24,6 +24,7 @@ namespace App\Http\Controllers\Web\Auth;
  */
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\WebController;
 use App\Http\Requests\Auth\LoginRequest;
@@ -114,7 +115,7 @@ class AuthenticatedSessionController extends WebController
     {
 
         if (!$request->isMethod('get') && !$request->isMethod('post')) {
-            throw new ReportError("Method not allowed", 405);
+            throw new ReportError(__("Method not allowed"), 405);
         }
 
         // Save the last connected
@@ -134,6 +135,6 @@ class AuthenticatedSessionController extends WebController
             return redirect($request->post_logout_redirect_uri);
         }
 
-        return redirect()->route('login');
+        return Route::has('welcome') ? redirect()->route('welcome') : redirect()->route('login');
     }
 }

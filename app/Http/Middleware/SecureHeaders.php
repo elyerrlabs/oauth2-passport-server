@@ -20,7 +20,7 @@ namespace App\Http\Middleware;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -41,7 +41,7 @@ class SecureHeaders
 
         view()->share('nonce', $nonce);
         $response = $next($request);
-        
+
         if (config('system.csp_enabled', true)) {
 
             $response->headers->set("Referrer-Policy", "no-referrer");
@@ -60,7 +60,7 @@ class SecureHeaders
     }
 
     /**
-     * Setting default content security policies 
+     * Setting default content security policies
      * @return string
      */
     public function ContentSecurityPolicy($nonce)

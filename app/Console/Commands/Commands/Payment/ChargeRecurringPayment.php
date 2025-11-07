@@ -24,10 +24,9 @@ namespace App\Console\Commands\Commands\Payment;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use App\Models\Subscription\Package;
-use App\Services\Payment\PaymentManager;
+use Illuminate\Console\Command; 
+use Illuminate\Support\Facades\Log; 
+use Core\Transaction\Jobs\DispatchRecurringPaymentJob;
 
 class ChargeRecurringPayment extends Command
 {
@@ -51,33 +50,8 @@ class ChargeRecurringPayment extends Command
     public function handle()
     {
         if (config('billing.renew.enable')) {
-
             Log::info('Starting process for recurring payment execution.');
-
-            Package::with([
-                'user',
-                'transactions',
-                'lastTransaction'
-            ])->where('is_recurring', true)
-                ->whereHas('lastTransaction', function ($query) {
-                    $query->whereNotNull('payment_method_id')
-                        ->where('payment_method', '!=', config('billing.methods.offline.key'))
-                        ->where('status', config('billing.status.successful.name')); //Last successful transaction
-                })
-                ->whereBetween('end_at', [now(), now()->addHours(intval(config('billing.renew.hours_before', 10)))])
-                ->chunk(500, function ($packages) {
-                    foreach ($packages as $package) {
-                        $data = $package->meta();
-
-                        $paymentManager = new PaymentManager();
-
-                        $paymentManager->chargeRecurringPayment(
-                            $data['transaction']['payment_method'],
-                            $data
-                        );
-                    }
-                });
-
+            DispatchRecurringPaymentJob::dispatch();
             Log::info('Ending process for recurring payment execution.');
         }
     }

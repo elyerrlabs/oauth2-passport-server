@@ -16,67 +16,52 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
+import "../css/app.css";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { setupI18n, __ } from "./config/locale.js";
+import "./config/notify.js";
+import "./config/editor.js";
 
-import { customComponents } from "./app/config/customComponents.js";
-//import { $echo } from "./app/config/echo.js";
-import { $server } from "./app/config/axios.js";
-import { layouts } from "./app/config/layouts.js";
+//import { $echo } from "./config/echo.js";
+import { $server } from "./config/axios.js";
 
-//Quasar
-import { Quasar, Ripple, ClosePopup, Notify, Dialog, Loading } from "quasar";
-import "quasar/dist/quasar.css";
-import "@quasar/extras/material-icons/material-icons.css";
-import { QComponents } from "./app/config/quasar.js";
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+
+//icons https://pictogrammers.com/library/mdi/
+import "@mdi/font/css/materialdesignicons.css";
 
 //Vue date picker
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
-//icons https://pictogrammers.com/library/mdi/
-import "@mdi/font/css/materialdesignicons.css";
+setupI18n();
+window.__ = __;
+window.$notify = $notify;
+window.$server = $server;
 
 createInertiaApp({
-    resolve: (name) => {
-        const pages = require.context("./app/pages", true, /\.vue$/);
-        return pages(`./${name}.vue`).default;
-    },
-    setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) });
+  resolve: (name) =>
+    resolvePageComponent(
+      `./pages/${name}.vue`,
+      import.meta.glob("./pages/**/*.vue")
+    ),
+  setup({ el, App, props, plugin }) {
+    const app = createApp({ render: () => h(App, props) });
 
-        customComponents.forEach((index) => {
-            app.component(index[0], index[1]);
-        });
+    // app.config.globalProperties.$echo = $echo;
+    app.config.globalProperties.$server = $server;
+    app.config.globalProperties.__ = __;
 
-        layouts.forEach((index) => {
-            app.component(index[0], index[1]);
-        });
-
-        app.use(Quasar, {
-            plugins: {
-                Notify,
-                Dialog,
-                Loading,
-            },
-            directives: {
-                Ripple,
-                ClosePopup,
-            },
-        });
-
-        QComponents.forEach((item) => {
-            app.component(item.name, item);
-        });
-
-       // app.config.globalProperties.$echo = $echo; 
-        app.config.globalProperties.$server = $server;
-
-        app.component("VueDatePicker", VueDatePicker);
-        app.use(plugin);
-        app.mount(el);
-    },
+    app.component("VueDatePicker", VueDatePicker);
+    app.use(plugin);
+    app.use(VueSweetalert2);
+    //  app.use(i18n);
+    app.mount(el);
+  },
 });

@@ -30,8 +30,8 @@ use DateTime;
 use DateInterval;
 use LogicException;
 use App\Support\CacheKeys;
-use App\Models\User\UserScope;
-use App\Models\Subscription\Group;
+use Core\User\Model\Group;
+use Core\User\Model\UserScope;
 use Laravel\Passport\HasApiTokens;
 use App\Repositories\Traits\Scopes;
 use Elyerr\ApiResponse\Assets\Asset;
@@ -39,6 +39,7 @@ use App\Repositories\Traits\Standard;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\Auth\ResetPassword;
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -138,6 +139,35 @@ class Auth extends Authenticatable
         return false;
     }
 
+
+    /**
+     * Summary of canAny
+     * @param array $scopes
+     * @return bool
+     */
+    public function hasAccess(array $scopes)
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+
+        if (auth()->user()->isAdmin()) {
+            return true;
+        }
+
+        $userScopes = $this->scopes(false)->pluck('id') ?? [];
+
+        // Clean spaces
+        $scopes = array_map('trim', $scopes);
+
+        if (count($userScopes) && array_intersect($userScopes->toArray(), $scopes)) {
+            return true;
+        }
+
+        return false;
+    }
+
+
     /**
      * Relationship with scopes
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -193,9 +223,12 @@ class Auth extends Authenticatable
             return true;
         }
 
-        $groups = $this->listUserGroups();
+        $groups = $this->scopes()
+            ->pluck('id')
+            ->map(fn($item) => implode(':', array_slice(explode(':', $item), 0, 2)))
+            ->toArray();
 
-        return count($groups) ? $groups->pluck('slug')->contains($group) : false;
+        return in_array($group, $groups, true);
     }
 
 

@@ -1,0 +1,946 @@
+<!--
+Copyright (c) 2025 Elvis Yerel Roman Concha
+
+This file is part of an open source project licensed under the
+"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+
+You may use, study, modify, and redistribute this file for personal,
+educational, or non-commercial research purposes only.
+
+Commercial use is strictly prohibited without prior written consent
+from the author.
+
+Combining this software with any project licensed for commercial use
+(such as AGPL) is not permitted without explicit authorization.
+
+This software supports OAuth 2.0 and OpenID Connect.
+
+Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+-->
+<template>
+    <v-admin-layout>
+        <div
+            class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 py-6 px-4 sm:px-6 lg:px-8"
+        >
+            <div class="max-w-7xl mx-auto">
+                <!-- Header Section -->
+                <div
+                    class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-8"
+                >
+                    <div
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-8"
+                    >
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+                        >
+                            <div
+                                class="flex items-center space-x-4 mb-4 sm:mb-0"
+                            >
+                                <div
+                                    class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm"
+                                >
+                                    <i
+                                        class="fas fa-shopping-bag text-white text-2xl"
+                                    ></i>
+                                </div>
+                                <div>
+                                    <h1
+                                        class="text-2xl md:text-3xl font-bold text-white"
+                                    >
+                                        {{
+                                            __("Orders Successfully Processed")
+                                        }}
+                                    </h1>
+                                    <p class="text-blue-100 mt-1">
+                                        {{
+                                            __(
+                                                "Manage and track all your customer orders"
+                                            )
+                                        }}
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                v-if="orders.length > 0"
+                                @click="getCheckouts"
+                                :disabled="loading"
+                                class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 backdrop-blur-sm border border-white/30"
+                            >
+                                <i
+                                    class="fas fa-sync-alt"
+                                    :class="{ 'animate-spin': loading }"
+                                ></i>
+                                <span class="font-medium">{{
+                                    __("Refresh")
+                                }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div
+                    v-if="orders.length === 0 && !loading"
+                    class="bg-white rounded-2xl shadow-lg border border-gray-200 p-12 text-center"
+                >
+                    <div class="max-w-md mx-auto">
+                        <div
+                            class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6"
+                        >
+                            <i class="fas fa-inbox text-gray-400 text-4xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">
+                            {{ __("No Orders Yet") }}
+                        </h3>
+                        <p class="text-gray-600 mb-6">
+                            {{
+                                __(
+                                    "Your orders will appear here once customers start purchasing your products"
+                                )
+                            }}
+                        </p>
+                        <a
+                            href="#"
+                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                        >
+                            <i class="fas fa-store mr-2"></i>
+                            {{ __("View Products") }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Orders Content -->
+                <div v-else-if="orders.length > 0">
+                    <!-- Stats Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                        >
+                            <div class="flex items-center">
+                                <div
+                                    class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4"
+                                >
+                                    <i
+                                        class="fas fa-shopping-bag text-blue-600 text-lg"
+                                    ></i>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-sm font-medium text-gray-600"
+                                    >
+                                        {{ __("Total Orders") }}
+                                    </p>
+                                    <p class="text-2xl font-bold text-gray-900">
+                                        {{ orders.length }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                        >
+                            <div class="flex items-center">
+                                <div
+                                    class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4"
+                                >
+                                    <i
+                                        class="fas fa-check-circle text-green-600 text-lg"
+                                    ></i>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-sm font-medium text-gray-600"
+                                    >
+                                        {{ __("Completed") }}
+                                    </p>
+                                    <p class="text-2xl font-bold text-gray-900">
+                                        {{ completedOrdersCount }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                        >
+                            <div class="flex items-center">
+                                <div
+                                    class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4"
+                                >
+                                    <i
+                                        class="fas fa-clock text-yellow-600 text-lg"
+                                    ></i>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-sm font-medium text-gray-600"
+                                    >
+                                        {{ __("Pending") }}
+                                    </p>
+                                    <p class="text-2xl font-bold text-gray-900">
+                                        {{ pendingOrdersCount }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                        >
+                            <div class="flex items-center">
+                                <div
+                                    class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4"
+                                >
+                                    <i
+                                        class="fas fa-times-circle text-red-600 text-lg"
+                                    ></i>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-sm font-medium text-gray-600"
+                                    >
+                                        {{ __("Failed") }}
+                                    </p>
+                                    <p class="text-2xl font-bold text-gray-900">
+                                        {{ failedOrdersCount }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex items-center justify-end mb-5 p-4 space-x-2 bg-white rounded-xl px-3 py-2 border border-gray-300 shadow-sm"
+                    >
+                        <i class="fas fa-list-ol text-gray-400"></i>
+                        <select
+                            v-model="search.per_page"
+                            @change="getCheckouts"
+                            class="border-0 focus:ring-0 text-gray-700 font-medium bg-transparent"
+                        >
+                            <option value="5">5 {{ __("per page") }}</option>
+                            <option value="10">10 {{ __("per page") }}</option>
+                            <option value="15">15 {{ __("per page") }}</option>
+                            <option value="25">25 {{ __("per page") }}</option>
+                            <option value="50">50 {{ __("per page") }}</option>
+                            <option value="100">
+                                100 {{ __("per page") }}
+                            </option>
+                        </select>
+                    </div>
+                    <!-- Orders List -->
+                    <div class="space-y-4">
+                        <div
+                            v-for="order in orders"
+                            :key="order.id"
+                            class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl"
+                        >
+                            <!-- Order Header -->
+                            <div
+                                class="p-6 cursor-pointer border-b border-gray-100"
+                                @click="toggleOrder(order.id)"
+                            >
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <div
+                                            class="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center"
+                                        >
+                                            <span
+                                                class="text-blue-600 font-bold text-lg"
+                                                >{{
+                                                    orderNumberIcon(order.code)
+                                                }}</span
+                                            >
+                                        </div>
+                                        <div>
+                                            <h3
+                                                class="font-semibold text-gray-900"
+                                            >
+                                                {{ __("Order") }} #{{
+                                                    order.code
+                                                }}
+                                            </h3>
+                                            <p
+                                                class="text-sm text-gray-600 flex items-center mt-1"
+                                            >
+                                                <i
+                                                    class="fas fa-calendar-alt mr-2 text-blue-500"
+                                                ></i>
+                                                {{ order.created_at }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center space-x-4">
+                                        <div class="text-right">
+                                            <span
+                                                :class="
+                                                    getStatusBadgeClass(
+                                                        order.transaction.status
+                                                    )
+                                                "
+                                            >
+                                                {{
+                                                    __(order.transaction.status)
+                                                }}
+                                            </span>
+                                            <p
+                                                class="text-lg font-bold text-gray-900 mt-1"
+                                            >
+                                                {{ order.transaction.total }}
+                                                {{ order.transaction.currency }}
+                                            </p>
+                                        </div>
+                                        <i
+                                            class="fas fa-chevron-down text-gray-400 transition-transform duration-300"
+                                            :class="{
+                                                'rotate-180':
+                                                    expandedOrders[order.id],
+                                            }"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Details -->
+                            <div
+                                v-if="expandedOrders[order.id]"
+                                class="p-6 bg-gray-50/50"
+                            >
+                                <div class="space-y-6">
+                                    <!-- Transaction and Delivery Info -->
+                                    <div
+                                        class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                                    >
+                                        <!-- Transaction Details -->
+                                        <div
+                                            class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                                        >
+                                            <div class="flex items-center mb-4">
+                                                <i
+                                                    class="fas fa-receipt text-blue-500 mr-3"
+                                                ></i>
+                                                <h4
+                                                    class="font-semibold text-gray-900"
+                                                >
+                                                    {{
+                                                        __(
+                                                            "Transaction Details"
+                                                        )
+                                                    }}
+                                                </h4>
+                                            </div>
+                                            <div class="space-y-3">
+                                                <div
+                                                    class="flex justify-between items-center"
+                                                >
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __("Status")
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        :class="
+                                                            getStatusTextClass(
+                                                                order
+                                                                    .transaction
+                                                                    .status
+                                                            )
+                                                        "
+                                                    >
+                                                        {{
+                                                            __(
+                                                                order
+                                                                    .transaction
+                                                                    .status
+                                                            )
+                                                        }}
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    class="flex justify-between items-center"
+                                                >
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __("Payment Method")
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        class="text-sm font-medium text-gray-900"
+                                                        >{{
+                                                            order.transaction
+                                                                .payment_method
+                                                        }}</span
+                                                    >
+                                                </div>
+                                                <div
+                                                    class="flex justify-between items-center"
+                                                >
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __("Total Amount")
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        class="text-lg font-bold text-green-600"
+                                                    >
+                                                        {{
+                                                            order.transaction
+                                                                .total
+                                                        }}
+                                                        {{
+                                                            order.transaction
+                                                                .currency
+                                                        }}
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    v-if="
+                                                        order.transaction
+                                                            .payment_intent_id
+                                                    "
+                                                    class="flex justify-between items-center"
+                                                >
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __("Payment Intent")
+                                                        }}</span
+                                                    >
+                                                    <div
+                                                        class="flex items-center space-x-2"
+                                                    >
+                                                        <code
+                                                            class="text-xs bg-gray-100 px-2 py-1 rounded"
+                                                        >
+                                                            {{
+                                                                order
+                                                                    .transaction
+                                                                    .payment_intent_id
+                                                            }}
+                                                        </code>
+                                                        <button
+                                                            @click="
+                                                                copyToClipboard(
+                                                                    order
+                                                                        .transaction
+                                                                        .payment_intent_id,
+                                                                    'Payment Intent ID'
+                                                                )
+                                                            "
+                                                            class="text-gray-500 hover:text-blue-600 transition-colors"
+                                                            title="Copy Payment Intent ID"
+                                                        >
+                                                            <i
+                                                                class="fas fa-copy text-sm"
+                                                            ></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    v-if="
+                                                        order.transaction.code
+                                                    "
+                                                    class="flex justify-between items-center"
+                                                >
+                                                    <span
+                                                        class="text-sm text-gray-600"
+                                                        >{{
+                                                            __(
+                                                                "Transaction Code"
+                                                            )
+                                                        }}</span
+                                                    >
+                                                    <div
+                                                        class="flex items-center space-x-2"
+                                                    >
+                                                        <code
+                                                            class="text-xs bg-gray-100 px-2 py-1 rounded"
+                                                        >
+                                                            {{
+                                                                order
+                                                                    .transaction
+                                                                    .code
+                                                            }}
+                                                        </code>
+                                                        <button
+                                                            @click="
+                                                                copyToClipboard(
+                                                                    order
+                                                                        .transaction
+                                                                        .code,
+                                                                    'Transaction Code'
+                                                                )
+                                                            "
+                                                            class="text-gray-500 hover:text-blue-600 transition-colors"
+                                                            title="Copy Transaction Code"
+                                                        >
+                                                            <i
+                                                                class="fas fa-copy text-sm"
+                                                            ></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Delivery Address -->
+                                        <div
+                                            class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                                        >
+                                            <div class="flex items-center mb-4">
+                                                <i
+                                                    class="fas fa-truck text-green-500 mr-3"
+                                                ></i>
+                                                <h4
+                                                    class="font-semibold text-gray-900"
+                                                >
+                                                    {{ __("Delivery Address") }}
+                                                </h4>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <p
+                                                    class="font-medium text-gray-900"
+                                                >
+                                                    {{
+                                                        order.delivery_address
+                                                            .full_name
+                                                    }}
+                                                </p>
+                                                <p
+                                                    class="text-sm text-gray-600"
+                                                >
+                                                    {{
+                                                        order.delivery_address
+                                                            .address
+                                                    }}
+                                                </p>
+                                                <p
+                                                    class="text-sm text-gray-600"
+                                                >
+                                                    {{
+                                                        order.delivery_address
+                                                            .city
+                                                    }},
+                                                    {{
+                                                        order.delivery_address
+                                                            .district
+                                                    }}
+                                                </p>
+                                                <p
+                                                    class="text-sm text-gray-600"
+                                                >
+                                                    {{
+                                                        order.delivery_address
+                                                            .country
+                                                    }}
+                                                </p>
+                                                <div
+                                                    class="flex items-center justify-between mt-3"
+                                                >
+                                                    <div
+                                                        class="flex items-center text-sm text-gray-600"
+                                                    >
+                                                        <i
+                                                            class="fas fa-phone mr-2"
+                                                        ></i>
+                                                        {{
+                                                            order
+                                                                .delivery_address
+                                                                .phone
+                                                        }}
+                                                    </div>
+                                                    <a
+                                                        v-if="
+                                                            order
+                                                                .delivery_address
+                                                                .whatsapp
+                                                        "
+                                                        :href="
+                                                            order
+                                                                .delivery_address
+                                                                .whatsapp
+                                                        "
+                                                        target="_blank"
+                                                        class="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-colors"
+                                                    >
+                                                        <i
+                                                            class="fab fa-whatsapp text-sm"
+                                                        ></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Order Items -->
+                                    <div
+                                        class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                                    >
+                                        <div
+                                            class="flex items-center justify-between mb-6"
+                                        >
+                                            <div class="flex items-center">
+                                                <i
+                                                    class="fas fa-boxes text-purple-500 mr-3"
+                                                ></i>
+                                                <h4
+                                                    class="font-semibold text-gray-900"
+                                                >
+                                                    {{ __("Order Items") }}
+                                                </h4>
+                                            </div>
+                                            <span
+                                                class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium"
+                                            >
+                                                {{ order.orders.length }}
+                                                {{ __("items") }}
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-4"
+                                        >
+                                            <div
+                                                v-for="item in order.orders"
+                                                :key="item.id"
+                                                class="flex items-center space-x-4 p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+                                            >
+                                                <img
+                                                    v-if="
+                                                        item.images &&
+                                                        item.images.length > 0
+                                                    "
+                                                    :src="
+                                                        getImageUrl(
+                                                            item.images[0].url
+                                                        )
+                                                    "
+                                                    :alt="item.meta.name"
+                                                    class="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                                                />
+                                                <div
+                                                    v-else
+                                                    class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"
+                                                >
+                                                    <i
+                                                        class="fas fa-image text-gray-400 text-xl"
+                                                    ></i>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p
+                                                        class="text-base font-semibold text-gray-900 truncate"
+                                                    >
+                                                        {{ item.meta.name }}
+                                                    </p>
+                                                    <p
+                                                        v-if="item.meta.variant"
+                                                        class="text-sm text-gray-600 mt-1"
+                                                    >
+                                                        <strong
+                                                            >{{
+                                                                __("Variant")
+                                                            }}:</strong
+                                                        >
+                                                        {{
+                                                            item.meta.variant
+                                                                .name
+                                                        }}
+                                                    </p>
+                                                    <div
+                                                        class="flex items-center space-x-4 mt-2"
+                                                    >
+                                                        <p
+                                                            class="text-sm text-gray-600"
+                                                        >
+                                                            <strong
+                                                                >{{
+                                                                    __("Qty")
+                                                                }}:</strong
+                                                            >
+                                                            {{ item.quantity }}
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-600"
+                                                        >
+                                                            <strong
+                                                                >{{
+                                                                    __(
+                                                                        "Unit Price"
+                                                                    )
+                                                                }}:</strong
+                                                            >
+                                                            {{
+                                                                item.format_price
+                                                            }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="text-right flex-shrink-0"
+                                                >
+                                                    <p
+                                                        class="text-lg font-bold text-green-600"
+                                                    >
+                                                        {{
+                                                            calculateItemTotal(
+                                                                item
+                                                            )
+                                                        }}
+                                                    </p>
+                                                    <p
+                                                        class="text-xs text-gray-500 mt-1"
+                                                    >
+                                                        {{ __("Total") }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div
+                                    class="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-200"
+                                >
+                                    <a
+                                        v-if="order.transaction.payment_url"
+                                        :href="order.transaction.payment_url"
+                                        target="_blank"
+                                        class="px-4 py-2 bg-blue-500 cursor-pointer hover:bg-blue-600 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                                    >
+                                        <i class="fas fa-receipt"></i>
+                                        <span>{{ __("View Receipt") }}</span>
+                                    </a>
+
+                                    <button
+                                        @click="copyOrderId(order.code)"
+                                        class="px-4 py-2 bg-gray-500 cursor-pointer hover:bg-gray-600 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                                    >
+                                        <i class="fas fa-copy"></i>
+                                        <span>{{ __("Copy Order ID") }}</span>
+                                    </button>
+
+                                    <button
+                                        v-if="order.transaction.code"
+                                        @click="
+                                            copyToClipboard(
+                                                order.transaction.code,
+                                                'Transaction Code'
+                                            )
+                                        "
+                                        class="px-4 py-2 bg-purple-500 cursor-pointer hover:bg-purple-600 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                                    >
+                                        <i class="fas fa-copy"></i>
+                                        <span>{{
+                                            __("Copy Transaction Code")
+                                        }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="flex justify-center mt-8">
+                        <v-paginate
+                            :total-pages="pages.total_pages"
+                            v-model="search.page"
+                            @change="getCheckouts"
+                        />
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div
+                    v-if="loading"
+                    class="flex justify-center items-center py-20"
+                >
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                        >
+                            <i
+                                class="fas fa-spinner fa-spin text-blue-600 text-2xl"
+                            ></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                            {{ __("Loading Orders") }}
+                        </h3>
+                        <p class="text-gray-600">
+                            {{ __("Please wait while we fetch your orders") }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </v-admin-layout>
+</template>
+
+<script>
+import VAdminLayout from "../../Components/VAdminLayout.vue";
+import VPaginate from "@/components/VPaginate.vue";
+
+export default {
+    components: {
+        VAdminLayout,
+        VPaginate,
+    },
+
+    data() {
+        return {
+            orders: [],
+            loading: false,
+            pages: {
+                total_pages: 0,
+            },
+            search: {
+                page: 1,
+                per_page: 15,
+            },
+            expandedOrders: {},
+        };
+    },
+
+    computed: {
+        completedOrdersCount() {
+            return this.orders.filter(
+                (order) =>
+                    order.transaction.status === "successful" ||
+                    order.transaction.status === "completed"
+            ).length;
+        },
+
+        pendingOrdersCount() {
+            return this.orders.filter(
+                (order) =>
+                    order.transaction.status === "pending" ||
+                    order.transaction.status === "processing"
+            ).length;
+        },
+
+        failedOrdersCount() {
+            return this.orders.filter(
+                (order) =>
+                    order.transaction.status === "failed" ||
+                    order.transaction.status === "cancelled"
+            ).length;
+        },
+    },
+
+    created() {
+        this.getCheckouts();
+    },
+
+    methods: {
+        async getCheckouts() {
+            this.loading = true;
+
+            try {
+                const res = await this.$server.get(
+                    this.$page.props.routes.orders,
+                    { params: this.search }
+                );
+                if (res.status === 200) {
+                    const values = res.data;
+
+                    // Manejar la estructura de datos anidada
+                    if (values.data && typeof values.data === "object") {
+                        // Si los datos vienen como objeto con claves numéricas
+                        this.orders = Object.values(values.data);
+                    } else {
+                        this.orders = values.data || [];
+                    }
+
+                    this.pages = values.meta?.pagination || { total_pages: 0 };
+                }
+            } catch (e) {
+                if (e?.response?.data?.message) {
+                    $notify.error(e.response.data.message);
+                }
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        getImageUrl(imagePath) {
+            // Si la URL ya es completa, devolverla tal cual
+            if (imagePath.startsWith("http")) {
+                return imagePath;
+            }
+            // Si es una ruta relativa, construir la URL completa
+            return `${window.location.origin}${imagePath}`;
+        },
+
+        calculateItemTotal(item) {
+            // Calcular el total del item (precio * cantidad)
+            const price = parseFloat(item.price) || 0;
+            const quantity = item.quantity || 0;
+            const total = price * quantity;
+
+            // Formatear el total similar al formato_price
+            return total.toLocaleString("es-PE", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
+        },
+
+        orderNumberIcon(code) {
+            return code.slice(-1).toUpperCase();
+        },
+
+        toggleOrder(orderId) {
+            this.expandedOrders = {
+                ...this.expandedOrders,
+                [orderId]: !this.expandedOrders[orderId],
+            };
+        },
+
+        getStatusBadgeClass(status) {
+            const baseClasses =
+                "px-3 py-1 rounded-full text-xs font-semibold capitalize";
+            const statusClasses = {
+                successful:
+                    "bg-green-100 text-green-800 border border-green-200",
+                completed:
+                    "bg-green-100 text-green-800 border border-green-200",
+                pending:
+                    "bg-yellow-100 text-yellow-800 border border-yellow-200",
+                processing:
+                    "bg-yellow-100 text-yellow-800 border border-yellow-200",
+                failed: "bg-red-100 text-red-800 border border-red-200",
+                cancelled: "bg-red-100 text-red-800 border border-red-200",
+            };
+            return `${baseClasses} ${
+                statusClasses[status] ||
+                "bg-gray-100 text-gray-800 border border-gray-200"
+            }`;
+        },
+
+        getStatusTextClass(status) {
+            const baseClasses = "font-semibold capitalize";
+            const statusClasses = {
+                successful: "text-green-600",
+                completed: "text-green-600",
+                pending: "text-yellow-600",
+                processing: "text-yellow-600",
+                failed: "text-red-600",
+                cancelled: "text-red-600",
+            };
+            return `${baseClasses} ${statusClasses[status] || "text-gray-600"}`;
+        },
+
+        copyOrderId(orderCode) {
+            navigator.clipboard.writeText(orderCode);
+            $notify.success(__("Order ID copied to clipboard"));
+        },
+
+        copyToClipboard(text, label = "Text") {
+            navigator.clipboard.writeText(text);
+            $notify.success(`${label} ${__("copied to clipboard")}`);
+        },
+    },
+};
+</script>

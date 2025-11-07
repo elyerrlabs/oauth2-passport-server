@@ -18,17 +18,18 @@
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Admin\Setting\SettingController;
-
+use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
 
 Route::group([
     'prefix' => 'settings',
     'as' => 'settings.',
+    'middleware' => ['throttle:general:settings']
 ], function () {
     Route::get('/', [SettingController::class, 'general'])->name('general');
     Route::get('/email', [SettingController::class, 'email'])->name('email');
@@ -40,7 +41,20 @@ Route::group([
     Route::get('/payment', [SettingController::class, 'payment'])->name('payment');
     Route::get('/session', [SettingController::class, 'session'])->name('session');
     Route::get('/security', [SettingController::class, 'security'])->name('security');
+    Route::get('/rate_limit', [SettingController::class, 'rateLimit'])->name('rate_limit');
+    Route::get('/modules', [SettingController::class, 'modules'])->name('modules');
 
     Route::put('/', [SettingController::class, 'update'])->name('update');
     Route::put('/cache/reload', [SettingController::class, 'reloadCache'])->name('reload');
+});
+
+Route::group([
+    'prefix' => 'policies',
+    'as' => 'policies.',
+    'middleware' => ['throttle:general:settings']
+], function () {
+    // Route::get("/", [PoliciesController::class, 'dashboard'])->name('dashboard');
+    Route::get('terms-and-conditions', [PoliciesController::class, 'termsAndConditionForm'])->name('terms-and-conditions');
+    Route::get('policies-of-privacy', [PoliciesController::class, 'policiesOfPrivacyForm'])->name('policies-of-privacy');
+    Route::get('policies-of-cookies', [PoliciesController::class, 'policiesOfCookiesForm'])->name('policies-of-cookies');
 });

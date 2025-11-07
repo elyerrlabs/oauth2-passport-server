@@ -22,7 +22,7 @@ namespace App\Notifications\User;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
 use Illuminate\Bus\Queueable;
 use App\Repositories\Traits\Standard;
 use Illuminate\Notifications\Notification;
@@ -63,12 +63,12 @@ class UserUpdatedPassword extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Password Updated Successfully')
-            ->greeting('Hello!')
-            ->line('We want to inform you that your password has been updated successfully.')
-            ->line('If you did not make this change, please contact us immediately to secure your account.')
-            ->action('Go to the App', url('/'))
-            ->line('Thank you for trusting us to keep your account secure. We are always here to help!');
+            ->subject(__('Password Updated Successfully'))
+            ->greeting(__('Hello!'))
+            ->line(__('We want to inform you that your password has been updated successfully.'))
+            ->line(__('If you did not make this change, please contact us immediately to secure your account.'))
+            ->action(__('Go to the App'), url('/'))
+            ->line(__('Thank you for trusting us to keep your account secure. We are always here to help!'));
 
     }
 

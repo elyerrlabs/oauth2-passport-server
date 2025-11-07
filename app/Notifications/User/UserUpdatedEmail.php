@@ -22,7 +22,7 @@ namespace App\Notifications\User;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
 use Illuminate\Bus\Queueable;
 use App\Repositories\Traits\Standard;
 use Illuminate\Notifications\Notification;
@@ -62,12 +62,12 @@ class UserUpdatedEmail extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Email Updated Successfully')
-            ->greeting('Hello!')
-            ->line('We want to let you know that your email address has been updated successfully.')
-            ->line('If you did not make this change, please contact us immediately to secure your account.')
-            ->action('Visit Our Page', url('/'))
-            ->line('Thank you for keeping your information up-to-date. We’re here to support you anytime!');
+            ->subject(__('Email Updated Successfully'))
+            ->greeting(__('Hello!'))
+            ->line(__('We want to let you know that your email address has been updated successfully.'))
+            ->line(__('If you did not make this change, please contact us immediately to secure your account.'))
+            ->action(__('Visit Our Page'), url('/'))
+            ->line(__('Thank you for keeping your information up-to-date. We’re here to support you anytime!'));
     }
 
     /**

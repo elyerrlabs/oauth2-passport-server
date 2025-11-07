@@ -2,6 +2,7 @@
 !app
 !bootstrap
 !config
+!core
 !database
 !docker/
 !public
@@ -12,10 +13,12 @@
 !artisan
 !composer.json
 !AUTHORS.md
+!lang
+!LICENSE.md
+!LICENSE.txt
 !LICENSE
 !package.json
 !package-lock.json
-!tailwind.config.js
-!webpack.mix.js
+!vite.config.js
 !.gitignore
 !.dockerignore

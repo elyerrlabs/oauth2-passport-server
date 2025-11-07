@@ -62,7 +62,7 @@ class MemberReactivateAccount extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject(__('Welcome Back! Your Account Has Been Reactivated'))
-            ->greeting(__('Dear ') . $notifiable->name . ',')
+            ->greeting(__('Dear :name ,', ['name' => $notifiable->name]))
             ->line(__('We are thrilled to have you back! Your account has been successfully reactivated following your decision to log in again.'))
             ->line(__('Please note that this reactivation is only possible within the allowed timeframe after initiating the account deactivation process.'))
             ->action(__('Access Your Dashboard'), url(env('FRONTEND_URL')))
