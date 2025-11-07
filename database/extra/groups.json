@@ -22,6 +22,19 @@
         ]
       },
       {
+        "name": "horizon",
+        "description": "Horizon allows you to easily monitor key metrics of your queue system such as job throughput, runtime, and job failures.",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0,
+            "web": 1
+          }
+        ]
+      },
+      {
         "name": "group",
         "description": "Service to manage resource of groups",
         "actions": [
