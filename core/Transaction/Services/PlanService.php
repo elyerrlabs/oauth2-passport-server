@@ -121,12 +121,12 @@ class PlanService
     }
 
     /**
-     * Create new plan
+     * Create a new plan
      * @param array $data
      */
     public function create(array $data)
     {
-        $plan = DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data) {
 
             $plan = $this->planRepository->create([
                 'name' => $data['name'],
@@ -153,8 +153,6 @@ class PlanService
 
             return $plan;
         });
-
-        return $plan;
     }
 
     /**
