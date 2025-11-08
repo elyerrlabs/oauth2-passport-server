@@ -173,6 +173,17 @@ return [
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
 
+        "horizon" => [
+            "url" => null,
+            "host" => "127.0.0.1",
+            "username" => null,
+            "password" => null,
+            "port" => "6379",
+            "database" => "0",
+            "options" => [
+                "prefix" => "laravel_horizon:",
+            ],
+        ],
     ],
 
 ];

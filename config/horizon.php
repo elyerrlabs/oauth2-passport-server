@@ -224,7 +224,6 @@ return [
 
         'dev' => [
             'supervisor-1' => [
-                'connection' => 'redis',
                 'balance' => 'auto',
                 'autoScalingStrategy' => 'time',
                 'maxProcesses' => 5,

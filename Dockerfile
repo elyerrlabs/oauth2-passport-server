@@ -29,6 +29,7 @@ RUN apk add --no-cache \
     php84-gd \
     php84-intl \
     php84-sodium \
+    php84-pecl-redis \
     nginx \
     curl \
     supervisor \

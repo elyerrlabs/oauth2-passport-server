@@ -82,12 +82,12 @@
                                 class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-colors duration-300"
                                 value="{{ config('cache.expires') }}" placeholder="1440" min="1">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500">min</span>
+                                <span class="text-gray-500">Days</span>
                             </div>
                         </div>
                         <small class="block mt-2 text-sm text-gray-500">
                             <i class="mdi mdi-information-outline mr-1"></i>
-                            {{ __('Default cache item expiration time in minutes') }}
+                            {{ __('Default cache item expiration time in days') }}
                         </small>
                     </div>
 
