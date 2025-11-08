@@ -387,7 +387,7 @@ export default {
         async create() {
             try {
                 const res = await this.$server.post(
-                    this.$page.props.route["plans"],
+                    this.$page.props.routes.plans,
                     this.form
                 );
 
@@ -414,7 +414,7 @@ export default {
         async getServices() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.route["services"],
+                    this.$page.props.routes.services,
                     {
                         params: {
                             per_page: 500,
@@ -438,7 +438,7 @@ export default {
         async getBillingPeriod() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.route["billing_period"]
+                    this.$page.props.routes.billing_period
                 );
 
                 if (res.status == 200) {
@@ -454,7 +454,7 @@ export default {
         async getCurrencies() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.route["currencies"]
+                    this.$page.props.routes.currencies
                 );
 
                 if (res.status == 200) {
