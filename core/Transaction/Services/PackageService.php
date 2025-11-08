@@ -103,7 +103,7 @@ final class PackageService
         });
 
         // Retrieve the data before ending
-        $end = filter_var(config('billing.renew.hours_before', 10), FILTER_VALIDATE_INT);
+        $end = intval(config('billing.renew.hours_before', 10));
         $query->whereBetween('end_at', [
             now(),
             now()->addHours($end)
@@ -111,7 +111,6 @@ final class PackageService
             ->chunk(
                 500, // every five hundred
                 function ($packages) {
-                    Log::info("package", $packages->toArray());
                     foreach ($packages as $package) {
                         ProcessRecurringPaymentJob::dispatch($package->id);
                     }
