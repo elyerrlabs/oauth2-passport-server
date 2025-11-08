@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\Transaction\Http\Controllers\Admin;
 
 /**
@@ -19,7 +20,7 @@ namespace Core\Transaction\Http\Controllers\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -27,20 +28,20 @@ namespace Core\Transaction\Http\Controllers\Admin;
 use App\Models\Common\Price;
 use Core\Transaction\Model\Plan;
 use App\Http\Controllers\WebController;
-use Core\Transaction\Repositories\PlanRepository;
+use Core\Transaction\Services\PlanService;
 
 class PlanPriceController extends WebController
 {
     /**
      * Repository
-     * @var PlanRepository
+     * @var PlanService
      */
-    public $repository;
+    public $plansService;
 
-    public function __construct(PlanRepository $planRepository)
+    public function __construct(PlanService $planService)
     {
         parent::__construct();
-        $this->repository = $planRepository;
+        $this->repository = $planService;
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:destroy')->only('destroy');
     }
 
@@ -52,7 +53,7 @@ class PlanPriceController extends WebController
      */
     public function destroy(Plan $plan, Price $price)
     {
-        $this->repository->deletePrice($plan->id, $price->id);
+        $this->plansService->deletePrice($plan->id, $price->id);
 
         return $this->message(__('Price has been deleted successfully'), 200);
     }
