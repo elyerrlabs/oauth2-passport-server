@@ -24,18 +24,19 @@ namespace App\Services\Settings;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\User\Model\Scope;
 use App\Models\OAuth\Token;
 use Illuminate\Support\Str;
 use App\Models\OAuth\Client;
 use App\Models\OAuth\AuthCode;
 use Laravel\Passport\Passport;
+use PhpParser\Node\Stmt\TryCatch;
 use App\Models\OAuth\RefreshToken;
-use Core\User\Model\Scope;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\QueryException;
-use PhpParser\Node\Stmt\TryCatch;
 
 class Setting
 {
@@ -48,24 +49,39 @@ class Setting
     {
         try {
             $settings = \App\Models\Setting\Setting::all(['key', 'value']);
-            foreach ($settings as $key => $item) {
 
-                if (filter_var($item->value, FILTER_VALIDATE_INT) == true) {
-                    $item->value = intval($item->value);
+            foreach ($settings as $item) {
+
+                // Ignore empty values
+                if ($item->value === null || $item->value === '') {
+                    continue;
                 }
 
-                Config::set($item->key, $item->value);
+                $value = $item->value;
+
+                // Convert string numbers to string
+                if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
+                    $value = intval($value);
+                }
+                // Convert to float from string number
+                elseif (is_numeric($value)) {
+                    $value = floatval($value);
+                }
+
+                // Set the new config
+                Config::set($item->key, $value);
             }
+
         } catch (\Throwable $th) {
+            Log::error('Something is wrong to load settings' . $th->getMessage());
         }
 
         Setting::getPassportSetting();
 
-        if (config('system.schema_mode', 'https') == 'https') {
-            URL::forceScheme('https');
+        if (config('system.schema_mode', 'https') === 'https') {
+            \URL::forceScheme('https');
         }
     }
-
 
     /**
      * Add default setting into the system
