@@ -746,7 +746,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-admin-transaction-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, onMounted } from "vue";
 import VAdminTransactionLayout from "@/layouts/VAdminTransactionLayout.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
@@ -755,104 +756,74 @@ import VRevokeScope from "./RevokeScope.vue";
 import VDeletePrice from "./DeletePrice.vue";
 import VPaginate from "@/components/VPaginate.vue";
 
-export default {
-    components: {
-        VAdminTransactionLayout,
-        VCreate,
-        VDelete,
-        VUpdate,
-        VRevokeScope,
-        VDeletePrice,
-    },
-    data() {
-        return {
-            plans: [],
-            expandedPlans: {},
-            expandedPricing: null,
-            expandedPricingMobile: null,
-            search: { page: 1, per_page: 15 },
-            pages: { total_pages: 0 },
-        };
-    },
+const props = defineProps({
+    data: Object,
+    routes: Object,
+    transaction_routes: Object,
+});
 
-    created() {
-        this.getPlans();
-    },
-    methods: {
-        async getPlans(params) {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.route.plans,
-                    {
-                        params: { ...this.search, ...params },
-                    }
-                );
-                if (res.status === 200) {
-                    this.plans = res.data.data;
-                    this.pages = res.data.meta.pagination;
-                    this.expandedPlans = {};
-                    this.expandedPricing = null;
-                    this.expandedPricingMobile = null;
-                }
-            } catch (e) {
-                console.error(
-                    e?.response?.data?.message || "Failed to load plans"
-                );
-            }
-        },
+const plans = ref([]);
+const expandedPlans = reactive({});
+const expandedPricing = ref(null);
+const expandedPricingMobile = ref(null);
+const search = reactive({ page: 1, per_page: 15 });
+const pages = reactive({ total_pages: 0 });
 
-        togglePlanExpansion(planId, section) {
-            const key = `${planId}-${section}`;
-            this.expandedPlans[key] = !this.expandedPlans[key];
-        },
+/** Functions */
+const getPlans = async (params = {}) => {
+    try {
+        const res = await window.$server.get(window.$page.props.route.plans, {
+            params: { ...search, ...params },
+        });
 
-        isPlanExpanded(planId, section) {
-            return !!this.expandedPlans[`${planId}-${section}`];
-        },
+        if (res.status === 200) {
+            plans.value = res.data.data;
+            Object.assign(pages, res.data.meta.pagination);
 
-        togglePricingRow(planId) {
-            // If clicking the same row, toggle it
-            // If clicking a different row, close the current one and open the new one
-            if (this.expandedPricing === planId) {
-                this.expandedPricing = null;
-            } else {
-                this.expandedPricing = planId;
-            }
-        },
-
-        togglePricingRowMobile(planId) {
-            if (this.expandedPricingMobile === planId) {
-                this.expandedPricingMobile = null;
-            } else {
-                this.expandedPricingMobile = planId;
-            }
-        },
-
-        formatBillingPeriod(period) {
-            const map = {
-                monthly: this.__("Monthly"),
-                yearly: this.__("Yearly"),
-                weekly: this.__("Weekly"),
-                daily: this.__("Daily"),
-            };
-            return map[period] || period;
-        },
-        pageBtnClass(disabled) {
-            return [
-                "flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 border",
-                disabled
-                    ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400",
-            ];
-        },
-        pageClass(page) {
-            return [
-                "flex items-center justify-center w-10 h-10 rounded-xl text-sm font-semibold transition-all duration-200 border",
-                this.search.page === page
-                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border-blue-600"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400",
-            ];
-        },
-    },
+            // Reset expanded states
+            for (const key in expandedPlans) delete expandedPlans[key];
+            expandedPricing.value = null;
+            expandedPricingMobile.value = null;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e?.response?.data?.message);
+        }
+    }
 };
+
+const togglePlanExpansion = (planId, section) => {
+    const key = `${planId}-${section}`;
+    expandedPlans[key] = !expandedPlans[key];
+};
+
+const isPlanExpanded = (planId, section) => {
+    return !!expandedPlans[`${planId}-${section}`];
+};
+
+const togglePricingRow = (planId) => {
+    expandedPricing.value = expandedPricing.value === planId ? null : planId;
+};
+
+const togglePricingRowMobile = (planId) => {
+    expandedPricingMobile.value =
+        expandedPricingMobile.value === planId ? null : planId;
+};
+
+const formatBillingPeriod = (period) => {
+    const map = {
+        monthly: __("Monthly"),
+        yearly: __("Yearly"),
+        weekly: __("Weekly"),
+        daily: __("Daily"),
+    };
+    return map[period] || period;
+};
+
+onMounted(() => {
+    const values = props.data;
+
+    plans.value = values.data;
+    pages.value = values.meta.pagination;
+});
 </script>

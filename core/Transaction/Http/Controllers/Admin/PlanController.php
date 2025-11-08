@@ -25,6 +25,8 @@ namespace Core\Transaction\Http\Controllers\Admin;
  */
 
 
+use Core\Transaction\Services\PlanService;
+use Core\Transaction\Transformer\Admin\PlanTransformer;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Core\Transaction\Model\Plan;
@@ -37,18 +39,18 @@ class PlanController extends WebController
 {
     /**
      * Repository
-     * @var PlanRepository
+     * @var PlanService
      */
-    public $repository;
+    public $planService;
 
     /**
      * Construct
-     * @param PlanRepository $planRepository
+     * @param PlanService $planService
      */
-    public function __construct(PlanRepository $planRepository)
+    public function __construct(PlanService $planService)
     {
         parent::__construct();
-        $this->repository = $planRepository;
+        $this->planService = $planService;
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:view')->only('index');
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:show')->only('show');
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:create')->only('store');
@@ -64,12 +66,13 @@ class PlanController extends WebController
      */
     public function index(Request $request)
     {
-        if (request()->wantsJson()) {
-            return $this->repository->search($request);
-        }
+        $page = $request->filled('per_page') ? $request->per_page : 15;
+
+        $data = $this->planService->search($request)->paginate($page);
 
         return Inertia::render("Core/Transaction/Admin/Plans/Index", [
-            'route' => [
+            'data' => fractal($data, PlanTransformer::class)->toArray(),
+            'routes' => [
                 'services' => route("user.admin.services.index"),
                 'billing_period' => route('api.transaction.payments.billing-period'),
                 'currencies' => route('api.transaction.payments.currencies'),
@@ -79,22 +82,17 @@ class PlanController extends WebController
             "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes'))
         ])->rootView('system');
     }
-
-    public function edit(string $id)
-    {
-
-
-    }
-
     /**
      * Create new plan
      * @param  PlanStoreRequest $request
      * @param \ Core\Transaction\Model\Plan $plan
      * @return \Elyerr\ApiResponse\Assets\JsonResponser
      */
-    public function store(PlanStoreRequest $request, Plan $plan)
+    public function store(PlanStoreRequest $request)
     {
-        return $this->repository->create($request->toArray());
+        $plan = $this->planService->create($request->toArray());
+
+        return $this->showOne($plan, PlanTransformer::class);
     }
 
     /**
@@ -104,26 +102,34 @@ class PlanController extends WebController
      */
     public function show(Plan $plan)
     {
-        return $this->repository->details($plan->id);
+        $plan = $this->planService->details($plan->id);
+
+        return $this->showOne($plan, PlanTransformer::class);
+
     }
 
     /**
      * Update specific resource
-     * @param  PlanUpdateRequest $request
-     * @param \ Core\Transaction\Model\Plan $plan
+     * @param \Core\Transaction\Http\Requests\PlanUpdateRequest $request
+     * @param \Core\Transaction\Model\Plan $plan
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function update(PlanUpdateRequest $request, Plan $plan)
     {
-        return $this->repository->update($plan->id, $request->toArray());
+        $plan = $this->planService->update($plan->id, $request->toArray());
+
+        return $this->showOne($plan, PlanTransformer::class);
     }
 
     /**
      * Delete specific resource
      * @param \Core\Transaction\Model\Plan $plan
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * @return Plan|\Illuminate\Database\Eloquent\Builder<Plan>|\Illuminate\Database\Eloquent\Builder<Plan>[]|\Illuminate\Database\Eloquent\Collection<int, Plan>|\Illuminate\Database\Eloquent\Model|null
      */
     public function destroy(Plan $plan)
     {
-        return $this->repository->delete($plan->id);
+        $plan = $this->planService->delete($plan->id);
+
+        return $this->showOne($plan, PlanTransformer::class);
     }
 }

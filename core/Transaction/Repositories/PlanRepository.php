@@ -78,7 +78,7 @@ class PlanRepository
     /**
      * Create new resource
      * @param array $data
-     * @return JsonResponser 
+     * @return Plan|TModel|\Illuminate\Database\Eloquent\Model
      */
     public function create(array $data)
     {
