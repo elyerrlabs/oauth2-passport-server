@@ -21,103 +21,179 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div class="w-full">
-        <!-- Label Section -->
-        <div class="flex items-center justify-start mb-2">
-            <label
-                class="block text-sm font-medium text-gray-700 transition-colors duration-200"
-            >
-                {{ label }}
-                <span class="text-red-500" v-if="required">*</span>
-            </label>
+        <!-- Header Section -->
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-3">
+                <!-- Label -->
+                <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
+                >
+                    {{ label }}
+                    <span class="text-red-500" v-if="required">*</span>
+                </label>
 
-            <!-- Value Indicator -->
-            <span
-                class="text-xs font-medium px-2 py-1 rounded-md transition-colors duration-200"
-                :class="
-                    localValue
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
-                "
-            >
-                {{ localValue ? __(activeText) : __(inactiveText) }}
-            </span>
+                <!-- Value Indicator -->
+                <span
+                    class="text-xs font-medium px-2.5 py-1 rounded-full border transition-all duration-200 shadow-sm"
+                    :class="
+                        localValue
+                            ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700'
+                    "
+                >
+                    <i
+                        class="mdi mr-1 text-xs"
+                        :class="
+                            localValue ? 'mdi-check-circle' : 'mdi-close-circle'
+                        "
+                    ></i>
+                    {{ localValue ? __(activeText) : __(inactiveText) }}
+                </span>
+            </div>
+
+            <!-- Optional Help Icon -->
+            <div v-if="placeholder" class="relative group">
+                <i
+                    class="mdi mdi-information-outline text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 cursor-help text-lg"
+                ></i>
+                <div
+                    class="absolute bottom-full right-0 mb-2 w-64 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 shadow-xl"
+                >
+                    {{ __(placeholder) }}
+                    <div
+                        class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 dark:bg-gray-700 transform rotate-45"
+                    ></div>
+                </div>
+            </div>
         </div>
 
-        <!-- Optional placeholder -->
-        <p v-if="placeholder" class="text-xs text-gray-500 mb-3">
+        <!-- Toggle Switch Container -->
+        <div
+            class="flex items-center justify-between p-4 bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800/70 group"
+        >
+            <!-- Toggle Switch -->
+            <div class="flex items-center space-x-4">
+                <label class="flex items-center cursor-pointer group/switch">
+                    <!-- Toggle Track -->
+                    <div class="relative">
+                        <input
+                            type="checkbox"
+                            class="sr-only"
+                            v-model="localValue"
+                            :disabled="disabled"
+                        />
+                        <!-- Track -->
+                        <div
+                            class="w-16 h-8 rounded-full transition-all duration-300 ease-in-out shadow-inner"
+                            :class="[
+                                localValue
+                                    ? 'bg-green-500 dark:bg-green-600 group-hover/switch:bg-green-600 dark:group-hover/switch:bg-green-500'
+                                    : 'bg-gray-300 dark:bg-gray-600 group-hover/switch:bg-gray-400 dark:group-hover/switch:bg-gray-500',
+                                disabled ? 'opacity-50 cursor-not-allowed' : '',
+                            ]"
+                        ></div>
+                        <!-- Thumb -->
+                        <div
+                            class="absolute left-1 top-1 bg-white dark:bg-gray-100 w-6 h-6 rounded-full shadow-lg transition-all duration-300 ease-in-out flex items-center justify-center group-hover/switch:shadow-xl"
+                            :class="[
+                                localValue ? 'translate-x-8' : '',
+                                disabled ? 'opacity-70' : '',
+                            ]"
+                        >
+                            <!-- Inner icon indicator -->
+                            <i
+                                v-if="localValue"
+                                class="mdi mdi-check text-green-500 dark:text-green-600 text-sm"
+                            ></i>
+                            <i
+                                v-else
+                                class="mdi mdi-close text-gray-400 dark:text-gray-500 text-sm"
+                            ></i>
+                        </div>
+
+                        <!-- Active/Inactive Background Glow -->
+                        <div
+                            class="absolute inset-0 rounded-full opacity-0 transition-opacity duration-300"
+                            :class="[
+                                localValue
+                                    ? 'bg-green-200 dark:bg-green-900/30 group-hover/switch:opacity-40'
+                                    : 'bg-gray-200 dark:bg-gray-700 group-hover/switch:opacity-40',
+                            ]"
+                        ></div>
+                    </div>
+
+                    <!-- Toggle Label -->
+                    <span
+                        class="ml-4 text-sm font-semibold transition-colors duration-200"
+                        :class="[
+                            localValue
+                                ? 'text-green-700 dark:text-green-400'
+                                : 'text-gray-700 dark:text-gray-400',
+                            disabled ? 'opacity-50' : '',
+                        ]"
+                    >
+                        {{ localValue ? __(activeLabel) : __(inactiveLabel) }}
+                    </span>
+                </label>
+            </div>
+
+            <!-- Status Icon -->
+            <div class="flex-shrink-0">
+                <div
+                    class="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300"
+                    :class="[
+                        localValue
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400',
+                        disabled ? 'opacity-50' : '',
+                    ]"
+                >
+                    <i
+                        v-if="localValue"
+                        class="mdi mdi-toggle-switch text-xl"
+                    ></i>
+                    <i v-else class="mdi mdi-toggle-switch-off text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description (alternative to tooltip) -->
+        <p
+            v-if="placeholder && !$slots.description"
+            class="text-xs text-gray-500 dark:text-gray-400 mt-2 px-1"
+        >
             {{ __(placeholder) }}
         </p>
 
-        <!-- Toggle Switch -->
-        <div class="flex items-center">
-            <label class="flex items-center cursor-pointer group">
-                <!-- Toggle Track -->
-                <div class="relative">
-                    <input
-                        type="checkbox"
-                        class="sr-only"
-                        v-model="localValue"
-                    />
-                    <!-- Track -->
-                    <div
-                        class="w-14 h-8 rounded-full transition-all duration-300 ease-in-out"
-                        :class="
-                            localValue
-                                ? 'bg-green-500 group-hover:bg-green-600'
-                                : 'bg-gray-300 group-hover:bg-gray-400'
-                        "
-                    ></div>
-                    <!-- Thumb -->
-                    <div
-                        class="absolute left-1 top-1 bg-white w-6 h-6 rounded-full shadow-lg transition-transform duration-300 ease-in-out flex items-center justify-center"
-                        :class="localValue ? 'translate-x-6' : ''"
-                    >
-                        <!-- Inner icon indicator -->
-                        <svg
-                            v-if="localValue"
-                            class="w-3 h-3 text-green-500"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                        <svg
-                            v-else
-                            class="w-3 h-3 text-gray-400"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- Toggle Label -->
-                <span
-                    class="mx-4 text-sm font-medium text-gray-700 transition-colors duration-200"
-                    :class="localValue ? 'text-green-700' : 'text-gray-700'"
-                >
-                    {{ localValue ? __(activeLabel) : __(inactiveLabel) }}
-                </span>
-            </label>
+        <!-- Custom Description Slot -->
+        <div v-if="$slots.description" class="mt-2">
+            <slot name="description" :value="localValue" />
         </div>
 
         <!-- Validation Message -->
-        <v-error :error="error" />
+        <v-error :error="error" class="mt-2" />
+
+        <!-- Usage Statistics (Optional) -->
+        <div
+            v-if="showStats && localValue"
+            class="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800"
+        >
+            <div
+                class="flex items-center space-x-2 text-sm text-blue-700 dark:text-blue-300"
+            >
+                <i class="mdi mdi-chart-line"></i>
+                <span>{{
+                    __("This feature is currently active and being used")
+                }}</span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
 import VError from "@/components/VError.vue";
+
 const props = defineProps({
     modelValue: {
         type: Boolean,
@@ -155,7 +231,11 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    error: { Array, default: [] },
+    error: { type: [Array, String], default: [] },
+    showStats: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits(["update:modelValue", "change"]);
@@ -176,13 +256,28 @@ watch(localValue, (newVal) => {
 </script>
 
 <style scoped>
-label,
-div,
-span {
-    transition: all 0.3s ease;
+.group\/switch:focus-within .relative > div:first-child {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
 }
 
-input:focus + div {
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+.dark .group\/switch:focus-within .relative > div:first-child {
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.3);
+}
+
+/* Smooth transitions for all interactive elements */
+label,
+div,
+span,
+button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Disabled state styling */
+input:disabled + div {
+    cursor: not-allowed;
+}
+
+input:disabled ~ span {
+    cursor: not-allowed;
 }
 </style>

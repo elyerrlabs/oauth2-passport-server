@@ -1,3 +1,24 @@
+<!--
+Copyright (c) 2025 Elvis Yerel Roman Concha
+
+This file is part of an open source project licensed under the
+"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+
+You may use, study, modify, and redistribute this file for personal,
+educational, or non-commercial research purposes only.
+
+Commercial use is strictly prohibited without prior written consent
+from the author.
+
+Combining this software with any project licensed for commercial use
+(such as AGPL) is not permitted without explicit authorization.
+
+This software supports OAuth 2.0 and OpenID Connect.
+
+Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+-->
 <template>
     <TransitionRoot appear :show="isOpen" as="template">
         <Dialog as="div" :class="['relative', zIndex]">
@@ -10,7 +31,7 @@
                 leave-from="opacity-100"
                 leave-to="opacity-0"
             >
-                <div class="fixed inset-0 bg-black/25" />
+                <div class="fixed inset-0 bg-black/25 dark:bg-black/40" />
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-y-auto">
@@ -26,24 +47,32 @@
                     >
                         <DialogPanel
                             :class="[
-                                'transform  rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all',
+                                'transform rounded-2xl bg-white dark:bg-gray-800 p-6 text-left align-middle shadow-xl transition-all',
                                 panelClass,
                             ]"
                         >
-                            <DialogTitle as="div" class="flex justify-between" v-if="title">
-                                <h1 class="font-semibold text-3xl mx-2">
+                            <DialogTitle
+                                as="div"
+                                class="flex justify-between"
+                                v-if="title"
+                            >
+                                <h1
+                                    class="font-semibold text-3xl mx-2 text-gray-900 dark:text-white"
+                                >
                                     {{ title }}
                                 </h1>
 
                                 <button
                                     type="button"
-                                    class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                    class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 dark:bg-blue-900/30 px-4 py-2 text-sm font-medium text-blue-900 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-blue-400"
                                     @click="closeModal"
                                 >
                                     X
                                 </button>
                             </DialogTitle>
-                            <div class="p-6 text-gray-700 flex-grow">
+                            <div
+                                class="p-6 text-gray-700 dark:text-gray-300 flex-grow"
+                            >
                                 <slot name="body" />
                             </div>
                         </DialogPanel>

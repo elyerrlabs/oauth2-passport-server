@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <div class="w-full">
         <button
             @click="showDialog = true"
-            class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 shadow hover:bg-blue-700 transition"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 shadow transition-colors duration-200"
         >
             <i class="mdi mdi-map-marker-outline"></i>
             <span>{{ __("Choose delivery address") }}</span>
@@ -31,16 +31,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <div v-if="selected" class="mt-4">
             <div
-                class="bg-white rounded-xl border border-gray-300 shadow-sm hover:shadow-md transition"
+                class="bg-white dark:bg-gray-800 rounded-xl border border-gray-300 dark:border-gray-600 shadow-sm hover:shadow-md transition-all duration-200"
             >
                 <div
-                    class="flex items-center justify-between px-4 py-3 border-b border-b-gray-300"
+                    class="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-gray-600"
                 >
-                    <h3 class="text-sm uppercase font-medium text-blue-600">
+                    <h3
+                        class="text-sm uppercase font-medium text-blue-600 dark:text-blue-400"
+                    >
                         {{ __("Selected Delivery Address") }}
                     </h3>
                     <button
-                        class="text-blue-600 hover:text-blue-800"
+                        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
                         @click="showDialog = true"
                     >
                         <i class="mdi mdi-pencil"></i>
@@ -51,18 +53,29 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm"
                 >
                     <div v-if="selected.full_name">
-                        <div class="uppercase text-gray-500 text-xs mb-1">
+                        <div
+                            class="uppercase text-gray-500 dark:text-gray-400 text-xs mb-1"
+                        >
                             {{ __("Full name") }}
                         </div>
-                        <div class="font-medium">{{ selected.full_name }}</div>
+                        <div class="font-medium text-gray-900 dark:text-white">
+                            {{ selected.full_name }}
+                        </div>
                     </div>
 
                     <div v-if="selected.address || selected.address_line_2">
-                        <div class="uppercase text-gray-500 text-xs mb-1">
+                        <div
+                            class="uppercase text-gray-500 dark:text-gray-400 text-xs mb-1"
+                        >
                             {{ __("Address") }}
                         </div>
-                        <div>{{ selected.address }}</div>
-                        <div v-if="selected.address_line_2">
+                        <div class="text-gray-700 dark:text-gray-300">
+                            {{ selected.address }}
+                        </div>
+                        <div
+                            v-if="selected.address_line_2"
+                            class="text-gray-700 dark:text-gray-300"
+                        >
                             {{ selected.address_line_2 }}
                         </div>
                     </div>
@@ -72,10 +85,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             selected.city || selected.state || selected.district
                         "
                     >
-                        <div class="uppercase text-gray-500 text-xs mb-1">
+                        <div
+                            class="uppercase text-gray-500 dark:text-gray-400 text-xs mb-1"
+                        >
                             {{ __("Location") }}
                         </div>
-                        <div>
+                        <div class="text-gray-700 dark:text-gray-300">
                             <span v-if="selected.city">{{
                                 selected.city
                             }}</span>
@@ -89,10 +104,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <div v-if="selected.country || selected.postal_code">
-                        <div class="uppercase text-gray-500 text-xs mb-1">
+                        <div
+                            class="uppercase text-gray-500 dark:text-gray-400 text-xs mb-1"
+                        >
                             {{ __("Country") }} / {{ __("Postal Code") }}
                         </div>
-                        <div>
+                        <div class="text-gray-700 dark:text-gray-300">
                             <span v-if="selected.country">{{
                                 selected.country
                             }}</span>
@@ -103,24 +120,36 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <div v-if="selected.phone">
-                        <div class="uppercase text-gray-500 text-xs mb-1">
+                        <div
+                            class="uppercase text-gray-500 dark:text-gray-400 text-xs mb-1"
+                        >
                             {{ __("Primary phone") }}
                         </div>
-                        <div>{{ selected.phone }}</div>
+                        <div class="text-gray-700 dark:text-gray-300">
+                            {{ selected.phone }}
+                        </div>
                     </div>
 
                     <div v-if="selected.secondary_phone">
-                        <div class="uppercase text-gray-500 text-xs mb-1">
+                        <div
+                            class="uppercase text-gray-500 dark:text-gray-400 text-xs mb-1"
+                        >
                             {{ __("Secondary phone") }}
                         </div>
-                        <div>{{ selected.secondary_phone }}</div>
+                        <div class="text-gray-700 dark:text-gray-300">
+                            {{ selected.secondary_phone }}
+                        </div>
                     </div>
 
                     <div v-if="selected.references">
-                        <div class="uppercase text-gray-500 text-xs mb-1">
+                        <div
+                            class="uppercase text-gray-500 dark:text-gray-400 text-xs mb-1"
+                        >
                             {{ __("References") }}
                         </div>
-                        <div>{{ selected.references }}</div>
+                        <div class="text-gray-700 dark:text-gray-300">
+                            {{ selected.references }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,8 +161,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             :title="__('Delivery Addresses')"
         >
             <template #body>
-                <div class="p-1 grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <div class="bg-white rounded-xl shadow-sm">
+                <div class="p-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Add New Address Card -->
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
+                    >
                         <div
                             class="bg-blue-600 text-white px-4 py-3 rounded-t-xl"
                         >
@@ -173,7 +205,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </template>
 
                                     <template #option="{ option }">
-                                        <span class="text-gray-700 p-4">
+                                        <span
+                                            class="text-gray-700 dark:text-gray-300 p-4"
+                                        >
                                             {{ option.emoji }} -
                                             {{ option.name_en }}
                                         </span>
@@ -249,7 +283,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
 
                             <div>
-                                <span class="text-gray-700">
+                                <span class="text-gray-700 dark:text-gray-300">
                                     {{ __("Primary phone") }}
                                     <i class="text-red-500">*</i>
                                 </span>
@@ -276,7 +310,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             </template>
 
                                             <template #option="{ option }">
-                                                <span class="text-gray-700 p-4">
+                                                <span
+                                                    class="text-gray-700 dark:text-gray-300 p-4"
+                                                >
                                                     {{ option.emoji }} -
                                                     {{ option.name_en }}
                                                 </span>
@@ -294,7 +330,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
 
                             <div>
-                                <span class="text-gray-700">
+                                <span class="text-gray-700 dark:text-gray-300">
                                     {{ __("Secondary phone") }}
                                 </span>
                                 <div class="flex gap-2">
@@ -319,7 +355,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             </template>
 
                                             <template #option="{ option }">
-                                                <span class="text-gray-700 p-4">
+                                                <span
+                                                    class="text-gray-700 dark:text-gray-300 p-4"
+                                                >
                                                     {{ option.emoji }} -
                                                     {{ option.name_en }}
                                                 </span>
@@ -337,7 +375,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                                 >
                                     {{ __("References") }}
                                 </label>
@@ -345,14 +383,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     v-model="form.references"
                                     :error="errors.references"
                                     type="text"
-                                    class="mt-1 py-2 px-3 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                    class="mt-1 py-2 px-3 block w-full rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-700 dark:text-white"
                                 ></textarea>
                             </div>
                         </div>
                         <div class="px-4 py-3">
                             <button
                                 @click="saveAddress"
-                                class="w-full bg-blue-600 cursor-pointer hover:bg-blue-700 text-white py-3 rounded-lg"
+                                class="w-full bg-blue-600 cursor-pointer hover:bg-blue-700 text-white py-3 rounded-lg transition-colors duration-200"
                             >
                                 {{
                                     form.id
@@ -363,7 +401,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-sm">
+                    <!-- Your Addresses Card -->
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
+                    >
                         <div
                             class="bg-blue-600 text-white px-4 py-3 rounded-t-xl"
                         >
@@ -371,24 +412,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ __("Your Addresses") }}
                             </h4>
                         </div>
-                        <div class="p-4 max-h-[60vh] overflow-y-auto divide-y">
+                        <div
+                            class="p-4 max-h-[60vh] overflow-y-auto divide-y divide-gray-200 dark:divide-gray-700"
+                        >
                             <div
                                 v-for="address in addresses"
                                 :key="address.id"
-                                class="py-3 flex justify-between items-start"
+                                class="py-3 flex justify-between items-start transition-colors duration-200"
                                 :class="{
-                                    'bg-blue-50 border-l-4 border-blue-600':
+                                    'bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-600 dark:border-blue-500':
                                         selected?.id === address.id,
                                 }"
                             >
-                                <div>
-                                    <div class="font-medium">
+                                <div class="flex-1">
+                                    <div
+                                        class="font-medium text-gray-900 dark:text-white"
+                                    >
                                         {{ address.full_name }}
                                         -
                                         {{ address.country }} -
                                         {{ address.city }}
                                     </div>
-                                    <div class="text-sm text-gray-600">
+                                    <div
+                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                    >
                                         {{ address.address }}
                                         <span v-if="address.address_line_2"
                                             >,
@@ -396,15 +443,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         >
                                     </div>
                                     <div
-                                        class="flex items-center text-sm text-gray-600 mt-1"
+                                        class="flex items-center text-sm text-gray-600 dark:text-gray-400 mt-1"
                                     >
                                         <i class="mdi mdi-phone mr-1"></i>
                                         {{ address.phone }}
                                     </div>
                                 </div>
-                                <div class="flex flex-col space-y-1">
+                                <div class="flex flex-col space-y-1 ml-4">
                                     <button
-                                        class="text-blue-600 hover:underline text-sm"
+                                        class="text-blue-600 dark:text-blue-400 hover:underline text-sm transition-colors"
                                         @click="selectAddress(address)"
                                     >
                                         {{
@@ -414,13 +461,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         }}
                                     </button>
                                     <button
-                                        class="text-gray-600 hover:underline text-sm"
+                                        class="text-gray-600 dark:text-gray-400 hover:underline text-sm transition-colors"
                                         @click="edit(address)"
                                     >
                                         {{ __("Edit") }}
                                     </button>
                                     <button
-                                        class="text-red-600 hover:underline text-sm"
+                                        class="text-red-600 dark:text-red-400 hover:underline text-sm transition-colors"
                                         @click="destroy(address)"
                                     >
                                         {{ __("Remove") }}
@@ -432,9 +479,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Footer -->
-                <div class="flex justify-end px-6 py-4">
+                <div
+                    class="flex justify-end px-6 py-4 border-t border-gray-200 dark:border-gray-700"
+                >
                     <button
-                        class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100"
+                        class="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                         @click="showDialog = false"
                     >
                         {{ __("Close") }}
@@ -446,7 +495,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VCountry from "@/components/VCountry.vue";
+//import VCountry from "@/components/VCountry.vue";
 import VPhone from "@/components/VPhone.vue";
 import VInput from "@/components/VInput.vue";
 import VModal from "@/components/VModal.vue";
@@ -455,7 +504,7 @@ import VError from "@/components/VError.vue";
 
 export default {
     components: {
-        VCountry,
+  //      VCountry,
         VPhone,
         VInput,
         VModal,

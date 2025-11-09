@@ -19,29 +19,8 @@ Author Contact: yerel9212@yahoo.es
 
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
-<!--
-Copyright (c) 2025 Elvis Yerel Roman Concha
-
-This file is part of an open source project licensed under the
-"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
-
-You may use, study, modify, and redistribute this file for personal,
-educational, or non-commercial research purposes only.
-
-Commercial use is strictly prohibited without prior written consent
-from the author.
-
-Combining this software with any project licensed for commercial use
-(such as AGPL) is not permitted without explicit authorization.
-
-This software supports OAuth 2.0 and OpenID Connect.
-
-Author Contact: yerel9212@yahoo.es
-
-SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
--->
 <template>
-    <div class="min-h-screen bg-gray-50 flex">
+    <div class="min-h-screen bg-white dark:bg-gray-900 flex">
         <!-- Sidebar Overlay (Mobile) -->
         <div
             v-if="isSidebarOpen"
@@ -51,7 +30,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Enhanced Sidebar - Fixed on desktop -->
         <aside
-            class="fixed lg:sticky overflow-auto min-h-screen max-h-screen inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform transition-all duration-300 ease-in-out border-r border-gray-200 flex flex-col"
+            class="fixed lg:sticky overflow-auto min-h-screen max-h-screen inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-xl transform transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700 flex flex-col"
             :class="[
                 // Mobile behavior
                 isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
@@ -62,7 +41,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             ]"
         >
             <div
-                class="p-4 border-b border-gray-200 flex-shrink-0"
+                class="p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0"
                 v-if="$page.props.user && aside"
             >
                 <div class="flex items-center space-x-3">
@@ -72,10 +51,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         {{ userInitials }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-gray-900 truncate">
+                        <p
+                            class="text-sm font-semibold text-gray-900 dark:text-white truncate"
+                        >
                             {{ user.name }}
                         </p>
-                        <p class="text-sm text-gray-500 truncate">
+                        <p
+                            class="text-sm text-gray-500 dark:text-gray-400 truncate"
+                        >
                             {{ user.email }}
                         </p>
                     </div>
@@ -83,18 +66,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Scrollable Navigation -->
-            <div class="flex-1 overflow-y-auto aside-scrollbar" v-if="aside">
+            <div class="flex-1 overflow-y-auto" v-if="aside">
                 <nav class="p-4 space-y-2">
                     <!-- Account Section -->
                     <div>
                         <h3
-                            class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2"
+                            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
                         >
                             {{ __("Account") }}
                         </h3>
                         <button
                             @click="open($page.props.user_dashboard)"
-                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
                         >
                             <div
                                 class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
@@ -117,10 +100,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
             <!-- Footer -->
             <div
-                class="border-t border-gray-200 p-4 flex-shrink-0"
+                class="border-t border-gray-200 dark:border-gray-700 p-4 flex-shrink-0"
                 v-if="aside"
             >
-                <p class="text-xs text-center text-gray-500">
+                <p class="text-xs text-center text-gray-500 dark:text-gray-400">
                     &copy; {{ new Date().getFullYear() }}
                     {{ $page.props.org_name }}
                 </p>
@@ -133,7 +116,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         >
             <!-- Enhanced Header -->
             <header
-                class="bg-white shadow-sm border-b border-gray-200 z-30 sticky top-0"
+                class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 z-30 sticky top-0"
             >
                 <div
                     class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8"
@@ -142,7 +125,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Mobile menu button -->
                         <button
                             @click="toggleMenu"
-                            class="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
+                            class="lg:hidden p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                         >
                             <i class="mdi mdi-menu text-lg"></i>
                         </button>
@@ -166,12 +149,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </button>
 
                         <!-- App Title -->
-                        <h1 class="text-xl font-semibold text-gray-900">
+                        <h1
+                            class="text-xl font-semibold text-gray-900 dark:text-white"
+                        >
                             {{ app_name }}
                         </h1>
                     </div>
 
                     <div class="flex items-center space-x-4">
+                        <v-theme />
                         <v-notification />
                         <v-profile />
                     </div>
@@ -187,118 +173,77 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
     </div>
 </template>
-
-<script>
+<script setup>
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { router, usePage } from "@inertiajs/vue3";
 import VNotification from "@/components/VNotification.vue";
 import VProfile from "@/components/VProfile.vue";
+import VTheme from "@/components/VTheme.vue";
 
-export default {
-    components: {
-        VProfile,
-        VNotification,
-    },
+const page = usePage();
 
-    data() {
-        return {
-            isSidebarOpen: false,
-            user: {},
-            app_name: "",
-            aside: true, // true = sidebar visible, false = sidebar hidden
-        };
-    },
+// Reactive state
+const isSidebarOpen = ref(false);
+const user = ref(page.props.user ?? {});
+const app_name = ref(page.props.org_name ?? "");
+const aside = ref(true); // true = sidebar visible, false = hidden
 
-    computed: {
-        userInitials() {
-            if (!this.user || !this.user.name) return "U";
-            return this.user.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase();
-        },
-    },
+// Computed: get user initials
+const userInitials = computed(() => {
+    if (!user.value || !user.value.name) return "U";
+    return user.value.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase();
+});
 
-    created() {
-        this.user = this.$page.props.user ?? {};
-        this.app_name = this.$page.props.org_name ?? "";
+// Load sidebar visibility from localStorage
+const savedState = localStorage.getItem("sidebarVisible");
+if (savedState !== null) {
+    aside.value = JSON.parse(savedState);
+}
 
-        // Load sidebar state from localStorage
-        const savedState = localStorage.getItem("sidebarVisible");
-        if (savedState !== null) {
-            this.aside = JSON.parse(savedState);
-        }
-    },
-
-    mounted() {
-        this.setupEventListeners();
-    },
-
-    methods: {
-        toggleMenu() {
-            this.isSidebarOpen = !this.isSidebarOpen;
-        },
-
-        open(item) {
-            window.location.href = item.route;
-        },
-
-        toggle() {
-            this.aside = !this.aside;
-            localStorage.setItem("sidebarVisible", this.aside);
-
-            // Close mobile menu if open
-            if (this.isSidebarOpen) {
-                this.isSidebarOpen = false;
-            }
-        },
-
-        handleResize() {
-            if (window.innerWidth >= 1024) {
-                // On desktop, ensure mobile menu is closed
-                this.isSidebarOpen = false;
-            } else {
-                // On mobile, ensure sidebar is closed by default
-                this.isSidebarOpen = false;
-            }
-        },
-
-        setupEventListeners() {
-            window.addEventListener("resize", this.handleResize);
-            this.handleResize(); // Initial check
-        },
-    },
-
-    beforeUnmount() {
-        window.removeEventListener("resize", this.handleResize);
-    },
+// Methods
+const toggleMenu = () => {
+    isSidebarOpen.value = !isSidebarOpen.value;
 };
+
+const open = (item) => {
+    router.visit(item.route);
+};
+
+const toggle = () => {
+    aside.value = !aside.value;
+    localStorage.setItem("sidebarVisible", aside.value);
+
+    // Close mobile menu if it's open
+    if (isSidebarOpen.value) {
+        isSidebarOpen.value = false;
+    }
+};
+
+const handleResize = () => {
+    // Always close the mobile sidebar on resize
+    if (window.innerWidth >= 1024) {
+        isSidebarOpen.value = false;
+    } else {
+        isSidebarOpen.value = false;
+    }
+};
+
+// Setup window event listeners
+const setupEventListeners = () => {
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial check
+};
+
+// Lifecycle hooks
+onMounted(() => {
+    setupEventListeners();
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener("resize", handleResize);
+});
 </script>
-
-<style scoped>
-/* Custom scrollbar for sidebar */
-.aside-scrollbar::-webkit-scrollbar {
-    width: 4px;
-}
-
-.aside-scrollbar::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-.aside-scrollbar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-}
-
-.aside-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
-/* Smooth transitions for layout */
-.main-content {
-    transition: margin-left 0.3s ease-in-out;
-}
-
-.sidebar {
-    transition: transform 0.3s ease-in-out;
-}
-</style>

@@ -20,19 +20,36 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <nav class="flex items-center justify-center mt-8" aria-label="Pagination">
+    <nav
+        class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 px-4"
+        aria-label="Pagination"
+    >
+        <!-- Page Info -->
         <div
-            class="flex items-center gap-2 bg-white rounded-xl shadow-sm border border-gray-200 p-2"
+            class="text-sm text-gray-600 dark:text-gray-400 order-2 sm:order-1"
         >
+            {{ __("Showing page") }}
+            <span class="font-semibold text-gray-900 dark:text-white">{{
+                currentPage
+            }}</span>
+            {{ __("of") }}
+            <span class="font-semibold text-gray-900 dark:text-white">{{
+                totalPages
+            }}</span>
+            <span class="hidden md:inline"> - {{ __("Total pages") }}</span>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="flex items-center gap-2 order-1 sm:order-2">
             <!-- Previous Button -->
             <button
                 @click="goToPage(currentPage - 1)"
                 :disabled="currentPage === 1"
-                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                class="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
                 :class="
                     currentPage === 1
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm'
+                        ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-sm border border-gray-200 dark:border-gray-600'
                 "
                 aria-label="Previous page"
             >
@@ -40,20 +57,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </button>
 
             <!-- Page Numbers -->
-            <div class="flex items-center gap-1">
+            <div
+                class="flex items-center gap-1 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-1"
+            >
                 <button
                     v-for="page in pagesToShow"
                     :key="page"
                     @click="goToPage(page)"
                     :aria-current="currentPage === page ? 'page' : null"
                     :aria-label="`Go to page ${page}`"
-                    class="flex items-center justify-center min-w-10 h-10 rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    class="flex items-center justify-center min-w-10 h-10 rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
                     :class="[
                         page === '...'
-                            ? 'text-gray-400 cursor-default px-2'
+                            ? 'text-gray-400 dark:text-gray-500 cursor-default px-2'
                             : currentPage === page
-                            ? 'bg-blue-600 text-white shadow-md shadow-blue-200 hover:bg-blue-700 scale-105'
-                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm border border-transparent',
+                            ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-200 dark:shadow-blue-900/50 hover:from-blue-700 hover:to-blue-800 scale-105'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 border border-transparent',
                     ]"
                     :disabled="page === '...'"
                 >
@@ -70,11 +89,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <button
                 @click="goToPage(currentPage + 1)"
                 :disabled="currentPage === totalPages"
-                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                class="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
                 :class="
                     currentPage === totalPages
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm'
+                        ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-sm border border-gray-200 dark:border-gray-600'
                 "
                 aria-label="Next page"
             >
@@ -82,12 +101,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </button>
         </div>
 
-        <!-- Page Info (Mobile) -->
-        <div class="ml-4 text-sm text-gray-500 hidden sm:block">
-            {{ __("Page") }}
-            <span class="font-semibold text-gray-700">{{ currentPage }}</span>
-            {{ __("of") }}
-            <span class="font-semibold text-gray-700">{{ totalPages }}</span>
+        <!-- Quick Navigation (Desktop) -->
+        <div class="hidden lg:flex items-center gap-2 order-3">
+            <span
+                class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap"
+            >
+                {{ __("Go to page") }}:
+            </span>
+            <div class="relative">
+                <input
+                    type="number"
+                    :min="1"
+                    :max="totalPages"
+                    v-model.number="quickPage"
+                    @keyup.enter="goToQuickPage"
+                    class="w-20 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                    :placeholder="__('Page')"
+                />
+                <button
+                    @click="goToQuickPage"
+                    class="absolute right-1 top-1/2 transform -translate-y-1/2 p-1 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                >
+                    <i class="mdi mdi-arrow-right text-sm"></i>
+                </button>
+            </div>
         </div>
     </nav>
 </template>
@@ -108,6 +145,11 @@ export default {
             type: Number,
             default: 7,
         },
+    },
+    data() {
+        return {
+            quickPage: null,
+        };
     },
     computed: {
         currentPage: {
@@ -158,7 +200,17 @@ export default {
         goToPage(page) {
             if (page >= 1 && page <= this.totalPages && page !== "...") {
                 this.currentPage = page;
+                this.quickPage = null;
                 this.$emit("change", page);
+            }
+        },
+        goToQuickPage() {
+            if (
+                this.quickPage &&
+                this.quickPage >= 1 &&
+                this.quickPage <= this.totalPages
+            ) {
+                this.goToPage(this.quickPage);
             }
         },
     },
@@ -167,21 +219,25 @@ export default {
 
 <style scoped>
 button:not(:disabled) {
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes gentle-pulse {
     0%,
     100% {
         transform: scale(1);
+        box-shadow: 0 4px 6px -1px rgb(59 130 246 / 0.1),
+            0 2px 4px -2px rgb(59 130 246 / 0.1);
     }
     50% {
         transform: scale(1.05);
+        box-shadow: 0 10px 15px -3px rgb(59 130 246 / 0.2),
+            0 4px 6px -4px rgb(59 130 246 / 0.1);
     }
 }
 
 button[aria-current="page"] {
-    animation: gentle-pulse 2s ease-in-out infinite;
+    animation: gentle-pulse 3s ease-in-out infinite;
 }
 
 button:focus-visible {
@@ -191,5 +247,16 @@ button:focus-visible {
 
 button:not(:disabled):not(.cursor-default):hover {
     transform: translateY(-1px);
+}
+
+/* Hide number input arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 </style>

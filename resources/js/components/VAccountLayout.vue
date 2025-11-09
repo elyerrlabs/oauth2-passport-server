@@ -20,7 +20,7 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="min-h-screen bg-gray-50 flex">
+    <div class="min-h-screen bg-white dark:bg-gray-900 flex">
         <!-- Sidebar Overlay (Mobile) -->
         <div
             v-if="isSidebarOpen"
@@ -31,13 +31,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Enhanced Sidebar - Fixed on desktop -->
         <aside
             :class="[
-                'fixed lg:fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:transform-none lg:translate-x-0 border-r border-gray-200 flex flex-col',
+                'fixed lg:fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out lg:transform-none lg:translate-x-0 border-r border-gray-200 dark:border-gray-700 flex flex-col',
                 isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
             ]"
         >
             <!-- User Profile Section -->
             <div
-                class="p-4 border-b border-gray-200 flex-shrink-0"
+                class="p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0"
                 v-if="$page.props.user"
             >
                 <div class="flex items-center space-x-3">
@@ -47,10 +47,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         {{ userInitials }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-gray-900 truncate">
+                        <p
+                            class="text-sm font-semibold text-gray-900 dark:text-white truncate"
+                        >
                             {{ user.name }}
                         </p>
-                        <p class="text-sm text-gray-500 truncate">
+                        <p
+                            class="text-sm text-gray-500 dark:text-gray-400 truncate"
+                        >
                             {{ user.email }}
                         </p>
                     </div>
@@ -63,13 +67,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Account Section -->
                     <div>
                         <h3
-                            class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2"
+                            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
                         >
                             {{ __("Account") }}
                         </h3>
                         <button
                             @click="open($page.props.user_dashboard)"
-                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
                         >
                             <div
                                 class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
@@ -91,7 +95,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Developers Section -->
                     <div v-if="developers.show">
                         <h3
-                            class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-6"
+                            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 mt-6"
                         >
                             {{ __(developers.name) }}
                         </h3>
@@ -99,7 +103,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             v-for="(item, index) in developers.menu"
                             :key="index"
                             @click="open(item)"
-                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
                         >
                             <div
                                 class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"
@@ -119,7 +123,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Dashboards Section -->
                     <div v-if="admin_dashboard.length">
                         <h3
-                            class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-6"
+                            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 mt-6"
                         >
                             {{ __("Dashboards") }}
                         </h3>
@@ -127,7 +131,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             v-for="(item, index) in admin_dashboard"
                             :key="index"
                             @click="open(item)"
-                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
                         >
                             <div
                                 class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center"
@@ -145,16 +149,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Policies Section -->
-                    <div class="pt-4 border-t border-gray-200">
+                    <div
+                        class="pt-4 border-t border-gray-200 dark:border-gray-700"
+                    >
                         <button
                             v-for="(item, index) in $page.props.policies"
                             :key="index"
                             @click="open(item)"
                             v-show="item.show"
-                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200"
+                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
                         >
                             <div
-                                class="w-8 h-8 bg-gray-400 rounded-lg flex items-center justify-center"
+                                class="w-8 h-8 bg-gray-400 dark:bg-gray-600 rounded-lg flex items-center justify-center"
                             >
                                 <i
                                     :class="[
@@ -171,8 +177,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Footer -->
-            <div class="border-t border-gray-200 p-4 flex-shrink-0">
-                <p class="text-xs text-center text-gray-500">
+            <div
+                class="border-t border-gray-200 dark:border-gray-700 p-4 flex-shrink-0"
+            >
+                <p class="text-xs text-center text-gray-500 dark:text-gray-400">
                     &copy; {{ new Date().getFullYear() }}
                     {{ $page.props.org_name }}
                 </p>
@@ -183,7 +191,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <div class="flex-1 flex flex-col min-w-0 lg:ml-64">
             <!-- Enhanced Header -->
             <header
-                class="bg-white shadow-sm border-b border-gray-200 z-20 sticky top-0"
+                class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 z-20 sticky top-0"
             >
                 <div
                     class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8"
@@ -192,7 +200,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Mobile menu button -->
                         <button
                             @click="toggleMenu"
-                            class="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
+                            class="lg:hidden p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                         >
                             <i class="mdi mdi-menu text-lg"></i>
                         </button>
@@ -206,7 +214,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="mdi mdi-view-dashboard text-white text-sm"
                                 ></i>
                             </div>
-                            <h1 class="text-xl font-semibold text-gray-900">
+                            <h1
+                                class="text-xl font-semibold text-gray-900 dark:text-white"
+                            >
                                 {{ app_name }}
                             </h1>
                         </div>
@@ -220,7 +230,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 overflow-auto bg-gray-50">
+            <main class="flex-1 overflow-auto bg-white dark:bg-gray-900">
                 <div class="p-4 sm:p-6 lg:p-8">
                     <slot />
                 </div>
@@ -230,7 +240,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VProfile from"@/components/VProfile.vue";
+import VProfile from "@/components/VProfile.vue";
 import VNotification from "@/components/VNotification.vue";
 
 export default {
@@ -306,23 +316,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-/* Custom scrollbar for sidebar */
-.aside-scrollbar::-webkit-scrollbar {
-    width: 4px;
-}
-
-.aside-scrollbar::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-.aside-scrollbar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-}
-
-.aside-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-</style>
