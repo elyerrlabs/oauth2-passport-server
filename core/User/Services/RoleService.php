@@ -55,6 +55,10 @@ class RoleService
         // Prepare query
         $query = $this->roleRepository->query();
 
+        if ($request->disabled_request) {
+            return $query;
+        }
+
         if ($request->filled('name')) {
             $query->whereRaw("LOWER(name) like ?", ["%" . strtolower($request->name) . "%"]);
         }

@@ -24,6 +24,7 @@ namespace Core\User\Http\Controllers\Admin;
  */
 
 
+use Core\User\Services\ScopeService;
 use Illuminate\Http\Request;
 use Core\User\Repositories\ScopeRepository;
 use App\Http\Controllers\WebController;
@@ -32,28 +33,29 @@ class ScopeController extends WebController
 {
     /**
      * Repository
-     * @var ScopeRepository
+     * @var  ScopeService
      */
-    public $repository;
+    public $scopeService;
 
     /**
-     * Construct
-     * @param \Core\User\Repositories\ScopeRepository $scopeRepository
+     * Scope service
+     * @param \Core\User\Services\ScopeService $scopeService
      */
-    public function __construct(ScopeRepository $scopeRepository)
+    public function __construct(ScopeService $scopeService)
     {
         parent::__construct();
-        $this->repository = $scopeRepository;
+        $this->scopeService = $scopeService;
         $this->middleware('userCanAny:administrator:scope:full,administrator:scope:view')->only('index');
         $this->middleware('wants.json');
     }
 
     /**
-     * Show the all scope
+     * Show the all scope for user only public and active
      * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder<\Core\User\Model\Scope>
      */
     public function index(Request $request)
     {
-        return $this->repository->search($request);
+        return $this->scopeService->searchForUser($request);
     }
 }

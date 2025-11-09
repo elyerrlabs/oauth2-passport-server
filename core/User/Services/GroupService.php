@@ -53,6 +53,10 @@ class GroupService
         // Prepare query
         $query = $this->groupRepository->query();
 
+        if ($request->disabled_request) {
+            return $query;
+        }
+
         if ($request->filled('name')) {
             $query->whereRaw("LOWER(name) like ?", ["%" . strtolower($request->name) . "%"]);
         }

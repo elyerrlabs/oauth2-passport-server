@@ -24,19 +24,10 @@ namespace Core\User\Repositories;
  */
 
 use Core\User\Model\Role;
-use Elyerr\ApiResponse\Assets\Asset;
-use Elyerr\ApiResponse\Assets\JsonResponser;
-use Core\User\Transformer\Admin\RoleTransformer;
 
 
 class RoleRepository
 {
-    /**
-     * Transformer class
-     * @var 
-     */
-    public $transformer = RoleTransformer::class;
-
     /**
      * Model
      * @var Role
