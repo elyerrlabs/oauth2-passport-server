@@ -23,9 +23,11 @@ namespace Core\User\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\User\Transformer\Admin\RoleTransformer;
 use Inertia\Inertia;
 use Core\User\Model\Role;
 use Illuminate\Http\Request;
+use Core\User\Services\RoleService;
 use App\Http\Controllers\WebController;
 use Core\User\Repositories\RoleRepository;
 use Core\User\Http\Requests\RoleStoreRequest;
@@ -36,24 +38,23 @@ class RoleController extends WebController
 
     /**
      * Repository
-     * @var RoleRepository
+     * @var RoleService
      */
-    public $repository;
+    private $roleService;
 
     /**
      * Construct
-     * @param \Core\User\Repositories\RoleRepository $roleRepository
+     * @param \Core\User\Repositories\RoleRepository $roleService
      */
-    public function __construct(RoleRepository $roleRepository)
+    public function __construct(RoleService $roleService)
     {
         parent::__construct();
-        $this->repository = $roleRepository;
+        $this->roleService = $roleService;
         $this->middleware('userCanAny:administrator:role:full,administrator:role:view')->only('index');
         $this->middleware('userCanAny:administrator:role:full,administrator:role:show')->only('show');
         $this->middleware('userCanAny:administrator:role:full,administrator:role:create')->only('store');
         $this->middleware('userCanAny:administrator:role:full,administrator:role:update')->only('update');
         $this->middleware('userCanAny:administrator:role:full,administrator:role:destroy')->only('destroy');
-        $this->middleware('wants.json')->only('show');
     }
 
     /**
@@ -63,54 +64,50 @@ class RoleController extends WebController
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-            return $this->repository->search($request);
-        }
+        $page = $request->filled('per_page') ? $request->per_page : 15;
+
+        $data = $this->roleService->search($request)->paginate($page);
 
         return Inertia::render("Core/User/Admin/Role/Index", [
+            'data' => fractal($data, RoleTransformer::class)->toArray(),
             'route' => route('user.admin.roles.index'),
             'admin_routes' => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);
     }
 
     /**
-     * Show detail
-     * @param \Core\User\Model\Role $role
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function show(Role $role)
-    {
-        return $this->repository->details($role->id);
-    }
-
-    /**
-     * Create new role
-     * @param  RoleStoreRequest $request
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * Create
+     * @param \Core\User\Http\Requests\RoleStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(RoleStoreRequest $request)
     {
-        return $this->repository->create($request->toArray());
+        $this->roleService->create($request->toArray());
+
+        return redirect()->route('user.admin.roles.index');
     }
 
     /**
-     * Update resource
-     * @param  RoleUpdateRequest $request
+     * Update
+     * @param \Core\User\Http\Requests\RoleUpdateRequest $request
      * @param \Core\User\Model\Role $role
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(RoleUpdateRequest $request, Role $role)
     {
-        return $this->repository->update($role->id, $request->toArray());
+        $this->roleService->update($role->id, $request->toArray());
+
+        return redirect()->route('user.admin.roles.index');
     }
 
     /**
-     * Delete role
+     * Destroy
      * @param \Core\User\Model\Role $role
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Role $role)
     {
-        return $this->repository->delete($role->id);
+        $this->roleService->delete($role->id);
+        return redirect()->route('user.admin.roles.index');
     }
 }

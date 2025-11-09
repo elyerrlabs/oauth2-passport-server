@@ -24,18 +24,13 @@ namespace Core\User\Repositories;
  */
 
 use Core\User\Model\Role;
-use Illuminate\Http\Request;
 use Elyerr\ApiResponse\Assets\Asset;
-use App\Repositories\Contracts\Contracts;
 use Elyerr\ApiResponse\Assets\JsonResponser;
-use Elyerr\ApiResponse\Exceptions\ReportError;
 use Core\User\Transformer\Admin\RoleTransformer;
 
 
-class RoleRepository implements Contracts
+class RoleRepository
 {
-    use JsonResponser, Asset;
-
     /**
      * Transformer class
      * @var 
@@ -46,51 +41,34 @@ class RoleRepository implements Contracts
      * Model
      * @var Role
      */
-    public $model;
+    private $model;
 
-
+    /**
+     * Construct
+     * @param \Core\User\Model\Role $role
+     */
     public function __construct(Role $role)
     {
         $this->model = $role;
     }
 
     /**
-     * Search resources
-     * @param \Illuminate\Http\Request $request
-     * @return JsonResponser
+     * Query
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder<Role>
      */
-    public function search(Request $request)
+    public function query()
     {
-        // Retrieve params of the request
-        $params = $this->filter_transform($this->transformer);
-
-        // Prepare query
-        $data = $this->model->query();
-
-        // Search
-        $data = $this->searchByBuilder($data, $params);
-
-        // Order by
-        $data = $this->orderByBuilder($data, $this->transformer);
-
-        return $this->showAllByBuilder($data, $this->transformer);
+        return $this->model->query();
     }
 
     /**
      * Create new resource
      * @param array $data
-     * @return JsonResponser
+     * @return Role|TModel|\Illuminate\Database\Eloquent\Model
      */
     public function create(array $data)
     {
-        $model = $this->model->create([
-            'name' => $data['name'],
-            'slug' => $data['name'],
-            'description' => $data['description'],
-            'system' => $data['system'] ?? false,
-        ]);
-        //send event
-        return $this->showOne($model, $this->transformer, 201);
+        return $this->model->create($data);
     }
 
     /**
@@ -104,60 +82,19 @@ class RoleRepository implements Contracts
     }
 
     /**
-     * Show role details
-     * @param string $id
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function details(string $id)
-    {
-        $model = $this->find($id);
-
-        return $this->showOne($model, $this->transformer);
-    }
-
-    /**
      * Update specific resource
      * @param string $id
      * @param array $data
-     * @return JsonResponser
+     * @return Role|Role[]|TModel|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
      */
     public function update(string $id, array $data)
     {
         $model = $this->model->find($id);
 
-        if (!empty($data['name'])) {
-            $model->name = $data['name'];
-        }
+        $model->update($data);
 
-        if (!empty($data['description'])) {
-            $model->description = $data['description'];
-        }
-
-        $model->push();
-
-        return $this->showOne($model, $this->transformer, 200);
+        return $model;
     }
 
-    /**
-     * Delete specific resource
-     * @param string $id 
-     * @return JsonResponser
-     */
-    public function delete(string $id)
-    {
-        $model = $this->find($id);
 
-        collect(Role::rolesByDefault())->map(function ($value, $key) use ($model) {
-            throw_if($value->name == $model->name, new ReportError(__("This action cannot be completed because this role is a system role and cannot be deleted."), 403));
-        });
-
-        throw_if($model->system, new ReportError(__("This action cannot be completed because this role is a system role and cannot be deleted."), 403));
-
-        throw_if($model->scopes()->count() > 0, new ReportError(__("This action cannot be completed because this role is currently assigned to one or more scopes and cannot be deleted."), 403));
-
-        $model->delete();
-
-        //send event
-        return $this->showOne($model, $this->transformer);
-    }
 }

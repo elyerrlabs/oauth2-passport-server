@@ -24,28 +24,17 @@ namespace Core\User\Repositories;
  */
 
 use Core\User\Model\Group;
-use Illuminate\Http\Request;
-use Elyerr\ApiResponse\Assets\Asset;
-use App\Repositories\Contracts\Contracts;
-use Elyerr\ApiResponse\Assets\JsonResponser;
-use Elyerr\ApiResponse\Exceptions\ReportError;
-use Core\User\Transformer\Admin\GroupTransformer;
 
-class GroupRepository implements Contracts
+class GroupRepository
 {
-
-    use JsonResponser, Asset;
-
-    public $transformer = GroupTransformer::class;
-
     /**
      * Instance of group model
      * @var Group
      */
-    public $model;
+    private $model;
 
     /**
-     * 
+     * Construct
      * @param \Core\User\Model\Group $group
      */
     public function __construct(Group $group)
@@ -54,104 +43,48 @@ class GroupRepository implements Contracts
     }
 
     /**
-     * Search resources
-     * @param \Illuminate\Http\Request $request
-     * @return JsonResponser
+     * Query
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder<Group>
      */
-    public function search(Request $request)
+    public function query()
     {
-        // Retrieve params of the request
-        $params = $this->filter_transform($this->transformer);
-
-        // Prepare query
-        $data = $this->model->query();
-
-        // Search
-        $data = $this->searchByBuilder($data, $params);
-
-        $this->orderByBuilder($data, $this->transformer);
-
-        return $this->showAllByBuilder($data, $this->transformer);
+        return $this->model->query();
     }
 
     /**
-     * Create new group
+     * Create group
      * @param array $data
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return Group|TModel|\Illuminate\Database\Eloquent\Model
      */
     public function create(array $data)
     {
-        $model = $this->model->create([
-            'name' => $data['name'],
-            'slug' => $data['name'],
-            'description' => $data['description'],
-            'system' => $data['system'],
-        ]);
+        $model = $this->model->create($data);
 
-        return $this->showOne($model, $this->transformer, 201);
+        return $model;
     }
 
     /**
-     * Search specific resource
+     * Update 
      * @param string $id
-     * @return Group
+     * @param array $data
+     * @return Group|Group[]|TModel|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     */
+    public function update(string $id, array $data)
+    {
+        $model = $this->model->find($id);
+
+        $model->update($data);
+
+        return $model;
+    }
+
+    /**
+     * Find specific resource
+     * @param string $id
+     * @return Group|Group[]|TModel|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
      */
     public function find(string $id)
     {
         return $this->model->find($id);
-    }
-
-    /**
-     * Show group details
-     * @param string $group_id
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function detail(string $group_id)
-    {
-        $model = $this->find($group_id);
-
-        return $this->showOne($model, $this->transformer);
-    }
-
-    /**
-     * Update specific resource
-     * @param string $id
-     * @param array $data
-     * @return JsonResponser
-     */
-    public function update(string $group_id, array $data)
-    {
-        $model = $this->find($group_id);
-
-        if (!empty($data['description']) && $model->description != $data['description']) {
-            $model->description = $data["description"];
-            $model->push();
-        }
-
-        return $this->showOne($model, $this->transformer, 201);
-    }
-
-    /**
-     * Delete specific resource
-     * @param string $id 
-     * @return JsonResponser
-     */
-    public function delete(string $group_id)
-    {
-        $model = $this->find($group_id);
-
-        if ($model->services()->count() === 0 && $model->users()->count()) {
-            new ReportError(__("This action cannot be completed because this group is currently in use by another resource."), 403);
-        }
-
-        throw_if($model->system, new ReportError(__("This group cannot be deleted because it is a system group."), 403));
-
-        collect(Group::groupByDefault())->map(function ($value, $key) use ($model) {
-            throw_if($value->name == $model->name, new ReportError(__("This group cannot be deleted because it is a system group."), 403));
-        });
-
-        $model->delete();
-
-        return $this->showOne($model, $this->transformer);
     }
 }
