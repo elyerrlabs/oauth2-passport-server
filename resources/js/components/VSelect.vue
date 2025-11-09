@@ -367,7 +367,7 @@ export default {
             default: null,
         },
         options: {
-            type: Array,
+            type: [Array, Object],
             default: () => [],
         },
         label: String,
