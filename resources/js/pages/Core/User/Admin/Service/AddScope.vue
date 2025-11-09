@@ -22,25 +22,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <!-- Button -->
     <button
+        v-if="!scope || scope?.id"
         @click="open"
-        :class="[
-            'flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors',
-            scope
-                ? 'rounded-full p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700'
-                : 'rounded-lg border border-blue-600 px-4 py-2 text-blue-600 hover:bg-blue-600 hover:text-white',
-        ]"
+        class="relative group w-12 h-12 gap-2 border border-blue-600 dark:border-blue-400 px-4 py-2 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
     >
         <i :class="icon"></i>
-        <span v-if="!scope">{{ __("Add new scope") }}</span>
 
-        <!-- Tooltip for scope mode -->
+        <!-- Tooltip -->
         <div
-            v-if="scope"
-            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-blue-600 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
+            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
         >
-            {{ __("Update scope") }}
+            {{ scope ? __("Update Scope") : __("Add Scope") }}
             <div
-                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-600"
+                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-600 dark:border-t-blue-500"
             ></div>
         </div>
     </button>
@@ -56,34 +50,36 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Role Select -->
                 <div class="space-y-2">
                     <label
-                        class="flex items-center gap-2 text-sm font-medium text-gray-700"
+                        class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        <i class="mdi mdi-account-key text-gray-500"></i>
+                        <i
+                            class="mdi mdi-account-key text-gray-500 dark:text-gray-400"
+                        ></i>
                         {{ __("Role") }}
                     </label>
                     <div class="relative">
                         <v-select
-                            :label="__('Select role')"
+                            :label="__('Select Role')"
                             v-model="form.role_id"
-                            :error="errors.role_id"
+                            :error="form.errors.role_id"
                             :options="roles"
                             :required="true"
                         />
                     </div>
                 </div>
-
                 <!-- Permissions Section -->
                 <div class="space-y-4">
-                    <h4 class="text-lg font-medium text-gray-800">
+                    <h4
+                        class="text-lg font-medium text-gray-800 dark:text-gray-200"
+                    >
                         {{ __("Permissions") }}
                     </h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- API Key Access -->
-
                         <v-switch
                             v-model="form.api_key"
                             :label="__('API Key Access')"
-                            :error="errors.api_key"
+                            :error="form.errors.api_key"
                             :required="true"
                             :placeholder="
                                 __(
@@ -92,12 +88,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             "
                         />
 
-                        <!-- Web routes -->
-
+                        <!-- Web Access -->
                         <v-switch
                             v-model="form.web"
-                            :label="__('Web')"
-                            :error="errors.web"
+                            :label="__('Web Access')"
+                            :error="form.errors.web"
                             :required="true"
                             :placeholder="
                                 __(
@@ -107,11 +102,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         />
 
                         <!-- Active -->
-
                         <v-switch
                             v-model="form.active"
                             :label="__('Active')"
-                            :error="errors.active"
+                            :error="form.errors.active"
                             :required="true"
                             :placeholder="
                                 __('Enable this scope for immediate use')
@@ -119,11 +113,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         />
 
                         <!-- Public Access -->
-
                         <v-switch
                             v-model="form.public"
                             :label="__('Public Access')"
-                            :error="errors.public"
+                            :error="form.errors.public"
                             :required="true"
                             :placeholder="
                                 __(
@@ -137,12 +130,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
             <!-- Actions -->
             <div
-                class="flex justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl"
+                class="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-2xl transition-colors duration-200"
             >
                 <button
                     @click="dialog = false"
                     :disabled="loading"
-                    class="px-6 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {{ __("Cancel") }}
                 </button>
@@ -150,10 +143,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     @click="addScopes"
                     :disabled="loading"
                     :class="[
-                        'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors',
+                        'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200',
                         loading
-                            ? 'bg-blue-400 cursor-not-allowed'
-                            : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-200',
+                            ? 'bg-blue-400 dark:bg-blue-600 cursor-not-allowed'
+                            : 'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:ring-blue-200 dark:focus:ring-blue-800',
                     ]"
                 >
                     <i v-if="loading" class="mdi mdi-loading animate-spin"></i>
@@ -161,136 +154,118 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         v-else
                         :class="scope ? 'mdi mdi-update' : 'mdi mdi-plus'"
                     ></i>
-                    {{ scope ? __("Update Scope") : __("Add Scope") }}
+                    <span>{{
+                        loading
+                            ? __(scope ? "Updating..." : "Adding...")
+                            : scope
+                            ? __("Update Scope")
+                            : __("Add Scope")
+                    }}</span>
                 </button>
             </div>
         </template>
     </v-modal>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
 import VModal from "@/components/VModal.vue";
-import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
 import VSwitch from "@/components/VSwitch.vue";
+import { useForm, usePage } from "@inertiajs/vue3";
 
-export default {
-    components: {
-        VModal,
-        VInput,
-        VSelect,
-        VSwitch,
+const emits = defineEmits(["created"]);
+const page = usePage();
+
+const props = defineProps({
+    icon: {
+        type: String,
+        default: "mdi mdi-lock-open-plus-outline",
     },
-    emits: ["created"],
-
-    props: {
-        icon: {
-            required: false,
-            type: String,
-            default: "mdi mdi-lock-open-plus-outline",
-        },
-        scope: {
-            required: false,
-            type: Object,
-        },
-        link: {
-            required: true,
-            type: String,
-        },
+    scope: {
+        type: Object,
+        required: false,
     },
-
-    data() {
-        return {
-            dialog: false,
-            loading: false,
-            loadingRoles: false,
-            roles: [],
-            form: {
-                api_key: false,
-                web: false,
-                active: false,
-                public: false,
-                role_id: "",
-            },
-            errors: {},
-        };
+    link: {
+        type: String,
+        required: true,
     },
+});
 
-    methods: {
-        async open() {
-            this.form = {
-                api_key: false,
-                web: false,
-                active: false,
-                public: false,
-                role_id: "",
-            };
-            this.errors = {};
+const dialog = ref(false);
+const loading = ref(false);
+const roles = ref([]);
 
-            await this.getRoles();
+const form = useForm({
+    api_key: false,
+    web: false,
+    active: false,
+    public: false,
+    role_id: "",
+});
 
-            if (this.scope) {
-                this.form = {
-                    ...this.scope,
-                    role_id: this.scope.role?.id || "",
-                };
-            }
+const open = () => {
+    roles.value = page.props.roles.data;
 
-            this.dialog = true;
+    if (props.scope?.id) {
+        form.api_key = props.scope.api_key;
+        form.web = props.scope.web;
+        form.active = props.scope.active;
+        form.public = props.scope.public;
+        form.role_id = props.scope?.role?.id;
+    }
+
+    dialog.value = true;
+};
+
+const addScopes = () => {
+    loading.value = true;
+
+    form.post(props.link, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            $notify.success(
+                props.scope?.id
+                    ? __("Scope updated successfully")
+                    : __("Scope added successfully")
+            );
+            emits("created");
+            dialog.value = false;
         },
-
-        async getRoles() {
-            this.loadingRoles = true;
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.route.roles,
-                    {
-                        params: {
-                            per_page: 100,
-                        },
-                    }
-                );
-
-                if (res.status == 200) {
-                    this.roles = res.data.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loadingRoles = false;
-            }
+        onFinish: () => {
+            loading.value = false;
         },
-
-        async addScopes() {
-            this.loading = true;
-            this.errors = {};
-
-            try {
-                const res = await this.$server.post(this.link, this.form);
-
-                if (res.status == 201) {
-                    $notify.success(
-                        this.scope
-                            ? __("Scope updated successfully")
-                            : __("Scope added successfully")
-                    );
-                    this.$emit("created");
-                    this.dialog = false;
-                }
-            } catch (e) {
-                if (e.response.status == 422) {
-                    this.errors = e.response.data.errors;
-                }
-
-                if (e?.response?.data?.message) {
-                    $notify.success(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
+    });
 };
 </script>
+
+<style scoped>
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+</style>
+
+<style scoped>
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+</style>
