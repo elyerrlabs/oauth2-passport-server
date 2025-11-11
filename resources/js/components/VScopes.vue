@@ -296,7 +296,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         <div
                                                             class="text-sm font-semibold text-gray-900 dark:text-white truncate"
                                                         >
-                                                            {{ role.role_name }}
+                                                            {{ __(role.role_name) }}
                                                         </div>
                                                         <i
                                                             v-if="
@@ -310,11 +310,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     <div
                                                         class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2"
                                                         :title="
-                                                            role.role_description
+                                                            __(role.role_description)
                                                         "
                                                     >
                                                         {{
-                                                            role.role_description ||
+                                                            __(role.role_description) ||
                                                             __(
                                                                 "No description available"
                                                             )
