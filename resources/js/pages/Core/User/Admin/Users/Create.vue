@@ -20,94 +20,112 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <!-- Create Button -->
+    <!-- Create/Edit Button -->
     <button
+        v-if="item?.id"
         @click="open"
-        class="create-user-btn bg-transparent border border-blue-600 text-blue-600 rounded-full p-3 hover:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        :title="__('Add new user')"
+        class="relative group w-12 h-12 gap-2 border border-blue-600 dark:border-blue-400 px-4 py-2 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
+        :title="__('Edit user')"
     >
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path
-                fill-rule="evenodd"
-                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clip-rule="evenodd"
-            />
-        </svg>
+        <i class="mdi mdi-pencil text-lg"></i>
+
+        <!-- Tooltip -->
+        <div
+            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
+        >
+            {{ __("Edit User") }}
+            <div
+                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-600 dark:border-t-blue-500"
+            ></div>
+        </div>
+    </button>
+
+    <button
+        v-else
+        @click="open"
+        class="flex items-center gap-2 px-4 py-2 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
+    >
+        <i class="mdi mdi-plus-circle"></i>
+        {{ __("Create User") }}
     </button>
 
     <v-modal
         v-model="dialog"
-        :title="__('Create New User')"
+        :title="item?.id ? __('Update User') : __('Create New User')"
         panel-class="w-full lg:w-6xl"
     >
         <template #body>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <v-input
                     v-model="form.name"
                     :label="__('Name')"
-                    :error="errors.name"
+                    :error="form.errors.name"
                     :required="true"
+                    :placeholder="__('Enter user name')"
                 />
 
                 <v-input
                     v-model="form.last_name"
                     :label="__('Last Name')"
-                    :error="errors.last_name"
+                    :error="form.errors.last_name"
                     :required="true"
+                    :placeholder="__('Enter last name')"
                 />
 
                 <v-input
                     :label="__('Email')"
                     v-model="form.email"
-                    :error="errors.email"
+                    :error="form.errors.email"
                     :required="true"
+                    :placeholder="__('Enter email address')"
                 />
 
                 <v-select
                     :label="__('Country')"
                     v-model="form.country"
-                    :error="errors.country"
+                    :error="form.errors.country"
                     :options="countries"
                     :required="true"
                     label-key="name_en"
                     value-key="name_en"
+                    searchable
                 >
                     <template #selected="{ option }">
-                        <span class="text-gray-700 p-4">
+                        <span class="text-gray-700 dark:text-gray-200">
                             {{
                                 option
                                     ? `${option.emoji} - ${option.name_en}`
-                                    : __("select")
+                                    : __("Select country")
                             }}
                         </span>
                     </template>
                     <template #option="{ option }">
-                        <span class="text-gray-700 p-4">
+                        <span class="text-gray-700 dark:text-gray-200 block">
                             {{ option.emoji }} - {{ option.name_en }}
                         </span>
                     </template>
                 </v-select>
 
                 <v-select
-                    :label="__('Dial code')"
+                    :label="__('Dial Code')"
                     v-model="form.dial_code"
                     :options="dial_codes"
-                    :error="errors.dial_codes"
-                    :required="true"
+                    :error="form.errors.dial_code"
                     label-key="name_en"
                     value-key="dial_code"
+                    searchable
                 >
                     <template #selected="{ option }">
-                        <span class="text-gray-700 p-4">
+                        <span class="text-gray-700 dark:text-gray-200">
                             {{
                                 option
-                                    ? `${option.emoji} - ${option.name_en}   ${option.dial_code}`
-                                    : __("select")
+                                    ? `${option.emoji} - ${option.name_en} ${option.dial_code}`
+                                    : __("Select dial code")
                             }}
                         </span>
                     </template>
                     <template #option="{ option }">
-                        <span class="text-gray-700 p-4 m-2">
+                        <span class="text-gray-700 dark:text-gray-200 block">
                             {{ option.emoji }} - {{ option.name_en }} -
                             {{ option.dial_code }}
                         </span>
@@ -115,24 +133,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </v-select>
 
                 <v-input
-                    :label="__('Phone')"
+                    :label="__('Phone Number')"
                     v-model="form.phone"
-                    :error="errors.phone"
-                    :required="true"
+                    :error="form.errors.phone"
+                    :placeholder="__('Enter phone number')"
+                />
+
+                <v-switch
+                    v-model="form.verify_email"
+                    :label="__('Mark email as verified')"
+                    :help-text="
+                        __('User will not need to verify their email address')
+                    "
                 />
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        <svg
-                            class="w-4 h-4 inline mr-1"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"
-                            />
-                            <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
-                        </svg>
+                    <label
+                        class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                        <i
+                            class="mdi mdi-cake-variant text-gray-500 dark:text-gray-400"
+                        ></i>
                         {{ __("Birthday") }}
                     </label>
                     <VueDatePicker
@@ -142,175 +163,176 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         format="yyyy-MM-dd"
                         model-type="format"
                         :placeholder="__('Select birthday')"
-                        class="date-picker w-full"
+                        :dark="isDarkMode"
+                        auto-apply
+                        class="w-full"
                     />
-                    <v-error :error="errors.birthday" class="mt-1"></v-error>
+                    <v-error :error="form.errors.birthday" class="mt-1" />
                 </div>
             </div>
+
+            <!-- Actions -->
             <div
-                class="flex justify-end space-x-3 mt-8 pt-4 border-t border-gray-200"
+                class="flex justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700"
             >
                 <button
-                    @click="dialog = false"
-                    class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                    @click="close"
+                    class="flex items-center gap-2 px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 transition-colors duration-200"
                 >
-                    <svg
-                        class="w-4 h-4 inline mr-2"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
+                    <i class="mdi mdi-close-circle"></i>
                     {{ __("Cancel") }}
                 </button>
                 <button
-                    @click="create"
-                    class="px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                    @click="createOrUpdate"
+                    :disabled="form.processing"
+                    :class="[
+                        'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200',
+                        form.processing
+                            ? 'bg-blue-400 dark:bg-blue-600 cursor-not-allowed'
+                            : 'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:ring-blue-200 dark:focus:ring-blue-800',
+                    ]"
                 >
-                    <svg
-                        class="w-4 h-4 inline mr-2"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path
-                            d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"
-                        />
-                    </svg>
-                    {{ __("Create User") }}
+                    <i
+                        v-if="form.processing"
+                        class="mdi mdi-loading animate-spin"
+                    ></i>
+                    <i v-else class="mdi mdi-account-plus"></i>
+                    <span>{{
+                        form.processing
+                            ? __(item?.id ? "Updating..." : "Creating...")
+                            : item?.id
+                            ? __("Update User")
+                            : __("Create User")
+                    }}</span>
                 </button>
             </div>
         </template>
     </v-modal>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
 import VModal from "@/components/VModal.vue";
-import VCountry from "@/components/VCountry.vue";
 import VSelect from "@/components/VSelect.vue";
 import VInput from "@/components/VInput.vue";
+import VSwitch from "@/components/VSwitch.vue";
 import VError from "@/components/VError.vue";
+import { useForm, usePage } from "@inertiajs/vue3";
 
-export default {
-    components: {
-        VModal,
-        VCountry,
-        VSelect,
-        VInput,
-        VError,
+// Emits
+const emits = defineEmits(["created", "updated"]);
+const props = defineProps({
+    item: {
+        type: Object,
+        default: null,
     },
-    emits: ["created"],
-    data() {
-        return {
-            dialog: false,
-            form: {
-                name: null,
-                last_name: null,
-                email: null,
-                country: null,
-                dial_code: null,
-                phone: null,
-                birthday: null,
-                groups: [],
-                verify_email: false,
+});
+
+const page = usePage();
+
+// State
+const dialog = ref(false);
+const form = useForm({
+    name: null,
+    last_name: null,
+    email: null,
+    country: null,
+    dial_code: null,
+    phone: null,
+    birthday: null,
+    verify_email: false,
+});
+
+const countries = ref([]);
+const dial_codes = ref([]);
+
+// Computed
+const isDarkMode = computed(() => {
+    return document.documentElement.classList.contains("dark");
+});
+
+// Methods
+const close = () => {
+    form.reset();
+    dialog.value = false;
+};
+
+const open = async () => {
+    form.reset();
+
+    if (props.item?.id) {
+        form.name = props.item.name;
+        form.last_name = props.item.last_name;
+        form.email = props.item.email;
+        form.country = props.item.country;
+        form.dial_code = props.item.dial_code;
+        form.phone = props.item.phone;
+        form.birthday = props.item.birthday;
+        form.verify_email = props.item.email_verified_at !== null;
+    }
+
+    dialog.value = true;
+    await getCountries();
+};
+
+const createOrUpdate = () => {
+    if (props.item?.id) {
+        form.put(props.item.links.update, {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                $notify.success(__("User updated successfully"));
+                emits("updated");
+                close();
             },
-            errors: {},
-            countries: [],
-            dial_codes: [],
-            formFields: {
-                name: { label: "Name", type: "text" },
-                last_name: { label: "Last Name", type: "text" },
-                email: { label: "Email", type: "email" },
-                phone: { label: "Phone Number", type: "text" },
+            onError: () => {
+                $notify.error(__("Failed to update user"));
             },
-        };
-    },
+        });
+    } else {
+        form.post(page.props.route, {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                $notify.success(__("User created successfully"));
+                emits("created");
+                close();
+            },
+            onError: () => {
+                $notify.error(__("Failed to create user"));
+            },
+        });
+    }
+};
 
-    methods: {
-        async open() {
-            this.clean();
-            this.dialog = true;
-            await this.getCountries();
-        },
-
-        clean() {
-            this.form = {
-                name: null,
-                last_name: null,
-                email: null,
-                country: null,
-                dial_code: null,
-                phone: null,
-                birthday: null,
-                groups: [],
-                verify_email: false,
-            };
-            this.errors = {};
-        },
-
-        close() {
-            this.dialog = false;
-            this.clean();
-        },
-
-        async create() {
-            try {
-                const res = await this.$server.post(
-                    this.$page.props.route,
-                    this.form
-                );
-                if (res.status === 201) {
-                    this.clean();
-                    $notify.success(__("User created successfully"));
-                    this.$emit("created", true);
-                    this.dialog = false;
-                }
-            } catch (e) {
-                if (
-                    e.response &&
-                    e.response.data.errors &&
-                    e.response.status == 422
-                ) {
-                    this.errors = e.response.data.errors;
-                }
-
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            }
-        },
-
-        filteredCountries(val) {
-            console.log(val);
-
-            return this.countries.filter(
-                (item) => item.name_en == this.form.name
-            );
-        },
-
-        filteredDialCodes() {},
-
-        async getCountries() {
-            try {
-                const res = await this.$server.get("/api/public/countries", {
-                    params: {
-                        order_by: "name_en",
-                        order_type: "asc",
-                    },
-                });
-                if (res.status === 200) {
-                    this.countries = res.data;
-                    this.dial_codes = res.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            }
-        },
-    },
+const getCountries = async () => {
+    try {
+        const res = await $server.get("/api/public/countries", {
+            params: { order_by: "name_en", order_type: "asc" },
+        });
+        if (res.status === 200) {
+            countries.value = res.data;
+            dial_codes.value = res.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
 };
 </script>
+
+<style scoped>
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+</style>

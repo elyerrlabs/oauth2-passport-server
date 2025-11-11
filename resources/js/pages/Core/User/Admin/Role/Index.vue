@@ -362,7 +362,6 @@ const viewOptions = reactive([
         label: __("Grid"),
     },
 ]);
-const searchTimeout = ref(null);
 
 // mounted
 onMounted(() => {
@@ -373,12 +372,7 @@ onMounted(() => {
 
 // methods
 const clearFilters = () => {
-    search = {
-        page: 1,
-        per_page: 15,
-        name: "",
-        system: "",
-    };
+    search.reset();
     getRoles();
 };
 
@@ -386,7 +380,6 @@ const getRoles = () => {
     search.get(page.props.route, {
         preserveScroll: true,
         preserveState: true,
-        preserveUrl: true,
         onSuccess: (page) => {
             const values = page.props.data;
             roles.value = values.data;

@@ -24,24 +24,38 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- View Scopes Button -->
         <button
             @click="openDialog"
-            class="bg-transparent border border-blue-600 text-blue-600 rounded-full p-2 hover:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            class="relative group w-12 h-12 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
             :title="__('View assigned scopes')"
         >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <svg
+                class="w-5 h-5 mx-auto"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+            >
                 <path
                     fill-rule="evenodd"
                     d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                     clip-rule="evenodd"
                 />
             </svg>
+
+            <!-- Tooltip -->
+            <div
+                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
+            >
+                {{ __("View Scopes") }}
+                <div
+                    class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-600 dark:border-t-blue-500"
+                ></div>
+            </div>
         </button>
 
         <!-- Main Dialog -->
-        <v-modal v-model="dialog" panel-class="w-full lg:w-7xl  ">
+        <v-modal v-model="dialog" panel-class="w-full lg:w-7xl">
             <!-- Header -->
             <template #body>
                 <div
-                    class="bg-blue-600 text-white rounded-t-lg -mx-6 -mt-6 px-6 py-4"
+                    class="bg-blue-600 text-white rounded-t-lg -mx-6 -mt-6 px-6 py-4 dark:bg-blue-700"
                 >
                     <div class="flex items-center justify-between">
                         <div>
@@ -60,7 +74,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <button
                             @click="dialog = false"
-                            class="text-white hover:bg-blue-700 rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+                            class="text-white hover:bg-blue-700 dark:hover:bg-blue-600 rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
                         >
                             <svg
                                 class="w-6 h-6"
@@ -77,14 +91,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                 </div>
 
-                <div class="border-t border-gray-200 my-4"></div>
+                <div
+                    class="border-t border-gray-200 dark:border-gray-700 my-4"
+                ></div>
 
                 <!-- Body -->
                 <div class="mt-4">
                     <!-- Loading State -->
                     <div v-if="loading" class="text-center py-12">
                         <svg
-                            class="animate-spin h-12 w-12 text-blue-600 mx-auto"
+                            class="animate-spin h-12 w-12 text-blue-600 dark:text-blue-400 mx-auto"
                             fill="none"
                             viewBox="0 0 24 24"
                         >
@@ -102,10 +118,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                             ></path>
                         </svg>
-                        <div class="text-xl text-blue-600 mt-4 font-semibold">
+                        <div
+                            class="text-xl text-blue-600 dark:text-blue-400 mt-4 font-semibold"
+                        >
                             {{ __("Loading assigned scopes...") }}
                         </div>
-                        <div class="text-gray-600 mt-2">
+                        <div class="text-gray-600 dark:text-gray-400 mt-2">
                             {{
                                 __(
                                     "Please wait while we fetch the user's permissions"
@@ -120,7 +138,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         class="text-center py-12"
                     >
                         <svg
-                            class="w-16 h-16 text-gray-300 mx-auto"
+                            class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                         >
@@ -130,10 +148,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 clip-rule="evenodd"
                             />
                         </svg>
-                        <div class="text-xl text-gray-500 mt-4">
+                        <div
+                            class="text-xl text-gray-500 dark:text-gray-400 mt-4"
+                        >
                             {{ __("No scopes assigned") }}
                         </div>
-                        <div class="text-gray-400 mt-2">
+                        <div class="text-gray-400 dark:text-gray-500 mt-2">
                             {{
                                 __(
                                     "This user doesn't have any access permissions yet"
@@ -151,7 +171,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         >
                             <!-- Group Header -->
                             <div
-                                class="bg-blue-50 text-blue-700 px-4 py-3 rounded-lg border border-blue-200"
+                                class="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-lg border border-blue-200 dark:border-blue-800"
                             >
                                 <div class="flex items-center">
                                     <svg
@@ -178,10 +198,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="service-section mt-4 ml-4"
                             >
                                 <!-- Service Header -->
-                                <div class="bg-gray-100 px-3 py-2 rounded-lg">
+                                <div
+                                    class="bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-lg"
+                                >
                                     <div class="flex items-center">
                                         <svg
-                                            class="w-4 h-4 mr-2 text-gray-600"
+                                            class="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400"
                                             fill="currentColor"
                                             viewBox="0 0 20 20"
                                         >
@@ -192,7 +214,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             />
                                         </svg>
                                         <span
-                                            class="font-medium text-gray-700"
+                                            class="font-medium text-gray-700 dark:text-gray-300"
                                             >{{ serviceName }}</span
                                         >
                                     </div>
@@ -208,14 +230,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="role-card"
                                     >
                                         <div
-                                            class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4"
+                                            class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4"
                                         >
                                             <div
                                                 class="flex items-center justify-between"
                                             >
                                                 <div class="flex-grow">
                                                     <div
-                                                        class="font-bold text-blue-600 flex items-center"
+                                                        class="font-bold text-blue-600 dark:text-blue-400 flex items-center"
                                                     >
                                                         <svg
                                                             class="w-4 h-4 mr-1"
@@ -233,7 +255,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         }}
                                                     </div>
                                                     <div
-                                                        class="text-sm text-gray-600 mt-1"
+                                                        class="text-sm text-gray-600 dark:text-gray-400 mt-1"
                                                     >
                                                         {{
                                                             item.scope.role
@@ -249,7 +271,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         @click="
                                                             confirmAction(item)
                                                         "
-                                                        class="text-red-600 hover:bg-red-50 rounded-full p-1 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+                                                        class="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full p-1 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400"
                                                         :title="
                                                             __(
                                                                 'Revoke this permission'
@@ -279,8 +301,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     :class="[
                                                         'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
                                                         item.scope.api_key
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : 'bg-gray-100 text-gray-800',
+                                                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                                            : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
                                                     ]"
                                                 >
                                                     <svg
@@ -315,8 +337,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     :class="[
                                                         'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
                                                         item.scope.active
-                                                            ? 'bg-blue-100 text-blue-800'
-                                                            : 'bg-gray-100 text-gray-800',
+                                                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                                            : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
                                                     ]"
                                                 >
                                                     <svg
@@ -351,8 +373,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     :class="[
                                                         'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
                                                         item.scope.public
-                                                            ? 'bg-orange-100 text-orange-800'
-                                                            : 'bg-gray-100 text-gray-800',
+                                                            ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300'
+                                                            : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
                                                     ]"
                                                 >
                                                     <svg
@@ -400,11 +422,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Footer -->
                 <div
-                    class="flex justify-end mt-8 pt-4 border-t border-gray-200"
+                    class="flex justify-end mt-8 pt-4 border-t border-gray-200 dark:border-gray-700"
                 >
                     <button
                         @click="dialog = false"
-                        class="px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                        class="px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors"
                     >
                         <svg
                             class="w-4 h-4 inline mr-2"
@@ -425,104 +447,92 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </div>
 </template>
 
-<script>
+<script setup>
 import VModal from "@/components/VModal.vue";
-export default {
-    components: {
-        VModal,
+import { useForm } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
+
+const props = defineProps({
+    item: {
+        required: true,
+        type: Object,
     },
-    props: {
-        item: {
-            required: true,
-            type: Object,
+});
+
+const user_roles = ref([]);
+const dialog = ref(false);
+const confirm = ref(false);
+const selected_scope = ref({});
+const loading = ref(true);
+const revoking = ref(false);
+
+const groupedRoles = computed(() => {
+    const grouped = {};
+
+    for (const item of user_roles.value) {
+        const group = item.scope?.service?.group?.name || "Unknown Group";
+        const service = item.scope?.service?.name || "Unknown Service";
+
+        if (!grouped[group]) {
+            grouped[group] = {};
+        }
+
+        if (!grouped[group][service]) {
+            grouped[group][service] = [];
+        }
+
+        grouped[group][service].push(item);
+    }
+
+    return Object.entries(grouped);
+});
+
+const openDialog = async () => {
+    dialog.value = true;
+    await userRoles();
+};
+
+const confirmAction = (item) => {
+    selected_scope.value = item;
+    confirm.value = true;
+    revoke();
+};
+
+const userRoles = async () => {
+    loading.value = true;
+    try {
+        const res = await $server.get(props.item.links.scopes, {
+            params: { per_page: 150 },
+        });
+
+        if (res.status === 200) {
+            user_roles.value = res.data.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
+};
+
+const revoke = () => {
+    revoking.value = true;
+
+    const form = useForm();
+
+    form.put(selected_scope.value.links.revoke, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: async () => {
+            $notify.success(__("Permission revoked successfully"));
+            confirm.value = false;
+            await userRoles();
         },
-    },
-
-    data() {
-        return {
-            user_roles: [],
-            dialog: false,
-            confirm: false,
-            selected_scope: {},
-            loading: true,
-            revoking: false,
-        };
-    },
-
-    computed: {
-        groupedRoles() {
-            const grouped = {};
-
-            for (const item of this.user_roles) {
-                const group =
-                    item.scope?.service?.group?.name || "Unknown Group";
-                const service = item.scope?.service?.name || "Unknown Service";
-
-                if (!grouped[group]) {
-                    grouped[group] = {};
-                }
-
-                if (!grouped[group][service]) {
-                    grouped[group][service] = [];
-                }
-
-                grouped[group][service].push(item);
-            }
-
-            return Object.entries(grouped);
+        onFinish: () => {
+            revoking.value = false;
         },
-    },
-
-    methods: {
-        openDialog() {
-            this.dialog = true;
-            this.userRoles();
-        },
-
-        confirmAction(item) {
-            this.selected_scope = item;
-            this.confirm = true;
-        },
-
-        async userRoles() {
-            this.loading = true;
-            try {
-                const res = await this.$server.get(this.item.links.scopes, {
-                    params: { per_page: 150 },
-                });
-
-                if (res.status === 200) {
-                    this.user_roles = res.data.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        async revoke() {
-            this.revoking = true;
-            try {
-                const res = await this.$server.put(
-                    this.selected_scope.links.revoke
-                );
-
-                if (res.status === 200) {
-                    $notify.success(__("Permission revoked successfully"));
-                    this.userRoles();
-                    this.confirm = false;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.revoking = false;
-            }
-        },
-    },
+    });
 };
 </script>
