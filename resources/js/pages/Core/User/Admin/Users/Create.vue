@@ -78,6 +78,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     :error="form.errors.email"
                     :required="true"
                     :placeholder="__('Enter email address')"
+                    :disabled="item?.id"
                 />
 
                 <v-select
@@ -85,13 +86,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     v-model="form.country"
                     :error="form.errors.country"
                     :options="countries"
-                    :required="true"
                     label-key="name_en"
                     value-key="name_en"
                     searchable
                 >
                     <template #selected="{ option }">
-                        <span class="text-gray-700 dark:text-gray-200">
+                        <span class="text-gray-700 p-2 dark:text-gray-200">
                             {{
                                 option
                                     ? `${option.emoji} - ${option.name_en}`
@@ -100,11 +100,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </span>
                     </template>
                     <template #option="{ option }">
-                        <span class="text-gray-700 dark:text-gray-200 block">
+                        <span class="text-gray-700 p-2 dark:text-gray-200 block">
                             {{ option.emoji }} - {{ option.name_en }}
                         </span>
                     </template>
                 </v-select>
+
+                <v-input
+                    :label="__('City')"
+                    v-model="form.city"
+                    :error="form.errors.city"
+                    :placeholder="__('Enter city name')"
+                />
 
                 <v-select
                     :label="__('Dial Code')"
@@ -116,7 +123,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     searchable
                 >
                     <template #selected="{ option }">
-                        <span class="text-gray-700 dark:text-gray-200">
+                        <span class="text-gray-700 p-2 dark:text-gray-200">
                             {{
                                 option
                                     ? `${option.emoji} - ${option.name_en} ${option.dial_code}`
@@ -125,7 +132,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </span>
                     </template>
                     <template #option="{ option }">
-                        <span class="text-gray-700 dark:text-gray-200 block">
+                        <span
+                            class="text-gray-700 p-2 dark:text-gray-200 block"
+                        >
                             {{ option.emoji }} - {{ option.name_en }} -
                             {{ option.dial_code }}
                         </span>
