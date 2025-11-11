@@ -24,6 +24,7 @@ namespace App\Http\Middleware;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Services\AuthService;
 use Closure;
 use Core\User\Model\User;
 use App\Models\Setting\Code;
@@ -33,6 +34,19 @@ use App\Notifications\Setting\CodeNotification;
 
 class Auth2faMiddleware
 {
+
+    /**
+     * Auth service
+     * @var AuthService
+     */
+    private $authService;
+
+
+    public function __construct()
+    {
+        $this->authService = app(AuthService::class);
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -44,7 +58,7 @@ class Auth2faMiddleware
     {
         if (!$request->user() and User::validate($request)) {
 
-            Auth2faMiddleware::generateToken($request);
+            $this->authService->tokenGenerator($request);
 
             session(['email' => $request->email]);
 
@@ -52,26 +66,5 @@ class Auth2faMiddleware
         }
 
         return $next($request);
-    }
-
-    /**
-     * Store a new token
-     * 
-     * @param Request $request
-     */
-    public static function generateToken(Request $request)
-    {
-        $email = $request->email ?: $request->user()->email;
-
-        $user = User::where('email', $email)->first();
-
-        Code::create([
-            'status' => $request->session()->getId(),
-            'email' => $user->email,
-            'code' => Hash::make($code = mt_rand(100000, 999999)),
-            'created_at' => now(),
-        ]);
-
-        $user->notify(new CodeNotification($code));
     }
 }

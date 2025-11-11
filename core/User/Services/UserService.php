@@ -190,12 +190,12 @@ class UserService
         $model = $this->userRepository->update($id, [
             "name" => $data['name'],
             "last_name" => $data['last_name'],
-            "country" => $data['country'],
-            "dial_code" => $data['dial_code'],
-            "city" => $data['city'],
-            "address" => $data['address'],
-            "birthday" => $data['birthday'],
-            "phone" => $data['phone'],
+            "country" => $data['country'] ?? null,
+            "dial_code" => $data['dial_code'] ?? null,
+            "phone" => $data['phone'] ?? null,
+            "city" => $data['city'] ?? null ,
+            "address" => $data['address'] ?? null,
+            "birthday" => $data['birthday'] ?? null,
         ]);
 
         // Update cache

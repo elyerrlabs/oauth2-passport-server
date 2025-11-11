@@ -20,7 +20,7 @@ namespace Core\User\Http\Requests;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
@@ -49,13 +49,25 @@ class UserPersonalUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:100', 'unique:users,email,' . $user->id],
             'country' => ['required', 'max:150'],
             'city' => ['nullable', 'string', 'max:100'],
             'address' => ['nullable', 'max:150'],
-            'dial_code' => [Rule::requiredIf(request()->phone != null), 'max:8', 'exists:countries,dial_code'],
-            'phone' => [Rule::requiredIf(request()->dial_code != null), 'max:25', 'unique:users,phone,' . $user->id],
-            'birthday' => ['nullable', 'date_format:Y-m-d', 'before: ' . User::setBirthday()],
+            'dial_code' => [
+                Rule::requiredIf(function () {
+                    return $this->filled('phone');
+                }),
+                'max:8'
+            ],
+            Rule::requiredIf(fn() => $this->filled('dial_code')),
+            'max:15',
+            Rule::when($this->filled('phone'), function () use ($user) {
+                return Rule::unique('users')->ignore($user->id);
+            }),
+            'birthday' => [
+                'nullable',
+                'date_format:Y-m-d',
+                'before: ' . User::setBirthday()
+            ],
         ];
     }
 }

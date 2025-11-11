@@ -51,11 +51,22 @@ class UserPersonalPasswordRequest extends FormRequest
                 'required',
                 function ($attribute, $value, $fail) use ($user) {
                     if (!Hash::check($value, $user->password)) {
-                        $fail('The password is incorrect');
+                        $fail(__('The current password is incorrect.'));
                     }
-                }
+                },
             ],
-            'password' => ['required', 'confirmed', 'min:10', 'max:200']
+
+            'password' => [
+                'required',
+                'confirmed',
+                'min:10',
+                'max:200',
+                function ($attribute, $value, $fail) use ($user) {
+                    if (Hash::check($value, $user->password)) {
+                        $fail(__('The new password must be different from your current password.'));
+                    }
+                },
+            ],
         ];
     }
 }
