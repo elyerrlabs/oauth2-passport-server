@@ -23,7 +23,7 @@
     "@headlessui/vue": "^1.7.23",
     "@inertiajs/vue3": "^2.0.8",
     "@mdi/font": "^7.4.47",
-    "@vuepic/vue-datepicker": "^11.0.1",
+    "@vuepic/vue-datepicker": "^12.0.3",
     "apexcharts": "^4.7.0",
     "axios": "^1.11.0",
     "flatpickr": "^4.6.13",
