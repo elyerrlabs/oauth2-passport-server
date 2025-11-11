@@ -87,4 +87,13 @@ class GroupRepository
     {
         return $this->model->find($id);
     }
+
+    /**
+     * Find by slug
+     * @param string $slug
+     */
+    public function findBySlug(string $slug)
+    {
+        return $this->model->whereRaw("LOWER(slug) = ?", [strtolower($slug)])->first();
+    }
 }

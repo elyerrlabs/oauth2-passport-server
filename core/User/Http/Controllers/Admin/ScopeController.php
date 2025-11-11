@@ -25,6 +25,7 @@ namespace Core\User\Http\Controllers\Admin;
 
 
 use Core\User\Services\ScopeService;
+use Core\User\Transformer\Admin\ScopeTransformer;
 use Illuminate\Http\Request;
 use Core\User\Repositories\ScopeRepository;
 use App\Http\Controllers\WebController;
@@ -56,6 +57,8 @@ class ScopeController extends WebController
      */
     public function index(Request $request)
     {
-        return $this->scopeService->searchForUser($request);
+        $scopes = $this->scopeService->searchForUser($request)->get();
+
+        return $this->showAll($scopes, ScopeTransformer::class, 200, false);
     }
 }

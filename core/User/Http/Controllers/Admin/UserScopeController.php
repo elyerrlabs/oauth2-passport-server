@@ -28,8 +28,11 @@ namespace Core\User\Http\Controllers\Admin;
 use Core\User\Model\User;
 use Core\User\Model\UserScope;
 use App\Http\Controllers\WebController;
-use Core\User\Repositories\UserRepository; 
+use Core\User\Repositories\UserRepository;
 use Core\User\Http\Requests\UserScopeStoreRequest;
+use Core\User\Services\UserService;
+use Core\User\Transformer\Admin\ScopeTransformer;
+use Core\User\Transformer\Admin\UserScopeTransformer;
 
 class UserScopeController extends WebController
 {
@@ -37,15 +40,15 @@ class UserScopeController extends WebController
     /**
      * User repository
      */
-    public $repository;
+    public $userService;
 
     /**
      * Construct of class
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserService $userService)
     {
         parent::__construct();
-        $this->repository = $userRepository;
+        $this->userService = $userService;
         $this->middleware('userCanAny:administrator:user:full,administrator:user:view')->only('index');
         $this->middleware('userCanAny:administrator:user:full,administrator:user:assign')->only('assign');
         $this->middleware('userCanAny:administrator:user:full,administrator:user:revoke')->only('revoke');
@@ -59,39 +62,46 @@ class UserScopeController extends WebController
      */
     public function index(string $user_id)
     {
-        return $this->repository->searchScopesForUser($user_id);
+        $data = $this->userService->searchScopesForUser($user_id)->get();
+        return $this->showAll($data, UserScopeTransformer::class, 200, false);
     }
 
     /**
-     * Create new scope for the user
-     * @param \App\Http\Requests\UserScope\StoreRequest $request
-     * @param string $user_id
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * Assign scopes
+     * @param \Core\User\Http\Requests\UserScopeStoreRequest $request
+     * @param \Core\User\Model\User $user
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function assign(UserScopeStoreRequest $request, User $user)
     {
-        return $this->repository->assignScopeForUser($user->id, $request->toArray());
+        $this->userService->assignScopeForUser($user->id, $request->toArray());
+
+        return back();
     }
 
     /**
-     * Revoke scope
+     * Revoke scopes
      * @param \Core\User\Model\User $user
      * @param \Core\User\Model\UserScope $scope
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function revoke(User $user, UserScope $scope)
     {
-        return $this->repository->revokeScopeForUser($user->id, $scope->id);
+        $this->userService->revokeScopeForUser($user->id, $scope->id);
+
+        return back();
     }
 
     /**
-     * Show the history the all scopes 
+     * Show history scopes
      * @param \Core\User\Model\User $user
      * @param \Core\User\Model\UserScope $userScope
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function history(User $user, UserScope $userScope)
     {
-        return $this->repository->searchScopeHistoryForUser($user->id);
+        $this->userService->searchScopeHistoryForUser($user->id);
+
+        return back();
     }
 }

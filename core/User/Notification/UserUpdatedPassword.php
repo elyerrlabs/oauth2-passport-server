@@ -1,5 +1,6 @@
 <?php
-namespace App\Notifications\User;
+
+namespace Core\User\Notification;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,28 +25,23 @@ namespace App\Notifications\User;
  */
 
 use Illuminate\Bus\Queueable;
+use App\Repositories\Traits\Standard;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
-class UserCreatedAccount extends Notification implements ShouldQueue
+class UserUpdatedPassword extends Notification implements ShouldQueue
 {
-    use Queueable;
-
-    /**
-     * Password 
-     * @var string
-     */
-    public $password;
+    use Queueable, Standard;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($password = null)
+    public function __construct()
     {
-        $this->password = $password;
+
     }
 
     /**
@@ -56,7 +52,7 @@ class UserCreatedAccount extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -68,18 +64,14 @@ class UserCreatedAccount extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__("Welcome to Our Platform"))
-            ->line(__("We are excited to inform you that your account has been successfully created. Below are your login details:"))
-            ->line(__("Password :key", ['key' => $this->password]))
-            ->line(__("For your security, we recommend updating your password. You can do this by following these steps:"))
-            ->line(__("1. Click the button below to reset your password."))
-            ->action(__('Reset Password'), route('forgot-password'))
-            ->line(__("2. You will receive an email with a link to update your password."))
-            ->line(__("3. Follow the link to set and confirm your new password. Once done, you can log in with your updated credentials."))
-            ->line(__("If you have any questions or need assistance, feel free to contact our support team."))
-            ->salutation(__('Thank you for choosing us!'));
-    }
+            ->subject(__('Password Updated Successfully'))
+            ->greeting(__('Hello!'))
+            ->line(__('We want to inform you that your password has been updated successfully.'))
+            ->line(__('If you did not make this change, please contact us immediately to secure your account.'))
+            ->action(__('Go to the App'), url('/'))
+            ->line(__('Thank you for trusting us to keep your account secure. We are always here to help!'));
 
+    }
 
     /**
      * Get the array representation of the notification.
@@ -89,8 +81,6 @@ class UserCreatedAccount extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+        return $this->notificationDatabase("Password Updated Successfully", "Your password has been successfully updated. If this wasn’t you, please contact support immediately.");
     }
 }
