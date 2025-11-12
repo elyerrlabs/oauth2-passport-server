@@ -47,7 +47,7 @@ class PlanScopeController extends WebController
     public function __construct(PlanService $planService)
     {
         parent::__construct();
-        $this->repository = $planService;
+        $this->planService = $planService;
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:revoke')->only('revoke');
     }
 
@@ -55,12 +55,12 @@ class PlanScopeController extends WebController
      * Delete scopes
      * @param \Core\Transaction\Model\Plan $plan
      * @param \Core\User\Model\Scope $scope
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function revoke(Plan $plan, Scope $scope)
     {
         $this->planService->deleteScope($plan->id, $scope->id);
 
-        return $this->message(__('Scopes revoked successfully'), 200);
+        return redirect()->back()->with('message', __('Scopes revoked successfully'));
     }
 }

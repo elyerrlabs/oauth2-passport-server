@@ -55,6 +55,6 @@ class DashboardController extends WebController
             "route" => route("transaction.admin.dashboard"),
             "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes')),
             'status' => route('api.transaction.payments.status')
-        ])->rootView('system');
+        ]);
     }
 }

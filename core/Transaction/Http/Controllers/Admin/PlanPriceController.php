@@ -41,7 +41,7 @@ class PlanPriceController extends WebController
     public function __construct(PlanService $planService)
     {
         parent::__construct();
-        $this->repository = $planService;
+        $this->plansService = $planService;
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:destroy')->only('destroy');
     }
 
@@ -49,12 +49,12 @@ class PlanPriceController extends WebController
      * Delete price of the plan
      * @param \Core\Transaction\Model\Plan $plan
      * @param \App\Models\Common\Price $price
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Plan $plan, Price $price)
     {
         $this->plansService->deletePrice($plan->id, $price->id);
 
-        return $this->message(__('Price has been deleted successfully'), 200);
+        return redirect()->back();
     }
 }

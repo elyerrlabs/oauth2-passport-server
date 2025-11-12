@@ -63,7 +63,7 @@ class TransactionManagerController extends WebController
 
         // Retrieve data using the transaction service
         $data = $this->transactionService->search($request)->paginate($per_page);
-        
+
         return Inertia::render(
             "Core/Transaction/Admin/Transaction/Index",
             [
@@ -71,6 +71,6 @@ class TransactionManagerController extends WebController
                 "route" => route('transaction.admin.transactions.index'),
                 "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes')),
             ]
-        )->rootView('system');
+        );
     }
 }

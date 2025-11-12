@@ -26,12 +26,13 @@ namespace Core\Transaction\Http\Controllers\Admin;
 
 
 use Core\Transaction\Services\PlanService;
+use Core\User\Transformer\Admin\ServiceTransformer;
 use Core\Transaction\Transformer\Admin\PlanTransformer;
+use Core\User\Services\ServiceService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Core\Transaction\Model\Plan;
 use App\Http\Controllers\WebController;
-use Core\Transaction\Repositories\PlanRepository;
 use Core\Transaction\Http\Requests\PlanStoreRequest;
 use Core\Transaction\Http\Requests\PlanUpdateRequest;
 
@@ -44,19 +45,26 @@ class PlanController extends WebController
     public $planService;
 
     /**
+     * Service of service
+     * @var
+     */
+    private $serviceService;
+
+    /**
      * Construct
      * @param PlanService $planService
+     * @param ServiceService $serviceService
      */
-    public function __construct(PlanService $planService)
+    public function __construct(PlanService $planService, ServiceService $serviceService)
     {
         parent::__construct();
         $this->planService = $planService;
+        $this->serviceService = $serviceService;
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:view')->only('index');
-        $this->middleware('userCanAny:administrator:plan:full,administrator:plan:show')->only('show');
+        // $this->middleware('userCanAny:administrator:plan:full,administrator:plan:show')->only('show');
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:create')->only('store');
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:update')->only('update');
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:destroy')->only('destroy');
-        $this->middleware('wants.json')->only('show');
     }
 
     /**
@@ -70,66 +78,57 @@ class PlanController extends WebController
 
         $data = $this->planService->search($request)->paginate($page);
 
+        // Extra data disable request
+        $request->merge([
+            'disabled_request' => true
+
+        ]);
+        $services = $this->serviceService->searchForGuest($request)->get();
+
         return Inertia::render("Core/Transaction/Admin/Plans/Index", [
             'data' => fractal($data, PlanTransformer::class)->toArray(),
+            'services' => fractal($services, ServiceTransformer::class)->toArray()['data'] ?? [],
             'routes' => [
-                'services' => route("user.admin.services.index"),
-                'billing_period' => route('api.transaction.payments.billing-period'),
-                'currencies' => route('api.transaction.payments.currencies'),
-                'methods' => route('api.transaction.payments.methods'),
                 'plans' => route('transaction.admin.plans.index'),
             ],
             "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes'))
-        ])->rootView('system');
+        ]);
     }
+
     /**
-     * Create new plan
-     * @param  PlanStoreRequest $request
-     * @param \ Core\Transaction\Model\Plan $plan
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * Create plan
+     * @param \Core\Transaction\Http\Requests\PlanStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(PlanStoreRequest $request)
     {
-        $plan = $this->planService->create($request->toArray());
+        $this->planService->create($request->toArray());
 
-        return $this->showOne($plan, PlanTransformer::class);
+        return redirect()->back();
     }
 
     /**
-     * Show details of the plan
-     * @param \ Core\Transaction\Model\Plan $plan
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
-     */
-    public function show(Plan $plan)
-    {
-        $plan = $this->planService->details($plan->id);
-
-        return $this->showOne($plan, PlanTransformer::class);
-
-    }
-
-    /**
-     * Update specific resource
+     * Update plan
      * @param \Core\Transaction\Http\Requests\PlanUpdateRequest $request
      * @param \Core\Transaction\Model\Plan $plan
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(PlanUpdateRequest $request, Plan $plan)
     {
         $plan = $this->planService->update($plan->id, $request->toArray());
 
-        return $this->showOne($plan, PlanTransformer::class);
+        return redirect()->back();
     }
 
     /**
-     * Delete specific resource
+     * Delete plan
      * @param \Core\Transaction\Model\Plan $plan
-     * @return Plan|\Illuminate\Database\Eloquent\Builder<Plan>|\Illuminate\Database\Eloquent\Builder<Plan>[]|\Illuminate\Database\Eloquent\Collection<int, Plan>|\Illuminate\Database\Eloquent\Model|null
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Plan $plan)
     {
         $plan = $this->planService->delete($plan->id);
 
-        return $this->showOne($plan, PlanTransformer::class);
+        return redirect()->back();
     }
 }
