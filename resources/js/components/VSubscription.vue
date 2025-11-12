@@ -21,145 +21,153 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div class="p-6" v-if="period?.id && plan?.id">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <div
-                class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4"
-            >
-                <i
-                    class="mdi mdi-credit-card-outline text-blue-600 dark:text-blue-400 text-2xl"
-                ></i>
-            </div>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                {{ label }}
-            </h2>
-            <p class="text-gray-600 dark:text-gray-400">
-                {{
-                    __(
-                        "Choose your preferred payment method to complete your subscription"
-                    )
-                }}
-            </p>
+        <div class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            {{ label }}
         </div>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">
+            {{ __("Select your preferred payment method to continue") }}
+        </p>
 
-        <!-- Payment Methods -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            <div
-                v-for="(method, key) in methods"
-                :key="key"
-                v-if="method.enable"
-                @click="selectMethod(key)"
-                class="border-2 rounded-xl cursor-pointer transition-all duration-300 group"
-                :class="{
-                    'border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-lg scale-105':
-                        selected_method === key,
-                    'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md':
-                        selected_method !== key,
-                }"
-            >
-                <div class="p-6 text-center">
-                    <!-- Icon -->
-                    <div class="flex justify-center mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div v-for="(method, key) in methods" :key="key">
+                <div
+                    v-if="method.enable"
+                    @click="selectMethod(key)"
+                    class="border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105"
+                    :class="{
+                        'border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-md':
+                            selected_method === key,
+                        'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-blue-300 dark:hover:border-blue-500':
+                            selected_method !== key,
+                    }"
+                >
+                    <div class="p-6 text-center">
+                        <div class="flex justify-center mb-4">
+                            <div
+                                class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300"
+                                :class="{
+                                    'bg-blue-500 dark:bg-blue-600 text-white shadow-lg':
+                                        selected_method === key,
+                                    'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400':
+                                        selected_method !== key,
+                                }"
+                            >
+                                <svg
+                                    v-if="method.icon === 'credit_card'"
+                                    class="w-8 h-8"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                                    />
+                                </svg>
+                                <svg
+                                    v-else-if="method.icon === 'paypal'"
+                                    class="w-8 h-8"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                                    />
+                                </svg>
+                                <svg
+                                    v-else
+                                    class="w-8 h-8"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
                         <div
-                            class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                            class="text-lg font-semibold mb-2"
                             :class="{
-                                'bg-blue-500 dark:bg-blue-600 text-white shadow-lg':
+                                'text-blue-700 dark:text-blue-300':
                                     selected_method === key,
-                                'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 group-hover:text-blue-600 dark:group-hover:text-blue-400':
+                                'text-gray-900 dark:text-white':
                                     selected_method !== key,
                             }"
                         >
-                            <i
-                                v-if="method.icon === 'credit_card'"
-                                class="mdi mdi-credit-card-outline text-2xl"
-                            ></i>
-                            <i
-                                v-else-if="method.icon === 'paypal'"
-                                class="mdi mdi-paypal text-2xl"
-                            ></i>
-                            <i
-                                v-else-if="method.icon === 'bank'"
-                                class="mdi mdi-bank text-2xl"
-                            ></i>
-                            <i
-                                v-else-if="method.icon === 'crypto'"
-                                class="mdi mdi-currency-btc text-2xl"
-                            ></i>
-                            <i
-                                v-else
-                                class="mdi mdi-wallet-outline text-2xl"
-                            ></i>
+                            {{ method.name }}
+                        </div>
+                        <div
+                            class="text-sm"
+                            :class="{
+                                'text-blue-600 dark:text-blue-400':
+                                    selected_method === key,
+                                'text-gray-500 dark:text-gray-400':
+                                    selected_method !== key,
+                            }"
+                        >
+                            {{ method.description || __("Secure payment") }}
                         </div>
                     </div>
 
-                    <!-- Method Name -->
+                    <!-- Selected Indicator -->
                     <div
-                        class="text-lg font-semibold mb-2 transition-colors"
-                        :class="{
-                            'text-blue-700 dark:text-blue-300':
-                                selected_method === key,
-                            'text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400':
-                                selected_method !== key,
-                        }"
-                    >
-                        {{ method.name }}
-                    </div>
-
-                    <!-- Method Description -->
-                    <div
-                        class="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2"
-                    >
-                        {{
-                            method.description ||
-                            __("Secure payment processing")
-                        }}
-                    </div>
-
-                    <!-- Badge -->
-                    <div
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                        :class="{
-                            'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300':
-                                selected_method === key,
-                            'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300':
-                                selected_method !== key,
-                        }"
-                    >
-                        <i class="mdi mdi-shield-check mr-1 text-xs"></i>
-                        {{ __("Secure") }}
-                    </div>
+                        v-if="selected_method === key"
+                        class="w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-b-xl"
+                    ></div>
                 </div>
-
-                <!-- Selected Indicator -->
-                <div
-                    v-if="selected_method === key"
-                    class="w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-b-xl"
-                ></div>
             </div>
         </div>
 
-        <!-- Order Summary -->
         <transition
             enter-active-class="transition-all duration-300 ease-out"
             enter-from-class="opacity-0 transform translate-y-4"
             enter-to-class="opacity-100 transform translate-y-0"
-            leave-active-class="transition-all duration-200 ease-in"
-            leave-from-class="opacity-100 transform translate-y-0"
-            leave-to-class="opacity-0 transform translate-y-4"
         >
-            <div v-if="selected_method >= 0" class="mb-8">
+            <div v-if="selected_method >= 0" class="mb-6">
                 <div
                     class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-6"
                 >
                     <div class="flex items-center mb-4">
-                        <i
-                            class="mdi mdi-receipt text-blue-600 dark:text-blue-400 text-xl mr-3"
-                        ></i>
-                        <h3
-                            class="text-lg font-semibold text-gray-900 dark:text-white"
+                        <div
+                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4"
                         >
-                            {{ __("Order Summary") }}
-                        </h3>
+                            <svg
+                                class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                        </div>
+                        <div>
+                            <div
+                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Order Summary") }}
+                            </div>
+                            <div
+                                class="text-blue-600 dark:text-blue-400 text-sm font-medium"
+                            >
+                                {{ __("Ready to proceed with payment") }}
+                            </div>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -190,11 +198,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     >{{ __("Payment Method:") }}</span
                                 >
                                 <span
-                                    class="font-medium text-blue-600 dark:text-blue-400 flex items-center"
+                                    class="font-medium text-blue-600 dark:text-blue-400"
+                                    >{{ methods[selected_method]?.name }}</span
                                 >
-                                    <i class="mdi mdi-check-circle mr-1"></i>
-                                    {{ methods[selected_method]?.name }}
-                                </span>
                             </div>
                         </div>
 
@@ -229,7 +235,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <span
                                     class="font-medium text-green-600 dark:text-green-400 flex items-center"
                                 >
-                                    <i class="mdi mdi-lock-check mr-1"></i>
+                                    <svg
+                                        class="w-4 h-4 mr-1"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                        />
+                                    </svg>
                                     {{ __("Ready to pay") }}
                                 </span>
                             </div>
@@ -239,73 +257,64 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
         </transition>
 
-        <!-- Action Buttons -->
         <div
             class="flex flex-col sm:flex-row gap-4 justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-700"
         >
             <div
                 class="flex items-center text-sm text-gray-500 dark:text-gray-400"
             >
-                <i class="mdi mdi-shield-lock-outline mr-2"></i>
+                <svg
+                    class="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                </svg>
                 {{ __("Your payment is secure and encrypted") }}
             </div>
 
-            <div class="flex gap-3 w-full sm:w-auto">
-                <button
-                    v-if="selected_method >= 0"
-                    :disabled="disabled"
-                    @click="payment"
-                    class="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-8 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
-                >
-                    <i class="mdi mdi-lock-outline"></i>
-                    <span>{{ __("Continue to Payment") }}</span>
-                    <i
-                        v-if="disabled"
-                        class="mdi mdi-loading mdi-spin ml-2"
-                    ></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Guest Warning -->
-        <transition
-            enter-active-class="transition-all duration-300"
-            enter-from-class="opacity-0 transform scale-95"
-            enter-to-class="opacity-100 transform scale-100"
-        >
-            <div
-                v-if="guest"
-                class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl"
+            <button
+                v-if="selected_method >= 0"
+                :disabled="disabled"
+                @click="payment"
+                class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white py-3 px-8 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
             >
-                <div class="flex items-start space-x-3">
-                    <i
-                        class="mdi mdi-alert-circle-outline text-yellow-600 dark:text-yellow-400 text-xl mt-0.5"
-                    ></i>
-                    <div class="flex-1">
-                        <div
-                            class="font-medium text-yellow-800 dark:text-yellow-300 mb-1"
-                        >
-                            {{ __("Authentication Required") }}
-                        </div>
-                        <div
-                            class="text-yellow-700 dark:text-yellow-400 text-sm"
-                        >
-                            {{
-                                __(
-                                    "Please log in to your account to complete the payment process."
-                                )
-                            }}
-                        </div>
-                    </div>
-                    <button
-                        @click="guest = false"
-                        class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
-                    >
-                        <i class="mdi mdi-close"></i>
-                    </button>
-                </div>
-            </div>
-        </transition>
+                <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                </svg>
+                <span>{{ __("Continue to Payment") }}</span>
+                <svg
+                    v-if="disabled"
+                    class="w-4 h-4 animate-spin"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                </svg>
+            </button>
+        </div>
     </div>
 </template>
 
@@ -342,7 +351,6 @@ export default {
             methods: [],
             disabled: false,
             guest: false,
-            user: null,
         };
     },
 
@@ -368,14 +376,12 @@ export default {
         async payment() {
             if (!this.user?.id) {
                 this.guest = true;
-                this.$notify?.error(__("Please login and try again"));
+                $notify.error(__("Please login and try again"));
                 return;
             }
 
             if (!this.user?.id) {
-                this.$notify?.error(
-                    __("Please select the plan to continue ...")
-                );
+                $notify.error(__("Please select the plan to continue ..."));
                 return;
             }
 
@@ -404,7 +410,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify?.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
 
                 this.disabled = false;
@@ -430,7 +436,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify?.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
 
                 this.disabled = false;
@@ -448,27 +454,10 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$notify?.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
             }
         },
     },
 };
 </script>
-
-<style scoped>
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.cursor-pointer {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.cursor-pointer:hover {
-    transform: translateY(-2px);
-}
-</style>
