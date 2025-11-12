@@ -18,23 +18,30 @@ This software supports OAuth 2.0 and OpenID Connect.
 Author Contact: yerel9212@yahoo.es
 
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
---> 
+-->
 <template>
-    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
-        <!-- Tabs -->
-        <label class="text-sm md:text-lg lg:text-lg text-gray-600 font-medium">
+    <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-900/50 p-6 border border-gray-100 dark:border-gray-700"
+    >
+        <!-- Label -->
+        <label
+            class="text-sm md:text-lg lg:text-lg text-gray-600 dark:text-gray-300 font-medium"
+        >
             {{ label }}
             <span class="text-red-500" v-if="required">*</span>
         </label>
+
         <!-- Tabs -->
-        <div class="flex border-b border-gray-300 mb-4 space-x-2">
+        <div
+            class="flex border-b border-gray-300 dark:border-gray-600 mb-4 space-x-2"
+        >
             <button
                 v-for="tab in tabs"
                 :key="tab.id"
                 type="button"
-                class="px-6 py-2 tab-btn rounded-t-lg transition-all duration-200 font-medium text-gray-700 hover:text-blue-600"
+                class="px-6 py-2 tab-btn rounded-t-lg transition-all duration-200 font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
                 :class="{
-                    'border-b-2 border-blue-500 text-blue-600 bg-blue-50':
+                    'border-b-2 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30':
                         activeTab === tab.id,
                 }"
                 @click="switchTab(tab.id)"
@@ -55,42 +62,42 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="mb-2 flex flex-wrap items-center gap-2">
                 <button
                     type="button"
-                    class="toolbar-btn bg-blue-100 text-blue-700"
+                    class="toolbar-btn bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800"
                     @click="copyHTML"
                 >
                     <i class="fas fa-copy mr-1"></i>{{ __("Copy") }}
                 </button>
                 <button
                     type="button"
-                    class="toolbar-btn bg-green-100 text-green-700"
+                    class="toolbar-btn bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800"
                     @click="formatHTML"
                 >
                     <i class="fas fa-indent mr-1"></i>{{ __("Format") }}
                 </button>
                 <button
                     type="button"
-                    class="toolbar-btn bg-gray-100 text-gray-700"
+                    class="toolbar-btn bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                     @click="undo"
                 >
                     <i class="fas fa-undo mr-1"></i>{{ __("Undo") }}
                 </button>
                 <button
                     type="button"
-                    class="toolbar-btn bg-gray-100 text-gray-700"
+                    class="toolbar-btn bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                     @click="redo"
                 >
                     <i class="fas fa-redo mr-1"></i>{{ __("Redo") }}
                 </button>
                 <button
                     type="button"
-                    class="toolbar-btn bg-purple-100 text-purple-700"
+                    class="toolbar-btn bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-800"
                     @click="toggleWrap"
                 >
                     <i class="fas fa-align-left mr-1"></i>{{ __("Wrap") }}
                 </button>
                 <button
                     type="button"
-                    class="toolbar-btn bg-purple-100 text-purple-700"
+                    class="toolbar-btn bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-800"
                     @click="toggleMinimap"
                 >
                     <i class="fas fa-th-large mr-1"></i>{{ __("Minimap") }}
@@ -98,7 +105,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <select
                     v-model="language"
-                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-xs"
+                    class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-xs border border-gray-300 dark:border-gray-600"
                 >
                     <option value="html">HTML</option>
                     <option value="javascript">JavaScript</option>
@@ -110,7 +117,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <div
-                class="border border-gray-300 rounded-lg overflow-hidden"
+                class="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden"
             >
                 <div ref="monacoEl" class="min-h-[500px]"></div>
             </div>
@@ -119,12 +126,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Preview Tab -->
         <div v-show="activeTab === 'preview'">
             <div class="mb-2 flex justify-between items-center">
-                <label class="text-sm font-medium text-gray-700">{{
-                    __("Preview")
-                }}</label>
+                <label
+                    class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >{{ __("Preview") }}</label
+                >
                 <button
                     type="button"
-                    class="text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 px-2 py-1 rounded transition"
+                    class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded transition border border-gray-300 dark:border-gray-600"
                     @click="updatePreview"
                 >
                     <i class="fas fa-redo mr-1"></i>{{ __("Refresh") }}
@@ -132,7 +140,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
             <div
                 ref="previewEl"
-                class="border min-h-[500px] border-gray-300 rounded-lg p-4 bg-white prose max-w-none w-full overflow-auto"
+                class="border min-h-[500px] border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-800 prose dark:prose-invert max-w-none w-full overflow-auto"
             ></div>
         </div>
     </div>
@@ -147,7 +155,7 @@ const props = defineProps({
         default: "",
     },
     error: {
-        type: Array,
+        type: [Array, String],
         default: [],
     },
     label: {
@@ -181,6 +189,11 @@ let isMonacoInitialized = false;
 onMounted(async () => {
     // Inicializa Jodit con el valor inicial
     joditEditor = createJoditEditor(editorEl.value, {
+        theme: document.documentElement.classList.contains("dark")
+            ? "dark"
+            : "default",
+        toolbarAdaptive: false,
+        minHeight: 400,
         events: {
             afterInit() {
                 previewEl.value.innerHTML = props.modelValue;
@@ -206,7 +219,6 @@ onMounted(async () => {
     updatePreview();
 });
 
-// Sincroniza cambios externos (cuando el padre cambia el valor del modelo)
 watch(
     () => props.modelValue,
     (newVal) => {
@@ -227,10 +239,14 @@ function switchTab(tabId) {
 }
 
 function initializeMonacoEditor() {
+    // Detecta el tema actual para Monaco
+    const isDark = document.documentElement.classList.contains("dark");
+    const monacoTheme = isDark ? "vs-dark" : "vs";
+
     monacoEditor = createMonacoEditor(monacoEl.value, {
         value: props.modelValue,
         language: language.value,
-        theme: "vs-dark",
+        theme: monacoTheme,
         automaticLayout: true,
         minimap: { enabled: true },
         scrollBeyondLastLine: false,
@@ -303,3 +319,22 @@ onBeforeUnmount(() => {
     if (joditEditor) joditEditor.destruct();
 });
 </script>
+
+<style scoped>
+/* Transiciones suaves para cambios de tema */
+.bg-white,
+.bg-gray-100,
+.bg-blue-50,
+.bg-green-100,
+.bg-purple-100 {
+    transition: background-color 0.3s ease;
+}
+
+.dark .bg-gray-800,
+.dark .bg-gray-700,
+.dark .bg-blue-900\/30,
+.dark .bg-green-900\/30,
+.dark .bg-purple-900\/30 {
+    transition: background-color 0.3s ease;
+}
+</style>
