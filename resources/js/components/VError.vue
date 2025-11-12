@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <div v-if="hasErrors">
         <span
-            class="bg-red-100 text-red-700 px-3 py-1 my-2 rounded-full text-sm block mb-1"
+            class="px-3 p-2 my-2 rounded text-sm block mb-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
             v-for="(item, index) in filteredErrors"
             :key="index"
         >
