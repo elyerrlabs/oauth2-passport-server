@@ -191,12 +191,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             item.role.name
                                         }}</span>
                                     </div>
-                                    <div
-                                        class="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-sm mt-1"
-                                    >
-                                        <i class="mdi mdi-account-group"></i>
-                                        {{ item.service.group.name }}
-                                    </div>
                                 </div>
                                 <button
                                     @click="copyToClipboard(item.gsr_id)"

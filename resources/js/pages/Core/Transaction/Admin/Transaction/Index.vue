@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-admin-transaction-layout>
         <!-- Header Section -->
         <div
-            class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6"
+            class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6"
         >
             <div
                 class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6"
@@ -34,19 +34,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="w-2 h-8 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"
                         ></div>
                         <h1
-                            class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent"
+                            class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent"
                         >
                             {{ __("Transactions Management") }}
                         </h1>
                     </div>
-                    <p class="text-gray-600 text-base ml-5">
+                    <p class="text-gray-600 dark:text-gray-400 text-base ml-5">
                         {{ __("Monitor and manage all transaction records") }}
                     </p>
                 </div>
             </div>
 
             <!-- Custom Filter Component -->
-            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+            >
                 <div
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
                 >
@@ -96,7 +98,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="flex items-end">
                         <button
                             @click="clearFilters"
-                            class="w-full px-4 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium shadow-sm"
+                            class="w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 font-medium shadow-sm"
                         >
                             {{ __("Clear Filters") }}
                         </button>
@@ -107,34 +109,40 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Transactions Table -->
         <div
-            class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
         >
             <!-- Table Header -->
             <div
-                class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200"
+                class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 border-b border-gray-200 dark:border-gray-600"
             >
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800">
+                        <h3
+                            class="text-lg font-semibold text-gray-800 dark:text-white"
+                        >
                             {{ __("Transaction Records") }}
                         </h3>
-                        <p class="text-sm text-gray-500 mt-1">
+                        <p
+                            class="text-sm text-gray-500 dark:text-gray-400 mt-1"
+                        >
                             {{ __("Total") }}: {{ transactions.length }}
                             {{ __("records") }}
                         </p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-500"
+                        <span class="text-sm text-gray-500 dark:text-gray-400"
                             >{{ __("View") }}:</span
                         >
-                        <div class="flex bg-gray-100 rounded-lg p-1">
+                        <div
+                            class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1"
+                        >
                             <button
                                 @click="viewMode = 'list'"
                                 :class="[
                                     'px-3 py-1 rounded-md text-sm font-medium transition-all duration-200',
                                     viewMode === 'list'
-                                        ? 'bg-white text-blue-600 shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-800',
+                                        ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200',
                                 ]"
                             >
                                 {{ __("List") }}
@@ -144,8 +152,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :class="[
                                     'px-3 py-1 rounded-md text-sm font-medium transition-all duration-200',
                                     viewMode === 'grid'
-                                        ? 'bg-white text-blue-600 shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-800',
+                                        ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200',
                                 ]"
                             >
                                 {{ __("Grid") }}
@@ -159,64 +167,68 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div v-if="viewMode === 'list'" class="hidden lg:block">
                 <div class="overflow-x-auto">
                     <table class="w-full">
-                        <thead class="bg-gray-50 border-b border-gray-200">
+                        <thead
+                            class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
+                        >
                             <tr>
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
                                 >
                                     {{ __("Transaction") }}
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
                                 >
                                     {{ __("Amount") }}
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
                                 >
                                     {{ __("Type") }}
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
                                 >
                                     {{ __("Status") }}
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
                                 >
                                     {{ __("Refund") }}
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-20"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-20"
                                 >
                                     {{ __("Details") }}
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700"
+                        >
                             <template
                                 v-for="(item, index) in transactions"
                                 :key="index"
                             >
                                 <!-- Main Row -->
                                 <tr
-                                    class="hover:bg-gray-50 transition-colors duration-200 group"
+                                    class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 group"
                                 >
                                     <!-- Transaction Info -->
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
                                             <div class="flex-shrink-0">
                                                 <div
-                                                    class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm"
+                                                    class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center shadow-sm"
                                                 >
                                                     <i
-                                                        class="mdi mdi-receipt text-blue-600 text-lg"
+                                                        class="mdi mdi-receipt text-blue-600 dark:text-blue-400 text-lg"
                                                     ></i>
                                                 </div>
                                             </div>
                                             <div class="flex-1 min-w-0">
                                                 <div
-                                                    class="text-sm font-semibold text-gray-900 truncate cursor-pointer hover:text-blue-600 transition-colors group-hover:underline"
+                                                    class="text-sm font-semibold text-gray-900 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors group-hover:underline"
                                                     @click="
                                                         copyToClipboard(
                                                             item.code
@@ -231,18 +243,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     {{ item.code }}
                                                 </div>
                                                 <div
-                                                    class="text-xs text-gray-500 mt-1 flex items-center gap-1"
+                                                    class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1"
                                                 >
                                                     <i
-                                                        class="mdi mdi-calendar-clock text-gray-400"
+                                                        class="mdi mdi-calendar-clock text-gray-400 dark:text-gray-500"
                                                     ></i>
                                                     {{ item.created }}
                                                 </div>
                                                 <div
-                                                    class="text-xs text-gray-500 mt-1 flex items-center gap-1"
+                                                    class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1"
                                                 >
                                                     <i
-                                                        class="mdi mdi-credit-card-outline text-gray-400"
+                                                        class="mdi mdi-credit-card-outline text-gray-400 dark:text-gray-500"
                                                     ></i>
                                                     {{ item.payment_method }}
                                                 </div>
@@ -253,18 +265,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <!-- Amount -->
                                     <td class="px-6 py-4">
                                         <div
-                                            class="text-sm font-semibold text-gray-900"
+                                            class="text-sm font-semibold text-gray-900 dark:text-white"
                                         >
                                             {{ item.total }} {{ item.currency }}
                                         </div>
-                                        <div class="text-xs text-gray-500 mt-1">
+                                        <div
+                                            class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                                        >
                                             {{ item.billing_period }}
                                             {{ __("plan") }}
                                         </div>
                                     </td>
 
                                     <!-- Status -->
-                                    <td class="px-6 py-4">
+                                    <td
+                                        class="px-6 py-4 text-gray-900 dark:text-white"
+                                    >
                                         {{ item.type }}
                                     </td>
                                     <td class="px-6 py-4">
@@ -281,7 +297,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             </span>
                                             <div
                                                 v-if="item.activated"
-                                                class="text-xs text-gray-500 flex items-center gap-1"
+                                                class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"
                                             >
                                                 <i
                                                     class="mdi mdi-calendar-check"
@@ -299,21 +315,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             class="flex flex-col gap-2"
                                         >
                                             <span
-                                                class="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide inline-flex items-center justify-center w-fit bg-purple-100 text-purple-800 border border-purple-200"
+                                                class="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide inline-flex items-center justify-center w-fit bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-700"
                                             >
                                                 <i
                                                     class="mdi mdi-cash-refund mr-1"
                                                 ></i>
                                                 {{ item.refund.status }}
                                             </span>
-                                            <div class="text-xs text-gray-500">
+                                            <div
+                                                class="text-xs text-gray-500 dark:text-gray-400"
+                                            >
                                                 {{ item.refund.amount }}
                                                 {{ item.refund.currency }}
                                             </div>
                                         </div>
                                         <div
                                             v-else
-                                            class="text-xs text-gray-400 italic"
+                                            class="text-xs text-gray-400 dark:text-gray-500 italic"
                                         >
                                             {{ __("No refund") }}
                                         </div>
@@ -326,8 +344,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             :class="[
                                                 'w-full flex items-center justify-center p-2 rounded-lg border transition-all duration-200 font-medium text-sm',
                                                 expandedRow === index
-                                                    ? 'bg-blue-50 text-blue-600 border-blue-200 shadow-inner'
-                                                    : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-800',
+                                                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700 shadow-inner'
+                                                    : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-800 dark:hover:text-gray-200',
                                             ]"
                                             :title="
                                                 expandedRow === index
@@ -350,7 +368,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Expanded Details Row -->
                                 <tr
                                     v-if="expandedRow === index"
-                                    class="bg-blue-50/30 border-b border-blue-200/50"
+                                    class="bg-blue-50/30 dark:bg-blue-900/10 border-b border-blue-200/50 dark:border-blue-700/30"
                                 >
                                     <td colspan="5" class="p-6">
                                         <div
@@ -361,7 +379,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <!-- Basic Transaction Details -->
                                                 <div>
                                                     <h4
-                                                        class="text-sm font-semibold text-blue-800 uppercase tracking-wide flex items-center gap-2 mb-4"
+                                                        class="text-sm font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide flex items-center gap-2 mb-4"
                                                     >
                                                         <i
                                                             class="mdi mdi-information-outline"
@@ -380,7 +398,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Transaction Code"
@@ -388,7 +406,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm font-mono text-gray-900 cursor-pointer hover:text-blue-600 transition-colors bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm font-mono text-gray-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                     @click="
                                                                         copyToClipboard(
                                                                             item.code
@@ -409,7 +427,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Payment Method"
@@ -417,7 +435,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item.payment_method
@@ -428,7 +446,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Billing Period"
@@ -436,7 +454,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item.billing_period
@@ -454,7 +472,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Session ID"
@@ -462,7 +480,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm font-mono text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200 truncate"
+                                                                    class="text-sm font-mono text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 truncate"
                                                                 >
                                                                     {{
                                                                         item.session_id ||
@@ -476,7 +494,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Payment Intent"
@@ -484,7 +502,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm font-mono text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200 truncate"
+                                                                    class="text-sm font-mono text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 truncate"
                                                                 >
                                                                     {{
                                                                         item.payment_intent_id ||
@@ -498,7 +516,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Renewal"
@@ -506,7 +524,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item.renew
@@ -526,7 +544,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <!-- Financial Information -->
                                                 <div>
                                                     <h4
-                                                        class="text-sm font-semibold text-blue-800 uppercase tracking-wide flex items-center gap-2 mb-4"
+                                                        class="text-sm font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide flex items-center gap-2 mb-4"
                                                     >
                                                         <i
                                                             class="mdi mdi-cash"
@@ -545,7 +563,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Total Amount"
@@ -553,7 +571,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-lg font-semibold text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-lg font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item.total
@@ -569,7 +587,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Commission Rate"
@@ -577,7 +595,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item.partner_commission_rate ||
@@ -592,7 +610,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <!-- Refund Information -->
                                                 <div v-if="hasRefund(item)">
                                                     <h4
-                                                        class="text-sm font-semibold text-purple-800 uppercase tracking-wide flex items-center gap-2 mb-4"
+                                                        class="text-sm font-semibold text-purple-800 dark:text-purple-300 uppercase tracking-wide flex items-center gap-2 mb-4"
                                                     >
                                                         <i
                                                             class="mdi mdi-cash-refund"
@@ -611,7 +629,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Refund Amount"
@@ -619,7 +637,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm font-semibold text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item
@@ -637,7 +655,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Refund Type"
@@ -645,7 +663,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item
@@ -660,7 +678,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Refund Status"
@@ -688,7 +706,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Reason"
@@ -696,7 +714,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item
@@ -721,7 +739,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             class="flex flex-col"
                                                         >
                                                             <span
-                                                                class="text-xs font-medium text-gray-600 mb-1"
+                                                                class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
                                                                         "Description"
@@ -729,7 +747,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 }}</span
                                                             >
                                                             <span
-                                                                class="text-sm text-gray-700 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                class="text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                             >
                                                                 {{
                                                                     item.refund
@@ -746,7 +764,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <!-- User Information -->
                                                 <div>
                                                     <h4
-                                                        class="text-sm font-semibold text-blue-800 uppercase tracking-wide flex items-center gap-2 mb-4"
+                                                        class="text-sm font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide flex items-center gap-2 mb-4"
                                                     >
                                                         <i
                                                             class="mdi mdi-account"
@@ -765,7 +783,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Owner Name"
@@ -773,7 +791,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item
@@ -789,7 +807,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 class="flex flex-col"
                                                             >
                                                                 <span
-                                                                    class="text-xs font-medium text-gray-600 mb-1"
+                                                                    class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
                                                                             "Owner Last Name"
@@ -797,7 +815,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                    class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                 >
                                                                     {{
                                                                         item
@@ -814,7 +832,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             class="flex flex-col"
                                                         >
                                                             <span
-                                                                class="text-xs font-medium text-gray-600 mb-1"
+                                                                class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
                                                                         "Owner Email"
@@ -822,7 +840,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 }}</span
                                                             >
                                                             <span
-                                                                class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                             >
                                                                 {{
                                                                     item.owner
@@ -835,7 +853,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             class="flex flex-col"
                                                         >
                                                             <span
-                                                                class="text-xs font-medium text-gray-600 mb-1"
+                                                                class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
                                                                         "Activated By"
@@ -843,7 +861,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 }}</span
                                                             >
                                                             <span
-                                                                class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                             >
                                                                 {{
                                                                     item.activated
@@ -856,7 +874,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <!-- Timeline -->
                                                 <div>
                                                     <h4
-                                                        class="text-sm font-semibold text-blue-800 uppercase tracking-wide flex items-center gap-2 mb-4"
+                                                        class="text-sm font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide flex items-center gap-2 mb-4"
                                                     >
                                                         <i
                                                             class="mdi mdi-clock-outline"
@@ -868,7 +886,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             class="flex flex-col"
                                                         >
                                                             <span
-                                                                class="text-xs font-medium text-gray-600 mb-1"
+                                                                class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
                                                                         "Created"
@@ -876,7 +894,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 }}</span
                                                             >
                                                             <span
-                                                                class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                             >
                                                                 {{
                                                                     item.created
@@ -887,7 +905,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             class="flex flex-col"
                                                         >
                                                             <span
-                                                                class="text-xs font-medium text-gray-600 mb-1"
+                                                                class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
                                                                         "Last Updated"
@@ -895,7 +913,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 }}</span
                                                             >
                                                             <span
-                                                                class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                             >
                                                                 {{
                                                                     item.updated
@@ -909,7 +927,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             class="flex flex-col"
                                                         >
                                                             <span
-                                                                class="text-xs font-medium text-gray-600 mb-1"
+                                                                class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
                                                                         "Cancellation Date"
@@ -917,7 +935,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 }}</span
                                                             >
                                                             <span
-                                                                class="text-sm text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200"
+                                                                class="text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                             >
                                                                 {{
                                                                     item.cancellation_at
@@ -930,7 +948,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 <!-- Actions Section -->
                                                 <div>
                                                     <h4
-                                                        class="text-sm font-semibold text-blue-800 uppercase tracking-wide flex items-center gap-2 mb-4"
+                                                        class="text-sm font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide flex items-center gap-2 mb-4"
                                                     >
                                                         <i
                                                             class="mdi mdi-cog-outline"
@@ -957,7 +975,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     index
                                                                 )
                                                             "
-                                                            class="col-span-full px-4 py-2.5 text-sm text-gray-700 hover:text-gray-900 hover:bg-white border border-gray-300 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium"
+                                                            class="col-span-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium"
                                                         >
                                                             <i
                                                                 class="mdi mdi-close"
@@ -986,24 +1004,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         v-for="(item, index) in transactions"
                         :key="index"
-                        class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+                        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
                     >
                         <!-- Card Header -->
                         <div
-                            class="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white"
+                            class="p-4 border-b border-gray-100 dark:border-gray-600 bg-gradient-to-r from-gray-50 to-white dark:from-gray-700 dark:to-gray-800"
                         >
                             <div class="flex items-center justify-between mb-3">
                                 <div class="flex items-center gap-3">
                                     <div
-                                        class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm"
+                                        class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center shadow-sm"
                                     >
                                         <i
-                                            class="mdi mdi-receipt text-blue-600 text-lg"
+                                            class="mdi mdi-receipt text-blue-600 dark:text-blue-400 text-lg"
                                         ></i>
                                     </div>
                                     <div>
                                         <div
-                                            class="text-sm font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+                                            class="text-sm font-semibold text-gray-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                                             @click="copyToClipboard(item.code)"
                                             :title="
                                                 __(
@@ -1014,10 +1032,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             {{ truncateCode(item.code) }}
                                         </div>
                                         <div
-                                            class="text-xs text-gray-500 mt-1 flex items-center gap-1"
+                                            class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1"
                                         >
                                             <i
-                                                class="mdi mdi-calendar-clock text-gray-400"
+                                                class="mdi mdi-calendar-clock text-gray-400 dark:text-gray-500"
                                             ></i>
                                             {{ item.created }}
                                         </div>
@@ -1035,7 +1053,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <span
                                         v-if="hasRefund(item)"
                                         :class="[
-                                            'px-2 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-purple-100 text-purple-800 border border-purple-200',
+                                            'px-2 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-700',
                                         ]"
                                     >
                                         <i class="mdi mdi-cash-refund mr-1"></i>
@@ -1050,8 +1068,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :class="[
                                     'w-full flex items-center justify-center p-2 rounded-lg border transition-all duration-200 text-sm font-medium',
                                     expandedRow === index
-                                        ? 'bg-blue-50 text-blue-600 border-blue-200'
-                                        : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50',
+                                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700'
+                                        : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600',
                                 ]"
                             >
                                 <span class="mr-2">{{
@@ -1073,28 +1091,33 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Card Body -->
                         <div class="p-4 space-y-3">
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600"
+                                <span
+                                    class="text-sm text-gray-600 dark:text-gray-400"
                                     >{{ __("Amount") }}:</span
                                 >
                                 <span
-                                    class="text-sm font-semibold text-gray-900"
+                                    class="text-sm font-semibold text-gray-900 dark:text-white"
                                 >
                                     {{ item.total }} {{ item.currency }}
                                 </span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600"
+                                <span
+                                    class="text-sm text-gray-600 dark:text-gray-400"
                                     >{{ __("Payment Method") }}:</span
                                 >
-                                <span class="text-sm text-gray-900">{{
-                                    item.payment_method
-                                }}</span>
+                                <span
+                                    class="text-sm text-gray-900 dark:text-white"
+                                    >{{ item.payment_method }}</span
+                                >
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600"
+                                <span
+                                    class="text-sm text-gray-600 dark:text-gray-400"
                                     >{{ __("Plan") }}:</span
                                 >
-                                <span class="text-sm text-gray-900"
+                                <span
+                                    class="text-sm text-gray-900 dark:text-white"
                                     >{{ item.billing_period }}
                                     {{ __("plan") }}</span
                                 >
@@ -1103,22 +1126,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 v-if="item.activated"
                                 class="flex justify-between items-center"
                             >
-                                <span class="text-sm text-gray-600"
+                                <span
+                                    class="text-sm text-gray-600 dark:text-gray-400"
                                     >{{ __("Activated") }}:</span
                                 >
-                                <span class="text-sm text-gray-900">{{
-                                    item.activated
-                                }}</span>
+                                <span
+                                    class="text-sm text-gray-900 dark:text-white"
+                                    >{{ item.activated }}</span
+                                >
                             </div>
                             <div
                                 v-if="hasRefund(item)"
                                 class="flex justify-between items-center"
                             >
-                                <span class="text-sm text-gray-600"
+                                <span
+                                    class="text-sm text-gray-600 dark:text-gray-400"
                                     >{{ __("Refund Amount") }}:</span
                                 >
                                 <span
-                                    class="text-sm font-semibold text-purple-600"
+                                    class="text-sm font-semibold text-purple-600 dark:text-purple-400"
                                 >
                                     {{ item.refund.amount }}
                                     {{ item.refund.currency }}
@@ -1129,24 +1155,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Expanded Details for Mobile -->
                         <div
                             v-if="expandedRow === index"
-                            class="p-4 bg-blue-50/30 border-t border-blue-200/50"
+                            class="p-4 bg-blue-50/30 dark:bg-blue-900/10 border-t border-blue-200/50 dark:border-blue-700/30"
                         >
                             <div class="space-y-4">
                                 <!-- User Information -->
                                 <div class="space-y-3">
                                     <h4
-                                        class="text-xs font-semibold text-blue-800 uppercase tracking-wide flex items-center gap-2"
+                                        class="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide flex items-center gap-2"
                                     >
                                         <i class="mdi mdi-account"></i>
                                         {{ __("User Info") }}
                                     </h4>
                                     <div class="space-y-2 text-xs">
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600"
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400"
                                                 >{{ __("Name") }}:</span
                                             >
                                             <span
-                                                class="font-medium text-gray-900"
+                                                class="font-medium text-gray-900 dark:text-white"
                                                 >{{
                                                     item.owner?.name ||
                                                     __("N/A")
@@ -1154,11 +1181,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             >
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600"
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400"
                                                 >{{ __("Email") }}:</span
                                             >
                                             <span
-                                                class="font-medium text-gray-900"
+                                                class="font-medium text-gray-900 dark:text-white"
                                                 >{{
                                                     item.owner?.email ||
                                                     __("N/A")
@@ -1166,11 +1194,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             >
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600"
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400"
                                                 >{{ __("Activated By") }}:</span
                                             >
                                             <span
-                                                class="font-medium text-gray-900"
+                                                class="font-medium text-gray-900 dark:text-white"
                                                 >{{ item.activated }}</span
                                             >
                                         </div>
@@ -1180,18 +1209,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Financial Details -->
                                 <div class="space-y-3">
                                     <h4
-                                        class="text-xs font-semibold text-blue-800 uppercase tracking-wide flex items-center gap-2"
+                                        class="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide flex items-center gap-2"
                                     >
                                         <i class="mdi mdi-cash"></i>
                                         {{ __("Financial") }}
                                     </h4>
                                     <div class="space-y-2 text-xs">
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600"
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400"
                                                 >{{ __("Commission") }}:</span
                                             >
                                             <span
-                                                class="font-medium text-gray-900"
+                                                class="font-medium text-gray-900 dark:text-white"
                                                 >{{
                                                     item.partner_commission_rate ||
                                                     "0"
@@ -1199,11 +1229,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             >
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600"
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400"
                                                 >{{ __("Renewal") }}:</span
                                             >
                                             <span
-                                                class="font-medium text-gray-900"
+                                                class="font-medium text-gray-900 dark:text-white"
                                                 >{{
                                                     item.renew
                                                         ? __("Yes")
@@ -1217,33 +1248,36 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Refund Information for Mobile -->
                                 <div v-if="hasRefund(item)" class="space-y-3">
                                     <h4
-                                        class="text-xs font-semibold text-purple-800 uppercase tracking-wide flex items-center gap-2"
+                                        class="text-xs font-semibold text-purple-800 dark:text-purple-300 uppercase tracking-wide flex items-center gap-2"
                                     >
                                         <i class="mdi mdi-cash-refund"></i>
                                         {{ __("Refund Info") }}
                                     </h4>
                                     <div class="space-y-2 text-xs">
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600"
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400"
                                                 >{{ __("Amount") }}:</span
                                             >
                                             <span
-                                                class="font-medium text-gray-900"
+                                                class="font-medium text-gray-900 dark:text-white"
                                                 >{{ item.refund.amount }}
                                                 {{ item.refund.currency }}</span
                                             >
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600"
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400"
                                                 >{{ __("Type") }}:</span
                                             >
                                             <span
-                                                class="font-medium text-gray-900"
+                                                class="font-medium text-gray-900 dark:text-white"
                                                 >{{ item.refund.type }}</span
                                             >
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600"
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400"
                                                 >{{ __("Status") }}:</span
                                             >
                                             <span
@@ -1261,11 +1295,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             v-if="item.refund.reason"
                                             class="flex justify-between"
                                         >
-                                            <span class="text-gray-600"
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400"
                                                 >{{ __("Reason") }}:</span
                                             >
                                             <span
-                                                class="font-medium text-gray-900 text-right"
+                                                class="font-medium text-gray-900 dark:text-white text-right"
                                                 >{{ item.refund.reason }}</span
                                             >
                                         </div>
@@ -1275,7 +1310,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Actions Section -->
                                 <div class="space-y-3">
                                     <h4
-                                        class="text-xs font-semibold text-blue-800 uppercase tracking-wide flex items-center gap-2"
+                                        class="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wide flex items-center gap-2"
                                     >
                                         <i class="mdi mdi-cog-outline"></i>
                                         {{ __("Actions") }}
@@ -1293,7 +1328,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         />
                                         <button
                                             @click="toggleRowExpansion(index)"
-                                            class="w-full px-3 py-2 text-xs text-gray-600 hover:text-gray-800 hover:bg-white border border-gray-300 rounded transition-colors duration-200 flex items-center justify-center gap-1 font-medium"
+                                            class="w-full px-3 py-2 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-white dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded transition-colors duration-200 flex items-center justify-center gap-1 font-medium"
                                         >
                                             <i class="mdi mdi-close"></i>
                                             {{ __("Close") }}
@@ -1310,9 +1345,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div v-if="loading" class="flex justify-center items-center py-16">
                 <div class="text-center">
                     <div
-                        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
+                        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto mb-4"
                     ></div>
-                    <p class="text-gray-600 font-medium">
+                    <p class="text-gray-600 dark:text-gray-400 font-medium">
                         {{ __("Loading transactions...") }}
                     </p>
                 </div>
@@ -1325,14 +1360,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             >
                 <div class="max-w-md mx-auto">
                     <div
-                        class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                        class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
                     >
-                        <i class="mdi mdi-receipt text-gray-400 text-3xl"></i>
+                        <i
+                            class="mdi mdi-receipt text-gray-400 dark:text-gray-500 text-3xl"
+                        ></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-600 mb-2">
+                    <h3
+                        class="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-2"
+                    >
                         {{ __("No transactions available") }}
                     </h3>
-                    <p class="text-gray-500">
+                    <p class="text-gray-500 dark:text-gray-500">
                         {{
                             __("Get started by creating your first transaction")
                         }}
@@ -1404,13 +1443,13 @@ onMounted(() => {
 const getStatusClasses = (status) => {
     switch (status) {
         case "successful":
-            return "bg-green-100 text-green-800 border border-green-200";
+            return "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700";
         case "pending":
-            return "bg-orange-100 text-orange-800 border border-orange-200";
+            return "bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 border border-orange-200 dark:border-orange-700";
         case "failed":
-            return "bg-red-100 text-red-800 border border-red-200";
+            return "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700";
         default:
-            return "bg-gray-100 text-gray-800 border border-gray-200";
+            return "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600";
     }
 };
 
@@ -1418,14 +1457,14 @@ const getRefundStatusClasses = (status) => {
     switch (status?.toLowerCase()) {
         case "completed":
         case "succeeded":
-            return "bg-green-100 text-green-800 border-green-200";
+            return "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700";
         case "pending":
-            return "bg-orange-100 text-orange-800 border-orange-200";
+            return "bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-700";
         case "failed":
         case "canceled":
-            return "bg-red-100 text-red-800 border-red-200";
+            return "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700";
         default:
-            return "bg-gray-100 text-gray-800 border-gray-200";
+            return "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600";
     }
 };
 
@@ -1433,14 +1472,14 @@ const getRefundStatusTextClasses = (status) => {
     switch (status?.toLowerCase()) {
         case "completed":
         case "succeeded":
-            return "text-green-600";
+            return "text-green-600 dark:text-green-400";
         case "pending":
-            return "text-orange-600";
+            return "text-orange-600 dark:text-orange-400";
         case "failed":
         case "canceled":
-            return "text-red-600";
+            return "text-red-600 dark:text-red-400";
         default:
-            return "text-gray-600";
+            return "text-gray-600 dark:text-gray-400";
     }
 };
 
@@ -1486,11 +1525,11 @@ const searching = () => {
 };
 
 const debouncedSearch = () => {
-    if (searchTimeout) {
-        clearTimeout(searchTimeout);
+    if (searchTimeout.value) {
+        clearTimeout(searchTimeout.value);
     }
 
-    searchTimeout = setTimeout(() => {
+    searchTimeout.value = setTimeout(() => {
         searching();
     }, 500);
 };
