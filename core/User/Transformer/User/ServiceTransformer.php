@@ -1,6 +1,5 @@
 <?php
-
-namespace Core\User\Transformer\Admin;
+namespace Core\User\Transformer\User;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -20,12 +19,12 @@ namespace Core\User\Transformer\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- *
+ * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use Core\User\Model\Service;
-use Core\User\Transformer\Admin\ServiceScopeTransformer;
+use Core\User\Transformer\User\ScopeTransformer;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
@@ -63,26 +62,7 @@ class ServiceTransformer extends TransformerAbstract
             'name' => $data->name,
             'slug' => $data->slug,
             'description' => $data->description,
-            'system' => $data->system ? true : false,
-            'visibility' => $data->visibility,
-            'group' => [
-                'id' => $data->id,
-                'name' => $data->group->name,
-                'slug' => $data->group->slug,
-                'description' => $data->group->description,
-
-            ],
-            'scopes' => fractal($data->scopes, ServiceScopeTransformer::class)->toArray()['data'] ?? [],
-            'created' => $this->format_date($data->created_at),
-            'updated' => $this->format_date($data->updated_at),
-            'links' => [
-                'index' => route('user.admin.services.index'),
-                'store' => route('user.admin.services.store'),
-                'show' => route('user.admin.services.show', ['service' => $data->id]),
-                'update' => route('user.admin.services.update', ['service' => $data->id]),
-                'destroy' => route('user.admin.services.destroy', ['service' => $data->id]),
-                'scopes' => route('user.admin.service.scopes.index', ['service' => $data->id])
-            ]
+            'role' => fractal($data->scopes, ScopeTransformer::class)->toArray()['data'] ?? [],
         ];
     }
 
