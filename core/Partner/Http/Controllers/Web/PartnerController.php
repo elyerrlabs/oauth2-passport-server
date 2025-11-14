@@ -25,33 +25,27 @@ namespace Core\Partner\Http\Controllers\Web;
  */
 
 
+use Core\Partner\Transformer\DataTransformer;
+use Core\Partner\Transformer\PartnerTransformer;
+use Core\Partner\Transformer\TransactionTransformer;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\Partner\Repositories\PartnerRepository;
-use Core\Partner\Repositories\DashboardRepository;
+use Core\Partner\Services\PartnerService;
 
 class PartnerController extends WebController
 {
-    /**
-     * Dashboard repository
-     * @var DashboardRepository
-     */
-    public $dashboardRepository;
 
     /**
      * User repository
-     * @var PartnerRepository
+     * @var PartnerService
      */
-    public $repository;
+    public $partnerService;
 
-    public function __construct(
-        DashboardRepository $dashboardRepository,
-        PartnerRepository $partnerRepository
-    ) {
+    public function __construct(PartnerService $partnerService)
+    {
         parent::__construct();
-        $this->dashboardRepository = $dashboardRepository;
-        $this->repository = $partnerRepository;
+        $this->partnerService = $partnerService;
         $this->middleware("userCanAny:reseller:partner:full,reseller:partner:dashboard")->only('dashboard');
         $this->middleware("userCanAny:reseller:partner:full,reseller:partner:show")->only('show');
         $this->middleware("userCanAny:reseller:partner:full,reseller:partner:create")->only('generate');
@@ -66,17 +60,13 @@ class PartnerController extends WebController
      */
     public function dashboard(Request $request)
     {
-        $meta = $this->dashboardRepository->partner($request);
-
-        if ($request->wantsJson()) {
-            return $meta;
-        }
-
+        $data = $this->partnerService->partnerDashboard($request);
+        
         return Inertia::render("Core/Partner/Web/Index", [
-            "sales" => $meta,
+            "data" => $data,
             "route" => route("partner.dashboard"),
             "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
-        ])->rootView('system');
+        ]);
     }
 
 
@@ -86,23 +76,14 @@ class PartnerController extends WebController
      */
     public function show()
     {
-        $partner = $this->repository->details(auth()->user()->id);
+        $partner = $this->partnerService->details(auth()->user()->id);
 
         return Inertia::render("Core/Partner/Web/Refer", [
-            "partner" => $partner,
-            "route" => route('partner.generate'),
+            "data" => fractal($partner, PartnerTransformer::class)->toArray()['data'] ?? [],
             "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
-        ])->rootView('system');
+        ]);
     }
 
-    /**
-     * Generate partner
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function generate()
-    {
-        return $this->repository->generateLink();
-    }
 
     /**
      * Show the all transactions
@@ -111,14 +92,14 @@ class PartnerController extends WebController
      */
     public function sales(Request $request)
     {
-        if ($request->wantsJson()) {
-            return $this->repository->search($request);
-        }
+        $page = $request->filled('per_page') ? $request->get('per_page') : 15;
+
+        $data = $this->partnerService->listLastTransactions($request)->paginate($page);
 
         return Inertia::render("Core/Partner/Web/Sales", [
+            "data" => fractal($data, TransactionTransformer::class)->toArray(),
             "route" => route("partner.sales"),
             "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
-
-        ])->rootView('system');
+        ]);
     }
 }

@@ -25,26 +25,30 @@ namespace Core\Partner\Http\Controllers\Admin;
  */
 
 use Inertia\Inertia;
+use Core\Partner\Services\PartnerService;
 use Core\Partner\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
 use Core\Partner\Transformer\UserTransformer;
-use Core\Partner\Repositories\PartnerRepository;
 
 class PartnerController extends WebController
 {
     /**
      * Repository
-     * @var
+     * @var PartnerService
      */
-    public $repository;
+    public $partnerService;
 
-    public function __construct(PartnerRepository $partnerRepository)
+    /**
+     * Construct
+     * @param \Core\Partner\Services\PartnerService $partnerService
+     */
+    public function __construct(PartnerService $partnerService)
     {
         parent::__construct();
         $this->middleware('userCanAny:administrator:partner:full,reseller:partner:view')->only('index');
         $this->middleware('userCanAny:administrator:partner:full,administrator:partner:update')->only('update');
-        $this->repository = $partnerRepository;
+        $this->partnerService = $partnerService;
     }
 
     /**
@@ -54,18 +58,17 @@ class PartnerController extends WebController
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-            $query = $this->repository->listPartners($request);
+        $page = $request->filled('per_page') ? $request->per_page : 15;
 
-            return $this->showAllByBuilder($query, UserTransformer::class);
-        }
+        $partners = $this->partnerService->listPartners($request)->paginate($page);
 
         return Inertia::render("Core/Partner/Admin/Users/Index", [
+            'data' => fractal($partners, UserTransformer::class)->toArray(),
             'routes' => [
                 'partners' => route('partner.admin.partner.index')
             ],
             "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
-        ])->rootView('system');
+        ]);
     }
 
     /**
@@ -84,19 +87,16 @@ class PartnerController extends WebController
                     $value = filter_var($value, FILTER_VALIDATE_FLOAT);
 
                     if (!$value) {
-                        $fail("The value is incorrect, please fixed and try again");
+                        $fail(__("The value is incorrect, please fixed and try again"));
                     }
                 }
             ]
         ]);
 
         if ($request->filled("commission_rate")) {
-            $user = $this->repository->updateCommissionRate(
-                $user->id,
-                $request->commission_rate,
-            );
+            $user = $this->partnerService->updateCommissionRate($user->id, $request->commission_rate);
         }
 
-        return $this->message("Commission rate updated successfully");
+        return redirect()->back();
     }
 }

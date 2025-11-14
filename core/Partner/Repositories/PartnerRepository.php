@@ -24,125 +24,45 @@ namespace Core\Partner\Repositories;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Illuminate\Support\Str;
-use Core\Partner\Model\User;
-use Illuminate\Http\Request;
 use Core\Partner\Model\Partner;
-use Core\Transaction\Model\Transaction;
-use App\Repositories\Contracts\Contracts;
-use Elyerr\ApiResponse\Assets\JsonResponser;
 use Core\Partner\Transformer\PartnerTransformer;
 
-class PartnerRepository implements Contracts
+class PartnerRepository
 {
-    use JsonResponser;
-
     /**
      * Transformer
-     * @var
+     * @var PartnerTransformer
      */
     public $transformer = PartnerTransformer::class;
 
     /**
      * Model
-     * @var
+     * @var Partner
      */
     public $model;
 
     /**
-     * Transaction model
-     * @var Transaction
+     * Construct
+     * @param \Core\Partner\Model\Partner $partner
      */
-    public $transaction;
-
-    /**
-     * Constructor
-     * @param Core\Partner\Model\Partner $partner
-     */
-    public function __construct(Partner $partner, Transaction $transaction)
+    public function __construct(Partner $partner)
     {
         $this->model = $partner;
-        $this->transaction = $transaction;
     }
 
     /**
-     * Search resources
-     * @param \Illuminate\Http\Request $request
-     * @return JsonResponser
+     * Query
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder<Partner>
      */
-    public function search(Request $request)
+    public function query()
     {
-        $params = $this->filter_transform($this->transaction->transformer);
-
-        $data = $this->transaction->query();
-
-        $partner = User::find(auth()->user()->id)->partner;
-
-        $data = $this->transaction->whereHas(
-            'partner',
-            function ($query) use ($partner) {
-                $query->where('code', $partner->code ?? null);
-            }
-        );
-
-        $data = $this->searchByBuilder($data, $params);
-
-        $data = $this->orderByBuilder($data, $this->transaction->transformer);
-
-        return $this->showAllByBuilder($data, $this->transaction->transformer);
-    }
-
-    /**
-     * List partner
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Database\Eloquent\Builder<User>
-     */
-    public function listPartners(Request $request)
-    {
-        $query = User::query();
-
-        $query->whereHas('partner');
-
-        if ($request->filled('name')) {
-            $query->whereRaw("LOWER(name) LIKE ?", ['%' . strtolower($request->name) . '%']);
-        }
-
-        if ($request->filled('last_name')) {
-            $query->whereRaw("LOWER(last_name) LIKE ?", ['%' . strtolower($request->last_name) . '%']);
-        }
-
-        if ($request->filled('email')) {
-            $query->whereRaw("LOWER(email) LIKE ?", ['%' . strtolower($request->email) . '%']);
-        }
-
-        if ($request->filled('country')) {
-            $query->whereRaw("LOWER(country) LIKE ?", ['%' . strtolower($request->country) . '%']);
-        }
-
-        if ($request->filled('code')) {
-            $query->whereHas('partner', function ($query) use ($request) {
-                $query->whereRaw("LOWER(code) LIKE ?", [
-                    '%' . strtolower($request->code) . '%'
-                ]);
-            });
-        }
-
-        return $query;
-    }
-
-    /**
-     * Create new resource
-     * @param array $data
-     * @return void
-     */
-    public function create(array $data)
-    {
-
+        return $this->model->query();
     }
 
     /**
      * Search specific resource
      * @param string $id
+     * @return Partner|Partner[]|TModel|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
      */
     public function find(string $id)
     {
@@ -150,94 +70,37 @@ class PartnerRepository implements Contracts
     }
 
     /**
-     * Show partner detail
-     * @param string $id
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function details(string $id)
-    {
-        $partner = $this->find($id)->partner ?? null;
-        return !empty($partner) ? $this->showOne($partner, PartnerTransformer::class) : [];
-    }
-
-    /**
-     * Update specific resource
-     * @param string $id
-     * @param array $data
-     * @return void
-     */
-    public function update(string $id, array $data)
-    {
-        /**
-         * Update the commission rate
-         */
-
-    }
-
-    /**
-     * Delete specific resource
-     * @param string $id
-     * @return void
-     */
-    public function delete(string $id)
-    {
-
-    }
-
-    /**
      * Search partner by code
      * @param string $code
+     * @return TModel|TValue|null
      */
     public function findByCode(string $code)
     {
         return $this->model->where('code', $code)->first();
     }
 
-
     /**
-     * Generate code
-     * @param mixed $prefix
-     * @param mixed $length
-     * @return string
+     * Create 
+     * @param array $data
+     * @return Partner|TModel|\Illuminate\Database\Eloquent\Model
      */
-    public function generateReferralCode($length = 32)
+    public function create(array $data)
     {
-        $prefix = strtoupper(substr(auth()->user()->name, 0, 2));
-        $random = strtoupper(Str::random($length));
-        return $prefix . "_" . $random;
+        return $this->model->create($data);
     }
 
     /**
-     * Update commission rate
+     * Update partner
      * @param string $id
-     * @param mixed $percentage
+     * @param array $data
+     * @return Partner|Partner[]|TModel|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
      */
-    public function updateCommissionRate(string $user_id, $percentage)
+    public function update(string $id, array $data)
     {
-        $partner = User::find($user_id)->partner;
-        $partner->commission_rate = $percentage;
+        $partner = $this->find($id);
+        $partner->update($data);
         $partner->push();
-
         return $partner;
     }
 
-    /**
-     * Generate the partner link
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function generateLink()
-    {
-        $partner = User::find(auth()->user()->id)->partner;
-
-        if (empty($partner)) {
-            $partner = $this->model->create([
-                'code' => $this->generateReferralCode(),
-                'user_id' => auth()->user()->id
-            ]);
-        }
-
-        $partner["links"] = $partner->referLinks();
-
-        return $this->showOne($partner, PartnerTransformer::class, 201);
-    }
 }
