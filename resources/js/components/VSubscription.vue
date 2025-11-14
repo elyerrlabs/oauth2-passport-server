@@ -401,7 +401,7 @@ export default {
                         plan: this.plan.id,
                         billing_period: this.period.billing_period,
                         payment_method: this.methods[this.selected_method].key,
-                        refer_link: this.getReferralLink(),
+                        referral_code: this.getReferralLink(),
                     }
                 );
 
