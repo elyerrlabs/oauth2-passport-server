@@ -193,7 +193,7 @@ class UserService
             "country" => $data['country'] ?? null,
             "dial_code" => $data['dial_code'] ?? null,
             "phone" => $data['phone'] ?? null,
-            "city" => $data['city'] ?? null ,
+            "city" => $data['city'] ?? null,
             "address" => $data['address'] ?? null,
             "birthday" => $data['birthday'] ?? null,
         ]);
@@ -610,6 +610,7 @@ class UserService
     public function verifyUserAccount(array $data)
     {
         try {
+
             // Verify the auth user and incoming use are the same
             if (auth()->check() && auth()->user()->email !== $data['email']) {
                 // Destroy token
@@ -635,10 +636,10 @@ class UserService
             $date = $now->format("Y-m-d H:i:s");
 
             // Destroy current token
-            DB::table('password_resets')->where('email', '=', $token->email)->delete();
+            //  DB::table('password_resets')->where('email', '=', $token->email)->delete();
 
             // Retrieve the user object
-            $user = $this->userRepository->findByEmail($token->email)->first();
+            $user = $this->userRepository->findByEmail($token->email);
 
             // Validate expiration token
             if (date('Y-m-d H:i:s', strtotime(now())) > $date) {
