@@ -112,6 +112,20 @@ class TransactionRepository
     }
 
     /**
+     * create query for user
+     * @param string $user_id
+     * @return \Illuminate\Database\Eloquent\Builder<Transaction>
+     */
+    public function queryForUser(string $user_id)
+    {
+        $query = $this->query();
+
+        $query->where('user_id', $user_id);
+        $query->orderBy('created_at', 'desc');
+        return $query;
+    }
+
+    /**
      * Create new resource
      * @param array $data
      * @return TModel
