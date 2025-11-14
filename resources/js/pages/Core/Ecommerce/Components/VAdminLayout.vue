@@ -25,69 +25,85 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Dashboard -->
             <a
                 @click="open(menu_dashboard)"
+                class="flex items-center p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
                 :class="{
-                    'bg-blue-50 text-blue-600': isActive(menu_dashboard),
-                    'text-gray-700 hover:bg-gray-100':
+                    'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400':
+                        isActive(menu_dashboard),
+                    'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700':
                         !isActive(menu_dashboard),
                 }"
-                class="flex items-center p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200"
             >
-                <i class="fas fa-tachometer-alt w-6 text-blue-500 mr-3"></i>
-                <span>{{ __(menu_dashboard.name) }}</span>
+                <i
+                    class="fas fa-tachometer-alt w-6 text-blue-500 dark:text-blue-400 mr-3"
+                ></i>
+                <span class="font-medium">{{ __(menu_dashboard.name) }}</span>
             </a>
 
             <!-- Products Section -->
             <div class="expansion-item">
                 <div
-                    class="flex items-center justify-between p-3 mx-2 my-1 rounded-lg cursor-pointer hover:bg-gray-100"
+                    class="flex items-center justify-between p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
+                    :class="{
+                        'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white':
+                            expandedSections.products,
+                        'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700':
+                            !expandedSections.products,
+                    }"
                     @click="toggleExpansion('products')"
                 >
                     <div class="flex items-center">
-                        <i class="fas fa-box-open w-6 text-blue-500 mr-3"></i>
-                        <span>{{ __("Products") }}</span>
+                        <i
+                            class="fas fa-box-open w-6 text-blue-500 dark:text-blue-400 mr-3"
+                        ></i>
+                        <span class="font-medium">{{ __("Products") }}</span>
                     </div>
                     <i
-                        class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300"
+                        class="fas fa-chevron-down text-xs transition-transform duration-300"
                         :class="{
-                            'rotate-180': expandedSections.products,
+                            'rotate-180 text-blue-500 dark:text-blue-400':
+                                expandedSections.products,
+                            'text-gray-400 dark:text-gray-500':
+                                !expandedSections.products,
                         }"
                     ></i>
                 </div>
 
                 <div
-                    class="submenu transition-all duration-300 overflow-hidden"
+                    class="transition-all duration-300 overflow-hidden"
                     :class="expandedSections.products ? 'max-h-40' : 'max-h-0'"
                 >
                     <a
                         @click="open(menu_category)"
+                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
                         :class="{
-                            'bg-blue-50 text-blue-600': isActive(menu_category),
-                            'text-gray-700 hover:bg-gray-100':
+                            'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400':
+                                isActive(menu_category),
+                            'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700':
                                 !isActive(menu_category),
                         }"
-                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
                     >
                         <i
-                            class="fas fa-shapes w-5 text-blue-400 mr-3 text-sm"
+                            class="fas fa-shapes w-5 text-blue-400 dark:text-blue-300 mr-3 text-sm"
                         ></i>
-                        <span class="text-sm">
+                        <span class="text-sm font-medium">
                             {{ __(menu_category.name) }}
                         </span>
                     </a>
 
                     <a
                         @click="open(menu_products)"
+                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
                         :class="{
-                            'bg-blue-50 text-blue-600': isActive(menu_products),
-                            'text-gray-700 hover:bg-gray-100':
+                            'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400':
+                                isActive(menu_products),
+                            'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700':
                                 !isActive(menu_products),
                         }"
-                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
                     >
                         <i
-                            class="fas fa-list-alt w-5 text-blue-400 mr-3 text-sm"
+                            class="fas fa-list-alt w-5 text-blue-400 dark:text-blue-300 mr-3 text-sm"
                         ></i>
-                        <span class="text-sm">
+                        <span class="text-sm font-medium">
                             {{ __(menu_products.name) }}
                         </span>
                     </a>
@@ -97,66 +113,68 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Orders Section -->
             <div class="expansion-item">
                 <div
-                    class="flex items-center justify-between p-3 mx-2 my-1 rounded-lg cursor-pointer hover:bg-gray-100"
+                    class="flex items-center justify-between p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
+                    :class="{
+                        'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white':
+                            expandedSections.orders,
+                        'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700':
+                            !expandedSections.orders,
+                    }"
                     @click="toggleExpansion('orders')"
                 >
                     <div class="flex items-center">
                         <i
-                            class="fas fa-shopping-cart w-6 text-blue-500 mr-3"
+                            class="fas fa-shopping-cart w-6 text-blue-500 dark:text-blue-400 mr-3"
                         ></i>
-                        <span>{{ __("Orders") }}</span>
+                        <span class="font-medium">{{ __("Orders") }}</span>
                     </div>
                     <i
-                        class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300"
+                        class="fas fa-chevron-down text-xs transition-transform duration-300"
                         :class="{
-                            'rotate-180': expandedSections.orders,
+                            'rotate-180 text-blue-500 dark:text-blue-400':
+                                expandedSections.orders,
+                            'text-gray-400 dark:text-gray-500':
+                                !expandedSections.orders,
                         }"
                     ></i>
                 </div>
 
                 <div
-                    class="submenu transition-all duration-300 overflow-hidden"
+                    class="transition-all duration-300 overflow-hidden"
                     :class="expandedSections.orders ? 'max-h-40' : 'max-h-0'"
                 >
                     <a
                         @click="open(menu_orders)"
+                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
                         :class="{
-                            'bg-blue-50 text-blue-600': isActive(menu_orders),
-                            'text-gray-700 hover:bg-gray-100':
+                            'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400':
+                                isActive(menu_orders),
+                            'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700':
                                 !isActive(menu_orders),
                         }"
-                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
                     >
                         <i
-                            :class="[
-                                'mdi',
-                                menu_orders.icon,
-                                'w-5 text-blue-400 mr-3 text-sm',
-                            ]"
+                            class="fas fa-receipt w-5 text-blue-400 dark:text-blue-300 mr-3 text-sm"
                         ></i>
-                        <span class="text-sm">
+                        <span class="text-sm font-medium">
                             {{ __(menu_orders.name) }}
                         </span>
                     </a>
 
                     <a
                         @click="open(menu_orders_pending)"
+                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
                         :class="{
-                            'bg-blue-50 text-blue-600':
+                            'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400':
                                 isActive(menu_orders_pending),
-                            'text-gray-700 hover:bg-gray-100':
+                            'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700':
                                 !isActive(menu_orders_pending),
                         }"
-                        class="flex items-center p-3 pl-11 my-1 rounded-lg cursor-pointer transition-colors duration-200"
                     >
                         <i
-                            :class="[
-                                'mdi',
-                                menu_orders_pending.icon,
-                                'w-5 text-blue-400 mr-3 text-sm',
-                            ]"
+                            class="fas fa-clock w-5 text-blue-400 dark:text-blue-300 mr-3 text-sm"
                         ></i>
-                        <span class="text-sm">
+                        <span class="text-sm font-medium">
                             {{ menu_orders_pending.name }}
                         </span>
                     </a>
@@ -166,21 +184,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Customers -->
             <a
                 @click="open(menu_orders_customer)"
+                class="flex items-center p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
                 :class="{
-                    'bg-blue-50 text-blue-600': isActive(menu_orders_customer),
-                    'text-gray-700 hover:bg-gray-100':
+                    'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400':
+                        isActive(menu_orders_customer),
+                    'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700':
                         !isActive(menu_orders_customer),
                 }"
-                class="flex items-center p-3 mx-2 my-1 rounded-lg cursor-pointer transition-colors duration-200"
             >
                 <i
-                    :class="[
-                        'mdi',
-                        menu_orders_customer.icon,
-                        'w-6 text-blue-500 mr-3',
-                    ]"
+                    class="fas fa-users w-6 text-blue-500 dark:text-blue-400 mr-3"
                 ></i>
-                <span>{{ __(menu_orders_customer.name) }}</span>
+                <span class="font-medium">{{
+                    __(menu_orders_customer.name)
+                }}</span>
             </a>
         </template>
         <template #main>
@@ -191,8 +208,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import VNotification from "@/components/VNotification.vue";
-import VProfile from"@/components/VProfile.vue";
+import VProfile from "@/components/VProfile.vue";
 import VLayout from "@/components/VLayout.vue";
+import { router } from "@inertiajs/vue3";
 
 export default {
     components: {
@@ -221,21 +239,31 @@ export default {
     },
 
     created() {
-        this.user = this.$page.props.user;
-        this.app_name = this.$page.props.app_name;
-        this.menus = this.$page.props.ecommerce_menus;
+        this.user = this.$page.props.user || {};
+        this.app_name = this.$page.props.app_name || "Admin";
+        this.menus = this.$page.props.ecommerce_menus || [];
 
-        this.menu_category = this.menus.find((item) => item.id == "categories");
-        this.menu_dashboard = this.menus.find((item) => item.id == "dashboard");
-        this.menu_products = this.menus.find((item) => item.id == "products");
-        this.menu_orders = this.menus.find((item) => item.id == "orders");
+        // Safe menu finding with fallbacks
+        this.menu_category = this.menus.find(
+            (item) => item?.id == "categories"
+        ) || { name: "Categories", route: "#" };
+        this.menu_dashboard = this.menus.find(
+            (item) => item?.id == "dashboard"
+        ) || { name: "Dashboard", route: "#" };
+        this.menu_products = this.menus.find(
+            (item) => item?.id == "products"
+        ) || { name: "Products", route: "#" };
+        this.menu_orders = this.menus.find((item) => item?.id == "orders") || {
+            name: "Orders",
+            route: "#",
+            icon: "cart",
+        };
         this.menu_orders_pending = this.menus.find(
-            (item) => item.id == "orders_pending"
-        );
-
+            (item) => item?.id == "orders_pending"
+        ) || { name: "Pending Orders", route: "#", icon: "clock" };
         this.menu_orders_customer = this.menus.find(
-            (item) => item.id == "orders_customers"
-        );
+            (item) => item?.id == "orders_customers"
+        ) || { name: "Customers", route: "#", icon: "users" };
     },
 
     methods: {
@@ -248,11 +276,22 @@ export default {
         },
 
         open(item) {
-            window.location.href = item.route;
+            if (item && item.route && item.route !== "#") {
+                router.visit(item.route);
+            }
         },
 
         isActive(item) {
-            return window.location.href === item.route;
+            if (!item || !item.route || item.route === "#") return false;
+
+            const currentPath = window.location.pathname;
+            const itemPath = new URL(item.route, window.location.origin)
+                .pathname;
+
+            return (
+                currentPath === itemPath ||
+                currentPath.startsWith(itemPath + "/")
+            );
         },
     },
 };

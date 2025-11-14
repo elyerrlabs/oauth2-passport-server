@@ -20,44 +20,53 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen p-4">
+    <div
+        class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 min-h-screen p-4"
+    >
         <div class="max-w-3xl mx-auto">
             <!-- Header compacto -->
             <header class="text-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-800 mb-2">
+                <h1
+                    class="text-2xl font-bold text-gray-800 dark:text-white mb-2"
+                >
                     {{ __("Upload Files") }}
                 </h1>
-                <p class="text-gray-600 text-sm">
+                <p class="text-gray-600 dark:text-gray-400 text-sm">
                     {{ __("Drag & drop or select images to upload") }}
                 </p>
             </header>
 
-            <div class="bg-white rounded-xl shadow-lg p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
                 <div
                     @dragover.prevent="dragOver = true"
                     @dragleave="dragOver = false"
                     @drop.prevent="handleDrop"
-                    :class="{ 'drag-over': dragOver }"
-                    class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer transition-colors mb-6"
+                    class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer transition-colors mb-6"
+                    :class="{
+                        'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600':
+                            dragOver,
+                    }"
                     @click="selectFiles"
                 >
                     <div class="py-4">
                         <div
-                            class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                            class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-3"
                         >
                             <i
-                                class="fas fa-cloud-upload-alt text-blue-500 text-xl"
+                                class="fas fa-cloud-upload-alt text-blue-500 dark:text-blue-400 text-xl"
                             ></i>
                         </div>
-                        <p class="text-gray-700 mb-2">
+                        <p class="text-gray-700 dark:text-gray-300 mb-2">
                             {{ __("Drag & drop your images here") }}
                         </p>
                         <button
-                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
+                            class="px-4 py-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
                         >
                             {{ __("Browse Files") }}
                         </button>
-                        <p class="text-gray-500 text-xs mt-2">
+                        <p
+                            class="text-gray-500 dark:text-gray-400 text-xs mt-2"
+                        >
                             {{ __("Supports") }} JPG, WEBP, JPEG, PNG, GIF (max
                             5MB)
                         </p>
@@ -74,9 +83,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <div v-if="images.length > 0" class="mb-6">
                     <h2
-                        class="text-lg font-semibold text-gray-800 mb-3 flex items-center"
+                        class="text-lg font-semibold text-gray-800 dark:text-white mb-3 flex items-center"
                     >
-                        <i class="fas fa-images text-blue-500 mr-2"></i>
+                        <i
+                            class="fas fa-images text-blue-500 dark:text-blue-400 mr-2"
+                        ></i>
                         {{ __("Selected Images") }} ({{ images.length }})
                     </h2>
 
@@ -84,9 +95,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             v-for="(image, index) in images"
                             :key="index"
-                            class="relative group rounded-md  bg-gray-50 overflow-hidden"
+                            class="relative group rounded-md bg-gray-50 dark:bg-gray-700 overflow-hidden"
                             :class="[
-                                error[index] ? 'border-2 border-red-500' : 'border border-gray-200',
+                                error[index]
+                                    ? 'border-2 border-red-500 dark:border-red-400'
+                                    : 'border border-gray-200 dark:border-gray-600',
                             ]"
                         >
                             <img
@@ -97,11 +110,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <div class="p-1.5">
                                 <p
-                                    class="text-xs font-medium text-gray-700 truncate"
+                                    class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate"
                                 >
                                     {{ truncateName(image.name) }}
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p
+                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                >
                                     {{ formatFileSize(image.size) }}
                                 </p>
                                 <v-error
@@ -134,28 +149,39 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     v-if="images.length > 0"
                     class="flex justify-between items-center"
                 >
-                    <span class="text-gray-600 text-sm">
-                        <i class="fas fa-info-circle text-blue-500 mr-1"></i>
+                    <span class="text-gray-600 dark:text-gray-400 text-sm">
+                        <i
+                            class="fas fa-info-circle text-blue-500 dark:text-blue-400 mr-1"
+                        ></i>
                         {{ totalFilesSize }} {{ __("total") }}
                     </span>
                     <button
                         @click="clearAll"
-                        class="px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg text-sm transition-colors"
+                        class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg text-sm transition-colors"
                     >
                         {{ __("Clear All") }}
                     </button>
                 </div>
 
                 <div v-else class="text-center py-8">
-                    <i class="fas fa-image text-gray-300 text-3xl mb-2"></i>
-                    <p class="text-gray-500 text-sm">
+                    <i
+                        class="fas fa-image text-gray-300 dark:text-gray-600 text-3xl mb-2"
+                    ></i>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">
                         {{ __("No images selected yet") }}
                     </p>
                     <v-error :error="error" />
                 </div>
             </div>
 
-            <transition name="fade">
+            <transition
+                enter-active-class="transition-opacity duration-300"
+                enter-from-class="opacity-0"
+                enter-to-class="opacity-100"
+                leave-active-class="transition-opacity duration-300"
+                leave-from-class="opacity-100"
+                leave-to-class="opacity-0"
+            >
                 <div
                     v-if="previewImage"
                     class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
@@ -178,6 +204,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
     </div>
 </template>
+
 <script setup>
 import VError from "@/components/VError.vue";
 import { ref, computed, watch } from "vue";
@@ -307,18 +334,3 @@ const emitUpdate = () => {
     emit("update:modelValue", files);
 };
 </script>
-
-<style>
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
-.drag-over {
-    background-color: #f0f9ff;
-    border-color: #3b82f6;
-}
-</style>

@@ -21,35 +21,45 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-layout>
-        <div class="min-h-screen bg-gray-50 py-2 px-4 sm:px-6 lg:px-2">
+        <div
+            class="min-h-screen bg-white dark:bg-gray-900 py-2 px-4 sm:px-6 lg:px-2 transition-colors duration-300"
+        >
             <div class="max-w-7xl mx-auto">
                 <!-- Header -->
                 <div class="text-center mb-4">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                    <h1
+                        class="text-3xl font-bold text-gray-900 dark:text-white mb-2"
+                    >
                         {{
                             form.id
                                 ? __("Update category")
                                 : __("Create new category")
                         }}
                     </h1>
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 dark:text-gray-400">
                         {{ __("Manage your product categories with ease") }}
                     </p>
                 </div>
 
                 <!-- Form Card -->
-                <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300"
+                >
                     <!-- Form Content -->
                     <div class="p-4 space-y-8">
                         <!-- Basic Information Section -->
                         <div class="space-y-6">
                             <div class="flex items-center space-x-3">
-                                <div class="p-2 bg-blue-100 rounded-lg">
+                                <div
+                                    class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg"
+                                >
                                     <i
-                                        class="mdi mdi-information text-blue-600 text-xl"
+                                        class="mdi mdi-information text-blue-600 dark:text-blue-400 text-xl"
                                     ></i>
                                 </div>
-                                <h3 class="text-lg font-semibold text-gray-800">
+                                <h3
+                                    class="text-lg font-semibold text-gray-800 dark:text-white"
+                                >
                                     {{ __("Basic Information") }}
                                 </h3>
                             </div>
@@ -80,7 +90,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <a
                                         href="https://pictogrammers.com/library/mdi/"
                                         target="_blank"
-                                        class="text-blue-600"
+                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200"
                                     >
                                         <i class="mdi mdi-launch">
                                             View Icon Library
@@ -125,15 +135,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     :class="[
                                                         'mdi',
                                                         option.icon?.icon,
+                                                        'text-blue-600 dark:text-blue-400',
                                                     ]"
                                                 ></span>
-                                                <span class="text-gray-700 p-4">
+                                                <span
+                                                    class="text-gray-700 dark:text-gray-300 p-4"
+                                                >
                                                     {{ option.name }}
                                                 </span>
                                             </div>
                                             <span
                                                 v-else
-                                                class="text-gray-700 p-4"
+                                                class="text-gray-500 dark:text-gray-400 p-4"
                                             >
                                                 {{ __("Select ") }}
                                             </span>
@@ -144,9 +157,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     :class="[
                                                         'mdi',
                                                         option.icon?.icon,
+                                                        'text-blue-600 dark:text-blue-400',
                                                     ]"
                                                 ></span>
-                                                <span class="text-gray-700 p-4">
+                                                <span
+                                                    class="text-gray-700 dark:text-gray-300 p-4"
+                                                >
                                                     {{ option.name }}
                                                 </span>
                                             </div>
@@ -159,19 +175,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Description Section -->
                         <div class="space-y-6">
                             <div class="flex items-center space-x-3">
-                                <div class="p-2 bg-blue-100 rounded-lg">
+                                <div
+                                    class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg"
+                                >
                                     <i
-                                        class="mdi mdi-text text-blue-600 text-xl"
+                                        class="mdi mdi-text text-blue-600 dark:text-blue-400 text-xl"
                                     ></i>
                                 </div>
-                                <h3 class="text-lg font-semibold text-gray-800">
+                                <h3
+                                    class="text-lg font-semibold text-gray-800 dark:text-white"
+                                >
                                     {{ __("Description") }}
                                 </h3>
                             </div>
                             <div class="space-y-2">
                                 <v-editor
                                     v-model="form.description"
-                                    class="border border-gray-300 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent transition-all duration-200"
+                                    class="border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent transition-all duration-200 bg-white dark:bg-gray-700"
                                 />
                             </div>
                         </div>
@@ -188,7 +208,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Form Actions -->
-                    <div class="px-6 py-6 bg-gray-50 border-t border-gray-200">
+                    <div
+                        class="px-6 py-6 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-600 transition-colors duration-300"
+                    >
                         <div
                             class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4"
                         >
@@ -198,8 +220,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :class="[
                                     'px-6 py-3 rounded-xl transition-all duration-200 flex items-center cursor-pointer justify-center space-x-2 font-medium',
                                     disabled
-                                        ? 'bg-gray-400 text-white cursor-not-allowed'
-                                        : 'bg-gradient-to-r from-blue-600 to-indigo-700 text-white hover:from-blue-700 hover:to-indigo-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5',
+                                        ? 'bg-gray-400 dark:bg-gray-600 text-white cursor-not-allowed'
+                                        : 'bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-blue-700 dark:to-indigo-800 text-white hover:from-blue-700 hover:to-indigo-800 dark:hover:from-blue-800 dark:hover:to-indigo-900 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5',
                                 ]"
                             >
                                 <i
@@ -375,12 +397,24 @@ export default {
     background: #f1f5f9;
 }
 
+.dark .form-content::-webkit-scrollbar-track {
+    background: #374151;
+}
+
 .form-content::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 3px;
 }
 
+.dark .form-content::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+
 .form-content::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+.dark .form-content::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
 }
 </style>

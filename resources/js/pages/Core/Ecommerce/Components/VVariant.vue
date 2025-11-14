@@ -1,20 +1,47 @@
+<!--
+Copyright (c) 2025 Elvis Yerel Roman Concha
+
+This file is part of an open source project licensed under the
+"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+
+You may use, study, modify, and redistribute this file for personal,
+educational, or non-commercial research purposes only.
+
+Commercial use is strictly prohibited without prior written consent
+from the author.
+
+Combining this software with any project licensed for commercial use
+(such as AGPL) is not permitted without explicit authorization.
+
+This software supports OAuth 2.0 and OpenID Connect.
+
+Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+-->
 <template>
     <div class="max-w-7xl mx-auto p-6">
         <!-- Component Description -->
         <div
-            class="mb-6 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl shadow-sm"
+            class="mb-6 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 border border-blue-100 dark:border-gray-700 rounded-2xl shadow-sm"
         >
             <div class="flex items-start gap-4">
                 <div
-                    class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                    class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
                 >
-                    <i class="fas fa-cubes text-blue-600 text-lg"></i>
+                    <i
+                        class="fas fa-cubes text-blue-600 dark:text-blue-400 text-lg"
+                    ></i>
                 </div>
                 <div class="flex-1">
-                    <h2 class="text-xl font-bold text-gray-900 mb-2">
+                    <h2
+                        class="text-xl font-bold text-gray-900 dark:text-white mb-2"
+                    >
                         {{ __("What is a Variant?") }}
                     </h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
+                    <p
+                        class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"
+                    >
                         {{
                             __(
                                 "A variant represents a specific version of your product (e.g. 128GB, Red, Limited Edition). Each variant has its own stock, price, currency, and description. This allows you to manage availability and pricing more flexibly."
@@ -24,7 +51,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div
-                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100"
+                            class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-blue-100 dark:border-blue-900"
                         >
                             <div
                                 class="w-8 h-8 bg-blue-500 rounded flex items-center justify-center"
@@ -32,10 +59,14 @@
                                 <i class="fas fa-tag text-white text-xs"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 text-sm">
+                                <h3
+                                    class="font-semibold text-gray-900 dark:text-white text-sm"
+                                >
                                     {{ __("Name") }}
                                 </h3>
-                                <p class="text-gray-600 text-xs">
+                                <p
+                                    class="text-gray-600 dark:text-gray-400 text-xs"
+                                >
                                     {{
                                         __(
                                             "A short label for the variant (e.g. '128GB')"
@@ -45,7 +76,7 @@
                             </div>
                         </div>
                         <div
-                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-100"
+                            class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-green-100 dark:border-green-900"
                         >
                             <div
                                 class="w-8 h-8 bg-green-500 rounded flex items-center justify-center"
@@ -53,10 +84,14 @@
                                 <i class="fas fa-cubes text-white text-xs"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 text-sm">
+                                <h3
+                                    class="font-semibold text-gray-900 dark:text-white text-sm"
+                                >
                                     {{ __("Stock") }}
                                 </h3>
-                                <p class="text-gray-600 text-xs">
+                                <p
+                                    class="text-gray-600 dark:text-gray-400 text-xs"
+                                >
                                     {{
                                         __(
                                             "The available quantity for this variant"
@@ -66,7 +101,7 @@
                             </div>
                         </div>
                         <div
-                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-yellow-100"
+                            class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-yellow-100 dark:border-yellow-900"
                         >
                             <div
                                 class="w-8 h-8 bg-yellow-500 rounded flex items-center justify-center"
@@ -76,10 +111,14 @@
                                 ></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 text-sm">
+                                <h3
+                                    class="font-semibold text-gray-900 dark:text-white text-sm"
+                                >
                                     {{ __("Price") }}
                                 </h3>
-                                <p class="text-gray-600 text-xs">
+                                <p
+                                    class="text-gray-600 dark:text-gray-400 text-xs"
+                                >
                                     {{
                                         __(
                                             "The cost of this variant, independent from the base product"
@@ -89,7 +128,7 @@
                             </div>
                         </div>
                         <div
-                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-purple-100"
+                            class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-purple-100 dark:border-purple-900"
                         >
                             <div
                                 class="w-8 h-8 bg-purple-500 rounded flex items-center justify-center"
@@ -97,10 +136,14 @@
                                 <i class="fas fa-globe text-white text-xs"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 text-sm">
+                                <h3
+                                    class="font-semibold text-gray-900 dark:text-white text-sm"
+                                >
                                     {{ __("Currency") }}
                                 </h3>
-                                <p class="text-gray-600 text-xs">
+                                <p
+                                    class="text-gray-600 dark:text-gray-400 text-xs"
+                                >
                                     {{
                                         __(
                                             "The currency in which the price is defined"
@@ -112,7 +155,7 @@
                     </div>
 
                     <div
-                        class="flex items-center gap-3 p-3 bg-indigo-50 rounded-lg border border-indigo-100"
+                        class="flex items-center gap-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-100 dark:border-indigo-800"
                     >
                         <div
                             class="w-8 h-8 bg-indigo-500 rounded flex items-center justify-center"
@@ -120,10 +163,12 @@
                             <i class="fas fa-align-left text-white text-xs"></i>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-gray-900 text-sm">
+                            <h3
+                                class="font-semibold text-gray-900 dark:text-white text-sm"
+                            >
                                 {{ __("Description") }}
                             </h3>
-                            <p class="text-gray-600 text-xs">
+                            <p class="text-gray-600 dark:text-gray-400 text-xs">
                                 {{
                                     __(
                                         "Optional short description for this variant to clarify details and specifications"
@@ -138,19 +183,21 @@
 
         <!-- Header -->
         <div
-            class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-6 bg-white rounded-2xl shadow-sm border border-gray-200"
+            class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700"
         >
             <div class="flex-1">
-                <h1 class="text-xl font-bold text-gray-900 mb-1">
+                <h1
+                    class="text-xl font-bold text-gray-900 dark:text-white mb-1"
+                >
                     {{ __("Manage Variants") }}
                 </h1>
-                <p class="text-gray-600 text-sm">
+                <p class="text-gray-600 dark:text-gray-400 text-sm">
                     {{ __("Add and configure different product variations") }}
                 </p>
             </div>
             <button
                 @click="addVariant"
-                class="flex items-center gap-2 px-5 py-2.5 cursor-pointer bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
+                class="flex items-center gap-2 px-5 py-2.5 cursor-pointer bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
             >
                 <i class="fas fa-plus-circle"></i>
                 <span>{{ __("Add Variant") }}</span>
@@ -162,11 +209,11 @@
             <div
                 v-for="(variant, index) in modelValue"
                 :key="index"
-                class="group bg-white rounded-xl border-2 border-gray-100 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-blue-200"
+                class="group bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-blue-200 dark:hover:border-blue-600"
             >
                 <!-- Variant Header -->
                 <div
-                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-4 border-b border-gray-100"
+                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-gray-700"
                 >
                     <div class="flex items-center gap-3">
                         <div
@@ -177,23 +224,28 @@
                             }}</span>
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900">
+                            <h3
+                                class="text-lg font-bold text-gray-900 dark:text-white"
+                            >
                                 {{ __("Variant") }} #{{ index + 1 }}
                             </h3>
                             <p
                                 v-if="variant.name"
-                                class="text-blue-600 font-medium text-sm"
+                                class="text-blue-600 dark:text-blue-400 font-medium text-sm"
                             >
                                 {{ variant.name }}
                             </p>
-                            <p v-else class="text-gray-500 text-xs">
+                            <p
+                                v-else
+                                class="text-gray-500 dark:text-gray-400 text-xs"
+                            >
                                 {{ __("Unnamed variant") }}
                             </p>
                         </div>
                     </div>
                     <button
                         @click="removeVariant(index)"
-                        class="flex items-center gap-1.5 cursor-pointer px-3 py-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-all duration-200 border border-transparent hover:border-red-200 text-sm"
+                        class="flex items-center gap-1.5 cursor-pointer px-3 py-1.5 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded transition-all duration-200 border border-transparent hover:border-red-200 dark:hover:border-red-800 text-sm"
                     >
                         <i class="fas fa-trash-alt"></i>
                         <span class="font-medium">{{ __("Remove") }}</span>
@@ -242,7 +294,9 @@
                                 @change="calculateStock(variant)"
                             />
                         </div>
-                        <span class="font-semibold text-gray-800">
+                        <span
+                            class="font-semibold text-gray-800 dark:text-gray-200"
+                        >
                             {{ __("Current stock") }} :
                             {{ variant.stock_temp }}
                         </span>
@@ -292,17 +346,21 @@
         <!-- Empty State -->
         <div
             v-if="modelValue.length === 0"
-            class="text-center py-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-dashed border-gray-300"
+            class="text-center py-12 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600"
         >
             <div
-                class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl flex items-center justify-center mx-auto mb-4"
             >
-                <i class="fas fa-cubes text-blue-500 text-2xl"></i>
+                <i
+                    class="fas fa-cubes text-blue-500 dark:text-blue-400 text-2xl"
+                ></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
                 {{ __("No variants yet") }}
             </h3>
-            <p class="text-gray-600 mb-4 max-w-md mx-auto text-sm">
+            <p
+                class="text-gray-600 dark:text-gray-400 mb-4 max-w-md mx-auto text-sm"
+            >
                 {{
                     __(
                         "Get started by adding your first product variant to manage different versions of your product."
@@ -311,7 +369,7 @@
             </p>
             <button
                 @click="addVariant"
-                class="inline-flex items-center cursor-pointer gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
+                class="inline-flex items-center cursor-pointer gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
             >
                 <i class="fas fa-plus-circle"></i>
                 <span>{{ __("Create First Variant") }}</span>
@@ -323,8 +381,8 @@
 
 <script>
 import VInput from "@/components/VInput.vue";
-import VSelect from"@/components/VSelect.vue";
-import VTextarea from"@/components/VTextarea.vue";
+import VSelect from "@/components/VSelect.vue";
+import VTextarea from "@/components/VTextarea.vue";
 import VError from "@/components/VError.vue";
 import VSwitch from "@/components/VSwitch.vue";
 

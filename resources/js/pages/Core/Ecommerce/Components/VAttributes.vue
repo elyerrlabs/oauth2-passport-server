@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <div class="w-full max-w-7xl mx-auto p-6">
         <!-- Header Section -->
         <div
-            class="mb-8 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 shadow-sm"
+            class="mb-8 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-blue-100 dark:border-gray-700 shadow-sm"
         >
             <div class="flex items-start gap-2 mb-4">
                 <div
@@ -32,13 +32,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <i class="fas fa-pencil-alt text-white text-2xl"></i>
                 </div>
                 <div class="flex-1">
-                    <h2 class="text-lg font-bold text-gray-900 mb-3">
+                    <h2
+                        class="text-lg font-bold text-gray-900 dark:text-white mb-3"
+                    >
                         {{ __("Product Attributes") }}
                     </h2>
-                    <p class="text-md text-gray-700 font-medium mb-4">
+                    <p
+                        class="text-md text-gray-700 dark:text-gray-300 font-medium mb-4"
+                    >
                         {{ __("Manage product attributes and variations") }}
                     </p>
-                    <p class="text-gray-600 text-lg leading-relaxed">
+                    <p
+                        class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed"
+                    >
                         {{
                             __(
                                 "Product attributes represent the main characteristics of your products (e.g., color, size, material). These attributes help customers filter products in the store and make more accurate purchase decisions."
@@ -51,27 +57,29 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Main Card -->
         <div
-            class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-8"
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-8"
         >
             <!-- Card Header -->
             <div
-                class="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6 border-b border-gray-200"
+                class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-8 py-6 border-b border-gray-200 dark:border-gray-600"
             >
                 <div
                     class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
                 >
                     <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                        <h3
+                            class="text-2xl font-bold text-gray-900 dark:text-white mb-2"
+                        >
                             {{ __("Attributes List") }}
                         </h3>
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 dark:text-gray-400">
                             {{
                                 __("Manage all product attributes in one place")
                             }}
                         </p>
                     </div>
                     <span
-                        class="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-semibold shadow-sm"
+                        class="px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded-full text-sm font-semibold shadow-sm"
                     >
                         {{ modelValue.length }} {{ __("attribute") }}(s)
                     </span>
@@ -83,14 +91,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Empty State -->
                 <div v-if="modelValue.length === 0" class="text-center py-4">
                     <div
-                        class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner"
+                        class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner"
                     >
-                        <i class="fas fa-tags text-gray-400 text-4xl"></i>
+                        <i
+                            class="fas fa-tags text-gray-400 dark:text-gray-500 text-4xl"
+                        ></i>
                     </div>
-                    <h4 class="text-2xl font-bold text-gray-900 mb-3">
+                    <h4
+                        class="text-2xl font-bold text-gray-900 dark:text-white mb-3"
+                    >
                         {{ __("No attributes added yet") }}
                     </h4>
-                    <p class="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+                    <p
+                        class="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-md mx-auto"
+                    >
                         {{
                             __(
                                 "Get started by adding your first product attribute to enhance your product catalog."
@@ -99,7 +113,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </p>
                     <button
                         @click="addAttribute"
-                        class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                        class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
                         <i class="fas fa-plus-circle text-xl"></i>
                         <span class="text-lg">{{
@@ -115,11 +129,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         v-for="(attr, index) in modelValue"
                         :key="index"
-                        class="group bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-gray-100 p-6 shadow-sm hover:shadow-2xl transition-all duration-300 hover:border-blue-200"
+                        class="group bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-800 rounded-2xl border-2 border-gray-100 dark:border-gray-600 p-6 shadow-sm hover:shadow-2xl transition-all duration-300 hover:border-blue-200 dark:hover:border-blue-600"
                     >
                         <!-- Attribute Header -->
                         <div
-                            class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 pb-6 border-b border-gray-200"
+                            class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-600"
                         >
                             <div class="flex items-center gap-4">
                                 <div
@@ -131,23 +145,28 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     >
                                 </div>
                                 <div>
-                                    <h4 class="text-xl font-bold text-gray-900">
+                                    <h4
+                                        class="text-xl font-bold text-gray-900 dark:text-white"
+                                    >
                                         {{ __("Attribute") }} #{{ index + 1 }}
                                     </h4>
                                     <p
                                         v-if="attr.name"
-                                        class="text-blue-600 font-medium"
+                                        class="text-blue-600 dark:text-blue-400 font-medium"
                                     >
                                         {{ attr.name }}
                                     </p>
-                                    <p v-else class="text-gray-500 text-sm">
+                                    <p
+                                        v-else
+                                        class="text-gray-500 dark:text-gray-400 text-sm"
+                                    >
                                         {{ __("Unnamed attribute") }}
                                     </p>
                                 </div>
                             </div>
                             <button
                                 @click="deleteAttribute(index)"
-                                class="flex items-center gap-2 px-4 py-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200 border border-transparent hover:border-red-200 font-medium"
+                                class="flex items-center gap-2 px-4 py-2 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 border border-transparent hover:border-red-200 dark:hover:border-red-800 font-medium"
                                 :title="__('Delete attribute')"
                             >
                                 <i class="fas fa-trash-alt"></i>
@@ -211,15 +230,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :error="error[index]['value']"
                                 />
                             </div>
-                            <!--
-                                <v-input
-                                :label="__('Available Stock')"
-                                v-model="attr.stock"
-                                :required="true"
-                                type="number"
-                                :placeholder="__('Enter stock quantity')"
-                                />
-                                -->
                             <div>
                                 <v-switch
                                     :label="__('Multiple Values')"
@@ -238,11 +248,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Add Button -->
             <div
                 v-if="modelValue.length > 0"
-                class="border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6"
+                class="border-t border-gray-200 dark:border-gray-600 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-8 py-6"
             >
                 <button
                     @click="addAttribute"
-                    class="w-full max-w-md mx-auto px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
+                    class="w-full max-w-md mx-auto px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 hover:from-green-600 hover:to-green-700 dark:hover:from-green-700 dark:hover:to-green-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
                 >
                     <i class="fas fa-plus-circle text-xl"></i>
                     <span class="text-lg">{{ __("Add New Attribute") }}</span>

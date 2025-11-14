@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <div class="w-full max-w-6xl mx-auto p-3">
         <!-- Header Section - Mejorado -->
         <div
-            class="mb-8 p-4 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl border border-purple-100 shadow-sm"
+            class="mb-8 p-4 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-purple-100 dark:border-gray-700 shadow-sm"
         >
             <div class="flex items-start gap-6 mb-4">
                 <div
@@ -32,13 +32,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <i class="fas fa-tags text-white text-2xl"></i>
                 </div>
                 <div class="flex-1">
-                    <h2 class="text-lg font-bold text-gray-900 mb-3">
+                    <h2
+                        class="text-lg font-bold text-gray-900 dark:text-white mb-3"
+                    >
                         {{ __("Product Tags") }}
                     </h2>
-                    <p class="text-xl text-gray-700 font-medium mb-4">
+                    <p
+                        class="text-xl text-gray-700 dark:text-gray-300 font-medium mb-4"
+                    >
                         {{ __("Manage product tags and categories") }}
                     </p>
-                    <p class="text-gray-600 text-md leading-relaxed">
+                    <p
+                        class="text-gray-600 dark:text-gray-400 text-md leading-relaxed"
+                    >
                         {{
                             __(
                                 "Tags allow you to add keywords or labels to your products (e.g., 'eco-friendly', 'new arrival', 'summer collection'). Unlike categories, tags are flexible and can be combined freely. They help customers quickly find related products and improve search and filtering in your store."
@@ -51,20 +57,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Main Content Card  -->
         <div
-            class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden"
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
         >
             <!-- Card Header -->
             <div
-                class="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6 border-b border-gray-200"
+                class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-8 py-6 border-b border-gray-200 dark:border-gray-600"
             >
                 <div
                     class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
                 >
                     <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                        <h3
+                            class="text-2xl font-bold text-gray-900 dark:text-white mb-2"
+                        >
                             {{ __("Tags Manager") }}
                         </h3>
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 dark:text-gray-400">
                             {{
                                 __("Add, edit, and organize your product tags")
                             }}
@@ -72,7 +80,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                     <div class="flex items-center gap-3">
                         <span
-                            class="px-4 py-2 bg-purple-500 text-white rounded-full text-sm font-semibold shadow-sm"
+                            class="px-4 py-2 bg-purple-500 dark:bg-purple-600 text-white rounded-full text-sm font-semibold shadow-sm"
                         >
                             {{ internalTags.length }} {{ __("tag") }}(s)
                         </span>
@@ -85,14 +93,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Empty State - Mejorado -->
                 <div v-if="internalTags.length === 0" class="text-center py-16">
                     <div
-                        class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner"
+                        class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner"
                     >
-                        <i class="fas fa-tags text-gray-400 text-4xl"></i>
+                        <i
+                            class="fas fa-tags text-gray-400 dark:text-gray-500 text-4xl"
+                        ></i>
                     </div>
-                    <h4 class="text-2xl font-bold text-gray-900 mb-3">
+                    <h4
+                        class="text-2xl font-bold text-gray-900 dark:text-white mb-3"
+                    >
                         {{ __("No tags added yet") }}
                     </h4>
-                    <p class="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+                    <p
+                        class="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-md mx-auto"
+                    >
                         {{
                             __(
                                 "Start by adding tags to help customers discover your products through search and filtering."
@@ -102,7 +116,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <button
                         @click="addTag"
                         :disabled="maxTags && internalTags.length >= maxTags"
-                        class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 hover:from-purple-600 hover:to-purple-700 dark:hover:from-purple-700 dark:hover:to-purple-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
                         <i class="fas fa-plus-circle text-xl"></i>
                         <span class="text-lg">{{ __("Add First Tag") }}</span>
@@ -118,10 +132,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             v-for="(tag, index) in internalTags"
                             :key="index"
                             :class="[
-                                'group relative bg-gradient-to-br from-white to-gray-50 rounded-2xl border-2 p-4 shadow-sm hover:shadow-xl transition-all duration-300',
+                                'group relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl border-2 p-4 shadow-sm hover:shadow-xl transition-all duration-300',
                                 tag.editing
-                                    ? 'border-purple-300 ring-4 ring-purple-100'
-                                    : 'border-gray-200 hover:border-purple-200',
+                                    ? 'border-purple-300 dark:border-purple-600 ring-4 ring-purple-100 dark:ring-purple-900/30'
+                                    : 'border-gray-200 dark:border-gray-600 hover:border-purple-200 dark:hover:border-purple-600',
                             ]"
                         >
                             <!-- Tag Content -->
@@ -129,7 +143,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Tag Display -->
                                 <div v-if="!tag.editing" class="flex-1 min-w-0">
                                     <span
-                                        class="text-sm font-semibold text-gray-900 truncate block"
+                                        class="text-sm font-semibold text-gray-900 dark:text-white truncate block"
                                     >
                                         {{ tag.name || __("New Tag") }}
                                     </span>
@@ -140,7 +154,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <input
                                         v-model="tag.name"
                                         type="text"
-                                        class="w-full px-3 py-2 text-sm border-2 border-purple-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                                        class="w-full px-3 py-2 text-sm border-2 border-purple-300 dark:border-purple-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                         :placeholder="__('Tag name')"
                                         @blur="finishEditing(tag, index)"
                                         @keyup.enter="finishEditing(tag, index)"
@@ -162,7 +176,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             'w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 shadow-sm',
                                             tag.editing
                                                 ? 'bg-green-500 text-white hover:bg-green-600 hover:scale-110'
-                                                : 'bg-purple-100 text-purple-600 hover:bg-purple-200 hover:scale-110',
+                                                : 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 hover:bg-purple-200 dark:hover:bg-purple-800 hover:scale-110',
                                         ]"
                                         :title="
                                             tag.editing
@@ -183,7 +197,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <!-- Delete Button -->
                                     <button
                                         @click="deleteTag(index)"
-                                        class="w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 hover:scale-110 transition-all duration-200 shadow-sm"
+                                        class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 hover:scale-110 transition-all duration-200 shadow-sm"
                                         :title="__('Delete tag')"
                                     >
                                         <i class="fas fa-trash text-xs"></i>
@@ -193,7 +207,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <button
                                         v-if="tag.editing"
                                         @click="cancelEditing(index)"
-                                        class="w-8 h-8 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 hover:scale-110 transition-all duration-200 shadow-sm"
+                                        class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-500 hover:scale-110 transition-all duration-200 shadow-sm"
                                         :title="__('Cancel')"
                                     >
                                         <i class="fas fa-times text-xs"></i>
@@ -219,13 +233,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Add Tag Section - Mejorado -->
                 <div
                     v-if="internalTags.length > 0"
-                    class="border-t border-gray-200 pt-8"
+                    class="border-t border-gray-200 dark:border-gray-600 pt-8"
                 >
                     <div
                         class="flex flex-col sm:flex-row items-center justify-between gap-4"
                     >
                         <div class="flex-1">
-                            <p class="text-gray-600 text-sm">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
                                 {{
                                     __(
                                         "Add more tags to improve product discoverability"
@@ -241,8 +255,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :class="[
                                 'px-6 py-3 rounded-xl border-2 font-semibold transition-all duration-300 flex items-center gap-2',
                                 maxTags && internalTags.length >= maxTags
-                                    ? 'border-gray-300 text-gray-400 cursor-not-allowed bg-gray-100'
-                                    : 'border-purple-300 text-purple-600 hover:border-purple-400 hover:bg-purple-50 hover:scale-105 bg-white shadow-sm',
+                                    ? 'border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed bg-gray-100 dark:bg-gray-700'
+                                    : 'border-purple-300 dark:border-purple-600 text-purple-600 dark:text-purple-400 hover:border-purple-400 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:scale-105 bg-white dark:bg-gray-800 shadow-sm',
                             ]"
                         >
                             <i class="fas fa-plus"></i>
@@ -253,17 +267,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Max Tags Message -->
                     <div
                         v-if="maxTags && internalTags.length >= maxTags"
-                        class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl"
+                        class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl"
                     >
                         <div class="flex items-center gap-3">
                             <i
-                                class="fas fa-exclamation-triangle text-amber-500 text-lg"
+                                class="fas fa-exclamation-triangle text-amber-500 dark:text-amber-400 text-lg"
                             ></i>
                             <div>
-                                <p class="text-amber-800 font-semibold">
+                                <p
+                                    class="text-amber-800 dark:text-amber-300 font-semibold"
+                                >
                                     {{ __("Maximum Tags Reached") }}
                                 </p>
-                                <p class="text-amber-700 text-sm">
+                                <p
+                                    class="text-amber-700 dark:text-amber-400 text-sm"
+                                >
                                     {{ __("You can only add up to") }}
                                     {{ maxTags }} {{ __("tags") }}
                                 </p>
@@ -339,9 +357,10 @@ export default {
                 this.$swal({
                     icon: "warning",
                     title: __("Maximum Tags Reached"),
-                    text: __(
-                        "You can only add up to {maxTags} tags."
-                    ).replace("{maxTags}", this.maxTags),
+                    text: __("You can only add up to {maxTags} tags.").replace(
+                        "{maxTags}",
+                        this.maxTags
+                    ),
                     timer: 3000,
                     showConfirmButton: false,
                 });
