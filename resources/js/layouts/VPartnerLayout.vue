@@ -24,7 +24,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <template #aside>
             <div>
                 <h3
-                    class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-6"
+                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 mt-6"
                 >
                     {{ __("Navigation") }}
                 </h3>
@@ -32,11 +32,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     v-for="(item, index) in menus"
                     :key="index"
                     @click="open(item)"
-                    class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
-                    :class="{ 'bg-gray-300': isActive(item) }"
+                    class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-200"
+                    :class="{
+                        'bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white':
+                            isActive(item),
+                        'bg-transparent': !isActive(item),
+                    }"
                 >
                     <div
-                        class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center"
+                        class="w-8 h-8 bg-green-600 dark:bg-green-500 rounded-lg flex items-center justify-center"
                     >
                         <i
                             :class="['mdi', item.icon, 'text-white text-sm']"
@@ -52,102 +56,73 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-layout>
 </template>
 
-<script>
-import VNotification from "@/components/VNotification.vue";
-import VProfile from "@/components/VProfile.vue";
+<script setup>
 import VLayout from "@/components/VLayout.vue";
+import { router, usePage } from "@inertiajs/vue3";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
-export default {
-    components: {
-        VProfile,
-        VNotification,
-        VLayout,
-    },
+const page = usePage();
+const isSidebarOpen = ref(false);
+const app_name = ref("");
+const menus = ref([]);
 
-    data() {
-        return {
-            isSidebarOpen: false,
-            user: {},
-            app_name: "",
-            menus: [],
-            aside: true,
-        };
-    },
+onMounted(() => {
+    app_name.value = page.props.org_name ?? "";
+    menus.value = page.props.partner_routes ?? [];
+    setupEventListeners();
+});
 
-    computed: {
-        userInitials() {
-            if (!this.user || !this.user.name) return "U";
-            return this.user.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase();
-        },
-    },
-
-    created() {
-        this.user = this.$page.props.user ?? {};
-        this.app_name = this.$page.props.org_name ?? "";
-        this.menus = this.$page.props.partner_routes ?? [];
-    },
-
-    mounted() {
-        this.setupEventListeners();
-    },
-
-    methods: {
-        open(item) {
-            window.location.href = item.route;
-            if (window.innerWidth < 1024) {
-                this.isSidebarOpen = false;
-            }
-        },
-
-        isActive(item) {
-            return item.route == window.location.href;
-        },
-
-        toggleMenu() {
-            this.isSidebarOpen = !this.isSidebarOpen;
-        },
-
-        toggle() {
-            this.aside = !this.aside;
-        },
-
-        handleResize() {
-            if (window.innerWidth >= 1024) {
-                this.isSidebarOpen = false;
-            }
-        },
-
-        setupEventListeners() {
-            window.addEventListener("resize", this.handleResize);
-        },
-    },
-
-    beforeUnmount() {
-        window.removeEventListener("resize", this.handleResize);
-    },
+const open = (item) => {
+    router.visit(item.route);
+    if (window.innerWidth < 1024) {
+        isSidebarOpen.value = false;
+    }
 };
+
+const isActive = (item) => {
+    return item.route == `${window.location.origin}${window.location.pathname}`;
+};
+
+const handleResize = () => {
+    if (window.innerWidth >= 1024) {
+        isSidebarOpen.value = false;
+    }
+};
+
+const setupEventListeners = () => {
+    window.addEventListener("resize", handleResize);
+};
+
+onBeforeUnmount(() => {
+    window.removeEventListener("resize", handleResize);
+});
 </script>
 
 <style scoped>
-/* Custom scrollbar for sidebar */
-.aside-scrollbar::-webkit-scrollbar {
-    width: 4px;
+/* Transiciones suaves para cambios de tema */
+button {
+    transition: all 0.2s ease-in-out;
 }
 
-.aside-scrollbar::-webkit-scrollbar-track {
-    background: #f1f5f9;
+/* Mejora de contraste para estados activos */
+.bg-gray-300.dark\:bg-gray-600 {
+    border-left: 3px solid rgb(34 197 94); /* green-500 */
 }
 
-.aside-scrollbar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
+/* Estados hover mejorados */
+.hover\:bg-gray-100:hover {
+    transform: translateX(2px);
 }
 
-.aside-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+.dark .hover\:bg-gray-700:hover {
+    transform: translateX(2px);
+}
+
+.text-white {
+    filter: brightness(0.95);
+}
+
+.dark .text-white {
+    filter: brightness(1.1);
 }
 </style>

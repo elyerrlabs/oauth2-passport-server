@@ -17,21 +17,28 @@ This software supports OAuth 2.0 and OpenID Connect.
 
 Author Contact: yerel9212@yahoo.es
 
-SPDX-->
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+-->
 <template>
     <v-partner-layout>
         <!-- Header Section -->
-        <div class="bg-blue-600 text-white px-4 sm:px-6 py-4">
+        <div
+            class="bg-blue-600 dark:bg-blue-800 text-white px-4 sm:px-6 py-4 transition-colors duration-200"
+        >
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-lg sm:text-xl font-bold">
                         {{ __("Partner Management") }}
                     </h1>
-                    <p class="text-blue-100 text-xs sm:text-sm mt-1">
+                    <p
+                        class="text-blue-100 dark:text-blue-200 text-xs sm:text-sm mt-1"
+                    >
                         {{ __("Manage your partners and their commissions") }}
                     </p>
                 </div>
-                <div class="hidden sm:block p-3 bg-blue-500 rounded-lg">
+                <div
+                    class="hidden sm:block p-3 bg-blue-500 dark:bg-blue-700 rounded-lg transition-colors duration-200"
+                >
                     <svg
                         class="w-6 h-6 text-white"
                         fill="currentColor"
@@ -46,19 +53,23 @@ SPDX-->
         </div>
 
         <!-- Filters Section -->
-        <div class="bg-white border-b border-gray-200 px-4 sm:px-6 py-4">
+        <div
+            class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4 transition-colors duration-200"
+        >
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-base sm:text-lg font-semibold text-gray-900">
+                <h2
+                    class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-200"
+                >
                     {{ __("Filters") }}
                 </h2>
                 <div class="flex items-center space-x-2 sm:space-x-3">
                     <label
-                        class="flex items-center space-x-2 text-xs sm:text-sm text-gray-700"
+                        class="flex items-center space-x-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 transition-colors duration-200"
                     >
                         <input
                             type="checkbox"
                             v-model="showFilters"
-                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4"
+                            class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 w-4 h-4 bg-white dark:bg-gray-700 transition-colors duration-200"
                         />
                         <span class="hidden sm:inline">{{
                             __("Show Filters")
@@ -67,7 +78,7 @@ SPDX-->
                     </label>
                     <button
                         @click="resetFilters"
-                        class="p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-lg transition-colors"
+                        class="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
                         :title="__('Reset filters')"
                     >
                         <svg
@@ -93,11 +104,11 @@ SPDX-->
             >
                 <div v-show="showFilters" class="overflow-hidden">
                     <div
-                        class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
                     >
                         <div>
                             <label
-                                class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+                                class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-200"
                             >
                                 {{ __("Name") }}
                             </label>
@@ -105,13 +116,13 @@ SPDX-->
                                 v-model="search.name"
                                 type="text"
                                 @input="debounceGetPartners"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                                 placeholder="Search by name..."
                             />
                         </div>
                         <div>
                             <label
-                                class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+                                class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-200"
                             >
                                 {{ __("Last Name") }}
                             </label>
@@ -119,13 +130,13 @@ SPDX-->
                                 v-model="search.last_name"
                                 type="text"
                                 @input="debounceGetPartners"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                                 placeholder="Search by last name..."
                             />
                         </div>
                         <div>
                             <label
-                                class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+                                class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-200"
                             >
                                 {{ __("Email") }}
                             </label>
@@ -133,13 +144,13 @@ SPDX-->
                                 v-model="search.email"
                                 type="email"
                                 @input="debounceGetPartners"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                                 placeholder="Search by email..."
                             />
                         </div>
                         <div>
                             <label
-                                class="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
+                                class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-200"
                             >
                                 {{ __("Code") }}
                             </label>
@@ -147,7 +158,7 @@ SPDX-->
                                 v-model="search.code"
                                 type="text"
                                 @input="debounceGetPartners"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                                 placeholder="Search by code..."
                             />
                         </div>
@@ -157,12 +168,14 @@ SPDX-->
         </div>
 
         <!-- Info Banner and Controls -->
-        <div class="px-4 sm:px-6 py-3 bg-gray-50 border-b border-gray-200">
+        <div
+            class="px-4 sm:px-6 py-3 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200"
+        >
             <div
                 class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
             >
                 <div
-                    class="flex items-center space-x-2 bg-blue-50 text-blue-700 px-3 py-2 rounded-lg"
+                    class="flex items-center space-x-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-lg transition-colors duration-200"
                 >
                     <svg
                         class="w-4 h-4 sm:w-5 sm:h-5"
@@ -183,7 +196,7 @@ SPDX-->
                     <select
                         v-model="search.per_page"
                         @change="getPartners"
-                        class="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200"
                     >
                         <option value="10">10 {{ __("items") }}</option>
                         <option value="15">15 {{ __("items") }}</option>
@@ -191,60 +204,21 @@ SPDX-->
                         <option value="50">50 {{ __("items") }}</option>
                         <option value="100">100 {{ __("items") }}</option>
                     </select>
-
-                    <div class="flex bg-gray-100 rounded-lg p-1">
-                        <button
-                            @click="viewMode = 'list'"
-                            :class="[
-                                'px-2 py-1 text-xs sm:px-3 sm:py-1 sm:text-sm rounded-md transition-colors',
-                                viewMode === 'list'
-                                    ? 'bg-blue-600 text-white shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-800',
-                            ]"
-                        >
-                            <span class="hidden sm:inline">{{
-                                __("List")
-                            }}</span>
-                            <span class="sm:hidden">📋</span>
-                        </button>
-                        <button
-                            @click="viewMode = 'grid'"
-                            :class="[
-                                'px-2 py-1 text-xs sm:px-3 sm:py-1 sm:text-sm rounded-md transition-colors',
-                                viewMode === 'grid'
-                                    ? 'bg-blue-600 text-white shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-800',
-                            ]"
-                        >
-                            <span class="hidden sm:inline">{{
-                                __("Grid")
-                            }}</span>
-                            <span class="sm:hidden">🟰</span>
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Grid View (Default for small screens) -->
-        <div
-            v-if="
-                (isMobile && users.length) ||
-                (viewMode === 'grid' && users.length)
-            "
-            class="p-3 sm:p-6"
-        >
-            <div
-                class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
-            >
+        <!-- Mobile & Tablet Grid View (XS: 1 col, MD: 2 cols) -->
+        <div v-if="!isLargeScreen && users.length" class="p-3 sm:p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div
                     v-for="user in users"
                     :key="user.id"
-                    class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                    class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
                 >
                     <!-- Card Header -->
                     <div
-                        class="bg-blue-600 text-white px-3 sm:px-4 py-2 sm:py-3"
+                        class="bg-blue-600 dark:bg-blue-700 text-white px-3 sm:px-4 py-2 sm:py-3 transition-colors duration-200"
                     >
                         <div class="flex items-center justify-between">
                             <div class="flex-1 min-w-0">
@@ -254,14 +228,14 @@ SPDX-->
                                     {{ user.name }} {{ user.last_name }}
                                 </h3>
                                 <p
-                                    class="text-blue-100 text-xs truncate mt-0.5"
+                                    class="text-blue-100 dark:text-blue-200 text-xs truncate mt-0.5 transition-colors duration-200"
                                 >
                                     {{ user.email }}
                                 </p>
                             </div>
                             <div class="flex-shrink-0 ml-2 sm:ml-3">
                                 <div
-                                    class="w-8 h-8 sm:w-10 sm:h-10 bg-white text-blue-600 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 bg-white text-blue-600 dark:bg-gray-800 dark:text-blue-400 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors duration-200"
                                 >
                                     {{ userInitials(user) }}
                                 </div>
@@ -272,10 +246,10 @@ SPDX-->
                     <!-- Card Body -->
                     <div class="p-3 sm:p-4 space-y-2">
                         <div
-                            class="flex items-center text-xs sm:text-sm text-gray-600"
+                            class="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200"
                         >
                             <svg
-                                class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400 flex-shrink-0"
+                                class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400 dark:text-gray-500 flex-shrink-0 transition-colors duration-200"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                             >
@@ -288,10 +262,10 @@ SPDX-->
                             >
                         </div>
                         <div
-                            class="flex items-center text-xs sm:text-sm text-gray-600"
+                            class="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200"
                         >
                             <svg
-                                class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400 flex-shrink-0"
+                                class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400 dark:text-gray-500 flex-shrink-0 transition-colors duration-200"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                             >
@@ -305,10 +279,10 @@ SPDX-->
                         </div>
                         <div
                             v-if="user.country"
-                            class="flex items-center text-xs sm:text-sm text-gray-600"
+                            class="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200"
                         >
                             <svg
-                                class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400 flex-shrink-0"
+                                class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400 dark:text-gray-500 flex-shrink-0 transition-colors duration-200"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                             >
@@ -321,10 +295,10 @@ SPDX-->
                             >
                         </div>
                         <div
-                            class="flex items-center text-xs sm:text-sm text-gray-600"
+                            class="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200"
                         >
                             <svg
-                                class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400 flex-shrink-0"
+                                class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400 dark:text-gray-500 flex-shrink-0 transition-colors duration-200"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                             >
@@ -341,7 +315,7 @@ SPDX-->
 
                     <!-- Card Actions -->
                     <div
-                        class="px-3 sm:px-4 py-2 sm:py-3 bg-gray-50 border-t border-gray-200"
+                        class="px-3 sm:px-4 py-2 sm:py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 transition-colors duration-200"
                     >
                         <div class="flex justify-end">
                             <v-update
@@ -355,73 +329,42 @@ SPDX-->
             </div>
         </div>
 
-        <!-- Grid Empty State -->
-        <div
-            v-else-if="
-                (isMobile && !users.length) ||
-                (viewMode === 'grid' && !users.length)
-            "
-            class="p-6 sm:p-12 text-center"
-        >
+        <!-- Desktop Table View (LG screens and above) -->
+        <div v-else-if="isLargeScreen" class="p-3 sm:p-6">
             <div
-                class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8"
-            >
-                <svg
-                    class="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3 sm:mb-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-                    />
-                </svg>
-                <h3 class="text-base sm:text-lg font-medium text-gray-900 mb-2">
-                    {{ __("No partners found") }}
-                </h3>
-                <p class="text-gray-500 text-xs sm:text-sm mb-4">
-                    {{ __("No partners found matching your criteria") }}
-                </p>
-                <button
-                    @click="resetFilters"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors"
-                >
-                    {{ __("Clear Filters") }}
-                </button>
-            </div>
-        </div>
-
-        <!-- Desktop List View (Only for desktop when explicitly selected) -->
-        <div v-if="!isMobile && viewMode === 'list'" class="p-3 sm:p-6">
-            <div
-                class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden"
+                class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden transition-colors duration-200"
             >
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-[600px]">
-                        <thead class="bg-gray-50">
+                        <thead
+                            class="bg-white dark:bg-gray-800 transition-colors duration-200"
+                        >
                             <tr>
                                 <th
-                                    class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 transition-colors duration-200"
                                 >
                                     {{ __("Partner") }}
                                 </th>
                                 <th
-                                    class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 transition-colors duration-200"
                                 >
                                     {{ __("Code") }}
                                 </th>
                                 <th
-                                    class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 transition-colors duration-200"
                                 >
                                     {{ __("Commission") }}
                                 </th>
                                 <th
-                                    class="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    class="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 transition-colors duration-200"
                                 >
                                     {{ __("Actions") }}
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody
+                            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-200"
+                        >
                             <tr v-if="loading">
                                 <td
                                     :colspan="4"
@@ -431,7 +374,7 @@ SPDX-->
                                         class="flex justify-center items-center"
                                     >
                                         <svg
-                                            class="w-5 h-5 text-blue-600 animate-spin mr-2"
+                                            class="w-5 h-5 text-blue-600 dark:text-blue-400 animate-spin mr-2"
                                             fill="none"
                                             viewBox="0 0 24 24"
                                         >
@@ -449,9 +392,10 @@ SPDX-->
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                             ></path>
                                         </svg>
-                                        <span class="text-gray-600">{{
-                                            __("Loading...")
-                                        }}</span>
+                                        <span
+                                            class="text-gray-600 dark:text-gray-400 transition-colors duration-200"
+                                            >{{ __("Loading...") }}</span
+                                        >
                                     </div>
                                 </td>
                             </tr>
@@ -461,10 +405,10 @@ SPDX-->
                                     class="px-4 sm:px-6 py-8 text-center"
                                 >
                                     <div
-                                        class="flex flex-col items-center text-gray-500"
+                                        class="flex flex-col items-center text-gray-500 dark:text-gray-400 transition-colors duration-200"
                                     >
                                         <svg
-                                            class="w-10 h-10 sm:w-12 sm:h-12 text-gray-300 mb-2"
+                                            class="w-10 h-10 sm:w-12 sm:h-12 text-gray-300 dark:text-gray-600 mb-2 transition-colors duration-200"
                                             fill="currentColor"
                                             viewBox="0 0 24 24"
                                         >
@@ -477,7 +421,7 @@ SPDX-->
                                         }}</span>
                                         <button
                                             @click="resetFilters"
-                                            class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                            class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium transition-colors duration-200"
                                         >
                                             {{ __("Clear Filters") }}
                                         </button>
@@ -488,30 +432,32 @@ SPDX-->
                                 v-else
                                 v-for="user in users"
                                 :key="user.id"
-                                class="hover:bg-gray-50"
+                                class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
                             >
                                 <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div
-                                            class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold text-sm mr-3"
+                                            class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold text-sm mr-3 transition-colors duration-200"
                                         >
                                             {{ userInitials(user) }}
                                         </div>
                                         <div>
                                             <div
-                                                class="text-sm font-medium text-gray-900"
+                                                class="text-sm font-medium text-gray-900 dark:text-white transition-colors duration-200"
                                             >
                                                 {{ user.name }}
                                                 {{ user.last_name }}
                                             </div>
-                                            <div class="text-sm text-gray-500">
+                                            <div
+                                                class="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-200"
+                                            >
                                                 {{ user.email }}
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td
-                                    class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                    class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white transition-colors duration-200"
                                 >
                                     {{ user.code }}
                                 </td>
@@ -519,7 +465,7 @@ SPDX-->
                                     class="px-4 sm:px-6 py-4 whitespace-nowrap text-center"
                                 >
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200"
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition-colors duration-200"
                                     >
                                         {{ user.commission_rate }}%
                                     </span>
@@ -539,130 +485,145 @@ SPDX-->
             </div>
         </div>
 
+        <!-- Empty State for all screen sizes -->
+        <div
+            v-if="!loading && users.length === 0"
+            class="p-6 sm:p-12 text-center"
+        >
+            <div
+                class="bg-white dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 sm:p-8 transition-colors duration-200"
+            >
+                <svg
+                    class="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 dark:text-gray-500 mx-auto mb-3 sm:mb-4 transition-colors duration-200"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                    />
+                </svg>
+                <h3
+                    class="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-2 transition-colors duration-200"
+                >
+                    {{ __("No partners found") }}
+                </h3>
+                <p
+                    class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-4 transition-colors duration-200"
+                >
+                    {{ __("No partners found matching your criteria") }}
+                </p>
+                <button
+                    @click="resetFilters"
+                    class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200"
+                >
+                    {{ __("Clear Filters") }}
+                </button>
+            </div>
+        </div>
+
         <!-- Pagination -->
         <v-paginate
-            v-if="users.length"
-            :total-pages="pages.total_count"
+            v-if="pages.total_pages > 1"
+            :total-pages="pages.total_pages"
             v-model="search.page"
             @change="getPartners"
         />
     </v-partner-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, onMounted, onBeforeUnmount, computed } from "vue";
 import VUpdate from "./Update.vue";
 import VPartnerLayout from "@/layouts/VPartnerLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
+import { useForm, usePage } from "@inertiajs/vue3";
 
-export default {
-    components: { VUpdate, VPartnerLayout },
+const page = usePage();
+const showFilters = ref(true);
+const loading = ref(false);
+const users = ref([]);
+const debounceTimer = ref(null);
 
-    data() {
-        return {
-            viewMode: "list",
-            showFilters: true,
-            loading: false,
-            users: [],
-            pages: {
-                total_pages: 0,
-            },
-            search: {
-                page: 1,
-                per_page: 15,
-                name: "",
-                last_name: "",
-                email: "",
-                code: "",
-            },
-            debounceTimer: null,
-            isMobile: false,
-        };
-    },
+const pages = ref({
+    total_pages: 0,
+    total_count: 0,
+});
 
-    created() {
-        this.checkMobile();
-        window.addEventListener("resize", this.checkMobile);
-        this.getPartners();
-    },
+const search = useForm({
+    page: 1,
+    per_page: 15,
+    name: "",
+    last_name: "",
+    email: "",
+    code: "",
+});
 
-    beforeUnmount() {
-        window.removeEventListener("resize", this.checkMobile);
-    },
+// Responsive screen detection
+const isLargeScreen = ref(false);
 
-    methods: {
-        checkMobile() {
-            this.isMobile = window.innerWidth < 768;
-            // Auto-switch to grid view on mobile
-            if (this.isMobile && this.viewMode === "list") {
-                this.viewMode = "grid";
-            }
-        },
-
-        async getPartners() {
-            this.loading = true;
-
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.partners,
-                    { params: this.search }
-                );
-
-                if (res.status === 200 && res.data.data.length) {
-                    this.users = res.data.data;
-                    const meta = res.data.meta;
-                    this.pages = meta.pagination;
-                    this.search.current_page = meta.pagination.current_page;
-                } else {
-                    this.users = [];
-                    this.pages = {
-                        total_pages: 0,
-                        total_count: 0,
-                    };
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        debounceGetPartners() {
-            clearTimeout(this.debounceTimer);
-            this.debounceTimer = setTimeout(() => {
-                this.getPartners();
-            }, 500);
-        },
-
-        resetFilters() {
-            this.search = {
-                page: 1,
-                per_page: 15,
-                name: "",
-                last_name: "",
-                email: "",
-                code: "",
-            };
-            this.getPartners();
-        },
-
-        userInitials(user) {
-            return (
-                `${user.name?.charAt(0) || ""}${
-                    user.last_name?.charAt(0) || ""
-                }`.toUpperCase() || "U"
-            );
-        },
-    },
+const checkScreenSize = () => {
+    isLargeScreen.value = window.innerWidth >= 1024; // lg breakpoint
 };
+
+const userInitials = (user) => {
+    return (
+        `${user.name?.charAt(0) || ""}${
+            user.last_name?.charAt(0) || ""
+        }`.toUpperCase() || "U"
+    );
+};
+
+const debounceGetPartners = () => {
+    clearTimeout(debounceTimer.value);
+    debounceTimer.value = setTimeout(() => {
+        search.page = 1; // Reset to first page when filtering
+        getPartners();
+    }, 500);
+};
+
+const getPartners = () => {
+    loading.value = true;
+
+    search.get(page.props.routes.partners, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (page) => {
+            const values = page.props.data;
+            users.value = values.data;
+            pages.value = values.meta.pagination;
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
+};
+
+const resetFilters = () => {
+    search.reset();
+    getPartners();
+};
+
+onMounted(() => {
+    const values = page.props.data;
+    users.value = values.data;
+    pages.value = values.meta.pagination;
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener("resize", checkScreenSize);
+    clearTimeout(debounceTimer.value);
+});
 </script>
 
 <style scoped>
-/* Custom breakpoint for extra small screens */
-@media (min-width: 475px) {
-    .xs\:grid-cols-2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+/* Smooth transitions for all theme changes */
+* {
+    transition-property: color, background-color, border-color,
+        text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
 }
 </style>
