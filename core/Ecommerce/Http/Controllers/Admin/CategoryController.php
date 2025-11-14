@@ -87,7 +87,7 @@ class CategoryController extends WebController
                 'create' => route('ecommerce.admin.categories.create')
             ],
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
-        ])->rootView('ecommerce');
+        ]);
     }
 
     /**
@@ -104,7 +104,7 @@ class CategoryController extends WebController
                 'store' => route('ecommerce.admin.categories.store'),
             ],
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
-        ])->rootView('ecommerce');
+        ]);
     }
 
     /**
@@ -125,7 +125,7 @@ class CategoryController extends WebController
                 'store' => route('ecommerce.admin.categories.store'),
             ],
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
-        ])->rootView('ecommerce');
+        ]);
     }
 
     /**

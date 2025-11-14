@@ -64,6 +64,6 @@ class CustomerController extends WebController
                 ],
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
-        )->rootView('ecommerce');
+        );
     }
 }
