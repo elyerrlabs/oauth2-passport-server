@@ -56,6 +56,6 @@ class HomePageController extends WebController
 
         return Inertia::render("Core/User/Web/About", [
             'route' => route('user.dashboard'),
-        ])->rootView('system');
+        ]);
     }
 }

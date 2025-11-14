@@ -69,7 +69,7 @@ class PersonalAccessTokenController extends WebController
 
         return Inertia::render("OAuth2/Web/Personal/Index", [
             'route' => route('passport.personal.tokens.index')
-        ])->rootView('system');
+        ]);
     }
 
     /**

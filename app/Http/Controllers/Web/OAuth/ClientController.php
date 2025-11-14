@@ -64,7 +64,7 @@ class ClientController extends WebController
 
         return Inertia::render("OAuth2/Web/Clients/Index", [
             'route' => Route::has('passport.clients.index') ? route('passport.clients.index') : ''
-        ])->rootView('system');
+        ]);
     }
 
     /**
