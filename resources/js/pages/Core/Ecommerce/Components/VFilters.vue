@@ -21,14 +21,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <aside
-        class="w-full md:w-80 bg-white rounded-2xl shadow-lg p-3 md:p-6 space-y-2"
+        class="w-full md:w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-3 md:p-6 space-y-2"
     >
         <div class="flex justify-between md:justify-start">
-            <h2 class="text-xl font-semibold text-gray-800">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
                 {{ __("Filters") }}
             </h2>
             <button
-                class="py-1 px-2 cursor-pointer bg-blue-500 text-white hover:bg-blue-700 md:hidden rounded-full"
+                class="py-1 px-2 cursor-pointer bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-700 dark:hover:bg-blue-800 md:hidden rounded-full transition-colors"
             >
                 <span
                     @click="toggleFilter"
@@ -40,15 +40,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Price Range Filter -->
         <div class="space-y-4 md:block" :class="{ hidden: !toggle }">
             <div
-                class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5 shadow-sm border border-gray-100"
+                class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
             >
                 <!-- Range Display -->
                 <div class="mb-4">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-sm font-medium text-gray-600">{{
-                            __("Price Range")
-                        }}</span>
-                        <span class="text-lg font-bold text-blue-600">
+                        <span
+                            class="text-sm font-medium text-gray-600 dark:text-gray-300"
+                            >{{ __("Price Range") }}</span
+                        >
+                        <span
+                            class="text-lg font-bold text-blue-600 dark:text-blue-400"
+                        >
                             {{ priceMin }} - {{ priceMax }}
                         </span>
                     </div>
@@ -58,12 +61,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="relative mb-8 h-6">
                     <!-- Track -->
                     <div
-                        class="absolute h-1.5 bg-gray-200 rounded-full w-full top-1/2 transform -translate-y-1/2"
+                        class="absolute h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full w-full top-1/2 transform -translate-y-1/2"
                     ></div>
 
                     <!-- Active Range -->
                     <div
-                        class="absolute h-1.5 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full top-1/2 transform -translate-y-1/2"
+                        class="absolute h-1.5 bg-gradient-to-r from-blue-400 to-indigo-500 dark:from-blue-500 dark:to-indigo-600 rounded-full top-1/2 transform -translate-y-1/2"
                         :style="{
                             left:
                                 ((priceMin - minPrice) /
@@ -91,10 +94,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         @mousedown="startDragging('min')"
                     >
                         <div
-                            class="w-5 h-5 bg-white border-2 border-blue-500 rounded-full shadow-lg hover:scale-110 transition-transform"
+                            class="w-5 h-5 bg-white dark:bg-gray-800 border-2 border-blue-500 dark:border-blue-400 rounded-full shadow-lg hover:scale-110 transition-transform"
                         >
                             <div
-                                class="w-2 h-2 bg-blue-500 rounded-full mx-auto mt-1.5"
+                                class="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mx-auto mt-1.5"
                             ></div>
                         </div>
                     </div>
@@ -112,10 +115,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         @mousedown="startDragging('max')"
                     >
                         <div
-                            class="w-5 h-5 bg-white border-2 border-indigo-500 rounded-full shadow-lg hover:scale-110 transition-transform"
+                            class="w-5 h-5 bg-white dark:bg-gray-800 border-2 border-indigo-500 dark:border-indigo-400 rounded-full shadow-lg hover:scale-110 transition-transform"
                         >
                             <div
-                                class="w-2 h-2 bg-indigo-500 rounded-full mx-auto mt-1.5"
+                                class="w-2 h-2 bg-indigo-500 dark:bg-indigo-400 rounded-full mx-auto mt-1.5"
                             ></div>
                         </div>
                     </div>
@@ -125,7 +128,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label
-                            class="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide"
+                            class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide"
                             >{{ __("Min Price") }}</label
                         >
                         <div class="relative">
@@ -134,14 +137,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 v-model.number="priceMin"
                                 :min="minPrice"
                                 :max="priceMax"
-                                class="w-full pl-7 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white"
+                                class="w-full pl-7 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             />
                         </div>
                     </div>
 
                     <div>
                         <label
-                            class="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide"
+                            class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide"
                         >
                             {{ __("Max Price") }}
                         </label>
@@ -151,7 +154,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 v-model.number="priceMax"
                                 :min="priceMin"
                                 :max="maxPrice"
-                                class="w-full pl-7 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-transparent bg-white"
+                                class="w-full pl-7 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             />
                         </div>
                     </div>
@@ -160,7 +163,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Quick Select Buttons -->
                 <div class="mt-4">
                     <label
-                        class="block text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide"
+                        class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide"
                         >{{ __("Quick Select") }}</label
                     >
                     <div class="flex flex-wrap gap-2">
@@ -171,8 +174,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="px-3 py-1.5 text-xs rounded-full border transition-colors"
                             :class="
                                 isActiveRange(range.min, range.max)
-                                    ? 'bg-blue-100 border-blue-300 text-blue-700 font-medium'
-                                    : 'border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-600'
+                                    ? 'bg-blue-100 dark:bg-blue-900 border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-300 font-medium'
+                                    : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-blue-300 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 bg-white dark:bg-gray-700'
                             "
                         >
                             {{ range.label }}
@@ -185,24 +188,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Static Filters Section -->
         <div class="space-y-4 md:block" :class="{ hidden: !toggle }">
             <div
-                class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-5 shadow-sm border border-gray-100"
+                class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
             >
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold text-gray-700 text-lg">
+                    <h3
+                        class="font-semibold text-gray-700 dark:text-gray-200 text-lg"
+                    >
                         {{ __("Product Status") }}
                     </h3>
-                    <i class="fas fa-bolt text-purple-500 text-xl"></i>
+                    <i
+                        class="fas fa-bolt text-purple-500 dark:text-purple-400 text-xl"
+                    ></i>
                 </div>
 
                 <!-- Latest Products Filter -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
                         {{ __("Latest Products") }}
                     </label>
                     <div class="flex items-center space-x-3">
                         <select
                             v-model="staticFilters.latest"
-                            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent bg-white text-sm"
+                            class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
                         >
                             <option value="">
                                 {{ __("Show all products") }}
@@ -214,7 +223,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <option value="30">{{ __("Last 30 days") }}</option>
                         </select>
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {{ __("Filter by product creation date") }}
                     </p>
                 </div>
@@ -222,48 +231,60 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Latest Sellers Filter -->
                 <div class="mb-4">
                     <label
-                        class="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 hover:border-purple-400 transition-colors cursor-pointer bg-white"
+                        class="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 transition-colors cursor-pointer bg-white dark:bg-gray-700"
                     >
                         <input
                             type="checkbox"
                             v-model="staticFilters.latest_seller"
                             true-value="true"
                             false-value=""
-                            class="text-purple-600 focus:ring-purple-500 rounded"
+                            class="text-purple-600 dark:text-purple-500 focus:ring-purple-500 rounded"
                         />
                         <div class="flex-1">
-                            <span class="text-gray-700 font-medium text-sm">
+                            <span
+                                class="text-gray-700 dark:text-gray-300 font-medium text-sm"
+                            >
                                 {{ __("Best Sellers") }}
                             </span>
-                            <p class="text-xs text-gray-500 mt-1">
+                            <p
+                                class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                            >
                                 {{ __("Show only top selling products") }}
                             </p>
                         </div>
-                        <i class="fas fa-crown text-yellow-500"></i>
+                        <i
+                            class="fas fa-crown text-yellow-500 dark:text-yellow-400"
+                        ></i>
                     </label>
                 </div>
 
                 <!-- Featured Products Filter -->
                 <div class="mb-2">
                     <label
-                        class="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 hover:border-purple-400 transition-colors cursor-pointer bg-white"
+                        class="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 transition-colors cursor-pointer bg-white dark:bg-gray-700"
                     >
                         <input
                             type="checkbox"
                             v-model="staticFilters.featured"
                             true-value="true"
                             false-value=""
-                            class="text-purple-600 focus:ring-purple-500 rounded"
+                            class="text-purple-600 dark:text-purple-500 focus:ring-purple-500 rounded"
                         />
                         <div class="flex-1">
-                            <span class="text-gray-700 font-medium text-sm">
+                            <span
+                                class="text-gray-700 dark:text-gray-300 font-medium text-sm"
+                            >
                                 {{ __("Featured Products") }}
                             </span>
-                            <p class="text-xs text-gray-500 mt-1">
+                            <p
+                                class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                            >
                                 {{ __("Show only featured products") }}
                             </p>
                         </div>
-                        <i class="fas fa-star text-purple-500"></i>
+                        <i
+                            class="fas fa-star text-purple-500 dark:text-purple-400"
+                        ></i>
                     </label>
                 </div>
             </div>
@@ -277,13 +298,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             :class="{ hidden: !toggle }"
         >
             <div
-                class="bg-gray-50 rounded-xl p-2 shadow-sm border border-gray-100"
+                class="bg-gray-50 dark:bg-gray-700 rounded-xl p-2 shadow-sm border border-gray-100 dark:border-gray-600"
             >
                 <div class="flex justify-between">
-                    <h3 class="font-medium text-gray-700 mb-2">
+                    <h3
+                        class="font-medium text-gray-700 dark:text-gray-200 mb-2"
+                    >
                         {{ filter.name }}
                     </h3>
-                    <i class="mdi mdi-filter text-2xl text-blue-600" />
+                    <i
+                        class="mdi mdi-filter text-2xl text-blue-600 dark:text-blue-400"
+                    />
                 </div>
 
                 <!-- Checkbox Widget -->
@@ -291,22 +316,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <label
                         v-for="value in filter.values"
                         :key="value"
-                        class="flex items-center space-x-3 p-2 rounded-lg border border-gray-200 hover:border-blue-400 transition-colors cursor-pointer"
+                        class="flex items-center space-x-3 p-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 transition-colors cursor-pointer"
                         :class="
                             selectedFilters[filter.slug]?.includes(value)
-                                ? 'bg-blue-50 border-blue-300'
-                                : 'bg-white'
+                                ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-500'
+                                : 'bg-white dark:bg-gray-600'
                         "
                     >
                         <input
                             type="checkbox"
                             :value="value"
                             v-model="selectedFilters[filter.slug]"
-                            class="text-blue-600 focus:ring-blue-500 rounded"
+                            class="text-blue-600 dark:text-blue-500 focus:ring-blue-500 rounded"
                             :true-value="filter.multiple ? [value] : value"
                             :false-value="filter.multiple ? [] : null"
                         />
-                        <span class="text-gray-700 text-sm capitalize">
+                        <span
+                            class="text-gray-700 dark:text-gray-300 text-sm capitalize"
+                        >
                             {{ value }}
                         </span>
                     </label>
@@ -317,20 +344,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <label
                         v-for="value in filter.values"
                         :key="value"
-                        class="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 hover:border-blue-400 transition-colors cursor-pointer"
+                        class="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 transition-colors cursor-pointer"
                         :class="
                             selectedFilters[filter.slug] === value
-                                ? 'bg-blue-50 border-blue-300'
-                                : 'bg-white'
+                                ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-500'
+                                : 'bg-white dark:bg-gray-600'
                         "
                     >
                         <input
                             type="radio"
                             :value="value"
                             v-model="selectedFilters[filter.slug]"
-                            class="text-blue-600 focus:ring-blue-500"
+                            class="text-blue-600 dark:text-blue-500 focus:ring-blue-500"
                         />
-                        <span class="text-gray-700 text-sm capitalize">
+                        <span
+                            class="text-gray-700 dark:text-gray-300 text-sm capitalize"
+                        >
                             {{ value }}
                         </span>
                     </label>
@@ -340,7 +369,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div v-else-if="filter.widget === 'select'" class="space-y-2">
                     <select
                         v-model="selectedFilters[filter.slug]"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white"
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-600 text-gray-900 dark:text-white"
                     >
                         <option value="">
                             {{ __("Select") }} {{ filter.name }}
@@ -362,13 +391,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <div class="gap-3 md:flex" :class="{ hidden: !toggle }">
             <button
                 @click="applyAllFilters"
-                class="flex-1 bg-gradient-to-r cursor-pointer from-blue-500 to-indigo-600 text-white py-3 rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md font-medium transform hover:scale-105"
+                class="flex-1 bg-gradient-to-r cursor-pointer from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 text-white py-3 rounded-lg hover:from-blue-600 hover:to-indigo-700 dark:hover:from-blue-700 dark:hover:to-indigo-800 transition-all shadow-md font-medium transform hover:scale-105"
             >
                 {{ __("Apply Filters") }}
             </button>
             <button
                 @click="clearAllFilters"
-                class="px-4 py-3 border cursor-pointer border-gray-300 text-gray-600 rounded-lg hover:border-gray-400 hover:text-gray-700 transition-colors font-medium"
+                class="px-4 py-3 border cursor-pointer border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors font-medium bg-white dark:bg-gray-700"
             >
                 <i class="fas fa-times"></i>
             </button>

@@ -28,7 +28,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     >
         <div
             v-if="loading"
-            class="fixed inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center z-50"
+            class="fixed inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm flex items-center justify-center z-50"
         >
             <div
                 class="text-center transform transition-all duration-300"
@@ -38,43 +38,46 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="relative w-20 h-20 mx-auto mb-5">
                     <div class="absolute inset-0">
                         <div
-                            class="w-full h-full border-4 border-purple-100 rounded-full"
+                            class="w-full h-full border-4 border-purple-100 dark:border-purple-900/50 rounded-full"
                         ></div>
                     </div>
                     <div class="absolute inset-0 animate-spin">
                         <div
-                            class="w-full h-full border-4 border-transparent border-t-purple-500 rounded-full"
+                            class="w-full h-full border-4 border-transparent border-t-purple-500 dark:border-t-purple-400 rounded-full"
                         ></div>
                     </div>
                     <div class="absolute inset-2">
                         <div
-                            class="w-full h-full border-4 border-transparent border-b-purple-400 rounded-full animate-pulse"
+                            class="w-full h-full border-4 border-transparent border-b-purple-400 dark:border-b-purple-300 rounded-full animate-pulse"
                         ></div>
                     </div>
                     <div class="absolute inset-4">
                         <div
-                            class="w-full h-full border-4 border-transparent border-l-purple-300 rounded-full animate-spin duration-700"
+                            class="w-full h-full border-4 border-transparent border-l-purple-300 dark:border-l-purple-200 rounded-full animate-spin duration-700"
                         ></div>
                     </div>
                 </div>
- 
-                <p class="text-gray-600 font-medium text-lg animate-pulse">
-                    {{ __('Loading...') }}<span class="inline-block ml-1">
+
+                <p
+                    class="text-gray-600 dark:text-gray-400 font-medium text-lg animate-pulse"
+                >
+                    {{ __("Loading...")
+                    }}<span class="inline-block ml-1">
                         <span class="animate-bounce delay-75">.</span>
                         <span class="animate-bounce delay-150">.</span>
                         <span class="animate-bounce delay-300">.</span>
                     </span>
                 </p>
- 
+
                 <div class="mt-4 flex justify-center space-x-1">
                     <div
-                        class="w-2 h-2 bg-purple-400 rounded-full animate-bounce delay-100"
+                        class="w-2 h-2 bg-purple-400 dark:bg-purple-300 rounded-full animate-bounce delay-100"
                     ></div>
                     <div
-                        class="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-200"
+                        class="w-2 h-2 bg-purple-500 dark:bg-purple-400 rounded-full animate-bounce delay-200"
                     ></div>
                     <div
-                        class="w-2 h-2 bg-purple-600 rounded-full animate-bounce delay-300"
+                        class="w-2 h-2 bg-purple-600 dark:bg-purple-500 rounded-full animate-bounce delay-300"
                     ></div>
                 </div>
             </div>
