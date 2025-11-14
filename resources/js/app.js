@@ -37,8 +37,8 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import "@mdi/font/css/materialdesignicons.css";
 
 //Vue date picker
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
+import { VueDatePicker } from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 setupI18n();
 window.__ = __;
