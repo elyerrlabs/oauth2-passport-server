@@ -206,7 +206,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                     <template #option="{ option }">
                                         <span
-                                            class="text-gray-700 dark:text-gray-300 p-4"
+                                            class="text-gray-700 block dark:text-gray-300 p-4"
                                         >
                                             {{ option.emoji }} -
                                             {{ option.name_en }}
@@ -311,7 +311,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                             <template #option="{ option }">
                                                 <span
-                                                    class="text-gray-700 dark:text-gray-300 p-4"
+                                                    class="text-gray-700 block dark:text-gray-300 p-2"
                                                 >
                                                     {{ option.emoji }} -
                                                     {{ option.name_en }}
@@ -345,6 +345,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             <template #selected="{ option }">
                                                 <span v-if="option">
                                                     {{ option.emoji }}
+
                                                     {{ option.dial_code }}
                                                 </span>
                                                 <span v-else>
@@ -356,7 +357,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                             <template #option="{ option }">
                                                 <span
-                                                    class="text-gray-700 dark:text-gray-300 p-4"
+                                                    class="text-gray-700 block dark:text-gray-300 p-2"
                                                 >
                                                     {{ option.emoji }} -
                                                     {{ option.name_en }}
