@@ -495,8 +495,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-//import VCountry from "@/components/VCountry.vue";
-import VPhone from "@/components/VPhone.vue";
 import VInput from "@/components/VInput.vue";
 import VModal from "@/components/VModal.vue";
 import VSelect from "@/components/VSelect.vue";
@@ -504,8 +502,6 @@ import VError from "@/components/VError.vue";
 
 export default {
     components: {
-  //      VCountry,
-        VPhone,
         VInput,
         VModal,
         VSelect,
