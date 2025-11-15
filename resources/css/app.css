@@ -1,3 +1,4 @@
 @import "flatpickr";
 @import 'tailwindcss';
 @import '@fortawesome/fontawesome-free/css/all.min.css';
+@custom-variant dark (&:where(.dark, .dark *));
