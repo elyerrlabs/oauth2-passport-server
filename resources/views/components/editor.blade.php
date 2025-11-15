@@ -106,6 +106,9 @@
 
             // Jodit Editor
             joditEditor = createJoditEditor(document.getElementById("editor"), {
+                theme: document.documentElement.classList.contains("dark") ?
+                    "dark" :
+                    "default",
                 events: {
                     afterInit() {
                         document.getElementById('preview').innerHTML = this.value;
