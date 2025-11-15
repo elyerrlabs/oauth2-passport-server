@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <!-- Update Button -->
     <button
         @click="loadData(item)"
-        class="group p-2.5 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl border border-blue-200 hover:border-blue-300 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        class="group p-2.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
         :title="__('Update Commission Rate')"
     >
         <div class="flex items-center space-x-2">
@@ -54,16 +54,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="space-y-8">
                 <!-- Current Commission Display -->
                 <div
-                    class="text-center bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100"
+                    class="text-center bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 border border-blue-100 dark:border-blue-800 transition-colors duration-200"
                 >
                     <div
                         class="flex items-center justify-center space-x-2 mb-3"
                     >
                         <div
-                            class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center"
+                            class="w-8 h-8 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center transition-colors duration-200"
                         >
                             <svg
-                                class="w-4 h-4 text-blue-600"
+                                class="w-4 h-4 text-blue-600 dark:text-blue-400 transition-colors duration-200"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                             >
@@ -72,16 +72,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 />
                             </svg>
                         </div>
-                        <p class="text-sm font-medium text-blue-700">
+                        <p
+                            class="text-sm font-medium text-blue-700 dark:text-blue-300 transition-colors duration-200"
+                        >
                             {{ __("Current Commission Rate") }}
                         </p>
                     </div>
                     <div
-                        class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                        class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent"
                     >
                         {{ item.commission_rate }}%
                     </div>
-                    <p class="text-sm text-blue-600/80 mt-2 font-medium">
+                    <p
+                        class="text-sm text-blue-600/80 dark:text-blue-300/80 mt-2 font-medium transition-colors duration-200"
+                    >
                         {{ __("for") }}
                         <span class="font-semibold"
                             >{{ item.name }} {{ item.last_name }}</span
@@ -94,7 +98,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Input Field -->
                     <div>
                         <label
-                            class="block text-sm font-semibold text-gray-900 mb-4"
+                            class="block text-sm font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-200"
                         >
                             {{ __("New Commission Rate") }}
                             <span class="text-red-500 ml-1">*</span>
@@ -109,10 +113,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 step="0.01"
                                 @keyup.enter="update"
                                 :class="[
-                                    'w-full pl-12 pr-16 py-4 border-2 rounded-xl text-lg font-semibold transition-all duration-300 focus:ring-4 focus:ring-blue-500/20',
-                                    errors.commission_rate
-                                        ? 'border-red-300 bg-red-50 text-red-900 focus:border-red-500'
-                                        : 'border-gray-200 bg-white text-gray-900 focus:border-blue-500 group-hover:border-blue-300',
+                                    'w-full pl-12 pr-16 py-4 border-2 rounded-xl text-lg font-semibold transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 dark:focus:ring-blue-400/20',
+                                    form.errors.commission_rate
+                                        ? 'border-red-300 dark:border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-200 focus:border-red-500 dark:focus:border-red-400'
+                                        : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-400 group-hover:border-blue-300 dark:group-hover:border-blue-500',
                                 ]"
                                 placeholder="0.00"
                             />
@@ -122,9 +126,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <svg
                                     class="w-6 h-6 transition-colors duration-300"
                                     :class="
-                                        errors.commission_rate
-                                            ? 'text-red-500'
-                                            : 'text-blue-500 group-hover:text-blue-600'
+                                        form.errors.commission_rate
+                                            ? 'text-red-500 dark:text-red-400'
+                                            : 'text-blue-500 dark:text-blue-400 group-hover:text-blue-600 dark:group-hover:text-blue-300'
                                     "
                                     fill="currentColor"
                                     viewBox="0 0 24 24"
@@ -138,11 +142,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"
                             >
                                 <span
-                                    class="text-lg font-semibold"
+                                    class="text-lg font-semibold transition-colors duration-200"
                                     :class="
-                                        errors.commission_rate
-                                            ? 'text-red-500'
-                                            : 'text-gray-500'
+                                        form.errors.commission_rate
+                                            ? 'text-red-500 dark:text-red-400'
+                                            : 'text-gray-500 dark:text-gray-400'
                                     "
                                     >%</span
                                 >
@@ -150,7 +154,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
 
                         <p
-                            class="text-xs text-gray-500 mt-3 flex items-center space-x-1"
+                            class="text-xs text-gray-500 dark:text-gray-400 mt-3 flex items-center space-x-1 transition-colors duration-200"
                         >
                             <svg
                                 class="w-4 h-4"
@@ -171,11 +175,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </p>
 
                         <div
-                            v-if="errors.commission_rate"
-                            class="flex items-center space-x-2 mt-3 p-3 bg-red-50 border border-red-200 rounded-lg"
+                            v-if="form.errors.commission_rate"
+                            class="flex items-center space-x-2 mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg transition-colors duration-200"
                         >
                             <svg
-                                class="w-4 h-4 text-red-500 flex-shrink-0"
+                                class="w-4 h-4 text-red-500 dark:text-red-400 flex-shrink-0"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -187,66 +191,95 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                 />
                             </svg>
-                            <span class="text-red-700 text-sm font-medium">{{
-                                errors.commission_rate[0]
-                            }}</span>
+                            <span
+                                class="text-red-700 dark:text-red-300 text-sm font-medium transition-colors duration-200"
+                                >{{ form.errors.commission_rate[0] }}</span
+                            >
                         </div>
                     </div>
 
                     <!-- Visual Slider -->
                     <div
-                        class="space-y-4 bg-gray-50 rounded-xl p-6 border border-gray-200"
+                        class="space-y-4 bg-white dark:bg-gray-700 rounded-xl p-6 border border-gray-200 dark:border-gray-600 transition-colors duration-200"
                     >
                         <div class="flex justify-between items-center">
-                            <span class="text-sm font-semibold text-gray-900">{{
-                                __("Adjust with slider")
-                            }}</span>
                             <span
-                                class="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                                class="text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-200"
+                                >{{ __("Adjust with slider") }}</span
+                            >
+                            <span
+                                class="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent"
                             >
                                 {{ sliderValue }}%
                             </span>
                         </div>
-                        <input
-                            type="range"
-                            v-model="sliderValue"
-                            min="0"
-                            max="100"
-                            step="0.5"
-                            @input="updateFromSlider"
-                            class="w-full h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full appearance-none cursor-pointer slider-thumb"
-                        />
+                        <div class="relative">
+                            <input
+                                type="range"
+                                v-model="sliderValue"
+                                min="0"
+                                max="100"
+                                step="0.5"
+                                @input="updateFromSlider"
+                                class="w-full h-3 bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 rounded-full appearance-none cursor-pointer slider-thumb dark:slider-thumb-dark"
+                            />
+                            <!-- Slider track fill -->
+                            <div
+                                class="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 rounded-full pointer-events-none -translate-y-1/2"
+                                :style="{ width: `${sliderValue}%` }"
+                            ></div>
+                        </div>
                         <div
-                            class="flex justify-between text-sm font-medium text-gray-600"
+                            class="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-400 transition-colors duration-200"
                         >
                             <span>0%</span>
-                            <span class="text-gray-400">|</span>
+                            <span class="text-gray-400 dark:text-gray-600"
+                                >|</span
+                            >
                             <span>25%</span>
-                            <span class="text-gray-400">|</span>
+                            <span class="text-gray-400 dark:text-gray-600"
+                                >|</span
+                            >
                             <span>50%</span>
-                            <span class="text-gray-400">|</span>
+                            <span class="text-gray-400 dark:text-gray-600"
+                                >|</span
+                            >
                             <span>75%</span>
-                            <span class="text-gray-400">|</span>
+                            <span class="text-gray-400 dark:text-gray-600"
+                                >|</span
+                            >
                             <span>100%</span>
                         </div>
+                    </div>
+
+                    <!-- Quick Preset Buttons -->
+                    <div class="grid grid-cols-4 gap-2">
+                        <button
+                            v-for="preset in [0, 5, 10, 15]"
+                            :key="preset"
+                            @click="setPresetValue(preset)"
+                            class="px-3 py-2 text-xs font-medium rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 hover:scale-105"
+                        >
+                            {{ preset }}%
+                        </button>
                     </div>
                 </div>
             </div>
 
             <!-- Actions -->
             <div
-                class="flex justify-end space-x-4 mt-8 pt-8 border-t border-gray-200"
+                class="flex justify-end space-x-4 mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 transition-colors duration-200"
             >
                 <button
                     @click="dialog = false"
-                    class="px-6 py-3 text-sm font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300"
+                    class="px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-offset-gray-900 transition-all duration-300"
                 >
                     {{ __("Cancel") }}
                 </button>
                 <button
                     @click="update"
                     :disabled="updating"
-                    class="px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 focus:scale-105 flex items-center space-x-3 shadow-lg shadow-blue-500/25"
+                    class="px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 rounded-xl hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 focus:scale-105 flex items-center space-x-3 shadow-lg shadow-blue-500/25 dark:shadow-blue-500/40"
                 >
                     <svg
                         v-if="updating"
@@ -291,139 +324,115 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-modal>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, watch } from "vue";
 import VModal from "@/components/VModal.vue";
-export default {
-    components: {
-        VModal,
+import { useForm } from "@inertiajs/vue3";
+
+const props = defineProps({
+    item: {
+        required: true,
+        type: Object,
     },
-    emits: ["updated"],
+});
 
-    props: {
-        item: {
-            required: true,
-            type: Object,
-        },
-    },
+const emit = defineEmits(["updated"]);
 
-    data() {
-        return {
-            errors: {},
-            form: {
-                commission_rate: 0,
-            },
-            dialog: false,
-            updating: false,
-            sliderValue: 0,
-        };
-    },
+const form = useForm({
+    commission_rate: 0,
+});
+const dialog = ref(false);
+const updating = ref(false);
+const sliderValue = ref(0);
 
-    watch: {
-        "form.commission_rate"(newValue) {
-            if (newValue !== null && newValue !== undefined) {
-                let numValue = parseFloat(newValue);
-                if (isNaN(numValue)) {
-                    this.form.commission_rate = 0;
-                } else if (numValue > 100) {
-                    this.form.commission_rate = 100;
-                } else if (numValue < 0) {
-                    this.form.commission_rate = 0;
-                } else {
-                    this.form.commission_rate =
-                        Math.round(numValue * 100) / 100;
-                }
-                this.sliderValue = this.form.commission_rate;
+watch(
+    () => form.commission_rate,
+    (newValue) => {
+        if (newValue !== null && newValue !== undefined) {
+            let numValue = parseFloat(newValue);
+            if (isNaN(numValue)) {
+                form.commission_rate = 0;
+            } else if (numValue > 100) {
+                form.commission_rate = 100;
+            } else if (numValue < 0) {
+                form.commission_rate = 0;
+            } else {
+                form.commission_rate = Math.round(numValue * 100) / 100;
             }
+            sliderValue.value = form.commission_rate;
+        }
+    }
+);
+
+watch(
+    () => sliderValue.value,
+    (newValue) => {
+        form.commission_rate = parseFloat(newValue);
+    }
+);
+
+async function loadData(item) {
+    form.commission_rate = parseFloat(item.commission_rate) || 0;
+    sliderValue.value = form.commission_rate;
+    dialog.value = true;
+}
+
+function updateFromSlider(event) {
+    sliderValue.value = parseFloat(event.target.value);
+}
+
+function setPresetValue(value) {
+    form.commission_rate = value;
+    sliderValue.value = value;
+}
+
+async function update() {
+    if (form.commission_rate === null || form.commission_rate === undefined) {
+        form.errors.commission_rate = ["Commission rate is required"];
+
+        return;
+    }
+
+    const commissionRate = parseFloat(form.commission_rate);
+    if (isNaN(commissionRate)) {
+        form.errors.commission_rate = ["Please enter a valid number"];
+
+        return;
+    }
+
+    if (commissionRate < 0 || commissionRate > 100) {
+        form.errors.commission_rate = [
+            "Commission rate must be between 0 and 100",
+        ];
+
+        return;
+    }
+
+    updating.value = true;
+
+    form.put(props.item.links.update, {
+        preserveScroll: true,
+        onSuccess: (page) => {
+            emit("updated", true);
+            dialog.value = false;
+            $notify.success(__("Commission rate updated successfully"));
+            form.resetAndClearErrors();
         },
-    },
-
-    methods: {
-        /**
-         * Load necessary data to update commission rate
-         */
-        async loadData(item) {
-            this.form = {
-                commission_rate: parseFloat(item.commission_rate) || 0,
-            };
-            this.sliderValue = this.form.commission_rate;
-            this.errors = {};
-            this.dialog = true;
+        onFinish: () => {
+            updating.value = false;
         },
-
-        /**
-         * Update commission rate from slider
-         */
-        updateFromSlider(value) {
-            this.form.commission_rate = parseFloat(value);
-        },
-
-        /**
-         * Update the commission rate
-         */
-        async update() {
-            // Validate input
-            if (
-                this.form.commission_rate === null ||
-                this.form.commission_rate === undefined
-            ) {
-                this.errors = {
-                    commission_rate: ["Commission rate is required"],
-                };
-                return;
-            }
-
-            const commissionRate = parseFloat(this.form.commission_rate);
-            if (isNaN(commissionRate)) {
-                this.errors = {
-                    commission_rate: ["Please enter a valid number"],
-                };
-                return;
-            }
-
-            if (commissionRate < 0 || commissionRate > 100) {
-                this.errors = {
-                    commission_rate: [
-                        "Commission rate must be between 0 and 100",
-                    ],
-                };
-                return;
-            }
-
-            this.updating = true;
-            this.errors = {};
-
-            try {
-                const res = await this.$server.put(
-                    this.item.links.update,
-                    this.form
-                );
-
-                if (res.status == 200) {
-                    this.errors = {};
-                    this.$emit("updated", true);
-                    this.dialog = false;
-                    $notify.error(__("Commission rate updated successfully"));
-                }
-            } catch (e) {
-                if (e?.response?.status == 422) {
-                    this.errors = e.response.data.errors;
-                }
-
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.updating = false;
-            }
-        },
-    },
-};
+    });
+}
 </script>
 
 <style scoped>
 /* Custom slider styles */
 .slider-thumb {
     background: linear-gradient(to right, #3b82f6, #8b5cf6);
+}
+
+.slider-thumb-dark {
+    background: linear-gradient(to right, #1e40af, #7c3aed);
 }
 
 .slider-thumb::-webkit-slider-thumb {
@@ -443,6 +452,15 @@ export default {
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.6);
 }
 
+.slider-thumb-dark::-webkit-slider-thumb {
+    border: 3px solid #60a5fa;
+    box-shadow: 0 2px 8px rgba(96, 165, 250, 0.4);
+}
+
+.slider-thumb-dark::-webkit-slider-thumb:hover {
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.6);
+}
+
 .slider-thumb::-moz-range-thumb {
     height: 24px;
     width: 24px;
@@ -452,10 +470,38 @@ export default {
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
     cursor: pointer;
     transition: all 0.2s ease;
+    border: none;
 }
 
 .slider-thumb::-moz-range-thumb:hover {
     transform: scale(1.1);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.6);
+}
+
+.slider-thumb-dark::-moz-range-thumb {
+    border: 3px solid #60a5fa;
+    box-shadow: 0 2px 8px rgba(96, 165, 250, 0.4);
+}
+
+.slider-thumb-dark::-moz-range-thumb:hover {
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.6);
+}
+
+/* Hide the default track background */
+.slider-thumb::-webkit-slider-track {
+    background: transparent;
+}
+
+.slider-thumb::-moz-range-track {
+    background: transparent;
+    border: none;
+}
+
+/* Smooth transitions for dark mode */
+* {
+    transition-property: color, background-color, border-color,
+        text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
 }
 </style>

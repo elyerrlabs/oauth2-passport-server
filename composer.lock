@@ -577,16 +577,16 @@
         },
         {
             "name": "elyerr/api-response",
-            "version": "v1.0.25",
+            "version": "v1.0.26",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/elyerr/api-response.git",
-                "reference": "abdacbc41601c8ad0c10a39e434aa2620d1371a7"
+                "reference": "b587c1bcb746eafac48c8166f514bf31d33b7985"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/elyerr%2Fapi-response/repository/archive.zip?sha=abdacbc41601c8ad0c10a39e434aa2620d1371a7",
-                "reference": "abdacbc41601c8ad0c10a39e434aa2620d1371a7",
+                "url": "https://gitlab.com/api/v4/projects/elyerr%2Fapi-response/repository/archive.zip?sha=b587c1bcb746eafac48c8166f514bf31d33b7985",
+                "reference": "b587c1bcb746eafac48c8166f514bf31d33b7985",
                 "shasum": ""
             },
             "require": {
@@ -623,9 +623,9 @@
             "description": "Add news functionalities for oauth2 passport server",
             "support": {
                 "issues": "https://gitlab.com/elyerr/api-response/-/issues",
-                "source": "https://gitlab.com/elyerr/api-response/-/tree/v1.0.25"
+                "source": "https://gitlab.com/elyerr/api-response/-/tree/v1.0.26"
             },
-            "time": "2025-09-14T12:10:50+00:00"
+            "time": "2025-11-09T13:57:10+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",

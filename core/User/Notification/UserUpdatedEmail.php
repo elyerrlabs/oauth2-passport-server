@@ -1,5 +1,6 @@
 <?php
-namespace App\Notifications\User;
+
+namespace Core\User\Notification;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -29,7 +30,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UserUpdatedPassword extends Notification implements ShouldQueue
+class UserUpdatedEmail extends Notification implements ShouldQueue
 {
     use Queueable, Standard;
 
@@ -40,7 +41,6 @@ class UserUpdatedPassword extends Notification implements ShouldQueue
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -63,13 +63,12 @@ class UserUpdatedPassword extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__('Password Updated Successfully'))
+            ->subject(__('Email Updated Successfully'))
             ->greeting(__('Hello!'))
-            ->line(__('We want to inform you that your password has been updated successfully.'))
+            ->line(__('We want to let you know that your email address has been updated successfully.'))
             ->line(__('If you did not make this change, please contact us immediately to secure your account.'))
-            ->action(__('Go to the App'), url('/'))
-            ->line(__('Thank you for trusting us to keep your account secure. We are always here to help!'));
-
+            ->action(__('Visit Our Page'), url('/'))
+            ->line(__('Thank you for keeping your information up-to-date. We’re here to support you anytime!'));
     }
 
     /**
@@ -80,6 +79,6 @@ class UserUpdatedPassword extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        return $this->notificationDatabase("Password Updated Successfully", "Your password has been successfully updated. If this wasn’t you, please contact support immediately.");
+        return $this->notificationDatabase("Email Updated Successfully", "Your email address has been updated. If this change wasn’t made by you, please contact support immediately.");
     }
 }

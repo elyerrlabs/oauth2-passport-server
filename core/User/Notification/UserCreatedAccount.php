@@ -1,5 +1,6 @@
 <?php
-namespace App\Notifications\User;
+
+namespace Core\User\Notification;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,22 +25,28 @@ namespace App\Notifications\User;
  */
 
 use Illuminate\Bus\Queueable;
-use App\Repositories\Traits\Standard;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class UserUpdatedEmail extends Notification implements ShouldQueue
+class UserCreatedAccount extends Notification implements ShouldQueue
 {
-    use Queueable, Standard;
+    use Queueable;
+
+    /**
+     * Password 
+     * @var string
+     */
+    public $password;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($password = null)
     {
+        $this->password = $password;
     }
 
     /**
@@ -50,7 +57,7 @@ class UserUpdatedEmail extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'database'];
+        return ['mail'];
     }
 
     /**
@@ -62,13 +69,18 @@ class UserUpdatedEmail extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__('Email Updated Successfully'))
-            ->greeting(__('Hello!'))
-            ->line(__('We want to let you know that your email address has been updated successfully.'))
-            ->line(__('If you did not make this change, please contact us immediately to secure your account.'))
-            ->action(__('Visit Our Page'), url('/'))
-            ->line(__('Thank you for keeping your information up-to-date. We’re here to support you anytime!'));
+            ->subject(__("Welcome to Our Platform"))
+            ->line(__("We are excited to inform you that your account has been successfully created. Below are your login details:"))
+            ->line(__("Password :key", ['key' => $this->password]))
+            ->line(__("For your security, we recommend updating your password. You can do this by following these steps:"))
+            ->line(__("1. Click the button below to reset your password."))
+            ->action(__('Reset Password'), route('forgot-password'))
+            ->line(__("2. You will receive an email with a link to update your password."))
+            ->line(__("3. Follow the link to set and confirm your new password. Once done, you can log in with your updated credentials."))
+            ->line(__("If you have any questions or need assistance, feel free to contact our support team."))
+            ->salutation(__('Thank you for choosing us!'));
     }
+
 
     /**
      * Get the array representation of the notification.
@@ -78,6 +90,8 @@ class UserUpdatedEmail extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        return $this->notificationDatabase("Email Updated Successfully", "Your email address has been updated. If this change wasn’t made by you, please contact support immediately.");
+        return [
+            //
+        ];
     }
 }

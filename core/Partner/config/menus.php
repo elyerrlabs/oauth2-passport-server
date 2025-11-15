@@ -60,7 +60,7 @@ return [
         [
             "id" => "referral_link",
             "name" => __("Referral Link"),
-            "route" => "partner.generate",
+            "route" => "partner.show",
             "icon" => "mdi-reload",
             'service' => 'reseller:partner',
         ],

@@ -21,7 +21,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-layout>
-        <div class="admin-dashboard-page min-h-screen p-6">
+        <div
+            class="admin-dashboard-page min-h-screen p-6 bg-white dark:bg-gray-900"
+        >
             <!-- Header Section -->
             <div class="page-header mb-8">
                 <div class="header-content flex items-center space-x-3 mb-2">
@@ -32,11 +34,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="mdi mdi-view-dashboard text-white text-lg"
                         ></i>
                     </div>
-                    <h1 class="text-3xl font-bold text-gray-800">
+                    <h1
+                        class="text-3xl font-bold text-gray-800 dark:text-white"
+                    >
                         {{ __("Admin Dashboard") }}
                     </h1>
                 </div>
-                <div class="text-gray-600 text-lg">
+                <div class="text-gray-600 dark:text-gray-400 text-lg">
                     {{
                         __(
                             "Monitor your application's performance and user activity"
@@ -52,31 +56,35 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div
                     v-for="card in cards"
                     :key="card.label"
-                    class="stats-card bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+                    class="stats-card bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
                     <div class="card-content">
                         <div
-                            class="text-xs font-medium uppercase text-gray-500 mb-1"
+                            class="text-xs font-medium uppercase text-gray-500 dark:text-gray-400 mb-1"
                         >
                             {{ __(card.label) }}
                         </div>
                         <div class="flex items-center justify-between">
-                            <div class="text-4xl font-bold text-blue-600">
+                            <div
+                                class="text-4xl font-bold text-blue-600 dark:text-blue-400"
+                            >
                                 {{ card.value }}
                             </div>
                             <div
-                                class="card-icon w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"
+                                class="card-icon w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center"
                             >
                                 <i
                                     :class="card.icon"
-                                    class="text-blue-600 text-xl"
+                                    class="text-blue-600 dark:text-blue-400 text-xl"
                                 ></i>
                             </div>
                         </div>
                         <div class="progress-bar mt-4">
-                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                            <div
+                                class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5"
+                            >
                                 <div
-                                    class="bg-blue-600 h-1.5 rounded-full w-3/4"
+                                    class="bg-blue-600 dark:bg-blue-500 h-1.5 rounded-full w-3/4"
                                 ></div>
                             </div>
                         </div>
@@ -86,11 +94,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
             <!-- Filters Section -->
             <div
-                class="filters-card bg-white rounded-lg border border-gray-200 mb-6 shadow-sm"
+                class="filters-card bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-6 shadow-sm"
             >
                 <div class="p-6">
                     <div
-                        class="text-xl font-medium text-gray-800 mb-4 flex items-center"
+                        class="text-xl font-medium text-gray-800 dark:text-white mb-4 flex items-center"
                     >
                         <i class="mdi mdi-filter mr-2 text-blue-500"></i>
                         {{ __("Filter Analytics") }}
@@ -100,7 +108,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         <div class="input-group">
                             <label
-                                class="block text-sm font-medium text-gray-700 mb-1"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                             >
                                 {{ __("Start Date") }}
                             </label>
@@ -108,16 +116,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <input
                                     v-model="params.start"
                                     type="date"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                 />
                                 <i
-                                    class="mdi mdi-calendar-start absolute right-3 top-2.5 text-gray-400"
+                                    class="mdi mdi-calendar-start absolute right-3 top-2.5 text-gray-400 dark:text-gray-500"
                                 ></i>
                             </div>
                         </div>
                         <div class="input-group">
                             <label
-                                class="block text-sm font-medium text-gray-700 mb-1"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                             >
                                 {{ __("End Date") }}
                             </label>
@@ -125,22 +133,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <input
                                     v-model="params.end"
                                     type="date"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                 />
                                 <i
-                                    class="mdi mdi-calendar-end absolute right-3 top-2.5 text-gray-400"
+                                    class="mdi mdi-calendar-end absolute right-3 top-2.5 text-gray-400 dark:text-gray-500"
                                 ></i>
                             </div>
                         </div>
                         <div class="input-group">
                             <label
-                                class="block text-sm font-medium text-gray-700 mb-1"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                             >
                                 {{ __("Date Range") }}
                             </label>
                             <select
                                 v-model="params.type"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                             >
                                 <option
                                     v-for="type in types"
@@ -153,13 +161,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div class="input-group">
                             <label
-                                class="block text-sm font-medium text-gray-700 mb-1"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                             >
                                 {{ __("Chart Type") }}
                             </label>
                             <select
                                 v-model="chartType"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                             >
                                 <option
                                     v-for="chartType in chartTypes"
@@ -193,11 +201,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="grid grid-cols-1 gap-8">
                 <!-- Chart Column -->
                 <div
-                    class="chart-card bg-white rounded-lg border border-gray-200 shadow-sm"
+                    class="chart-card bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
                     <div class="p-6">
                         <div
-                            class="text-xl font-medium text-gray-800 mb-4 flex items-center"
+                            class="text-xl font-medium text-gray-800 dark:text-white mb-4 flex items-center"
                         >
                             <i
                                 class="mdi mdi-chart-line mr-2 text-blue-500"
@@ -216,11 +224,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Recent Users Column -->
                 <div
-                    class="users-card bg-white rounded-lg border border-gray-200 shadow-sm"
+                    class="users-card bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
                     <div class="p-6">
                         <div
-                            class="text-xl font-medium text-gray-800 mb-4 flex items-center"
+                            class="text-xl font-medium text-gray-800 dark:text-white mb-4 flex items-center"
                         >
                             <i
                                 class="mdi mdi-account-group mr-2 text-blue-500"
@@ -231,7 +239,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 v-for="user in last_users"
                                 :key="user.id"
-                                class="user-item p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-gray-200"
+                                class="user-item p-4 hover:bg-white dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
                             >
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-3">
@@ -242,17 +250,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                         <div>
                                             <div
-                                                class="font-medium text-gray-800"
+                                                class="font-medium text-gray-800 dark:text-white"
                                             >
                                                 {{ user.name }}
                                             </div>
-                                            <div class="text-gray-600 text-sm">
+                                            <div
+                                                class="text-gray-600 dark:text-gray-400 text-sm"
+                                            >
                                                 {{ user.email }}
                                             </div>
                                         </div>
                                     </div>
                                     <div
-                                        class="date-badge border border-blue-200 text-blue-600 px-3 py-1 rounded-full text-sm flex items-center"
+                                        class="date-badge border border-blue-200 dark:border-blue-600 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-sm flex items-center"
                                     >
                                         <i
                                             class="mdi mdi-calendar mr-1 text-sm"
@@ -268,13 +278,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="text-center py-8"
                         >
                             <div
-                                class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3"
                             >
                                 <i
                                     class="mdi mdi-account-off text-gray-400 text-2xl"
                                 ></i>
                             </div>
-                            <div class="text-gray-500">
+                            <div class="text-gray-500 dark:text-gray-400">
                                 {{ __("No recent users") }}
                             </div>
                         </div>
@@ -285,7 +295,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Auto-refresh Indicator -->
             <div class="fixed bottom-4 right-4">
                 <div
-                    class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center"
+                    class="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-sm flex items-center"
                 >
                     <i class="mdi mdi-autorenew mr-1 text-sm"></i>
                     {{ __("Auto-refresh every 10 seconds") }}

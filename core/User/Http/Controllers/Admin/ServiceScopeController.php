@@ -26,26 +26,28 @@ namespace Core\User\Http\Controllers\Admin;
 
 
 use Core\User\Model\Scope;
+use Core\User\Services\ServiceService;
 use Core\User\Model\Service;
 use App\Http\Controllers\WebController;
 use Core\User\Repositories\ServiceRepository;
-use Core\User\Http\Requests\ServiceScopeStoreRequest; 
+use Core\User\Http\Requests\ServiceScopeStoreRequest;
+use Core\User\Transformer\Admin\ServiceScopeTransformer;
 
 class ServiceScopeController extends WebController
 {
     /**
      * Service repository
-     * @var ServiceRepository
+     * @var ServiceService
      */
-    public $repository;
+    public $serviceService;
 
     /**
      * Construct 
      */
-    public function __construct(ServiceRepository $serviceRepository)
+    public function __construct(ServiceService $serviceService)
     {
         parent::__construct();
-        $this->repository = $serviceRepository;
+        $this->serviceService = $serviceService;
         $this->middleware('userCanAny:administrator:service:full,administrator:service:view')->only('index');
         $this->middleware('userCanAny:administrator:service:full,administrator:service:assign')->only('assign');
         $this->middleware('userCanAny:administrator:service:full,administrator:service:revoke')->only('revoke');
@@ -59,7 +61,9 @@ class ServiceScopeController extends WebController
      */
     public function index(Service $service)
     {
-        return $this->repository->searchScopes($service->id);
+        $data = $this->serviceService->searchScopes($service->id);
+
+        return $this->showAll($data, ServiceScopeTransformer::class);
     }
 
     /**
@@ -70,7 +74,9 @@ class ServiceScopeController extends WebController
      */
     public function assign(ServiceScopeStoreRequest $request, Service $service)
     {
-        return $this->repository->assignOrUpdateScopes($service->id, $request->toArray());
+        $this->serviceService->assignOrUpdateScopes($service->id, $request->toArray());
+
+        return back()->with('status', __("Service scope has been updated successfully"));
     }
 
     /**
@@ -81,6 +87,8 @@ class ServiceScopeController extends WebController
      */
     public function revoke(Service $service, Scope $scope)
     {
-        return $this->repository->revokeScope($service->id, $scope->id);
+        $this->serviceService->revokeScope($service->id, $scope->id);
+
+        return back()->with('status', __("Service scope has been deleted successfully"));
     }
 }

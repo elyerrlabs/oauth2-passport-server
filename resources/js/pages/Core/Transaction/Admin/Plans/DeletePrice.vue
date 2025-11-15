@@ -23,80 +23,117 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <!-- Delete Price Button -->
     <button
         @click="dialog = true"
-        class="flex items-center justify-center w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+        class="flex items-center justify-center w-8 h-8 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
         :title="__('Delete Price')"
     >
-        <i class="mdi mdi-close text-sm"></i>
+        <i class="mdi mdi-trash-can-outline text-sm"></i>
     </button>
 
     <!-- Confirm Modal -->
-    <v-modal v-model="dialog" :title="__('Delete Price')">
+    <v-modal
+        v-model="dialog"
+        :title="__('Delete Price Configuration')"
+        panel-class="w-full lg:w-5xl"
+    >
         <template #body>
-            <div class="flex items-center gap-3 text-red-600">
-                <i class="mdi mdi-currency-usd-off text-2xl"></i>
-                <span class="text-xl font-bold">{{ __("Delete Price") }}</span>
-            </div>
-            <div class="space-y-5">
-                <!-- Warning Message -->
+            <div class="space-y-6">
+                <!-- Warning Header -->
                 <div class="flex items-start gap-4">
-                    <i
-                        class="mdi mdi-alert text-3xl text-red-500 mt-1 flex-shrink-0"
-                    ></i>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-1">
-                            {{ __("Confirm Deletion") }}
+                    <div
+                        class="flex-shrink-0 w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center"
+                    >
+                        <i
+                            class="mdi mdi-currency-usd-off text-2xl text-red-600 dark:text-red-400"
+                        ></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3
+                            class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2"
+                        >
+                            {{ __("Delete Price Configuration") }}
                         </h3>
-                        <p class="text-gray-600">
+                        <p
+                            class="text-gray-600 dark:text-gray-300 leading-relaxed"
+                        >
                             {{
                                 __(
-                                    "You are about to delete the following price option. This action cannot be undone."
+                                    "You are about to permanently delete this price configuration. This action will remove the pricing option from the subscription plan."
                                 )
                             }}
                         </p>
                     </div>
                 </div>
 
-                <!-- Price Details -->
+                <!-- Price Details Card -->
                 <div
-                    class="bg-gray-50 border-l-4 border-red-500 border rounded-xl p-4"
+                    class="bg-white dark:bg-gray-800 border-l-4 border-red-500 dark:border-red-400 border border-gray-200 dark:border-gray-600 rounded-xl p-6 shadow-sm"
                 >
-                    <h4
-                        class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide"
+                    <div
+                        class="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100 dark:border-gray-700"
                     >
-                        {{ __("Price Details") }}
-                    </h4>
+                        <i
+                            class="mdi mdi-cash-remove text-red-500 dark:text-red-400"
+                        ></i>
+                        <h4
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wide"
+                        >
+                            {{ __("Price Configuration Details") }}
+                        </h4>
+                    </div>
 
-                    <div class="space-y-3">
+                    <div class="space-y-4">
                         <!-- Amount -->
-                        <div class="flex items-center gap-3">
-                            <i class="mdi mdi-cash text-gray-500"></i>
-                            <div class="flex items-center">
-                                <span class="font-medium text-gray-700">
-                                    {{ __("Amount:") }}
-                                </span>
-                                <span
-                                    class="ml-2 text-red-600 font-bold text-lg"
+                        <div
+                            class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600"
+                        >
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center"
                                 >
-                                    {{ item.amount_format }}
-                                </span>
-                                <span class="ml-1 text-gray-600 text-sm"
-                                    >({{ item.currency }})</span
-                                >
+                                    <i
+                                        class="mdi mdi-cash text-green-600 dark:text-green-400 text-sm"
+                                    ></i>
+                                </div>
+                                <div>
+                                    <div
+                                        class="font-medium text-gray-700 dark:text-gray-300 text-sm"
+                                    >
+                                        {{ __("Amount") }}
+                                    </div>
+                                    <div
+                                        class="text-2xl font-bold text-red-600 dark:text-red-400"
+                                    >
+                                        {{ item.amount_format }}
+                                        <span
+                                            class="text-sm font-normal text-gray-600 dark:text-gray-400 ml-1"
+                                        >
+                                            {{ item.currency }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Billing Period -->
                         <div class="flex items-center gap-3">
-                            <i
-                                class="mdi mdi-calendar-refresh text-gray-500"
-                            ></i>
-                            <div>
-                                <span class="font-medium text-gray-700">
-                                    {{ __("Billing Period:") }}
-                                </span>
-                                <span class="ml-2 text-gray-900 capitalize">{{
-                                    item.billing_period
-                                }}</span>
+                            <div
+                                class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+                            >
+                                <i
+                                    class="mdi mdi-calendar-refresh text-blue-600 dark:text-blue-400 text-sm"
+                                ></i>
+                            </div>
+                            <div class="flex-1">
+                                <div
+                                    class="font-medium text-gray-700 dark:text-gray-300 text-sm mb-1"
+                                >
+                                    {{ __("Billing Period") }}
+                                </div>
+                                <div
+                                    class="text-gray-900 dark:text-gray-100 font-semibold capitalize"
+                                >
+                                    {{ item.billing_period }}
+                                </div>
                             </div>
                         </div>
 
@@ -105,50 +142,97 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             v-if="item.expiration"
                             class="flex items-center gap-3"
                         >
-                            <i class="mdi mdi-clock-alert text-gray-500"></i>
-                            <div>
-                                <span class="font-medium text-gray-700">
-                                    {{ __("Expiration:") }}
-                                </span>
-                                <span class="ml-2 text-gray-900">
+                            <div
+                                class="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center"
+                            >
+                                <i
+                                    class="mdi mdi-clock-alert text-amber-600 dark:text-amber-400 text-sm"
+                                ></i>
+                            </div>
+                            <div class="flex-1">
+                                <div
+                                    class="font-medium text-gray-700 dark:text-gray-300 text-sm mb-1"
+                                >
+                                    {{ __("Expiration Date") }}
+                                </div>
+                                <div class="text-gray-900 dark:text-gray-100">
                                     {{ item.expiration }}
-                                </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Additional Warning -->
+                <!-- Critical Warning -->
                 <div
-                    class="flex items-center gap-2 text-sm text-gray-600 bg-yellow-50 border border-yellow-200 rounded-lg p-3"
+                    class="flex items-start gap-4 p-4 rounded-xl border-2"
+                    :class="[
+                        'bg-red-50 dark:bg-red-900/20',
+                        'border-red-200 dark:border-red-700',
+                        'text-red-800 dark:text-red-200',
+                    ]"
                 >
-                    <i class="mdi mdi-information text-yellow-500"></i>
-                    <span>
-                        {{
-                            __(
-                                "This price will be permanently removed from the system."
-                            )
-                        }}
-                    </span>
+                    <i
+                        class="mdi mdi-alert-octagon text-red-500 dark:text-red-400 mt-0.5 shrink-0 text-xl"
+                    ></i>
+                    <div class="flex-1">
+                        <div
+                            class="font-bold text-red-900 dark:text-red-100 mb-2"
+                        >
+                            {{ __("Critical: This Action Cannot Be Undone") }}
+                        </div>
+                        <p
+                            class="text-red-700 dark:text-red-200/90 leading-relaxed"
+                        >
+                            {{
+                                __(
+                                    "This price configuration will be permanently deleted from the system. Any active subscriptions using this price may be affected."
+                                )
+                            }}
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Footer Buttons -->
-                <div class="flex justify-end gap-3 pt-4">
+                <div
+                    class="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700"
+                >
                     <button
                         @click="dialog = false"
-                        class="px-4 py-2.5 rounded-xl font-semibold bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all"
+                        class="px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                        :class="[
+                            'bg-gray-100 dark:bg-gray-700',
+                            'hover:bg-gray-200 dark:hover:bg-gray-600',
+                            'text-gray-700 dark:text-gray-200',
+                            'border border-gray-300 dark:border-gray-600',
+                            'focus:ring-gray-500 dark:focus:ring-gray-400',
+                            'hover:scale-105 transform',
+                        ]"
                     >
-                        <i class="mdi mdi-close mr-1"></i>{{ __("Cancel") }}
+                        <i class="mdi mdi-close text-lg"></i>
+                        {{ __("Cancel") }}
                     </button>
 
                     <button
                         @click="destroy"
-                        class="px-4 py-2.5 rounded-xl font-semibold bg-red-600 hover:bg-red-700 text-white transition-all flex items-center gap-2"
                         :disabled="loading"
+                        class="px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                        :class="[
+                            loading
+                                ? 'bg-red-400 dark:bg-red-500 cursor-not-allowed'
+                                : 'bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600',
+                            'text-white dark:text-gray-100',
+                            'border border-red-600 dark:border-red-600',
+                            'focus:ring-red-500 dark:focus:ring-red-400',
+                            loading ? '' : 'hover:scale-105 transform',
+                        ]"
                     >
-                        <i class="mdi mdi-delete"></i>
-                        <span v-if="!loading">{{ __("Delete Price") }}</span>
-                        <span v-else>{{ __("Deleting...") }}</span>
+                        <i
+                            v-if="loading"
+                            class="mdi mdi-loading mdi-spin text-lg"
+                        ></i>
+                        <i v-else class="mdi mdi-trash-can-outline text-lg"></i>
+                        {{ loading ? __("Deleting...") : __("Delete Price") }}
                     </button>
                 </div>
             </div>
@@ -156,44 +240,59 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-modal>
 </template>
 
-<script>
+<script setup>
 import VModal from "@/components/VModal.vue";
+import { useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
 
-export default {
-    components: { VModal },
-    emits: ["deleted"],
+const emits = defineEmits(["deleted"]);
+const props = defineProps({
+    item: {
+        type: Object,
+        required: true,
+    },
+});
+const dialog = ref(false);
+const loading = ref(false);
 
-    props: {
-        item: {
-            type: Object,
-            required: true,
+const destroy = async () => {
+    if (loading.value) return;
+
+    loading.value = true;
+    const form = useForm();
+
+    form.delete(props.item.links.destroy, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            dialog.value = false;
+            emits("deleted", props.item.id);
+            $notify.success(__("Price configuration deleted successfully"));
         },
-    },
-
-    data() {
-        return {
-            dialog: false,
-        };
-    },
-
-    methods: {
-        async destroy() {
-            this.loading = true;
-            try {
-                const res = await this.$server.delete(this.item.links.destroy);
-                if (res.status === 200) {
-                    this.dialog = false;
-                    this.$emit("deleted", true);
-                    $notify.success(__("Price deleted successfully."));
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e?.response?.data?.message);
-                }
-            } finally {
-                this.loading = false;
-            }
+        onFinish: () => {
+            loading.value = false;
         },
-    },
+    });
 };
 </script>
+
+<style scoped>
+/* Smooth transitions */
+button {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Loading animation */
+.mdi-loading {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+</style>

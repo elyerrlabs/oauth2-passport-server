@@ -1,102 +1,179 @@
+<!--
+Copyright (c) 2025 Elvis Yerel Roman Concha
+
+This file is part of an open source project licensed under the
+"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+
+You may use, study, modify, and redistribute this file for personal,
+educational, or non-commercial research purposes only.
+
+Commercial use is strictly prohibited without prior written consent
+from the author.
+
+Combining this software with any project licensed for commercial use
+(such as AGPL) is not permitted without explicit authorization.
+
+This software supports OAuth 2.0 and OpenID Connect.
+
+Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+-->
 <template>
-    <div class="attributes-container">
-        <q-card-section class="q-pa-none q-mb-md">
-            <div class="row items-center q-gutter-sm">
-                <q-icon name="mdi-pencil-plus" color="primary" size="md" />
-                <div class="text-h6 text-primary">{{ __("Attributes") }}</div>
+    <div
+        class="attributes-container bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 w-full"
+    >
+        <!-- Header -->
+        <div class="flex items-center space-x-2 mb-4">
+            <div
+                class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center"
+            >
+                <i class="mdi mdi-pencil-plus text-white text-sm"></i>
             </div>
-        </q-card-section>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                {{ __("Attributes") }}
+            </h3>
+        </div>
 
         <!-- Dynamic attributes list -->
-        <div
-            v-for="(attr, index) in internalAttributes"
-            :key="index"
-            class="attribute-row"
-        >
-            <!-- Name -->
-            <q-input
-                class="attribute-item"
-                filled
-                v-model="attr.name"
-                :label="__('Name')"
-                dense
-                @update:model-value="emitUpdate"
-            />
+        <div class="space-y-4">
+            <div
+                v-for="(attr, index) in internalAttributes"
+                :key="index"
+                class="attribute-row bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
+            >
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end"
+                >
+                    <!-- Name -->
+                    <div class="input-group">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >
+                            {{ __("Name") }}
+                        </label>
+                        <input
+                            v-model="attr.name"
+                            @input="emitUpdate"
+                            type="text"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                            :placeholder="__('Name')"
+                        />
+                    </div>
 
-            <!-- Type -->
-            <q-select
-                class="attribute-item"
-                filled
-                v-model="attr.type"
-                :options="typeOptions"
-                :label="__('Type')"
-                dense
-                @update:model-value="emitUpdate"
-            />
+                    <!-- Type -->
+                    <div class="input-group">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >
+                            {{ __("Type") }}
+                        </label>
+                        <select
+                            v-model="attr.type"
+                            @change="emitUpdate"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                        >
+                            <option
+                                v-for="option in typeOptions"
+                                :key="option"
+                                :value="option"
+                            >
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
 
-            <!-- Value -->
-            <q-input
-                class="attribute-item"
-                filled
-                v-model="attr.value"
-                :label="__('Value')"
-                dense
-                @update:model-value="emitUpdate"
-            />
+                    <!-- Value -->
+                    <div class="input-group">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >
+                            {{ __("Value") }}
+                        </label>
+                        <input
+                            v-model="attr.value"
+                            @input="emitUpdate"
+                            type="text"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                            :placeholder="__('Value')"
+                        />
+                    </div>
 
-            <!-- Stock -->
-            <q-input
-                class="attribute-item"
-                filled
-                type="number"
-                v-model="attr.stock"
-                :label="__('Stock')"
-                dense
-                @update:model-value="emitUpdate"
-            />
+                    <!-- Stock -->
+                    <div class="input-group">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >
+                            {{ __("Stock") }}
+                        </label>
+                        <input
+                            v-model="attr.stock"
+                            @input="emitUpdate"
+                            type="number"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                            :placeholder="__('Stock')"
+                        />
+                    </div>
 
-            <!-- Widget -->
-            <q-select
-                class="attribute-item"
-                filled
-                v-model="attr.widget"
-                :options="widgetOptions"
-                :label="__('Widget')"
-                dense
-                @update:model-value="emitUpdate"
-            />
+                    <!-- Widget -->
+                    <div class="input-group">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                        >
+                            {{ __("Widget") }}
+                        </label>
+                        <select
+                            v-model="attr.widget"
+                            @change="emitUpdate"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                        >
+                            <option
+                                v-for="option in widgetOptions"
+                                :key="option"
+                                :value="option"
+                            >
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
 
-            <!-- Multiple -->
-            <div class="attribute-item checkbox-container">
-                <q-checkbox
-                    v-model="attr.multiple"
-                    :label="__('Multiple')"
-                    dense
-                    @update:model-value="emitUpdate"
-                />
-            </div>
+                    <!-- Multiple & Delete -->
+                    <div class="flex items-center space-x-3 justify-end">
+                        <!-- Multiple -->
+                        <div class="checkbox-container flex items-center">
+                            <input
+                                v-model="attr.multiple"
+                                @change="emitUpdate"
+                                type="checkbox"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            />
+                            <label
+                                class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                            >
+                                {{ __("Multiple") }}
+                            </label>
+                        </div>
 
-            <!-- Delete button -->
-            <div class="attribute-item btn-container">
-                <q-btn
-                    outline
-                    color="negative"
-                    icon="delete"
-                    @click="deleteAttribute(index)"
-                    class="delete-btn"
-                />
+                        <!-- Delete button -->
+                        <button
+                            @click="deleteAttribute(index)"
+                            class="w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-md flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                        >
+                            <i class="mdi mdi-delete text-sm"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Add new attribute -->
-        <q-btn
-            color="primary"
-            size="sm"
-            outline
-            icon="add"
-            :label="__('Add attribute')"
+        <button
             @click="addAttribute"
-        />
+            class="mt-4 px-4 py-2 border border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+        >
+            <i class="mdi mdi-plus text-sm"></i>
+            <span>{{ __("Add attribute") }}</span>
+        </button>
     </div>
 </template>
 
@@ -190,97 +267,18 @@ export default {
                 if (res.status === 200) {
                     this.internalAttributes.splice(index, 1);
                     this.emitUpdate();
-                    this.$q.notify({
+                    this.$notify?.({
                         message: "Attribute deleted",
-                        color: "positive",
-                        icon: "check",
+                        type: "positive",
                     });
                 }
             } catch (e) {
-                this.$q.notify({
+                this.$notify?.({
                     message: "Error deleting attribute",
-                    color: "negative",
-                    icon: "error",
+                    type: "negative",
                 });
             }
         },
     },
 };
 </script>
-
-<style lang="scss" scoped>
-.attributes-container {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    background: white;
-
-    .attribute-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        margin-bottom: 12px;
-
-        .attribute-item {
-            flex: 1 1 100%;
-
-            &.checkbox-container {
-                display: flex;
-                align-items: center;
-                min-height: 40px; /* Match input height */
-            }
-
-            &.btn-container {
-                display: flex;
-                justify-content: flex-end;
-            }
-        }
-
-        .delete-btn {
-            min-width: 40px;
-        }
-    }
-
-    .add-btn {
-        margin-top: 16px;
-    }
-
-    /* Medium screens (750px - 945px) */
-    @media (min-width: 750px) and (max-width: 945px) {
-        .attribute-row {
-            .attribute-item {
-                flex: 1 1 calc(50% - 6px); /* 2 items per row with gap */
-            }
-        }
-    }
-
-    /* Large screens (>945px) */
-    @media (min-width: 945px) {
-        .attribute-row {
-            flex-wrap: nowrap;
-
-            .attribute-item {
-                flex: 1 1 auto;
-                min-width: 0;
-
-                &.checkbox-container {
-                    flex: 0 1 auto;
-                    padding: 0 8px;
-                }
-
-                &.btn-container {
-                    flex: 0 0 auto;
-                }
-            }
-        }
-    }
-}
-
-.title-icon {
-    color: var(--q-primary);
-}
-</style>

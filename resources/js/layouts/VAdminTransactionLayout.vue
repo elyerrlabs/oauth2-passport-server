@@ -22,28 +22,46 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-layout>
         <template #aside>
-            <div>
+            <div
+                class="h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700"
+            >
                 <h3
-                    class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-6"
+                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 mt-6 px-3"
                 >
                     {{ __("Navigation") }}
                 </h3>
-                <button
-                    v-for="(item, index) in menus"
-                    :key="index"
-                    @click="open(item)"
-                    class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
-                    :class="{ 'bg-gray-300': isActive(item) }"
-                >
-                    <div
-                        class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center"
+                <div class="space-y-1 px-2">
+                    <button
+                        v-for="(item, index) in menus"
+                        :key="index"
+                        @click="open(item)"
+                        class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                        :class="{
+                            'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800':
+                                isActive(item),
+                            'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white':
+                                !isActive(item),
+                        }"
                     >
-                        <i
-                            :class="['mdi', item.icon, 'text-white text-sm']"
-                        ></i>
-                    </div>
-                    <span>{{ __(item.name) }}</span>
-                </button>
+                        <div
+                            class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200"
+                            :class="{
+                                'bg-blue-600 dark:bg-blue-500': isActive(item),
+                                'bg-green-600 dark:bg-green-500':
+                                    !isActive(item),
+                            }"
+                        >
+                            <i
+                                :class="[
+                                    'mdi',
+                                    item.icon,
+                                    'text-white text-sm',
+                                ]"
+                            ></i>
+                        </div>
+                        <span class="text-left">{{ __(item.name) }}</span>
+                    </button>
+                </div>
             </div>
         </template>
         <template #main>
@@ -54,6 +72,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import VLayout from "@/components/VLayout.vue";
+import { router } from "@inertiajs/vue3";
 export default {
     components: {
         VLayout,
@@ -76,9 +95,12 @@ export default {
         open(item) {
             window.location.href = item.route;
         },
-
+        
         isActive(item) {
-            return item.route == window.location.href;
+            return (
+                item.route ==
+                `${window.location.origin}${window.location.pathname}`
+            );
         },
     },
 };

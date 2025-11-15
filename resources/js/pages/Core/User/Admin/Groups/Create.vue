@@ -19,45 +19,59 @@ Author Contact: yerel9212@yahoo.es
 
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
+
 <template>
-    <div class="p-4 space-y-3">
+    <div>
+        <!-- Trigger Button -->
         <button
-            @click="open"
-            class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
+            v-if="!item"
+            @click="open()"
+            class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 px-4 py-2 text-white rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
             :class="{ 'animate-pulse': !dialog }"
         >
-            <i class="mdi mdi-plus-circle text-xl"></i>
+            <i class="mdi mdi-plus-circle text-xl mr-2"></i>
+            {{ __("Create New") }}
         </button>
 
+        <button
+            v-else
+            @click="open()"
+            class="w-8 h-8 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-full flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-opacity-50"
+        >
+            <i class="mdi mdi-pencil text-lg"></i>
+        </button>
+
+        <!-- Modal -->
         <v-modal
             v-model="dialog"
-            :title="__('Create New Group')"
+            :title="isEdit ? __('Update Group') : __('Create New Group')"
             panel-class="w-full lg:w-4xl"
         >
             <template #body>
                 <!-- Form -->
-                <div class="p-6 space-y-4">
+                <div class="p-6 space-y-6">
                     <v-input
                         :label="__('Group Name')"
-                        :placeholder="__('name')"
+                        :placeholder="__('Enter group name')"
                         v-model="form.name"
-                        :error="errors.name"
+                        :error="form.errors.name"
                         :required="true"
+                        :disabled="isEdit"
                     />
 
                     <v-textarea
                         :label="__('Description')"
                         v-model="form.description"
-                        :error="errors.description"
-                        :placeholder="__('Write short description ...')"
+                        :error="form.errors.description"
+                        :placeholder="__('Write a short description...')"
                         :required="true"
                     />
 
-                    <!-- System Group Checkbox -->
                     <v-switch
                         :label="__('System Group')"
                         v-model="form.system"
-                        :placeholder="
+                        :disabled="isEdit"
+                        :help-text="
                             __(
                                 'System groups have special permissions and cannot be deleted.'
                             )
@@ -67,26 +81,44 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Actions -->
                 <div
-                    class="flex justify-end space-x-3 p-6 border-t border-gray-200"
+                    class="flex justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50"
                 >
                     <button
                         @click="close"
-                        :disabled="loading"
-                        class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        :disabled="form.processing"
+                        class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {{ __("Cancel") }}
+                        <i class="mdi mdi-close-circle"></i>
+                        <span>{{ __("Cancel") }}</span>
                     </button>
+
                     <button
-                        @click="create"
-                        :disabled="loading"
-                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg flex items-center space-x-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        @click="submit"
+                        :disabled="form.processing"
+                        class="px-6 py-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <i class="mdi mdi-check-circle" v-if="!loading"></i>
+                        <i
+                            class="mdi"
+                            :class="
+                                isEdit ? 'mdi-content-save' : 'mdi-check-circle'
+                            "
+                            v-if="!form.processing"
+                        ></i>
                         <div
-                            v-if="loading"
-                            class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                            v-else
+                            class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
                         ></div>
-                        <span>{{ __("Create Group") }}</span>
+                        <span>
+                            {{
+                                form.processing
+                                    ? isEdit
+                                        ? __("Updating...")
+                                        : __("Creating...")
+                                    : isEdit
+                                    ? __("Update Group")
+                                    : __("Create Group")
+                            }}
+                        </span>
                     </button>
                 </div>
             </template>
@@ -94,87 +126,81 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
+import { useForm, usePage } from "@inertiajs/vue3";
 import VModal from "@/components/VModal.vue";
 import VInput from "@/components/VInput.vue";
 import VTextarea from "@/components/VTextarea.vue";
 import VSwitch from "@/components/VSwitch.vue";
 
-export default {
-    components: {
-        VModal,
-        VTextarea,
-        VInput,
-        VSwitch,
+// Emits
+const emit = defineEmits(["created", "updated"]);
+
+// Props
+const props = defineProps({
+    item: {
+        type: Object,
+        default: null,
     },
-    emits: ["created"],
+});
 
-    data() {
-        return {
-            dialog: false,
-            loading: false,
-            form: {
-                name: null,
-                description: null,
-                system: false,
-            },
-            errors: {},
-        };
-    },
+// Reactive State
+const dialog = ref(false);
+const page = usePage();
+const isEdit = computed(() => !!props.item);
 
-    methods: {
-        close() {
-            this.form = {
-                name: null,
-                description: null,
-                system: false,
-            };
-            this.errors = {};
-            this.dialog = false;
-            this.loading = false;
+// useForm (shared for create & edit)
+const form = useForm({
+    name: null,
+    description: null,
+    system: false,
+});
+
+// Methods
+const open = () => {
+    form.errors = {};
+    if (props.item?.id) {
+        form.name = props.item.name;
+        form.description = props.item.description;
+        form.system = props.item.system;
+    }
+    dialog.value = true;
+};
+
+const close = () => {
+    form.errors = {};
+    dialog.value = false;
+};
+
+const submit = () => {
+    if (isEdit.value) updateGroup();
+    else createGroup();
+};
+
+const createGroup = () => {
+    form.post(page.props.route, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            $notify.success(__("Group created successfully"));
+            dialog.value = false;
+            emit("created");
         },
+        onError: () => {},
+    });
+};
 
-        open() {
-            this.form.name = null;
-            this.form.description = null;
-            this.form.system = false;
-            this.errors = {};
-            this.dialog = true;
+const updateGroup = () => {
+    form.put(props.item.links.update, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            $notify.success(__("Group updated successfully"));
+            dialog.value = false;
+            emit("updated");
         },
-
-        async create() {
-            this.loading = true;
-            this.errors = {};
-
-            try {
-                const res = await this.$server.post(
-                    this.$page.props.route,
-                    this.form
-                );
-
-                if (res.status == 201) {
-                    this.$notify?.(__("Group created successfully"));
-
-                    this.form = {
-                        name: null,
-                        description: null,
-                        system: false,
-                    };
-                    this.errors = {};
-                    this.$emit("created", true);
-                    this.dialog = false;
-                }
-            } catch (e) {
-                if (e.response && e.response.data.errors) {
-                    this.errors = e.response.data.errors;
-                }
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
+        onError: () => {},
+    });
 };
 </script>

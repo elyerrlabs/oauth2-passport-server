@@ -20,18 +20,25 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
+    <!-- Edit Button -->
     <button
         @click="open(item)"
-        class="bg-transparent border border-blue-600 text-blue-600 rounded-full p-2 hover:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        class="edit-btn group inline-flex items-center justify-center bg-transparent border border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 rounded-full p-2 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 hover:shadow-md transform hover:-translate-y-0.5"
         :title="__('Edit Client')"
+        :disabled="loading"
     >
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <svg
+            class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-200"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+        >
             <path
                 d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
             />
         </svg>
     </button>
 
+    <!-- Edit Modal -->
     <v-modal
         v-model="dialog"
         panel-class="w-full lg:w-3xl"
@@ -40,7 +47,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <template #body>
             <!-- Header -->
             <div class="mb-6">
-                <div class="text-gray-600 text-sm">
+                <div class="text-gray-600 dark:text-gray-400 text-sm">
                     {{
                         __("Modify your OAuth 2.0 client application settings")
                     }}
@@ -49,6 +56,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
             <!-- Form Content -->
             <div class="grid grid-cols-1 gap-6 mb-4">
+                <!-- Client Name -->
                 <v-input
                     v-model="form.name"
                     :label="__('Name')"
@@ -59,61 +67,178 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             'Enter a descriptive name for your client application'
                         )
                     "
+                    :disabled="loading"
                 />
 
+                <!-- Redirect URI -->
                 <v-input
                     v-model="form.redirect"
                     :label="__('Redirect URI')"
                     :required="true"
-                    :error="errors.name"
+                    :error="errors.redirect"
                     placeholder="https://yourapp.com/oauth/callback"
+                    :disabled="loading"
                 />
 
-                <v-switch
-                    v-model="form.confidential"
-                    :error="errors.confidential"
-                    :placeholder="
-                        __(
-                            'Confidential clients can keep secrets secure (server-side applications). Uncheck for public clients (SPA, mobile apps).'
-                        )
-                    "
-                />
+                <!-- Confidential Switch -->
+                <div class="space-y-3">
+                    <v-switch
+                        v-model="form.confidential"
+                        :label="__('Confidential Client')"
+                        :error="errors.confidential"
+                        :disabled="loading"
+                    />
+
+                    <!-- Switch Description -->
+                    <div
+                        :class="[
+                            'flex items-start space-x-3 text-sm rounded-lg p-3 border transition-colors duration-200',
+                            form.confidential
+                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+                                : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700',
+                        ]"
+                    >
+                        <svg
+                            class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        <span>
+                            {{
+                                form.confidential
+                                    ? __(
+                                          "Confidential clients can keep secrets secure (recommended for server-side applications)."
+                                      )
+                                    : __(
+                                          "Public clients cannot keep secrets secure (suitable for SPA and mobile apps)."
+                                      )
+                            }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Client ID (Read-only) -->
+                <div v-if="form.id" class="space-y-2">
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                        {{ __("Client ID") }}
+                    </label>
+                    <div class="relative">
+                        <input
+                            :value="form.id"
+                            type="text"
+                            readonly
+                            :class="[
+                                'w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 rounded-lg text-gray-600 dark:text-gray-400 cursor-not-allowed transition-colors duration-200 font-mono text-sm',
+                            ]"
+                        />
+                        <div
+                            class="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                            <button
+                                @click="copyToClipboard(form.id, 'Client ID')"
+                                class="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 p-1 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                :title="__('Copy Client ID to clipboard')"
+                                :disabled="loading"
+                            >
+                                <svg
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        {{ __("This identifier cannot be changed") }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Information Notice -->
+            <div
+                class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4"
+            >
+                <div class="flex items-start space-x-3">
+                    <svg
+                        class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                    </svg>
+                    <div class="text-blue-700 dark:text-blue-300 text-sm">
+                        <p class="font-medium mb-1">
+                            {{ __("Update Information") }}
+                        </p>
+                        <p>
+                            {{
+                                __(
+                                    "Updating client details will not affect existing access tokens. Changes take effect immediately for new authorizations."
+                                )
+                            }}
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <!-- Actions -->
             <div
-                class="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200"
+                class="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700"
             >
                 <button
                     @click="close"
-                    class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                    :disabled="loading"
+                    class="cancel-btn px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {{ __("Cancel") }}
                 </button>
                 <button
                     @click="updateClient"
-                    :disabled="loading"
-                    class="px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                    :disabled="loading || !isFormValid"
+                    :class="[
+                        'update-btn px-4 py-2.5 text-sm font-medium text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2',
+                        loading || !isFormValid
+                            ? 'bg-blue-400 dark:bg-blue-500'
+                            : 'bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700',
+                    ]"
                 >
                     <svg
                         v-if="loading"
-                        class="animate-spin h-4 w-4 text-white"
+                        class="w-4 h-4 animate-spin"
                         fill="none"
+                        stroke="currentColor"
                         viewBox="0 0 24 24"
                     >
-                        <circle
-                            class="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="4"
-                        ></circle>
                         <path
-                            class="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
                     </svg>
                     <svg
                         v-else
@@ -127,7 +252,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             clip-rule="evenodd"
                         />
                     </svg>
-                    <span>{{
+                    <span class="font-medium">{{
                         loading ? __("Updating...") : __("Update Client")
                     }}</span>
                 </button>
@@ -162,11 +287,18 @@ export default {
             errors: {
                 name: "",
                 redirect: "",
+                confidential: "",
             },
             form: {},
             dialog: false,
             loading: false,
         };
+    },
+
+    computed: {
+        isFormValid() {
+            return this.form.name?.trim() && this.form.redirect?.trim();
+        },
     },
 
     methods: {
@@ -184,6 +316,8 @@ export default {
         },
 
         async updateClient() {
+            if (!this.isFormValid) return;
+
             this.loading = true;
             this.errors = {};
 
@@ -197,31 +331,63 @@ export default {
                     this.$emit("updated", true);
                     this.dialog = false;
 
-                    $notify.error(__("OAuth client updated successfully"));
+                    this.$notify.success({
+                        title: this.__("Success"),
+                        message: this.__("OAuth client updated successfully"),
+                        timeout: 3000,
+                    });
                 }
             } catch (e) {
                 if (e?.response?.status == 422) {
                     this.errors = e.response.data.errors;
-                    $notify.error(__("Please fix the form errors"));
-                }
-
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
+                    this.$notify.error({
+                        title: this.__("Validation Error"),
+                        message: this.__("Please fix the form errors"),
+                        timeout: 5000,
+                    });
+                } else if (e?.response?.data?.message) {
+                    this.$notify.error({
+                        title: this.__("Error"),
+                        message: e.response.data.message,
+                        timeout: 5000,
+                    });
+                } else {
+                    this.$notify.error({
+                        title: this.__("Error"),
+                        message: this.__("Failed to update client"),
+                        timeout: 5000,
+                    });
                 }
             } finally {
                 this.loading = false;
             }
         },
 
-        async copyToClipboard(text) {
+        async copyToClipboard(text, type = "") {
             try {
                 await navigator.clipboard.writeText(text);
-
-                $notify.error(__("Client ID copied to clipboard"));
+                this.$notify.success({
+                    title: this.__("Copied"),
+                    message: this.__(`:type copied to clipboard`, {
+                        type: type || "Text",
+                    }),
+                    timeout: 2000,
+                });
             } catch (err) {
-                $notify.error(__("Failed to copy to clipboard"));
+                this.$notify.error({
+                    title: this.__("Error"),
+                    message: this.__("Failed to copy to clipboard"),
+                    timeout: 3000,
+                });
             }
         },
     },
 };
 </script>
+
+<style scoped>
+.edit-btn:active {
+    transform: translateY(0);
+    transition: transform 0.1s ease;
+}
+</style>

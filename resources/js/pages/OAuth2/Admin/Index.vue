@@ -1,13 +1,38 @@
+<!--
+Copyright (c) 2025 Elvis Yerel Roman Concha
+
+This file is part of an open source project licensed under the
+"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+
+You may use, study, modify, and redistribute this file for personal,
+educational, or non-commercial research purposes only.
+
+Commercial use is strictly prohibited without prior written consent
+from the author.
+
+Combining this software with any project licensed for commercial use
+(such as AGPL) is not permitted without explicit authorization.
+
+This software supports OAuth 2.0 and OpenID Connect.
+
+Author Contact: yerel9212@yahoo.es
+
+SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+-->
 <template>
     <v-admin-layout>
         <!-- Header Section -->
-        <div class="bg-white p-6 shadow-lg rounded-lg">
+        <div
+            class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg transition-colors duration-200"
+        >
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <div class="text-3xl font-bold text-blue-600">
+                    <div
+                        class="text-3xl font-bold text-blue-600 dark:text-blue-400"
+                    >
                         {{ __("OAuth Clients Management") }}
                     </div>
-                    <div class="text-gray-600 mt-1">
+                    <div class="text-gray-600 dark:text-gray-400 mt-1">
                         {{ __("Manage your application's OAuth 2.0 clients") }}
                     </div>
                 </div>
@@ -26,7 +51,7 @@
         >
             <!-- Total Clients -->
             <div
-                class="bg-blue-50 text-blue-700 rounded-lg border border-blue-200"
+                class="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-800 transition-colors duration-200 hover:shadow-md"
             >
                 <div class="p-4 text-center">
                     <div class="text-xl font-semibold">
@@ -51,7 +76,7 @@
 
             <!-- Confidential Clients -->
             <div
-                class="bg-green-50 text-green-700 rounded-lg border border-green-200"
+                class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-lg border border-green-200 dark:border-green-800 transition-colors duration-200 hover:shadow-md"
             >
                 <div class="p-4 text-center">
                     <div class="text-xl font-semibold">
@@ -75,7 +100,7 @@
 
             <!-- Public Clients -->
             <div
-                class="bg-orange-50 text-orange-700 rounded-lg border border-orange-200"
+                class="bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 rounded-lg border border-orange-200 dark:border-orange-800 transition-colors duration-200 hover:shadow-md"
             >
                 <div class="p-4 text-center">
                     <div class="text-xl font-semibold">
@@ -99,7 +124,7 @@
 
             <!-- Grant Types -->
             <div
-                class="bg-purple-50 text-purple-700 rounded-lg border border-purple-200"
+                class="bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-lg border border-purple-200 dark:border-purple-800 transition-colors duration-200 hover:shadow-md"
             >
                 <div class="p-4 text-center">
                     <div class="text-xl font-semibold">
@@ -124,168 +149,223 @@
 
         <!-- Clients Table -->
         <div
-            class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden mt-4"
+            class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden mt-4 transition-colors duration-200"
         >
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th
-                                v-for="column in columns"
-                                :key="column.name"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                :class="{
-                                    'text-left': column.align === 'left',
-                                    'text-center': column.align === 'center',
-                                    'text-right': column.align === 'right',
-                                }"
-                            >
-                                {{ column.label }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <!-- Loading State -->
-                        <tr v-if="loading">
-                            <td
-                                :colspan="columns.length"
-                                class="px-6 py-12 text-center"
-                            >
-                                <div class="flex justify-center items-center">
-                                    <svg
-                                        class="animate-spin h-8 w-8 text-blue-600"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            class="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            stroke-width="4"
-                                        ></circle>
-                                        <path
-                                            class="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                        ></path>
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Clients Rows -->
-                        <tr
-                            v-for="client in clients"
-                            :key="client.id"
-                            class="hover:bg-gray-50 transition-colors"
+            <table
+                class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+            >
+                <thead class="bg-gray-50 dark:bg-gray-700/50">
+                    <tr>
+                        <th
+                            v-for="column in columns"
+                            :key="column.name"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-colors duration-200"
+                            :class="{
+                                'text-left': column.align === 'left',
+                                'text-center': column.align === 'center',
+                                'text-right': column.align === 'right',
+                            }"
                         >
-                            <!-- Client Name -->
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="font-bold text-blue-600">
-                                    {{ client.name }}
-                                </div>
-                                <div class="text-sm text-gray-500 mt-1">
-                                    {{ __("ID:") }} {{ client.id }}
-                                </div>
-                            </td>
+                            {{ column.label }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody
+                    class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+                >
+                    <!-- Loading State -->
+                    <tr v-if="loading">
+                        <td
+                            :colspan="columns.length"
+                            class="px-6 py-12 text-center"
+                        >
+                            <div class="flex justify-center items-center">
+                                <svg
+                                    class="animate-spin h-8 w-8 text-blue-600 dark:text-blue-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        class="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        stroke-width="4"
+                                    ></circle>
+                                    <path
+                                        class="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                </svg>
+                            </div>
+                        </td>
+                    </tr>
 
-                            <!-- Created Date -->
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">
-                                    {{ formatDate(client.created_at) }}
+                    <!-- Clients Rows -->
+                    <tr
+                        v-for="client in clients"
+                        :key="client.id"
+                        class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group"
+                    >
+                        <!-- Client Name -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center space-x-3">
+                                <div
+                                    class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center transition-colors duration-200 group-hover:bg-blue-200 dark:group-hover:bg-blue-800/30"
+                                >
+                                    <i
+                                        class="mdi mdi-application text-blue-600 dark:text-blue-400 text-lg"
+                                    ></i>
                                 </div>
-                            </td>
+                                <div>
+                                    <div
+                                        class="font-bold text-blue-600 dark:text-blue-400"
+                                    >
+                                        {{ client.name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
 
-                            <!-- Confidential -->
-                            <td class="px-6 py-4 whitespace-nowrap">
+                        <!-- Created Date -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div
+                                class="flex items-center text-sm text-gray-900 dark:text-gray-100"
+                            >
+                                <i
+                                    class="mdi mdi-calendar-clock text-gray-400 dark:text-gray-500 mr-2"
+                                ></i>
+                                <div>
+                                    <div>
+                                        {{ formatDate(client.created_at) }}
+                                    </div>
+                                    <div
+                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                    >
+                                        {{ formatTimeAgo(client.created_at) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Confidential -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex flex-col items-center space-y-2">
                                 <span
                                     :class="[
-                                        'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
+                                        'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200',
                                         client.confidential
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-orange-100 text-orange-800',
+                                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800'
+                                            : 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 border border-orange-200 dark:border-orange-800',
                                     ]"
                                 >
-                                    <svg
-                                        class="w-4 h-4 mr-1"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path
-                                            v-if="client.confidential"
-                                            fill-rule="evenodd"
-                                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                            clip-rule="evenodd"
-                                        />
-                                        <path
-                                            v-else
-                                            fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z"
-                                            clip-rule="evenodd"
-                                        />
-                                    </svg>
+                                    <i
+                                        :class="[
+                                            'mdi mr-1.5',
+                                            client.confidential
+                                                ? 'mdi-lock-outline'
+                                                : 'mdi-lock-open-outline',
+                                        ]"
+                                    ></i>
                                     {{
                                         client.confidential
                                             ? __("Yes")
                                             : __("No")
                                     }}
                                 </span>
-                            </td>
-
-                            <!-- Created By -->
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">
+                                <div
+                                    class="text-xs text-gray-500 dark:text-gray-400 text-center"
+                                >
                                     {{
-                                        client.created_by?.email || __("System")
+                                        client.confidential
+                                            ? __("With secret")
+                                            : __("No secret")
                                     }}
                                 </div>
-                            </td>
+                            </div>
+                        </td>
 
-                            <!-- Grant Types -->
-                            <td class="px-6 py-4">
-                                <div class="flex flex-wrap gap-2">
-                                    <span
-                                        v-for="(
-                                            grant, index
-                                        ) in formatGrantTypes(
-                                            client.grant_types
-                                        )"
-                                        :key="index"
-                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
-                                    >
-                                        {{ grant }}
-                                    </span>
-                                </div>
-                            </td>
-
-                            <!-- Actions -->
-                            <td
-                                class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                        <!-- Created By -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div
+                                class="flex items-center text-sm text-gray-900 dark:text-gray-100"
                             >
-                                <div class="flex justify-end space-x-2">
-                                    <v-update
-                                        :item="client"
-                                        @updated="getClients"
-                                    />
-                                    <v-delete
-                                        :item="client"
-                                        @deleted="getClients"
-                                    />
+                                <i
+                                    class="mdi mdi-account text-gray-400 dark:text-gray-500 mr-2"
+                                ></i>
+                                <div>
+                                    <div>
+                                        {{
+                                            client.created_by?.email ||
+                                            __("System")
+                                        }}
+                                    </div>
+                                    <div
+                                        v-if="client.created_by?.name"
+                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                    >
+                                        {{ client.created_by.name }}
+                                    </div>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                        </td>
 
-                <!-- Empty State -->
+                        <!-- Grant Types -->
+                        <td class="px-6 py-4">
+                            <div class="flex flex-wrap gap-1.5 max-w-xs">
+                                <span
+                                    v-for="(grant, index) in formatGrantTypes(
+                                        client.grant_types
+                                    )"
+                                    :key="index"
+                                    :class="[
+                                        'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border transition-colors duration-200',
+                                        getGrantColor(grant),
+                                    ]"
+                                    :title="getGrantDescription(grant)"
+                                >
+                                    <i
+                                        :class="[
+                                            getGrantIcon(grant),
+                                            'mdi mr-1.5 text-xs',
+                                        ]"
+                                    ></i>
+                                    {{ formatGrantType(grant) }}
+                                </span>
+                            </div>
+                        </td>
+
+                        <!-- Actions -->
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                        >
+                            <div class="flex justify-end space-x-2">
+                                <v-update
+                                    :item="client"
+                                    @updated="getClients"
+                                />
+                                <v-delete
+                                    :item="client"
+                                    @deleted="getClients"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div
+                v-if="!loading && clients.length === 0"
+                class="text-center py-12"
+            >
                 <div
-                    v-if="!loading && clients.length === 0"
-                    class="text-center py-12"
+                    class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4"
                 >
                     <svg
-                        class="w-16 h-16 text-gray-300 mx-auto"
+                        class="w-8 h-8 text-gray-400 dark:text-gray-500"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >
@@ -295,20 +375,19 @@
                             clip-rule="evenodd"
                         />
                     </svg>
-                    <div class="text-gray-500 text-lg mt-4">
-                        {{ __("No clients available") }}
-                    </div>
-                    <div class="text-gray-400 text-sm mt-2">
-                        {{
-                            __("Create your first OAuth client to get started")
-                        }}
-                    </div>
+                </div>
+                <div class="text-gray-500 dark:text-gray-400 text-lg mt-4">
+                    {{ __("No clients available") }}
+                </div>
+                <div class="text-gray-400 dark:text-gray-500 text-sm mt-2">
+                    {{ __("Create your first OAuth client to get started") }}
                 </div>
             </div>
         </div>
 
         <!-- Pagination -->
         <v-paginate
+            v-if="clients.length > 0"
             v-model="search.page"
             :total-pages="pages.total_pages"
             @change="getClients"
@@ -316,7 +395,7 @@
     </v-admin-layout>
 </template>
 
-<script> 
+<script>
 import VAdminLayout from "@/layouts/VAdminLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
@@ -347,12 +426,16 @@ export default {
             },
 
             columns: [
-                "Client Name",
-                "Created Date",
-                "Confidential",
-                "Created By",
-                "Grant Types",
-                "Actions",
+                { name: "name", label: "Client Name", align: "left" },
+                { name: "created", label: "Created Date", align: "left" },
+                {
+                    name: "confidential",
+                    label: "Confidential",
+                    align: "center",
+                },
+                { name: "created_by", label: "Created By", align: "left" },
+                { name: "grant_types", label: "Grant Types", align: "left" },
+                { name: "actions", label: "Actions", align: "right" },
             ],
         };
     },
@@ -378,11 +461,32 @@ export default {
 
     methods: {
         formatDate(dateString) {
-            if (!dateString) return "";
-            return new Date(dateString).toLocaleDateString("en-US", {
+            if (!dateString) return "N/A";
+            const date = new Date(dateString);
+            return date.toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
+            });
+        },
+
+        formatTimeAgo(dateString) {
+            if (!dateString) return "";
+
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) return this.__("1 day ago");
+            if (diffDays < 7)
+                return this.__(":count days ago", { count: diffDays });
+            if (diffDays < 30)
+                return this.__(":count weeks ago", {
+                    count: Math.floor(diffDays / 7),
+                });
+            return this.__(":count months ago", {
+                count: Math.floor(diffDays / 30),
             });
         },
 
@@ -406,6 +510,63 @@ export default {
             return [];
         },
 
+        formatGrantType(grant) {
+            const map = {
+                authorization_code: "Auth Code",
+                password: "Password",
+                client_credentials: "Client Credentials",
+                implicit: "Implicit",
+                refresh_token: "Refresh Token",
+            };
+            return map[grant] || grant;
+        },
+
+        getGrantIcon(grant) {
+            const icons = {
+                authorization_code: "mdi-shield-account",
+                password: "mdi-form-textbox-password",
+                client_credentials: "mdi-account-key",
+                implicit: "mdi-flash",
+                refresh_token: "mdi-autorenew",
+            };
+            return `mdi ${icons[grant] || "mdi-cog"}`;
+        },
+
+        getGrantColor(grant) {
+            const colors = {
+                authorization_code:
+                    "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800",
+                password:
+                    "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800",
+                client_credentials:
+                    "bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800",
+                implicit:
+                    "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800",
+                refresh_token:
+                    "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800",
+            };
+            return (
+                colors[grant] ||
+                "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-600"
+            );
+        },
+
+        getGrantDescription(grant) {
+            const descriptions = {
+                authorization_code:
+                    "Authorization Code Flow - for web applications",
+                password:
+                    "Resource Owner Password Credentials - for trusted applications",
+                client_credentials:
+                    "Client Credentials Flow - for machine-to-machine authentication",
+                implicit:
+                    "Implicit Flow - for single-page applications (legacy)",
+                refresh_token:
+                    "Refresh Token - for obtaining new access tokens",
+            };
+            return descriptions[grant] || "OAuth 2.0 Grant Type";
+        },
+
         getClients(param = null) {
             this.loading = true;
             const params = { ...this.search, ...param };
@@ -422,7 +583,7 @@ export default {
                 })
                 .catch((e) => {
                     if (e?.response?.data?.message) {
-                        $notify.error(e.response.data.message);
+                        this.$notify.error(e.response.data.message);
                     }
                 })
                 .finally(() => {
@@ -433,9 +594,9 @@ export default {
         async copyToClipboard(text) {
             try {
                 await navigator.clipboard.writeText(text);
-                $notify.success(__("Copied to clipboard"));
+                this.$notify.success(this.__("Copied to clipboard"));
             } catch (err) {
-                $notify.error(__("Failed to copy"));
+                this.$notify.error(this.__("Failed to copy"));
             }
         },
     },

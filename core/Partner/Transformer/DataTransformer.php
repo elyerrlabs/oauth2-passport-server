@@ -23,7 +23,7 @@ namespace Core\Partner\Transformer;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
@@ -59,8 +59,8 @@ class DataTransformer extends TransformerAbstract
     {
         return [
             'date' => $partner->date,
-            'commission' =>  $this->formatMoney($partner->commission),
-            'currency' => $partner->currency,
+            'commission' => $this->formatMoney($partner->commission),
+            'currency' => strtoupper($partner->currency),
             'total' => $partner->total,
         ];
     }

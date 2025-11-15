@@ -57,7 +57,7 @@
 
 @push('js')
     <script nonce="{{ $nonce }}">
-        const route = "{{ config('system.redirect_to', 'about') }}"
+        const route = "{{ route('user.dashboard') }}"
         let timeLeft = 10;
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('counter').innerHTML = timeLeft + ' seconds';

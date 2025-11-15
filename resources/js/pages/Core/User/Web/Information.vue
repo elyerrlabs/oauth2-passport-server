@@ -21,16 +21,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-account-layout>
-        <div class="min-h-screen bg-gray-50 py-4 px-4 sm:px-6 lg:px-8">
+        <div
+            class="min-h-screen bg-white dark:bg-gray-900 py-4 px-4 sm:px-6 lg:px-8"
+        >
             <div class="max-w-5xl mx-auto">
                 <!-- Compact Header -->
                 <div class="mb-6">
                     <div class="flex items-center space-x-3">
                         <div
-                            class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
                         >
                             <svg
-                                class="w-5 h-5 text-blue-600"
+                                class="w-5 h-5 text-blue-600 dark:text-blue-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -44,10 +46,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-xl font-semibold text-gray-900">
+                            <h1
+                                class="text-xl font-semibold text-gray-900 dark:text-white"
+                            >
                                 {{ __("Account Information") }}
                             </h1>
-                            <p class="text-sm text-gray-600 mt-1">
+                            <p
+                                class="text-sm text-gray-600 dark:text-gray-400 mt-1"
+                            >
                                 {{ __("Manage your personal details") }}
                             </p>
                         </div>
@@ -56,11 +62,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Account Form Card -->
                 <div
-                    class="bg-white rounded-xl shadow-sm border border-gray-200"
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
                 >
                     <!-- Card Header -->
-                    <div class="px-6 py-4 border-b border-gray-100">
-                        <h2 class="text-lg font-medium text-gray-900">
+                    <div
+                        class="px-6 py-4 border-b border-gray-100 dark:border-gray-700"
+                    >
+                        <h2
+                            class="text-lg font-medium text-gray-900 dark:text-white"
+                        >
                             {{ __("Personal Details") }}
                         </h2>
                     </div>
@@ -74,7 +84,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :label="__('First Name')"
                                     v-model="form.name"
                                     :placeholder="__('Enter your first name')"
-                                    :error="errors.name"
+                                    :error="form.errors.name"
                                     :required="true"
                                 />
                             </div>
@@ -85,29 +95,54 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :label="__('Last Name')"
                                     v-model="form.last_name"
                                     :placeholder="__('Enter your last name')"
-                                    :error="errors.last_name"
+                                    :error="form.errors.last_name"
                                     :required="true"
                                 />
                             </div>
 
-                            <!-- Email -->
+                            <!-- Email    -->
                             <div class="space-y-2">
                                 <v-input
                                     :label="__('Email')"
                                     v-model="form.email"
                                     placeholder="something@email.com"
-                                    :error="errors.email"
+                                    :error="form.errors.email"
                                     :required="true"
+                                    disabled
                                 />
                             </div>
 
-                            <!-- Country -->
                             <div class="space-y-2">
-                                <v-country
+                                <v-select
+                                    :label="__('Country')"
                                     v-model="form.country"
-                                    :error="errors.country"
+                                    :options="countries"
+                                    :error="form.errors.country"
                                     :required="true"
-                                />
+                                    label-key="name_en"
+                                    value-key="name_en"
+                                    searchable
+                                >
+                                    <template #selected="{ option }">
+                                        <span
+                                            class="text-gray-700 dark:text-gray-200"
+                                        >
+                                            {{
+                                                option
+                                                    ? `${option.emoji} - ${option.name_en}`
+                                                    : __("Select dial code")
+                                            }}
+                                        </span>
+                                    </template>
+                                    <template #option="{ option }">
+                                        <span
+                                            class="text-gray-700 p-2 dark:text-gray-200 block"
+                                        >
+                                            {{ option.emoji }}
+                                            {{ option.name_en }}
+                                        </span>
+                                    </template>
+                                </v-select>
                             </div>
 
                             <!-- City -->
@@ -116,7 +151,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :label="__('City')"
                                     v-model="form.city"
                                     :placeholder="__('Enter your city')"
-                                    :error="errors.city"
+                                    :error="form.errors.city"
                                     :required="true"
                                 />
                             </div>
@@ -127,7 +162,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :label="__('Address')"
                                     v-model="form.address"
                                     :placeholder="__('Enter your full address')"
-                                    :error="errors.address"
+                                    :error="form.errors.address"
                                     :required="true"
                                 />
                             </div>
@@ -137,13 +172,34 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <v-select
                                     :label="__('Dial code')"
                                     v-model="form.dial_code"
-                                    :options="dial_codes"
-                                    :error="errors.dial_code"
+                                    :options="countries"
+                                    :error="form.errors.dial_code"
                                     :required="true"
-                                    label-key="label"
+                                    label-key="name_en"
                                     value-key="dial_code"
-                                    @search="getDialCode"
-                                />
+                                    searchable
+                                >
+                                    <template #selected="{ option }">
+                                        <span
+                                            class="text-gray-700 dark:text-gray-200"
+                                        >
+                                            {{
+                                                option
+                                                    ? `${option.emoji} - ${option.name_en} ${option.dial_code}`
+                                                    : __("Select dial code")
+                                            }}
+                                        </span>
+                                    </template>
+                                    <template #option="{ option }">
+                                        <span
+                                            class="text-gray-700 p-2 dark:text-gray-200 block"
+                                        >
+                                            {{ option.emoji }} -
+                                            {{ option.name_en }} -
+                                            {{ option.dial_code }}
+                                        </span>
+                                    </template>
+                                </v-select>
                             </div>
 
                             <!-- Phone -->
@@ -152,7 +208,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :label="__('Phone')"
                                     v-model="form.phone"
                                     :placeholder="__('Enter your phone number')"
-                                    :error="errors.phone"
+                                    :error="form.errors.phone"
                                     :required="true"
                                 />
                             </div>
@@ -160,7 +216,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Birthday -->
                             <div class="space-y-2">
                                 <label
-                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                                 >
                                     {{ __("Birthday") }}
                                 </label>
@@ -174,14 +230,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :placeholder="
                                             __('Select your birthday')
                                         "
-                                        class="w-full [&_.dp\_\_input]:px-3 [&_.dp\_\_input]:py-2.5 [&_.dp\_\_input]:border [&_.dp\_\_input]:border-gray-300 [&_.dp\_\_input]:rounded-lg [&_.dp\_\_input]:focus:ring-1 [&_.dp\_\_input]:focus:ring-blue-500 [&_.dp\_\_input]:focus:border-blue-500 [&_.dp\_\_input]:transition-colors"
-                                        :class="{
-                                            '[&_.dp\\_\\_input]:border-red-500':
-                                                !!errors.birthday,
-                                        }"
+                                        auto-apply
+                                        :dark="true"
                                     />
                                     <div
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none"
                                     >
                                         <svg
                                             class="w-4 h-4"
@@ -199,20 +252,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </div>
                                 </div>
                                 <div
-                                    v-if="errors.birthday"
-                                    class="text-sm text-red-600 mt-1"
+                                    v-if="form.errors.birthday"
+                                    class="text-sm text-red-600 dark:text-red-400 mt-1"
                                 >
-                                    {{ errors.birthday[0] }}
+                                    {{ form.errors.birthday[0] }}
                                 </div>
                             </div>
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="mt-8 pt-6 border-t border-gray-100">
+                        <div
+                            class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700"
+                        >
                             <button
                                 @click="update"
                                 :disabled="loading"
-                                class="w-full sm:w-auto bg-blue-600 text-white py-3 px-8 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[140px]"
+                                class="w-full sm:w-auto bg-blue-600 dark:bg-blue-500 text-white py-3 px-8 rounded-lg font-medium hover:bg-blue-700 dark:hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[140px]"
                             >
                                 <svg
                                     v-if="loading"
@@ -248,100 +303,66 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-account-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
+import { useForm, usePage } from "@inertiajs/vue3";
 import VAccountLayout from "@/layouts/VAccountLayout.vue";
 import VInput from "@/components/VInput.vue";
-import VPhone from "@/components/VPhone.vue";
-import VCountry from "@/components/VCountry.vue";
 import VSelect from "@/components/VSelect.vue";
 
-export default {
-    components: {
-        VAccountLayout,
-        VInput,
-        VPhone,
-        VCountry,
-        VSelect,
-    },
-    data() {
-        return {
-            form: {
-                name: "",
-                last_name: "",
-                email: "",
-                country: "",
-                city: "",
-                address: "",
-                dial_code: "",
-                phone: "",
-                birthday: "",
+const page = usePage();
+
+const form = useForm({
+    name: "",
+    last_name: "",
+    country: "",
+    city: "",
+    address: "",
+    dial_code: "",
+    phone: "",
+    birthday: "",
+});
+
+const countries = ref([]);
+const loading = ref(false);
+
+onMounted(() => {
+    Object.assign(form, page.props.user);
+
+    getDialCode();
+});
+
+//
+const getDialCode = async () => {
+    try {
+        const res = await $server.get("/api/public/countries", {
+            params: {
+                order_by: "name_en",
+                order_type: "asc",
             },
-            dial_codes: [],
-            errors: {},
-            loading: false,
-        };
-    },
+        });
+        if (res.status === 200) {
+            countries.value = res.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
+};
 
-    created() {
-        this.getDialCode();
-    },
+const update = async () => {
+    loading.value = true;
 
-    mounted() {
-        this.form = { ...this.$page.props.user };
-    },
-
-    methods: {
-        async update() {
-            this.loading = true;
-            this.errors = {};
-
-            try {
-                const res = await this.$server.put(
-                    this.form.links.update,
-                    this.form
-                );
-
-                if (res.status === 200) {
-                    this.form = res.data.data;
-
-                     $notify.success(
-                        __("Information has been updated successfully")
-                    );
-                }
-            } catch (e) {
-                if (e.response && e.response.status == 422) {
-                    this.errors = e.response.data.errors;
-                }
-
-                if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
+    form.put(page.props.route, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            $notify.success(__("Information has been updated successfully"));
         },
-
-        async getDialCode(value = null) {
-            try {
-                const res = await this.$server.get("/api/public/countries", {
-                    params: {
-                        order_by: "name_en",
-                        order_type: "asc",
-                        name_en: value,
-                    },
-                });
-                if (res.status === 200) {
-                    this.dial_codes = res.data.map((item) => ({
-                        label: `${item.emoji} ${item.dial_code} ${item.name_en}`,
-                        ...item,
-                    }));
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
-                }
-            }
+        onFinish: () => {
+            loading.value = false;
         },
-    },
+    });
 };
 </script>

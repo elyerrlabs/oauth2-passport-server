@@ -25,9 +25,9 @@ namespace Core\User\Http\Controllers\Web;
  */
 
 
+use Core\User\Services\UserService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\User\Repositories\UserRepository;
 use App\Http\Requests\User\RegisterRequest;
 use Core\User\Http\Requests\UserRegisterRequest;
 use App\Notifications\Member\MemberCreatedAccount;
@@ -36,18 +36,18 @@ class RegisterClientController extends WebController
 {
     /**
      * User repository
-     * @var UserRepository
+     * @var UserService
      */
-    public $repository;
+    public $userService;
 
 
     /**
      * Construct
-     * @param \Core\User\Repositories\UserRepository $userRepository
+     * @param \Core\User\Services\UserService $userService
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserService $userService)
     {
-        $this->repository = $userRepository;
+        $this->userService = $userService;
         $this->middleware('auth')->except('register', 'store', 'verifyAccount');
     }
 
@@ -77,7 +77,15 @@ class RegisterClientController extends WebController
     public function store(UserRegisterRequest $request)
     {
         $this->recoveryReferralCode($request);
-        return $this->repository->registerCustomer($request->toArray());
+
+        $user = $this->userService->registerCustomer($request->toArray());
+
+        $user->notify(new MemberCreatedAccount());
+
+        return redirect()->route('login')->with(
+            'status',
+            __('Your account has been registered successfully. A verification email has been sent to your inbox.')
+        );
     }
 
     /**
@@ -87,7 +95,7 @@ class RegisterClientController extends WebController
      */
     public function verifyAccount(Request $request)
     {
-        return $this->repository->verifyUserAccount($request->toArray());
+        return $this->userService->verifyUserAccount($request->toArray());
     }
 
     /**

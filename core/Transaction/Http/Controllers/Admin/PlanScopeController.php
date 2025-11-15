@@ -27,6 +27,7 @@ namespace Core\Transaction\Http\Controllers\Admin;
 
 use Core\Transaction\Repositories\PlanRepository;
 use Core\Transaction\Model\Plan;
+use Core\Transaction\Services\PlanService;
 use Core\User\Model\Scope;
 use App\Http\Controllers\WebController;
 
@@ -35,18 +36,18 @@ class PlanScopeController extends WebController
 
     /**
      * Repository
-     * @var PlanRepository
+     * @var PlanService
      */
-    public $repository;
+    public $planService;
 
     /**
      * Construct
-     * @param  PlanRepository $planRepository
+     * @param  PlanService $planService
      */
-    public function __construct(PlanRepository $planRepository)
+    public function __construct(PlanService $planService)
     {
         parent::__construct();
-        $this->repository = $planRepository;
+        $this->planService = $planService;
         $this->middleware('userCanAny:administrator:plan:full,administrator:plan:revoke')->only('revoke');
     }
 
@@ -54,12 +55,12 @@ class PlanScopeController extends WebController
      * Delete scopes
      * @param \Core\Transaction\Model\Plan $plan
      * @param \Core\User\Model\Scope $scope
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function revoke(Plan $plan, Scope $scope)
     {
-        $this->repository->deleteScope($plan->id, $scope->id);
+        $this->planService->deleteScope($plan->id, $scope->id);
 
-        return $this->message(__('Scopes revoked successfully'), 200);
+        return redirect()->back()->with('message', __('Scopes revoked successfully'));
     }
 }

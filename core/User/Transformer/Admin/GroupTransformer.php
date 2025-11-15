@@ -63,7 +63,6 @@ class GroupTransformer extends TransformerAbstract
             'links' => [
                 'index' => route('user.admin.groups.index'),
                 'store' => route('user.admin.groups.store'),
-                'show' => route('user.admin.groups.show', ['group' => $group->id]),
                 'update' => route('user.admin.groups.update', ['group' => $group->id]),
                 'destroy' => route('user.admin.groups.destroy', ['group' => $group->id]),
             ],

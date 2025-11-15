@@ -61,8 +61,8 @@ class PartnerTransformer extends TransformerAbstract
         return [
             'code' => $partner->code,
             'commission_rate' => $partner->commission_rate,
-            'created' => $partner->created_at,
-            'updated' => $partner->updated_at,
+            'created' => $this->format_date($partner->created_at),
+            'updated' => $this->format_date($partner->updated_at),
             'referral_links' => $partner->referLinks()
         ];
     }

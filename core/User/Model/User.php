@@ -38,6 +38,8 @@ class User extends Auth
 
     public $tag = "user";
 
+    public $table = "users";
+
     protected $fillable = [
         "name",
         "last_name",
@@ -58,6 +60,14 @@ class User extends Auth
         'last_connected',
     ];
 
+    /**
+     * User scopes
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<UserScope, User>
+     */
+    public function userScopes()
+    {
+        return $this->hasMany(\Core\User\Model\UserScope::class, 'user_id', 'id');
+    }
 
     /**
      * The attributes that should be cast.

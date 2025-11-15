@@ -24,82 +24,146 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Notification Button -->
         <button
             @click="dropdownOpen = !dropdownOpen"
-            class="px-2 py-1 text-gray-200 bg-purple-700 rounded-full hover:text-white relative cursor-pointer"
+            class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
         >
-            <i class="mdi mdi-bell lg:text-xl bg-secondary"></i>
-            <!-- Badge -->
+            <i class="mdi mdi-bell text-xl"></i>
 
+            <!-- Badge -->
             <span
                 v-if="unreadNotifications.length"
-                class="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full"
+                class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold leading-none text-white bg-red-500 rounded-full transform scale-100 transition-transform duration-200"
+                :class="{ 'animate-pulse': unreadNotifications.length > 0 }"
             >
-                {{ unreadNotifications.length }}
+                {{
+                    unreadNotifications.length > 99
+                        ? "99+"
+                        : unreadNotifications.length
+                }}
             </span>
         </button>
 
         <!-- Dropdown -->
-        <div
-            v-show="dropdownOpen"
-            @click.outside="dropdownOpen = false"
-            class="origin-top-right absolute right-0 mt-1 w-80 bg-white border border-gray-200 divide-y divide-gray-200 rounded-lg shadow-lg z-50"
+        <transition
+            enter-active-class="transition ease-out duration-200"
+            enter-from-class="transform opacity-0 scale-95"
+            enter-to-class="transform opacity-100 scale-100"
+            leave-active-class="transition ease-in duration-150"
+            leave-from-class="transform opacity-100 scale-100"
+            leave-to-class="transform opacity-0 scale-95"
         >
-            <!-- Header -->
-            <div class="px-2 py-2">
-                <h3 class="text-lg font-semibold">Notifications</h3>
-            </div>
-
-            <!-- Notifications List -->
-            <div class="max-h-60 overflow-y-auto">
-                <div v-if="unreadNotifications.length">
-                    <div
-                        v-for="n in unreadNotifications"
-                        :key="n.id"
-                        @click="markAsRead(n)"
-                        class="flex items-start px-4 py-3 hover:bg-gray-100 cursor-pointer"
-                    >
-                        <div class="flex-shrink-0">
-                            <div
-                                class="bg-purple-600 text-white rounded-full p-2 flex items-center justify-center"
-                            >
-                                <i class="mdi mdi-email-alert"></i>
-                            </div>
-                        </div>
-                        <div class="ml-3 flex-1">
-                            <p class="text-sm font-semibold">{{ n.title }}</p>
-                            <p class="text-xs text-gray-500">{{ n.message }}</p>
-                        </div>
-                        <div class="flex-shrink-0 text-xs text-gray-400 ml-2">
-                            <i class="mdi mdi-clock-outline mr-1"></i
-                            >{{ n.created }}
-                        </div>
-                    </div>
-                </div>
-
-                <div v-else>
-                    <div
-                        class="flex flex-col items-center justify-center py-8 text-gray-500"
-                    >
-                        <i
-                            class="mdi mdi-email-check lg:text-4xl text-green-500"
-                        ></i>
-                        <span class="mt-2 text-sm font-medium">
-                            All caught up!
+            <div
+                v-show="dropdownOpen"
+                @click.outside="dropdownOpen = false"
+                class="origin-top-right absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden"
+            >
+                <!-- Header -->
+                <div
+                    class="px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700"
+                >
+                    <div class="flex items-center justify-between">
+                        <h3
+                            class="text-lg font-semibold text-white flex items-center"
+                        >
+                            <i class="mdi mdi-bell-outline mr-2"></i>
+                            {{ __("Notifications") }}
+                        </h3>
+                        <span class="text-blue-100 text-sm font-medium">
+                            {{ unreadNotifications.length }} {{ __("unread") }}
                         </span>
                     </div>
                 </div>
-            </div>
 
-            <!-- Footer -->
-            <div class="px-4 py-2 flex justify-end">
-                <button
-                    @click="markAllAsRead"
-                    :disabled="!unreadNotifications.length"
-                    class="px-3 py-1 rounded text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                <!-- Notifications List -->
+                <div class="max-h-80 overflow-y-auto">
+                    <div v-if="unreadNotifications.length">
+                        <div
+                            v-for="n in unreadNotifications"
+                            :key="n.id"
+                            @click="markAsRead(n)"
+                            class="flex items-start p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-750 cursor-pointer transition-colors duration-150 group"
+                        >
+                            <div class="flex-shrink-0 mt-1">
+                                <div
+                                    class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                                >
+                                    <i class="mdi mdi-email-alert text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="ml-3 flex-1 min-w-0">
+                                <p
+                                    class="text-sm font-semibold text-gray-900 dark:text-white truncate"
+                                >
+                                    {{ n.title }}
+                                </p>
+                                <p
+                                    class="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2"
+                                >
+                                    {{ n.message }}
+                                </p>
+                                <div
+                                    class="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-500"
+                                >
+                                    <i class="mdi mdi-clock-outline mr-1"></i>
+                                    <span>{{ n.created }}</span>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 ml-2">
+                                <div
+                                    class="w-2 h-2 bg-blue-500 rounded-full group-hover:bg-green-500 transition-colors duration-200"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else>
+                        <div
+                            class="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-gray-500"
+                        >
+                            <div
+                                class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-3"
+                            >
+                                <i
+                                    class="mdi mdi-email-check text-2xl text-green-400"
+                                ></i>
+                            </div>
+                            <span
+                                class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                            >
+                                {{ __("All caught up!") }}
+                            </span>
+                            <span
+                                class="text-xs text-gray-400 dark:text-gray-500 mt-1"
+                            >
+                                {{ __("No new notifications") }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div
+                    v-if="unreadNotifications.length"
+                    class="px-4 py-3 bg-white dark:bg-gray-750 border-t border-gray-200 dark:border-gray-700"
                 >
-                    Mark all as read
-                </button>
+                    <div class="flex justify-between items-center">
+                        <button
+                            @click="markAllAsRead"
+                            :disabled="!unreadNotifications.length"
+                            class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                        >
+                            <i class="mdi mdi-check-all mr-1"></i>
+                            {{ __("Mark all as read") }}
+                        </button>
+                        <button
+                            @click="dropdownOpen = false"
+                            class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+                        >
+                            {{ __("Close") }}
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -127,7 +191,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    this.$notify?.error(e.response.data.message);
                 }
             }
         },
@@ -141,13 +205,11 @@ export default {
                     if (notification.link) {
                         window.open(notification.link, "_blank");
                     }
-                     $notify.success(
-                        __("Notification marked as read")
-                    );
+                    this.$notify?.success(__("Notification marked as read"));
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    this.$notify?.error(e.response.data.message);
                 }
             }
         },
@@ -160,17 +222,26 @@ export default {
                     );
                 }
                 this.getUnreadNotifications();
-                if (e?.response?.data?.message) {
-                     $notify.success(
-                        __("All notifications marked as read")
-                    );
-                }
+                this.$notify?.success(__("All notifications marked as read"));
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    this.$notify?.error(e.response.data.message);
                 }
             }
         },
     },
 };
 </script>
+
+<style scoped>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.gray-750 {
+    background-color: #374151;
+}
+</style>

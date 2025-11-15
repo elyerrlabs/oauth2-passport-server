@@ -20,13 +20,15 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="min-h-screen bg-gray-50">
+    <div
+        class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
+    >
         <!-- Header -->
         <v-header />
 
         <!-- Hero Carousel -->
         <section
-            class="relative overflow-hidden bg-gradient-to-r from-purple-900 via-purple-700 to-indigo-800"
+            class="relative overflow-hidden bg-gradient-to-r from-purple-900 via-purple-700 to-indigo-800 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900"
         >
             <div
                 class="flex carousel-transition"
@@ -51,7 +53,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         v-html="slide.short_description"
                                     ></p>
                                     <button
-                                        class="bg-white text-purple-700 font-bold py-4 px-10 rounded-xl shadow-lg hover:bg-gray-100 transform hover:-translate-y-1 transition-all duration-300 text-lg"
+                                        class="bg-white dark:bg-gray-800 text-purple-700 dark:text-purple-400 font-bold py-4 px-10 rounded-xl shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:-translate-y-1 transition-all duration-300 text-lg"
                                         @click.stop="goTo(slide?.links?.show)"
                                     >
                                         {{ __("Shop Now") }}
@@ -61,7 +63,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="md:w-1/2 flex justify-center">
                                     <div class="relative">
                                         <div
-                                            class="absolute -inset-4 bg-white/20 rounded-2xl blur-xl"
+                                            class="absolute -inset-4 bg-white/20 dark:bg-gray-800/30 rounded-2xl blur-xl"
                                         ></div>
                                         <img
                                             :src="slide.images[0].url"
@@ -79,13 +81,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Navigation Arrows -->
             <button
                 @click="prevSlide"
-                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-purple-700 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
+                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
             >
                 <i class="fas fa-chevron-left text-lg"></i>
             </button>
             <button
                 @click="nextSlide"
-                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-purple-700 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
             >
                 <i class="fas fa-chevron-right text-lg"></i>
             </button>
@@ -109,15 +111,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </section>
 
         <!-- Featured Categories Section -->
-        <section class="py-5 bg-white">
+        <section
+            class="py-5 bg-white dark:bg-gray-800 transition-colors duration-300"
+        >
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2
-                        class="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
+                        class="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                     >
                         {{ __("Featured Categories") }}
                     </h2>
-                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    <p
+                        class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto"
+                    >
                         {{ __("Discover our most popular product categories") }}
                     </p>
                 </div>
@@ -129,7 +135,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         v-for="category in featuredCategories"
                         :key="category.id"
-                        class="category-card group relative rounded-2xl overflow-hidden shadow-lg cursor-pointer transform transition-all duration-500 hover:-translate-y-2"
+                        class="category-card group relative rounded-2xl overflow-hidden shadow-lg dark:shadow-gray-900/50 cursor-pointer transform transition-all duration-500 hover:-translate-y-2"
                         @click="goTo(category.links.index)"
                     >
                         <!-- Category Image Container -->
@@ -151,7 +157,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Product Count Badge -->
                             <div
                                 v-if="category.product_count"
-                                class="absolute top-3 right-3 bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm"
+                                class="absolute top-3 right-3 bg-black/70 dark:bg-gray-900/80 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm"
                             >
                                 {{ category.product_count }} {{ __("items") }}
                             </div>
@@ -206,13 +212,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                 </div>
 
-                <!-- Information Section -->
-
                 <!-- Call to Action -->
                 <div class="text-center mt-8">
                     <button
                         @click="goTo($page.props.routes.categories_index)"
-                        class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center"
+                        class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center"
                     >
                         {{ __("View All Categories") }}
                         <i class="fas fa-arrow-right ml-2"></i>
@@ -222,25 +226,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </section>
 
         <!-- New Arrivals -->
-        <section class="py-16 bg-gradient-to-br from-gray-50 to-white">
+        <section
+            class="py-16 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300"
+        >
             <div class="container mx-auto px-4">
                 <div
                     class="flex flex-col md:flex-row justify-between items-center mb-12"
                 >
                     <div>
                         <h2
-                            class="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
+                            class="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                         >
                             {{ __("New Arrivals") }}
                         </h2>
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 dark:text-gray-400">
                             {{ __("Check out our latest products") }}
                         </p>
                     </div>
                     <a
                         href="#"
                         @click="goTo($page.props.routes.search)"
-                        class="mt-4 md:mt-0 inline-flex items-center text-purple-600 hover:text-purple-800 font-semibold text-lg group"
+                        class="mt-4 md:mt-0 inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-semibold text-lg group"
                     >
                         {{ __("View all") }}
                         <i
@@ -254,7 +260,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         v-for="(product, index) in latest_products"
                         :key="index"
-                        class="product-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer"
+                        class="product-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer border border-gray-200 dark:border-gray-700"
                         @click="goTo(product.links.show)"
                     >
                         <div class="relative overflow-hidden">
@@ -269,25 +275,29 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ __("NEW") }}
                             </div>
                             <div
-                                class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"
+                                class="absolute inset-0 bg-black/0 group-hover:bg-black/10 dark:group-hover:bg-black/20 transition-all duration-300"
                             ></div>
                         </div>
                         <div class="p-5">
                             <h3
-                                class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors"
+                                class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-gray-900 dark:text-white"
                             >
                                 {{ product.name }}
                             </h3>
-                            <p class="text-gray-500 text-sm mb-3">
+                            <p
+                                class="text-gray-500 dark:text-gray-400 text-sm mb-3"
+                            >
                                 {{ product.category.name }}
                             </p>
                             <div class="flex items-center justify-between">
-                                <span class="text-xl font-bold text-purple-600">
+                                <span
+                                    class="text-xl font-bold text-purple-600 dark:text-purple-400"
+                                >
                                     {{ product.symbol }}
                                     {{ product.format_price }}
                                 </span>
                                 <button
-                                    class="bg-purple-100 text-purple-600 p-3 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-md"
+                                    class="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 p-3 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-md"
                                     @click.stop="addToCart(product)"
                                 >
                                     <i class="fas fa-shopping-cart"></i>
@@ -300,25 +310,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </section>
 
         <!-- Best Sellers -->
-        <section class="py-16 bg-white">
+        <section
+            class="py-16 bg-white dark:bg-gray-800 transition-colors duration-300"
+        >
             <div class="container mx-auto px-4">
                 <div
                     class="flex flex-col md:flex-row justify-between items-center mb-12"
                 >
                     <div>
                         <h2
-                            class="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
+                            class="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                         >
                             {{ __("Best Sellers") }}
                         </h2>
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 dark:text-gray-400">
                             {{ __("Our most popular products") }}
                         </p>
                     </div>
                     <a
                         href="#"
                         @click="goTo($page.props.routes.search)"
-                        class="mt-4 md:mt-0 inline-flex items-center text-purple-600 hover:text-purple-800 font-semibold text-lg group"
+                        class="mt-4 md:mt-0 inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-semibold text-lg group"
                     >
                         {{ __("View all") }}
                         <i
@@ -332,7 +344,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         v-for="(product, index) in latest_seller"
                         :key="index"
-                        class="product-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer"
+                        class="product-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer border border-gray-200 dark:border-gray-700"
                         @click="goTo(product.links.show)"
                     >
                         <div class="relative overflow-hidden">
@@ -354,12 +366,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 -{{ product.discount }}%
                             </div>
                             <div
-                                class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"
+                                class="absolute inset-0 bg-black/0 group-hover:bg-black/10 dark:group-hover:bg-black/20 transition-all duration-300"
                             ></div>
                         </div>
                         <div class="p-5">
                             <h3
-                                class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors"
+                                class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-gray-900 dark:text-white"
                             >
                                 {{ product.name }}
                             </h3>
@@ -373,40 +385,40 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :key="star"
                                         class="fas fa-star text-sm"
                                         :class="{
-                                            'text-gray-300':
+                                            'text-gray-300 dark:text-gray-600':
                                                 star > product.rating,
                                         }"
                                     ></i>
                                 </div>
                                 <span
                                     v-if="product.reviews"
-                                    class="text-gray-500 text-sm"
+                                    class="text-gray-500 dark:text-gray-400 text-sm"
                                     >({{ product.reviews }})</span
                                 >
                             </div>
                             <p
                                 v-if="product.soldCount"
-                                class="text-gray-500 text-sm mb-3"
+                                class="text-gray-500 dark:text-gray-400 text-sm mb-3"
                             >
                                 {{ product.soldCount }} {{ __("sold") }}
                             </p>
                             <div class="flex items-center justify-between">
                                 <div>
                                     <span
-                                        class="text-xl font-bold text-purple-600"
+                                        class="text-xl font-bold text-purple-600 dark:text-purple-400"
                                     >
                                         {{ product.symbol }}
                                         {{ product.format_price }}</span
                                     >
                                     <span
                                         v-if="product.originalPrice"
-                                        class="text-sm text-gray-500 line-through ml-2"
+                                        class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2"
                                         >{{ product.symbol
                                         }}{{ product.originalPrice }}</span
                                     >
                                 </div>
                                 <button
-                                    class="bg-purple-100 text-purple-600 p-3 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-md"
+                                    class="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 p-3 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-md"
                                     @click.stop="addToCart(product)"
                                 >
                                     <i class="fas fa-shopping-cart"></i>
@@ -420,14 +432,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Featured Products Section -->
         <section
-            class="py-16 bg-gradient-to-br from-purple-50 to-indigo-50 relative overflow-hidden"
+            class="py-16 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-900 dark:to-purple-900/20 relative overflow-hidden transition-colors duration-300"
         >
             <!-- Background Decoration -->
             <div
-                class="absolute top-0 right-0 w-64 h-64 bg-purple-200 rounded-full -translate-y-32 translate-x-32 opacity-20"
+                class="absolute top-0 right-0 w-64 h-64 bg-purple-200 dark:bg-purple-800/30 rounded-full -translate-y-32 translate-x-32 opacity-20"
             ></div>
             <div
-                class="absolute bottom-0 left-0 w-48 h-48 bg-indigo-200 rounded-full translate-y-24 -translate-x-24 opacity-30"
+                class="absolute bottom-0 left-0 w-48 h-48 bg-indigo-200 dark:bg-indigo-800/30 rounded-full translate-y-24 -translate-x-24 opacity-30"
             ></div>
 
             <div class="container mx-auto px-4 relative z-10">
@@ -440,24 +452,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="flex items-center justify-center md:justify-start mb-3"
                         >
                             <div
-                                class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-2 rounded-lg mr-3"
+                                class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white p-2 rounded-lg mr-3"
                             >
                                 <i class="fas fa-crown text-lg"></i>
                             </div>
                             <h2
-                                class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
+                                class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                             >
                                 {{ __("Featured Products") }}
                             </h2>
                         </div>
-                        <p class="text-gray-600 text-lg">
+                        <p class="text-gray-600 dark:text-gray-400 text-lg">
                             {{ __("Handpicked premium items just for you") }}
                         </p>
                     </div>
                     <a
                         href="#"
                         @click="goTo($page.props.routes.search)"
-                        class="mt-4 md:mt-0 inline-flex items-center bg-white text-purple-600 hover:text-purple-800 font-semibold text-lg group py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+                        class="mt-4 md:mt-0 inline-flex items-center bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-semibold text-lg group py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
                     >
                         {{ __("View All Featured") }}
                         <i
@@ -473,7 +485,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         v-for="product in featuredProducts"
                         :key="product.id"
-                        class="product-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer border-2 border-transparent hover:border-purple-200 relative"
+                        class="product-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer border-2 border-transparent hover:border-purple-200 dark:hover:border-purple-600 relative"
                         @click="goTo(product.links.show)"
                     >
                         <!-- Premium Featured Badge -->
@@ -501,7 +513,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <!-- Exclusive Ribbon -->
                             <div
-                                class="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-b-lg shadow-md z-20"
+                                class="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white text-xs font-bold px-4 py-1 rounded-b-lg shadow-md z-20"
                             >
                                 {{ __("EXCLUSIVE") }}
                             </div>
@@ -516,7 +528,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="absolute bottom-3 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20"
                             >
                                 <button
-                                    class="bg-white text-purple-600 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-50 transition-colors text-sm"
+                                    class="bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors text-sm"
                                 >
                                     {{ __("Quick View") }}
                                 </button>
@@ -527,13 +539,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="p-5 relative">
                             <!-- Featured Product Label -->
                             <div
-                                class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full"
+                                class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full"
                             >
                                 {{ __("FEATURED") }}
                             </div>
 
                             <h3
-                                class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors text-center mt-2"
+                                class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-center mt-2 text-gray-900 dark:text-white"
                             >
                                 {{ product.name }}
                             </h3>
@@ -549,153 +561,66 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :key="star"
                                         class="fas fa-star text-sm"
                                         :class="{
-                                            'text-gray-300':
+                                            'text-gray-300 dark:text-gray-600':
                                                 star > product.rating,
                                         }"
                                     ></i>
                                 </div>
-                                <span class="text-gray-500 text-sm"
+                                <span
+                                    class="text-gray-500 dark:text-gray-400 text-sm"
                                     >({{ product.reviews }})</span
                                 >
                             </div>
-
-                            <!-- Popularity Indicator 
-                            <div
-                                v-if="product.popularity"
-                                class="flex justify-center mb-3"
-                            >
-                                <span
-                                    class="bg-green-100 text-green-600 text-xs font-semibold px-2 py-1 rounded-full"
-                                >
-                                    <i class="fas fa-fire mr-1"></i>
-                                    {{ __("Trending") }}
-                                </span>
-                            </div>-->
 
                             <!-- Price and Add to Cart -->
                             <div class="flex items-center justify-between">
                                 <div class="text-center flex-1">
                                     <span
-                                        class="text-xl font-bold text-purple-600 block"
+                                        class="text-xl font-bold text-purple-600 dark:text-purple-400 block"
                                     >
                                         {{ product.symbol
                                         }}{{ product.format_price }}
                                     </span>
                                     <span
                                         v-if="product.originalPrice"
-                                        class="text-sm text-gray-500 line-through"
+                                        class="text-sm text-gray-500 dark:text-gray-400 line-through"
                                     >
                                         {{ product.symbol
                                         }}{{ product.originalPrice }}
                                     </span>
                                 </div>
                                 <button
-                                    class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white cursor-pointer p-3 rounded-full hover:shadow-lg transition-all duration-300 transform group-hover:scale-110 shadow-md"
+                                    class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white cursor-pointer p-3 rounded-full hover:shadow-lg transition-all duration-300 transform group-hover:scale-110 shadow-md"
                                     @click="goTo(product.links.show)"
                                 >
                                     <i class="fas fa-shopping-cart"></i>
                                 </button>
                             </div>
-
-                            <!-- Additional Features 
-                            <div
-                                class="flex justify-between items-center mt-3 pt-3 border-t border-gray-100"
-                            >
-                                <div
-                                    class="flex items-center text-green-600 text-sm"
-                                >
-                                    <i class="fas fa-shipping-fast mr-1"></i>
-                                    <span>{{ __("Free Shipping") }}</span>
-                                </div>
-                                <div
-                                    class="flex items-center text-blue-600 text-sm"
-                                >
-                                    <i class="fas fa-shield-alt mr-1"></i>
-                                    <span>{{ __("Warranty") }}</span>
-                                </div>
-                            </div>-->
                         </div>
 
                         <!-- Corner Accent -->
                         <div
-                            class="absolute top-0 right-0 w-6 h-6 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-bl-2xl"
+                            class="absolute top-0 right-0 w-6 h-6 bg-gradient-to-br from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 rounded-bl-2xl"
                         ></div>
                     </div>
                 </div>
-
-                <!-- Quality Assurance Banner
-                <div
-                    class="mt-12 bg-white rounded-2xl shadow-lg p-6 border border-purple-200"
-                >
-                    <div
-                        class="flex flex-col md:flex-row items-center justify-between"
-                    >
-                        <div class="flex items-center mb-4 md:mb-0">
-                            <div
-                                class="bg-green-100 text-green-600 p-3 rounded-full mr-4"
-                            >
-                                <i class="fas fa-check-circle text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg text-gray-800">
-                                    {{ __("Quality Guaranteed") }}
-                                </h3>
-                                <p class="text-gray-600">
-                                    {{
-                                        __(
-                                            "All featured products undergo strict quality checks"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex space-x-4">
-                            <div class="text-center">
-                                <div
-                                    class="bg-purple-100 text-purple-600 p-2 rounded-lg mb-1"
-                                >
-                                    <i class="fas fa-award"></i>
-                                </div>
-                                <span class="text-xs text-gray-600">{{
-                                    __("Premium Quality")
-                                }}</span>
-                            </div>
-                            <div class="text-center">
-                                <div
-                                    class="bg-blue-100 text-blue-600 p-2 rounded-lg mb-1"
-                                >
-                                    <i class="fas fa-truck"></i>
-                                </div>
-                                <span class="text-xs text-gray-600">{{
-                                    __("Fast Delivery")
-                                }}</span>
-                            </div>
-                            <div class="text-center">
-                                <div
-                                    class="bg-green-100 text-green-600 p-2 rounded-lg mb-1"
-                                >
-                                    <i class="fas fa-headset"></i>
-                                </div>
-                                <span class="text-xs text-gray-600">{{
-                                    __("24/7 Support")
-                                }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </section>
 
         <!-- Random Products -->
-        <section class="py-16 bg-gradient-to-br from-gray-50 to-white">
+        <section
+            class="py-16 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300"
+        >
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2
-                        class="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
+                        class="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                     >
                         {{ __("You Might Also Like") }}
                     </h2>
-                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    <p
+                        class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto"
+                    >
                         {{ __("Discover products tailored to your interests") }}
                     </p>
                 </div>
@@ -705,7 +630,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         v-for="product in randomProducts"
                         :key="product.id"
-                        class="product-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer"
+                        class="product-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer border border-gray-200 dark:border-gray-700"
                         @click="goTo(product.links.show)"
                     >
                         <div class="relative overflow-hidden">
@@ -721,16 +646,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 -{{ product.discount }}%
                             </div>
                             <div
-                                class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"
+                                class="absolute inset-0 bg-black/0 group-hover:bg-black/10 dark:group-hover:bg-black/20 transition-all duration-300"
                             ></div>
                         </div>
                         <div class="p-5">
                             <h3
-                                class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors"
+                                class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-gray-900 dark:text-white"
                             >
                                 {{ product.name }}
                             </h3>
-                            <p class="text-gray-500 text-sm mb-3">
+                            <p
+                                class="text-gray-500 dark:text-gray-400 text-sm mb-3"
+                            >
                                 {{ product.category.name }}
                             </p>
                             <div
@@ -743,32 +670,33 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         :key="star"
                                         class="fas fa-star text-sm"
                                         :class="{
-                                            'text-gray-300':
+                                            'text-gray-300 dark:text-gray-600':
                                                 star > product.rating,
                                         }"
                                     ></i>
                                 </div>
-                                <span class="text-gray-500 text-sm"
+                                <span
+                                    class="text-gray-500 dark:text-gray-400 text-sm"
                                     >({{ product.reviews }})</span
                                 >
                             </div>
                             <div class="flex items-center justify-between">
                                 <div>
                                     <span
-                                        class="text-xl font-bold text-purple-600"
+                                        class="text-xl font-bold text-purple-600 dark:text-purple-400"
                                     >
                                         {{ product.symbol }}
                                         {{ product.format_price }}
                                     </span>
                                     <span
                                         v-if="product.originalPrice"
-                                        class="text-sm text-gray-500 line-through ml-2"
+                                        class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2"
                                         >{{ product.symbol
                                         }}{{ product.originalPrice }}</span
                                     >
                                 </div>
                                 <button
-                                    class="bg-purple-100 text-purple-600 p-3 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-md"
+                                    class="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 p-3 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-md"
                                     @click.stop="addToCart(product)"
                                 >
                                     <i class="fas fa-shopping-cart"></i>
@@ -780,7 +708,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="text-center mt-12">
                     <button
                         @click="goTo($page.props.routes.search)"
-                        class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 text-lg"
+                        class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 text-lg"
                     >
                         {{ __("Load More Products") }}
                         <i class="fas fa-arrow-right ml-2"></i>
@@ -791,7 +719,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Call to Action -->
         <section
-            class="py-20 bg-gradient-to-r from-purple-900 via-purple-800 to-indigo-900 text-white relative overflow-hidden"
+            class="py-20 bg-gradient-to-r from-purple-900 via-purple-800 to-indigo-900 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 text-white relative overflow-hidden"
         >
             <div class="absolute inset-0 opacity-10">
                 <div
@@ -816,7 +744,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </p>
                 <button
                     @click="goTo($page.props.routes.search)"
-                    class="bg-white text-purple-700 font-bold py-4 px-12 rounded-xl shadow-2xl hover:bg-gray-100 transform hover:-translate-y-1 transition-all duration-300 text-lg inline-flex items-center"
+                    class="bg-white dark:bg-gray-800 text-purple-700 dark:text-purple-400 font-bold py-4 px-12 rounded-xl shadow-2xl hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:-translate-y-1 transition-all duration-300 text-lg inline-flex items-center"
                 >
                     {{ __("Browse All Products") }}
                     <i class="fas fa-arrow-right ml-3"></i>

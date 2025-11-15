@@ -22,52 +22,53 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-layout>
         <template #aside>
-            <ul class="sidebar-menu space-y-1">
-                <li v-for="(item, index) in menus" :key="index">
-                    <a
-                        @click="open(item)"
-                        class=""
-                        :class="[
-                            'menu-item flex items-center px-4 py-3 cursor-pointer transition-colors',
-                            isActive(item)
-                                ? 'menu-item-active bg-primary-50 text-primary-600 border-r-2 border-primary-600'
-                                : 'text-gray-700 hover:bg-gray-100',
-                        ]"
-                    >
-                        <div
-                            class="menu-icon w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center text-white mr-3"
+            <div
+                class="sidebar-container p-4 bg-white dark:bg-gray-900 min-h-full"
+            >
+                <div class="sidebar-header mb-6">
+                    <h2 class="text-lg font-bold text-gray-800 dark:text-white">
+                        {{ __("Navigation") }}
+                    </h2>
+                </div>
+
+                <ul class="sidebar-menu space-y-2">
+                    <li v-for="(item, index) in menus" :key="index">
+                        <a
+                            @click="open(item)"
+                            class="group"
+                            :class="[
+                                'menu-item flex items-center px-4 py-3 cursor-pointer transition-all duration-300 rounded-xl border',
+                                isActive(item)
+                                    ? 'bg-blue-500 text-white shadow-lg border-blue-600 transform scale-105'
+                                    : 'text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-md',
+                            ]"
                         >
-                            <i
-                                :class="item.icon"
-                                class="mdi text-blue-600 text-2xl"
-                            ></i>
-                        </div>
-
-                        <span class="menu-text flex-1 font-medium">
-                            {{ __(item.name) }}
-                        </span>
-
-                        <div v-if="isActive(item)" class="ml-2">
-                            <svg
-                                class="w-5 h-5 text-primary-500"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                            <div
+                                class="menu-icon w-10 h-10 rounded-xl flex items-center justify-center mr-3 transition-all duration-300"
+                                :class="
+                                    isActive(item)
+                                        ? 'bg-white/20 text-white'
+                                        : 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white'
+                                "
                             >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 5l7 7-7 7"
-                                ></path>
-                            </svg>
-                        </div>
-                    </a>
-                    <div
-                        class="menu-separator border-t border-gray-100 my-1"
-                    ></div>
-                </li>
-            </ul>
+                                <i :class="item.icon" class="mdi text-lg"></i>
+                            </div>
+
+                            <span
+                                class="menu-text flex-1 font-semibold text-sm"
+                            >
+                                {{ __(item.name) }}
+                            </span>
+
+                            <div v-if="isActive(item)" class="ml-2">
+                                <div
+                                    class="w-2 h-2 bg-white rounded-full"
+                                ></div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </template>
         <template #main>
             <slot />
@@ -75,32 +76,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-layout>
 </template>
 
-<script>
+<script setup>
 import VLayout from "@/components/VLayout.vue";
+import { router, usePage } from "@inertiajs/vue3";
+import { ref, onMounted } from "vue";
 
-export default {
-    components: {
-        VLayout,
-    },
-    data() {
-        return {
-            errors: {},
-            menus: [],
-        };
-    },
+const menus = ref([]);
+const page = usePage();
 
-    created() {
-        this.menus = this.$page.props.admin_routes;
-    },
+onMounted(() => {
+    menus.value = page.props.admin_routes;
+});
 
-    methods: {
-        open(item) {
-            window.location.href = item.route;
-        },
+const open = (item) => {
+    window.location.href = item.route;
+};
 
-        isActive(item) {
-            return item.route == window.location.href;
-        },
-    },
+const isActive = (item) => {
+    return item.route == `${window.location.origin}${window.location.pathname}`;
 };
 </script>

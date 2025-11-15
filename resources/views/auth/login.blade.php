@@ -6,12 +6,6 @@
 
 @push('css')
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
         .gradient-bg {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
@@ -78,12 +72,12 @@
 @endpush
 
 @section('content')
-    <div class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <div class="gradient-bg min-h-screen flex items-center justify-center p-1 lg:p-4">
 
         <div class="w-full max-w-4xl bg-white rounded-2xl overflow-hidden card-shadow flex flex-col md:flex-row">
             <!-- Panel de Login -->
-            <div class="w-full md:w-1/2 p-8">
-                <div class="text-center mb-8">
+            <div class="w-full md:w-1/2 p-2 lg:p-8">
+                <div class="text-center p-2 lg:mb-8">
                     <h1 class="text-3xl font-bold text-gray-800">
                         <i class="mdi mdi-lock text-indigo-600 mr-2"></i>
                         {{ __(config('app.name', 'Oauth2 Server')) }}
@@ -93,7 +87,7 @@
 
                 {{-- Demo Mode Card --}}
                 @if (config('system.demo.enabled'))
-                    <div class="mb-6 p-4 rounded-xl bg-yellow-50 border border-yellow-300 shadow-sm text-sm text-yellow-800">
+                    <div class="mb-6 p-2 lg:p-4 rounded-xl bg-yellow-50 border border-yellow-300 shadow-sm text-sm text-yellow-800">
                         <div class="flex items-center mb-2">
                             <i class="mdi mdi-monitor-eye text-yellow-600 text-xl mr-2"></i>
                             <span class="font-semibold">{{ __('Demo Mode Active') }}</span>
@@ -194,7 +188,7 @@
                 </form>
             </div>
 
-            <div class="info-card w-full md:w-1/2 text-white p-8 flex flex-col justify-center">
+            <div class="info-card   w-full md:w-1/2 text-white p-2 lg:p-8 hidden lg:flex flex-col justify-center">
                 <h2 class="text-2xl font-bold mb-6">{{ __('Authorization Server') }}</h2>
 
                 <div class="space-y-6">

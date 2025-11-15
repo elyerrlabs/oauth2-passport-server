@@ -23,36 +23,54 @@ namespace Core\User\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\User\Services\GroupService;
+use Core\User\Transformer\Admin\RoleTransformer;
+use Core\User\Services\RoleService;
+use Core\User\Transformer\Admin\ServiceTransformer;
 use Inertia\Inertia;
 use Core\User\Model\Service;
 use Illuminate\Http\Request;
+use Core\User\Services\ServiceService;
 use App\Http\Controllers\WebController;
-use Core\User\Repositories\ServiceRepository;
 use Core\User\Http\Requests\ServiceStoreRequest;
 use Core\User\Http\Requests\ServiceUpdateRequest;
+use Core\User\Transformer\Admin\GroupTransformer;
 
 class ServiceController extends WebController
 {
     /**
      * Repository
-     * @var ServiceRepository
+     * @var  ServiceService
      */
-    public $repository;
+    private $serviceService;
 
     /**
-     * Construct
-     * @param \Core\User\Repositories\ServiceRepository $serviceRepository
+     * Group service
+     * @var GroupService
      */
-    public function __construct(ServiceRepository $serviceRepository)
+    private $groupService;
+
+    /**
+     * Role Service
+     * @var RoleService
+     */
+    private $roleService;
+
+    /**
+     * Service scope
+     * @param \Core\User\Services\ServiceService $serviceService
+     */
+    public function __construct(ServiceService $serviceService, GroupService $groupService, RoleService $roleService)
     {
         parent::__construct();
-        $this->repository = $serviceRepository;
+        $this->serviceService = $serviceService;
+        $this->groupService = $groupService;
+        $this->roleService = $roleService;
         $this->middleware('userCanAny:administrator:service:full,administrator:service:view')->only('index');
         $this->middleware('userCanAny:administrator:service:full,administrator:service:show')->only('show');
         $this->middleware('userCanAny:administrator:service:full,administrator:service:create')->only('store');
         $this->middleware('userCanAny:administrator:service:full,administrator:service:update')->only('update');
         $this->middleware('userCanAny:administrator:service:full,administrator:service:destroy')->only('destroy');
-        $this->middleware('wants.json')->only('show');
     }
 
     /**
@@ -62,59 +80,63 @@ class ServiceController extends WebController
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-            return $this->repository->search($request);
-        }
+        $page = $request->filled('per_page') ? $request->per_page : 15;
+
+        $data = $this->serviceService->search($request)->paginate($page);
+
+        // Disable request for groups
+        $request->merge([
+            'disabled_request' => true
+        ]);
+
+        // Additional data
+        $groups = $this->groupService->search($request)->paginate(100);
+        $roles = $this->roleService->search($request)->paginate(100);
 
         // Render vue component
         return Inertia::render("Core/User/Admin/Service/Index", [
-            'route' => [
-                'services' => route("user.admin.services.index"),
-                'groups' => route("user.admin.groups.index"),
-                'roles' => route("user.admin.roles.index")
-            ],
+            'data' => fractal($data, ServiceTransformer::class)->toArray(),
+            'groups' => fractal($groups, GroupTransformer::class)->toArray(),
+            'roles' => fractal($roles, RoleTransformer::class)->toArray(),
+            'route' => route("user.admin.services.index"),
             'admin_routes' => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);
     }
 
     /**
-     * Create resource
+     * Create new resource
      * @param \Core\User\Http\Requests\ServiceStoreRequest $request
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(ServiceStoreRequest $request)
     {
-        return $this->repository->create($request->toArray());
-    }
+        $this->serviceService->create($request->toArray());
 
-    /**
-     * Show details
-     * @param \Core\User\Model\Service $service
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function show(Service $service)
-    {
-        return $this->repository->details($service->id);
+        return redirect()->route('user.admin.services.index');
     }
 
     /**
      * Update resource
      * @param \Core\User\Http\Requests\ServiceUpdateRequest $request
      * @param \Core\User\Model\Service $service
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ServiceUpdateRequest $request, Service $service)
     {
-        return $this->repository->update($service->id, $request->toArray());
+        $this->serviceService->update($service->id, $request->toArray());
+
+        return redirect()->route('user.admin.services.index');
     }
 
     /**
-     * Destroy specific resource
+     * Destroy resource
      * @param \Core\User\Model\Service $service
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Service $service)
     {
-        return $this->repository->delete($service->id);
+        $this->serviceService->delete($service->id);
+
+        return redirect()->route('user.admin.services.index');
     }
 }

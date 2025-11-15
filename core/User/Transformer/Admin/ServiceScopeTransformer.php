@@ -64,18 +64,6 @@ class ServiceScopeTransformer extends TransformerAbstract
             'gsr_id' => $data->getGsrID(),
             'api_key' => $data->api_key,
             'web' => $data->web,
-            'service' => [
-                'id' => $data->service->id,
-                'name' => $data->service->name,
-                'slug' => $data->service->slug,
-                'description' => $data->service->description,
-                'system' => $data->service->system ? true : false,
-                'group' => [
-                    'id' => $data->service->group->id,
-                    'name' => $data->service->group->name,
-                    'description' => $data->service->group->description,
-                ]
-            ],
             'role' => [
                 'id' => $data->role->id,
                 'name' => $data->role->name,

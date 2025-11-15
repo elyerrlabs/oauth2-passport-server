@@ -25,6 +25,8 @@ namespace Core\User\Http\Controllers\Web;
  */
 
 
+use Core\User\Services\UserService;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Http\Controllers\WebController;
 use Core\User\Repositories\UserRepository;
@@ -35,18 +37,18 @@ class UserController extends WebController
 {
     /**
      * User repository
-     * @var UserRepository
+     * @var UserService
      */
-    public $repository;
+    public $userService;
 
     /**
      * Construct
-     * @param \Core\User\Repositories\UserRepository $userRepository
+     * @param \Core\User\Services\UserService $userService
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserService $userService)
     {
         parent::__construct();
-        $this->repository = $userRepository;
+        $this->userService = $userService;
     }
 
     /**
@@ -57,17 +59,19 @@ class UserController extends WebController
     {
         return Inertia::render("Core/User/Web/Information", [
             'route' => route('user.update'),
-        ])->rootView('system');
+        ]);
     }
 
     /**
      * Update personal information for the user
      * @param \Core\User\Http\Requests\UserPersonalUpdateRequest $request
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function personalInformation(UserPersonalUpdateRequest $request)
     {
-        return $this->repository->updatePersonalInformation($request->toArray());
+        $this->userService->update(auth()->user()->id, $request->toArray());
+
+        return redirect()->back();
     }
 
     /**
@@ -76,17 +80,18 @@ class UserController extends WebController
      */
     public function formToChangePassword()
     {
-        return Inertia::render("Core/User/Web/Password")->rootView('system');
+        return Inertia::render("Core/User/Web/Password");
     }
 
     /**
      * Change password
      * @param \Core\User\Http\Requests\UserPersonalPasswordRequest $request
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function changePassword(UserPersonalPasswordRequest $request)
     {
-        return $this->repository->updatePersonalPassword($request->toArray());
+        $this->userService->updatePassword(auth()->user()->id, $request->toArray());
 
+        return redirect()->back();
     }
 }

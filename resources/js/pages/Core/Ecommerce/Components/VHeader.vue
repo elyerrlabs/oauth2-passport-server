@@ -21,7 +21,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header
+        class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50 transition-colors duration-300"
+    >
         <div class="container-fluid mx-auto px-4 py-1">
             <div class="flex items-center justify-between">
                 <!-- Logo and Mobile Menu -->
@@ -29,7 +31,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Logo -->
                     <a
                         :href="$page.props.routes.dashboard"
-                        class="lg:text-2xl font-bold text-primary-700 flex items-center"
+                        class="lg:text-2xl font-bold text-primary-700 dark:text-purple-400 flex items-center"
                     >
                         <i class="fas fa-store mr-2"></i
                         >{{ $page.props.app_name }}
@@ -41,6 +43,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Right side icons -->
                 <div class="flex items-center xs:space-x-2 md:space-x-4">
+                    <v-theme />
                     <!-- Notifications -->
                     <v-notification />
 
@@ -52,7 +55,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Mobile Menu Button -->
                     <button
-                        class="px-2 py-1 not-odd: text-gray-200 bg-purple-700 rounded-full hover:text-white relative cursor-pointer md:hidden"
+                        class="px-2 py-1 text-gray-200 bg-purple-700 dark:bg-purple-600 rounded-full hover:text-white hover:bg-purple-800 dark:hover:bg-purple-700 relative cursor-pointer md:hidden transition-colors duration-300"
                         @click="mobileMenuOpen = !mobileMenuOpen"
                     >
                         <i class="fas fa-bars text-lg"></i>
@@ -64,19 +67,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
     <!-- Mobile menu -->
     <div
-        class="fixed inset-0 z-51 bg-white flex flex-col md:hidden mobile-menu"
+        class="fixed inset-0 z-51 bg-white dark:bg-gray-800 flex flex-col md:hidden mobile-menu transition-colors duration-300"
         :class="{ open: mobileMenuOpen }"
     >
         <div
-            class="flex items-center justify-between p-4 border-b border-gray-200"
+            class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
         >
             <a
                 href="#"
-                class="md:text-xl font-bold text-primary-700 flex items-center"
+                class="md:text-xl font-bold text-primary-700 dark:text-purple-400 flex items-center"
             >
                 <i class="fas fa-store mr-2"></i>{{ $page.props.app_name }}
             </a>
-            <button class="p-2 text-gray-600" @click="mobileMenuOpen = false">
+            <button
+                class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+                @click="mobileMenuOpen = false"
+            >
                 <i class="fas fa-times text-lg"></i>
             </button>
         </div>
@@ -85,53 +91,65 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="px-4 space-y-2">
                 <a
                     href="#"
-                    class="block py-3 px-4 rounded-lg bg-primary-50 text-primary-700 font-medium"
+                    class="block py-3 px-4 rounded-lg bg-primary-50 dark:bg-purple-900/30 text-primary-700 dark:text-purple-400 font-medium transition-colors"
                 >
                     <i class="fas fa-th-large mr-3"></i> Categories
                 </a>
                 <v-categories />
             </div>
 
-            <div class="border-t border-gray-200 my-4"></div>
+            <div
+                class="border-t border-gray-200 dark:border-gray-700 my-4"
+            ></div>
 
             <!-- User menu options moved here for mobile -->
             <div class="px-4 space-y-2">
                 <a
                     :href="$page.props.auth_routes.dashboard"
-                    class="block py-3 px-4 rounded-lg hover:bg-gray-100"
+                    class="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
                 >
-                    <i class="fas fa-user-circle mr-3 text-primary-600"></i>
+                    <i
+                        class="fas fa-user-circle mr-3 text-primary-600 dark:text-purple-400"
+                    ></i>
                     {{ __("My Profile") }}
                 </a>
                 <a
                     :href="$page.props.ecommerce_orders.route"
-                    class="block py-3 px-4 rounded-lg hover:bg-gray-100"
+                    class="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
                 >
-                    <i class="fas fa-shopping-bag mr-3 text-primary-600"></i>
+                    <i
+                        class="fas fa-shopping-bag mr-3 text-primary-600 dark:text-purple-400"
+                    ></i>
                     {{ __("My Orders") }}
                 </a>
                 <a
                     :href="$page.props.ecommerce_checkout.route"
-                    class="block py-3 px-4 rounded-lg hover:bg-gray-100"
+                    class="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
                 >
-                    <i class="fas fa-heart mr-3 text-primary-600"></i>
+                    <i
+                        class="fas fa-heart mr-3 text-primary-600 dark:text-purple-400"
+                    ></i>
                     {{ __("Checkout") }}
                 </a>
                 <a
                     :href="$page.props.auth_routes.dashboard"
-                    class="block py-3 px-4 rounded-lg hover:bg-gray-100"
+                    class="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
                 >
-                    <i class="fas fa-cog mr-3 text-primary-600"></i>
+                    <i
+                        class="fas fa-cog mr-3 text-primary-600 dark:text-purple-400"
+                    ></i>
                     {{ __("Settings") }}
                 </a>
             </div>
 
-            <div class="border-t border-gray-200 my-4"></div>
+            <div
+                class="border-t border-gray-200 dark:border-gray-700 my-4"
+            ></div>
 
             <div class="px-4">
                 <a
                     :href="$page.props.auth_routes.logout"
-                    class="block py-3 px-4 rounded-lg hover:bg-gray-100 text-red-600"
+                    class="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 dark:text-red-400 transition-colors"
                 >
                     <i class="fas fa-sign-out-alt mr-3"></i> {{ __("Logout") }}
                 </a>
@@ -141,7 +159,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
     <!-- Mobile menu overlay -->
     <div
-        class="fixed inset-0 bg-black bg-opacity-50 z-30 mobile-overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-30 mobile-overlay transition-opacity duration-300"
         :class="{ open: mobileMenuOpen }"
         @click="mobileMenuOpen = false"
     ></div>
@@ -153,6 +171,7 @@ import VCart from "./VCart.vue";
 import VProfile from "@/components/VProfile.vue";
 import VSearch from "./VSearch.vue";
 import VCategories from "./VCategories.vue";
+import VTheme from "@/components/VTheme.vue";
 
 export default {
     components: {
@@ -161,6 +180,7 @@ export default {
         VProfile,
         VSearch,
         VCategories,
+        VTheme
     },
 
     data() {
@@ -272,5 +292,3 @@ export default {
     display: block;
 }
 </style>
-
-<!DOCTYPE html>

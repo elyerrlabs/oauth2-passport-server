@@ -22,15 +22,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-admin-layout>
         <div
-            class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 py-6 px-4 sm:px-6 lg:px-8"
+            class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-gray-800 py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300"
         >
             <div class="max-w-7xl mx-auto">
                 <!-- Header Section -->
                 <div
-                    class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-8"
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-8 transition-colors duration-300"
                 >
                     <div
-                        class="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-8"
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 px-6 py-8"
                     >
                         <div
                             class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
@@ -39,7 +39,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="flex items-center space-x-4 mb-4 sm:mb-0"
                             >
                                 <div
-                                    class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm"
+                                    class="w-16 h-16 bg-white/20 dark:bg-black/20 rounded-2xl flex items-center justify-center backdrop-blur-sm"
                                 >
                                     <i
                                         class="fas fa-shopping-bag text-white text-2xl"
@@ -53,7 +53,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             __("Orders Successfully Processed")
                                         }}
                                     </h1>
-                                    <p class="text-blue-100 mt-1">
+                                    <p
+                                        class="text-blue-100 dark:text-blue-200 mt-1"
+                                    >
                                         {{
                                             __(
                                                 "Manage and track all your customer orders"
@@ -66,7 +68,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 v-if="orders.length > 0"
                                 @click="getCheckouts"
                                 :disabled="loading"
-                                class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 backdrop-blur-sm border border-white/30"
+                                class="px-4 py-2 bg-white/20 dark:bg-black/20 hover:bg-white/30 dark:hover:bg-black/30 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 backdrop-blur-sm border border-white/30 dark:border-white/20"
                             >
                                 <i
                                     class="fas fa-sync-alt"
@@ -83,18 +85,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Empty State -->
                 <div
                     v-if="orders.length === 0 && !loading"
-                    class="bg-white rounded-2xl shadow-lg border border-gray-200 p-12 text-center"
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-12 text-center transition-colors duration-300"
                 >
                     <div class="max-w-md mx-auto">
                         <div
-                            class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6"
+                            class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-3xl flex items-center justify-center mx-auto mb-6"
                         >
-                            <i class="fas fa-inbox text-gray-400 text-4xl"></i>
+                            <i
+                                class="fas fa-inbox text-gray-400 dark:text-gray-500 text-4xl"
+                            ></i>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">
+                        <h3
+                            class="text-xl font-bold text-gray-900 dark:text-white mb-2"
+                        >
                             {{ __("No Orders Yet") }}
                         </h3>
-                        <p class="text-gray-600 mb-6">
+                        <p class="text-gray-600 dark:text-gray-400 mb-6">
                             {{
                                 __(
                                     "Your orders will appear here once customers start purchasing your products"
@@ -103,7 +109,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </p>
                         <a
                             href="#"
-                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl"
                         >
                             <i class="fas fa-store mr-2"></i>
                             {{ __("View Products") }}
@@ -116,92 +122,100 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Stats Overview -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                         <div
-                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300"
                         >
                             <div class="flex items-center">
                                 <div
-                                    class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4"
+                                    class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4"
                                 >
                                     <i
-                                        class="fas fa-shopping-bag text-blue-600 text-lg"
+                                        class="fas fa-shopping-bag text-blue-600 dark:text-blue-500 text-lg"
                                     ></i>
                                 </div>
                                 <div>
                                     <p
-                                        class="text-sm font-medium text-gray-600"
+                                        class="text-sm font-medium text-gray-600 dark:text-gray-400"
                                     >
                                         {{ __("Total Orders") }}
                                     </p>
-                                    <p class="text-2xl font-bold text-gray-900">
+                                    <p
+                                        class="text-2xl font-bold text-gray-900 dark:text-white"
+                                    >
                                         {{ orders.length }}
                                     </p>
                                 </div>
                             </div>
                         </div>
                         <div
-                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300"
                         >
                             <div class="flex items-center">
                                 <div
-                                    class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4"
+                                    class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mr-4"
                                 >
                                     <i
-                                        class="fas fa-check-circle text-green-600 text-lg"
+                                        class="fas fa-check-circle text-green-600 dark:text-green-500 text-lg"
                                     ></i>
                                 </div>
                                 <div>
                                     <p
-                                        class="text-sm font-medium text-gray-600"
+                                        class="text-sm font-medium text-gray-600 dark:text-gray-400"
                                     >
                                         {{ __("Completed") }}
                                     </p>
-                                    <p class="text-2xl font-bold text-gray-900">
+                                    <p
+                                        class="text-2xl font-bold text-gray-900 dark:text-white"
+                                    >
                                         {{ completedOrdersCount }}
                                     </p>
                                 </div>
                             </div>
                         </div>
                         <div
-                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300"
                         >
                             <div class="flex items-center">
                                 <div
-                                    class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4"
+                                    class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mr-4"
                                 >
                                     <i
-                                        class="fas fa-clock text-yellow-600 text-lg"
+                                        class="fas fa-clock text-yellow-600 dark:text-yellow-500 text-lg"
                                     ></i>
                                 </div>
                                 <div>
                                     <p
-                                        class="text-sm font-medium text-gray-600"
+                                        class="text-sm font-medium text-gray-600 dark:text-gray-400"
                                     >
                                         {{ __("Pending") }}
                                     </p>
-                                    <p class="text-2xl font-bold text-gray-900">
+                                    <p
+                                        class="text-2xl font-bold text-gray-900 dark:text-white"
+                                    >
                                         {{ pendingOrdersCount }}
                                     </p>
                                 </div>
                             </div>
                         </div>
                         <div
-                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300"
                         >
                             <div class="flex items-center">
                                 <div
-                                    class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4"
+                                    class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4"
                                 >
                                     <i
-                                        class="fas fa-times-circle text-red-600 text-lg"
+                                        class="fas fa-times-circle text-red-600 dark:text-red-500 text-lg"
                                     ></i>
                                 </div>
                                 <div>
                                     <p
-                                        class="text-sm font-medium text-gray-600"
+                                        class="text-sm font-medium text-gray-600 dark:text-gray-400"
                                     >
                                         {{ __("Failed") }}
                                     </p>
-                                    <p class="text-2xl font-bold text-gray-900">
+                                    <p
+                                        class="text-2xl font-bold text-gray-900 dark:text-white"
+                                    >
                                         {{ failedOrdersCount }}
                                     </p>
                                 </div>
@@ -209,14 +223,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                     </div>
 
+                    <!-- Per Page Selector -->
                     <div
-                        class="flex items-center justify-end mb-5 p-4 space-x-2 bg-white rounded-xl px-3 py-2 border border-gray-300 shadow-sm"
+                        class="flex items-center justify-end mb-5 p-4 space-x-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-300 dark:border-gray-600 shadow-sm transition-colors duration-300"
                     >
-                        <i class="fas fa-list-ol text-gray-400"></i>
+                        <i
+                            class="fas fa-list-ol text-gray-400 dark:text-gray-500"
+                        ></i>
                         <select
                             v-model="search.per_page"
                             @change="getCheckouts"
-                            class="border-0 focus:ring-0 text-gray-700 font-medium bg-transparent"
+                            class="border-0 focus:ring-0 text-gray-700 dark:text-gray-300 font-medium bg-transparent dark:bg-gray-800"
                         >
                             <option value="5">5 {{ __("per page") }}</option>
                             <option value="10">10 {{ __("per page") }}</option>
@@ -228,25 +245,26 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </option>
                         </select>
                     </div>
+
                     <!-- Orders List -->
                     <div class="space-y-4">
                         <div
                             v-for="order in orders"
                             :key="order.id"
-                            class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl"
+                            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl dark:hover:shadow-2xl transition-colors duration-300"
                         >
                             <!-- Order Header -->
                             <div
-                                class="p-6 cursor-pointer border-b border-gray-100"
+                                class="p-6 cursor-pointer border-b border-gray-100 dark:border-gray-700 transition-colors duration-300"
                                 @click="toggleOrder(order.id)"
                             >
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-4">
                                         <div
-                                            class="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center"
+                                            class="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center"
                                         >
                                             <span
-                                                class="text-blue-600 font-bold text-lg"
+                                                class="text-blue-600 dark:text-blue-500 font-bold text-lg"
                                                 >{{
                                                     orderNumberIcon(order.code)
                                                 }}</span
@@ -254,17 +272,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                         <div>
                                             <h3
-                                                class="font-semibold text-gray-900"
+                                                class="font-semibold text-gray-900 dark:text-white"
                                             >
                                                 {{ __("Order") }} #{{
                                                     order.code
                                                 }}
                                             </h3>
                                             <p
-                                                class="text-sm text-gray-600 flex items-center mt-1"
+                                                class="text-sm text-gray-600 dark:text-gray-400 flex items-center mt-1"
                                             >
                                                 <i
-                                                    class="fas fa-calendar-alt mr-2 text-blue-500"
+                                                    class="fas fa-calendar-alt mr-2 text-blue-500 dark:text-blue-400"
                                                 ></i>
                                                 {{ order.created_at }}
                                             </p>
@@ -285,14 +303,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 }}
                                             </span>
                                             <p
-                                                class="text-lg font-bold text-gray-900 mt-1"
+                                                class="text-lg font-bold text-gray-900 dark:text-white mt-1"
                                             >
                                                 {{ order.transaction.total }}
                                                 {{ order.transaction.currency }}
                                             </p>
                                         </div>
                                         <i
-                                            class="fas fa-chevron-down text-gray-400 transition-transform duration-300"
+                                            class="fas fa-chevron-down text-gray-400 dark:text-gray-500 transition-transform duration-300"
                                             :class="{
                                                 'rotate-180':
                                                     expandedOrders[order.id],
@@ -305,7 +323,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Order Details -->
                             <div
                                 v-if="expandedOrders[order.id]"
-                                class="p-6 bg-gray-50/50"
+                                class="p-6 bg-gray-50/50 dark:bg-gray-700/50 transition-colors duration-300"
                             >
                                 <div class="space-y-6">
                                     <!-- Transaction and Delivery Info -->
@@ -314,14 +332,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     >
                                         <!-- Transaction Details -->
                                         <div
-                                            class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                                            class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300"
                                         >
                                             <div class="flex items-center mb-4">
                                                 <i
-                                                    class="fas fa-receipt text-blue-500 mr-3"
+                                                    class="fas fa-receipt text-blue-500 dark:text-blue-400 mr-3"
                                                 ></i>
                                                 <h4
-                                                    class="font-semibold text-gray-900"
+                                                    class="font-semibold text-gray-900 dark:text-white"
                                                 >
                                                     {{
                                                         __(
@@ -335,7 +353,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     class="flex justify-between items-center"
                                                 >
                                                     <span
-                                                        class="text-sm text-gray-600"
+                                                        class="text-sm text-gray-600 dark:text-gray-400"
                                                         >{{
                                                             __("Status")
                                                         }}</span
@@ -362,13 +380,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     class="flex justify-between items-center"
                                                 >
                                                     <span
-                                                        class="text-sm text-gray-600"
+                                                        class="text-sm text-gray-600 dark:text-gray-400"
                                                         >{{
                                                             __("Payment Method")
                                                         }}</span
                                                     >
                                                     <span
-                                                        class="text-sm font-medium text-gray-900"
+                                                        class="text-sm font-medium text-gray-900 dark:text-white"
                                                         >{{
                                                             order.transaction
                                                                 .payment_method
@@ -379,13 +397,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     class="flex justify-between items-center"
                                                 >
                                                     <span
-                                                        class="text-sm text-gray-600"
+                                                        class="text-sm text-gray-600 dark:text-gray-400"
                                                         >{{
                                                             __("Total Amount")
                                                         }}</span
                                                     >
                                                     <span
-                                                        class="text-lg font-bold text-green-600"
+                                                        class="text-lg font-bold text-green-600 dark:text-green-500"
                                                     >
                                                         {{
                                                             order.transaction
@@ -405,7 +423,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     class="flex justify-between items-center"
                                                 >
                                                     <span
-                                                        class="text-sm text-gray-600"
+                                                        class="text-sm text-gray-600 dark:text-gray-400"
                                                         >{{
                                                             __("Payment Intent")
                                                         }}</span
@@ -414,7 +432,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         class="flex items-center space-x-2"
                                                     >
                                                         <code
-                                                            class="text-xs bg-gray-100 px-2 py-1 rounded"
+                                                            class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-gray-800 dark:text-gray-300"
                                                         >
                                                             {{
                                                                 order
@@ -431,7 +449,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     'Payment Intent ID'
                                                                 )
                                                             "
-                                                            class="text-gray-500 hover:text-blue-600 transition-colors"
+                                                            class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                                                             title="Copy Payment Intent ID"
                                                         >
                                                             <i
@@ -447,7 +465,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     class="flex justify-between items-center"
                                                 >
                                                     <span
-                                                        class="text-sm text-gray-600"
+                                                        class="text-sm text-gray-600 dark:text-gray-400"
                                                         >{{
                                                             __(
                                                                 "Transaction Code"
@@ -458,7 +476,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         class="flex items-center space-x-2"
                                                     >
                                                         <code
-                                                            class="text-xs bg-gray-100 px-2 py-1 rounded"
+                                                            class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-gray-800 dark:text-gray-300"
                                                         >
                                                             {{
                                                                 order
@@ -475,7 +493,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                     'Transaction Code'
                                                                 )
                                                             "
-                                                            class="text-gray-500 hover:text-blue-600 transition-colors"
+                                                            class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                                                             title="Copy Transaction Code"
                                                         >
                                                             <i
@@ -489,21 +507,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                         <!-- Delivery Address -->
                                         <div
-                                            class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                                            class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300"
                                         >
                                             <div class="flex items-center mb-4">
                                                 <i
-                                                    class="fas fa-truck text-green-500 mr-3"
+                                                    class="fas fa-truck text-green-500 dark:text-green-400 mr-3"
                                                 ></i>
                                                 <h4
-                                                    class="font-semibold text-gray-900"
+                                                    class="font-semibold text-gray-900 dark:text-white"
                                                 >
                                                     {{ __("Delivery Address") }}
                                                 </h4>
                                             </div>
                                             <div class="space-y-2">
                                                 <p
-                                                    class="font-medium text-gray-900"
+                                                    class="font-medium text-gray-900 dark:text-white"
                                                 >
                                                     {{
                                                         order.delivery_address
@@ -511,7 +529,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     }}
                                                 </p>
                                                 <p
-                                                    class="text-sm text-gray-600"
+                                                    class="text-sm text-gray-600 dark:text-gray-400"
                                                 >
                                                     {{
                                                         order.delivery_address
@@ -519,7 +537,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     }}
                                                 </p>
                                                 <p
-                                                    class="text-sm text-gray-600"
+                                                    class="text-sm text-gray-600 dark:text-gray-400"
                                                 >
                                                     {{
                                                         order.delivery_address
@@ -531,7 +549,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     }}
                                                 </p>
                                                 <p
-                                                    class="text-sm text-gray-600"
+                                                    class="text-sm text-gray-600 dark:text-gray-400"
                                                 >
                                                     {{
                                                         order.delivery_address
@@ -542,7 +560,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     class="flex items-center justify-between mt-3"
                                                 >
                                                     <div
-                                                        class="flex items-center text-sm text-gray-600"
+                                                        class="flex items-center text-sm text-gray-600 dark:text-gray-400"
                                                     >
                                                         <i
                                                             class="fas fa-phone mr-2"
@@ -565,7 +583,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                                 .whatsapp
                                                         "
                                                         target="_blank"
-                                                        class="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-colors"
+                                                        class="w-8 h-8 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-full flex items-center justify-center transition-colors"
                                                     >
                                                         <i
                                                             class="fab fa-whatsapp text-sm"
@@ -578,23 +596,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                     <!-- Order Items -->
                                     <div
-                                        class="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                                        class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300"
                                     >
                                         <div
                                             class="flex items-center justify-between mb-6"
                                         >
                                             <div class="flex items-center">
                                                 <i
-                                                    class="fas fa-boxes text-purple-500 mr-3"
+                                                    class="fas fa-boxes text-purple-500 dark:text-purple-400 mr-3"
                                                 ></i>
                                                 <h4
-                                                    class="font-semibold text-gray-900"
+                                                    class="font-semibold text-gray-900 dark:text-white"
                                                 >
                                                     {{ __("Order Items") }}
                                                 </h4>
                                             </div>
                                             <span
-                                                class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium"
+                                                class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1 rounded-full text-sm font-medium"
                                             >
                                                 {{ order.orders.length }}
                                                 {{ __("items") }}
@@ -606,7 +624,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             <div
                                                 v-for="item in order.orders"
                                                 :key="item.id"
-                                                class="flex items-center space-x-4 p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+                                                class="flex items-center space-x-4 p-4 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 transition-colors duration-300"
                                             >
                                                 <img
                                                     v-if="
@@ -623,21 +641,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 />
                                                 <div
                                                     v-else
-                                                    class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"
+                                                    class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0"
                                                 >
                                                     <i
-                                                        class="fas fa-image text-gray-400 text-xl"
+                                                        class="fas fa-image text-gray-400 dark:text-gray-500 text-xl"
                                                     ></i>
                                                 </div>
                                                 <div class="flex-1 min-w-0">
                                                     <p
-                                                        class="text-base font-semibold text-gray-900 truncate"
+                                                        class="text-base font-semibold text-gray-900 dark:text-white truncate"
                                                     >
                                                         {{ item.meta.name }}
                                                     </p>
                                                     <p
                                                         v-if="item.meta.variant"
-                                                        class="text-sm text-gray-600 mt-1"
+                                                        class="text-sm text-gray-600 dark:text-gray-400 mt-1"
                                                     >
                                                         <strong
                                                             >{{
@@ -653,7 +671,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         class="flex items-center space-x-4 mt-2"
                                                     >
                                                         <p
-                                                            class="text-sm text-gray-600"
+                                                            class="text-sm text-gray-600 dark:text-gray-400"
                                                         >
                                                             <strong
                                                                 >{{
@@ -663,7 +681,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                             {{ item.quantity }}
                                                         </p>
                                                         <p
-                                                            class="text-sm text-gray-600"
+                                                            class="text-sm text-gray-600 dark:text-gray-400"
                                                         >
                                                             <strong
                                                                 >{{
@@ -682,7 +700,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     class="text-right flex-shrink-0"
                                                 >
                                                     <p
-                                                        class="text-lg font-bold text-green-600"
+                                                        class="text-lg font-bold text-green-600 dark:text-green-500"
                                                     >
                                                         {{
                                                             calculateItemTotal(
@@ -691,7 +709,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         }}
                                                     </p>
                                                     <p
-                                                        class="text-xs text-gray-500 mt-1"
+                                                        class="text-xs text-gray-500 dark:text-gray-400 mt-1"
                                                     >
                                                         {{ __("Total") }}
                                                     </p>
@@ -703,13 +721,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                 <!-- Action Buttons -->
                                 <div
-                                    class="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-200"
+                                    class="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-600 transition-colors duration-300"
                                 >
                                     <a
                                         v-if="order.transaction.payment_url"
                                         :href="order.transaction.payment_url"
                                         target="_blank"
-                                        class="px-4 py-2 bg-blue-500 cursor-pointer hover:bg-blue-600 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                                        class="px-4 py-2 bg-blue-500 cursor-pointer hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
                                     >
                                         <i class="fas fa-receipt"></i>
                                         <span>{{ __("View Receipt") }}</span>
@@ -717,7 +735,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                     <button
                                         @click="copyOrderId(order.code)"
-                                        class="px-4 py-2 bg-gray-500 cursor-pointer hover:bg-gray-600 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                                        class="px-4 py-2 bg-gray-500 cursor-pointer hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
                                     >
                                         <i class="fas fa-copy"></i>
                                         <span>{{ __("Copy Order ID") }}</span>
@@ -731,7 +749,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 'Transaction Code'
                                             )
                                         "
-                                        class="px-4 py-2 bg-purple-500 cursor-pointer hover:bg-purple-600 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                                        class="px-4 py-2 bg-purple-500 cursor-pointer hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
                                     >
                                         <i class="fas fa-copy"></i>
                                         <span>{{
@@ -760,16 +778,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <div class="text-center">
                         <div
-                            class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                            class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
                         >
                             <i
-                                class="fas fa-spinner fa-spin text-blue-600 text-2xl"
+                                class="fas fa-spinner fa-spin text-blue-600 dark:text-blue-500 text-2xl"
                             ></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                        <h3
+                            class="text-lg font-semibold text-gray-900 dark:text-white mb-2"
+                        >
                             {{ __("Loading Orders") }}
                         </h3>
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 dark:text-gray-400">
                             {{ __("Please wait while we fetch your orders") }}
                         </p>
                     </div>
@@ -858,7 +878,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
+                    this.$notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -903,43 +923,46 @@ export default {
                 "px-3 py-1 rounded-full text-xs font-semibold capitalize";
             const statusClasses = {
                 successful:
-                    "bg-green-100 text-green-800 border border-green-200",
+                    "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700",
                 completed:
-                    "bg-green-100 text-green-800 border border-green-200",
+                    "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700",
                 pending:
-                    "bg-yellow-100 text-yellow-800 border border-yellow-200",
+                    "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700",
                 processing:
-                    "bg-yellow-100 text-yellow-800 border border-yellow-200",
-                failed: "bg-red-100 text-red-800 border border-red-200",
-                cancelled: "bg-red-100 text-red-800 border border-red-200",
+                    "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700",
+                failed: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700",
+                cancelled:
+                    "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700",
             };
             return `${baseClasses} ${
                 statusClasses[status] ||
-                "bg-gray-100 text-gray-800 border border-gray-200"
+                "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
             }`;
         },
 
         getStatusTextClass(status) {
             const baseClasses = "font-semibold capitalize";
             const statusClasses = {
-                successful: "text-green-600",
-                completed: "text-green-600",
-                pending: "text-yellow-600",
-                processing: "text-yellow-600",
-                failed: "text-red-600",
-                cancelled: "text-red-600",
+                successful: "text-green-600 dark:text-green-400",
+                completed: "text-green-600 dark:text-green-400",
+                pending: "text-yellow-600 dark:text-yellow-400",
+                processing: "text-yellow-600 dark:text-yellow-400",
+                failed: "text-red-600 dark:text-red-400",
+                cancelled: "text-red-600 dark:text-red-400",
             };
-            return `${baseClasses} ${statusClasses[status] || "text-gray-600"}`;
+            return `${baseClasses} ${
+                statusClasses[status] || "text-gray-600 dark:text-gray-400"
+            }`;
         },
 
         copyOrderId(orderCode) {
             navigator.clipboard.writeText(orderCode);
-            $notify.success(__("Order ID copied to clipboard"));
+            this.$notify.success(__("Order ID copied to clipboard"));
         },
 
         copyToClipboard(text, label = "Text") {
             navigator.clipboard.writeText(text);
-            $notify.success(`${label} ${__("copied to clipboard")}`);
+            this.$notify.success(`${label} ${__("copied to clipboard")}`);
         },
     },
 };

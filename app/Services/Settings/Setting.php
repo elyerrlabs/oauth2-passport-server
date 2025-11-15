@@ -291,8 +291,7 @@ class Setting
         settingLoad('system.disable_create_user_by_command', false);
         settingLoad('system.destroy_user_after', 30);
         settingLoad('system.code_2fa_email_expires', 5);
-        settingLoad('system.csp_enabled', false);
-        settingLoad('system.redirect_to', "/account");
+        settingLoad('system.csp_enabled', false); 
         settingLoad('system.privacy_url', null);
         settingLoad('system.terms_url', null);
         settingLoad('system.policy_cookies', null);

@@ -24,26 +24,33 @@ namespace Core\User\Http\Controllers\Admin;
  */
 
 
+use Core\User\Services\GroupService;
+use Core\User\Transformer\Admin\GroupTransformer;
+use Elyerr\ApiResponse\Assets\JsonResponser;
 use Inertia\Inertia;
 use Core\User\Model\Group;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\User\Repositories\GroupRepository;
 use Core\User\Http\Requests\GroupStoreRequest;
 
 class GroupController extends WebController
 {
+    use JsonResponser;
 
     /**
      * Repository
-     * @var GroupRepository
+     * @var GroupService
      */
-    public $repository;
+    public $groupService;
 
-    public function __construct(GroupRepository $groupRepository)
+    /**
+     * Construct
+     * @param  GroupService $groupService
+     */
+    public function __construct(GroupService $groupService)
     {
         parent::__construct();
-        $this->repository = $groupRepository;
+        $this->groupService = $groupService;
         $this->middleware('userCanAny:administrator:group:full,administrator:group:view')->only('index');
         $this->middleware('userCanAny:administrator:group:full,administrator:group:show')->only('show');
         $this->middleware('userCanAny:administrator:group:full,administrator:group:create')->only('store');
@@ -51,7 +58,6 @@ class GroupController extends WebController
         $this->middleware('userCanAny:administrator:group:full,administrator:group:destroy')->only('destroy');
         $this->middleware('userCanAny:administrator:group:full,administrator:group:enable')->only('enable');
         $this->middleware('userCanAny:administrator:group:full,administrator:group:disable')->only('disable');
-        $this->middleware('wants.json')->only('show');
     }
 
     /**
@@ -61,13 +67,14 @@ class GroupController extends WebController
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-            return $this->repository->search($request);
-        }
+        $page = $request->filled('par_page') ? $request->per_page : 15;
+
+        $data = $this->groupService->search($request)->paginate($page);
 
         return Inertia::render(
             "Core/User/Admin/Groups/Index",
             [
+                "data" => fractal($data, GroupTransformer::class)->toArray(),
                 "route" => route('user.admin.groups.index'),
                 'admin_routes' => resolveInertiaRoutes(config('menus.admin_routes'))
             ]
@@ -81,24 +88,16 @@ class GroupController extends WebController
      */
     public function store(GroupStoreRequest $request)
     {
-        return $this->repository->create($request->toArray());
-    }
+        $this->groupService->create($request->toArray());
 
-    /**
-     * show resource
-     * @param \Core\User\Model\Group $group
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function show(Group $group)
-    {
-        return $this->repository->detail($group->id);
+        return redirect()->route('user.admin.groups.index');
     }
 
     /**
      * Update resource
      * @param \Illuminate\Http\Request $request
      * @param \Core\User\Model\Group $group
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Group $group)
     {
@@ -106,16 +105,20 @@ class GroupController extends WebController
             'description' => ['nullable', 'max:200'],
         ]);
 
-        return $this->repository->update($group->id, $request->toArray());
+        $this->groupService->update($group->id, $request->toArray());
+
+        return redirect()->route('user.admin.groups.index');
     }
 
     /**
-     * Destroy resource
+     *  Destroy resource
      * @param \Core\User\Model\Group $group
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Group $group)
     {
-        return $this->repository->delete($group->id);
+        $this->groupService->delete($group->id);
+
+        return redirect()->route('user.admin.groups.index');
     }
 }

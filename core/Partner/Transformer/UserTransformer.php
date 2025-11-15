@@ -66,7 +66,7 @@ class UserTransformer extends TransformerAbstract
             'country' => $user->country,
             'phone' => $user->phone,
             'commission_rate' => $user->partner ? $user->partner->commission_rate : 0,
-            'code' => $user->partner->code,
+            'code' => $user->partner->code ?? null,
             'links' => [
                 'update' => route('partner.admin.partner.update', ['user' => $user->id])
             ]

@@ -37,6 +37,22 @@ return [
      */
     "merge" => [
 
+        "api" => [
+            "transactions" => [
+                'billing_period' => 'api.transaction.payments.billing-period',
+                'currencies' => 'api.transaction.payments.currencies',
+                'methods' => 'api.transaction.payments.methods',
+                'statuses' => 'api.transaction.payments.status',
+                'types' => 'api.transaction.payments.types',
+                'refund_statuses' => 'api.transaction.refund.status',
+                'services_list' => 'api.transaction.services.list',
+                //  'users_refund_index' => 'api.transaction.users.refund.index',
+                //  'users_refund_store' => 'api.transaction.users.refund.store',
+                //  'admin_refund_index' => 'api.transaction.admin.refund.index',
+                //  'admin_refund_update' => 'api.transaction.admin.refund.update',
+            ],
+        ],
+
         "admin_dashboard" => [
 
             "transactions" => [

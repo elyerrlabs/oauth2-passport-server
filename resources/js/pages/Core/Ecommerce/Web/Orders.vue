@@ -20,7 +20,7 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
         <!-- Header -->
         <VHeader />
 
@@ -56,19 +56,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             >
                 <div class="max-w-md mx-auto">
                     <div
-                        class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+                        class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700"
                     >
                         <div
-                            class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6"
+                            class="w-20 h-20 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
                         >
                             <i
-                                class="fas fa-shopping-cart text-3xl text-purple-600"
+                                class="fas fa-shopping-cart text-3xl text-purple-600 dark:text-purple-400"
                             ></i>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
+                        <h3
+                            class="text-xl font-bold text-gray-900 dark:text-white mb-3"
+                        >
                             {{ __("Your cart is empty") }}
                         </h3>
-                        <p class="text-gray-600 text-sm mb-6">
+                        <p
+                            class="text-gray-600 dark:text-gray-400 text-sm mb-6"
+                        >
                             {{
                                 __(
                                     "Looks like you haven't added any items to your cart yet"
@@ -95,23 +99,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="lg:w-2/3 space-y-4">
                     <!-- Cart Header -->
                     <div
-                        class="bg-white rounded-xl p-4 shadow-sm border border-gray-200"
+                        class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700"
                     >
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <span
-                                    class="text-lg font-semibold text-gray-900"
+                                    class="text-lg font-semibold text-gray-900 dark:text-white"
                                 >
                                     {{ __("Cart Items") }}
                                 </span>
                                 <span
-                                    class="ml-3 bg-purple-100 text-purple-600 text-sm font-medium px-2 py-1 rounded-full"
+                                    class="ml-3 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-sm font-medium px-2 py-1 rounded-full"
                                 >
                                     {{ orders.length }} {{ __("items") }}
                                 </span>
                             </div>
                             <div
-                                class="flex items-center text-sm text-gray-600"
+                                class="flex items-center text-sm text-gray-600 dark:text-gray-400"
                             >
                                 <i
                                     class="fas fa-info-circle mr-2 text-purple-500"
@@ -126,7 +130,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             v-for="item in orders"
                             :key="item.id"
-                            class="cart-item bg-white rounded-xl p-4 flex items-start gap-4 shadow-sm border border-gray-200 hover:border-purple-200 transition-all duration-300 hover:shadow-md"
+                            class="cart-item bg-white dark:bg-gray-800 rounded-xl p-4 flex items-start gap-4 shadow-sm border border-gray-200 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-600 transition-all duration-300 hover:shadow-md dark:hover:shadow-gray-900/50 hover:-translate-y-0.5"
                         >
                             <!-- Checkbox -->
                             <div class="flex items-start pt-1">
@@ -134,14 +138,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     type="checkbox"
                                     v-model="selected_products"
                                     :value="item"
-                                    class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                                    class="w-4 h-4 text-purple-600 border-gray-300 dark:border-gray-600 rounded focus:ring-purple-500 dark:bg-gray-700"
                                 />
                             </div>
 
                             <!-- Product Image -->
                             <div class="flex-shrink-0">
                                 <div
-                                    class="w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200"
+                                    class="w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
                                 >
                                     <img
                                         :src="item?.images[0]?.url"
@@ -158,12 +162,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 >
                                     <div class="flex-grow">
                                         <h4
-                                            class="font-semibold text-gray-900 text-sm md:text-base leading-tight mb-1"
+                                            class="font-semibold text-gray-900 dark:text-white text-sm md:text-base leading-tight mb-1"
                                         >
                                             {{ item?.meta?.name }}
                                         </h4>
                                         <p
-                                            class="text-gray-500 text-xs md:text-sm mb-2 line-clamp-2"
+                                            class="text-gray-500 dark:text-gray-400 text-xs md:text-sm mb-2 line-clamp-2"
                                         >
                                             <span
                                                 v-html="
@@ -176,7 +180,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <!-- Variant Info -->
                                         <div
                                             v-if="item?.meta?.variant"
-                                            class="flex items-center text-xs text-gray-600 mb-2"
+                                            class="flex items-center text-xs text-gray-600 dark:text-gray-400 mb-2"
                                         >
                                             <i
                                                 class="fas fa-cube mr-1 text-purple-500"
@@ -189,7 +193,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             class="sm:hidden flex items-center justify-between mt-2"
                                         >
                                             <span
-                                                class="text-lg font-bold text-purple-600"
+                                                class="text-lg font-bold text-purple-600 dark:text-purple-400"
                                             >
                                                 {{ item.currency }}
                                                 {{ item.format_price }}
@@ -200,7 +204,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         item?.links?.delete
                                                     )
                                                 "
-                                                class="text-red-500 hover:text-red-700 text-xs flex items-center transition-colors"
+                                                class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-xs flex items-center transition-colors"
                                             >
                                                 <i
                                                     class="fas fa-trash-alt mr-1"
@@ -215,7 +219,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="hidden sm:flex flex-col items-end space-y-2"
                                     >
                                         <span
-                                            class="text-lg font-bold text-purple-600"
+                                            class="text-lg font-bold text-purple-600 dark:text-purple-400"
                                         >
                                             {{ item.currency }}
                                             {{ item.format_price }}
@@ -226,7 +230,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             class="flex items-center space-x-3"
                                         >
                                             <div
-                                                class="flex items-center border border-gray-300 rounded-lg bg-white"
+                                                class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700"
                                             >
                                                 <button
                                                     @click="
@@ -239,7 +243,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         'w-8 h-8 flex items-center justify-center transition-colors',
                                                         item.quantity <= 1
                                                             ? 'text-gray-400 cursor-not-allowed'
-                                                            : 'text-gray-600 hover:bg-gray-100 hover:text-purple-600',
+                                                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-purple-600 dark:hover:text-purple-400',
                                                     ]"
                                                 >
                                                     <i
@@ -247,7 +251,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     ></i>
                                                 </button>
                                                 <span
-                                                    class="w-8 text-center font-medium text-sm"
+                                                    class="w-8 text-center font-medium text-sm text-gray-900 dark:text-white"
                                                 >
                                                     {{ item.quantity }}
                                                 </span>
@@ -255,7 +259,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     @click="
                                                         increaseQuantity(item)
                                                     "
-                                                    class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 hover:text-purple-600 transition-colors"
+                                                    class="w-8 h-8 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
                                                 >
                                                     <i
                                                         class="fas fa-plus text-xs"
@@ -268,7 +272,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         item?.links?.delete
                                                     )
                                                 "
-                                                class="text-red-500 hover:text-red-700 text-sm flex items-center transition-colors ml-2"
+                                                class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm flex items-center transition-colors ml-2"
                                             >
                                                 <i
                                                     class="fas fa-trash-alt mr-1"
@@ -278,11 +282,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                         <!-- Item Total -->
                                         <div
-                                            class="text-right text-sm text-gray-600"
+                                            class="text-right text-sm text-gray-600 dark:text-gray-400"
                                         >
                                             {{ __("Total") }}:
                                             <span
-                                                class="font-semibold text-purple-600"
+                                                class="font-semibold text-purple-600 dark:text-purple-400"
                                             >
                                                 {{ item.currency }}
                                                 {{
@@ -299,12 +303,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                 <!-- Mobile Controls -->
                                 <div
-                                    class="sm:hidden flex items-center justify-between mt-3 pt-3 border-t border-gray-200"
+                                    class="sm:hidden flex items-center justify-between mt-3 pt-3 border-t border-gray-200 dark:border-gray-600"
                                 >
                                     <!-- Quantity Controls -->
                                     <div class="flex items-center space-x-3">
                                         <div
-                                            class="flex items-center border border-gray-300 rounded-lg bg-white"
+                                            class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700"
                                         >
                                             <button
                                                 @click="decreaseQuantity(item)"
@@ -313,31 +317,33 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     'w-7 h-7 flex items-center justify-center text-xs',
                                                     item.quantity <= 1
                                                         ? 'text-gray-400 cursor-not-allowed'
-                                                        : 'text-gray-600 hover:bg-gray-100',
+                                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600',
                                                 ]"
                                             >
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                             <span
-                                                class="w-6 text-center font-medium text-sm"
+                                                class="w-6 text-center font-medium text-sm text-gray-900 dark:text-white"
                                             >
                                                 {{ item.quantity }}
                                             </span>
                                             <button
                                                 @click="increaseQuantity(item)"
-                                                class="w-7 h-7 flex items-center justify-center text-gray-600 hover:bg-gray-100 text-xs"
+                                                class="w-7 h-7 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 text-xs"
                                             >
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </div>
-                                        <span class="text-sm text-gray-600">
+                                        <span
+                                            class="text-sm text-gray-600 dark:text-gray-400"
+                                        >
                                             {{ __("Qty") }}
                                         </span>
                                     </div>
 
                                     <!-- Item Total -->
                                     <span
-                                        class="text-sm font-semibold text-purple-600"
+                                        class="text-sm font-semibold text-purple-600 dark:text-purple-400"
                                     >
                                         {{ item.currency }}
                                         {{
@@ -355,7 +361,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Continue Shopping -->
                     <a
                         :href="$page.props.routes.search"
-                        class="inline-flex items-center justify-center w-full bg-white text-purple-600 hover:text-purple-700 border border-purple-600 hover:border-purple-700 font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-md"
+                        class="inline-flex items-center justify-center w-full bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 border border-purple-600 dark:border-purple-500 hover:border-purple-700 dark:hover:border-purple-400 font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-md"
                     >
                         <i class="fas fa-arrow-left mr-3"></i>
                         {{ __("Continue Shopping") }}
@@ -369,13 +375,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Delivery Address -->
                     <div v-if="orders.length > 0" class="w-full">
                         <div
-                            class="bg-white rounded-xl shadow-lg p-5 border border-gray-200"
+                            class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 border border-gray-200 dark:border-gray-700"
                         >
                             <h3
-                                class="text-lg font-bold mb-4 flex items-center"
+                                class="text-lg font-bold mb-4 flex items-center text-gray-900 dark:text-white"
                             >
                                 <i
-                                    class="fas fa-map-marker-alt mr-2 text-purple-600"
+                                    class="fas fa-map-marker-alt mr-2 text-purple-600 dark:text-purple-400"
                                 ></i>
                                 {{ __("Delivery Address") }}
                             </h3>
@@ -386,42 +392,56 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Order Summary -->
                     <div
-                        class="bg-white rounded-xl shadow-lg p-5 border border-gray-200 sticky top-6"
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 border border-gray-200 dark:border-gray-700 sticky top-6"
                     >
-                        <h3 class="text-lg font-bold mb-4 flex items-center">
-                            <i class="fas fa-receipt mr-2 text-purple-600"></i>
+                        <h3
+                            class="text-lg font-bold mb-4 flex items-center text-gray-900 dark:text-white"
+                        >
+                            <i
+                                class="fas fa-receipt mr-2 text-purple-600 dark:text-purple-400"
+                            ></i>
                             {{ __("Order Summary") }}
                         </h3>
 
                         <!-- Order Details -->
                         <div class="space-y-3 mb-4">
                             <div class="flex justify-between items-center">
-                                <span class="text-gray-600 text-sm">
+                                <span
+                                    class="text-gray-600 dark:text-gray-400 text-sm"
+                                >
                                     {{ __("Items") }} ({{ cartCount }})
                                 </span>
-                                <span class="font-semibold text-sm">
+                                <span
+                                    class="font-semibold text-sm text-gray-900 dark:text-white"
+                                >
                                     {{ orders[0]?.currency }} {{ subtotal }}
                                 </span>
                             </div>
 
                             <div class="flex justify-between items-center">
-                                <span class="text-gray-600 text-sm">
+                                <span
+                                    class="text-gray-600 dark:text-gray-400 text-sm"
+                                >
                                     {{ __("Shipping") }}
                                 </span>
                                 <span
-                                    class="text-green-600 text-sm font-semibold"
+                                    class="text-green-600 dark:text-green-400 text-sm font-semibold"
                                 >
                                     {{ __("Free") }}
                                 </span>
                             </div>
 
-                            <div class="border-t border-gray-200 pt-3">
+                            <div
+                                class="border-t border-gray-200 dark:border-gray-600 pt-3"
+                            >
                                 <div class="flex justify-between items-center">
-                                    <span class="text-gray-900 font-bold">
+                                    <span
+                                        class="text-gray-900 dark:text-white font-bold"
+                                    >
                                         {{ __("Total") }}
                                     </span>
                                     <span
-                                        class="text-xl font-bold text-purple-600"
+                                        class="text-xl font-bold text-purple-600 dark:text-purple-400"
                                     >
                                         {{ orders[0]?.currency }} {{ total }}
                                     </span>
@@ -432,7 +452,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Payment Method -->
                         <div class="mb-4">
                             <label
-                                class="block text-sm font-medium text-gray-700 mb-2"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                             >
                                 {{ __("Payment Method") }}
                             </label>
@@ -450,7 +470,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :class="[
                                 'w-full py-3 rounded-xl font-bold text-base flex items-center justify-center shadow-lg transition-all duration-200',
                                 selected_products.length === 0 || disabled
-                                    ? 'bg-gray-400 cursor-not-allowed text-white'
+                                    ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed text-white'
                                     : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white transform hover:-translate-y-0.5 hover:shadow-xl',
                             ]"
                         >
@@ -465,10 +485,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <!-- Security Notice -->
                         <div
-                            class="text-center text-xs text-gray-500 flex items-center justify-center mt-3"
+                            class="text-center text-xs text-gray-500 dark:text-gray-400 flex items-center justify-center mt-3"
                         >
                             <i
-                                class="fas fa-shield-alt mr-2 text-green-500"
+                                class="fas fa-shield-alt mr-2 text-green-500 dark:text-green-400"
                             ></i>
                             {{ __("Secure checkout • SSL encrypted") }}
                         </div>
@@ -476,7 +496,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Help Text -->
                         <div
                             v-if="selected_products.length === 0"
-                            class="text-center text-xs text-amber-600 bg-amber-50 p-2 rounded-lg mt-3"
+                            class="text-center text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 p-2 rounded-lg mt-3"
                         >
                             <i class="fas fa-exclamation-circle mr-1"></i>
                             {{
@@ -657,62 +677,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.cart-header {
-    background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
-}
-
-.cart-item {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.cart-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: #c4b5fd;
-}
-
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Smooth animations */
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
-
-/* Custom scrollbar for cart items */
-.cart-items-container {
-    scrollbar-width: thin;
-    scrollbar-color: #c4b5fd #f1f5f9;
-}
-
-.cart-items-container::-webkit-scrollbar {
-    width: 6px;
-}
-
-.cart-items-container::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 3px;
-}
-
-.cart-items-container::-webkit-scrollbar-thumb {
-    background: #c4b5fd;
-    border-radius: 3px;
-}
-
-.cart-items-container::-webkit-scrollbar-thumb:hover {
-    background: #a78bfa;
-}
-</style>

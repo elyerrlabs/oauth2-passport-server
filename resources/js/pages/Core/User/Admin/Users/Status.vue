@@ -25,16 +25,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <button
             @click="open"
             :class="[
-                'bg-transparent border rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
+                'relative group w-12 h-12 border rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-900',
                 item.disabled
-                    ? 'border-green-600 text-green-600 hover:bg-green-50 focus:ring-green-500'
-                    : 'border-red-600 text-red-600 hover:bg-red-50 focus:ring-red-500',
+                    ? 'border-green-600 dark:border-green-400 text-green-600 dark:text-green-400 hover:bg-green-600 dark:hover:bg-green-500 hover:text-white focus:ring-green-200 dark:focus:ring-green-800'
+                    : 'border-red-600 dark:border-red-400 text-red-600 dark:text-red-400 hover:bg-red-600 dark:hover:bg-red-500 hover:text-white focus:ring-red-200 dark:focus:ring-red-800',
             ]"
             :title="
                 item.disabled ? __('Enable this user') : __('Disable this user')
             "
         >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <svg
+                class="w-5 h-5 mx-auto"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+            >
                 <path
                     v-if="item.disabled"
                     fill-rule="evenodd"
@@ -48,6 +52,26 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     clip-rule="evenodd"
                 />
             </svg>
+
+            <!-- Tooltip -->
+            <div
+                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
+                :class="
+                    item.disabled
+                        ? 'bg-green-600 dark:bg-green-500'
+                        : 'bg-red-600 dark:bg-red-500'
+                "
+            >
+                {{ item.disabled ? __("Enable User") : __("Disable User") }}
+                <div
+                    class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent"
+                    :class="
+                        item.disabled
+                            ? 'border-t-green-600 dark:border-t-green-500'
+                            : 'border-t-red-600 dark:border-t-red-500'
+                    "
+                ></div>
+            </div>
         </button>
 
         <!-- Confirmation Dialog -->
@@ -62,7 +86,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- User Info -->
                     <div class="user-info mb-4">
                         <div
-                            class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-2"
+                            class="w-12 h-12 bg-blue-600 dark:bg-blue-500 text-white rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-2"
                         >
                             {{
                                 item.name
@@ -70,23 +94,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     : "U"
                             }}
                         </div>
-                        <div class="text-lg font-semibold text-gray-800">
+                        <div
+                            class="text-lg font-semibold text-gray-800 dark:text-gray-200"
+                        >
                             {{ item.name }} {{ item.last_name }}
                         </div>
-                        <div class="text-sm text-gray-600">
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
                             {{ item.email }}
                         </div>
                     </div>
 
                     <!-- Confirmation Message -->
-                    <div class="bg-gray-100 rounded-lg p-4 mb-3">
+                    <div
+                        class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 mb-3"
+                    >
                         <div class="flex items-center justify-center">
                             <svg
                                 class="w-5 h-5 mr-2"
                                 :class="
                                     item.disabled
-                                        ? 'text-green-600'
-                                        : 'text-red-600'
+                                        ? 'text-green-600 dark:text-green-500'
+                                        : 'text-red-600 dark:text-red-500'
                                 "
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
@@ -104,7 +132,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     clip-rule="evenodd"
                                 />
                             </svg>
-                            <span class="text-gray-700">
+                            <span class="text-gray-700 dark:text-gray-300">
                                 {{
                                     item.disabled
                                         ? __(
@@ -121,7 +149,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Warning Message (only for disable) -->
                     <div
                         v-if="!item.disabled"
-                        class="bg-orange-50 text-orange-700 rounded-lg p-4 border border-orange-200"
+                        class="bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 rounded-lg p-4 border border-orange-200 dark:border-orange-800"
                     >
                         <div class="flex items-center">
                             <svg
@@ -148,11 +176,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Actions -->
                 <div
-                    class="flex justify-center space-x-3 mt-8 pt-4 border-t border-gray-200"
+                    class="flex justify-center space-x-3 mt-8 pt-4 border-t border-gray-200 dark:border-gray-700"
                 >
                     <button
                         @click="dialog = false"
-                        class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                        class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors"
                     >
                         <svg
                             class="w-4 h-4 inline mr-2"
@@ -171,10 +199,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         @click="action(item)"
                         :disabled="loading"
                         :class="[
-                            'px-4 py-2 text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
+                            'px-4 py-2 text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
                             item.disabled
-                                ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
-                                : 'bg-red-600 hover:bg-red-700 focus:ring-red-500',
+                                ? 'bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600 focus:ring-green-500 dark:focus:ring-green-400'
+                                : 'bg-red-600 dark:bg-red-500 hover:bg-red-700 dark:hover:bg-red-600 focus:ring-red-500 dark:focus:ring-red-400',
                         ]"
                     >
                         <svg
@@ -228,71 +256,67 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
+import { useForm } from "@inertiajs/vue3";
 import VModal from "@/components/VModal.vue";
-export default {
-    components: {
-        VModal,
+
+const props = defineProps({
+    item: {
+        type: Object,
+        required: true,
     },
-    props: ["item"],
+});
 
-    emits: ["updated"],
+const emit = defineEmits(["updated"]);
 
-    data() {
-        return {
-            dialog: false,
-            loading: false,
-        };
-    },
+const dialog = ref(false);
+const loading = ref(false);
+const form = useForm({});
 
-    methods: {
-        open() {
-            this.dialog = true;
+function open() {
+    dialog.value = true;
+}
+
+const action = (item) => {
+    if (item.disabled) {
+        enable();
+    } else {
+        disable();
+    }
+};
+
+const disable = () => {
+    loading.value = true;
+
+    form.delete(props.item.links.disable, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+            $notify.success(__("User disabled successfully"));
+            emit("updated", true);
         },
-
-        action(item) {
-            if (item.disabled) {
-                this.enable();
-            } else {
-                this.disable();
-            }
+        onFinish: () => {
+            loading.value = false;
+            dialog.value = false;
         },
+    });
+};
 
-        async disable() {
-            this.loading = true;
-            try {
-                const res = await this.$server.delete(this.item.links.disable);
-                if (res.status === 200) {
-                    $notify.success(__("User disabled successfully"));
-                    this.$emit("updated", true);
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-                this.dialog = false;
-            }
-        },
+const enable = () => {
+    loading.value = true;
 
-        async enable() {
-            this.loading = true;
-            try {
-                const res = await this.$server.get(this.item.links.enable);
-                if (res.status === 200) {
-                    $notify.success(__("User enabled successfully"));
-                    this.$emit("updated", true);
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-                this.dialog = false;
-            }
+    form.get(props.item.links.enable, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            $notify.success(__("User enabled successfully"));
+            emit("updated", true);
         },
-    },
+        onFinish() {
+            loading.value = false;
+            dialog.value = false;
+        },
+    });
 };
 </script>

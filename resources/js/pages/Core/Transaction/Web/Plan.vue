@@ -22,35 +22,39 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-guest-layout>
         <div
-            class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 py-2"
+            class="min-h-screen bg-linear-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-slate-800/30 py-2"
         >
             <!-- Header Compacto -->
             <div class="text-center mb-4 px-2">
-                <h1 class="text-2xl font-bold text-slate-800 mb-2">
+                <h1
+                    class="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-2"
+                >
                     {{ __("Available Plans") }}
                 </h1>
-                <p class="text-slate-600 max-w-md mx-auto text-sm">
+                <p
+                    class="text-slate-600 dark:text-slate-400 max-w-md mx-auto text-sm"
+                >
                     {{ __("Choose the plan that fits your needs") }}
                 </p>
             </div>
 
             <!-- Filtros -->
-            <div class="w-full max-w-6xl mx-auto px-4 mb-6">
+            <div class="w-full mx-auto px-2 lg:px-4 mb-6">
                 <div
-                    class="bg-white rounded-xl shadow-sm border border-slate-200 p-4"
+                    class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4"
                 >
-                    <div class="flex flex-col sm:flex-row gap-3 items-center">
+                    <div class="flex flex-col sm:flex-row gap-2 items-center">
                         <!-- Buscar -->
                         <div class="flex-1 min-w-0">
                             <div class="relative">
                                 <i
-                                    class="mdi mdi-magnify absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm"
+                                    class="mdi mdi-magnify absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-slate-500 text-sm"
                                 ></i>
                                 <input
                                     v-model="search.name"
                                     type="text"
                                     :placeholder="__('Search plans...')"
-                                    class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 cursor-text"
+                                    class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 cursor-text text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
                                     @input="debouncedSearch"
                                 />
                             </div>
@@ -61,7 +65,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <select
                                 v-model="search.period"
                                 @change="getPlans"
-                                class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+                                class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 cursor-pointer text-slate-900 dark:text-slate-100"
                             >
                                 <option value="">
                                     {{ __("All Billing Periods") }}
@@ -79,7 +83,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Reset -->
                         <button
                             @click="resetFilters"
-                            class="px-4 py-2 text-sm border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap cursor-pointer"
+                            class="px-4 py-2 text-sm border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors whitespace-nowrap cursor-pointer"
                         >
                             {{ __("Clear Filters") }}
                         </button>
@@ -92,16 +96,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Loading -->
                 <div v-if="loading" class="flex justify-center py-8">
                     <div
-                        class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"
+                        class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 dark:border-blue-400"
                     ></div>
                 </div>
 
                 <!-- Empty State -->
                 <div v-else-if="!plans.length" class="text-center py-12">
                     <i
-                        class="mdi mdi-magnify-remove-outline text-4xl text-slate-300 mb-3"
+                        class="mdi mdi-magnify-remove-outline text-4xl text-slate-300 dark:text-slate-600 mb-3"
                     ></i>
-                    <p class="text-slate-500 text-sm">
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">
                         {{ __("No plans found") }}
                     </p>
                 </div>
@@ -109,36 +113,38 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Planes -->
                 <div
                     v-else
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                 >
                     <div
                         v-for="plan in plans"
                         :key="plan.id"
-                        class="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200"
+                        class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md dark:hover:shadow-slate-900/50 transition-all duration-200"
                         :class="{
-                            'ring-2 ring-blue-500 border-blue-300':
+                            'ring-2 ring-blue-500 border-blue-300 dark:ring-blue-400 dark:border-blue-600':
                                 selectedPlans[plan.id]?.selected,
                         }"
                     >
-                        <!-- Header del Plan - Área NO clickeable para detalles -->
-                        <div class="p-4 border-b border-slate-100">
+                        <!-- Header del Plan -->
+                        <div
+                            class="p-4 border-b border-slate-100 dark:border-slate-700"
+                        >
                             <div class="flex justify-between items-start mb-2">
                                 <h3
-                                    class="font-semibold text-slate-800 text-base"
+                                    class="font-semibold text-slate-800 dark:text-slate-200 text-base"
                                 >
                                     {{ plan.name }}
                                 </h3>
                                 <div class="flex gap-2">
                                     <span
                                         v-if="plan.bonus_enabled"
-                                        class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium"
+                                        class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs px-2 py-1 rounded-full font-medium"
                                     >
                                         +{{ plan.bonus_duration }}d
                                     </span>
                                     <!-- Botón para ver detalles -->
                                     <button
                                         @click="openPlanDetails(plan)"
-                                        class="text-blue-600 hover:text-blue-700 text-xs font-medium cursor-pointer flex items-center space-x-1"
+                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs font-medium cursor-pointer flex items-center space-x-1"
                                     >
                                         <i
                                             class="mdi mdi-information-outline text-sm"
@@ -148,20 +154,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </div>
                             </div>
                             <p
-                                class="text-slate-600 text-sm line-clamp-2"
+                                class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2"
                                 v-html="plan.description"
                             ></p>
                         </div>
 
                         <!-- Servicios Incluidos -->
-                        <div class="p-3 bg-slate-50 border-b border-slate-100">
+                        <div
+                            class="p-3 bg-slate-50 dark:bg-slate-700/50 border-b border-slate-100 dark:border-slate-700"
+                        >
                             <div class="flex flex-wrap gap-1">
                                 <span
                                     v-for="(scope, index) in getUniqueServices(
                                         plan.scopes
                                     )"
                                     :key="index"
-                                    class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium"
+                                    class="inline-flex items-center px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded text-xs font-medium"
                                 >
                                     <i
                                         class="mdi mdi-check-circle text-xs mr-1"
@@ -181,10 +189,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :key="price.id"
                                     class="flex justify-between items-center p-2 rounded-lg border transition-all duration-200 cursor-pointer"
                                     :class="{
-                                        'border-blue-500 bg-blue-50':
+                                        'border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20':
                                             selectedPlans[plan.id]?.priceId ===
                                             price.id,
-                                        'border-slate-200 hover:border-blue-300 hover:bg-blue-50/50':
+                                        'border-slate-200 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/10':
                                             selectedPlans[plan.id]?.priceId !==
                                             price.id,
                                     }"
@@ -195,10 +203,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <div
                                             class="flex items-center justify-center w-4 h-4 rounded-full border-2 transition-all"
                                             :class="{
-                                                'border-blue-500 bg-blue-500':
+                                                'border-blue-500 dark:border-blue-400 bg-blue-500 dark:bg-blue-400':
                                                     selectedPlans[plan.id]
                                                         ?.priceId === price.id,
-                                                'border-slate-400':
+                                                'border-slate-400 dark:border-slate-500':
                                                     selectedPlans[plan.id]
                                                         ?.priceId !== price.id,
                                             }"
@@ -208,11 +216,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     selectedPlans[plan.id]
                                                         ?.priceId === price.id
                                                 "
-                                                class="w-1.5 h-1.5 rounded-full bg-white"
+                                                class="w-1.5 h-1.5 rounded-full bg-white dark:bg-slate-900"
                                             ></div>
                                         </div>
                                         <span
-                                            class="text-slate-600 text-sm capitalize"
+                                            class="text-slate-600 dark:text-slate-400 text-sm capitalize"
                                         >
                                             {{
                                                 formatPeriodName(
@@ -222,7 +230,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </span>
                                     </div>
                                     <span
-                                        class="font-semibold text-slate-800 text-sm"
+                                        class="font-semibold text-slate-800 dark:text-slate-200 text-sm"
                                     >
                                         {{ price.currency }}
                                         {{ price.amount_format }}
@@ -233,10 +241,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Ver más precios -->
                             <div
                                 v-if="plan.prices.length > 3"
-                                class="mb-3 pt-2 border-t border-slate-100"
+                                class="mb-3 pt-2 border-t border-slate-100 dark:border-slate-700"
                             >
                                 <button
-                                    class="text-blue-600 hover:text-blue-700 text-xs font-medium cursor-pointer"
+                                    class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs font-medium cursor-pointer"
                                     @click="openPlanDetails(plan)"
                                 >
                                     +{{ plan.prices.length - 3 }}
@@ -248,7 +256,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <button
                                 @click="selectPlan(plan)"
                                 :disabled="!selectedPlans[plan.id]"
-                                class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-medium text-sm transition-all duration-200 cursor-pointer disabled:transform-none hover:scale-[1.02] active:scale-[0.98]"
+                                class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-medium text-sm transition-all duration-200 cursor-pointer disabled:transform-none hover:scale-[1.02] active:scale-[0.98]"
                             >
                                 <span
                                     class="flex items-center justify-center space-x-2"
@@ -271,16 +279,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="mt-2 text-center"
                             >
                                 <span
-                                    class="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium"
+                                    class="inline-flex items-center px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full text-xs font-medium"
                                 >
                                     <i
                                         class="mdi mdi-check-circle text-xs mr-1"
                                     ></i>
-                                    {{
-                                        formatPeriodName(
-                                            selectedPlans[plan.id].billingPeriod
-                                        )
-                                    }}
+                                    {{ selectedPlans[plan.id].billingPeriod }}
                                     selected
                                 </span>
                             </div>
@@ -301,70 +305,80 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Modal Detalles del Plan -->
             <v-modal
                 v-model="showPlanDetails"
-                panel-class="w-full lg:w-7xl overflow-y-auto max-h-screen"
+                panel-class="w-full lg:w-7xl"
             >
                 <template #body>
                     <!-- Header -->
                     <div
-                        class="bg-slate-800 px-6 py-4 flex justify-between items-center rounded"
+                        class="bg-slate-800 dark:bg-slate-900 px-2 lg:px-6 py-2 md:py-4 flex justify-between items-center rounded"
                     >
                         <div>
-                            <h3 class="text-xl font-bold text-white">
+                            <h3 class="text-md lg:text-xl font-bold text-white">
                                 {{ selected_plan_details?.name }}
                             </h3>
-                            <p class="text-slate-300 text-sm mt-1">
+                            <p
+                                class="text-slate-300 dark:text-slate-400 text-sm mt-1"
+                            >
                                 {{ __("Plan details and pricing") }}
                             </p>
                         </div>
                         <button
                             @click="showPlanDetails = false"
-                            class="text-slate-300 hover:text-white transition-colors cursor-pointer"
+                            class="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-slate-200 transition-colors cursor-pointer"
                         >
                             <i class="mdi mdi-close text-lg"></i>
                         </button>
                     </div>
 
                     <!-- Contenido -->
-                    <div class="p-6">
+                    <div class="p-2 md:p-4 lg:p-6">
                         <!-- Descripción -->
                         <div class="mb-6">
-                            <h4 class="font-semibold text-slate-800 mb-2">
+                            <h4
+                                class="font-semibold text-slate-800 dark:text-slate-200 mb-2"
+                            >
                                 {{ __("Description") }}
                             </h4>
                             <div
-                                class="text-slate-600 text-sm leading-relaxed"
+                                class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed"
                                 v-html="selected_plan_details?.description"
                             ></div>
                         </div>
 
                         <!-- Servicios y Roles -->
                         <div class="mb-6">
-                            <h4 class="font-semibold text-slate-800 mb-3">
+                            <h4
+                                class="font-semibold text-slate-800 dark:text-slate-200 mb-3"
+                            >
                                 {{ __("Included Services") }}
                             </h4>
                             <div class="space-y-3">
                                 <div
                                     v-for="scope in selected_plan_details?.scopes"
                                     :key="scope.id"
-                                    class="border border-slate-200 rounded-lg p-3"
+                                    class="border border-slate-200 dark:border-slate-700 rounded-lg p-3"
                                 >
                                     <div
                                         class="flex justify-between items-start mb-2"
                                     >
                                         <span
-                                            class="font-medium text-slate-800"
+                                            class="font-medium text-slate-800 dark:text-slate-200"
                                             >{{ __(scope.service.name) }}</span
                                         >
                                         <span
-                                            class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
+                                            class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded-full"
                                         >
                                             {{ __(scope.role.name) }}
                                         </span>
                                     </div>
-                                    <p class="text-slate-600 text-xs">
+                                    <p
+                                        class="text-slate-600 dark:text-slate-400 text-xs"
+                                    >
                                         {{ __(scope.role.description) }}
                                     </p>
-                                    <p class="text-slate-500 text-xs mt-1">
+                                    <p
+                                        class="text-slate-500 dark:text-slate-500 text-xs mt-1"
+                                    >
                                         {{ __(scope.service.description) }}
                                     </p>
                                 </div>
@@ -373,18 +387,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <!-- Todos los Precios con Selección Mejorada -->
                         <div>
-                            <h4 class="font-semibold text-slate-800 mb-3">
+                            <h4
+                                class="font-semibold text-md md:text-lg lg:text-3xl text-slate-800 dark:text-slate-200 mb-3"
+                            >
                                 {{ __("Pricing Options") }}
                             </h4>
                             <div class="space-y-3">
                                 <div
                                     v-for="price in selected_plan_details?.prices"
                                     :key="price.id"
-                                    class="p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer"
+                                    class="p-2 lg:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer"
                                     :class="{
-                                        'border-blue-500 bg-blue-50 shadow-md scale-[1.02]':
+                                        'border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-md scale-[1.02]':
                                             selected_period?.id === price.id,
-                                        'border-slate-200 hover:border-blue-300 hover:bg-blue-50/50':
+                                        'border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/10':
                                             selected_period?.id !== price.id,
                                     }"
                                     @click="selectPriceFromModal(price)"
@@ -393,16 +409,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="flex items-center justify-between mb-2"
                                     >
                                         <div
-                                            class="flex items-center space-x-3"
+                                            class="flex items-center lg:space-x-3"
                                         >
                                             <!-- Radio Button Grande -->
                                             <div
                                                 class="flex items-center justify-center w-5 h-5 rounded-full border-2 transition-all"
                                                 :class="{
-                                                    'border-blue-500 bg-blue-500':
+                                                    'border-blue-500 dark:border-blue-400 bg-blue-500 dark:bg-blue-400':
                                                         selected_period?.id ===
                                                         price.id,
-                                                    'border-slate-400':
+                                                    'border-slate-400 dark:border-slate-500':
                                                         selected_period?.id !==
                                                         price.id,
                                                 }"
@@ -412,12 +428,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         selected_period?.id ===
                                                         price.id
                                                     "
-                                                    class="w-2 h-2 rounded-full bg-white"
+                                                    class="w-2 h-2 rounded-full bg-white dark:bg-slate-900"
                                                 ></div>
                                             </div>
                                             <div>
                                                 <div
-                                                    class="font-semibold text-slate-800 capitalize text-lg"
+                                                    class="font-semibold text-slate-800 dark:text-slate-200 capitalize text-md lg:text-lg"
                                                 >
                                                     {{
                                                         formatPeriodName(
@@ -426,7 +442,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     }}
                                                 </div>
                                                 <div
-                                                    class="text-slate-500 text-xs"
+                                                    class="text-slate-500 dark:text-slate-500 text-xs"
                                                 >
                                                     {{ __("Expires") }}:
                                                     {{
@@ -439,13 +455,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                         <div class="text-right">
                                             <div
-                                                class="font-bold text-slate-800 text-xl"
+                                                class="font-bold text-slate-800 dark:text-slate-200 text-xl"
                                             >
                                                 {{ price.currency }}
                                                 {{ price.amount_format }}
                                             </div>
                                             <div
-                                                class="text-green-600 text-sm font-medium"
+                                                class="text-green-600 dark:text-green-400 text-sm font-medium"
                                             >
                                                 {{ __("Available") }}
                                             </div>
@@ -458,7 +474,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="flex justify-center mt-2"
                                     >
                                         <span
-                                            class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                                            class="inline-flex items-center px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium"
                                         >
                                             <i
                                                 class="mdi mdi-check-circle text-xs mr-1"
@@ -473,19 +489,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Bonificación -->
                         <div
                             v-if="selected_plan_details?.bonus_enabled"
-                            class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg"
+                            class="mt-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg"
                         >
                             <div class="flex items-center">
                                 <i
-                                    class="mdi mdi-gift text-green-600 text-lg mr-3"
+                                    class="mdi mdi-gift text-green-600 dark:text-green-400 text-lg mr-3"
                                 ></i>
                                 <div>
                                     <div
-                                        class="font-semibold text-green-800 text-sm"
+                                        class="font-semibold text-green-800 dark:text-green-300 text-sm"
                                     >
                                         {{ __("Special Bonus") }}
                                     </div>
-                                    <div class="text-green-700 text-xs">
+                                    <div
+                                        class="text-green-700 dark:text-green-400 text-xs"
+                                    >
                                         {{ __("Get") }} +{{
                                             selected_plan_details.bonus_duration
                                         }}
@@ -498,15 +516,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Footer -->
                     <div
-                        class="border-t border-slate-200 px-6 py-4 bg-slate-50"
+                        class="border-t border-slate-200 dark:border-slate-700 lg:px-6 py-4 bg-slate-50 dark:bg-slate-800"
                     >
                         <div class="flex justify-between items-center">
                             <div>
                                 <div
                                     v-if="selected_period"
-                                    class="text-sm text-slate-600"
+                                    class="text-sm text-slate-600 dark:text-slate-400"
                                 >
-                                    <span class="font-semibold text-slate-800"
+                                    <span
+                                        class="font-semibold text-slate-800 dark:text-slate-200"
                                         >{{ selected_period.currency }}
                                         {{
                                             selected_period.amount_format
@@ -519,21 +538,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         )
                                     }}
                                 </div>
-                                <div v-else class="text-sm text-slate-500">
+                                <div
+                                    v-else
+                                    class="text-sm text-slate-500 dark:text-slate-500"
+                                >
                                     {{ __("Select a pricing option") }}
                                 </div>
                             </div>
                             <div class="flex gap-2">
                                 <button
                                     @click="showPlanDetails = false"
-                                    class="px-4 py-2 text-sm border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                                    class="px-4 py-2 text-sm border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                                 >
                                     {{ __("Close") }}
                                 </button>
                                 <button
                                     @click="proceedWithSelectedPlan"
                                     :disabled="!selected_period"
-                                    class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                    class="px-4 py-2 text-sm bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                 >
                                     {{ __("Continue") }}
                                 </button>
@@ -550,39 +572,43 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 :title="__('Complete Subscription')"
             >
                 <template #body>
-                    <div class="p-6">
+                    <div class="md:p-2 lg:p-6">
                         <div class="text-center mb-6">
                             <i
-                                class="mdi mdi-lock-check-outline text-3xl text-blue-600 mb-3"
+                                class="mdi mdi-lock-check-outline text-3xl text-blue-600 dark:text-blue-400 mb-3"
                             ></i>
-                            <p class="text-slate-600 text-sm">
+                            <p
+                                class="text-slate-600 dark:text-slate-400 text-sm"
+                            >
                                 {{ __("You are about to subscribe to") }}
                             </p>
                         </div>
 
-                        <div class="bg-slate-50 rounded-lg p-4 mb-6">
+                        <div
+                            class="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-4 mb-6"
+                        >
                             <div class="text-center">
-                                <div class="font-bold text-slate-800 text-lg">
+                                <div
+                                    class="font-bold text-slate-800 dark:text-slate-200 text-lg"
+                                >
                                     {{ selected_plan?.name }}
                                 </div>
-                                <div class="text-slate-600 text-sm mb-2">
-                                    {{
-                                        formatPeriodName(
-                                            selected_period?.billing_period
-                                        )
-                                    }}
+                                <div
+                                    class="text-slate-600 dark:text-slate-400 text-sm mb-2"
+                                >
+                                    {{ selected_period?.billing_period }}
                                 </div>
-                                <div class="text-2xl font-bold text-green-600">
+                                <div
+                                    class="text-2xl font-bold text-green-600 dark:text-green-400"
+                                >
                                     {{ selected_period?.currency }}
                                     {{ selected_period?.amount_format }}
                                 </div>
                             </div>
                         </div>
-
                         <v-subscription
                             :plan="selected_plan"
                             :period="selected_period"
-                            @close="showSubscription = false"
                         />
                     </div>
                 </template>

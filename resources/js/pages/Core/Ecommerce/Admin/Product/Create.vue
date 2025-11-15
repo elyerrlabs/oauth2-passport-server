@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-admin-layout>
         <!-- Header Section -->
         <div
-            class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-6 px-4 sm:px-6 lg:px-3"
+            class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/20 py-6 px-4 sm:px-6 lg:px-3 transition-colors duration-300"
         >
             <div class="max-w-7xl mx-auto">
                 <!-- Page Header -->
@@ -32,19 +32,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <div class="flex items-center space-x-4 mb-4 sm:mb-0">
                         <div
-                            class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shadow-sm"
+                            class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center shadow-sm"
                         >
-                            <i class="fas fa-edit text-blue-600 text-xl"></i>
+                            <i
+                                class="fas fa-edit text-blue-600 dark:text-blue-400 text-xl"
+                            ></i>
                         </div>
                         <div>
-                            <h1 class="text-2xl font-bold text-gray-900">
+                            <h1
+                                class="text-2xl font-bold text-gray-900 dark:text-white"
+                            >
                                 {{
                                     form.id
                                         ? __("Update product")
                                         : __("Add new product")
                                 }}
                             </h1>
-                            <p class="text-gray-600 text-sm mt-1">
+                            <p
+                                class="text-gray-600 dark:text-gray-300 text-sm mt-1"
+                            >
                                 {{
                                     __(
                                         "Manage product information and inventory"
@@ -57,14 +63,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Main Content Card -->
                 <div
-                    class="bg-white rounded-2xl shadow-sm border border-gray-300 overflow-hidden"
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-300 dark:border-gray-600 overflow-hidden transition-colors duration-300"
                 >
                     <!-- Basic Information Section -->
-                    <div class="p-4 border-b border-gray-300">
+                    <div
+                        class="p-4 border-b border-gray-300 dark:border-gray-600"
+                    >
                         <h3
-                            class="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2"
+                            class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2"
                         >
-                            <i class="fas fa-info-circle text-blue-500"></i>
+                            <i
+                                class="fas fa-info-circle text-blue-500 dark:text-blue-400"
+                            ></i>
                             <span>{{ __("Basic Information") }}</span>
                         </h3>
 
@@ -94,11 +104,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <!-- Selected items -->
                                     <template #selected="{ option }">
                                         <div
-                                            v-if="option.name"
+                                            v-if="option"
                                             class="flex items-center"
                                         >
                                             <div
-                                                class="font-semibold text-gray-800"
+                                                class="font-semibold text-gray-800 dark:text-gray-200"
                                             >
                                                 <i
                                                     v-if="option.icon?.icon"
@@ -113,7 +123,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                         <span
                                             v-else
-                                            class="font-semibold text-gray-800 block"
+                                            class="font-semibold text-gray-800 dark:text-gray-200 block"
                                         >
                                             {{ __("Select menu") }}
                                         </span>
@@ -122,16 +132,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <!-- Option list -->
                                     <template #option="{ option }">
                                         <div
-                                            class="flex items-center gap-3 p-4"
+                                            class="flex items-center gap-3 p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                                         >
                                             <div>
                                                 <span
-                                                    class="font-semibold text-gray-800 block"
+                                                    class="font-semibold text-gray-800 dark:text-gray-200 block"
                                                 >
                                                     {{ option.name }}
                                                 </span>
                                                 <div
-                                                    class="flex items-center gap-2 text-sm text-gray-500"
+                                                    class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
                                                 >
                                                     <i
                                                         v-if="option.icon?.icon"
@@ -169,11 +179,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Title -->
                             <div>
                                 <h1
-                                    class="text-2xl font-bold text-gray-800 mb-2"
+                                    class="text-2xl font-bold text-gray-800 dark:text-white mb-2"
                                 >
                                     {{ __("Add Related Products") }}
                                 </h1>
-                                <p class="text-gray-500 text-sm">
+                                <p
+                                    class="text-gray-500 dark:text-gray-400 text-sm"
+                                >
                                     {{
                                         __(
                                             "Select one or more products to associate as related items."
@@ -197,7 +209,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <template #option="{ option }">
                                     <div
                                         v-if="option.name"
-                                        class="flex items-center justify-between gap-4 p-3 hover:bg-gray-50 transition-colors rounded-md"
+                                        class="flex items-center justify-between gap-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
                                     >
                                         <div class="flex items-center gap-3">
                                             <img
@@ -207,12 +219,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             />
                                             <div>
                                                 <span
-                                                    class="font-semibold text-gray-800 block"
+                                                    class="font-semibold text-gray-800 dark:text-gray-200 block"
                                                 >
                                                     {{ option.name }}
                                                 </span>
                                                 <div
-                                                    class="flex items-center gap-2 text-sm text-gray-500"
+                                                    class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
                                                 >
                                                     <i
                                                         v-if="
@@ -232,7 +244,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             </div>
                                         </div>
                                         <span
-                                            class="font-bold text-blue-600 whitespace-nowrap"
+                                            class="font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap"
                                         >
                                             {{ option.symbol }}
                                             {{ option.format_price }}
@@ -244,7 +256,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Related Products List -->
                             <div v-if="form.children.length" class="mt-6">
                                 <h2
-                                    class="text-lg font-semibold text-gray-700 mb-3"
+                                    class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3"
                                 >
                                     {{ __("Selected Related Products") }}
                                 </h2>
@@ -255,7 +267,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div
                                         v-for="(item, index) in form.children"
                                         :key="item.id"
-                                        class="flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-200 hover:shadow-md transition-all"
+                                        class="flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md dark:hover:shadow-gray-700/30 transition-all bg-white dark:bg-gray-700"
                                     >
                                         <div class="flex items-center gap-3">
                                             <img
@@ -265,19 +277,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             />
                                             <div>
                                                 <p
-                                                    class="font-semibold text-gray-800"
+                                                    class="font-semibold text-gray-800 dark:text-gray-200"
                                                 >
                                                     {{ item.name }}
                                                 </p>
                                                 <p
-                                                    class="text-blue-600 font-bold text-sm"
+                                                    class="text-blue-600 dark:text-blue-400 font-bold text-sm"
                                                 >
                                                     {{ item.symbol }}
                                                     {{ item.format_price }}
                                                 </p>
                                                 <div
                                                     v-if="item.category"
-                                                    class="flex items-center gap-2 text-sm text-gray-500"
+                                                    class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
                                                 >
                                                     <i
                                                         v-if="
@@ -316,17 +328,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                     </div>
 
-                    <div class="p-2 border-b border-gray-200">
+                    <div
+                        class="p-2 border-b border-gray-200 dark:border-gray-600"
+                    >
                         <v-attributes
                             v-model="form.attributes"
                             :error="errors.attributes"
                         />
                     </div>
-                    <div class="p-2 border-b border-gray-200">
+                    <div
+                        class="p-2 border-b border-gray-200 dark:border-gray-600"
+                    >
                         <v-tags v-model="form.tags" :error="errors.tags" />
                     </div>
 
-                    <div class="p-2 border-b border-gray-300">
+                    <div
+                        class="p-2 border-b border-gray-300 dark:border-gray-600"
+                    >
                         <v-variant
                             v-model="form.variants"
                             :error="errors.variants"
@@ -334,7 +352,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Descriptions Section -->
-                    <div class="p-2 border-b border-gray-200">
+                    <div
+                        class="p-2 border-b border-gray-200 dark:border-gray-600"
+                    >
                         <div class="space-y-6">
                             <v-editor
                                 v-model="form.short_description"
@@ -358,26 +378,33 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                     </div>
 
-                    <div class="p-2 border-b border-gray-200">
+                    <div
+                        class="p-2 border-b border-gray-200 dark:border-gray-600"
+                    >
                         <v-file-uploader
                             v-model="form.images"
                             :error="errors.images"
                         />
                     </div>
 
-                    <div class="p-2 border-b border-gray-200" v-if="form.id">
+                    <div
+                        class="p-2 border-b border-gray-200 dark:border-gray-600"
+                        v-if="form.id"
+                    >
                         <v-file-viewer v-model="current_images" />
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="p-6 bg-gray-50">
+                    <div class="p-6 bg-gray-50 dark:bg-gray-700/50">
                         <div
                             class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0"
                         >
                             <div
-                                class="text-sm text-gray-600 flex items-center space-x-2"
+                                class="text-sm text-gray-600 dark:text-gray-400 flex items-center space-x-2"
                             >
-                                <i class="fas fa-info-circle text-blue-400"></i>
+                                <i
+                                    class="fas fa-info-circle text-blue-400 dark:text-blue-300"
+                                ></i>
                                 <span>{{
                                     __(
                                         "Fill in all required fields to save the product"
@@ -391,8 +418,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :class="[
                                         'px-6 py-3 rounded-lg cursor-pointer font-medium flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow',
                                         disabled
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700',
+                                            ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                                            : 'bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 text-white hover:from-green-600 hover:to-green-700 dark:hover:from-green-700 dark:hover:to-green-800',
                                     ]"
                                 >
                                     <i
@@ -708,24 +735,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-/* Custom scrollbar for dropdowns */
-.scrollbar-thin::-webkit-scrollbar {
-    width: 4px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 10px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: #a1a1a1;
-}
-</style>

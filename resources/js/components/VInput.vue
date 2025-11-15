@@ -21,7 +21,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div>
-        <label v-if="label" class="block text-sm font-medium text-gray-700">
+        <label
+            v-if="label"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
             {{ label }}
             <span v-if="required" class="text-red-500">*</span>
         </label>
@@ -32,8 +35,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             :placeholder="placeholder ?? label"
             @blur="handleUp"
             @input="change"
-            class="mt-1 py-2 px-3 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            :class="{ 'bg-gray-200': disabled, 'border-red-600': error.length }"
+            class="mt-1 py-2 px-3 block w-full rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+            :class="{
+                'bg-gray-200 dark:bg-gray-600': disabled,
+                'border-red-600 dark:border-red-500': error.length,
+            }"
             :disabled="disabled"
         />
 
@@ -51,7 +57,7 @@ const props = defineProps({
     type: { type: String, default: "text" },
     placeholder: { type: String, default: null },
     required: { type: Boolean, default: false },
-    error: { type: Array, default: [] },
+    error: { type: [Array,String], default: [] },
     digits: { type: Number, default: 2 },
     disabled: { type: Boolean, default: false },
 });

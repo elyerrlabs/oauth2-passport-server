@@ -21,16 +21,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-account-layout>
-        <div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+        <div
+            class="min-h-screen bg-white dark:bg-gray-900 py-6 px-4 sm:px-6 lg:px-8"
+        >
             <div class="max-w-6xl mx-auto">
                 <!-- Compact Header -->
                 <div class="mb-8">
                     <div class="flex items-center space-x-3">
                         <div
-                            class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
                         >
                             <svg
-                                class="w-5 h-5 text-blue-600"
+                                class="w-5 h-5 text-blue-600 dark:text-blue-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -44,10 +46,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-xl font-semibold text-gray-900">
+                            <h1
+                                class="text-xl font-semibold text-gray-900 dark:text-white"
+                            >
                                 {{ "Two-Factor Authentication" }}
                             </h1>
-                            <p class="text-sm text-gray-600 mt-1">
+                            <p
+                                class="text-sm text-gray-600 dark:text-gray-400 mt-1"
+                            >
                                 {{
                                     __(
                                         "Secure your account with an extra layer of protection"
@@ -64,15 +70,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="lg:col-span-2 space-y-6">
                         <!-- Security Status Card -->
                         <div
-                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
                         >
                             <div class="flex items-center justify-between mb-6">
                                 <div class="flex items-center space-x-3">
                                     <div
-                                        class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                                        class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
                                     >
                                         <svg
-                                            class="w-5 h-5 text-blue-600"
+                                            class="w-5 h-5 text-blue-600 dark:text-blue-400"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -87,11 +93,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </div>
                                     <div>
                                         <h2
-                                            class="text-lg font-semibold text-gray-900"
+                                            class="text-lg font-semibold text-gray-900 dark:text-white"
                                         >
                                             {{ __("Security Status") }}
                                         </h2>
-                                        <p class="text-sm text-gray-500">
+                                        <p
+                                            class="text-sm text-gray-500 dark:text-gray-400"
+                                        >
                                             {{
                                                 __(
                                                     "Current two-factor authentication status"
@@ -104,8 +112,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :class="[
                                         'px-4 py-2 rounded-lg font-medium text-sm border',
                                         user.m2fa
-                                            ? 'bg-green-100 text-green-700 border-green-200'
-                                            : 'bg-red-100 text-red-700 border-red-200',
+                                            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800'
+                                            : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800',
                                     ]"
                                 >
                                     <span class="flex items-center space-x-1">
@@ -138,7 +146,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             />
                                         </svg>
                                         <span>{{
-                                            user.m2fa ? __("Protected") : __("At Risk")
+                                            user.m2fa
+                                                ? __("Protected")
+                                                : __("At Risk")
                                         }}</span>
                                     </span>
                                 </div>
@@ -149,14 +159,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :class="[
                                     'p-4 rounded-lg border',
                                     user.m2fa
-                                        ? 'bg-green-50 border-green-200 text-green-800'
-                                        : 'bg-amber-50 border-amber-200 text-amber-800',
+                                        ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-800 dark:text-green-300'
+                                        : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300',
                                 ]"
                             >
                                 <div class="flex items-center space-x-3">
                                     <svg
                                         v-if="user.m2fa"
-                                        class="w-5 h-5 text-green-600 flex-shrink-0"
+                                        class="w-5 h-5 text-green-600 dark:text-green-400 shrink-0"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -170,7 +180,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </svg>
                                     <svg
                                         v-else
-                                        class="w-5 h-5 text-amber-600 flex-shrink-0"
+                                        class="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -212,14 +222,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <!-- Verification Card -->
                         <div
-                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
                         >
                             <div class="flex items-center space-x-3 mb-6">
                                 <div
-                                    class="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center"
+                                    class="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg flex items-center justify-center"
                                 >
                                     <svg
-                                        class="w-5 h-5 text-cyan-600"
+                                        class="w-5 h-5 text-cyan-600 dark:text-cyan-400"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -234,11 +244,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </div>
                                 <div>
                                     <h2
-                                        class="text-lg font-semibold text-gray-900"
+                                        class="text-lg font-semibold text-gray-900 dark:text-white"
                                     >
                                         {{ __("Email Verification") }}
                                     </h2>
-                                    <p class="text-sm text-gray-500">
+                                    <p
+                                        class="text-sm text-gray-500 dark:text-gray-400"
+                                    >
                                         {{
                                             __(
                                                 "Verify your identity with a secure code"
@@ -252,20 +264,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="space-y-4">
                                 <div class="space-y-3">
                                     <label
-                                        class="block text-sm font-medium text-gray-700"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                                     >
                                         {{ __("Verification Code") }}
                                     </label>
                                     <div class="relative">
                                         <input
-                                            v-model="token"
+                                            v-model="form.token"
                                             type="text"
                                             maxlength="6"
                                             placeholder="Enter 6-digit code"
-                                            class="w-full pl-4 pr-32 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm font-mono placeholder-gray-400"
+                                            class="w-full pl-4 pr-32 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-400 transition-colors text-sm font-mono placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                             :class="
-                                                errors.token
-                                                    ? 'border-red-500 focus:ring-red-500'
+                                                form.errors.token
+                                                    ? 'border-red-500 dark:border-red-400 focus:ring-red-500'
                                                     : ''
                                             "
                                             @keyup.enter="activateFactor"
@@ -316,8 +328,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             }}</span>
                                         </button>
                                     </div>
-                                    <v-error :error="errors.token" />
-                                    <p class="text-xs text-gray-500">
+                                    <v-error :error="form.errors.token" />
+                                    <p
+                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                    >
                                         {{
                                             __(
                                                 "Check your email for the 6-digit verification code"
@@ -330,9 +344,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="pt-4">
                                     <button
                                         @click="activateFactor"
-                                        :disabled="
-                                            loading || (!token && !user.m2fa)
-                                        "
                                         :class="[
                                             'w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm',
                                             user.m2fa
@@ -404,14 +415,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="space-y-4">
                             <!-- Security Features -->
                             <div
-                                class="bg-white rounded-xl shadow-sm border border-gray-200 p-5"
+                                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5"
                             >
                                 <div class="flex items-center space-x-3 mb-4">
                                     <div
-                                        class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"
+                                        class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center"
                                     >
                                         <svg
-                                            class="w-4 h-4 text-purple-600"
+                                            class="w-4 h-4 text-purple-600 dark:text-purple-400"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -425,7 +436,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </svg>
                                     </div>
                                     <h3
-                                        class="text-base font-semibold text-gray-900"
+                                        class="text-base font-semibold text-gray-900 dark:text-white"
                                     >
                                         {{ __("Coming Features") }}
                                     </h3>
@@ -434,13 +445,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div class="space-y-3">
                                     <!-- Authenticator App -->
                                     <div
-                                        class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+                                        class="flex items-start space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"
                                     >
                                         <div
-                                            class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center flex-shrink-0"
+                                            class="w-8 h-8 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg flex items-center justify-center shrink-0"
                                         >
                                             <svg
-                                                class="w-4 h-4 text-cyan-600"
+                                                class="w-4 h-4 text-cyan-600 dark:text-cyan-400"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -455,11 +466,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                         <div>
                                             <h4
-                                                class="text-sm font-medium text-gray-900 mb-1"
+                                                class="text-sm font-medium text-gray-900 dark:text-white mb-1"
                                             >
                                                 {{ __("Authenticator App") }}
                                             </h4>
-                                            <p class="text-xs text-gray-600">
+                                            <p
+                                                class="text-xs text-gray-600 dark:text-gray-400"
+                                            >
                                                 {{
                                                     __(
                                                         "Google Authenticator & Authy integration"
@@ -471,13 +484,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                     <!-- QR Code -->
                                     <div
-                                        class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+                                        class="flex items-start space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"
                                     >
                                         <div
-                                            class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0"
+                                            class="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center shrink-0"
                                         >
                                             <svg
-                                                class="w-4 h-4 text-emerald-600"
+                                                class="w-4 h-4 text-emerald-600 dark:text-emerald-400"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -492,11 +505,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                         <div>
                                             <h4
-                                                class="text-sm font-medium text-gray-900 mb-1"
+                                                class="text-sm font-medium text-gray-900 dark:text-white mb-1"
                                             >
                                                 {{ __("QR Setup") }}
                                             </h4>
-                                            <p class="text-xs text-gray-600">
+                                            <p
+                                                class="text-xs text-gray-600 dark:text-gray-400"
+                                            >
                                                 {{
                                                     __(
                                                         "Instant setup with QR code scanning"
@@ -508,13 +523,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                     <!-- Backup -->
                                     <div
-                                        class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+                                        class="flex items-start space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"
                                     >
                                         <div
-                                            class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0"
+                                            class="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center shrink-0"
                                         >
                                             <svg
-                                                class="w-4 h-4 text-amber-600"
+                                                class="w-4 h-4 text-amber-600 dark:text-amber-400"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -529,11 +544,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                         <div>
                                             <h4
-                                                class="text-sm font-medium text-gray-900 mb-1"
+                                                class="text-sm font-medium text-gray-900 dark:text-white mb-1"
                                             >
                                                 {{ __("Backup Codes") }}
                                             </h4>
-                                            <p class="text-xs text-gray-600">
+                                            <p
+                                                class="text-xs text-gray-600 dark:text-gray-400"
+                                            >
                                                 {{
                                                     __(
                                                         "Emergency recovery codes for backup"
@@ -547,11 +564,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <!-- Security Tips -->
                             <div
-                                class="bg-blue-50 rounded-xl border border-blue-200 p-4"
+                                class="bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 p-4"
                             >
                                 <div class="flex items-center space-x-2 mb-2">
                                     <svg
-                                        class="w-4 h-4 text-blue-600"
+                                        class="w-4 h-4 text-blue-600 dark:text-blue-400"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -564,13 +581,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         />
                                     </svg>
                                     <h4
-                                        class="text-sm font-medium text-blue-900"
+                                        class="text-sm font-medium text-blue-900 dark:text-blue-100"
                                     >
                                         {{ __("Security Tip") }}
                                     </h4>
                                 </div>
                                 <p
-                                    class="text-xs text-blue-800 leading-relaxed"
+                                    class="text-xs text-blue-800 dark:text-blue-200 leading-relaxed"
                                 >
                                     {{
                                         __(
@@ -587,81 +604,64 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-account-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
 import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import { useForm, usePage } from "@inertiajs/vue3";
+import VError from "@/components/VError.vue";
 
-export default {
-    components: {
-        VAccountLayout,
-    },
-    data() {
-        return {
-            token: "",
-            user: {},
-            errors: {},
-            loading: false,
-            sendingCode: false,
-        };
-    },
-    mounted() {
-        this.user = this.$page.props.user;
-    },
-    methods: {
-        async requestCode() {
-            this.sendingCode = true;
-            try {
-                const res = await this.$server.post(
-                    this.$page.props.user.links.request_2fa_code
-                );
-                if (res.status === 201) {
-                     $notify.success(res.data.message);
-                    this.errors = {};
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.sendingCode = false;
-            }
+const page = usePage();
+
+const form = useForm({
+    token: "",
+});
+
+const user = ref({});
+const loading = ref(false);
+const sendingCode = ref(false);
+
+onMounted(() => {
+    user.value = page.props.user;
+});
+
+const requestCode = () => {
+    sendingCode.value = true;
+
+    form.post(user.value.links.request_2fa_code, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            $notify.success(__("We have sent the token to your email"));
         },
-
-        async activateFactor() {
-            if (!this.token && !this.user.m2fa) {
-                 $notify.error(__("Please enter a verification code"));
-                return;
-            }
-
-            this.loading = true;
-            this.errors = {};
-
-            try {
-                const res = await this.$server.post(
-                    this.$page.props.user.links.f2a_activate,
-                    {
-                        token: this.token,
-                    }
-                );
-
-                if (res.status === 201) {
-                    this.token = "";
-                     $notify.success(res.data.message);
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1500);
-                }
-            } catch (err) {
-                if (err.response && err.response.status == 422) {
-                    this.errors = err.response.data.errors;
-                }
-
-                if (err?.response?.data?.message) {
-                     $notify.error(err.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
+        onFinish: () => {
+            sendingCode.value = false;
+            loading.value = false;
         },
-    },
+    });
 };
+
+async function activateFactor() {
+    loading.value = true;
+
+    form.post(user.value.links.f2a_activate, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (page) => {
+            form.resetAndClearErrors();
+            user.value.m2fa = !user.value.m2fa;
+            if (user.value.m2fa) {
+                $notify.success(
+                    __("Two-factor authentication has been activated.")
+                );
+            } else {
+                $notify.error(
+                    __("Two-factor authentication has been deactivated.")
+                );
+            }
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
+}
 </script>

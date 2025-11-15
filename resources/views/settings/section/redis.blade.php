@@ -1,10 +1,11 @@
 @extends('settings.setting')
 
 @section('form')
-    <div class="flex flex-col lg:flex-row gap-8 items-start p-6 bg-gray-50 rounded-2xl shadow-sm">
+    <div
+        class="flex flex-col lg:flex-row gap-8 items-start p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-sm transition-colors duration-300">
         <!-- Header Section -->
         <div class="w-full lg:w-1/4 sticky top-4">
-            <div class="bg-indigo-600 text-white p-6 rounded-2xl shadow-md">
+            <div class="bg-indigo-600 dark:bg-indigo-700 text-white p-6 rounded-2xl shadow-md">
                 <div class="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mb-4">
                     <i class="mdi mdi-database text-2xl"></i>
                 </div>
@@ -14,22 +15,23 @@
                 </p>
             </div>
 
-            <div class="mt-4 p-4 bg-white rounded-xl shadow-sm border border-gray-200">
-                <h3 class="text-sm font-semibold text-gray-800 flex items-center">
-                    <i class="mdi mdi-lightbulb-on-outline mr-2 text-indigo-600"></i>
+            <div
+                class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                <h3 class="text-sm font-semibold text-gray-800 dark:text-white flex items-center">
+                    <i class="mdi mdi-lightbulb-on-outline mr-2 text-indigo-600 dark:text-indigo-400"></i>
                     {{ __('Performance Tips') }}
                 </h3>
-                <ul class="mt-2 space-y-2 text-xs text-gray-500">
+                <ul class="mt-2 space-y-2 text-xs text-gray-500 dark:text-gray-400">
                     <li class="flex items-start">
-                        <i class="mdi mdi-rocket-launch-outline text-green-500 mr-2 mt-0.5"></i>
+                        <i class="mdi mdi-rocket-launch-outline text-green-500 dark:text-green-400 mr-2 mt-0.5"></i>
                         {{ __('Use different databases for cache and sessions') }}
                     </li>
                     <li class="flex items-start">
-                        <i class="mdi mdi-shield-key-outline text-yellow-500 mr-2 mt-0.5"></i>
+                        <i class="mdi mdi-shield-key-outline text-yellow-500 dark:text-yellow-400 mr-2 mt-0.5"></i>
                         {{ __('Secure Redis with password authentication') }}
                     </li>
                     <li class="flex items-start">
-                        <i class="mdi mdi-server-network text-blue-500 mr-2 mt-0.5"></i>
+                        <i class="mdi mdi-server-network text-blue-500 dark:text-blue-400 mr-2 mt-0.5"></i>
                         {{ __('Use Redis clusters for high availability') }}
                     </li>
                 </ul>
@@ -40,12 +42,13 @@
         <div class="w-full lg:w-3/4 space-y-6">
             <!-- Default Redis Connection -->
             <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
+                class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-4">
-                    <div class="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-lg mr-3">
-                        <i class="mdi mdi-database-cog text-indigo-600 text-xl"></i>
+                    <div
+                        class="flex items-center justify-center w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg mr-3">
+                        <i class="mdi mdi-database-cog text-indigo-600 dark:text-indigo-400 text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
                         {{ __('Default Redis Connection') }}
                     </h3>
                 </div>
@@ -53,66 +56,66 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- URL -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-800 mb-2">URL</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">URL</label>
                         <input type="text" name="database[redis][default][url]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-900/20 transition-colors duration-300"
                             placeholder="Enter Redis URL" value="{{ config('database.redis.default.url', '') }}">
                     </div>
 
                     <!-- Host -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Host</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Host</label>
                         <input type="text" name="database[redis][default][host]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-900/20 transition-colors duration-300"
                             placeholder="Enter Redis host" value="{{ config('database.redis.default.host', '127.0.0.1') }}">
                     </div>
 
                     <!-- Username -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Username</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Username</label>
                         <input type="text" name="database[redis][default][username]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-900/20 transition-colors duration-300"
                             placeholder="Enter Redis username" value="{{ config('database.redis.default.username', '') }}">
                     </div>
 
                     <!-- Password -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Password</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Password</label>
                         <input type="password" name="database[redis][default][password]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-900/20 transition-colors duration-300"
                             placeholder="Enter Redis password" value="{{ config('database.redis.default.password', '') }}">
                     </div>
 
                     <!-- Port -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Port <span
-                                class="text-gray-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Port <span
+                                class="text-gray-500 dark:text-gray-400">*</span></label>
                         <input type="number" name="database[redis][default][port]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-900/20 transition-colors duration-300"
                             placeholder="6379" min="0" value="{{ config('database.redis.default.port', 6379) }}">
                     </div>
 
                     <!-- Database -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Database <span
-                                class="text-gray-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Database <span
+                                class="text-gray-500 dark:text-gray-400">*</span></label>
                         <input type="number" name="database[redis][default][database]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-900/20 transition-colors duration-300"
                             placeholder="0" min="0" max="15"
                             value="{{ config('database.redis.default.database', 0) }}">
-                        <small class="block mt-1 text-sm text-gray-500">Database index (0-15)</small>
+                        <small class="block mt-1 text-sm text-gray-500 dark:text-gray-400">Database index (0-15)</small>
                     </div>
                 </div>
             </div>
 
             <!-- Redis Cache Connection -->
             <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
+                class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-4">
-                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg mr-3">
-                        <i class="mdi mdi-cached text-blue-500 text-xl"></i>
+                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
+                        <i class="mdi mdi-cached text-blue-500 dark:text-blue-400 text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
                         {{ __('Redis Cache Connection') }}
                     </h3>
                 </div>
@@ -120,66 +123,66 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- URL -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-800 mb-2">URL</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">URL</label>
                         <input type="text" name="database[redis][cache][url]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
                             placeholder="Enter Redis cache URL" value="{{ config('database.redis.cache.url', '') }}">
                     </div>
 
                     <!-- Host -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Host</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Host</label>
                         <input type="text" name="database[redis][cache][host]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
                             placeholder="Enter Redis cache host"
                             value="{{ config('database.redis.cache.host', '127.0.0.1') }}">
                     </div>
 
                     <!-- Username -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Username</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Username</label>
                         <input type="text" name="database[redis][cache][username]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
                             placeholder="Enter Redis cache username"
                             value="{{ config('database.redis.cache.username', '') }}">
                     </div>
 
                     <!-- Password -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Password</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Password</label>
                         <input type="password" name="database[redis][cache][password]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
                             placeholder="Enter Redis cache password"
                             value="{{ config('database.redis.cache.password', '') }}">
                     </div>
 
                     <!-- Port -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Port <span
-                                class="text-gray-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Port <span
+                                class="text-gray-500 dark:text-gray-400">*</span></label>
                         <input type="number" name="database[redis][cache][port]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
                             placeholder="6379" min="0" value="{{ config('database.redis.cache.port', 6379) }}">
                     </div>
 
                     <!-- Database -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Database <span
-                                class="text-gray-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Database <span
+                                class="text-gray-500 dark:text-gray-400">*</span></label>
                         <input type="number" name="database[redis][cache][database]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
                             placeholder="1" min="0" max="15"
                             value="{{ config('database.redis.cache.database', 1) }}">
-                        <small class="block mt-1 text-sm text-gray-500">
+                        <small class="block mt-1 text-sm text-gray-500 dark:text-gray-400">
                             {{ __('Recommended: Use database 1 for cache to separate from default') }}
                         </small>
                     </div>
                 </div>
 
-                <div class="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
-                        <i class="mdi mdi-information-outline text-blue-500 mr-2"></i>
-                        <span class="text-sm text-gray-500">
+                        <i class="mdi mdi-information-outline text-blue-500 dark:text-blue-400 mr-2"></i>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">
                             {{ __('Dedicated connection for application caching. Recommended to use a separate database.') }}
                         </span>
                     </div>
@@ -188,12 +191,13 @@
 
             <!-- Redis Horizon Connection -->
             <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
+                class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-4">
-                    <div class="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-lg mr-3">
-                        <i class="mdi mdi-chart-timeline-variant text-purple-500 text-xl"></i>
+                    <div
+                        class="flex items-center justify-center w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg mr-3">
+                        <i class="mdi mdi-chart-timeline-variant text-purple-500 dark:text-purple-400 text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
                         {{ __('Redis Horizon Connection') }}
                     </h3>
                 </div>
@@ -201,66 +205,66 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- URL -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-800 mb-2">URL</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">URL</label>
                         <input type="text" name="database[redis][horizon][url]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-purple-600 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/20 transition-colors duration-300"
                             placeholder="Enter Redis Horizon URL" value="{{ config('database.redis.horizon.url', '') }}">
                     </div>
 
                     <!-- Host -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Host</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Host</label>
                         <input type="text" name="database[redis][horizon][host]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-purple-600 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/20 transition-colors duration-300"
                             placeholder="Enter Redis Horizon host"
                             value="{{ config('database.redis.horizon.host', '127.0.0.1') }}">
                     </div>
 
                     <!-- Username -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Username</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Username</label>
                         <input type="text" name="database[redis][horizon][username]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-purple-600 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/20 transition-colors duration-300"
                             placeholder="Enter Redis Horizon username"
                             value="{{ config('database.redis.horizon.username', '') }}">
                     </div>
 
                     <!-- Password -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Password</label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Password</label>
                         <input type="password" name="database[redis][horizon][password]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-purple-600 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/20 transition-colors duration-300"
                             placeholder="Enter Redis Horizon password"
                             value="{{ config('database.redis.horizon.password', '') }}">
                     </div>
 
                     <!-- Port -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Port <span
-                                class="text-gray-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Port <span
+                                class="text-gray-500 dark:text-gray-400">*</span></label>
                         <input type="number" name="database[redis][horizon][port]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-purple-600 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/20 transition-colors duration-300"
                             placeholder="6379" min="0" value="{{ config('database.redis.horizon.port', 6379) }}">
                     </div>
 
                     <!-- Database -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-800 mb-2">Database <span
-                                class="text-gray-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Database <span
+                                class="text-gray-500 dark:text-gray-400">*</span></label>
                         <input type="number" name="database[redis][horizon][database]"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 shadow-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-200 transition-colors duration-300"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-purple-600 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900/20 transition-colors duration-300"
                             placeholder="0" min="0" max="15"
                             value="{{ config('database.redis.horizon.database', 0) }}">
-                        <small class="block mt-1 text-sm text-gray-500">
+                        <small class="block mt-1 text-sm text-gray-500 dark:text-gray-400">
                             {{ __('Recommended: Use database 0 for Horizon (same as default) or separate if needed.') }}
                         </small>
                     </div>
                 </div>
 
-                <div class="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
-                        <i class="mdi mdi-information-outline text-purple-500 mr-2"></i>
-                        <span class="text-sm text-gray-500">
+                        <i class="mdi mdi-information-outline text-purple-500 dark:text-purple-400 mr-2"></i>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">
                             {{ __('Dedicated Redis connection for Laravel Horizon. You can use the same as default or assign a specific one for better isolation.') }}
                         </span>
                     </div>
@@ -269,31 +273,32 @@
 
             <!-- Recommended Configuration -->
             <div
-                class="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200">
+                class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center mb-4">
-                    <div class="flex items-center justify-center w-10 h-10 bg-green-100 rounded-lg mr-3">
-                        <i class="mdi mdi-check-all text-green-500 text-xl"></i>
+                    <div
+                        class="flex items-center justify-center w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
+                        <i class="mdi mdi-check-all text-green-500 dark:text-green-400 text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
                         {{ __('Best Practices') }}
                     </h3>
                 </div>
 
-                <div class="space-y-3 text-sm text-gray-500">
+                <div class="space-y-3 text-sm text-gray-500 dark:text-gray-400">
                     <div class="flex items-start">
-                        <i class="mdi mdi-check-circle-outline text-green-500 mr-2 mt-0.5"></i>
+                        <i class="mdi mdi-check-circle-outline text-green-500 dark:text-green-400 mr-2 mt-0.5"></i>
                         <span>{{ __('Use different database indexes for default and cache connections') }}</span>
                     </div>
                     <div class="flex items-start">
-                        <i class="mdi mdi-check-circle-outline text-green-500 mr-2 mt-0.5"></i>
+                        <i class="mdi mdi-check-circle-outline text-green-500 dark:text-green-400 mr-2 mt-0.5"></i>
                         <span>{{ __('Enable Redis persistence for data durability') }}</span>
                     </div>
                     <div class="flex items-start">
-                        <i class="mdi mdi-check-circle-outline text-green-500 mr-2 mt-0.5"></i>
+                        <i class="mdi mdi-check-circle-outline text-green-500 dark:text-green-400 mr-2 mt-0.5"></i>
                         <span>{{ __('Use password authentication in production environments') }}</span>
                     </div>
                     <div class="flex items-start">
-                        <i class="mdi mdi-check-circle-outline text-green-500 mr-2 mt-0.5"></i>
+                        <i class="mdi mdi-check-circle-outline text-green-500 dark:text-green-400 mr-2 mt-0.5"></i>
                         <span>{{ __('Consider using Redis clusters for high availability setups') }}</span>
                     </div>
                 </div>

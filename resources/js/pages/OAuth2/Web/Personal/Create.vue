@@ -23,10 +23,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <!-- Create Button -->
     <button
         @click="open"
-        class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200 shadow-sm"
+        class="create-btn group inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
     >
         <svg
-            class="w-5 h-5"
+            class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-200"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -42,74 +42,125 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </button>
 
     <!-- Dialog -->
-    <transition
-        enter-active-class="transition-opacity duration-300"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition-opacity duration-200"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-    >
-        <div
-            v-if="dialog"
-            class="fixed inset-0 z-50 overflow-y-auto"
-            role="dialog"
-            aria-modal="true"
-            :aria-label="__('Generate New API Key')"
-        >
-            <!-- Backdrop -->
-            <div
-                class="fixed inset-0 bg-black/80 transition-opacity"
-                @click="close"
-            ></div>
-
-            <!-- Dialog Panel -->
-            <div class="flex min-h-full items-center justify-center p-4">
-                <div
-                    class="relative bg-white rounded-xl shadow-xl w-full max-w-7xl max-h-[90vh] overflow-hidden transform transition-all"
-                >
-                    <!-- Header -->
+    <v-modal v-model="dialog" panel-class="w-full max-w-7xl">
+        <template #body>
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
                     <div
-                        class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white"
+                        class="flex items-center justify-center w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg transition-colors duration-200"
                     >
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-lg"
-                            >
-                                <svg
-                                    class="w-5 h-5 text-indigo-600"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                                    />
-                                </svg>
-                            </div>
-                            <div>
-                                <h2 class="text-lg font-semibold text-gray-900">
-                                    {{ __("Generate New API Key") }}
-                                </h2>
-                                <p class="text-sm text-gray-500 mt-1">
-                                    {{
-                                        __(
-                                            "Create a new API key with specific permissions"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-                        <button
-                            @click="close"
-                            class="rounded-lg p-2 hover:bg-gray-100 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            :aria-label="__('Close dialog')"
+                        <svg
+                            class="w-5 h-5 text-indigo-600 dark:text-indigo-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
                         >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                            />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2
+                            class="text-lg font-semibold text-gray-900 dark:text-white"
+                        >
+                            {{ __("Generate New API Key") }}
+                        </h2>
+                        <p
+                            class="text-sm text-gray-500 dark:text-gray-400 mt-1"
+                        >
+                            {{
+                                __(
+                                    "Create a new API key with specific permissions"
+                                )
+                            }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Content -->
+            <div class="space-y-6">
+                <!-- Key Name Section -->
+                <div class="space-y-3">
+                    <label
+                        for="key-name"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                        {{ __("Key Name") }}
+                        <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                        id="key-name"
+                        v-model="form.name"
+                        type="text"
+                        :placeholder="
+                            __('e.g., Production Server, Mobile App, etc.')
+                        "
+                        :class="[
+                            'w-full px-3 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
+                            errors.name
+                                ? 'border-red-300 dark:border-red-500 bg-red-50 dark:bg-red-900/20'
+                                : 'border-gray-300 dark:border-gray-600',
+                        ]"
+                        :disabled="loading"
+                    />
+                    <v-error :error="errors.name" />
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">
+                        {{
+                            __(
+                                "Choose a descriptive name to identify this API key"
+                            )
+                        }}
+                    </p>
+                </div>
+
+                <!-- Token Display -->
+                <div
+                    v-if="token"
+                    class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 space-y-3 animate-fade-in"
+                >
+                    <div class="flex items-center gap-2">
+                        <svg
+                            class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                        <h4
+                            class="text-green-800 dark:text-green-300 font-medium text-sm"
+                        >
+                            {{ __("API Key Generated Successfully!") }}
+                        </h4>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p
+                            class="text-green-700 dark:text-green-300 text-sm font-medium"
+                        >
+                            {{ __("Your new API key:") }}
+                        </p>
+                        <div
+                            class="bg-white dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg p-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-green-50 dark:hover:bg-green-900/30 transition-all duration-150 group"
+                            @click="copyToClipboard(token.accessToken)"
+                            role="button"
+                            :aria-label="__('Copy API key to clipboard')"
+                        >
+                            <code
+                                class="font-mono text-sm text-gray-800 dark:text-gray-200 break-all flex-1"
+                                >{{ token.accessToken }}</code
+                            >
                             <svg
-                                class="w-5 h-5 text-gray-500"
+                                class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 group-hover:scale-110 transition-transform"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -118,324 +169,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"
+                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-2"
                                 />
                             </svg>
-                        </button>
-                    </div>
-
-                    <!-- Form Content -->
-                    <div
-                        class="px-6 py-4 space-y-6 overflow-y-auto max-h-[calc(90vh-180px)]"
-                    >
-                        <!-- Key Name Section -->
-                        <div class="space-y-3">
-                            <label
-                                for="key-name"
-                                class="block text-sm font-medium text-gray-700"
-                            >
-                                {{ __("Key Name") }}
-                                <span class="text-red-500">*</span>
-                            </label>
-                            <input
-                                id="key-name"
-                                v-model="form.name"
-                                type="text"
-                                :placeholder="
-                                    __(
-                                        'e.g., Production Server, Mobile App, etc.'
-                                    )
-                                "
-                                :class="[
-                                    'w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200',
-                                    errors.name
-                                        ? 'border-red-300 bg-red-50'
-                                        : 'border-gray-300',
-                                ]"
-                                :disabled="loading"
-                            />
-                            <p
-                                v-if="errors.name"
-                                class="text-red-600 text-sm flex items-center gap-1"
-                            >
-                                <svg
-                                    class="w-4 h-4 flex-shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                {{ errors.name }}
-                            </p>
-                            <p class="text-gray-500 text-sm">
-                                {{
-                                    __(
-                                        "Choose a descriptive name to identify this API key"
-                                    )
-                                }}
-                            </p>
                         </div>
-
-                        <!-- Token Display -->
-                        <div
-                            v-if="token"
-                            class="bg-green-50 border border-green-200 rounded-lg p-4 space-y-3"
-                        >
-                            <div class="flex items-center gap-2">
-                                <svg
-                                    class="w-5 h-5 text-green-600 flex-shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <h4 class="text-green-800 font-medium text-sm">
-                                    {{ __("API Key Generated Successfully!") }}
-                                </h4>
-                            </div>
-
-                            <div class="space-y-2">
-                                <p class="text-green-700 text-sm font-medium">
-                                    {{ __("Your new API key:") }}
-                                </p>
-                                <div
-                                    class="bg-white border border-green-300 rounded-lg p-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-green-25 transition-colors duration-150 group"
-                                    @click="copyToClipboard(token.accessToken)"
-                                    role="button"
-                                    :aria-label="
-                                        __('Copy API key to clipboard')
-                                    "
-                                >
-                                    <code
-                                        class="font-mono text-sm text-gray-800 break-all flex-1"
-                                        >{{ token.accessToken }}</code
-                                    >
-                                    <svg
-                                        class="w-5 h-5 text-green-600 flex-shrink-0 group-hover:scale-110 transition-transform"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-2"
-                                        />
-                                    </svg>
-                                </div>
-                                <p
-                                    class="text-green-600 text-xs flex items-center gap-1"
-                                >
-                                    <svg
-                                        class="w-4 h-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        />
-                                    </svg>
-                                    {{
-                                        __(
-                                            "Click to copy the API key. Save it securely - you won't be able to see it again!"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Scopes Section -->
-                        <div v-if="scopes.length > 0" class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <label
-                                    class="block text-sm font-medium text-gray-700"
-                                >
-                                    {{ __("Permissions") }}
-                                </label>
-                                <span
-                                    class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"
-                                >
-                                    {{ selectedScopesCount }}
-                                    {{ __("selected") }}
-                                </span>
-                            </div>
-
-                            <div class="space-y-3">
-                                <div
-                                    v-for="(services, group) in groupedScopes"
-                                    :key="group"
-                                    class="border border-gray-200 rounded-lg overflow-hidden"
-                                >
-                                    <button
-                                        @click="toggleGroup(group)"
-                                        class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 flex items-center justify-between text-left transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-inset"
-                                        :aria-expanded="
-                                            expandedGroups.includes(group)
-                                        "
-                                        :aria-controls="`group-${group}`"
-                                    >
-                                        <span
-                                            class="font-medium text-gray-900 capitalize"
-                                            >{{ group }}</span
-                                        >
-                                        <div class="flex items-center gap-3">
-                                            <span
-                                                class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full"
-                                            >
-                                                {{
-                                                    getGroupScopeCount(services)
-                                                }}
-                                                {{ __("permissions") }}
-                                            </span>
-                                            <svg
-                                                class="w-4 h-4 text-gray-500 transition-transform duration-200"
-                                                :class="{
-                                                    'rotate-180':
-                                                        expandedGroups.includes(
-                                                            group
-                                                        ),
-                                                }"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"
-                                                />
-                                            </svg>
-                                        </div>
-                                    </button>
-
-                                    <div
-                                        v-show="expandedGroups.includes(group)"
-                                        :id="`group-${group}`"
-                                        class="px-4 py-3 bg-white space-y-4 border-t border-gray-200"
-                                    >
-                                        <div
-                                            v-for="(roles, service) in services"
-                                            :key="service"
-                                            class="space-y-3"
-                                        >
-                                            <h5
-                                                class="font-medium text-gray-800 text-sm capitalize flex items-center gap-2"
-                                            >
-                                                <svg
-                                                    class="w-4 h-4 text-gray-500"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                                                    />
-                                                </svg>
-                                                {{ service }}
-                                            </h5>
-
-                                            <div
-                                                class="grid grid-cols-1 md:grid-cols-2 gap-3"
-                                            >
-                                                <label
-                                                    v-for="role in roles"
-                                                    :key="role.id"
-                                                    class="flex items-start gap-3 p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
-                                                    :class="{
-                                                        'bg-blue-50 border-blue-200':
-                                                            form.scopes.includes(
-                                                                role.id
-                                                            ),
-                                                    }"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        v-model="form.scopes"
-                                                        :value="role.id"
-                                                        :disabled="loading"
-                                                        class="mt-0.5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                                                    />
-                                                    <div class="flex-1 min-w-0">
-                                                        <span
-                                                            class="block text-sm font-medium text-gray-900 capitalize"
-                                                        >
-                                                            {{ role.name }}
-                                                        </span>
-                                                        <p
-                                                            class="text-xs text-gray-500 mt-1 leading-relaxed"
-                                                        >
-                                                            {{
-                                                                role.description
-                                                            }}
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Loading State for Scopes -->
-                        <div
-                            v-if="scopes.length === 0 && dialog"
-                            class="flex items-center justify-center py-8"
-                        >
-                            <div class="flex items-center gap-3 text-gray-500">
-                                <svg
-                                    class="animate-spin h-5 w-5 text-indigo-600"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <circle
-                                        class="opacity-25"
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        stroke-width="4"
-                                    ></circle>
-                                    <path
-                                        class="opacity-75"
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                </svg>
-                                <span class="text-sm">
-                                    {{ __("Loading permissions...") }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Footer -->
-                    <div
-                        class="flex flex-col sm:flex-row justify-between gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50"
-                    >
-                        <div
-                            class="text-sm text-gray-500 flex items-center gap-2"
+                        <p
+                            class="text-green-600 dark:text-green-400 text-xs flex items-center gap-1"
                         >
                             <svg
-                                class="w-4 h-4 text-gray-400"
+                                class="w-4 h-4"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -449,76 +191,317 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </svg>
                             {{
                                 __(
-                                    "Make sure to copy your API key before closing this dialog"
+                                    "Click to copy the API key. Save it securely - you won't be able to see it again!"
                                 )
                             }}
-                        </div>
-                        <div class="flex gap-3">
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Scopes Section -->
+                <div v-if="scopes.length > 0" class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
+                            {{ __("Permissions") }}
+                        </label>
+                        <span
+                            class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded transition-colors duration-200"
+                        >
+                            {{ selectedScopesCount }}
+                            {{ __("selected") }}
+                        </span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div
+                            v-for="(services, group) in groupedScopes"
+                            :key="group"
+                            class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-200 hover:shadow-sm"
+                        >
                             <button
-                                @click="close"
-                                :disabled="loading"
-                                class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                @click="toggleGroup(group)"
+                                class="w-full px-4 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between text-left transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-inset"
+                                :aria-expanded="expandedGroups.includes(group)"
+                                :aria-controls="`group-${group}`"
                             >
-                                {{ token ? __("Done") : __("Cancel") }}
-                            </button>
-                            <button
-                                v-if="!token"
-                                @click="create"
-                                :disabled="loading || !form.name.trim()"
-                                class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                            >
-                                <svg
-                                    v-if="loading"
-                                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
+                                <span
+                                    class="font-medium text-gray-900 dark:text-white capitalize"
+                                    >{{ formatGroupName(group) }}</span
                                 >
-                                    <circle
-                                        class="opacity-25"
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
+                                <div class="flex items-center gap-3">
+                                    <span
+                                        class="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded-full transition-colors duration-200"
+                                    >
+                                        {{ getGroupScopeCount(services) }}
+                                        {{ __("permissions") }}
+                                    </span>
+                                    <svg
+                                        class="w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform duration-200"
+                                        :class="{
+                                            'rotate-180':
+                                                expandedGroups.includes(group),
+                                        }"
+                                        fill="none"
                                         stroke="currentColor"
-                                        stroke-width="4"
-                                    ></circle>
-                                    <path
-                                        class="opacity-75"
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                </svg>
-                                <svg
-                                    v-else
-                                    class="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                                    />
-                                </svg>
-                                <span>{{
-                                    loading
-                                        ? __("Generating...")
-                                        : __("Generate API Key")
-                                }}</span>
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M19 9l-7 7-7-7"
+                                        />
+                                    </svg>
+                                </div>
                             </button>
+
+                            <div
+                                v-show="expandedGroups.includes(group)"
+                                :id="`group-${group}`"
+                                class="px-4 py-3 bg-white dark:bg-gray-800 space-y-4 border-t border-gray-200 dark:border-gray-700"
+                            >
+                                <div
+                                    v-for="(roles, service) in services"
+                                    :key="service"
+                                    class="space-y-3"
+                                >
+                                    <h5
+                                        class="font-medium text-gray-800 dark:text-gray-200 text-sm capitalize flex items-center gap-2"
+                                    >
+                                        <svg
+                                            class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                                            />
+                                        </svg>
+                                        {{ formatServiceName(service) }}
+                                    </h5>
+
+                                    <div
+                                        class="grid grid-cols-1 md:grid-cols-2 gap-3"
+                                    >
+                                        <label
+                                            v-for="role in roles"
+                                            :key="role.id"
+                                            class="flex items-start gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 cursor-pointer group"
+                                            :class="{
+                                                'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700':
+                                                    form.scopes.includes(
+                                                        role.id
+                                                    ),
+                                            }"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                v-model="form.scopes"
+                                                :value="role.id"
+                                                :disabled="loading"
+                                                class="mt-0.5 text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 transition-colors duration-200"
+                                            />
+                                            <div class="flex-1 min-w-0">
+                                                <span
+                                                    class="block text-sm font-medium text-gray-900 dark:text-white capitalize"
+                                                >
+                                                    {{
+                                                        formatRoleName(
+                                                            role.name
+                                                        )
+                                                    }}
+                                                </span>
+                                                <p
+                                                    class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed"
+                                                >
+                                                    {{ role.description }}
+                                                </p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State for Scopes -->
+                <div
+                    v-if="scopes.length === 0 && dialog"
+                    class="flex items-center justify-center py-8"
+                >
+                    <div
+                        class="flex items-center gap-3 text-gray-500 dark:text-gray-400"
+                    >
+                        <svg
+                            class="animate-spin h-5 w-5 text-indigo-600 dark:text-indigo-400"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                            ></circle>
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                        <span class="text-sm">
+                            {{ __("Loading permissions...") }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Security Notice -->
+                <div
+                    class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
+                >
+                    <div class="flex items-start gap-3">
+                        <svg
+                            class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        <div class="text-sm text-blue-700 dark:text-blue-300">
+                            <p class="font-medium mb-1">
+                                {{ __("Security Best Practices") }}
+                            </p>
+                            <p>
+                                {{
+                                    __(
+                                        "Only grant the minimum permissions required. Regularly review and rotate your API keys."
+                                    )
+                                }}
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </transition>
+
+            <!-- Footer -->
+            <div
+                class="flex flex-col sm:flex-row justify-between gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700"
+            >
+                <div
+                    class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2"
+                >
+                    <svg
+                        class="w-4 h-4 text-gray-400 dark:text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                    </svg>
+                    {{
+                        __(
+                            "Make sure to copy your API key before closing this dialog"
+                        )
+                    }}
+                </div>
+                <div class="flex gap-3">
+                    <button
+                        @click="close"
+                        :disabled="loading"
+                        class="px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {{ token ? __("Done") : __("Cancel") }}
+                    </button>
+                    <button
+                        v-if="!token"
+                        @click="create"
+                        :disabled="loading || !form.name.trim()"
+                        :class="[
+                            'inline-flex items-center gap-2 px-4 py-2.5 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm',
+                            loading || !form.name.trim()
+                                ? 'bg-indigo-400 dark:bg-indigo-500'
+                                : 'bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-600',
+                        ]"
+                    >
+                        <svg
+                            v-if="loading"
+                            class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                            ></circle>
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                        <svg
+                            v-else
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"
+                            />
+                        </svg>
+                        <span>{{
+                            loading
+                                ? __("Generating...")
+                                : __("Generate API Key")
+                        }}</span>
+                    </button>
+                </div>
+            </div>
+        </template>
+    </v-modal>
 </template>
 
 <script>
+import VModal from "@/components/VModal.vue";
+import VError from "@/components/VError.vue";
+
 export default {
     emits: ["created"],
+    components: {
+        VModal,
+        VError,
+    },
+
     data() {
         return {
             form: {
@@ -587,18 +570,36 @@ export default {
             }
         },
 
+        formatGroupName(group) {
+            return group
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase());
+        },
+
+        formatServiceName(service) {
+            return service
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase());
+        },
+
+        formatRoleName(role) {
+            return role
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase());
+        },
+
         async copyToClipboard(text) {
             try {
                 await navigator.clipboard.writeText(text);
-                 $notify.success(__("API key copied to clipboard"));
+                this.$notify.success(this.__("API key copied to clipboard"));
             } catch (e) {
-                 $notify.error(__("Failed to copy to clipboard"));
+                this.$notify.error(this.__("Failed to copy to clipboard"));
             }
         },
 
         async create() {
             if (!this.form.name.trim()) {
-                this.errors = { name: __("Key name is required") };
+                this.errors = { name: this.__("Key name is required") };
                 return;
             }
 
@@ -615,7 +616,9 @@ export default {
                 if (res.status == 200) {
                     this.token = res.data;
                     this.$emit("created");
-                     $notify.success(__("API key generated successfully"));
+                    this.$notify.success(
+                        this.__("API key generated successfully")
+                    );
                 }
             } catch (e) {
                 if (e?.response?.status == 422) {
@@ -623,7 +626,7 @@ export default {
                 }
 
                 if (e?.response?.data?.message) {
-                     $notify.success(e.response.data.message);
+                    this.$notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
@@ -635,7 +638,7 @@ export default {
                 const res = await this.$server.get("/oauth/scopes");
                 this.scopes = res.data;
             } catch (error) {
-                 $notify.success(__("Failed to load permissions"));
+                this.$notify.error(this.__("Failed to load permissions"));
             }
         },
 
@@ -648,3 +651,20 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>

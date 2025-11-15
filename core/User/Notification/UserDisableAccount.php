@@ -1,5 +1,6 @@
 <?php
-namespace App\Notifications\User;
+
+namespace Core\User\Notification;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -61,14 +62,18 @@ class UserDisableAccount extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject(__('Account Deactivation Notice'))
-            ->greeting(__('Hello :name :last_name', ['name' => $notifiable->name, 'last_name' => $notifiable->last_name]))
-            ->line(__('We are writing to inform you that your account has been successfully deactivated.'))
-            ->line(__('If this was a mistake or you wish to regain access, you can reactivate your account at any time by logging back in.'))
-            ->action(__('Visit ') . config('app.name'), url(env('FRONTEND_URL')))
-            ->line(__('Thank you for being part of our platform. We appreciate your presence and support.'));
+            ->greeting(__('Hello :name :last_name,', [
+                'name' => $notifiable->name,
+                'last_name' => $notifiable->last_name,
+            ]))
+            ->line(__('We wanted to let you know that your account has been successfully deactivated.'))
+            ->line(__('If this was unintentional, you can easily reactivate it by signing back in.'))
+            ->action(__('Return to ') . config('app.name'), config('app.url'))
+            ->line(__('Thank you for being part of our community. We appreciate your trust and support.'));
     }
+
 
     /**
      * Get the array representation of the notification.

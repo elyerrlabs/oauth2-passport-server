@@ -21,16 +21,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-account-layout>
-        <div class="min-h-screen bg-gray-50 py-4 px-4 sm:px-6 lg:px-8">
+        <div
+            class="min-h-screen bg-white dark:bg-gray-900 py-4 px-4 sm:px-6 lg:px-8 transition-colors duration-200"
+        >
             <div class="max-w-4xl mx-auto">
                 <!-- Compact Header -->
                 <div class="mb-6">
                     <div class="flex items-center space-x-3">
                         <div
-                            class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center transition-colors duration-200"
                         >
                             <svg
-                                class="w-5 h-5 text-blue-600"
+                                class="w-5 h-5 text-blue-600 dark:text-blue-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -44,10 +46,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-lg font-semibold text-gray-900">
+                            <h1
+                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                            >
                                 {{ __("Update Password") }}
                             </h1>
-                            <p class="text-sm text-gray-600 mt-1">
+                            <p
+                                class="text-sm text-gray-600 dark:text-gray-400 mt-1"
+                            >
                                 {{ __("Secure your account") }}
                             </p>
                         </div>
@@ -57,13 +63,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                     <!-- Password Form Card -->
                     <div
-                        class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-all duration-200 hover:shadow-md"
                     >
                         <div class="space-y-5">
                             <!-- Current Password -->
                             <div class="space-y-2">
                                 <label
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                                 >
                                     {{ __("Current Password") }}
                                 </label>
@@ -75,11 +81,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 : 'password'
                                         "
                                         v-model="form.current_password"
-                                        placeholder="Enter current password"
-                                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                                        :placeholder="
+                                            __('Enter current password')
+                                        "
+                                        class="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         :class="{
-                                            'border-red-500':
-                                                errors.current_password,
+                                            'border-red-500 dark:border-red-400':
+                                                form.errors.current_password,
+                                            'border-green-500 dark:border-green-400':
+                                                form.current_password &&
+                                                !form.errors.current_password,
                                         }"
                                     />
                                     <button
@@ -87,7 +98,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             showCurrentPassword =
                                                 !showCurrentPassword
                                         "
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        type="button"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                                        :aria-label="
+                                            showCurrentPassword
+                                                ? 'Hide password'
+                                                : 'Show password'
+                                        "
                                     >
                                         <svg
                                             v-if="showCurrentPassword"
@@ -125,13 +142,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </svg>
                                     </button>
                                 </div>
-                                <v-error :error="errors.current_password" />
+                                <v-error
+                                    :error="form.errors.current_password"
+                                />
                             </div>
 
                             <!-- New Password -->
                             <div class="space-y-2">
                                 <label
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                                 >
                                     {{ __("New Password") }}
                                 </label>
@@ -143,17 +162,28 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 : 'password'
                                         "
                                         v-model="form.password"
-                                        placeholder="Create new password"
-                                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                                        :placeholder="__('Create new password')"
+                                        class="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         :class="{
-                                            'border-red-500': errors.password,
+                                            'border-red-500 dark:border-red-400':
+                                                form.errors.password,
+                                            'border-green-500 dark:border-green-400':
+                                                form.password &&
+                                                !form.errors.password &&
+                                                passwordStrength >= 0.7,
                                         }"
                                     />
                                     <button
                                         @click="
                                             showNewPassword = !showNewPassword
                                         "
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        type="button"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                                        :aria-label="
+                                            showNewPassword
+                                                ? 'Hide password'
+                                                : 'Show password'
+                                        "
                                     >
                                         <svg
                                             v-if="showNewPassword"
@@ -193,24 +223,39 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </div>
 
                                 <!-- Password Strength Indicator -->
-                                <div v-if="form.password" class="mt-2">
+                                <div v-if="form.password" class="mt-3">
                                     <div
-                                        class="flex items-center justify-between text-xs text-gray-600 mb-1"
+                                        class="flex items-center justify-between text-xs mb-2"
+                                        :class="passwordStrengthTextColor"
                                     >
                                         <span
                                             >{{
                                                 __("Password strength")
                                             }}:</span
                                         >
-                                        <span class="font-medium">{{
-                                            passwordStrengthText
-                                        }}</span>
+                                        <span
+                                            class="font-medium flex items-center"
+                                        >
+                                            {{ passwordStrengthText }}
+                                            <svg
+                                                v-if="passwordStrength >= 0.7"
+                                                class="w-3 h-3 ml-1 text-green-500"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                    clip-rule="evenodd"
+                                                />
+                                            </svg>
+                                        </span>
                                     </div>
                                     <div
-                                        class="w-full bg-gray-200 rounded-full h-1.5"
+                                        class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2"
                                     >
                                         <div
-                                            class="h-1.5 rounded-full transition-all duration-300"
+                                            class="h-2 rounded-full transition-all duration-500 ease-out"
                                             :class="passwordStrengthColor"
                                             :style="{
                                                 width: `${
@@ -219,14 +264,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             }"
                                         ></div>
                                     </div>
+                                    <div class="mt-2 grid grid-cols-4 gap-1">
+                                        <div
+                                            v-for="n in 4"
+                                            :key="n"
+                                            class="h-1 rounded-full transition-colors duration-300"
+                                            :class="
+                                                n <=
+                                                Math.ceil(passwordStrength * 4)
+                                                    ? passwordStrengthSegmentColor
+                                                    : 'bg-gray-200 dark:bg-gray-600'
+                                            "
+                                        ></div>
+                                    </div>
                                 </div>
-                                <v-error :error="errors.password" />
+                                <v-error :error="form.errors.password" />
                             </div>
 
                             <!-- Confirm Password -->
                             <div class="space-y-2">
                                 <label
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                                 >
                                     {{ __("Confirm Password") }}
                                 </label>
@@ -238,11 +296,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 : 'password'
                                         "
                                         v-model="form.password_confirmation"
-                                        placeholder="Confirm new password"
-                                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                                        :placeholder="
+                                            __('Confirm new password')
+                                        "
+                                        class="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         :class="{
-                                            'border-red-500':
-                                                errors.password_confirmation,
+                                            'border-red-500 dark:border-red-400':
+                                                form.errors
+                                                    .password_confirmation,
+                                            'border-green-500 dark:border-green-400':
+                                                form.password_confirmation &&
+                                                !form.errors
+                                                    .password_confirmation &&
+                                                passwordsMatch,
                                         }"
                                     />
                                     <button
@@ -250,7 +316,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             showConfirmPassword =
                                                 !showConfirmPassword
                                         "
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        type="button"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                                        :aria-label="
+                                            showConfirmPassword
+                                                ? 'Hide password'
+                                                : 'Show password'
+                                        "
                                     >
                                         <svg
                                             v-if="showConfirmPassword"
@@ -298,7 +370,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="mt-2 flex items-center"
                                 >
                                     <svg
-                                        class="w-3.5 h-3.5 mr-2"
+                                        class="w-3.5 h-3.5 mr-2 shrink-0"
                                         :class="
                                             passwordsMatch
                                                 ? 'text-green-500'
@@ -324,22 +396,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         />
                                     </svg>
                                     <span
-                                        class="text-xs"
+                                        class="text-xs font-medium"
                                         :class="
                                             passwordsMatch
-                                                ? 'text-green-600'
-                                                : 'text-red-600'
+                                                ? 'text-green-600 dark:text-green-400'
+                                                : 'text-red-600 dark:text-red-400'
                                         "
                                     >
                                         {{
                                             passwordsMatch
-                                                ? "Passwords match"
-                                                : "Passwords do not match"
+                                                ? __("Passwords match")
+                                                : __("Passwords do not match")
                                         }}
                                     </span>
                                 </div>
                                 <v-error
-                                    :error="errors.password_confirmation"
+                                    :error="form.errors.password_confirmation"
                                 />
                             </div>
 
@@ -347,8 +419,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="pt-2">
                                 <button
                                     @click="update"
-                                    :disabled="loading"
-                                    class="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-1 focus:ring-blue-500 focus:ring-offset-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
+                                    :disabled="loading || !isFormValid"
+                                    class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm shadow-sm hover:shadow-md"
                                 >
                                     <svg
                                         v-if="loading"
@@ -372,8 +444,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </svg>
                                     {{
                                         loading
-                                            ? "Updating..."
-                                            : "Update Password"
+                                            ? __("Updating...")
+                                            : __("Update Password")
                                     }}
                                 </button>
                             </div>
@@ -382,14 +454,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Security Tips -->
                     <div
-                        class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full"
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 h-full transition-all duration-200 hover:shadow-md"
                     >
                         <div class="flex items-center mb-4">
                             <div
-                                class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3"
+                                class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-3 transition-colors duration-200"
                             >
                                 <svg
-                                    class="w-4 h-4 text-green-600"
+                                    class="w-4 h-4 text-green-600 dark:text-green-400"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -402,14 +474,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     />
                                 </svg>
                             </div>
-                            <h2 class="text-base font-semibold text-gray-900">
+                            <h2
+                                class="text-base font-semibold text-gray-900 dark:text-white"
+                            >
                                 {{ __("Password Security Tips") }}
                             </h2>
                         </div>
                         <ul class="space-y-3 text-sm">
-                            <li class="flex items-start">
+                            <li
+                                v-for="(tip, index) in securityTips"
+                                :key="index"
+                                class="flex items-start group"
+                            >
                                 <svg
-                                    class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0"
+                                    class="w-4 h-4 text-green-500 dark:text-green-400 mr-3 mt-0.5 shrink-0 transition-transform duration-200 group-hover:scale-110"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -421,71 +499,41 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         d="M5 13l4 4L19 7"
                                     />
                                 </svg>
-                                <span class="text-gray-600"
-                                    >{{ __("Use at least 8 character") }}s</span
+                                <span
+                                    class="text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors duration-200"
                                 >
-                            </li>
-                            <li class="flex items-start">
-                                <svg
-                                    class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 13l4 4L19 7"
-                                    />
-                                </svg>
-                                <span class="text-gray-600">{{
-                                    __(
-                                        "Include uppercase and lowercase letters"
-                                    )
-                                }}</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg
-                                    class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 13l4 4L19 7"
-                                    />
-                                </svg>
-                                <span class="text-gray-600">{{
-                                    __("Add numbers and special characters")
-                                }}</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg
-                                    class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 13l4 4L19 7"
-                                    />
-                                </svg>
-                                <span class="text-gray-600"
-                                    >{{
-                                        __(
-                                            "Avoid common words or personal information"
-                                        )
-                                    }}
+                                    {{ tip }}
                                 </span>
                             </li>
                         </ul>
+
+                        <!-- Additional Security Info -->
+                        <div
+                            class="mt-6 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800"
+                        >
+                            <div class="flex items-start">
+                                <svg
+                                    class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 mr-2 shrink-0"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                                <p
+                                    class="text-xs text-blue-700 dark:text-blue-300"
+                                >
+                                    {{
+                                        __(
+                                            "Your password is encrypted and stored securely. We recommend updating it every 3-6 months."
+                                        )
+                                    }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -493,111 +541,113 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-account-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
 import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import { useForm, usePage } from "@inertiajs/vue3";
+import VError from "@/components/VError.vue";
 
-export default {
-    components: {
-        VAccountLayout,
-    },
-    data() {
-        return {
-            form: {
-                current_password: "",
-                password: "",
-                password_confirmation: "",
-            },
-            errors: {},
-            loading: false,
-            showCurrentPassword: false,
-            showNewPassword: false,
-            showConfirmPassword: false,
-        };
-    },
+const page = usePage();
 
-    computed: {
-        passwordStrength() {
-            if (!this.form.password) return 0;
+// Reactive state
+const form = useForm({
+    current_password: "",
+    password: "",
+    password_confirmation: "",
+});
 
-            let strength = 0;
-            const password = this.form.password;
+const loading = ref(false);
+const showCurrentPassword = ref(false);
+const showNewPassword = ref(false);
+const showConfirmPassword = ref(false);
 
-            // Length check
-            if (password.length >= 8) strength += 0.2;
-            if (password.length >= 12) strength += 0.1;
+// Computed: consejos de seguridad
+const securityTips = computed(() => [
+    __("Use at least 12 characters"),
+    __("Include uppercase and lowercase letters"),
+    __("Add numbers and special characters"),
+    __("Avoid common words or personal information"),
+    __("Don't reuse passwords from other sites"),
+    __("Consider using a passphrase"),
+]);
 
-            // Character variety checks
-            if (/[A-Z]/.test(password)) strength += 0.2;
-            if (/[a-z]/.test(password)) strength += 0.2;
-            if (/[0-9]/.test(password)) strength += 0.2;
-            if (/[^A-Za-z0-9]/.test(password)) strength += 0.2;
+// Fuerza de contraseña
+const passwordStrength = computed(() => {
+    if (!form.password) return 0;
 
-            return Math.min(strength, 1);
+    let strength = 0;
+    const password = form.password;
+
+    // Longitud
+    if (password.length >= 8) strength += 0.15;
+    if (password.length >= 12) strength += 0.15;
+    if (password.length >= 16) strength += 0.1;
+
+    // Variedad de caracteres
+    if (/[A-Z]/.test(password)) strength += 0.15;
+    if (/[a-z]/.test(password)) strength += 0.15;
+    if (/[0-9]/.test(password)) strength += 0.15;
+    if (/[^A-Za-z0-9]/.test(password)) strength += 0.15;
+
+    // Bonus
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 0.1;
+    if (/[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password))
+        strength += 0.05;
+
+    return Math.min(strength, 1);
+});
+
+const passwordStrengthColor = computed(() => {
+    if (passwordStrength.value < 0.4) return "bg-red-500";
+    if (passwordStrength.value < 0.7) return "bg-yellow-500";
+    return "bg-green-500";
+});
+
+const passwordStrengthSegmentColor = computed(() => {
+    if (passwordStrength.value < 0.4) return "bg-red-500";
+    if (passwordStrength.value < 0.7) return "bg-yellow-500";
+    return "bg-green-500";
+});
+
+const passwordStrengthTextColor = computed(() => {
+    if (passwordStrength.value < 0.4) return "text-red-600 dark:text-red-400";
+    if (passwordStrength.value < 0.7)
+        return "text-yellow-600 dark:text-yellow-400";
+    return "text-green-600 dark:text-green-400";
+});
+
+const passwordStrengthText = computed(() => {
+    if (passwordStrength.value < 0.4) return __("Weak");
+    if (passwordStrength.value < 0.7) return __("Medium");
+    return __("Strong");
+});
+
+const passwordsMatch = computed(
+    () => form.password === form.password_confirmation && form.password !== ""
+);
+
+const isFormValid = computed(
+    () =>
+        form.current_password &&
+        form.password &&
+        form.password_confirmation &&
+        passwordsMatch.value &&
+        passwordStrength.value >= 0.4
+);
+
+async function update() {
+    loading.value = true;
+
+    form.put(page.props.user.links.change_password, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            form.resetAndClearErrors();
+            $notify.success(__("Password has been updated successfully"));
         },
-
-        passwordStrengthColor() {
-            if (this.passwordStrength < 0.4) return "bg-red-500";
-            if (this.passwordStrength < 0.7) return "bg-yellow-500";
-            return "bg-green-500";
+        onFinish: () => {
+            loading.value = false;
         },
-
-        passwordStrengthText() {
-            if (this.passwordStrength < 0.4) return "Weak";
-            if (this.passwordStrength < 0.7) return "Medium";
-            return "Strong";
-        },
-
-        passwordsMatch() {
-            return (
-                this.form.password === this.form.password_confirmation &&
-                this.form.password !== ""
-            );
-        },
-    },
-
-    methods: {
-        async update() {
-            this.loading = true;
-            this.errors = {};
-
-            try {
-                const res = await this.$server.put(
-                    this.$page.props.user.links.change_password,
-                    this.form
-                );
-
-                if (res.status === 200) {
-                    this.form = {
-                        current_password: "",
-                        password: "",
-                        password_confirmation: "",
-                    };
-
-                    this.$q.notify({
-                        type: "positive",
-                        message: res.data.message,
-                        timeout: 3000,
-                        position: "top-right",
-                        icon: "mdi-check-circle",
-                        progress: true,
-                    });
-                }
-            } catch (e) {
-                if (e.response && e.response.status == 422) {
-                    this.errors = e.response.data.errors;
-                }
-
-                if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
-};
+    });
+}
 </script>

@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\User\Transformer\User;
 
 /**
@@ -19,15 +20,15 @@ namespace Core\User\Transformer\User;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\User\Model\Service;
+use Core\User\Model\Scope;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
-class ServiceUserTransformer extends TransformerAbstract
+class ScopeTransformer extends TransformerAbstract
 {
     use Asset;
 
@@ -54,15 +55,16 @@ class ServiceUserTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(Service $data)
+    public function transform($data)
     {
         return [
             'id' => $data->id,
-            'name' => $data->name,
-            'slug' => $data->slug,
-            'description' => $data->description,
-            'created' => $this->format_date($data->created_at),
-            'updated' => $this->format_date($data->updated_at),
+            'gsr_id' => $data->getGsrId(),
+            'role' => [
+                'id' => $data->role->id,
+                'name' => $data->role->name,
+                'description' => $data->role->description,
+            ],
         ];
     }
 
@@ -81,7 +83,6 @@ class ServiceUserTransformer extends TransformerAbstract
             'group_id' => "group_id",
             'created' => "created_at",
             'updated' => "updated_at",
-            'visibility' => 'visibility',
         ];
 
         return isset($attributes[$index]) ? $attributes[$index] : null;

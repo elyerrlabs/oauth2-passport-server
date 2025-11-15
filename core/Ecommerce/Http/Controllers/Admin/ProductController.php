@@ -76,7 +76,7 @@ final class ProductController extends WebController
                 ],
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
-        )->rootView('ecommerce');
+        );
     }
 
     /**
@@ -97,7 +97,7 @@ final class ProductController extends WebController
                 ],
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
-        )->rootView('ecommerce');
+        );
 
     }
 
@@ -122,7 +122,7 @@ final class ProductController extends WebController
                 ],
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
-        )->rootView('ecommerce');
+        );
 
     }
 

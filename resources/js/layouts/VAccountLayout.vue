@@ -23,71 +23,94 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-layout>
         <template #aside>
             <!-- Developers Section -->
-            <div v-if="developers.show">
+            <div v-if="developers.show" class="mb-6">
                 <h3
-                    class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-6"
+                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 mt-2"
                 >
                     {{ __(developers.name) }}
                 </h3>
-                <button
-                    v-for="(item, index) in developers.menu"
-                    :key="index"
-                    @click="open(item)"
-                    class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
-                >
-                    <div
-                        class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"
+                <div class="space-y-1">
+                    <button
+                        v-for="(item, index) in developers.menu"
+                        :key="index"
+                        @click="open(item)"
+                        class="w-full flex items-center cursor-pointer space-x-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-200 group"
                     >
-                        <i
-                            :class="['mdi', item.icon, 'text-white text-sm']"
-                        ></i>
-                    </div>
-                    <span>{{ __(item.name) }}</span>
-                </button>
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200"
+                        >
+                            <i
+                                :class="[
+                                    'mdi',
+                                    item.icon,
+                                    'text-white text-sm',
+                                ]"
+                            ></i>
+                        </div>
+                        <span class="font-medium">{{ __(item.name) }}</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Dashboards Section -->
-            <div v-if="admin_dashboard.length">
+            <div v-if="admin_dashboard.length" class="mb-6">
                 <h3
-                    class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-6"
+                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3"
                 >
                     {{ __("Dashboards") }}
                 </h3>
-                <button
-                    v-for="(item, index) in admin_dashboard"
-                    :key="index"
-                    @click="open(item)"
-                    class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
-                >
-                    <div
-                        class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center"
+                <div class="space-y-1">
+                    <button
+                        v-for="(item, index) in admin_dashboard"
+                        :key="index"
+                        @click="open(item)"
+                        class="w-full flex items-center cursor-pointer space-x-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-200 group"
                     >
-                        <i
-                            :class="['mdi', item.icon, 'text-white text-sm']"
-                        ></i>
-                    </div>
-                    <span>{{ __(item.name) }}</span>
-                </button>
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200"
+                        >
+                            <i
+                                :class="[
+                                    'mdi',
+                                    item.icon,
+                                    'text-white text-sm',
+                                ]"
+                            ></i>
+                        </div>
+                        <span class="font-medium">{{ __(item.name) }}</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Policies Section -->
-            <div class="pt-4 border-t border-gray-200">
-                <button
-                    v-for="(item, index) in $page.props.policies"
-                    :key="index"
-                    @click="open(item)"
-                    v-show="item.show"
-                    class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200"
+            <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h3
+                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3"
                 >
-                    <div
-                        class="w-8 h-8 bg-gray-400 rounded-lg flex items-center justify-center"
+                    {{ __("Policies & Legal") }}
+                </h3>
+                <div class="space-y-1">
+                    <button
+                        v-for="(item, index) in page.props.policies"
+                        :key="index"
+                        @click="open(item)"
+                        v-show="item.show"
+                        class="w-full flex items-center cursor-pointer space-x-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group"
                     >
-                        <i
-                            :class="['mdi', item.icon, 'text-white text-sm']"
-                        ></i>
-                    </div>
-                    <span>{{ __(item.name) }}</span>
-                </button>
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700 rounded-lg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200"
+                        >
+                            <i
+                                :class="[
+                                    'mdi',
+                                    item.icon,
+                                    'text-white text-sm',
+                                ]"
+                            ></i>
+                        </div>
+                        <span class="font-medium">{{ __(item.name) }}</span>
+                    </button>
+                </div>
             </div>
         </template>
         <template #main>
@@ -95,72 +118,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </template>
     </v-layout>
 </template>
-<script>
-import VNotification from "@/components/VNotification.vue";
-import VProfile from "@/components/VProfile.vue";
+
+<script setup>
 import VLayout from "@/components/VLayout.vue";
+import { usePage, router } from "@inertiajs/vue3";
+import { ref, computed, onMounted } from "vue";
 
-export default {
-    components: {
-        VLayout,
-        VProfile,
-        VNotification,
-    },
+const page = usePage();
+const menus = ref([]);
+const admin_dashboard = ref([]);
+const developers = ref([]);
 
-    data() {
-        return {
-            user: {},
-            menus: [],
-            admin_dashboard: [],
-            transaction_dashboard: [],
-            partner_dashboard: [],
-            settings: {},
-            developers: [],
-            ecommerce_dashboard: [],
-        };
-    },
+onMounted(() => {
+    menus.value = page.props.user_routes ?? [];
+    admin_dashboard.value = page.props.admin_dashboard ?? [];
+    developers.value = page.props.developers ?? [];
+});
 
-    computed: {
-        userInitials() {
-            if (!this.user || !this.user.name) return "U";
-            return this.user.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase();
-        },
-    },
-
-    created() {
-        this.menus = this.$page.props.user_routes ?? [];
-        this.admin_dashboard = this.$page.props.admin_dashboard ?? [];
-        this.developers = this.$page.props.developers ?? [];
-    },
-
-    methods: {
-        open(item) {
-            window.location.href = item.route;
-        },
-    },
+const open = (item) => {
+    window.location.href = item.route;
 };
 </script>
-
-<style scoped>
-/* Custom scrollbar for sidebar */
-.aside-scrollbar::-webkit-scrollbar {
-    width: 4px;
-}
-
-.aside-scrollbar::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-.aside-scrollbar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-}
-
-.aside-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-</style>
