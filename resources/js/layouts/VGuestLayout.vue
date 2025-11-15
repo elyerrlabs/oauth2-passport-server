@@ -113,6 +113,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <!-- User Profile -->
                         <div class="flex items-center space-x-4">
+                            <v-theme/>
                             <v-notification />
                             <v-profile />
                         </div>
@@ -146,11 +147,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <script>
 import VNotification from "@/components/VNotification.vue";
 import VProfile from "@/components/VProfile.vue";
+import VTheme from "@/components/VTheme.vue";
 
 export default {
     components: {
         VNotification,
         VProfile,
+        VTheme
     },
     data() {
         return {
