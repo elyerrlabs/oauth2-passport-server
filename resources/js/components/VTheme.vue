@@ -73,7 +73,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         >
             <div
                 v-show="isOpen"
-                @click.outside="closeDropdown"
                 class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl ring-1 ring-black/5 dark:ring-white/10 z-50 overflow-hidden"
             >
                 <!-- Header -->
@@ -159,16 +158,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
             </div>
         </transition>
-
-        <!-- Current Theme Badge (Desktop only)
-        <div class="hidden lg:flex items-center space-x-2 ml-3">
-            <span class="text-sm text-gray-500 dark:text-gray-400">
-                {{ __("Theme:") }}
-            </span>
-            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ currentThemeLabel }}
-            </span>
-        </div> -->
     </div>
 </template>
 
@@ -223,27 +212,23 @@ export default {
     },
     mounted() {
         // Load saved theme or detect system preference
-        const savedTheme = localStorage.getItem("theme");
-        const systemPrefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)"
-        ).matches;
-
-        if (savedTheme) {
-            this.selectedTheme = savedTheme;
-        } else {
-            this.selectedTheme = "auto";
-        }
-
-        this.applyTheme(this.selectedTheme);
+        this.loadTheme();
 
         // Listen for system theme changes
-        window
-            .matchMedia("(prefers-color-scheme: dark)")
-            .addEventListener("change", (e) => {
-                if (this.selectedTheme === "auto") {
-                    this.applyTheme("auto");
-                }
-            });
+        this.setupSystemThemeListener();
+
+        // Listen for clicks outside to close dropdown
+        document.addEventListener("click", this.handleClickOutside);
+    },
+    beforeUnmount() {
+        // Cleanup event listeners
+        document.removeEventListener("click", this.handleClickOutside);
+        if (this.systemThemeMediaQuery) {
+            this.systemThemeMediaQuery.removeEventListener(
+                "change",
+                this.handleSystemThemeChange
+            );
+        }
     },
     methods: {
         toggleDropdown() {
@@ -254,15 +239,41 @@ export default {
             this.isOpen = false;
         },
 
+        handleClickOutside(event) {
+            if (!this.$el.contains(event.target)) {
+                this.closeDropdown();
+            }
+        },
+
         selectTheme(theme) {
             this.selectedTheme = theme;
             this.applyTheme(theme);
             this.closeDropdown();
         },
 
+        loadTheme() {
+            // Try to load from localStorage
+            const savedTheme = localStorage.getItem("theme");
+
+            // Check system preference
+            const systemPrefersDark = window.matchMedia(
+                "(prefers-color-scheme: dark)"
+            ).matches;
+
+            if (savedTheme) {
+                this.selectedTheme = savedTheme;
+            } else {
+                // Default to auto if no saved preference
+                this.selectedTheme = "auto";
+            }
+
+            this.applyTheme(this.selectedTheme);
+        },
+
         applyTheme(theme) {
             let effectiveTheme = theme;
 
+            // Determine effective theme
             if (theme === "auto") {
                 effectiveTheme = window.matchMedia(
                     "(prefers-color-scheme: dark)"
@@ -272,37 +283,82 @@ export default {
             }
 
             // Apply to document
-            document.documentElement.classList.remove("light", "dark");
-            document.documentElement.classList.add(effectiveTheme);
+            this.setDocumentTheme(effectiveTheme);
 
-            // Update meta theme-color
+            // Update meta theme-color for mobile browsers
             this.updateMetaThemeColor(effectiveTheme);
 
-            // Save preference
-            localStorage.setItem("theme", theme);
+            // Save preference to localStorage
+            this.saveThemePreference(theme);
 
-            // Emit event for other components
+            // Emit event for other components if needed
             this.$emit("theme-changed", effectiveTheme);
+
+            // Dispatch global event
+            this.dispatchThemeChangeEvent(effectiveTheme);
+        },
+
+        setDocumentTheme(theme) {
+            // Remove all theme classes
+            document.documentElement.classList.remove("light", "dark");
+
+            // Add current theme class
+            document.documentElement.classList.add(theme);
         },
 
         updateMetaThemeColor(theme) {
-            let themeColor = "#ffffff";
-
-            if (theme === "dark") {
-                themeColor = "#1f2937"; // gray-800
-            } else if (theme === "light") {
-                themeColor = "#ffffff";
-            }
+            const themeColors = {
+                light: "#ffffff",
+                dark: "#1f2937", // gray-800
+            };
 
             let metaThemeColor = document.querySelector(
                 'meta[name="theme-color"]'
             );
+
             if (!metaThemeColor) {
                 metaThemeColor = document.createElement("meta");
                 metaThemeColor.name = "theme-color";
                 document.head.appendChild(metaThemeColor);
             }
-            metaThemeColor.content = themeColor;
+
+            metaThemeColor.content = themeColors[theme] || themeColors.light;
+        },
+
+        saveThemePreference(theme) {
+            try {
+                localStorage.setItem("theme", theme);
+            } catch (error) {
+                console.warn(
+                    "Could not save theme preference to localStorage:",
+                    error
+                );
+            }
+        },
+
+        setupSystemThemeListener() {
+            this.systemThemeMediaQuery = window.matchMedia(
+                "(prefers-color-scheme: dark)"
+            );
+            this.systemThemeMediaQuery.addEventListener(
+                "change",
+                this.handleSystemThemeChange
+            );
+        },
+
+        handleSystemThemeChange(event) {
+            if (this.selectedTheme === "auto") {
+                this.applyTheme("auto");
+            }
+        },
+
+        dispatchThemeChangeEvent(theme) {
+            // Dispatch a custom event that other components can listen to
+            window.dispatchEvent(
+                new CustomEvent("theme-change", {
+                    detail: { theme },
+                })
+            );
         },
 
         handleEscapeKey(event) {
@@ -321,24 +377,5 @@ export default {
             }
         },
     },
-
-    beforeUnmount() {
-        document.removeEventListener("keydown", this.handleEscapeKey);
-    },
 };
 </script>
-
-<style scoped>
-/* Smooth transitions for all interactive elements */
-button,
-div,
-span {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Custom focus styles */
-button:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-}
-</style>
