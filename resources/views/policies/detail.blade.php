@@ -6,7 +6,7 @@
 
 @section('content')
     <div
-        class="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center items-start py-10 transition-colors duration-300">
+        class="min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-white flex justify-center items-start py-10 transition-colors duration-300">
         <!-- Main Content Area -->
         <main class="w-full max-w-5xl px-4">
             <!-- Content Box -->

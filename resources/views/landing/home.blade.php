@@ -69,9 +69,6 @@
         }
 
         .feature-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 1rem;
             padding: 1.5rem;
             transition: all 0.3s ease;
             height: 100%;
@@ -101,10 +98,8 @@
             margin-top: 2rem;
         }
 
-        .server-info-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 1rem;
+        .server-info-card {            
+            
             padding: 1.5rem;
             transition: all 0.3s ease;
         }
@@ -135,9 +130,6 @@
         }
 
         .platform-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 1rem;
             padding: 2rem;
             text-align: center;
             transition: all 0.3s ease;
@@ -197,13 +189,13 @@
 @section('content')
     <main class="oauth-landing">
         <!-- Hero Section -->
-        <div class="relative overflow-hidden">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="relative overflow-hidden dark:bg-gray-900">
+            <div class=" max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div class="text-center">
-                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
                         {{ __('Centralized Authentication & Authorization Server') }}
                     </h1>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
                         {{ __('Secure OAuth2 + OpenID Connect server that connects applications, microservices, and platforms with centralized session, users and services management') }}
                     </p>
                     <div class="flex flex-wrap justify-center gap-4 mb-12">
@@ -238,46 +230,46 @@
         </div>
 
         <!-- Server Capabilities Section -->
-        <div class="relative py-12 bg-gray-50">
+        <div class="relative py-12 bg-gray-50 dark:bg-gray-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                         {{ __('One Authentication Server, Infinite Possibilities') }}
                     </h2>
-                    <p class="text-lg text-gray-600 max-w-4xl mx-auto">
+                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
                         {{ __('Our OAuth2 and OpenID Connect server provides a centralized authentication solution that seamlessly connects web applications, mobile apps, microservices, and external platforms with robust security and scalability.') }}
                     </p>
                 </div>
 
                 <!-- Platform Integration Grid -->
-                <div class="platform-grid">
-                    <div class="platform-card">
-                        <div class="platform-icon text-indigo-600">
+                <div class="platform-grid ">
+                    <div class="platform-card bg-white rounded dark:bg-gray-700">
+                        <div class="platform-icon text-indigo-600 dark:text-indigo-400">
                             <i class="mdi mdi-web"></i>
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                             {{ __('Web Applications') }}</h3>
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 dark:text-gray-300">
                             {{ __('Connect any web application built with React, Vue, Angular, or traditional server-side frameworks.') }}
                         </p>
                     </div>
 
-                    <div class="platform-card">
-                        <div class="platform-icon text-green-600">
+                    <div class="platform-card bg-white rounded dark:bg-gray-700">
+                        <div class="platform-icon text-green-600 dark:text-green-400">
                             <i class="mdi mdi-cellphone"></i>
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('Mobile Apps') }}</h3>
-                        <p class="text-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">{{ __('Mobile Apps') }}</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
                             {{ __('iOS and Android applications with secure token-based authentication and seamless user experiences.') }}
                         </p>
                     </div>
 
-                    <div class="platform-card">
-                        <div class="platform-icon text-blue-600">
+                    <div class="platform-card bg-white rounded dark:bg-gray-700">
+                        <div class="platform-icon text-blue-600 dark:text-blue-400">
                             <i class="mdi mdi-api"></i>
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('Microservices') }}</h3>
-                        <p class="text-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">{{ __('Microservices') }}</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
                             {{ __('Secure service-to-service communication with JWT tokens and centralized access control.') }}
                         </p>
                     </div>
@@ -285,47 +277,50 @@
 
                 <!-- Server Stats -->
                 <div class="server-info-grid mt-12">
-                    <div class="server-info-card">
+                    <div class="server-info-card bg-white dark:bg-gray-700">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-server-network text-indigo-600 text-xl"></i>
+                            <div
+                                class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="mdi mdi-server-network text-indigo-600 dark:text-indigo-400 text-xl"></i>
                             </div>
                             <div>
-                                <div class="stat-value">50+</div>
-                                <div class="stat-label">{{ __('Integrated Services') }}</div>
+                                <div class="stat-value dark:text-white">50+</div>
+                                <div class="stat-label dark:text-gray-300">{{ __('Integrated Services') }}</div>
                             </div>
                         </div>
-                        <p class="text-gray-600 text-sm">
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">
                             {{ __('From VPN and eCommerce to custom microservices and partner integrations.') }}
                         </p>
                     </div>
 
-                    <div class="server-info-card">
+                    <div class="server-info-card bg-white dark:bg-gray-700">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-shield-check text-green-600 text-xl"></i>
+                            <div
+                                class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="mdi mdi-shield-check text-green-600 dark:text-green-400 text-xl"></i>
                             </div>
                             <div>
-                                <div class="stat-value">{{ __('256-bit') }}</div>
-                                <div class="stat-label">{{ __('Encryption') }}</div>
+                                <div class="stat-value dark:text-white">{{ __('256-bit') }}</div>
+                                <div class="stat-label dark:text-gray-300">{{ __('Encryption') }}</div>
                             </div>
                         </div>
-                        <p class="text-gray-600 text-sm">
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">
                             {{ __('Military-grade encryption for all authentication tokens and communications.') }}
                         </p>
                     </div>
 
-                    <div class="server-info-card">
+                    <div class="server-info-card bg-white dark:bg-gray-700">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-account-multiple text-purple-600 text-xl"></i>
+                            <div
+                                class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="mdi mdi-account-multiple text-purple-600 dark:text-purple-400 text-xl"></i>
                             </div>
                             <div>
-                                <div class="stat-value">10K+</div>
-                                <div class="stat-label">{{ __('Active Sessions') }}</div>
+                                <div class="stat-value dark:text-white">10K+</div>
+                                <div class="stat-label dark:text-gray-300">{{ __('Active Sessions') }}</div>
                             </div>
                         </div>
-                        <p class="text-gray-600 text-sm">
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">
                             {{ __('Centralized session management across all connected applications and services.') }}
                         </p>
                     </div>
@@ -334,30 +329,31 @@
         </div>
 
         <!-- Payment Integration Section -->
-        <div class="py-16 bg-white">
+        <div class="py-16 bg-white dark:bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                         {{ __('Integrated Payment Solutions') }}
                     </h2>
-                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                         {{ __('Secure payment processing integrated directly with your authentication system') }}
                     </p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-gray-50 rounded-xl p-8">
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
                         <div class="flex items-center mb-6">
-                            <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-credit-card-outline text-blue-600 text-2xl"></i>
+                            <div
+                                class="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="mdi mdi-credit-card-outline text-blue-600 dark:text-blue-400 text-2xl"></i>
                             </div>
-                            <h3 class="text-xl font-semibold text-gray-900">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                                 {{ __('Stripe Integration') }}</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
                             {{ __('Securely process payments through Stripe with seamless authentication flow. Customers enjoy a smooth checkout experience without leaving your application.') }}
                         </p>
-                        <ul class="space-y-2 text-gray-600">
+                        <ul class="space-y-2 text-gray-600 dark:text-gray-300">
                             <li class="flex items-center">
                                 <i class="mdi mdi-check-circle text-green-600 mr-2"></i>
                                 {{ __('PCI Compliant payment processing') }}
@@ -373,18 +369,19 @@
                         </ul>
                     </div>
 
-                    <div class="bg-gray-50 rounded-xl p-8">
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
                         <div class="flex items-center mb-6">
-                            <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-cash-multiple text-green-600 text-2xl"></i>
+                            <div
+                                class="w-14 h-14 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="mdi mdi-cash-multiple text-green-600 dark:text-green-400 text-2xl"></i>
                             </div>
-                            <h3 class="text-xl font-semibold text-gray-900">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                                 {{ __('P2P & Direct Payments') }}</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
                             {{ __('Enable direct peer-to-peer payments and offline transactions without third-party intervention. Perfect for direct sales and personal transactions.') }}
                         </p>
-                        <ul class="space-y-2 text-gray-600">
+                        <ul class="space-y-2 text-gray-600 dark:text-gray-300">
                             <li class="flex items-center">
                                 <i class="mdi mdi-check-circle text-green-600 mr-2"></i>
                                 {{ __('Direct bank transfers and wallet payments') }}
@@ -404,30 +401,31 @@
         </div>
 
         <!-- Features Grid -->
-        <div class="py-16 bg-white">
+        <div class="py-16 bg-white dark:bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Applications Card -->
-                    <div class="feature-card">
-                        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                            <i class="mdi mdi-apps text-indigo-600 text-xl"></i>
+                    <div class="feature-card dark:bg-gray-800">
+                        <div
+                            class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mb-4">
+                            <i class="mdi mdi-apps text-indigo-600 dark:text-indigo-400 text-xl"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('Applications') }}
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{{ __('Applications') }}
                         </h3>
                         <div class="space-y-2">
                             <a href="{{ route('admin.clients.index') }}"
-                                class="flex items-center text-gray-600 hover:text-indigo-600 transition-colors">
+                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                                 <i class="mdi mdi-connection mr-2"></i>
                                 <span class="text-sm">{{ __('OAuth2 and OpenID Connect') }}</span>
                             </a>
                             <a href="{{ route('transaction.admin.dashboard') }}"
-                                class="flex items-center text-gray-600 hover:text-indigo-600 transition-colors">
+                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                                 <i class="mdi mdi-cash mr-2"></i>
                                 <span class="text-sm">{{ __('Transactions') }}</span>
                             </a>
                             @if (Route::has('partner.dashboard'))
                                 <a href="{{ route('partner.dashboard') }}"
-                                    class="flex items-center text-gray-600 hover:text-indigo-600 transition-colors">
+                                    class="flex items-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                                     <i class="mdi mdi-text-recognition mr-2"></i>
                                     <span class="text-sm">{{ __('Partners') }}</span>
                                 </a>
@@ -436,30 +434,31 @@
                     </div>
 
                     <!-- Access Control Card -->
-                    <div class="feature-card">
-                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                            <i class="mdi mdi-shield-account text-green-600 text-xl"></i>
+                    <div class="feature-card bg-white rounded dark:bg-gray-800">
+                        <div
+                            class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mb-4">
+                            <i class="mdi mdi-shield-account text-green-600 dark:text-green-400 text-xl"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('Access Control') }}
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{{ __('Access Control') }}
                         </h3>
                         <div class="space-y-2">
                             <a href="{{ route('user.admin.groups.index') }}"
-                                class="flex items-center text-gray-600 hover:text-green-600 transition-colors">
+                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
                                 <i class="mdi mdi-account-group-outline mr-2"></i>
                                 <span class="text-sm">{{ __('Groups') }}</span>
                             </a>
                             <a href="{{ route('user.admin.services.index') }}"
-                                class="flex items-center text-gray-600 hover:text-green-600 transition-colors">
+                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
                                 <i class="mdi mdi-account-group-outline mr-2"></i>
                                 <span class="text-sm">{{ __('Services') }}</span>
                             </a>
                             <a href="{{ route('user.admin.roles.index') }}"
-                                class="flex items-center text-gray-600 hover:text-green-600 transition-colors">
+                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
                                 <i class="mdi mdi-shield-star-outline mr-2"></i>
                                 <span class="text-sm">{{ __('Roles') }}</span>
                             </a>
                             <a href="{{ route('user.admin.users.index') }}"
-                                class="flex items-center text-gray-600 hover:text-green-600 transition-colors">
+                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
                                 <i class="mdi mdi-account-key mr-2"></i>
                                 <span class="text-sm">{{ __('Users') }}</span>
                             </a>
@@ -467,15 +466,16 @@
                     </div>
 
                     <!-- Integrations Card -->
-                    <div class="feature-card">
-                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                            <i class="mdi mdi-connection text-purple-600 text-xl"></i>
+                    <div class="feature-card bg-white rounded dark:bg-gray-800">
+                        <div
+                            class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mb-4">
+                            <i class="mdi mdi-connection text-purple-600 dark:text-purple-400 text-xl"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('Integrations') }}
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{{ __('Integrations') }}
                         </h3>
                         <div class="space-y-2">
                             <a href="https://github.com/elyerr/elyerr-cloud"
-                                class="flex items-center justify-between text-gray-600 hover:text-purple-600 transition-colors group">
+                                class="flex items-center justify-between text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors group">
                                 <div class="flex items-center">
                                     <i class="mdi mdi-cloud-outline mr-2"></i>
                                     <span class="text-sm">Cloud</span>
@@ -484,7 +484,7 @@
                                     class="mdi mdi-open-in-new opacity-0 group-hover:opacity-100 transition-opacity text-xs"></i>
                             </a>
                             <a href="https://vpn.elyerr.org"
-                                class="flex items-center justify-between text-gray-600 hover:text-purple-600 transition-colors group">
+                                class="flex items-center justify-between text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors group">
                                 <div class="flex items-center">
                                     <i class="mdi mdi-shield-lock mr-2"></i>
                                     <span class="text-sm">{{ __('VPN') }}</span>
@@ -494,7 +494,7 @@
                             </a>
                             @if (Route::has('ecommerce.dashboard'))
                                 <a href="{{ route('ecommerce.dashboard') }}"
-                                    class="flex items-center justify-between text-gray-600 hover:text-purple-600 transition-colors group">
+                                    class="flex items-center justify-between text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors group">
                                     <div class="flex items-center">
                                         <i class="mdi mdi-cart-outline mr-2"></i>
                                         <span class="text-sm">{{ __('eCommerce') }}</span>
@@ -507,28 +507,29 @@
                     </div>
 
                     <!-- Observability Card -->
-                    <div class="feature-card">
-                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                            <i class="mdi mdi-text-box-search-outline text-orange-600 text-xl"></i>
+                    <div class="feature-card bg-white rounded dark:bg-gray-800">
+                        <div
+                            class="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mb-4">
+                            <i class="mdi mdi-text-box-search-outline text-orange-600 dark:text-orange-400 text-xl"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('Observability') }}
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{{ __('Observability') }}
                         </h3>
                         <div class="space-y-2">
                             <a href="{{ route('admin.logs') }}"
-                                class="flex items-center text-gray-600 hover:text-orange-600 transition-colors">
+                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                                 <i class="mdi mdi-clipboard-text-outline mr-2"></i>
                                 <span class="text-sm">{{ __('Audit Logs') }}</span>
                             </a>
                             @if (Route::has('passport.personal.tokens.index'))
                                 <a href="{{ route('passport.personal.tokens.index') }}"
-                                    class="flex items-center text-gray-600 hover:text-orange-600 transition-colors">
+                                    class="flex items-center text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                                     <i class="mdi mdi-key-variant mr-2"></i>
                                     <span class="text-sm">{{ __('Issued Tokens') }}</span>
                                 </a>
                             @endif
                             @if (Route::has('passport.clients.index'))
                                 <a href="{{ route('passport.clients.index') }}"
-                                    class="flex items-center text-gray-600 hover:text-orange-600 transition-colors">
+                                    class="flex items-center text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                                     <i class="mdi mdi-connection mr-2"></i>
                                     <span class="text-sm">{{ __('OAuth2 Clients') }}</span>
                                 </a>
@@ -540,67 +541,71 @@
         </div>
 
         <!-- Benefits Section -->
-        <div class="py-16 bg-gray-50">
+        <div class="py-16 bg-gray-50 dark:bg-gray-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
                         {{ __('Why Choose Our Authentication Server?') }}
                     </h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-sm">
                         <div class="flex items-start mb-4">
-                            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-shield-account text-indigo-600"></i>
+                            <div
+                                class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="mdi mdi-shield-account text-indigo-600 dark:text-indigo-400"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900">
+                                <h3 class="font-semibold text-gray-900 dark:text-white">
                                     {{ __('Centralized Sessions') }}
                                 </h3>
-                                <p class="text-gray-600 text-sm mt-1">
+                                <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
                                     {{ __('Manage all user sessions from a single dashboard across web, mobile, and microservices') }}
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-sm">
                         <div class="flex items-start mb-4">
-                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-connection text-green-600"></i>
+                            <div
+                                class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="mdi mdi-connection text-green-600 dark:text-green-400"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900">
+                                <h3 class="font-semibold text-gray-900 dark:text-white">
                                     {{ __('Unlimited Integrations') }}
                                 </h3>
-                                <p class="text-gray-600 text-sm mt-1">
+                                <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
                                     {{ __('Connect VPN, eCommerce, payment systems, and custom microservices without limits') }}
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-sm">
                         <div class="flex items-start mb-4">
-                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-puzzle text-purple-600"></i>
+                            <div
+                                class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="mdi mdi-puzzle text-purple-600 dark:text-purple-400"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900">
+                                <h3 class="font-semibold text-gray-900 dark:text-white">
                                     {{ __('Modular & Scalable') }}
                                 </h3>
-                                <p class="text-gray-600 text-sm mt-1">
+                                <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
                                     {{ __('Extend functionality with modules and scale horizontally to handle millions of users') }}
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-sm">
                         <div class="flex items-start mb-4">
-                            <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-currency-usd text-orange-600"></i>
+                            <div
+                                class="w-10 h-10 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="mdi mdi-currency-usd text-orange-600 dark:text-orange-400"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900">{{ __('Payment Ready') }}</h3>
-                                <p class="text-gray-600 text-sm mt-1">
+                                <h3 class="font-semibold text-gray-900 dark:text-white">{{ __('Payment Ready') }}</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
                                     {{ __('Integrated Stripe and P2P payment processing with secure authentication flows') }}
                                 </p>
                             </div>
@@ -611,19 +616,19 @@
         </div>
 
         <!-- Status Section -->
-        <div class="py-12 bg-white">
+        <div class="py-12 bg-white dark:bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="flex flex-wrap justify-center gap-4">
-                    <span class="status-pill inline-flex items-center">
+                    <span class="status-pill inline-flex items-center dark:bg-gray-700 dark:text-gray-300">
                         <i class="mdi mdi-check-circle mr-2"></i> {{ __('Passport • Online') }}
                     </span>
-                    <span class="status-pill inline-flex items-center">
+                    <span class="status-pill inline-flex items-center dark:bg-gray-700 dark:text-gray-300">
                         <i class="mdi mdi-check-circle mr-2"></i> {{ __('OpenID • Online') }}
                     </span>
-                    <span class="status-pill inline-flex items-center">
+                    <span class="status-pill inline-flex items-center dark:bg-gray-700 dark:text-gray-300">
                         <i class="mdi mdi-check-circle mr-2"></i> {{ __('DB • Online') }}
                     </span>
-                    <span class="status-pill inline-flex items-center">
+                    <span class="status-pill inline-flex items-center dark:bg-gray-700 dark:text-gray-300">
                         <i class="mdi mdi-check-circle mr-2"></i> {{ __('Payments • Online') }}
                     </span>
                 </div>

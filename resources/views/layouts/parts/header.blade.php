@@ -1,4 +1,4 @@
-<header class="bg-indigo-600 text-white shadow-md">
+<header class="bg-blue-600 dark:bg-gray-800 text-white shadow-md">
     <div class="container mx-auto flex justify-between items-center py-4 px-2">
         <h1 class="text-2xl font-bold">{{ config('app.name') }}</h1>
         <nav>
@@ -28,6 +28,7 @@
                         </li>
                     @endif
                 @endif
+                <x-theme />
                 @if (auth()->check() && Route::has('user.dashboard'))
                     <li>
                         <a href="{{ route('user.dashboard') }}"
