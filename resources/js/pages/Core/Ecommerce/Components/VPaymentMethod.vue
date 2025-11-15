@@ -21,7 +21,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div class="w-full my-4">
-        <div class="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+        <div class="text-sm lg:text-xl font-semibold text-gray-900 dark:text-white mb-6">
             {{ __("Choose your payment method") }}
         </div>
 

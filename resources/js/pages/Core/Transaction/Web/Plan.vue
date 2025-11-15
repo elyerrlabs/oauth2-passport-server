@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-guest-layout>
         <div
-            class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-slate-800/30 py-2"
+            class="min-h-screen bg-linear-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-slate-800/30 py-2"
         >
             <!-- Header Compacto -->
             <div class="text-center mb-4 px-2">
@@ -39,11 +39,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Filtros -->
-            <div class="w-full max-w-6xl mx-auto px-4 mb-6">
+            <div class="w-full mx-auto px-2 lg:px-4 mb-6">
                 <div
                     class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4"
                 >
-                    <div class="flex flex-col sm:flex-row gap-3 items-center">
+                    <div class="flex flex-col sm:flex-row gap-2 items-center">
                         <!-- Buscar -->
                         <div class="flex-1 min-w-0">
                             <div class="relative">
@@ -113,7 +113,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Planes -->
                 <div
                     v-else
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                 >
                     <div
                         v-for="plan in plans"
@@ -305,15 +305,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Modal Detalles del Plan -->
             <v-modal
                 v-model="showPlanDetails"
-                panel-class="w-full lg:w-7xl overflow-y-auto max-h-screen"
+                panel-class="w-full lg:w-7xl"
             >
                 <template #body>
                     <!-- Header -->
                     <div
-                        class="bg-slate-800 dark:bg-slate-900 px-6 py-4 flex justify-between items-center rounded"
+                        class="bg-slate-800 dark:bg-slate-900 px-2 lg:px-6 py-2 md:py-4 flex justify-between items-center rounded"
                     >
                         <div>
-                            <h3 class="text-xl font-bold text-white">
+                            <h3 class="text-md lg:text-xl font-bold text-white">
                                 {{ selected_plan_details?.name }}
                             </h3>
                             <p
@@ -331,7 +331,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Contenido -->
-                    <div class="p-6">
+                    <div class="p-2 md:p-4 lg:p-6">
                         <!-- Descripción -->
                         <div class="mb-6">
                             <h4
@@ -388,7 +388,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Todos los Precios con Selección Mejorada -->
                         <div>
                             <h4
-                                class="font-semibold text-slate-800 dark:text-slate-200 mb-3"
+                                class="font-semibold text-md md:text-lg lg:text-3xl text-slate-800 dark:text-slate-200 mb-3"
                             >
                                 {{ __("Pricing Options") }}
                             </h4>
@@ -396,7 +396,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     v-for="price in selected_plan_details?.prices"
                                     :key="price.id"
-                                    class="p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer"
+                                    class="p-2 lg:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer"
                                     :class="{
                                         'border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-md scale-[1.02]':
                                             selected_period?.id === price.id,
@@ -409,7 +409,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="flex items-center justify-between mb-2"
                                     >
                                         <div
-                                            class="flex items-center space-x-3"
+                                            class="flex items-center lg:space-x-3"
                                         >
                                             <!-- Radio Button Grande -->
                                             <div
@@ -433,7 +433,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             </div>
                                             <div>
                                                 <div
-                                                    class="font-semibold text-slate-800 dark:text-slate-200 capitalize text-lg"
+                                                    class="font-semibold text-slate-800 dark:text-slate-200 capitalize text-md lg:text-lg"
                                                 >
                                                     {{
                                                         formatPeriodName(
@@ -516,7 +516,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Footer -->
                     <div
-                        class="border-t border-slate-200 dark:border-slate-700 px-6 py-4 bg-slate-50 dark:bg-slate-800"
+                        class="border-t border-slate-200 dark:border-slate-700 lg:px-6 py-4 bg-slate-50 dark:bg-slate-800"
                     >
                         <div class="flex justify-between items-center">
                             <div>
@@ -572,7 +572,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 :title="__('Complete Subscription')"
             >
                 <template #body>
-                    <div class="p-6">
+                    <div class="md:p-2 lg:p-6">
                         <div class="text-center mb-6">
                             <i
                                 class="mdi mdi-lock-check-outline text-3xl text-blue-600 dark:text-blue-400 mb-3"

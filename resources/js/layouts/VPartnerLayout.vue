@@ -73,7 +73,8 @@ onMounted(() => {
 });
 
 const open = (item) => {
-    router.visit(item.route);
+    window.location.href = item.route;
+
     if (window.innerWidth < 1024) {
         isSidebarOpen.value = false;
     }

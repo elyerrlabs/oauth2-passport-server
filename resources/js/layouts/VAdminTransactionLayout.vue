@@ -93,9 +93,9 @@ export default {
         },
 
         open(item) {
-            router.visit(item.route);
+            window.location.href = item.route;
         },
-
+        
         isActive(item) {
             return (
                 item.route ==

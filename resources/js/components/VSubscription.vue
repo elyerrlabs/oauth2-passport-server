@@ -20,18 +20,25 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="p-6" v-if="period?.id && plan?.id">
-        <div class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+    <div class="md:p-4 lg:p-6" v-if="period?.id && plan?.id">
+        <div
+            class="text-md lg:text-2xl font-bold text-gray-900 dark:text-white mb-2"
+        >
             {{ label }}
         </div>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
+        <p class="text-gray-600 dark:text-gray-400 mb-6 text-sm md:text-md">
             {{ __("Select your preferred payment method to continue") }}
         </p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div v-for="(method, key) in methods" :key="key">
+        <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-6"
+        >
+            <div
+                v-for="(method, key) in methods"
+                :key="key"
+                v-show="method.enable"
+            >
                 <div
-                    v-if="method.enable"
                     @click="selectMethod(key)"
                     class="border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105"
                     :class="{
@@ -41,7 +48,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             selected_method !== key,
                     }"
                 >
-                    <div class="p-6 text-center">
+                    <div class="p-4 text-center">
                         <div class="flex justify-center mb-4">
                             <div
                                 class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300"
@@ -97,7 +104,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                         </div>
                         <div
-                            class="text-lg font-semibold mb-2"
+                            class="text-md lg:text-lg font-semibold mb-2"
                             :class="{
                                 'text-blue-700 dark:text-blue-300':
                                     selected_method === key,
@@ -136,7 +143,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         >
             <div v-if="selected_method >= 0" class="mb-6">
                 <div
-                    class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-6"
+                    class="bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-6"
                 >
                     <div class="flex items-center mb-4">
                         <div
@@ -283,7 +290,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 v-if="selected_method >= 0"
                 :disabled="disabled"
                 @click="payment"
-                class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white py-3 px-8 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                class="w-full sm:w-auto bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white py-3 px-8 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
             >
                 <svg
                     class="w-5 h-5"

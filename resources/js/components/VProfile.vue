@@ -27,9 +27,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="flex items-center space-x-2 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm hover:shadow-md hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 group"
         >
             <!-- User Avatar -->
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
                 <div
-                    class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-inner group-hover:shadow-md transition-shadow"
+                    class="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-inner group-hover:shadow-md transition-shadow"
                 >
                     <template v-if="user?.id">
                         <span class="text-sm font-semibold">
@@ -67,7 +67,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Chevron Icon -->
-            <div class="hidden lg:block flex-shrink-0">
+            <div class="hidden lg:block shrink-0">
                 <i
                     class="mdi text-gray-400 transition-transform duration-200"
                     :class="menuOpen ? 'mdi-chevron-up' : 'mdi-chevron-down'"
@@ -93,12 +93,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- User Info Section -->
                 <div
                     v-if="user?.id"
-                    class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-gray-100 dark:border-gray-700"
+                    class="p-4 bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-gray-100 dark:border-gray-700"
                 >
                     <div class="flex items-center space-x-3">
-                        <div class="flex-shrink-0">
+                        <div class="shrink-0">
                             <div
-                                class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-lg"
+                                class="w-12 h-12 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-lg"
                             >
                                 <span class="text-lg font-semibold">
                                     {{ getUserInitials }}
@@ -129,10 +129,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Guest Info Section -->
                 <div
                     v-else
-                    class="p-4 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 border-b border-gray-100 dark:border-gray-700"
+                    class="p-4 bg-linear-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 border-b border-gray-100 dark:border-gray-700"
                 >
                     <div class="flex items-center space-x-3">
-                        <div class="flex-shrink-0">
+                        <div class="shrink-0">
                             <div
                                 class="w-12 h-12 rounded-full bg-gray-400 dark:bg-gray-600 flex items-center justify-center text-white shadow-lg"
                             >
@@ -215,10 +215,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </li>
 
                     <!-- Login (Unauthenticated only) -->
-                    <li v-if="!user?.id">
+                    <li class="block lg:hidden" v-if="!user?.id">
                         <a
-                            :href="loginRoute"
-                            @click.prevent="goTo(loginRoute)"
+                            @click="open($page.props.auth_routes.login)"
                             class="w-full text-left px-4 py-3 hover:bg-white dark:hover:bg-gray-700 flex items-center transition-all duration-200 group cursor-pointer"
                         >
                             <div
@@ -238,6 +237,33 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="text-xs text-gray-500 dark:text-gray-400"
                                 >
                                     {{ __("Access your account") }}
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class="block lg:hidden" v-if="$page.props.allow_register && !user?.id">
+                        <a
+                            @click="open($page.props.auth_routes.register)"
+                            class="w-full text-left px-4 py-3 hover:bg-white dark:hover:bg-gray-700 flex items-center transition-all duration-200 group cursor-pointer"
+                        >
+                            <div
+                                class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform"
+                            >
+                                <i
+                                    class="mdi mdi-login text-blue-600 dark:text-blue-400 text-lg"
+                                ></i>
+                            </div>
+                            <div>
+                                <div
+                                    class="font-medium text-gray-900 dark:text-white"
+                                >
+                                    {{ __("Sign up") }}
+                                </div>
+                                <div
+                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Create a new account") }}
                                 </div>
                             </div>
                         </a>
@@ -349,6 +375,25 @@ export default {
         handleEscapeKey(event) {
             if (event.key === "Escape" && this.menuOpen) {
                 this.closeMenu();
+            }
+        },
+
+        open(url) {
+            const currentUrl = window.location.href;
+
+            const path = url.startsWith("/")
+                ? url
+                : new URL(url, window.location.origin).pathname;
+
+            if (
+                path.startsWith("/auth/login") ||
+                path.startsWith("/auth/register")
+            ) {
+                const redirectUrl = new URL(url, window.location.origin);
+                redirectUrl.searchParams.set("redirect_to", currentUrl);
+                window.location.href = redirectUrl.toString();
+            } else {
+                window.location.href = url;
             }
         },
     },

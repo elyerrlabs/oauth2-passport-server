@@ -35,7 +35,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-y-auto">
-                <div class="flex items-center justify-center p-4 text-center">
+                <div class="flex items-center justify-center p-1 lg:p-4 text-center">
                     <TransitionChild
                         as="template"
                         enter="duration-300 ease-out"
@@ -57,7 +57,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 v-if="title"
                             >
                                 <h1
-                                    class="font-semibold text-3xl mx-2 text-gray-900 dark:text-white"
+                                    class="font-semibold text-md md:text-lg lg:text-3xl lg:mx-2 text-gray-900 dark:text-white"
                                 >
                                     {{ title }}
                                 </h1>
@@ -71,7 +71,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </button>
                             </DialogTitle>
                             <div
-                                class="p-6 text-gray-700 dark:text-gray-300 flex-grow"
+                                class="lg:p-6 text-gray-700 dark:text-gray-300 flex-grow"
                             >
                                 <slot name="body" />
                             </div>

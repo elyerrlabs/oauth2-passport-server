@@ -21,7 +21,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div
-        class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800"
+        class="min-h-screen bg-linear-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800"
     >
         <!-- Header -->
         <header
@@ -33,7 +33,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="flex items-center space-x-4">
                         <button
                             @click="homePage"
-                            class="group p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/30 dark:focus:ring-blue-600/30"
+                            class="group p-3 rounded-2xl bg-linear-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/30 dark:focus:ring-blue-600/30"
                         >
                             <svg
                                 class="w-6 h-6 transform group-hover:scale-110 transition-transform"
@@ -51,7 +51,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </button>
                         <div class="flex flex-col">
                             <span
-                                class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent"
+                                class="tex-md lg:text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent"
                             >
                                 {{ $page.props.app_name }}
                             </span>
@@ -69,7 +69,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <button
                             v-if="plan?.name"
                             @click="open(plan?.route)"
-                            class="group px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 dark:from-emerald-600 dark:to-green-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-emerald-600 hover:to-green-700 dark:hover:from-emerald-500 dark:hover:to-green-600 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 dark:focus:ring-emerald-600/30"
+                            class="group px-6 py-3 bg-linear-to-r from-emerald-500 to-green-600 dark:from-emerald-600 dark:to-green-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-emerald-600 hover:to-green-700 dark:hover:from-emerald-500 dark:hover:to-green-600 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 dark:focus:ring-emerald-600/30"
                         >
                             <span class="flex items-center space-x-2">
                                 <svg
@@ -92,7 +92,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Auth Buttons -->
                         <div
                             v-if="!$page.props.user?.id"
-                            class="flex items-center space-x-3"
+                            class="hidden lg:flex items-center space-x-3"
                         >
                             <button
                                 v-if="$page.props.allow_register"
@@ -104,8 +104,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ __("Register") }}
                             </button>
                             <button
-                                @click="open($page.props.auth_routes['login'])"
-                                class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-blue-600 hover:to-indigo-700 dark:hover:from-blue-500 dark:hover:to-indigo-600 focus:outline-none focus:ring-4 focus:ring-blue-500/30 dark:focus:ring-blue-600/30"
+                                @click="open($page.props.auth_routes.login)"
+                                class="px-6 py-3 bg-linear-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-blue-600 hover:to-indigo-700 dark:hover:from-blue-500 dark:hover:to-indigo-600 focus:outline-none focus:ring-4 focus:ring-blue-500/30 dark:focus:ring-blue-600/30"
                             >
                                 {{ __("Login") }}
                             </button>
@@ -113,8 +113,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <!-- User Profile -->
                         <div class="flex items-center space-x-4">
-                            <v-theme/>
-                            <v-notification />
+                            <div>
+                                <v-theme/>
+                            </div>
+                            <div class="hidden md:block">
+                                <v-notification />
+                            </div>
                             <v-profile />
                         </div>
                     </div>
@@ -123,9 +127,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </header>
 
         <!-- Main Content Area -->
-        <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <main class="max-w-7xl mx-auto py-2 md:py-4 lg:py-8 px-2 lg:px-8">
             <div
-                class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/60 dark:border-gray-700/60 p-8"
+                class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/60 dark:border-gray-700/60"
             >
                 <slot />
             </div>
