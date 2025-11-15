@@ -43,6 +43,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Right side icons -->
                 <div class="flex items-center xs:space-x-2 md:space-x-4">
+                    <v-theme />
                     <!-- Notifications -->
                     <v-notification />
 
@@ -170,6 +171,7 @@ import VCart from "./VCart.vue";
 import VProfile from "@/components/VProfile.vue";
 import VSearch from "./VSearch.vue";
 import VCategories from "./VCategories.vue";
+import VTheme from "@/components/VTheme.vue";
 
 export default {
     components: {
@@ -178,6 +180,7 @@ export default {
         VProfile,
         VSearch,
         VCategories,
+        VTheme
     },
 
     data() {

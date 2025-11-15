@@ -21,7 +21,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div class="w-full my-4">
-        <div class="text-xl font-semibold text-gray-900 mb-6">
+        <div class="text-xl font-semibold text-gray-900 dark:text-white mb-6">
             {{ __("Choose your payment method") }}
         </div>
 
@@ -32,10 +32,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 @click="selectMethod(key)"
                 v-show="method.enable"
                 :class="[
-                    'relative flex flex-col items-center justify-center p-4 rounded-xl shadow transition-all cursor-pointer border bg-white',
+                    'relative flex flex-col items-center justify-center p-4 rounded-xl shadow transition-all cursor-pointer border',
                     selected_method === method.key
-                        ? 'border-2 border-blue-600 bg-blue-50'
-                        : 'border border-gray-200 hover:-translate-y-1 hover:shadow-lg',
+                        ? 'border-2 border-blue-600 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                        : 'border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-gray-900/50',
                     !method.enable ? 'opacity-60 cursor-not-allowed' : '',
                 ]"
             >
@@ -45,17 +45,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             'mdi',
                             method.icon,
                             'text-3xl',
-                            method.enable ? 'text-blue-600' : 'text-gray-400',
+                            method.enable
+                                ? 'text-blue-600 dark:text-blue-400'
+                                : 'text-gray-400 dark:text-gray-500',
                         ]"
                     ></i>
                 </div>
 
                 <div
-                    class="mt-2 text-sm font-medium"
+                    class="mt-2 text-sm font-medium text-center"
                     :class="
                         selected_method === method.key
-                            ? 'text-blue-600'
-                            : 'text-gray-900'
+                            ? 'text-blue-600 dark:text-blue-400'
+                            : 'text-gray-900 dark:text-white'
                     "
                 >
                     {{ method.name }}
@@ -63,13 +65,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <div
                     v-if="!method.enable"
-                    class="mt-1 text-xs italic text-gray-500"
+                    class="mt-1 text-xs italic text-gray-500 dark:text-gray-400 text-center"
                 >
                     {{ __("Currently unavailable") }}
                 </div>
                 <div
                     v-if="selected_method === method.key"
-                    class="absolute top-2 right-2 text-green-600 bg-white rounded-full"
+                    class="absolute top-2 right-2 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-full"
                 >
                     <i class="mdi mdi-check-circle text-lg"></i>
                 </div>
@@ -81,21 +83,55 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="mt-6 animate-fade-in"
         >
             <div
-                class="flex items-center p-4 border rounded-xl bg-white shadow border-l-4 border-blue-600"
+                class="flex items-center p-4 border rounded-xl border-l-4 border-blue-600 dark:border-blue-500 bg-white dark:bg-gray-800 shadow"
             >
                 <i
                     :class="[
                         'mdi',
                         methods[selected_method]?.icon,
-                        'text-xl text-blue-600 mr-3',
+                        'text-xl text-blue-600 dark:text-blue-400 mr-3',
                     ]"
                 ></i>
-                <div class="text-base">
+                <div class="text-base text-gray-900 dark:text-white">
                     {{ __("Selected method") }}:
                     <span class="font-semibold">
-                        {{  selected_method   }}
+                        {{ selected_method }}
                     </span>
                 </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div
+            v-if="Object.keys(filteredMethods).length === 0 && !loading"
+            class="text-center py-8"
+        >
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+            >
+                <i
+                    class="mdi mdi-credit-card-off text-4xl text-gray-400 dark:text-gray-500 mb-4"
+                ></i>
+                <h3
+                    class="text-lg font-semibold text-gray-900 dark:text-white mb-2"
+                >
+                    {{ __("No payment methods available") }}
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ __("Please try again later or contact support") }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div v-if="loading" class="text-center py-8">
+            <div class="flex justify-center items-center space-x-3">
+                <div
+                    class="w-6 h-6 border-2 border-blue-600 dark:border-blue-400 border-t-transparent rounded-full animate-spin"
+                ></div>
+                <span class="text-gray-600 dark:text-gray-400">{{
+                    __("Loading payment methods...")
+                }}</span>
             </div>
         </div>
     </div>
@@ -114,12 +150,13 @@ export default {
         return {
             selected_method: this.modelValue,
             methods: {},
+            loading: false,
         };
     },
     computed: {
         filteredMethods() {
             return Object.entries(this.methods)
-                .filter(([key, method]) => method)
+                .filter(([key, method]) => method && method.enable !== false)
                 .reduce((obj, [key, method]) => {
                     obj[key] = method;
                     return obj;
@@ -144,6 +181,7 @@ export default {
             }
         },
         async getPaymentMethods() {
+            this.loading = true;
             try {
                 const res = await this.$server.get(
                     "/api/transaction/payments/methods"
@@ -151,17 +189,36 @@ export default {
                 if (res.status === 200) {
                     this.methods = res.data.data;
 
+                    // Auto-select first available method if none selected
+                    if (!this.selected_method) {
+                        const firstAvailable = Object.keys(this.methods).find(
+                            (key) =>
+                                this.methods[key] && this.methods[key].enable
+                        );
+                        if (firstAvailable) {
+                            this.selected_method =
+                                this.methods[firstAvailable].key;
+                        }
+                    }
+
+                    // Reset selection if current selection is not available
                     if (
                         this.selected_method &&
-                        !this.methods[this.selected_method]
+                        (!this.methods[this.selected_method] ||
+                            !this.methods[this.selected_method].enable)
                     ) {
                         this.selected_method = null;
                     }
                 }
             } catch (e) {
+                console.error("Error loading payment methods:", e);
                 if (e?.response?.data?.message) {
                     $notify.error(__(e.response.data.message));
+                } else {
+                    $notify.error(__("Failed to load payment methods"));
                 }
+            } finally {
+                this.loading = false;
             }
         },
     },
