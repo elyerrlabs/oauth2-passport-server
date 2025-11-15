@@ -6,13 +6,6 @@
 
 @push('css')
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-
         .card-shadow {
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
@@ -91,10 +84,10 @@
 @endpush
 
 @section('content')
-    <div class="min-h-screen flex items-center justify-center p-4">
+    <div class="min-h-screen flex items-center justify-center p-2 lg:p-4">
         <div class="w-full max-w-4xl flex flex-col md:flex-row rounded-2xl overflow-hidden card-shadow">
             <!-- Recovery Form -->
-            <div class="w-full md:w-1/2 bg-white p-8">
+            <div class="w-full md:w-1/2 bg-white p-2 lg:p-8">
                 <!-- Back Button -->
                 @if (Route::has('welcome'))
                     <a href="{{ route('welcome') }}"
@@ -110,7 +103,7 @@
                             <span class="mdi mdi-lock-reset text-indigo-600 text-3xl"></span>
                         </div>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-800">
+                    <h2 class="text-lg lg:text-2xl font-bold text-gray-800">
                         {{ __('Reset Your Password') }}
                     </h2>
                     <p class="text-sm text-gray-600 mt-2 max-w-md mx-auto">
@@ -140,7 +133,7 @@
 
                     <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full gradient-bg hover:opacity-90 text-white py-3 rounded-xl font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        class="w-full gradient-bg hover:opacity-90 text-sm lg:text-md text-white py-3 rounded-xl font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                         <span class="mdi mdi-email-send-outline mr-2"></span> {{ __('Send Reset Link') }}
                     </button>
                 </form>
@@ -160,7 +153,7 @@
             </div>
 
             <!-- Information Panel -->
-            <div class="gradient-bg w-full md:w-1/2 text-white p-8 flex flex-col justify-center">
+            <div class="gradient-bg w-full md:w-1/2 text-white p-8 hidden lg:flex lg:flex-col lg:justify-center">
                 <div class="text-center mb-6 illustration">
                     <span class="mdi mdi-shield-account text-6xl opacity-90"></span>
                 </div>

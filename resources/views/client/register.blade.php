@@ -6,13 +6,6 @@
 
 @push('css')
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-
         .card-shadow {
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
@@ -143,14 +136,14 @@
 @endpush
 
 @section('content')
-    <div class="min-h-screen flex items-center justify-center p-4 py-8 overflow-y-auto">
+    <div class="min-h-screen flex items-center justify-center p-2 lg:p-4 py-8 overflow-y-auto">
 
         <div class="w-full max-w-6xl flex flex-col md:flex-row rounded-2xl overflow-hidden card-shadow">
             <!-- Registration Form -->
-            <div class="w-full md:w-2/3 bg-white p-8">
+            <div class="w-full md:w-2/3 bg-white p-2 lg:p-8">
                 <!-- Header -->
                 <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-gray-800">
+                    <h2 class="text-lg lg:text-3xl font-bold text-gray-800">
                         <span class="mdi mdi-account-plus text-indigo-600 mr-2"></span>
                         {{ __('Create a New Account') }}
                     </h2>
@@ -294,7 +287,7 @@
             </div>
 
             <!-- Information Panel -->
-            <div class="gradient-bg w-full md:w-1/3 text-white p-8 flex flex-col justify-center">
+            <div class="gradient-bg w-full md:w-1/3 text-white p-8 hidden lg:flex flex-col justify-center">
                 <h2 class="text-2xl font-bold mb-6">{{ __('Why Join Our Platform?') }}</h2>
 
                 <div class="space-y-8">
