@@ -24,9 +24,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Notification Button -->
         <button
             @click="dropdownOpen = !dropdownOpen"
-            class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+            class="relative w-8 h-8 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white bg-white dark:bg-gray-800 rounded-full hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
         >
-            <i class="mdi mdi-bell text-xl"></i>
+            <i class="mdi mdi-bell text-lg"></i>
 
             <!-- Badge -->
             <span

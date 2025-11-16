@@ -28,48 +28,65 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Hero Carousel -->
         <section
-            class="relative overflow-hidden bg-gradient-to-r from-purple-900 via-purple-700 to-indigo-800 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900"
+            class="relative overflow-hidden bg-linear-to-r from-purple-900 via-purple-700 to-indigo-800 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900"
         >
-            <div
-                class="flex carousel-transition"
-                :style="`transform: translateX(-${currentSlide * 100}%)`"
-            >
+            <div class="relative overflow-hidden">
                 <div
-                    v-for="(slide, index) in carouselSlides"
-                    :key="index"
-                    class="min-w-full flex-shrink-0"
+                    class="flex carousel-transition"
+                    :style="`transform: translateX(-${currentSlide * 100}%)`"
                 >
-                    <div class="text-white py-16 md:py-24">
-                        <div class="container mx-auto px-4">
-                            <div class="flex flex-col md:flex-row items-center">
-                                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-10">
-                                    <h2
-                                        class="text-4xl md:text-6xl font-bold mb-6 leading-tight"
+                    <div
+                        v-for="(slide, index) in carouselSlides"
+                        :key="index"
+                        class="min-w-full shrink-0"
+                    >
+                        <div class="text-white py-12 md:py-16 lg:py-24">
+                            <div class="container mx-auto px-4">
+                                <div
+                                    class="flex flex-col lg:flex-row items-center"
+                                >
+                                    <!-- Contenido del texto -->
+                                    <div
+                                        class="lg:w-1/2 mb-8 lg:mb-0 lg:pr-10 text-center lg:text-left"
                                     >
-                                        {{ slide.name }}
-                                    </h2>
-                                    <p
-                                        class="text-xl md:text-2xl mb-8 leading-relaxed opacity-90"
-                                        v-html="slide.short_description"
-                                    ></p>
-                                    <button
-                                        class="bg-white dark:bg-gray-800 text-purple-700 dark:text-purple-400 font-bold py-4 px-10 rounded-xl shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:-translate-y-1 transition-all duration-300 text-lg"
-                                        @click.stop="goTo(slide?.links?.show)"
+                                        <h2
+                                            class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 lg:mb-6 leading-tight"
+                                        >
+                                            {{ slide.name }}
+                                        </h2>
+                                        <p
+                                            class="text-base sm:text-lg lg:text-xl xl:text-2xl mb-6 lg:mb-8 leading-relaxed opacity-90 max-w-2xl mx-auto lg:mx-0"
+                                            v-html="slide.short_description"
+                                        ></p>
+                                        <button
+                                            class="bg-white dark:bg-gray-800 cursor-pointer text-purple-700 dark:text-purple-400 font-bold py-3 px-6 sm:py-4 sm:px-10 rounded-xl shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:-translate-y-1 transition-all duration-300 text-base sm:text-lg"
+                                            @click.stop="
+                                                goTo(slide?.links?.show)
+                                            "
+                                        >
+                                            {{ __("Shop Now") }}
+                                            <i
+                                                class="fas fa-arrow-right ml-2"
+                                            ></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Imagen -->
+                                    <div
+                                        class="lg:w-1/2 flex justify-center mt-8 lg:mt-0"
                                     >
-                                        {{ __("Shop Now") }}
-                                        <i class="fas fa-arrow-right ml-2"></i>
-                                    </button>
-                                </div>
-                                <div class="md:w-1/2 flex justify-center">
-                                    <div class="relative">
                                         <div
-                                            class="absolute -inset-4 bg-white/20 dark:bg-gray-800/30 rounded-2xl blur-xl"
-                                        ></div>
-                                        <img
-                                            :src="slide.images[0].url"
-                                            :alt="slide.name"
-                                            class="rounded-2xl shadow-2xl w-full max-w-md relative z-10 transform hover:scale-105 transition-transform duration-500"
-                                        />
+                                            class="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
+                                        >
+                                            <div
+                                                class="absolute -inset-2 sm:-inset-3 lg:-inset-4 bg-white/20 dark:bg-gray-800/30 rounded-2xl blur-xl"
+                                            ></div>
+                                            <img
+                                                :src="slide.images[0].url"
+                                                :alt="slide.name"
+                                                class="rounded-2xl shadow-2xl w-full relative z-10 transform hover:scale-105 transition-transform duration-500"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -78,32 +95,32 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
             </div>
 
-            <!-- Navigation Arrows -->
+            <!-- Navigation Arrows - Ocultos en móviles, visibles en tablets y superiores -->
             <button
                 @click="prevSlide"
-                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
+                class="hidden sm:flex absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
             >
-                <i class="fas fa-chevron-left text-lg"></i>
+                <i class="fas fa-chevron-left text-sm sm:text-lg"></i>
             </button>
             <button
                 @click="nextSlide"
-                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
+                class="hidden sm:flex absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
             >
-                <i class="fas fa-chevron-right text-lg"></i>
+                <i class="fas fa-chevron-right text-sm sm:text-lg"></i>
             </button>
 
             <!-- Navigation Dots -->
             <div
-                class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20"
+                class="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-3 z-20"
             >
                 <button
                     v-for="(slide, index) in carouselSlides"
                     :key="index"
                     @click="currentSlide = index"
-                    class="w-4 h-4 rounded-full transition-all duration-300 border-2 border-white"
+                    class="w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-300 border-2 border-white"
                     :class="
                         currentSlide === index
-                            ? 'bg-white scale-125'
+                            ? 'bg-white scale-110 sm:scale-125'
                             : 'bg-transparent hover:bg-white/50'
                     "
                 ></button>
@@ -117,7 +134,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2
-                        class="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
+                        class="text-lg md:text-2xl lg:text-4xl font-bold mb-4 bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                     >
                         {{ __("Featured Categories") }}
                     </h2>
@@ -149,7 +166,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <!-- Featured Star Badge -->
                             <div
-                                class="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white p-2 rounded-full shadow-lg z-10 animate-pulse"
+                                class="absolute top-3 left-3 bg-linear-to-r from-yellow-400 to-yellow-500 text-white p-2 rounded-full shadow-lg z-10 animate-pulse"
                             >
                                 <i class="fas fa-star text-xs"></i>
                             </div>
@@ -162,9 +179,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ category.product_count }} {{ __("items") }}
                             </div>
 
-                            <!-- Gradient Overlay -->
+                            <!-- linear Overlay -->
                             <div
-                                class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300"
+                                class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300"
                             ></div>
 
                             <!-- Category Content -->
@@ -191,13 +208,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <!-- Hover Glow Effect -->
                             <div
-                                class="absolute inset-0 bg-gradient-to-r from-yellow-200/20 to-purple-200/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                                class="absolute inset-0 bg-linear-to-r from-yellow-200/20 to-purple-200/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                             ></div>
                         </div>
 
                         <!-- Mobile Floating Badge -->
                         <div
-                            class="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg md:hidden z-20"
+                            class="absolute -top-2 -right-2 bg-linear-to-r from-yellow-400 to-yellow-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg md:hidden z-20"
                         >
                             <i class="fas fa-star text-xs"></i>
                         </div>
@@ -216,7 +233,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="text-center mt-8">
                     <button
                         @click="goTo($page.props.routes.categories_index)"
-                        class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center"
+                        class="bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center"
                     >
                         {{ __("View All Categories") }}
                         <i class="fas fa-arrow-right ml-2"></i>
@@ -227,7 +244,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- New Arrivals -->
         <section
-            class="py-16 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300"
+            class="py-16 bg-linear-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300"
         >
             <div class="container mx-auto px-4">
                 <div
@@ -235,7 +252,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <div>
                         <h2
-                            class="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
+                            class="text-lg md:text-2xl lg:text-4xl font-bold mb-2 bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                         >
                             {{ __("New Arrivals") }}
                         </h2>
@@ -270,7 +287,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-700"
                             />
                             <div
-                                class="absolute top-3 left-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md"
+                                class="absolute top-3 left-3 bg-linear-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md"
                             >
                                 {{ __("NEW") }}
                             </div>
@@ -319,7 +336,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <div>
                         <h2
-                            class="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
+                            class="text-lg md:text-2xl lg:text-4xl font-bold mb-2 bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                         >
                             {{ __("Best Sellers") }}
                         </h2>
@@ -354,14 +371,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-700"
                             />
                             <div
-                                class="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center"
+                                class="absolute top-3 left-3 bg-linear-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center"
                             >
                                 <i class="fas fa-crown mr-1 text-xs"></i>
                                 {{ __("Best Seller") }}
                             </div>
                             <div
                                 v-if="product.discount"
-                                class="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md"
+                                class="absolute top-3 right-3 bg-linear-to-r from-red-500 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md"
                             >
                                 -{{ product.discount }}%
                             </div>
@@ -432,7 +449,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Featured Products Section -->
         <section
-            class="py-16 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-900 dark:to-purple-900/20 relative overflow-hidden transition-colors duration-300"
+            class="py-16 bg-linear-to-br from-purple-50 to-indigo-50 dark:from-gray-900 dark:to-purple-900/20 relative overflow-hidden transition-colors duration-300"
         >
             <!-- Background Decoration -->
             <div
@@ -452,12 +469,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="flex items-center justify-center md:justify-start mb-3"
                         >
                             <div
-                                class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white p-2 rounded-lg mr-3"
+                                class="bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white p-2 rounded-lg mr-3"
                             >
                                 <i class="fas fa-crown text-lg"></i>
                             </div>
                             <h2
-                                class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
+                                class="text-lg md:text-2xl lg:text-4xl font-bold bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                             >
                                 {{ __("Featured Products") }}
                             </h2>
@@ -490,7 +507,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         <!-- Premium Featured Badge -->
                         <div
-                            class="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white p-2 rounded-full shadow-lg z-20"
+                            class="absolute top-3 left-3 bg-linear-to-r from-yellow-400 to-yellow-500 text-white p-2 rounded-full shadow-lg z-20"
                         >
                             <i class="fas fa-star text-xs"></i>
                         </div>
@@ -506,21 +523,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Discount Badge -->
                             <div
                                 v-if="product.discount"
-                                class="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md z-20"
+                                class="absolute top-3 right-3 bg-linear-to-r from-red-500 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md z-20"
                             >
                                 -{{ product.discount }}%
                             </div>
 
                             <!-- Exclusive Ribbon -->
                             <div
-                                class="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white text-xs font-bold px-4 py-1 rounded-b-lg shadow-md z-20"
+                                class="absolute top-0 left-1/2 transform -translate-x-1/2 bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white text-xs font-bold px-4 py-1 rounded-b-lg shadow-md z-20"
                             >
                                 {{ __("EXCLUSIVE") }}
                             </div>
 
                             <!-- Hover Overlay -->
                             <div
-                                class="absolute inset-0 bg-gradient-to-t from-purple-900/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"
+                                class="absolute inset-0 bg-linear-to-t from-purple-900/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"
                             ></div>
 
                             <!-- Quick View Button -->
@@ -539,7 +556,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="p-5 relative">
                             <!-- Featured Product Label -->
                             <div
-                                class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full"
+                                class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full"
                             >
                                 {{ __("FEATURED") }}
                             </div>
@@ -590,7 +607,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </span>
                                 </div>
                                 <button
-                                    class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white cursor-pointer p-3 rounded-full hover:shadow-lg transition-all duration-300 transform group-hover:scale-110 shadow-md"
+                                    class="bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white cursor-pointer p-3 rounded-full hover:shadow-lg transition-all duration-300 transform group-hover:scale-110 shadow-md"
                                     @click="goTo(product.links.show)"
                                 >
                                     <i class="fas fa-shopping-cart"></i>
@@ -600,7 +617,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <!-- Corner Accent -->
                         <div
-                            class="absolute top-0 right-0 w-6 h-6 bg-gradient-to-br from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 rounded-bl-2xl"
+                            class="absolute top-0 right-0 w-6 h-6 bg-linear-to-br from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 rounded-bl-2xl"
                         ></div>
                     </div>
                 </div>
@@ -609,12 +626,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Random Products -->
         <section
-            class="py-16 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300"
+            class="py-16 bg-linear-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300"
         >
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2
-                        class="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
+                        class="text-lg md:text-2xl lg:text-4xl font-bold mb-4 bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
                     >
                         {{ __("You Might Also Like") }}
                     </h2>
@@ -641,7 +658,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             />
                             <div
                                 v-if="product.discount"
-                                class="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md"
+                                class="absolute top-3 right-3 bg-linear-to-r from-red-500 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md"
                             >
                                 -{{ product.discount }}%
                             </div>
@@ -708,7 +725,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="text-center mt-12">
                     <button
                         @click="goTo($page.props.routes.search)"
-                        class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 text-lg"
+                        class="bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 text-lg"
                     >
                         {{ __("Load More Products") }}
                         <i class="fas fa-arrow-right ml-2"></i>
@@ -719,7 +736,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Call to Action -->
         <section
-            class="py-20 bg-gradient-to-r from-purple-900 via-purple-800 to-indigo-900 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 text-white relative overflow-hidden"
+            class="py-20 bg-linear-to-r from-purple-900 via-purple-800 to-indigo-900 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 text-white relative overflow-hidden"
         >
             <div class="absolute inset-0 opacity-10">
                 <div
@@ -730,7 +747,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 ></div>
             </div>
             <div class="container mx-auto px-4 text-center relative z-10">
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                <h2 class="text-lg md:text-2xl lg:text-4xl font-bold mb-6">
                     {{ __("Can't find what you're looking for?") }}
                 </h2>
                 <p

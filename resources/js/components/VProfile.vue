@@ -24,15 +24,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Menu Button -->
         <button
             @click="toggleMenu"
-            class="flex items-center space-x-2 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm hover:shadow-md hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 group"
+            class="flex items-center p-1 md:p-2 bg-white dark:bg-gray-800 cursor-pointer rounded-xl shadow-sm hover:shadow-md hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 group"
         >
             <!-- User Avatar -->
             <div class="shrink-0">
                 <div
-                    class="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-inner group-hover:shadow-md transition-shadow"
+                    class="p-2 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-inner group-hover:shadow-md transition-shadow"
                 >
                     <template v-if="user?.id">
-                        <span class="text-sm font-semibold">
+                        <span class="text-sm">
                             {{ getUserInitials }}
                         </span>
                     </template>
@@ -242,7 +242,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </a>
                     </li>
 
-                    <li class="block lg:hidden" v-if="$page.props.allow_register && !user?.id">
+                    <li
+                        class="block lg:hidden"
+                        v-if="$page.props.allow_register && !user?.id"
+                    >
                         <a
                             @click="open($page.props.auth_routes.register)"
                             class="w-full text-left px-4 py-3 hover:bg-white dark:hover:bg-gray-700 flex items-center transition-all duration-200 group cursor-pointer"
