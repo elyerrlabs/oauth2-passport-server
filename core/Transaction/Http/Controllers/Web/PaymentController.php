@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\Transaction\Http\Controllers\Web;
 
 /**
@@ -19,28 +20,29 @@ namespace Core\Transaction\Http\Controllers\Web;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 
 use Core\Transaction\Model\Refund;
+use Core\Transaction\Transformer\User\ServiceTransformer;
+use Core\User\Services\ServiceService;
+use Core\User\Services\UserService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Core\User\Repositories\ServiceRepository;
 
 class PaymentController extends Controller
 {
-
     /**
      * Repository
-     * @var 
+     * @var
      */
-    public $repository;
+    public $serviceService;
 
-    public function __construct(ServiceRepository $serviceRepository)
+    public function __construct(ServiceService $serviceService)
     {
-        $this->repository = $serviceRepository;
+        $this->serviceService = $serviceService;
     }
 
     /**
@@ -86,7 +88,9 @@ class PaymentController extends Controller
      */
     public function services(Request $request)
     {
-        return $this->repository->searchForGuest($request);
+        $data = $this->serviceService->searchForGuest($request)->get();
+
+        return $this->showAll($data, ServiceTransformer::class);
     }
 
     /**
