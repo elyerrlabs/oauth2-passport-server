@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
-## 🛠️ Unrealized
+## 🛠️ v4.0.0
 
 -   Added support for module creation
 -   Introduced Artisan command for module installation
@@ -48,6 +48,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -   Optimized **background jobs with queues**, improving payment and transaction performance
 -   Added **foundational support for external service registration**, enabling integration with third-party apps (e.g., Nextcloud)
 - docker configuration updated
+- fixed responsive design
 
 ## 🚀 [v3.0.4]
 
