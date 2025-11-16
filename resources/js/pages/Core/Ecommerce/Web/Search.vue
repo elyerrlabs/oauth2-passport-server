@@ -33,14 +33,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="flex-1">
                 <!-- Search and Sort Header -->
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6"
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-3 md:p-6 mb-6"
                 >
                     <div
-                        class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+                        class="flex flex-col sm:flex-row justify-between items-start md:items-center gap-4"
                     >
                         <div>
                             <h1
-                                class="text-2xl font-bold text-gray-900 dark:text-white mb-1"
+                                class="text-lg md:text-2xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-1"
                             >
                                 {{ __("Products") }}
                             </h1>

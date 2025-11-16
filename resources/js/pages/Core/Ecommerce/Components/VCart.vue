@@ -26,9 +26,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Orders Button -->
         <button
             @click="open($page.props.ecommerce_orders.route)"
-            class="px-2 py-1 text-gray-200 bg-purple-700 rounded-full hover:text-white relative cursor-pointer hidden md:block"
+            class="px-2 py-1 text-gray-200 bg-purple-700 rounded-full hover:text-white relative cursor-pointer"
         >
-            <i class="mdi mdi-cart lg:text-xl"></i>
+            <i class="mdi mdi-cart text-xl"></i>
             <!-- Badge -->
             <span
                 v-if="orders.length"
@@ -41,7 +41,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Checkout Button -->
         <button
             @click="open($page.props.ecommerce_checkout.route)"
-            class="px-2 py-1 text-gray-200 bg-purple-700 rounded-full hover:text-white relative cursor-pointer hidden md:block"
+            class="px-2 py-1 text-gray-200 bg-purple-700 rounded-full hover:text-white relative cursor-pointer"
         >
             <i class="mdi mdi-credit-card lg:text-xl"></i>
         </button>
@@ -82,7 +82,7 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                     $notify.error(e.response.data.message);
+                    $notify.error(e.response.data.message);
                 }
             }
         },

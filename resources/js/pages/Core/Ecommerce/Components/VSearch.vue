@@ -20,10 +20,10 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="hidden md:flex flex-1 mx-2 max-w-2xl relative">
+    <div class="hidden sm:flex flex-1 mx-2 max-w-2xl relative">
         <div class="flex w-full">
             <!-- Categories Dropdown Button -->
-            <div class="relative">
+            <div class="relative hidden md:inline-block">
                 <button
                     class="bg-primary-700 cursor-pointer text-white py-1 px-1 rounded-l-lg hover:bg-primary-800 transition flex items-center"
                     @click="toggleCategories"
@@ -80,10 +80,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
     <!-- Mobile Menu Button -->
     <button
-        class="px-2 py-1 mx-2 text-gray-200 bg-purple-700 rounded-full hover:text-white relative cursor-pointer md:hidden"
+        class="h-10 w-10 text-gray-200 bg-purple-700 rounded-full hover:text-white relative cursor-pointer sm:hidden"
         @click="openModal"
     >
-        <i class="fas fa-search text-lg"></i>
+        <i class="fas fa-search text-xl"></i>
     </button>
 
     <!-- Search Modal -->

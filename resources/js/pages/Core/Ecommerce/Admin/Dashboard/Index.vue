@@ -22,42 +22,44 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <template>
     <v-admin-layout>
-        <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div
+            class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
+        >
             <!-- Header -->
-            <div class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div
+                class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+            >
                 <div class="px-6 py-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                            <h1
+                                class="text-2xl font-bold text-gray-900 dark:text-white"
+                            >
                                 {{ __("Dashboard Overview") }}
                             </h1>
                             <p class="text-gray-600 dark:text-gray-300 mt-1">
-                                {{ __("Welcome back! Here's what's happening with your store today.") }}
+                                {{
+                                    __(
+                                        "Welcome back! Here's what's happening with your store today."
+                                    )
+                                }}
                             </p>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <!-- Theme Toggle -->
-                            <button
-                                @click="toggleTheme"
-                                class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
-                                :title="__('Toggle theme')"
-                            >
-                                <svg v-if="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                                </svg>
-                                <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                                </svg>
-                            </button>
-                            
                             <!-- Refresh Button -->
                             <button
                                 @click="getData"
                                 class="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors duration-200"
                                 :title="__('Refresh data')"
                             >
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                                <svg
+                                    class="w-5 h-5"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                                    />
                                 </svg>
                             </button>
                         </div>
@@ -68,100 +70,236 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Main Content -->
             <div class="p-4 lg:p-6">
                 <!-- Stats Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8"
+                >
                     <!-- Total Sales -->
-                    <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group">
+                    <div
+                        class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                    >
                         <div class="flex items-center justify-between mb-4">
-                            <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-2xl">
-                                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            <div
+                                class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-2xl"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                    />
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
-                                    {{ dashboard.currency_symbol }}{{ formatNumber(dashboard.transactions_total) }}
+                                <div
+                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ dashboard.currency_symbol
+                                    }}{{
+                                        formatNumber(
+                                            dashboard.transactions_total
+                                        )
+                                    }}
                                 </div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ __("Total Sales") }}</div>
+                                <div
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Total Sales") }}
+                                </div>
                             </div>
                         </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                            <div class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 75%"></div>
+                        <div
+                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
+                        >
+                            <div
+                                class="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                                style="width: 75%"
+                            ></div>
                         </div>
                     </div>
 
                     <!-- Today Sales -->
-                    <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group">
+                    <div
+                        class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                    >
                         <div class="flex items-center justify-between mb-4">
-                            <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-2xl">
-                                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            <div
+                                class="p-3 bg-green-100 dark:bg-green-900/30 rounded-2xl"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-green-600 dark:text-green-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
-                                    {{ dashboard.currency_symbol }}{{ formatNumber(dashboard.transactions_today) }}
+                                <div
+                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ dashboard.currency_symbol
+                                    }}{{
+                                        formatNumber(
+                                            dashboard.transactions_today
+                                        )
+                                    }}
                                 </div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ __("Today Sales") }}</div>
+                                <div
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Today Sales") }}
+                                </div>
                             </div>
                         </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                            <div class="bg-green-500 h-2 rounded-full transition-all duration-500" style="width: 85%"></div>
+                        <div
+                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
+                        >
+                            <div
+                                class="bg-green-500 h-2 rounded-full transition-all duration-500"
+                                style="width: 85%"
+                            ></div>
                         </div>
                     </div>
 
                     <!-- Total Products -->
-                    <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group">
+                    <div
+                        class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                    >
                         <div class="flex items-center justify-between mb-4">
-                            <div class="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-2xl">
-                                <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            <div
+                                class="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-2xl"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-orange-600 dark:text-orange-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                                    />
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
-                                    {{ formatNumber(dashboard.products_stock_total) }}
+                                <div
+                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{
+                                        formatNumber(
+                                            dashboard.products_stock_total
+                                        )
+                                    }}
                                 </div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ __("Total Products") }}</div>
+                                <div
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Total Products") }}
+                                </div>
                             </div>
                         </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                            <div class="bg-orange-500 h-2 rounded-full transition-all duration-500" style="width: 65%"></div>
+                        <div
+                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
+                        >
+                            <div
+                                class="bg-orange-500 h-2 rounded-full transition-all duration-500"
+                                style="width: 65%"
+                            ></div>
                         </div>
                     </div>
 
                     <!-- Pending Orders -->
-                    <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group">
+                    <div
+                        class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                    >
                         <div class="flex items-center justify-between mb-4">
-                            <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl">
-                                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            <div
+                                class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-purple-600 dark:text-purple-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
-                                    {{ formatNumber(dashboard.products_pending) }}
+                                <div
+                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{
+                                        formatNumber(dashboard.products_pending)
+                                    }}
                                 </div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ __("Pending Orders") }}</div>
+                                <div
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Pending Orders") }}
+                                </div>
                             </div>
                         </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                            <div class="bg-purple-500 h-2 rounded-full transition-all duration-500" style="width: 45%"></div>
+                        <div
+                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
+                        >
+                            <div
+                                class="bg-purple-500 h-2 rounded-full transition-all duration-500"
+                                style="width: 45%"
+                            ></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Charts Section -->
-                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 mb-6 lg:mb-8">
+                <div
+                    class="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 mb-6 lg:mb-8"
+                >
                     <!-- Sales Overview Chart -->
-                    <div class="xl:col-span-2 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300">
+                    <div
+                        class="xl:col-span-2 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300"
+                    >
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white">
+                            <h3
+                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                            >
                                 {{ __("Sales Overview (Last 30 Days)") }}
                             </h3>
                             <div class="flex items-center space-x-2">
-                                <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                                <button
+                                    class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors"
+                                >
+                                    <svg
+                                        class="w-5 h-5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                        />
                                     </svg>
                                 </button>
                             </div>
@@ -177,9 +315,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Revenue Distribution -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300"
+                    >
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white">
+                            <h3
+                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                            >
                                 {{ __("Revenue Distribution") }}
                             </h3>
                         </div>
@@ -195,11 +337,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Second Row Charts -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-6 lg:mb-8">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-6 lg:mb-8"
+                >
                     <!-- Top Selling Products -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300"
+                    >
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white">
+                            <h3
+                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                            >
                                 {{ __("Top Selling Products") }}
                             </h3>
                         </div>
@@ -214,9 +362,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Today's Sales Progress -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300"
+                    >
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white">
+                            <h3
+                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                            >
                                 {{ __("Today's Sales Progress") }}
                             </h3>
                         </div>
@@ -234,13 +386,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Data Tables Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                     <!-- Recent Orders -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-300 overflow-hidden">
-                        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-300 overflow-hidden"
+                    >
+                        <div
+                            class="px-6 py-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50"
+                        >
                             <div class="flex items-center justify-between">
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                <h3
+                                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                                >
                                     {{ __("Recent Orders") }}
                                 </h3>
-                                <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium transition-colors">
+                                <button
+                                    class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium transition-colors"
+                                >
                                     {{ __("View All") }}
                                 </button>
                             </div>
@@ -248,63 +408,120 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
-                                    <tr class="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-600">
-                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                                    <tr
+                                        class="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-600"
+                                    >
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                        >
                                             {{ __("Order") }}
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                        >
                                             {{ __("Customer") }}
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                        >
                                             {{ __("Date") }}
                                         </th>
-                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                        >
                                             {{ __("Total") }}
                                         </th>
-                                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                        >
                                             {{ __("Status") }}
                                         </th>
-                                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                        >
                                             {{ __("Actions") }}
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
-                                    <tr 
-                                        v-for="checkout in checkouts" 
+                                <tbody
+                                    class="divide-y divide-gray-200 dark:divide-gray-600"
+                                >
+                                    <tr
+                                        v-for="checkout in checkouts"
                                         :key="checkout.id"
                                         class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-200 group"
                                     >
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"
+                                        >
                                             #{{ checkout.id }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300"
+                                        >
                                             {{ checkout.customer }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300"
+                                        >
                                             {{ formatDate(checkout.date) }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white text-right">
-                                            {{ dashboard.currency_symbol }}{{ checkout.total }}
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white text-right"
+                                        >
+                                            {{ dashboard.currency_symbol
+                                            }}{{ checkout.total }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-center"
+                                        >
                                             <span
                                                 class="inline-flex px-3 py-1 text-xs font-semibold rounded-full border transition-all duration-200 transform group-hover:scale-105"
-                                                :class="getStatusClasses(checkout.status)"
+                                                :class="
+                                                    getStatusClasses(
+                                                        checkout.status
+                                                    )
+                                                "
                                             >
-                                                <span class="w-2 h-2 rounded-full mr-1.5" :class="getStatusDotClass(checkout.status)"></span>
+                                                <span
+                                                    class="w-2 h-2 rounded-full mr-1.5"
+                                                    :class="
+                                                        getStatusDotClass(
+                                                            checkout.status
+                                                        )
+                                                    "
+                                                ></span>
                                                 {{ checkout.status }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-center"
+                                        >
                                             <button
                                                 @click="viewOrder(checkout)"
                                                 class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 p-1 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30"
-                                                :title="__('View order details')"
+                                                :title="
+                                                    __('View order details')
+                                                "
                                             >
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                                <svg
+                                                    class="w-4 h-4"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                    />
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                    />
                                                 </svg>
                                             </button>
                                         </td>
@@ -315,43 +532,67 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Top Products List -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-300 overflow-hidden">
-                        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-300 overflow-hidden"
+                    >
+                        <div
+                            class="px-6 py-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50"
+                        >
                             <div class="flex items-center justify-between">
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                <h3
+                                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                                >
                                     {{ __("Top Selling Products") }}
                                 </h3>
-                                <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium transition-colors">
+                                <button
+                                    class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium transition-colors"
+                                >
                                     {{ __("View All") }}
                                 </button>
                             </div>
                         </div>
-                        <div class="divide-y divide-gray-200 dark:divide-gray-600">
+                        <div
+                            class="divide-y divide-gray-200 dark:divide-gray-600"
+                        >
                             <div
                                 v-for="product in topProducts"
                                 :key="product.id"
                                 class="flex items-center p-4 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-200 group"
                             >
-                                <div class="flex-shrink-0 h-12 w-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-600">
+                                <div
+                                    class="flex-shrink-0 h-12 w-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-600"
+                                >
                                     <img
-                                        :src="product.image || '/images/placeholder-product.png'"
+                                        :src="
+                                            product.image ||
+                                            '/images/placeholder-product.png'
+                                        "
                                         :alt="product.name"
                                         class="h-full w-full object-cover"
                                     />
                                 </div>
                                 <div class="ml-4 flex-1 min-w-0">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    <div
+                                        class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                                    >
                                         {{ product.name }}
                                     </div>
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                                    <div
+                                        class="text-sm text-gray-500 dark:text-gray-400"
+                                    >
                                         {{ product.category }}
                                     </div>
                                 </div>
                                 <div class="ml-4 text-right">
-                                    <div class="text-sm font-semibold text-blue-600 dark:text-blue-400">
-                                        {{ dashboard.currency_symbol }}{{ product.price }}
+                                    <div
+                                        class="text-sm font-semibold text-blue-600 dark:text-blue-400"
+                                    >
+                                        {{ dashboard.currency_symbol
+                                        }}{{ product.price }}
                                     </div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                    <div
+                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                    >
                                         {{ __("Sold") }}: {{ product.sold }}
                                     </div>
                                 </div>
@@ -378,7 +619,7 @@ export default {
         return {
             isDark: false,
             dashboard: {
-                currency_symbol: '$',
+                currency_symbol: "$",
                 transactions_total: 0,
                 transactions_today: 0,
                 products_stock_total: 0,
@@ -386,7 +627,7 @@ export default {
                 products_lower_stock: 0,
                 transactions: [],
                 checkouts: [],
-                top_products: []
+                top_products: [],
             },
             revenue: [],
             checkouts: [],
@@ -409,14 +650,14 @@ export default {
                             reset: true,
                         },
                     },
-                    background: 'transparent',
+                    background: "transparent",
                 },
                 theme: {
-                    mode: 'light'
+                    mode: "light",
                 },
                 colors: ["#3B82F6"],
                 dataLabels: {
-                    enabled: false
+                    enabled: false,
                 },
                 stroke: {
                     curve: "smooth",
@@ -428,15 +669,15 @@ export default {
                         shadeIntensity: 1,
                         opacityFrom: 0.7,
                         opacityTo: 0.3,
-                        stops: [0, 90, 100]
-                    }
+                        stops: [0, 90, 100],
+                    },
                 },
                 xaxis: {
                     categories: [],
                     labels: {
                         style: {
-                            colors: '#6B7280'
-                        }
+                            colors: "#6B7280",
+                        },
                     },
                     axisBorder: {
                         show: false,
@@ -448,18 +689,22 @@ export default {
                 yaxis: {
                     labels: {
                         style: {
-                            colors: '#6B7280'
+                            colors: "#6B7280",
                         },
-                        formatter: (val) => this.dashboard.currency_symbol + this.formatNumber(val)
+                        formatter: (val) =>
+                            this.dashboard.currency_symbol +
+                            this.formatNumber(val),
                     },
                 },
                 grid: {
-                    borderColor: '#F3F4F6',
+                    borderColor: "#F3F4F6",
                     strokeDashArray: 4,
                 },
                 tooltip: {
                     y: {
-                        formatter: (val) => this.dashboard.currency_symbol + this.formatNumber(val)
+                        formatter: (val) =>
+                            this.dashboard.currency_symbol +
+                            this.formatNumber(val),
                     },
                 },
             },
@@ -469,26 +714,26 @@ export default {
             revenueChartOptions: {
                 chart: {
                     type: "donut",
-                    background: 'transparent'
+                    background: "transparent",
                 },
                 theme: {
-                    mode: 'light'
+                    mode: "light",
                 },
                 labels: [],
                 colors: ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444"],
                 legend: {
                     position: "bottom",
                     labels: {
-                        colors: '#6B7280'
-                    }
+                        colors: "#6B7280",
+                    },
                 },
                 dataLabels: {
                     enabled: true,
-                    formatter: (val) => val.toFixed(1) + '%',
+                    formatter: (val) => val.toFixed(1) + "%",
                     style: {
-                        fontSize: '12px',
-                        fontWeight: 'bold'
-                    }
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                    },
                 },
                 plotOptions: {
                     pie: {
@@ -497,31 +742,42 @@ export default {
                                 show: true,
                                 name: {
                                     show: true,
-                                    fontSize: '14px',
-                                    color: '#6B7280'
+                                    fontSize: "14px",
+                                    color: "#6B7280",
                                 },
                                 value: {
                                     show: true,
-                                    fontSize: '20px',
-                                    fontWeight: 'bold',
-                                    color: '#111827',
-                                    formatter: (val) => this.dashboard.currency_symbol + this.formatNumber(val)
+                                    fontSize: "20px",
+                                    fontWeight: "bold",
+                                    color: "#111827",
+                                    formatter: (val) =>
+                                        this.dashboard.currency_symbol +
+                                        this.formatNumber(val),
                                 },
                                 total: {
                                     show: true,
                                     label: __("Total Revenue"),
-                                    color: '#6B7280',
-                                    formatter: () => this.dashboard.currency_symbol + this.formatNumber(this.revenue.reduce((sum, item) => sum + item.total, 0))
-                                }
-                            }
-                        }
-                    }
+                                    color: "#6B7280",
+                                    formatter: () =>
+                                        this.dashboard.currency_symbol +
+                                        this.formatNumber(
+                                            this.revenue.reduce(
+                                                (sum, item) => sum + item.total,
+                                                0
+                                            )
+                                        ),
+                                },
+                            },
+                        },
+                    },
                 },
                 tooltip: {
                     y: {
-                        formatter: (val) => this.dashboard.currency_symbol + this.formatNumber(val)
-                    }
-                }
+                        formatter: (val) =>
+                            this.dashboard.currency_symbol +
+                            this.formatNumber(val),
+                    },
+                },
             },
 
             revenueChartSeries: [],
@@ -530,45 +786,45 @@ export default {
                 chart: {
                     type: "bar",
                     toolbar: { show: false },
-                    background: 'transparent'
+                    background: "transparent",
                 },
                 theme: {
-                    mode: 'light'
+                    mode: "light",
                 },
                 plotOptions: {
                     bar: {
                         borderRadius: 8,
                         horizontal: true,
-                    }
+                    },
                 },
                 colors: ["#10B981"],
                 dataLabels: {
-                    enabled: false
+                    enabled: false,
                 },
                 xaxis: {
                     categories: [],
                     labels: {
                         style: {
-                            colors: '#6B7280'
-                        }
-                    }
+                            colors: "#6B7280",
+                        },
+                    },
                 },
                 yaxis: {
                     labels: {
                         style: {
-                            colors: '#6B7280'
-                        }
-                    }
+                            colors: "#6B7280",
+                        },
+                    },
                 },
                 grid: {
-                    borderColor: '#F3F4F6',
+                    borderColor: "#F3F4F6",
                     strokeDashArray: 4,
                 },
                 tooltip: {
                     y: {
-                        formatter: (val) => val + " " + __("units sold")
-                    }
-                }
+                        formatter: (val) => val + " " + __("units sold"),
+                    },
+                },
             },
 
             topProductsChartSeries: [],
@@ -576,10 +832,10 @@ export default {
             todaySalesChartOptions: {
                 chart: {
                     type: "radialBar",
-                    background: 'transparent'
+                    background: "transparent",
                 },
                 theme: {
-                    mode: 'light'
+                    mode: "light",
                 },
                 plotOptions: {
                     radialBar: {
@@ -604,7 +860,9 @@ export default {
                                 fontSize: "13px",
                             },
                             value: {
-                                formatter: (val) => this.dashboard.currency_symbol + this.formatNumber(val),
+                                formatter: (val) =>
+                                    this.dashboard.currency_symbol +
+                                    this.formatNumber(val),
                                 color: "#111827",
                                 fontSize: "30px",
                                 show: true,
@@ -626,7 +884,7 @@ export default {
                     },
                 },
                 stroke: {
-                    lineCap: "round"
+                    lineCap: "round",
                 },
                 labels: [__("Today Sales")],
             },
@@ -642,43 +900,33 @@ export default {
 
     methods: {
         detectTheme() {
-            this.isDark = document.documentElement.classList.contains('dark');
-            this.updateChartThemes();
-        },
-
-        toggleTheme() {
-            this.isDark = !this.isDark;
-            if (this.isDark) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
+            this.isDark = document.documentElement.classList.contains("dark");
             this.updateChartThemes();
         },
 
         updateChartThemes() {
-            const themeMode = this.isDark ? 'dark' : 'light';
-            const textColor = this.isDark ? '#9CA3AF' : '#6B7280';
-            const backgroundColor = this.isDark ? '#1F2937' : '#FFFFFF';
-            const gridColor = this.isDark ? '#374151' : '#F3F4F6';
+            const themeMode = this.isDark ? "dark" : "light";
+            const textColor = this.isDark ? "#9CA3AF" : "#6B7280";
+            const backgroundColor = this.isDark ? "#1F2937" : "#FFFFFF";
+            const gridColor = this.isDark ? "#374151" : "#F3F4F6";
 
             // Update all chart themes
             const charts = [
-                'salesChartOptions',
-                'revenueChartOptions', 
-                'topProductsChartOptions',
-                'todaySalesChartOptions'
+                "salesChartOptions",
+                "revenueChartOptions",
+                "topProductsChartOptions",
+                "todaySalesChartOptions",
             ];
 
-            charts.forEach(chartName => {
+            charts.forEach((chartName) => {
                 if (this[chartName]) {
                     this[chartName] = {
                         ...this[chartName],
                         theme: { mode: themeMode },
                         chart: {
                             ...this[chartName].chart,
-                            background: 'transparent'
-                        }
+                            background: "transparent",
+                        },
                     };
 
                     // Update specific properties for each chart type
@@ -691,7 +939,10 @@ export default {
                     if (this[chartName].grid) {
                         this[chartName].grid.borderColor = gridColor;
                     }
-                    if (this[chartName].legend && this[chartName].legend.labels) {
+                    if (
+                        this[chartName].legend &&
+                        this[chartName].legend.labels
+                    ) {
                         this[chartName].legend.labels.colors = textColor;
                     }
                 }
@@ -699,18 +950,18 @@ export default {
         },
 
         formatNumber(num) {
-            return parseFloat(num || 0).toLocaleString('en-US', {
+            return parseFloat(num || 0).toLocaleString("en-US", {
                 minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                maximumFractionDigits: 2,
             });
         },
 
         formatDate(dateString) {
-            if (!dateString) return '-';
-            return new Date(dateString).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
+            if (!dateString) return "-";
+            return new Date(dateString).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
             });
         },
 
@@ -725,13 +976,15 @@ export default {
                     this.checkouts = res.data.checkouts || [];
                     this.topProducts = res.data.top_products || [];
                     this.revenue = res.data.revenue || [];
-                    this.todaySalesChartSeries = [res.data.transactions_today || 0];
+                    this.todaySalesChartSeries = [
+                        res.data.transactions_today || 0,
+                    ];
                     this.renderSales();
                     this.renderTopProducts();
                     this.renderRevenue();
                 }
             } catch (e) {
-                console.error('Error fetching dashboard data:', e);
+                console.error("Error fetching dashboard data:", e);
             }
         },
 
@@ -740,7 +993,9 @@ export default {
                 ...this.topProductsChartOptions,
                 xaxis: {
                     ...this.topProductsChartOptions.xaxis,
-                    categories: this.topProducts.map((item) => item.name || item.category),
+                    categories: this.topProducts.map(
+                        (item) => item.name || item.category
+                    ),
                 },
             };
 
@@ -760,17 +1015,21 @@ export default {
 
             this.revenueChartOptions = {
                 ...this.revenueChartOptions,
-                labels: this.revenue.map((item) => item.name || 'Unknown'),
+                labels: this.revenue.map((item) => item.name || "Unknown"),
             };
 
-            this.revenueChartSeries = this.revenue.map((item) => item.total || 0);
+            this.revenueChartSeries = this.revenue.map(
+                (item) => item.total || 0
+            );
         },
 
         renderSales() {
             this.salesChartSeries = [
                 {
                     name: __("Sales"),
-                    data: (this.dashboard.transactions || []).map((item) => item.total || 0),
+                    data: (this.dashboard.transactions || []).map(
+                        (item) => item.total || 0
+                    ),
                 },
             ];
 
@@ -779,7 +1038,7 @@ export default {
                 xaxis: {
                     ...this.salesChartOptions.xaxis,
                     categories: (this.dashboard.transactions || []).map(
-                        (item) => item.date || ''
+                        (item) => item.date || ""
                     ),
                 },
             };
@@ -787,24 +1046,30 @@ export default {
 
         getStatusClasses(status) {
             const statusClasses = {
-                successful: 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700',
-                pending: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700',
-                failed: 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700',
-                refunded: 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-700',
+                successful:
+                    "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700",
+                pending:
+                    "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700",
+                failed: "bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700",
+                refunded:
+                    "bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-700",
             };
 
-            return statusClasses[status] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600';
+            return (
+                statusClasses[status] ||
+                "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600"
+            );
         },
 
         getStatusDotClass(status) {
             const dotClasses = {
-                successful: 'bg-green-500',
-                pending: 'bg-yellow-500',
-                failed: 'bg-red-500',
-                refunded: 'bg-blue-500',
+                successful: "bg-green-500",
+                pending: "bg-yellow-500",
+                failed: "bg-red-500",
+                refunded: "bg-blue-500",
             };
 
-            return dotClasses[status] || 'bg-gray-500';
+            return dotClasses[status] || "bg-gray-500";
         },
 
         viewOrder(order) {
@@ -831,7 +1096,8 @@ export default {
 
 /* Smooth transitions for dark mode */
 * {
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease,
+        color 0.3s ease;
 }
 
 /* Custom scrollbar for tables */

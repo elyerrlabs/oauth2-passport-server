@@ -33,8 +33,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         :href="$page.props.routes.dashboard"
                         class="lg:text-2xl font-bold text-primary-700 dark:text-purple-400 flex items-center"
                     >
-                        <i class="fas fa-store mr-2"></i
-                        >{{ $page.props.app_name }}
+                        <i class="fas fa-store mr-2"></i>
+                        <span class="hidden lg:block">
+                            {{ $page.props.app_name }}
+                        </span>
                     </a>
                 </div>
 
@@ -42,24 +44,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <v-search />
 
                 <!-- Right side icons -->
-                <div class="flex items-center xs:space-x-2 md:space-x-4">
+                <div class="flex items-center space-x-2 md:space-x-4">
                     <v-theme />
                     <!-- Notifications -->
-                    <v-notification />
+                    <div class="hidden md:block">
+                        <v-notification v-if="$page.props.user?.id" />
+                    </div>
 
                     <!-- Cart -->
                     <v-cart />
 
-                    <!-- User menu (hidden on mobile) -->
-                    <v-profile />
-
                     <!-- Mobile Menu Button -->
                     <button
-                        class="px-2 py-1 text-gray-200 bg-purple-700 dark:bg-purple-600 rounded-full hover:text-white hover:bg-purple-800 dark:hover:bg-purple-700 relative cursor-pointer md:hidden transition-colors duration-300"
+                        class="h-8 w-8 text-gray-200 bg-purple-700 dark:bg-purple-600 rounded-full hover:text-white hover:bg-purple-800 dark:hover:bg-purple-700 relative cursor-pointer md:hidden transition-colors duration-300"
                         @click="mobileMenuOpen = !mobileMenuOpen"
                     >
                         <i class="fas fa-bars text-lg"></i>
                     </button>
+                    <v-profile />
                 </div>
             </div>
         </div>
@@ -180,7 +182,7 @@ export default {
         VProfile,
         VSearch,
         VCategories,
-        VTheme
+        VTheme,
     },
 
     data() {

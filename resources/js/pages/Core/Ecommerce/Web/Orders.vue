@@ -48,7 +48,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
         </div>
 
-        <div class="container mx-auto px-4 py-6 md:py-8">
+        <div class="mx-auto px-4 py-6 md:py-8">
             <!-- Empty Cart State -->
             <div
                 v-if="orders.length === 0 && !loading"
