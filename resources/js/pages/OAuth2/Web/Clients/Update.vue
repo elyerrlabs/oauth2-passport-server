@@ -393,12 +393,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import VModal from "@/components/VModal.vue";
+import VError from "@/components/VError.vue";
 
 export default {
     emits: ["updated"],
-
+    
     components: {
         VModal,
+        VError,
     },
 
     props: {

@@ -157,10 +157,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
         </div>
 
-        <!-- Grid & List Views -->
+        <!-- Grid View (sm:1, md:2) -->
         <div
             v-if="viewMode === 'grid'"
-            class="groups-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6"
+            class="groups-grid grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
         >
             <div
                 v-for="group in groups"
@@ -245,148 +245,214 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
         </div>
 
-        <!-- List View -->
+        <!-- List View (lg:table) -->
         <div v-else class="groups-list mb-6">
-            <div
-                class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden"
-            >
-                <div class="overflow-x-auto">
-                    <table
-                        class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
-                    >
-                        <thead class="bg-white dark:bg-gray-700">
-                            <tr>
-                                <th
-                                    v-for="(column, index) in columns"
-                                    :key="index"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-                                >
-                                    {{ __(column) }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody
-                            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
-                            v-if="!loading && groups.length > 0"
-                        >
-                            <tr
-                                v-for="group in groups"
-                                :key="group.id"
-                                class="hover:bg-white dark:hover:bg-gray-700 transition-colors"
+            <!-- Mobile/Tablet Cards (sm:1, md:2) -->
+            <div class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                    v-for="group in groups"
+                    :key="group.id"
+                    class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
+                >
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <h3
+                                class="font-semibold text-gray-900 dark:text-white"
                             >
-                                <td
-                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    {{ __(group.name) }}
-                                </td>
-                                <td
-                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"
-                                >
-                                    @{{ group.slug }}
-                                </td>
-                                <td
-                                    class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"
-                                >
-                                    <div class="line-clamp-2 max-w-xs">
-                                        {{ __(group.description) }}
-                                    </div>
-                                </td>
-                                <td
-                                    class="px-6 py-4 whitespace-nowrap text-center"
-                                >
-                                    <span
-                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
-                                        :class="
-                                            group.system
-                                                ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'
-                                                : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
-                                        "
+                                {{ __(group.name) }}
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                @{{ group.slug }}
+                            </p>
+                        </div>
+                        <span
+                            class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                            :class="
+                                group.system
+                                    ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'
+                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                            "
+                        >
+                            <i
+                                :class="
+                                    group.system
+                                        ? 'mdi mdi-shield-check'
+                                        : 'mdi mdi-account'
+                                "
+                                class="text-xs mr-1"
+                            ></i>
+                            {{ group.system ? __("System") : __("User") }}
+                        </span>
+                    </div>
+
+                    <p
+                        class="text-sm text-gray-600 dark:text-gray-300 mb-3 "
+                    >
+                        {{ __(group.description) }}
+                    </p>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500 dark:text-gray-400">
+                            <i class="mdi mdi-calendar mr-1"></i>
+                            {{ group.created_at }}
+                        </span>
+                        <div class="flex space-x-1">
+                            <v-create @updated="getGroups" :item="group" />
+                            <v-delete
+                                v-if="!group.system"
+                                @deleted="getGroups"
+                                :item="group"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Table (lg+) -->
+            <div class="hidden lg:block">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden"
+                >
+                    <div class="overflow-x-auto">
+                        <table
+                            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+                        >
+                            <thead class="bg-white dark:bg-gray-700">
+                                <tr>
+                                    <th
+                                        v-for="(column, index) in columns"
+                                        :key="index"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                                     >
-                                        <i
+                                        {{ __(column) }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody
+                                class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+                                v-if="!loading && groups.length > 0"
+                            >
+                                <tr
+                                    v-for="group in groups"
+                                    :key="group.id"
+                                    class="hover:bg-white dark:hover:bg-gray-700 transition-colors"
+                                >
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"
+                                    >
+                                        {{ __(group.name) }}
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"
+                                    >
+                                        @{{ group.slug }}
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"
+                                    >
+                                        <div class=" max-w-xs">
+                                            {{ __(group.description) }}
+                                        </div>
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-center"
+                                    >
+                                        <span
+                                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
                                             :class="
                                                 group.system
-                                                    ? 'mdi mdi-shield-check'
-                                                    : 'mdi mdi-account'
+                                                    ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'
+                                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
                                             "
-                                            class="text-sm mr-1"
-                                        ></i>
-                                        {{
-                                            group.system
-                                                ? __("System")
-                                                : __("User")
-                                        }}
-                                    </span>
-                                </td>
-                                <td
-                                    class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
-                                >
-                                    <div class="flex justify-center space-x-2">
-                                        <v-create
-                                            @updated="getGroups"
-                                            :item="group"
-                                        />
-                                        <v-delete
-                                            v-if="!group.system"
-                                            @deleted="getGroups"
-                                            :item="group"
-                                        />
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else-if="loading">
-                            <tr>
-                                <td
-                                    :colspan="columns.length"
-                                    class="px-6 py-12 text-center"
-                                >
-                                    <div
-                                        class="flex justify-center items-center"
-                                    >
-                                        <div
-                                            class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
-                                        ></div>
-                                        <span
-                                            class="ml-2 text-gray-600 dark:text-gray-400"
-                                            >{{ __("Loading...") }}</span
-                                        >
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else>
-                            <tr>
-                                <td
-                                    :colspan="columns.length"
-                                    class="px-6 py-12 text-center"
-                                >
-                                    <div class="empty-state">
-                                        <div
-                                            class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4"
                                         >
                                             <i
-                                                class="mdi mdi-account-group-off text-gray-400 text-2xl"
+                                                :class="
+                                                    group.system
+                                                        ? 'mdi mdi-shield-check'
+                                                        : 'mdi mdi-account'
+                                                "
+                                                class="text-sm mr-1"
                                             ></i>
-                                        </div>
-                                        <div
-                                            class="empty-title text-lg font-medium text-gray-700 dark:text-gray-300 mb-2"
-                                        >
-                                            {{ __("No groups found") }}
-                                        </div>
-                                        <div
-                                            class="empty-subtitle text-gray-500 dark:text-gray-400"
-                                        >
                                             {{
-                                                __(
-                                                    "Try adjusting your search filters"
-                                                )
+                                                group.system
+                                                    ? __("System")
+                                                    : __("User")
                                             }}
+                                        </span>
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
+                                    >
+                                        <div
+                                            class="flex justify-center space-x-2"
+                                        >
+                                            <v-create
+                                                @updated="getGroups"
+                                                :item="group"
+                                            />
+                                            <v-delete
+                                                v-if="!group.system"
+                                                @deleted="getGroups"
+                                                :item="group"
+                                            />
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else-if="loading">
+                                <tr>
+                                    <td
+                                        :colspan="columns.length"
+                                        class="px-6 py-12 text-center"
+                                    >
+                                        <div
+                                            class="flex justify-center items-center"
+                                        >
+                                            <div
+                                                class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+                                            ></div>
+                                            <span
+                                                class="ml-2 text-gray-600 dark:text-gray-400"
+                                                >{{ __("Loading...") }}</span
+                                            >
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else>
+                                <tr>
+                                    <td
+                                        :colspan="columns.length"
+                                        class="px-6 py-12 text-center"
+                                    >
+                                        <div class="empty-state">
+                                            <div
+                                                class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4"
+                                            >
+                                                <i
+                                                    class="mdi mdi-account-group-off text-gray-400 text-2xl"
+                                                ></i>
+                                            </div>
+                                            <div
+                                                class="empty-title text-lg font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                            >
+                                                {{ __("No groups found") }}
+                                            </div>
+                                            <div
+                                                class="empty-subtitle text-gray-500 dark:text-gray-400"
+                                            >
+                                                {{
+                                                    __(
+                                                        "Try adjusting your search filters"
+                                                    )
+                                                }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -449,5 +515,13 @@ const getGroups = () => {
             loading.value = false;
         },
     });
+};
+
+const resetFilters = () => {
+    search.name = "";
+    search.system = "";
+    search.per_page = 15;
+    search.page = 1;
+    getGroups();
 };
 </script>

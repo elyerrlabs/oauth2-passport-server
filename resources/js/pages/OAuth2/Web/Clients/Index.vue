@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                     <div>
                         <h1
-                            class="text-2xl font-bold text-gray-900 dark:text-white"
+                            class="text-md md:text-lg lg:text-2xl font-bold text-gray-900 dark:text-white"
                         >
                             {{ __("OAuth Clients") }}
                         </h1>
@@ -232,9 +232,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <!-- Actions -->
                             <td class="px-6 py-4">
-                                <div
-                                    class="flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                                >
+                                <div class="flex justify-end space-x-2">
                                     <v-update
                                         :item="client"
                                         @updated="getClients"

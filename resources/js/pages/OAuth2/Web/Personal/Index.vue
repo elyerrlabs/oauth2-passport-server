@@ -47,7 +47,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div>
                             <h1
-                                class="text-xl font-bold text-gray-900 dark:text-white"
+                                class="text-md md:text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
                             >
                                 {{ __("API Keys Management") }}
                             </h1>
@@ -66,96 +66,328 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
             </div>
 
-            <!-- Table Container -->
-            <div
-                class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200"
-            >
-                <!-- Table -->
-                <div class="overflow-x-auto">
-                    <table
-                        class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+            <!-- Mobile/Tablet Cards (sm:1, md:2) -->
+            <div class="lg:hidden space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div
+                        v-for="token in tokens"
+                        :key="token.id"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
                     >
-                        <thead class="bg-gray-50 dark:bg-gray-700/50">
-                            <tr>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-colors duration-200"
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex-1 min-w-0">
+                                <h3
+                                    class="font-semibold text-gray-900 dark:text-white truncate"
                                 >
-                                    {{ __("Key Name") }}
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-colors duration-200"
+                                    {{ token.name }}
+                                </h3>
+                            </div>
+                            <div class="flex space-x-1">
+                                <v-delete
+                                    @deleted="getPersonalAccessToken"
+                                    :item="token"
+                                />
+                                <button
+                                    v-if="token.token"
+                                    @click="copyToClipboard(token.token)"
+                                    class="inline-flex items-center p-1.5 border border-gray-300 dark:border-gray-600 rounded text-xs text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                    :title="__('Copy API key to clipboard')"
                                 >
-                                    {{ __("Created Date") }}
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-colors duration-200"
-                                >
-                                    {{ __("Expiration Date") }}
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-colors duration-200"
-                                >
-                                    {{ __("Actions") }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody
-                            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
-                        >
-                            <!-- Loading State -->
-                            <tr v-if="loading">
-                                <td colspan="4" class="px-6 py-8 text-center">
-                                    <div
-                                        class="flex justify-center items-center"
+                                    <svg
+                                        class="w-3 h-3"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <svg
-                                            class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600 dark:text-indigo-400"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <circle
-                                                class="opacity-25"
-                                                cx="12"
-                                                cy="12"
-                                                r="10"
-                                                stroke="currentColor"
-                                                stroke-width="4"
-                                            ></circle>
-                                            <path
-                                                class="opacity-75"
-                                                fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                            ></path>
-                                        </svg>
-                                        <span
-                                            class="text-gray-500 dark:text-gray-400"
-                                            >{{
-                                                __("Loading API keys...")
-                                            }}</span
-                                        >
-                                    </div>
-                                </td>
-                            </tr>
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-2"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
 
-                            <!-- Rows -->
-                            <tr
-                                v-for="token in tokens"
-                                :key="token.id"
-                                class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group"
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400"
+                                    >{{ __("Created") }}:</span
+                                >
+                                <span class="text-gray-900 dark:text-white">{{
+                                    formatDate(token.created)
+                                }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400"
+                                    >{{ __("Expires") }}:</span
+                                >
+                                <span
+                                    :class="[
+                                        'font-medium',
+                                        getExpirationClass(token.expires) ===
+                                        'text-positive'
+                                            ? 'text-green-600 dark:text-green-400'
+                                            : getExpirationClass(
+                                                  token.expires
+                                              ) === 'text-warning'
+                                            ? 'text-amber-600 dark:text-amber-400'
+                                            : 'text-red-600 dark:text-red-400',
+                                    ]"
+                                >
+                                    {{
+                                        token.expires
+                                            ? formatDate(token.expires)
+                                            : __("Never")
+                                    }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400"
+                                    >{{ __("Status") }}:</span
+                                >
+                                <span
+                                    :class="[
+                                        'text-xs font-medium px-2 py-1 rounded-full',
+                                        getExpirationClass(token.expires) ===
+                                        'text-positive'
+                                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                                            : getExpirationClass(
+                                                  token.expires
+                                              ) === 'text-warning'
+                                            ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300'
+                                            : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+                                    ]"
+                                >
+                                    {{ getExpirationStatus(token.expires) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div
+                            v-if="isExpiringSoon(token.expires)"
+                            class="mt-2 text-xs text-amber-600 dark:text-amber-400 flex items-center"
+                        >
+                            <svg
+                                class="w-3 h-3 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
                             >
-                                <!-- Name -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                            {{ __("Expiring soon") }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State for Cards -->
+                <div
+                    v-if="!loading && tokens.length === 0"
+                    class="text-center py-12"
+                >
+                    <div class="flex flex-col items-center justify-center">
+                        <div
+                            class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4"
+                        >
+                            <svg
+                                class="w-8 h-8 text-gray-400 dark:text-gray-500"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1"
+                                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                                />
+                            </svg>
+                        </div>
+                        <h3
+                            class="text-lg font-medium text-gray-900 dark:text-white mb-1"
+                        >
+                            {{ __("No API Keys Found") }}
+                        </h3>
+                        <p
+                            class="text-gray-500 dark:text-gray-400 max-w-md text-sm"
+                        >
+                            {{
+                                __(
+                                    "Create your first API key to get started with secure application integration"
+                                )
+                            }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Loading State for Cards -->
+                <div v-if="loading" class="text-center py-12">
+                    <div class="flex justify-center items-center">
+                        <svg
+                            class="animate-spin h-8 w-8 text-indigo-600 dark:text-indigo-400"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                            ></circle>
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                        <span class="text-gray-500 dark:text-gray-400 ml-3">
+                            {{ __("Loading API keys...") }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Table (lg+) -->
+            <div class="hidden lg:block">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200"
+                >
+                    <!-- Table -->
+                    <div class="overflow-x-auto">
+                        <table
+                            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+                        >
+                            <thead class="bg-gray-50 dark:bg-gray-700/50">
+                                <tr>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-colors duration-200"
+                                    >
+                                        {{ __("Key Name") }}
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-colors duration-200"
+                                    >
+                                        {{ __("Created Date") }}
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-colors duration-200"
+                                    >
+                                        {{ __("Expiration Date") }}
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-colors duration-200"
+                                    >
+                                        {{ __("Actions") }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody
+                                class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+                            >
+                                <!-- Loading State -->
+                                <tr v-if="loading">
+                                    <td
+                                        colspan="4"
+                                        class="px-6 py-8 text-center"
+                                    >
                                         <div
-                                            class="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 rounded-lg transition-colors duration-200 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/50"
+                                            class="flex justify-center items-center"
                                         >
                                             <svg
-                                                class="h-5 w-5 text-indigo-600 dark:text-indigo-400"
+                                                class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600 dark:text-indigo-400"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <circle
+                                                    class="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    stroke-width="4"
+                                                ></circle>
+                                                <path
+                                                    class="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
+                                            </svg>
+                                            <span
+                                                class="text-gray-500 dark:text-gray-400"
+                                                >{{
+                                                    __("Loading API keys...")
+                                                }}</span
+                                            >
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Rows -->
+                                <tr
+                                    v-for="token in tokens"
+                                    :key="token.id"
+                                    class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group"
+                                >
+                                    <!-- Name -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 rounded-lg transition-colors duration-200 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/50"
+                                            >
+                                                <svg
+                                                    class="h-5 w-5 text-indigo-600 dark:text-indigo-400"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div
+                                                    class="text-sm font-medium text-gray-900 dark:text-white"
+                                                >
+                                                    {{ token.name }}
+                                                </div>
+                                                <div
+                                                    class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded inline-block"
+                                                >
+                                                    ID: {{ token.id }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Created Date -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div
+                                            class="text-sm text-gray-900 dark:text-white"
+                                        >
+                                            {{ formatDate(token.created) }}
+                                        </div>
+                                        <div
+                                            class="flex items-center mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                        >
+                                            <svg
+                                                class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400 dark:text-gray-500"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -164,106 +396,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     stroke-linecap="round"
                                                     stroke-linejoin="round"
                                                     stroke-width="2"
-                                                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 />
                                             </svg>
+                                            {{ formatTimeAgo(token.created) }}
                                         </div>
-                                        <div class="ml-4">
-                                            <div
-                                                class="text-sm font-medium text-gray-900 dark:text-white"
-                                            >
-                                                {{ token.name }}
-                                            </div>
-                                            <div
-                                                class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded inline-block"
-                                            >
-                                                ID: {{ token.id }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
+                                    </td>
 
-                                <!-- Created Date -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div
-                                        class="text-sm text-gray-900 dark:text-white"
-                                    >
-                                        {{ formatDate(token.created) }}
-                                    </div>
-                                    <div
-                                        class="flex items-center mt-1 text-xs text-gray-500 dark:text-gray-400"
-                                    >
-                                        <svg
-                                            class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400 dark:text-gray-500"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                            />
-                                        </svg>
-                                        {{ formatTimeAgo(token.created) }}
-                                    </div>
-                                </td>
-
-                                <!-- Expiration Date -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div
-                                        :class="[
-                                            'text-sm font-medium',
-                                            getExpirationClass(
-                                                token.expires
-                                            ) === 'text-positive'
-                                                ? 'text-green-600 dark:text-green-400'
-                                                : getExpirationClass(
-                                                      token.expires
-                                                  ) === 'text-warning'
-                                                ? 'text-amber-600 dark:text-amber-400'
-                                                : 'text-red-600 dark:text-red-400',
-                                        ]"
-                                    >
-                                        {{
-                                            token.expires
-                                                ? formatDate(token.expires)
-                                                : __("Never")
-                                        }}
-                                    </div>
-                                    <div class="flex items-center mt-1">
-                                        <svg
+                                    <!-- Expiration Date -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div
                                             :class="[
-                                                'flex-shrink-0 mr-1.5 h-4 w-4',
-                                                getExpirationClass(
-                                                    token.expires
-                                                ) === 'text-positive'
-                                                    ? 'text-green-500 dark:text-green-400'
-                                                    : getExpirationClass(
-                                                          token.expires
-                                                      ) === 'text-warning'
-                                                    ? 'text-amber-500 dark:text-amber-400'
-                                                    : 'text-red-500 dark:text-red-400',
-                                            ]"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                :d="
-                                                    getExpirationIcon(
-                                                        token.expires
-                                                    )
-                                                "
-                                            />
-                                        </svg>
-                                        <span
-                                            :class="[
-                                                'text-xs font-medium',
+                                                'text-sm font-medium',
                                                 getExpirationClass(
                                                     token.expires
                                                 ) === 'text-positive'
@@ -276,54 +420,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             ]"
                                         >
                                             {{
-                                                getExpirationStatus(
-                                                    token.expires
-                                                )
+                                                token.expires
+                                                    ? formatDate(token.expires)
+                                                    : __("Never")
                                             }}
-                                        </span>
-                                    </div>
-                                    <div
-                                        v-if="isExpiringSoon(token.expires)"
-                                        class="text-xs text-amber-600 dark:text-amber-400 mt-1 flex items-center"
-                                    >
-                                        <svg
-                                            class="flex-shrink-0 mr-1 h-3 w-3"
-                                            fill="currentColor"
-                                            viewBox="0 0 20 20"
-                                        >
-                                            <path
-                                                fill-rule="evenodd"
-                                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd"
-                                            />
-                                        </svg>
-                                        {{ __("Expiring soon") }}
-                                    </div>
-                                </td>
-
-                                <!-- Actions -->
-                                <td
-                                    class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-                                >
-                                    <div
-                                        class="flex justify-end items-center space-x-2"
-                                    >
-                                        <v-delete
-                                            @deleted="getPersonalAccessToken"
-                                            :item="token"
-                                        />
-                                        <button
-                                            v-if="token.token"
-                                            @click="
-                                                copyToClipboard(token.token)
-                                            "
-                                            class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
-                                            :title="
-                                                __('Copy API key to clipboard')
-                                            "
-                                        >
+                                        </div>
+                                        <div class="flex items-center mt-1">
                                             <svg
-                                                class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-500 dark:text-gray-400"
+                                                :class="[
+                                                    'flex-shrink-0 mr-1.5 h-4 w-4',
+                                                    getExpirationClass(
+                                                        token.expires
+                                                    ) === 'text-positive'
+                                                        ? 'text-green-500 dark:text-green-400'
+                                                        : getExpirationClass(
+                                                              token.expires
+                                                          ) === 'text-warning'
+                                                        ? 'text-amber-500 dark:text-amber-400'
+                                                        : 'text-red-500 dark:text-red-400',
+                                                ]"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -332,84 +447,172 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                     stroke-linecap="round"
                                                     stroke-linejoin="round"
                                                     stroke-width="2"
-                                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-2"
+                                                    :d="
+                                                        getExpirationIcon(
+                                                            token.expires
+                                                        )
+                                                    "
                                                 />
                                             </svg>
-                                            {{ __("Copy") }}
-                                        </button>
-                                        <button
-                                            v-else
-                                            @click="showTokenDetails(token)"
-                                            class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
-                                            :title="__('View token details')"
+                                            <span
+                                                :class="[
+                                                    'text-xs font-medium',
+                                                    getExpirationClass(
+                                                        token.expires
+                                                    ) === 'text-positive'
+                                                        ? 'text-green-600 dark:text-green-400'
+                                                        : getExpirationClass(
+                                                              token.expires
+                                                          ) === 'text-warning'
+                                                        ? 'text-amber-600 dark:text-amber-400'
+                                                        : 'text-red-600 dark:text-red-400',
+                                                ]"
+                                            >
+                                                {{
+                                                    getExpirationStatus(
+                                                        token.expires
+                                                    )
+                                                }}
+                                            </span>
+                                        </div>
+                                        <div
+                                            v-if="isExpiringSoon(token.expires)"
+                                            class="text-xs text-amber-600 dark:text-amber-400 mt-1 flex items-center"
                                         >
                                             <svg
-                                                class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-500 dark:text-gray-400"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
+                                                class="flex-shrink-0 mr-1 h-3 w-3"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
                                             >
                                                 <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                />
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                    fill-rule="evenodd"
+                                                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd"
                                                 />
                                             </svg>
-                                            {{ __("View") }}
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                                            {{ __("Expiring soon") }}
+                                        </div>
+                                    </td>
 
-                            <!-- Empty State -->
-                            <tr v-if="!loading && tokens.length === 0">
-                                <td colspan="4" class="px-6 py-12 text-center">
-                                    <div
-                                        class="flex flex-col items-center justify-center"
+                                    <!-- Actions -->
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
                                     >
                                         <div
-                                            class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4"
+                                            class="flex justify-end items-center space-x-2"
                                         >
-                                            <svg
-                                                class="w-8 h-8 text-gray-400 dark:text-gray-500"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
+                                            <v-delete
+                                                @deleted="
+                                                    getPersonalAccessToken
+                                                "
+                                                :item="token"
+                                            />
+                                            <button
+                                                v-if="token.token"
+                                                @click="
+                                                    copyToClipboard(token.token)
+                                                "
+                                                class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
+                                                :title="
+                                                    __(
+                                                        'Copy API key to clipboard'
+                                                    )
+                                                "
                                             >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="1"
-                                                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                                                />
-                                            </svg>
+                                                <svg
+                                                    class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-500 dark:text-gray-400"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-2"
+                                                    />
+                                                </svg>
+                                                {{ __("Copy") }}
+                                            </button>
+                                            <button
+                                                v-else
+                                                @click="showTokenDetails(token)"
+                                                class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
+                                                :title="
+                                                    __('View token details')
+                                                "
+                                            >
+                                                <svg
+                                                    class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-500 dark:text-gray-400"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                    />
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                    />
+                                                </svg>
+                                                {{ __("View") }}
+                                            </button>
                                         </div>
-                                        <h3
-                                            class="text-lg font-medium text-gray-900 dark:text-white mb-1"
+                                    </td>
+                                </tr>
+
+                                <!-- Empty State -->
+                                <tr v-if="!loading && tokens.length === 0">
+                                    <td
+                                        colspan="4"
+                                        class="px-6 py-12 text-center"
+                                    >
+                                        <div
+                                            class="flex flex-col items-center justify-center"
                                         >
-                                            {{ __("No API Keys Found") }}
-                                        </h3>
-                                        <p
-                                            class="text-gray-500 dark:text-gray-400 max-w-md text-sm"
-                                        >
-                                            {{
-                                                __(
-                                                    "Create your first API key to get started with secure application integration"
-                                                )
-                                            }}
-                                        </p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                            <div
+                                                class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4"
+                                            >
+                                                <svg
+                                                    class="w-8 h-8 text-gray-400 dark:text-gray-500"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="1"
+                                                        d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <h3
+                                                class="text-lg font-medium text-gray-900 dark:text-white mb-1"
+                                            >
+                                                {{ __("No API Keys Found") }}
+                                            </h3>
+                                            <p
+                                                class="text-gray-500 dark:text-gray-400 max-w-md text-sm"
+                                            >
+                                                {{
+                                                    __(
+                                                        "Create your first API key to get started with secure application integration"
+                                                    )
+                                                }}
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 

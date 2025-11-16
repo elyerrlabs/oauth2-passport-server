@@ -44,8 +44,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         @click="dialog = true"
         class="relative group rounded-lg bg-blue-600 dark:bg-blue-700 text-white px-4 py-3 shadow-lg hover:shadow-xl hover:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 flex items-center gap-2"
     >
-        <i class="mdi mdi-plus-circle text-xl"></i>
-        {{ __("Add New Service") }}
+        <i class="mdi mdi-plus-circle text-md lg:text-xl"></i>
+        {{ __("New Service") }}
     </button>
 
     <v-modal
