@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Transaction\Http\Controllers\Web;
+namespace Core\Transaction\Http\Controllers\Api\Web;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha

@@ -23,8 +23,8 @@
  */
 
 use Core\Transaction\Http\Controllers\Api\Web\RefundController as UserRefundController;
+use Core\Transaction\Http\Controllers\Api\Web\PaymentController;
 use Core\Transaction\Http\Controllers\Api\Admin\RefundController as AdminRefundController;
-use Core\Transaction\Http\Controllers\Web\PaymentController;
 
 Route::middleware(['throttle:transaction:api'])->group(function () {
 
