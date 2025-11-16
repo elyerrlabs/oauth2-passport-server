@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-admin-transaction-layout>
         <!-- Header Section -->
         <div
-            class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6"
+            class="bg-white dark:bg-gray-800 p-2 md:p-4 lg:p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6"
         >
             <div
                 class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6"
@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="w-2 h-8 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"
                         ></div>
                         <h1
-                            class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent"
+                            class="text-md md:text-lg lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent"
                         >
                             {{ __("Transactions Management") }}
                         </h1>
@@ -50,7 +50,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
             >
                 <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+                    class="grid grid-cols- sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4"
                 >
                     <!-- Name Filter -->
                     <v-input
@@ -129,42 +129,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             {{ __("records") }}
                         </p>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-500 dark:text-gray-400"
-                            >{{ __("View") }}:</span
-                        >
-                        <div
-                            class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1"
-                        >
-                            <button
-                                @click="viewMode = 'list'"
-                                :class="[
-                                    'px-3 py-1 rounded-md text-sm font-medium transition-all duration-200',
-                                    viewMode === 'list'
-                                        ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200',
-                                ]"
-                            >
-                                {{ __("List") }}
-                            </button>
-                            <button
-                                @click="viewMode = 'grid'"
-                                :class="[
-                                    'px-3 py-1 rounded-md text-sm font-medium transition-all duration-200',
-                                    viewMode === 'grid'
-                                        ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200',
-                                ]"
-                            >
-                                {{ __("Grid") }}
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <!-- Desktop Table -->
-            <div v-if="viewMode === 'list'" class="hidden lg:block">
+            <div class="hidden lg:block">
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead
@@ -219,7 +188,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <div class="flex items-center gap-3">
                                             <div class="flex-shrink-0">
                                                 <div
-                                                    class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center shadow-sm"
+                                                    class="w-10 h-10 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center shadow-sm"
                                                 >
                                                     <i
                                                         class="mdi mdi-receipt text-blue-600 dark:text-blue-400 text-lg"
@@ -999,8 +968,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Mobile Cards -->
-            <div v-else class="p-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 block lg:hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div
                         v-for="(item, index) in transactions"
                         :key="index"
@@ -1008,12 +977,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         <!-- Card Header -->
                         <div
-                            class="p-4 border-b border-gray-100 dark:border-gray-600 bg-gradient-to-r from-gray-50 to-white dark:from-gray-700 dark:to-gray-800"
+                            class="p-4 border-b border-gray-100 dark:border-gray-600 bg-linear-to-r from-gray-50 to-white dark:from-gray-700 dark:to-gray-800"
                         >
                             <div class="flex items-center justify-between mb-3">
                                 <div class="flex items-center gap-3">
                                     <div
-                                        class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center shadow-sm"
+                                        class="w-10 h-10 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center shadow-sm"
                                     >
                                         <i
                                             class="mdi mdi-receipt text-blue-600 dark:text-blue-400 text-lg"
@@ -1360,7 +1329,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             >
                 <div class="max-w-md mx-auto">
                     <div
-                        class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                        class="w-20 h-20 bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
                     >
                         <i
                             class="mdi mdi-receipt text-gray-400 dark:text-gray-500 text-3xl"

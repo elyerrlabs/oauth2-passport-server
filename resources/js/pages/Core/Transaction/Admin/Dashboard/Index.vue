@@ -47,7 +47,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
             <div
                 v-for="card in cards"
                 :key="card.label"
@@ -96,11 +96,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </h2>
             </div>
 
-            <div
-                class="grid grid-cols-1 xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 gap-4"
-            >
+            <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                 <!-- Start Date -->
-                <div class="space-y-1">
+                <div>
                     <label
                         class="block text-xs font-medium text-gray-600 dark:text-gray-400"
                     >
@@ -110,7 +108,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <input
                             v-model="params.start"
                             type="date"
-                            class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                         />
                         <div
                             class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
@@ -123,7 +121,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- End Date -->
-                <div class="space-y-1">
+                <div>
                     <label
                         class="block text-xs font-medium text-gray-600 dark:text-gray-400"
                     >
@@ -133,7 +131,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <input
                             v-model="params.end"
                             type="date"
-                            class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                         />
                         <div
                             class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
@@ -146,7 +144,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Status -->
-                <div class="space-y-1">
+                <div>
                     <label
                         class="block text-xs font-medium text-gray-600 dark:text-gray-400"
                     >
@@ -155,7 +153,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="relative">
                         <select
                             v-model="params.status"
-                            class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
+                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
                         >
                             <option
                                 v-for="option in status"
@@ -183,7 +181,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Chart Type -->
-                <div class="space-y-1">
+                <div>
                     <label
                         class="block text-xs font-medium text-gray-600 dark:text-gray-400"
                     >
@@ -192,7 +190,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="relative">
                         <select
                             v-model="chartType"
-                            class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
+                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
                         >
                             <option
                                 v-for="type in chartTypes"
@@ -234,7 +232,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="relative">
                         <select
                             v-model="params.type"
-                            class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
+                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
                         >
                             <option
                                 v-for="type in types"

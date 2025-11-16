@@ -23,17 +23,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-admin-transaction-layout>
         <!-- HEADER -->
         <header
-            class="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-b-3xl shadow-lg dark:from-gray-800 dark:to-gray-900 dark:text-gray-100"
+            class="bg-linear-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-b-3xl shadow-lg dark:from-gray-800 dark:to-gray-900 dark:text-gray-100"
         >
-            <div
-                class="flex flex-col md:flex-row md:items-center justify-between"
-            >
+            <div class="sm:flex sm:justify-between">
                 <div class="flex-1 mb-6 md:mb-0">
-                    <h1 class="text-4xl font-bold mb-2">
+                    <h1 class="text-md md:text-lg lg:text-4xl font-bold mb-2">
                         {{ __("Subscription Plans") }}
                     </h1>
                     <p
-                        class="text-blue-100 text-lg opacity-90 dark:text-gray-400"
+                        class="text-blue-100 text-sm md:text-md lg:text-lg opacity-90 dark:text-gray-400"
                     >
                         {{
                             __(
@@ -42,7 +40,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         }}
                     </p>
                 </div>
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                     <v-create @created="getPlans" />
                 </div>
             </div>
@@ -53,7 +51,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             class="px-4 py-6 bg-white shadow-sm rounded-b-2xl border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700"
         >
             <div
-                class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4"
+                class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"
             >
                 <div>
                     <label
@@ -125,7 +123,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- PLANS TABLE -->
         <section class="px-4 py-8 max-w-7xl mx-auto">
             <div
-                class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:bg-gray-900 dark:border-gray-700"
+                class="bg-white rounded-2xl shadow-lg overflow-hidden lg:border lg:border-gray-200 dark:bg-gray-900 dark:border-gray-700"
             >
                 <!-- TABLE FOR LARGE SCREENS -->
                 <div class="hidden md:block">
@@ -173,11 +171,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <td class="py-4 px-6">
                                         <div class="flex items-center">
                                             <div
-                                                class="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-white"
+                                                class="shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-white"
                                                 :class="
                                                     plan.active
-                                                        ? 'bg-gradient-to-r from-green-500 to-green-600'
-                                                        : 'bg-gradient-to-r from-gray-500 to-gray-600'
+                                                        ? 'bg-linear-to-r from-green-500 to-green-600'
+                                                        : 'bg-linear-to-r from-gray-500 to-gray-600'
                                                 "
                                             >
                                                 <i
@@ -562,16 +560,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- CARDS FOR SMALL SCREENS -->
                 <div class="md:hidden">
                     <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <div v-for="plan in plans" :key="plan.id" class="p-4">
+                        <div v-for="plan in plans" :key="plan.id" class="p-4  mb-4 rounded border border-gray-200 dark:border-gray-700">
                             <!-- Plan Header -->
                             <div class="flex justify-between items-start mb-3">
                                 <div class="flex items-center">
                                     <div
-                                        class="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-white"
+                                        class="shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-white"
                                         :class="
                                             plan.active
-                                                ? 'bg-gradient-to-r from-green-500 to-green-600'
-                                                : 'bg-gradient-to-r from-gray-500 to-gray-600'
+                                                ? 'bg-linear-to-r from-green-500 to-green-600'
+                                                : 'bg-linear-to-r from-gray-500 to-gray-600'
                                         "
                                     >
                                         <i class="mdi mdi-crown text-lg"></i>

@@ -23,12 +23,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-admin-layout>
         <!-- Header Section -->
         <div
-            class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg transition-colors duration-200"
+            class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg transition-colors duration-200 mb-4"
         >
-            <div class="flex items-center justify-between mb-6">
+            <div class="md:flex items-center justify-between mb-6">
                 <div>
                     <div
-                        class="text-3xl font-bold text-blue-600 dark:text-blue-400"
+                        class="text-md md:text-lg lg:text-3xl font-bold text-blue-600 dark:text-blue-400"
                     >
                         {{ __("User Management") }}
                     </div>
@@ -125,7 +125,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400"
                 >
                     <span class="flex items-center gap-1">
-                        <i class="mdi mdi-account-group text-gray-500 dark:text-gray-400"></i>
+                        <i
+                            class="mdi mdi-account-group text-gray-500 dark:text-gray-400"
+                        ></i>
                         {{ users.length }} {{ __("user")
                         }}{{ users.length !== 1 ? "s" : "" }}
                     </span>
@@ -133,14 +135,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         v-if="activeUsersCount > 0"
                         class="flex items-center gap-1"
                     >
-                        <i class="mdi mdi-check-circle text-green-500 dark:text-green-400"></i>
+                        <i
+                            class="mdi mdi-check-circle text-green-500 dark:text-green-400"
+                        ></i>
                         {{ activeUsersCount }} {{ __("active") }}
                     </span>
                     <span
                         v-if="inactiveUsersCount > 0"
                         class="flex items-center gap-1"
                     >
-                        <i class="mdi mdi-close-circle text-orange-500 dark:text-orange-400"></i>
+                        <i
+                            class="mdi mdi-close-circle text-orange-500 dark:text-orange-400"
+                        ></i>
                         {{ inactiveUsersCount }} {{ __("inactive") }}
                     </span>
                 </div>
@@ -181,7 +187,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Grid View -->
         <div
             v-if="viewMode === 'grid' && users.length > 0"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-3"
+            class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
         >
             <div
                 v-for="user in users"
@@ -260,108 +266,178 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
 
         <!-- List View -->
-        <div
-            v-else
-            class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200"
-        >
-            <div class="overflow-x-auto">
-                <table
-                    class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+        <div v-else class="mb-6">
+            <!-- Mobile/Tablet Cards (sm:1, md:2) -->
+            <div class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                    v-for="user in users"
+                    :key="user.id"
+                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm"
                 >
-                    <thead class="bg-gray-50 dark:bg-gray-700">
-                        <tr>
-                            <th
-                                v-for="(column, index) in columns"
-                                :key="index"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex-1 min-w-0">
+                            <h3
+                                class="font-semibold text-gray-900 dark:text-white truncate"
                             >
-                                {{ column }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody
-                        class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
-                    >
-                        <tr
-                            v-for="user in users"
-                            :key="user.id"
-                            class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                                {{ user.name }} {{ user.last_name }}
+                            </h3>
+                            <p
+                                class="text-sm text-gray-500 dark:text-gray-400 truncate"
+                            >
+                                {{ user.email }}
+                            </p>
+                        </div>
+                        <span
+                            :class="[
+                                'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
+                                user.disabled
+                                    ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300'
+                                    : 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300',
+                            ]"
                         >
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div
-                                    class="font-bold text-blue-600 dark:text-blue-400"
-                                >
-                                    {{ user.name }} {{ user.last_name }}
-                                </div>
-                            </td>
+                            <i
+                                :class="[
+                                    'mdi mr-1 text-xs',
+                                    user.disabled
+                                        ? 'mdi-close-circle text-orange-600 dark:text-orange-400'
+                                        : 'mdi-check-circle text-green-600 dark:text-green-400',
+                                ]"
+                            ></i>
+                            {{ user.disabled ? __("Inactive") : __("Active") }}
+                        </span>
+                    </div>
 
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-gray-900 dark:text-gray-100">
-                                    {{ user.email }}
-                                </div>
-                            </td>
-
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    :class="[
-                                        'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200',
-                                        user.disabled
-                                            ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300'
-                                            : 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300',
-                                    ]"
-                                >
-                                    <i
-                                        :class="[
-                                            'mdi mr-1 text-sm',
-                                            user.disabled
-                                                ? 'mdi-close-circle text-orange-600 dark:text-orange-400'
-                                                : 'mdi-check-circle text-green-600 dark:text-green-400',
-                                        ]"
-                                    ></i>
-                                    {{
-                                        user.disabled
-                                            ? __("Inactive")
-                                            : __("Active")
-                                    }}
-                                </span>
-                            </td>
-
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex justify-end space-x-2">
-                                    <v-create
-                                        v-if="!user.disabled"
-                                        :item="user"
-                                        @updated="getUsers"
-                                    />
-                                    <v-scopes
-                                        v-if="!user.disabled"
-                                        :item="user"
-                                    />
-                                    <v-revoke
-                                        v-if="!user.disabled"
-                                        :item="user"
-                                    />
-                                    <v-status
-                                        :item="user"
-                                        @updated="getUsers"
-                                    />
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <div class="flex justify-between items-center">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                            {{ __("User") }}
+                        </div>
+                        <div class="flex space-x-1">
+                            <v-create
+                                v-if="!user.disabled"
+                                @updated="getUsers"
+                                :item="user"
+                            />
+                            <v-scopes v-if="!user.disabled" :item="user" />
+                            <v-revoke v-if="!user.disabled" :item="user" />
+                            <v-status :item="user" @updated="getUsers" />
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Empty State for Table -->
-            <div v-if="users.length === 0" class="text-center py-12">
-                <i
-                    class="mdi mdi-account-off-outline text-5xl text-gray-300 dark:text-gray-600"
-                ></i>
-                <div class="text-gray-500 dark:text-gray-400 mt-4">
-                    {{ __("No users available") }}
-                </div>
-                <div class="text-gray-400 dark:text-gray-500 text-sm mt-2">
-                    {{ __("Try adjusting your filters or create a new user") }}
+            <!-- Desktop Table (lg+) -->
+            <div class="hidden lg:block">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200"
+                >
+                    <div class="overflow-x-auto">
+                        <table
+                            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+                        >
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th
+                                        v-for="(column, index) in columns"
+                                        :key="index"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                                    >
+                                        {{ column }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody
+                                class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+                            >
+                                <tr
+                                    v-for="user in users"
+                                    :key="user.id"
+                                    class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                                >
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div
+                                            class="font-bold text-blue-600 dark:text-blue-400"
+                                        >
+                                            {{ user.name }} {{ user.last_name }}
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div
+                                            class="text-gray-900 dark:text-gray-100"
+                                        >
+                                            {{ user.email }}
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            :class="[
+                                                'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200',
+                                                user.disabled
+                                                    ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300'
+                                                    : 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300',
+                                            ]"
+                                        >
+                                            <i
+                                                :class="[
+                                                    'mdi mr-1 text-sm',
+                                                    user.disabled
+                                                        ? 'mdi-close-circle text-orange-600 dark:text-orange-400'
+                                                        : 'mdi-check-circle text-green-600 dark:text-green-400',
+                                                ]"
+                                            ></i>
+                                            {{
+                                                user.disabled
+                                                    ? __("Inactive")
+                                                    : __("Active")
+                                            }}
+                                        </span>
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex justify-end space-x-2">
+                                            <v-create
+                                                v-if="!user.disabled"
+                                                :item="user"
+                                                @updated="getUsers"
+                                            />
+                                            <v-scopes
+                                                v-if="!user.disabled"
+                                                :item="user"
+                                            />
+                                            <v-revoke
+                                                v-if="!user.disabled"
+                                                :item="user"
+                                            />
+                                            <v-status
+                                                :item="user"
+                                                @updated="getUsers"
+                                            />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State for Table -->
+                    <div v-if="users.length === 0" class="text-center py-12">
+                        <i
+                            class="mdi mdi-account-off-outline text-5xl text-gray-300 dark:text-gray-600"
+                        ></i>
+                        <div class="text-gray-500 dark:text-gray-400 mt-4">
+                            {{ __("No users available") }}
+                        </div>
+                        <div
+                            class="text-gray-400 dark:text-gray-500 text-sm mt-2"
+                        >
+                            {{
+                                __(
+                                    "Try adjusting your filters or create a new user"
+                                )
+                            }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -379,7 +455,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <script setup>
 import VAdminLayout from "@/layouts/VAdminLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
-import VCreate from "./Create.vue"; 
+import VCreate from "./Create.vue";
 import VScopes from "./Scopes.vue";
 import VStatus from "./Status.vue";
 import VRevoke from "./Revoke.vue";
@@ -464,7 +540,7 @@ const getUsers = () => {
         },
         onError: () => {
             loading.value = false;
-        }
+        },
     });
 };
 

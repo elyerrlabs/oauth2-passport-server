@@ -25,12 +25,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <div
             class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-xl mb-6 transition-colors duration-200"
         >
-            <div
-                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6"
-            >
-                <div>
+            <div class="mb-6 md:flex md:justify-between">
+                <div class="mb-4">
                     <h1
-                        class="text-3xl font-bold text-blue-600 dark:text-blue-400"
+                        class="text-md md:text-lg lg:text-3xl font-bold text-blue-600 dark:text-blue-400"
                     >
                         {{ __("Services Management") }}
                     </h1>
@@ -42,7 +40,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <div
-                    class="flex flex-col sm:flex-row items-start sm:items-center gap-3"
+                    class="flex justify-between gap-3"
                 >
                     <!-- Create Button -->
                     <v-create @created="getServices" />
@@ -219,7 +217,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Grid View -->
         <div
             v-if="viewMode === 'grid' && services.length > 0"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-3"
+            class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
         >
             <div
                 v-for="service in services"
@@ -248,10 +246,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div
                         class="text-gray-700 dark:text-gray-300 line-clamp-3 mb-3"
                     >
-                        {{
-                            __(service.description) ||
-                            __("No description provided")
-                        }}
+                        {{ __(service.description) }}
                     </div>
 
                     <div class="flex flex-wrap gap-2 mb-3">
@@ -316,58 +311,41 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
 
         <!-- List View -->
-        <div
-            v-else
-            class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden transition-colors duration-200"
-        >
-            <!-- Table Header -->
-            <div
-                class="grid grid-cols-12 gap-4 p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 font-semibold text-gray-700 dark:text-gray-300 transition-colors duration-200"
-            >
-                <div class="col-span-4">{{ __("Service") }}</div>
-                <div class="col-span-2 text-center">{{ __("System") }}</div>
-                <div class="col-span-3 text-center">{{ __("Visibility") }}</div>
-                <div class="col-span-3 text-right">{{ __("Actions") }}</div>
-            </div>
-
-            <!-- Loading State -->
-            <div v-if="loading" class="p-8 text-center">
-                <div
-                    class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"
-                ></div>
-                <p class="text-gray-500 dark:text-gray-400 mt-2">
-                    {{ __("Loading...") }}
-                </p>
-            </div>
-
-            <!-- Table Rows -->
-            <div v-else>
+        <div v-else class="mb-6">
+            <!-- Mobile/Tablet Cards (sm:1, md:2) -->
+            <div class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div
                     v-for="service in services"
                     :key="service.id"
-                    class="grid grid-cols-12 gap-4 p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm"
                 >
-                    <div class="col-span-4">
-                        <div
-                            class="font-semibold text-blue-600 dark:text-blue-400"
-                        >
-                            {{ __(service.name) }}
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex-1 min-w-0">
+                            <h3
+                                class="font-semibold text-gray-900 dark:text-white truncate"
+                            >
+                                {{ __(service.name) }}
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {{ __(service.group.name) }}
+                            </p>
                         </div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __(service.group.name) }}
-                        </div>
-                        <div
-                            v-if="service.description"
-                            class="text-sm text-gray-600 dark:text-gray-500 mt-1 line-clamp-1"
-                        >
-                            {{ __(service.description) }}
+                        <div class="flex items-center gap-1">
+                            <v-detail :service="service" />
                         </div>
                     </div>
 
-                    <div class="col-span-2 flex justify-center">
+                    <p
+                        v-if="service.description"
+                        class="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2"
+                    >
+                        {{ service.description }}
+                    </p>
+
+                    <div class="flex flex-wrap gap-2 mb-3">
                         <span
                             :class="[
-                                'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200',
+                                'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium',
                                 service.system
                                     ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300'
                                     : 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300',
@@ -380,46 +358,158 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         : 'mdi mdi-cog'
                                 "
                             ></i>
-                            {{ service.system ? __("Yes") : __("No") }}
+                            {{ service.system ? __("System") : __("Custom") }}
                         </span>
-                    </div>
 
-                    <div class="col-span-3 flex justify-center">
                         <span
-                            class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium transition-colors duration-200"
+                            class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium"
                         >
                             <i class="mdi mdi-eye"></i>
                             {{ __(service.visibility) }}
                         </span>
                     </div>
 
-                    <div class="col-span-3">
-                        <div class="flex justify-end gap-2">
-                            <v-detail :service="service" />
+                    <div class="flex justify-between items-center">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                            {{ __("Service") }}
+                        </div>
+                        <div class="flex space-x-1">
                             <v-create :item="service" @updated="getServices" />
                             <v-delete
-                                v-if="!service?.system"
+                                v-if="!service.system"
                                 :item="service"
                                 @deleted="getServices"
                             />
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Empty State for List View -->
-                <div v-if="services.length === 0" class="text-center py-16">
-                    <i
-                        class="mdi mdi-cog-off text-5xl text-gray-300 dark:text-gray-600"
-                    ></i>
-                    <div class="text-gray-500 dark:text-gray-400 mt-4 text-lg">
-                        {{ __("No services available") }}
+            <!-- Desktop Table (lg+) -->
+            <div class="hidden lg:block">
+                <div
+                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden transition-colors duration-200"
+                >
+                    <!-- Table Header -->
+                    <div
+                        class="grid grid-cols-12 gap-4 p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 font-semibold text-gray-700 dark:text-gray-300 transition-colors duration-200"
+                    >
+                        <div class="col-span-4">{{ __("Service") }}</div>
+                        <div class="col-span-2 text-center">
+                            {{ __("System") }}
+                        </div>
+                        <div class="col-span-3 text-center">
+                            {{ __("Visibility") }}
+                        </div>
+                        <div class="col-span-3 text-right">
+                            {{ __("Actions") }}
+                        </div>
                     </div>
-                    <div class="text-gray-400 dark:text-gray-500 text-sm mt-2">
-                        {{
-                            __(
-                                "Try adjusting your filters or create a new service"
-                            )
-                        }}
+
+                    <!-- Loading State -->
+                    <div v-if="loading" class="p-8 text-center">
+                        <div
+                            class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"
+                        ></div>
+                        <p class="text-gray-500 dark:text-gray-400 mt-2">
+                            {{ __("Loading...") }}
+                        </p>
+                    </div>
+
+                    <!-- Table Rows -->
+                    <div v-else>
+                        <div
+                            v-for="service in services"
+                            :key="service.id"
+                            class="grid grid-cols-12 gap-4 p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                        >
+                            <div class="col-span-4">
+                                <div
+                                    class="font-semibold text-blue-600 dark:text-blue-400"
+                                >
+                                    {{ __(service.name) }}
+                                </div>
+                                <div
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __(service.group.name) }}
+                                </div>
+                                <div
+                                    v-if="service.description"
+                                    class="text-sm text-gray-600 dark:text-gray-500 mt-1 line-clamp-1"
+                                >
+                                    {{ __(service.description) }}
+                                </div>
+                            </div>
+
+                            <div class="col-span-2 flex justify-center">
+                                <span
+                                    :class="[
+                                        'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200',
+                                        service.system
+                                            ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300'
+                                            : 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300',
+                                    ]"
+                                >
+                                    <i
+                                        :class="
+                                            service.system
+                                                ? 'mdi mdi-shield-check'
+                                                : 'mdi mdi-cog'
+                                        "
+                                    ></i>
+                                    {{ service.system ? __("Yes") : __("No") }}
+                                </span>
+                            </div>
+
+                            <div class="col-span-3 flex justify-center">
+                                <span
+                                    class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium transition-colors duration-200"
+                                >
+                                    <i class="mdi mdi-eye"></i>
+                                    {{ __(service.visibility) }}
+                                </span>
+                            </div>
+
+                            <div class="col-span-3">
+                                <div class="flex justify-end gap-2">
+                                    <v-detail :service="service" />
+                                    <v-create
+                                        :item="service"
+                                        @updated="getServices"
+                                    />
+                                    <v-delete
+                                        v-if="!service?.system"
+                                        :item="service"
+                                        @deleted="getServices"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Empty State for List View -->
+                        <div
+                            v-if="services.length === 0"
+                            class="text-center py-16"
+                        >
+                            <i
+                                class="mdi mdi-cog-off text-5xl text-gray-300 dark:text-gray-600"
+                            ></i>
+                            <div
+                                class="text-gray-500 dark:text-gray-400 mt-4 text-lg"
+                            >
+                                {{ __("No services available") }}
+                            </div>
+                            <div
+                                class="text-gray-400 dark:text-gray-500 text-sm mt-2"
+                            >
+                                {{
+                                    __(
+                                        "Try adjusting your filters or create a new service"
+                                    )
+                                }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -519,32 +609,3 @@ const getServices = async () => {
     });
 };
 </script>
-
-<style scoped>
-.line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-</style>

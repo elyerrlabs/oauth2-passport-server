@@ -23,10 +23,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <!-- Create Button -->
     <button
         @click="open"
-        class="create-btn group relative cursor-pointer flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white p-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+        class="create-btn group relative cursor-pointer flex items-center justify-center bg-linear-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white p-2 lg:p-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
     >
         <svg
-            class="w-6 h-6 transform group-hover:scale-110 group-hover:rotate-90 transition-all duration-200"
+            class="w-8 h-8 transform group-hover:scale-110 group-hover:rotate-90 transition-all duration-200"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -38,7 +38,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"
             />
         </svg>
-        <span class="ml-3 font-semibold text-sm hidden sm:block">
+        <span class="ml-3 font-semibold text-sm md:text-lg ">
             {{ __("Create Client") }}
         </span>
 
@@ -55,7 +55,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <template #body>
             <div class="mb-6">
                 <div class="flex items-center mb-2">
-                    <div class="flex-shrink-0">
+                    <div class="shrink-0">
                         <div
                             class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center transition-colors duration-200"
                         >
@@ -240,7 +240,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         ]"
                     >
                         <svg
-                            class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                            class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"

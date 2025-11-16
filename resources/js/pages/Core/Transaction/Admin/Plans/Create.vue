@@ -20,487 +20,458 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="p-4 space-y-4">
-        <!-- Add Plan Button - Normal Style -->
-        <button
-            v-if="item?.id"
-            @click="open"
-            class="rounded-full w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white p-3 shadow-md transition"
-            title="Update Plan"
-        >
-            <i class="mdi mdi-pencil text-lg"></i>
-        </button>
+    <!-- Add Plan Button - Normal Style -->
+    <button
+        v-if="item?.id"
+        @click="open"
+        class="rounded-full w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white p-3 shadow-md transition"
+        title="Update Plan"
+    >
+        <i class="mdi mdi-pencil text-lg"></i>
+    </button>
 
-        <button
-            v-else
-            class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-xl px-6 py-3 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer font-semibold"
-            @click="open"
-        >
-            <i class="mdi mdi-plus text-lg"></i>
-            <span>{{ __("Create New Plan") }}</span>
-        </button>
+    <button
+        v-else
+        class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-xl px-6 py-3 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer font-semibold"
+        @click="open"
+    >
+        <i class="mdi mdi-plus text-md md:text-lg"></i>
+        <span>{{ __("Create New Plan") }}</span>
+    </button>
 
-        <!-- Create Plan Dialog -->
-        <v-modal
-            v-model="dialog"
-            panel-class="w-full lg:w-7xl"
-            :title="item?.id ? __('Edit Plan') : __('Create New Plan')"
-        >
-            <template #body>
-                <div class="space-y-6 p-1">
-                    <!-- Plan Information Section -->
-                    <div
-                        class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm"
-                    >
-                        <div class="flex items-center space-x-3 mb-4">
-                            <div
-                                class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center"
-                            >
-                                <i
-                                    class="mdi mdi-information text-blue-600 dark:text-blue-400 text-lg"
-                                ></i>
-                            </div>
-                            <div>
-                                <h3
-                                    class="text-lg font-semibold text-gray-900 dark:text-white"
-                                >
-                                    {{ __("Plan Information") }}
-                                </h3>
-                                <p
-                                    class="text-sm text-gray-500 dark:text-gray-400"
-                                >
-                                    {{
-                                        __("Basic plan details and description")
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <v-input
-                                :label="__('Plan Name')"
-                                v-model="form.name"
-                                :error="form.errors.name"
-                                :placeholder="__('e.g., VPN Pro')"
-                                :required="true"
-                            />
-                        </div>
-
-                        <div class="mt-4">
-                            <v-editor
-                                v-model="form.description"
-                                :label="__('Description')"
-                                :error="form.errors.description"
-                                :required="true"
-                                :placeholder="
-                                    __(
-                                        'Describe the features and benefits of this plan...'
-                                    )
-                                "
-                            />
-                        </div>
-
+    <!-- Create Plan Dialog -->
+    <v-modal
+        v-model="dialog"
+        panel-class="w-full lg:w-7xl"
+        :title="item?.id ? __('Edit Plan') : __('Create New Plan')"
+    >
+        <template #body>
+            <div>
+                <!-- Plan Information Section -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-2xl p-1 sm:p-2 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-sm"
+                >
+                    <div class="flex items-center space-x-3 mb-4">
                         <div
-                            class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 items-end"
+                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center"
                         >
-                            <v-switch
-                                :label="__('Active Plan')"
-                                v-model="form.active"
-                                :error="form.errors.active"
-                                :description="
-                                    __('Make this plan available for purchase')
-                                "
-                            />
-
-                            <v-switch
-                                :label="__('Enable Bonus')"
-                                v-model="form.bonus_enabled"
-                                :error="form.errors.bonus_enabled"
-                                :description="__('Add bonus days to this plan')"
-                            />
-
-                            <v-input
-                                v-if="form.bonus_enabled"
-                                :label="__('Bonus Duration (Days)')"
-                                v-model="form.bonus_duration"
-                                :error="form.errors.bonus_duration"
-                                type="number"
-                                :placeholder="__('8')"
-                                :description="__('Number of extra bonus days')"
-                            />
+                            <i
+                                class="mdi mdi-information text-blue-600 dark:text-blue-400 text-lg"
+                            ></i>
+                        </div>
+                        <div>
+                            <h3
+                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Plan Information") }}
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {{ __("Basic plan details and description") }}
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Pricing Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <v-input
+                            :label="__('Plan Name')"
+                            v-model="form.name"
+                            :error="form.errors.name"
+                            :placeholder="__('e.g., VPN Pro')"
+                            :required="true"
+                        />
+                    </div>
+
+                    <div class="mt-4">
+                        <v-editor
+                            v-model="form.description"
+                            :label="__('Description')"
+                            :error="form.errors.description"
+                            :required="true"
+                            :placeholder="
+                                __(
+                                    'Describe the features and benefits of this plan...'
+                                )
+                            "
+                        />
+                    </div>
+
                     <div
-                        class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm"
+                        class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 items-end"
                     >
-                        <div class="flex items-center space-x-3 mb-6">
-                            <div
-                                class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center"
-                            >
-                                <i
-                                    class="mdi mdi-currency-usd text-green-600 dark:text-green-400 text-lg"
-                                ></i>
-                            </div>
-                            <div>
-                                <h3
-                                    class="text-lg font-semibold text-gray-900 dark:text-white"
-                                >
-                                    {{ __("Pricing Configuration") }}
-                                </h3>
-                                <p
-                                    class="text-sm text-gray-500 dark:text-gray-400"
-                                >
-                                    {{
-                                        __(
-                                            "Set up pricing options for different billing periods"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div v-if="form.prices.length" class="space-y-4">
-                            <div
-                                v-for="(price, index) in form.prices"
-                                :key="price.id || `new-${index}`"
-                                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 items-end"
-                            >
-                                <!-- Billing Period -->
-                                <v-select
-                                    :label="__('Billing Period')"
-                                    :options="billing_periods"
-                                    label-key="name"
-                                    value-key="id"
-                                    v-model="price.billing_period"
-                                    :error="
-                                        form.errors?.prices?.[index]
-                                            ?.billing_period
-                                    "
-                                    :required="true"
-                                />
-
-                                <!-- Currency -->
-                                <v-select
-                                    :label="__('Currency')"
-                                    :options="currencies"
-                                    label-key="name"
-                                    value-key="code"
-                                    v-model="price.currency"
-                                    :error="
-                                        form.errors?.prices?.[index]?.currency
-                                    "
-                                    :required="true"
-                                />
-
-                                <!-- Amount -->
-                                <v-input
-                                    v-model="price.amount"
-                                    :label="__('Amount')"
-                                    :error="
-                                        form.errors?.prices?.[index]?.amount
-                                    "
-                                    :required="true"
-                                    type="money"
-                                    :placeholder="__('0.00')"
-                                />
-
-                                <!-- Remove Price Button - Always visible for all prices -->
-                                <div class="flex items-end h-full">
-                                    <button
-                                        class="w-full h-[42px] bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white border border-red-500 dark:border-red-600 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 transform hover:scale-105 cursor-pointer font-medium"
-                                        @click="removePrice(price, index)"
-                                        :disabled="deletingPriceId === price.id"
-                                    >
-                                        <i
-                                            v-if="deletingPriceId !== price.id"
-                                            class="mdi mdi-delete text-lg"
-                                        ></i>
-                                        <i
-                                            v-else
-                                            class="mdi mdi-loading mdi-spin text-lg"
-                                        ></i>
-                                        {{ __("Remove") }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <v-error
-                            v-if="!form.prices.length"
-                            :error="form.errors?.prices"
-                            class="mb-4"
+                        <v-switch
+                            :label="__('Active Plan')"
+                            v-model="form.active"
+                            :error="form.errors.active"
+                            :description="
+                                __('Make this plan available for purchase')
+                            "
                         />
 
-                        <!-- Add Price Button -->
-                        <button
-                            class="w-full mt-4 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white border border-green-500 dark:border-green-600 rounded-xl px-4 py-3 flex items-center justify-center gap-2 transition-all duration-200 transform hover:scale-105 cursor-pointer font-semibold shadow-lg hover:shadow-xl"
-                            @click="addPrice"
+                        <v-switch
+                            :label="__('Enable Bonus')"
+                            v-model="form.bonus_enabled"
+                            :error="form.errors.bonus_enabled"
+                            :description="__('Add bonus days to this plan')"
+                        />
+
+                        <v-input
+                            v-if="form.bonus_enabled"
+                            :label="__('Bonus Duration (Days)')"
+                            v-model="form.bonus_duration"
+                            :error="form.errors.bonus_duration"
+                            type="number"
+                            :placeholder="__('8')"
+                            :description="__('Number of extra bonus days')"
+                        />
+                    </div>
+                </div>
+
+                <!-- Pricing Section -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm"
+                >
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div
+                            class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center"
                         >
-                            <i class="mdi mdi-plus-circle text-lg"></i>
-                            {{ __("Add Pricing Option") }}
-                        </button>
+                            <i
+                                class="mdi mdi-currency-usd text-green-600 dark:text-green-400 text-lg"
+                            ></i>
+                        </div>
+                        <div>
+                            <h3
+                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Pricing Configuration") }}
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {{
+                                    __(
+                                        "Set up pricing options for different billing periods"
+                                    )
+                                }}
+                            </p>
+                        </div>
                     </div>
 
-                    <!-- Scopes Section -->
-                    <div
-                        class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm"
-                    >
-                        <div class="flex items-center space-x-3 mb-6">
-                            <div
-                                class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center"
-                            >
-                                <i
-                                    class="mdi mdi-key-chain text-purple-600 dark:text-purple-400 text-lg"
-                                ></i>
-                            </div>
-                            <div>
-                                <h3
-                                    class="text-lg font-semibold text-gray-900 dark:text-white"
-                                >
-                                    {{ __("Access Scopes") }}
-                                </h3>
-                                <p
-                                    class="text-sm text-gray-500 dark:text-gray-400"
-                                >
-                                    {{
-                                        __(
-                                            "Configure service access and permissions"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Service Selection -->
-                        <div class="mb-6">
+                    <div v-if="form.prices.length" class="space-y-4">
+                        <div
+                            v-for="(price, index) in form.prices"
+                            :key="price.id || `new-${index}`"
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 items-end"
+                        >
+                            <!-- Billing Period -->
                             <v-select
-                                :label="__('Select Service')"
-                                :options="services"
+                                :label="__('Billing Period')"
+                                :options="billing_periods"
                                 label-key="name"
                                 value-key="id"
-                                v-model="selectedServiceId"
-                                :error="form.errors?.scopes"
-                                :clearable="true"
-                                @change="onServiceChange"
-                                :description="
-                                    __(
-                                        'Choose a service to configure access roles'
-                                    )
+                                v-model="price.billing_period"
+                                :error="
+                                    form.errors?.prices?.[index]?.billing_period
                                 "
-                                :placeholder="__('Select a service...')"
+                                :required="true"
                             />
-                        </div>
 
-                        <!-- Scopes List -->
-                        <div v-if="scopes.length" class="scopes-container">
-                            <div class="flex items-center space-x-2 mb-4">
-                                <div
-                                    class="w-2 h-4 bg-blue-500 rounded-full"
-                                ></div>
-                                <h4
-                                    class="text-sm font-semibold text-gray-700 dark:text-gray-300"
+                            <!-- Currency -->
+                            <v-select
+                                :label="__('Currency')"
+                                :options="currencies"
+                                label-key="name"
+                                value-key="code"
+                                v-model="price.currency"
+                                :error="form.errors?.prices?.[index]?.currency"
+                                :required="true"
+                            />
+
+                            <!-- Amount -->
+                            <v-input
+                                v-model="price.amount"
+                                :label="__('Amount')"
+                                :error="form.errors?.prices?.[index]?.amount"
+                                :required="true"
+                                type="money"
+                                :placeholder="__('0.00')"
+                            />
+
+                            <!-- Remove Price Button - Always visible for all prices -->
+                            <div class="flex items-end h-full">
+                                <button
+                                    class="w-full h-[42px] bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white border border-red-500 dark:border-red-600 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 transform hover:scale-105 cursor-pointer font-medium"
+                                    @click="removePrice(price, index)"
+                                    :disabled="deletingPriceId === price.id"
                                 >
-                                    {{ __("Available Roles for") }}
-                                    <span
-                                        class="text-blue-600 dark:text-blue-400"
-                                        >{{
-                                            selectedService?.name ||
-                                            "Selected Service"
-                                        }}</span
-                                    >
-                                </h4>
+                                    <i
+                                        v-if="deletingPriceId !== price.id"
+                                        class="mdi mdi-delete text-lg"
+                                    ></i>
+                                    <i
+                                        v-else
+                                        class="mdi mdi-loading mdi-spin text-lg"
+                                    ></i>
+                                    {{ __("Remove") }}
+                                </button>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div
-                                    v-for="(scope, index) in scopes"
-                                    :key="scope.id"
-                                    class="flex items-center p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer group relative"
-                                    :class="
-                                        hasScope(scope.id)
-                                            ? 'border-green-500 bg-green-50 dark:bg-green-900/20 shadow-md scale-105'
-                                            : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-lg'
-                                    "
-                                    @click="toggleScope(scope.id)"
+                        </div>
+                    </div>
+
+                    <v-error
+                        v-if="!form.prices.length"
+                        :error="form.errors?.prices"
+                        class="mb-4"
+                    />
+
+                    <!-- Add Price Button -->
+                    <button
+                        class="w-full mt-4 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white border border-green-500 dark:border-green-600 rounded-xl px-4 py-3 flex items-center justify-center gap-2 transition-all duration-200 transform hover:scale-105 cursor-pointer font-semibold shadow-lg hover:shadow-xl"
+                        @click="addPrice"
+                    >
+                        <i class="mdi mdi-plus-circle text-lg"></i>
+                        {{ __("Add Pricing Option") }}
+                    </button>
+                </div>
+
+                <!-- Scopes Section -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm"
+                >
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div
+                            class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center"
+                        >
+                            <i
+                                class="mdi mdi-key-chain text-purple-600 dark:text-purple-400 text-lg"
+                            ></i>
+                        </div>
+                        <div>
+                            <h3
+                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Access Scopes") }}
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {{
+                                    __(
+                                        "Configure service access and permissions"
+                                    )
+                                }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Service Selection -->
+                    <div class="mb-6">
+                        <v-select
+                            :label="__('Select Service')"
+                            :options="services"
+                            label-key="name"
+                            value-key="id"
+                            v-model="selectedServiceId"
+                            :error="form.errors?.scopes"
+                            :clearable="true"
+                            @change="onServiceChange"
+                            :description="
+                                __('Choose a service to configure access roles')
+                            "
+                            :placeholder="__('Select a service...')"
+                        />
+                    </div>
+
+                    <!-- Scopes List -->
+                    <div v-if="scopes.length" class="scopes-container">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <div class="w-2 h-4 bg-blue-500 rounded-full"></div>
+                            <h4
+                                class="text-sm font-semibold text-gray-700 dark:text-gray-300"
+                            >
+                                {{ __("Available Roles for") }}
+                                <span
+                                    class="text-blue-600 dark:text-blue-400"
+                                    >{{
+                                        selectedService?.name ||
+                                        "Selected Service"
+                                    }}</span
                                 >
-                                    <!-- Delete Scope Button (only for update mode and assigned scopes) -->
-                                    <button
-                                        v-if="
-                                            item?.id &&
-                                            hasScope(scope.id) &&
-                                            scope.links?.revoke
+                            </h4>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div
+                                v-for="(scope, index) in scopes"
+                                :key="scope.id"
+                                class="flex items-center p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer group relative"
+                                :class="
+                                    hasScope(scope.id)
+                                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20 shadow-md scale-105'
+                                        : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-lg'
+                                "
+                                @click="toggleScope(scope.id)"
+                            >
+                                <!-- Delete Scope Button (only for update mode and assigned scopes) -->
+                                <button
+                                    v-if="
+                                        item?.id &&
+                                        hasScope(scope.id) &&
+                                        scope.links?.revoke
+                                    "
+                                    class="absolute -top-2 -right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 transform hover:scale-110 z-10"
+                                    @click.stop="deleteScope(scope)"
+                                    :disabled="deletingScopeId === scope.id"
+                                >
+                                    <i
+                                        v-if="deletingScopeId !== scope.id"
+                                        class="mdi mdi-close text-sm"
+                                    ></i>
+                                    <i
+                                        v-else
+                                        class="mdi mdi-loading mdi-spin text-sm"
+                                    ></i>
+                                </button>
+
+                                <div class="flex-shrink-0 mr-4">
+                                    <div
+                                        class="w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-200"
+                                        :class="
+                                            hasScope(scope.id)
+                                                ? 'bg-green-500 text-white'
+                                                : 'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-400 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30'
                                         "
-                                        class="absolute -top-2 -right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 transform hover:scale-110 z-10"
-                                        @click.stop="deleteScope(scope)"
-                                        :disabled="deletingScopeId === scope.id"
                                     >
                                         <i
-                                            v-if="deletingScopeId !== scope.id"
-                                            class="mdi mdi-close text-sm"
+                                            class="mdi mdi-account-key text-lg"
                                         ></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow">
+                                    <div
+                                        class="font-semibold text-gray-900 dark:text-white"
+                                    >
+                                        {{
+                                            scope.role?.name ||
+                                            scope.gsr_id ||
+                                            "No name"
+                                        }}
+                                    </div>
+                                    <div
+                                        class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
+                                    >
+                                        {{
+                                            scope.role?.description ||
+                                            scope.gsr_id ||
+                                            "No description available"
+                                        }}
+                                    </div>
+                                    <div
+                                        v-if="scope.gsr_id"
+                                        class="text-xs text-gray-500 dark:text-gray-500 mt-1 font-mono"
+                                    >
+                                        ID: {{ scope.gsr_id }}
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <div
+                                        class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors duration-200"
+                                        :class="
+                                            hasScope(scope.id)
+                                                ? 'bg-green-500 border-green-500 text-white'
+                                                : 'border-gray-300 dark:border-gray-500 group-hover:border-blue-500'
+                                        "
+                                    >
                                         <i
-                                            v-else
-                                            class="mdi mdi-loading mdi-spin text-sm"
+                                            v-if="hasScope(scope.id)"
+                                            class="mdi mdi-check text-xs"
                                         ></i>
-                                    </button>
-
-                                    <div class="flex-shrink-0 mr-4">
-                                        <div
-                                            class="w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-200"
-                                            :class="
-                                                hasScope(scope.id)
-                                                    ? 'bg-green-500 text-white'
-                                                    : 'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-400 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30'
-                                            "
-                                        >
-                                            <i
-                                                class="mdi mdi-account-key text-lg"
-                                            ></i>
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow">
-                                        <div
-                                            class="font-semibold text-gray-900 dark:text-white"
-                                        >
-                                            {{
-                                                scope.role?.name ||
-                                                scope.gsr_id ||
-                                                "No name"
-                                            }}
-                                        </div>
-                                        <div
-                                            class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
-                                        >
-                                            {{
-                                                scope.role?.description ||
-                                                scope.gsr_id ||
-                                                "No description available"
-                                            }}
-                                        </div>
-                                        <div
-                                            v-if="scope.gsr_id"
-                                            class="text-xs text-gray-500 dark:text-gray-500 mt-1 font-mono"
-                                        >
-                                            ID: {{ scope.gsr_id }}
-                                        </div>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        <div
-                                            class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors duration-200"
-                                            :class="
-                                                hasScope(scope.id)
-                                                    ? 'bg-green-500 border-green-500 text-white'
-                                                    : 'border-gray-300 dark:border-gray-500 group-hover:border-blue-500'
-                                            "
-                                        >
-                                            <i
-                                                v-if="hasScope(scope.id)"
-                                                class="mdi mdi-check text-xs"
-                                            ></i>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Loading State -->
-                        <div v-else-if="loadingScopes" class="text-center py-8">
-                            <div
-                                class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mx-auto mb-3"
-                            >
-                                <i
-                                    class="mdi mdi-loading mdi-spin text-blue-600 dark:text-blue-400 text-2xl"
-                                ></i>
-                            </div>
-                            <p
-                                class="text-gray-600 dark:text-gray-400 font-medium"
-                            >
-                                {{ __("Loading available roles...") }}
-                            </p>
-                        </div>
-
-                        <!-- No Scopes State -->
+                    <!-- Loading State -->
+                    <div v-else-if="loadingScopes" class="text-center py-8">
                         <div
-                            v-else-if="selectedServiceId && !scopes.length"
-                            class="text-center py-8"
+                            class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mx-auto mb-3"
                         >
-                            <div
-                                class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-3"
-                            >
-                                <i
-                                    class="mdi mdi-information-outline text-gray-400 dark:text-gray-500 text-2xl"
-                                ></i>
-                            </div>
-                            <p
-                                class="text-gray-500 dark:text-gray-400 font-medium"
-                            >
-                                {{ __("No roles available for this service") }}
-                            </p>
-                            <p
-                                class="text-sm text-gray-400 dark:text-gray-500 mt-1"
-                            >
-                                {{
-                                    __(
-                                        "Please contact administrator to configure roles"
-                                    )
-                                }}
-                            </p>
+                            <i
+                                class="mdi mdi-loading mdi-spin text-blue-600 dark:text-blue-400 text-2xl"
+                            ></i>
                         </div>
+                        <p class="text-gray-600 dark:text-gray-400 font-medium">
+                            {{ __("Loading available roles...") }}
+                        </p>
+                    </div>
 
-                        <!-- No Service Selected State -->
+                    <!-- No Scopes State -->
+                    <div
+                        v-else-if="selectedServiceId && !scopes.length"
+                        class="text-center py-8"
+                    >
                         <div
-                            v-else-if="!selectedServiceId"
-                            class="text-center py-8"
+                            class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-3"
                         >
-                            <div
-                                class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-3"
-                            >
-                                <i
-                                    class="mdi mdi-server text-gray-400 dark:text-gray-500 text-2xl"
-                                ></i>
-                            </div>
-                            <p
-                                class="text-gray-500 dark:text-gray-400 font-medium"
-                            >
-                                {{ __("Select a service to configure access") }}
-                            </p>
-                            <p
-                                class="text-sm text-gray-400 dark:text-gray-500 mt-1"
-                            >
-                                {{
-                                    __(
-                                        "Choose a service from the dropdown above"
-                                    )
-                                }}
-                            </p>
+                            <i
+                                class="mdi mdi-information-outline text-gray-400 dark:text-gray-500 text-2xl"
+                            ></i>
                         </div>
+                        <p class="text-gray-500 dark:text-gray-400 font-medium">
+                            {{ __("No roles available for this service") }}
+                        </p>
+                        <p
+                            class="text-sm text-gray-400 dark:text-gray-500 mt-1"
+                        >
+                            {{
+                                __(
+                                    "Please contact administrator to configure roles"
+                                )
+                            }}
+                        </p>
+                    </div>
+
+                    <!-- No Service Selected State -->
+                    <div
+                        v-else-if="!selectedServiceId"
+                        class="text-center py-8"
+                    >
+                        <div
+                            class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-3"
+                        >
+                            <i
+                                class="mdi mdi-server text-gray-400 dark:text-gray-500 text-2xl"
+                            ></i>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-400 font-medium">
+                            {{ __("Select a service to configure access") }}
+                        </p>
+                        <p
+                            class="text-sm text-gray-400 dark:text-gray-500 mt-1"
+                        >
+                            {{ __("Choose a service from the dropdown above") }}
+                        </p>
                     </div>
                 </div>
+            </div>
 
-                <!-- Dialog Actions -->
-                <div
-                    class="flex justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
+            <!-- Dialog Actions -->
+            <div
+                class="flex justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
+            >
+                <button
+                    class="px-6 py-3 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 transform hover:scale-105 cursor-pointer font-semibold"
+                    @click="close"
                 >
-                    <button
-                        class="px-6 py-3 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 transform hover:scale-105 cursor-pointer font-semibold"
-                        @click="close"
-                    >
-                        {{ __("Cancel") }}
-                    </button>
-                    <button
-                        class="px-8 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-xl flex items-center justify-center space-x-2 transition-all duration-200 transform hover:scale-105 cursor-pointer font-semibold shadow-lg hover:shadow-xl"
-                        @click="create"
-                    >
-                        <i class="mdi mdi-check-circle text-lg"></i>
-                        <span>{{
-                            item?.id ? __("Update Plan") : __("Create Plan")
-                        }}</span>
-                    </button>
-                </div>
-            </template>
-        </v-modal>
-    </div>
+                    {{ __("Cancel") }}
+                </button>
+                <button
+                    class="px-8 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-xl flex items-center justify-center space-x-2 transition-all duration-200 transform hover:scale-105 cursor-pointer font-semibold shadow-lg hover:shadow-xl"
+                    @click="create"
+                >
+                    <i class="mdi mdi-check-circle text-lg"></i>
+                    <span>{{
+                        item?.id ? __("Update Plan") : __("Create Plan")
+                    }}</span>
+                </button>
+            </div>
+        </template>
+    </v-modal>
 </template>
 
 <script setup>

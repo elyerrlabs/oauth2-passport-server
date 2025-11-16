@@ -32,10 +32,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <button
         v-else
         @click="dialog = true"
-        class="relative group rounded bg-blue-600 dark:bg-blue-700 text-white p-3 shadow-lg hover:shadow-xl hover:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
+        class="rounded flex justify-between items-center text-md bg-blue-600 dark:bg-blue-700 text-white p-2 hover:shadow-xl hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
     >
-        <i class="mdi mdi-plus-circle text-xl"></i>
-        {{ __("Add new role") }}
+        <i class="mdi mdi-plus-circle text-3xl"></i>
+        <span>
+            {{ __("New role") }}
+        </span>
     </button>
 
     <!-- Modal -->
@@ -204,23 +206,3 @@ const createOrUpdate = () => {
     }
 };
 </script>
-
-<style scoped>
-button:first-child {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%,
-    100% {
-        transform: scale(1);
-        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-            0 4px 6px -4px rgb(0 0 0 / 0.1);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
-            0 10px 10px -5px rgb(0 0 0 / 0.04);
-    }
-}
-</style>
