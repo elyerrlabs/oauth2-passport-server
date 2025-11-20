@@ -70,8 +70,8 @@ class settingsRolesUpload extends Command
     {
         $roles = Role::rolesByDefault();
         foreach ($roles as $role) {
-            Role::firstOrCreate(
-                ['name' => $role->name],
+            Role::updateOrCreate(
+                ['slug' => $this->slug($role->name)],
                 [
                     'name' => $role->name,
                     'slug' => $this->slug($role->name),
@@ -94,7 +94,7 @@ class settingsRolesUpload extends Command
         foreach ($groups as $grp) {
 
             //upload system groups
-            $group = Group::firstOrCreate(
+            $group = Group::updateOrCreate(
                 [
                     'slug' => $this->slug($grp->name)
                 ],
@@ -110,9 +110,9 @@ class settingsRolesUpload extends Command
                 foreach ($grp->services as $srv) {
                     try {
                         //Uploading Services Available for this groups
-                        $service = Service::firstOrCreate(
+                        $service = Service::updateOrCreate(
                             [
-                                'name' => $srv->name,
+                                'slug' => $this->slug($srv->name),
                                 'group_id' => $group->id
                             ],
                             [
@@ -129,10 +129,10 @@ class settingsRolesUpload extends Command
                         if (isset($srv->actions)) {
                             foreach ($srv->actions as $action) {
                                 //searching for action in roles Model
-                                $role = Role::where('name', $action->name)->first();
+                                $role = Role::where('slug', $this->slug($action->name))->first();
 
                                 //create default scopes for this service
-                                Scope::firstOrCreate(
+                                Scope::updateOrCreate(
                                     [
                                         'service_id' => $service->id,
                                         'role_id' => $role->id
