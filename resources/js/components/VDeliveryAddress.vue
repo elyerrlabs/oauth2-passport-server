@@ -563,11 +563,10 @@ export default {
         },
 
         selectAddress(item) {
-            this.$swal.fire({
-                icon: "success",
-                title: __("Success"),
-                text: __("Delivery address has been selected successfully"),
-            });
+            $notify.success(
+                __("Delivery address has been selected successfully")
+            );
+
             this.selected = item;
             this.showDialog = false;
             this.open();
@@ -620,11 +619,10 @@ export default {
                     const res = await this.$server.delete(item.links.delete);
                     if (res.status == 200) {
                         this.getAddresses();
-                        this.$swal.fire({
-                            icon: "success",
-                            title: __("Success"),
-                            text: __("Delivery address removed successfully"),
-                        });
+
+                        $notify.success(
+                            __("Delivery address removed successfully")
+                        );
 
                         // If the removed address was selected, clear selection
                         if (this.selected?.id === item.id) {
@@ -633,11 +631,7 @@ export default {
                     }
                 } catch (e) {
                     if (e?.response?.data?.message) {
-                        this.$swal.fire({
-                            icon: "error",
-                            title: __("Error"),
-                            text: __("Delivery address removal failed"),
-                        });
+                        $notify.success(e?.response?.data?.message);
                     }
                 }
             }

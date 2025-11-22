@@ -199,11 +199,6 @@ export default {
                 if (res.status == 200) {
                     this.dialog = false;
                     this.$emit("deleted", true);
-
-                    // Mostrar modal de éxito después de un breve delay
-                    setTimeout(() => {
-                        this.successDialog = true;
-                    }, 300);
                 }
             } catch (e) {
                 this.dialog = false;

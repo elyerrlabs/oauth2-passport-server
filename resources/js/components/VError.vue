@@ -35,7 +35,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 export default {
     props: {
         error: {
-            type: [Object, String],
+            type: [Array, Object, String],
             required: true,
             default: () => ({ example: "example Error" }),
         },

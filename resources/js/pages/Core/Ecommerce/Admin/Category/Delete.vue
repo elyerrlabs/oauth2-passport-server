@@ -381,66 +381,39 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </div>
 </template>
 
-<script>
+<script setup>
 import VModal from "@/components/VModal.vue";
+import { ref } from "vue";
 
-export default {
-    emits: ["deleted"],
-
-    components: {
-        VModal,
+const emits = defineEmits(["deleted"]);
+const props = defineProps({
+    item: {
+        type: Object,
+        required: true,
     },
+});
 
-    props: {
-        item: {
-            type: Object,
-            required: true,
-        },
-    },
+const dialog = ref(false);
+const successDialog = ref(false);
+const loading = ref(false);
 
-    data() {
-        return {
-            dialog: false,
-            successDialog: false,
-            loading: false,
-        };
-    },
+const destroy = async () => {
+    loading.value = true;
 
-    methods: {
-        async destroy() {
-            this.loading = true;
+    try {
+        const res = await $server.delete(props.item.links.destroy);
 
-            try {
-                const res = await this.$server.delete(this.item.links.destroy);
-
-                if (res.status == 200) {
-                    this.dialog = false;
-                    this.successDialog = true;
-                    this.$emit("deleted", true);
-
-                    // Auto-close success modal after 3 seconds
-                    setTimeout(() => {
-                        if (this.successDialog) {
-                            this.successDialog = false;
-                        }
-                    }, 3000);
-                }
-            } catch (error) {
-                let errorMessage = __(
-                    "An error occurred while deleting the category"
-                );
-
-                if (error?.response?.data?.message) {
-                    errorMessage = __(error.response.data.message);
-                }
-
-                // Show error notification
-                this.$notify.error(errorMessage);
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
+        if (res.status == 200) {
+            dialog.value = false;
+            emits("deleted");
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
 

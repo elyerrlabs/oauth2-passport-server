@@ -24,7 +24,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Loader -->
         <div v-if="loading" class="flex justify-center items-center py-6">
             <svg
-                class="animate-spin h-6 w-6 text-primary-600"
+                class="animate-spin h-6 w-6 text-primary-600 dark:text-primary-400"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -78,14 +78,11 @@ export default {
         async getCategories() {
             this.loading = true;
             try {
-                const res = await this.$server.get(
-                    this.$page.props.api.ecommerce.categories,
-                    {
-                        params: {
-                            parent: "",
-                        },
-                    }
-                );
+                const res = await this.$server.get("/api/ecommerce/categories", {
+                    params: {
+                        parent: "",
+                    },
+                });
                 if (res.status === 200) {
                     this.categories = res.data.data;
                 }

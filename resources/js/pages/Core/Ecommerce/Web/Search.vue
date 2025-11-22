@@ -95,11 +95,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             v-for="product in products"
                             :key="product.id"
                             class="bg-white dark:bg-gray-800 cursor-pointer rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-xl dark:hover:shadow-gray-900/50 transition-all duration-300 hover:-translate-y-1 group"
-                            @click="goTo(product?.links?.show)"
+                            @click="goTo(product?.web?.show)"
                         >
                             <!-- Product Image Container -->
                             <div
-                                class="relative aspect-[4/3] overflow-hidden bg-gray-50 dark:bg-gray-700"
+                                class="relative aspect-4/3 overflow-hidden bg-gray-50 dark:bg-gray-700"
                             >
                                 <!-- Image Slider -->
                                 <div
@@ -113,7 +113,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div
                                         v-for="(img, index) in product.images"
                                         :key="index"
-                                        class="w-full h-full flex-shrink-0 flex items-center justify-center"
+                                        class="w-full h-full shrink-0 flex items-center justify-center"
                                     >
                                         <img
                                             :src="img.url"
@@ -131,7 +131,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Discount Badge -->
                                 <div
                                     v-if="product.discount"
-                                    class="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
+                                    class="absolute top-3 left-3 bg-linear-to-r from-red-500 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
                                 >
                                     {{ product.discount }}% OFF
                                 </div>
@@ -139,7 +139,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Featured Badge -->
                                 <div
                                     v-if="product.featured"
-                                    class="absolute top-3 right-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
+                                    class="absolute top-3 right-3 bg-linear-to-r from-yellow-400 to-yellow-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
                                 >
                                     <i class="fas fa-star mr-1"></i>
                                     {{ __("Featured") }}
@@ -197,7 +197,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         {{ product.name }}
                                     </h3>
                                     <i
-                                        class="fas fa-heart text-gray-300 dark:text-gray-600 hover:text-red-500 transition-colors mt-0.5 flex-shrink-0"
+                                        class="fas fa-heart text-gray-300 dark:text-gray-600 hover:text-red-500 transition-colors mt-0.5 shrink-0"
                                     ></i>
                                 </div>
 
@@ -261,8 +261,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </div>
 
                                     <!-- Add to Cart Button -->
+
                                     <button
-                                        @click.stop="goTo(product?.links?.show)"
+                                        @click.stop="goTo(product?.web?.show)"
                                         class="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 p-2 cursor-pointer rounded-xl hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-sm"
                                     >
                                         <i
@@ -363,7 +364,7 @@ export default {
             },
             search: {
                 page: 1,
-                per_page: 50,
+                per_page: 100,
                 random: true,
             },
             loading: true,
@@ -496,14 +497,15 @@ export default {
 
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes.search_api,
-                    { params }
+                    this.$page.props.api.search,
+                    {
+                        params,
+                    }
                 );
 
                 if (res.status === 200) {
                     this.products = res.data.data;
                     this.pages = res.data.meta.pagination;
-                    this.search.page = res.data.meta.pagination.current_page;
 
                     // Initialize image indexes for new products
                     this.products.forEach((product) => {

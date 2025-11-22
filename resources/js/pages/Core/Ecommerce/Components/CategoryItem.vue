@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <li>
         <!-- Menu Item -->
         <div
-            class="flex items-center px-4 pb-1 hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
+            class="flex items-center px-4 pb-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors cursor-pointer"
         >
             <div
                 class="flex items-center flex-1 p-3"
@@ -34,27 +34,28 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     :src="item.images[0].url"
                     :alt="item.name"
                 />
-                <span class="text-gray-700 dark:text-gray-200 font-semibold text-sm mx-2">
+                <span
+                    class="text-gray-700 dark:text-gray-200 font-semibold text-sm mx-2"
+                >
                     {{ item.name }}
                 </span>
                 <i
                     :class="[
                         'mdi',
                         item.icon?.icon || 'mdi-folder-outline',
-                        'mr-3 text-primary-600 text-lg',
+                        'mr-3 text-primary-600 dark:text-primary-400 text-lg',
                     ]"
                 ></i>
             </div>
 
             <!-- Toggle arrow -->
-
             <i
                 v-if="hasChildren"
                 @click.stop="toggle = !toggle"
                 :class="[
-                    'mdi font-bold  ',
+                    'mdi font-bold',
                     toggle ? 'mdi-chevron-down' : 'mdi-chevron-right',
-                    'ml-2 text-gray-500 text-2xl  cursor-pointer transition-transform duration-200',
+                    'ml-2 text-gray-500 dark:text-gray-400 text-2xl cursor-pointer transition-transform duration-200',
                 ]"
             ></i>
         </div>
@@ -63,7 +64,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <transition name="fade">
             <ul
                 v-show="toggle && hasChildren"
-                class="ml-6 border-l border-gray-200 pl-3 space-y-1"
+                class="ml-6 border-l border-gray-200 dark:border-gray-600 pl-3 space-y-1"
             >
                 <CategoryItem
                     v-for="child in item.children"

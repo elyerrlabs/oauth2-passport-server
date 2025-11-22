@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-admin-layout>
         <div
-            class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-gray-800 py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300"
+            class="min-h-screen bg-linear-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-gray-800 py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300"
         >
             <div class="max-w-6xl mx-auto">
                 <!-- Loading State -->
@@ -32,7 +32,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <div class="text-center">
                         <div
-                            class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                            class="w-16 h-16 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
                         >
                             <i
                                 class="fas fa-spinner fa-spin text-blue-600 dark:text-blue-500 text-2xl"
@@ -92,7 +92,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         <!-- Customer Header -->
                         <div
-                            class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 px-6 py-8"
+                            class="bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 px-6 py-8"
                         >
                             <div
                                 class="flex flex-col md:flex-row md:items-center md:justify-between"
@@ -349,7 +349,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4"
                                             >
                                                 <div
-                                                    class="bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 h-4 rounded-full transition-all duration-500"
+                                                    class="bg-linear-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 h-4 rounded-full transition-all duration-500"
                                                     :style="{
                                                         width:
                                                             Math.min(
@@ -406,63 +406,52 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-admin-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
 import VAdminLayout from "../../Components/VAdminLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
+import { usePage } from "@inertiajs/vue3";
 
-export default {
-    components: {
-        VAdminLayout,
-        VPaginate,
-    },
+const page = usePage();
 
-    data() {
-        return {
-            loading: true,
-            customers: [],
-            pages: {
-                total_pages: 0,
-            },
-            search: {
-                page: 1,
-                per_page: 15,
-            },
-        };
-    },
+const loading = ref(true);
+const customers = ref([]);
+const pages = ref({
+    total_pages: 0,
+});
+const search = ref({
+    page: 1,
+    per_page: 15,
+});
 
-    created() {
-        this.getCustomer();
-    },
+onMounted(() => {
+    getCustomer();
+});
 
-    methods: {
-        customerInitials(item) {
-            if (item.name && item.last_name) {
-                return item.name.charAt(0) + item.last_name.charAt(0);
-            }
-            return "CU";
-        },
+const customerInitials = (item) => {
+    if (item.name && item.last_name) {
+        return item.name.charAt(0) + item.last_name.charAt(0);
+    }
+    return "CU";
+};
 
-        async getCustomer() {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.customers,
-                    { params: this.search }
-                );
+const getCustomer = async () => {
+    try {
+        const res = await $server.get(page.props.api.customers, {
+            params: search.value,
+        });
 
-                if (res.status == 200) {
-                    this.customers = res.data.data;
-                    let meta = res.data.meta;
-                    this.pages = meta.pagination;
-                    this.search.current_page = meta.pagination.current_page;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
+        if (res.status == 200) {
+            customers.value = res.data.data;
+            let meta = res.data.meta;
+            pages.value = meta.pagination;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>

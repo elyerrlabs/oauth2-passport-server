@@ -123,7 +123,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="py-3"
                 >
                     <a
-                        :href="product.links?.show"
+                        :href="product.web?.show"
                         class="flex items-center gap-4 p-3 rounded-lg transition"
                         :class="{
                             'bg-gray-200 dark:bg-gray-700':
@@ -229,7 +229,7 @@ export default {
         async performSearch(query) {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.api.ecommerce.search,
+                    this.$page.props.api.search,
                     { params: { q: query, limit: 10 } }
                 );
 

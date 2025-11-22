@@ -114,7 +114,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- User Profile -->
                         <div class="flex items-center space-x-4">
                             <div>
-                                <v-theme/>
+                                <v-theme />
                             </div>
                             <div class="hidden md:block">
                                 <v-notification />
@@ -157,7 +157,7 @@ export default {
     components: {
         VNotification,
         VProfile,
-        VTheme
+        VTheme,
     },
     data() {
         return {
@@ -191,7 +191,16 @@ export default {
         },
 
         isActive(item) {
-            return item.route == window.location.href;
+            if (!item?.route) return false;
+
+            // Current query without params
+            const currentPath = window.location.pathname;
+
+            //Get only the path without query params
+            const itemPath = new URL(item.route, window.location.origin)
+                .pathname;
+
+            return currentPath === itemPath;
         },
 
         homePage() {
