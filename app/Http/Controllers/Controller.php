@@ -55,7 +55,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Transform data
+     * Transform model data
      * @param mixed $data
      * @param mixed $transformer
      */
@@ -65,5 +65,19 @@ class Controller extends BaseController
             $data,
             $transformer
         )->toArray()['data'] ?? [];
+    }
+
+    /**
+     * Transform collection
+     * @param mixed $data
+     * @param mixed $transformer
+     * @return array
+     */
+    public function transformCollection($data, $transformer)
+    {
+        return fractal(
+            $data,
+            $transformer
+        )->toArray() ?? [];
     }
 }
