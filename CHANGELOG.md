@@ -22,6 +22,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## Unreleased
+
+- Fixed filter for plan search.
+- Added new module for users to view transactions.
+- Refactored eCommerce module layers to delegate responsibilities more clearly.
+
 ## 🛠️ v4.0.0
 
 -   Added support for module creation
@@ -47,8 +53,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -   Added **automatic retry mechanism** for failed webhook deliveries
 -   Optimized **background jobs with queues**, improving payment and transaction performance
 -   Added **foundational support for external service registration**, enabling integration with third-party apps (e.g., Nextcloud)
-- docker configuration updated
-- fixed responsive design
+-   docker configuration updated
+-   fixed responsive design
 
 ## 🚀 [v3.0.4]
 
