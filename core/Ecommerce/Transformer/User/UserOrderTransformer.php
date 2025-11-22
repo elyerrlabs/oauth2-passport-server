@@ -74,12 +74,12 @@ class UserOrderTransformer extends TransformerAbstract
             ],
             'status' => $order->status,
             'links' => [
-                'show' => route('api.ecommerce.products.show', [
+                'show' => route('api.ecommerce.web.products.show', [
                     'category' => $order->meta['category']['slug'],
                     'product' => $order['meta']['slug']
                 ]),
-                'update' => route('api.ecommerce.orders.store'),
-                'delete' => route('api.ecommerce.orders.destroy', [
+                'update' => route('api.ecommerce.web.orders.store'),
+                'delete' => route('api.ecommerce.web.orders.destroy', [
                     'order' => $order->id
                 ])
             ]

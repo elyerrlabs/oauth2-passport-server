@@ -60,9 +60,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         ></p>
                                         <button
                                             class="bg-white dark:bg-gray-800 cursor-pointer text-purple-700 dark:text-purple-400 font-bold py-3 px-6 sm:py-4 sm:px-10 rounded-xl shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:-translate-y-1 transition-all duration-300 text-base sm:text-lg"
-                                            @click.stop="
-                                                goTo(slide?.links?.show)
-                                            "
+                                            @click.stop="goTo(slide?.web?.show)"
                                         >
                                             {{ __("Shop Now") }}
                                             <i
@@ -98,13 +96,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Navigation Arrows - Ocultos en móviles, visibles en tablets y superiores -->
             <button
                 @click="prevSlide"
-                class="hidden sm:flex absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
+                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-10 h-10 sm:w-12 sm:h-12 hidden sm:flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
             >
                 <i class="fas fa-chevron-left text-sm sm:text-lg"></i>
             </button>
             <button
                 @click="nextSlide"
-                class="hidden sm:flex absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-purple-700 dark:text-purple-400 rounded-full w-10 h-10 sm:w-12 sm:h-12 hidden sm:flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-20"
             >
                 <i class="fas fa-chevron-right text-sm sm:text-lg"></i>
             </button>
@@ -153,7 +151,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         v-for="category in featuredCategories"
                         :key="category.id"
                         class="category-card group relative rounded-2xl overflow-hidden shadow-lg dark:shadow-gray-900/50 cursor-pointer transform transition-all duration-500 hover:-translate-y-2"
-                        @click="goTo(category.links.index)"
+                        @click="goTo(category.web.index)"
                     >
                         <!-- Category Image Container -->
                         <div class="relative h-40 overflow-hidden">
@@ -228,17 +226,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                     </div>
                 </div>
-
-                <!-- Call to Action -->
-                <div class="text-center mt-8">
-                    <button
-                        @click="goTo($page.props.routes.categories_index)"
-                        class="bg-linear-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center"
-                    >
-                        {{ __("View All Categories") }}
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </button>
-                </div>
             </div>
         </section>
 
@@ -278,7 +265,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         v-for="(product, index) in latest_products"
                         :key="index"
                         class="product-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer border border-gray-200 dark:border-gray-700"
-                        @click="goTo(product.links.show)"
+                        @click="goTo(product.web.show)"
                     >
                         <div class="relative overflow-hidden">
                             <img
@@ -315,7 +302,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </span>
                                 <button
                                     class="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 p-3 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-md"
-                                    @click.stop="addToCart(product)"
                                 >
                                     <i class="fas fa-shopping-cart"></i>
                                 </button>
@@ -344,8 +330,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             {{ __("Our most popular products") }}
                         </p>
                     </div>
-                    <a
-                        href="#"
+                    <button
                         @click="goTo($page.props.routes.search)"
                         class="mt-4 md:mt-0 inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-semibold text-lg group"
                     >
@@ -353,7 +338,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <i
                             class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"
                         ></i>
-                    </a>
+                    </button>
                 </div>
                 <div
                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
@@ -362,7 +347,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         v-for="(product, index) in latest_seller"
                         :key="index"
                         class="product-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer border border-gray-200 dark:border-gray-700"
-                        @click="goTo(product.links.show)"
+                        @click="goTo(product.web.show)"
                     >
                         <div class="relative overflow-hidden">
                             <img
@@ -430,9 +415,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <span
                                         v-if="product.originalPrice"
                                         class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2"
-                                        >{{ product.symbol
-                                        }}{{ product.originalPrice }}</span
                                     >
+                                        {{ product.symbol }}
+                                        {{ product.originalPrice }}
+                                    </span>
                                 </div>
                                 <button
                                     class="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 p-3 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-md"
@@ -483,8 +469,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             {{ __("Handpicked premium items just for you") }}
                         </p>
                     </div>
-                    <a
-                        href="#"
+                    <button
                         @click="goTo($page.props.routes.search)"
                         class="mt-4 md:mt-0 inline-flex items-center bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-semibold text-lg group py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
                     >
@@ -492,7 +477,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <i
                             class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"
                         ></i>
-                    </a>
+                    </button>
                 </div>
 
                 <!-- Products Grid -->
@@ -503,7 +488,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         v-for="product in featuredProducts"
                         :key="product.id"
                         class="product-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer border-2 border-transparent hover:border-purple-200 dark:hover:border-purple-600 relative"
-                        @click="goTo(product.links.show)"
+                        @click="goTo(product.web.show)"
                     >
                         <!-- Premium Featured Badge -->
                         <div
@@ -648,7 +633,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         v-for="product in randomProducts"
                         :key="product.id"
                         class="product-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden transition-all duration-500 hover:-translate-y-3 group cursor-pointer border border-gray-200 dark:border-gray-700"
-                        @click="goTo(product.links.show)"
+                        @click="goTo(product.web.show)"
                     >
                         <div class="relative overflow-hidden">
                             <img
@@ -771,200 +756,158 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { usePage } from "@inertiajs/vue3";
 import VHeader from "../Components/VHeader.vue";
 
-export default {
-    components: {
-        VHeader,
-    },
+// Globales
+const page = usePage();
+const $server = window.$server;
+const __ = window.__;
+const $notify = window.$notify;
 
-    data() {
-        return {
-            mobileMenuOpen: false,
-            currentSlide: 0,
-            carouselInterval: null,
-            carouselSlides: [],
-            featuredCategories: [],
-            newProducts: [],
-            bestSellers: [],
-            featuredProducts: [],
-            randomProducts: [],
-            latest_products: [],
-            latest_seller: [],
-        };
-    },
+// STATE
+const mobileMenuOpen = ref(false);
+const currentSlide = ref(0);
+const carouselInterval = ref(null);
 
-    created() {
-        this.getFeaturedProducts();
-    },
+const carouselSlides = ref([]);
+const featuredCategories = ref([]);
+const newProducts = ref([]);
+const bestSellers = ref([]);
+const featuredProducts = ref([]);
+const randomProducts = ref([]);
+const latest_products = ref([]);
+const latest_seller = ref([]);
 
-    mounted() {
-        this.getFeaturedCategories();
-        this.getProducts();
-        this.getLatestProducts();
-        this.getLatestSeller();
-
-        this.carouselInterval = setInterval(() => {
-            this.nextSlide();
-        }, 5000);
-
-        this.$nextTick(() => {
-            const footer = document.getElementById("footer");
-            if (footer) {
-                footer.style.display = "block";
-            }
-        });
-    },
-
-    methods: {
-        toggleMobileMenu() {
-            this.mobileMenuOpen = !this.mobileMenuOpen;
-        },
-        nextSlide() {
-            this.currentSlide =
-                (this.currentSlide + 1) % this.carouselSlides.length;
-        },
-        prevSlide() {
-            this.currentSlide =
-                (this.currentSlide - 1 + this.carouselSlides.length) %
-                this.carouselSlides.length;
-        },
-
-        goTo(link) {
-            if (link) {
-                window.location.href = link;
-            }
-        },
-
-        addToCart(product) {
-            // Implementar lógica para agregar al carrito
-            // Por ahora solo prevenimos la navegación
-            event.stopPropagation();
-            $notify.success(`${product.name} added to cart!`);
-        },
-
-        async getFeaturedProducts() {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.search_api,
-                    {
-                        params: {
-                            per_page: 20,
-                            random: true,
-                            featured: true,
-                        },
-                    }
-                );
-
-                if (res.status == 200) {
-                    this.carouselSlides = res.data.data;
-                    this.featuredProducts = res.data.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            }
-        },
-
-        async getProducts() {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.search_api,
-                    {
-                        params: {
-                            per_page: 100,
-                            random: true,
-                        },
-                    }
-                );
-
-                if (res.status == 200) {
-                    this.randomProducts = res.data.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            }
-        },
-
-        async getLatestProducts() {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.search_api,
-                    {
-                        params: {
-                            per_page: 20,
-                            random: true,
-                            latest: 15,
-                        },
-                    }
-                );
-
-                if (res.status == 200) {
-                    this.latest_products = res.data.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            }
-        },
-
-        async getLatestSeller() {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.search_api,
-                    {
-                        params: {
-                            per_page: 30,
-                            random: true,
-                            latest_seller: true,
-                        },
-                    }
-                );
-
-                if (res.status == 200) {
-                    this.latest_seller = res.data.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            }
-        },
-
-        async getFeaturedCategories() {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.categories_api,
-                    {
-                        params: {
-                            featured: true,
-                            per_page: 10,
-                            random: true,
-                        },
-                    }
-                );
-
-                if (res.status == 200) {
-                    this.featuredCategories = res.data.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            }
-        },
-    },
-    beforeUnmount() {
-        if (this.carouselInterval) {
-            clearInterval(this.carouselInterval);
-        }
-    },
+// ACTIONS
+const toggleMobileMenu = () => {
+    mobileMenuOpen.value = !mobileMenuOpen.value;
 };
+
+const nextSlide = () => {
+    if (!carouselSlides.value.length) return;
+    currentSlide.value = (currentSlide.value + 1) % carouselSlides.value.length;
+};
+
+const prevSlide = () => {
+    if (!carouselSlides.value.length) return;
+    currentSlide.value =
+        (currentSlide.value - 1 + carouselSlides.value.length) %
+        carouselSlides.value.length;
+};
+
+const goTo = (link) => {
+    if (link) window.location.href = link;
+};
+
+const addToCart = (product) => {
+    // pendiente
+};
+
+// API REQUESTS
+const getFeaturedProducts = async () => {
+    try {
+        const res = await $server.get(page.props.api.search, {
+            params: { per_page: 20, random: true, featured: true },
+        });
+
+        if (res.status === 200) {
+            carouselSlides.value = res.data.data;
+            featuredProducts.value = res.data.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
+};
+
+const getProducts = async () => {
+    try {
+        const res = await $server.get(page.props.api.search, {
+            params: { per_page: 100, random: true },
+        });
+
+        if (res.status === 200) {
+            randomProducts.value = res.data.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
+};
+
+const getLatestProducts = async () => {
+    try {
+        const res = await $server.get(page.props.api.search, {
+            params: { per_page: 20, random: true, latest: 30 },
+        });
+
+        if (res.status === 200) {
+            latest_products.value = res.data.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
+};
+
+const getLatestSeller = async () => {
+    try {
+        const res = await $server.get(page.props.api.search, {
+            params: { per_page: 30, random: true, latest_seller: true },
+        });
+
+        if (res.status === 200) {
+            latest_seller.value = res.data.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
+};
+
+const getFeaturedCategories = async () => {
+    try {
+        const res = await $server.get(page.props.api.categories, {
+            params: { featured: true, per_page: 10, random: true },
+        });
+
+        if (res.status === 200) {
+            featuredCategories.value = res.data.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
+};
+
+// LIFECYCLE
+onMounted(async () => {
+    await getFeaturedProducts();
+    getFeaturedCategories();
+    getProducts();
+    getLatestProducts();
+    getLatestSeller();
+
+    carouselInterval.value = setInterval(() => nextSlide(), 5000);
+
+    await nextTick();
+    const footer = document.getElementById("footer");
+    if (footer) footer.style.display = "block";
+});
+
+onBeforeUnmount(() => {
+    if (carouselInterval.value) {
+        clearInterval(carouselInterval.value);
+    }
+});
 </script>
 
 <style scoped>

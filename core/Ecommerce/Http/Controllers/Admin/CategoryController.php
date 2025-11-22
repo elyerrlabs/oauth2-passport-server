@@ -24,41 +24,30 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Http\Middleware\WantsJsonHeader;
-use Illuminate\Support\Facades\Log;
+use Core\Ecommerce\Services\CategoryService;
+use Core\Ecommerce\Services\RouteService;
+use Core\Ecommerce\Transformer\Admin\CategoryTransformer;
 use Inertia\Inertia;
-use App\Rules\BooleanRule;
 use Illuminate\Http\Request;
-use App\Rules\UndefinedValues;
-use Stevebauman\Purify\Facades\Purify;
 use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\ProductRepository;
-use Core\Ecommerce\Repositories\CategoryRepository;
-use Core\Ecommerce\Http\Requests\Category\StoreRequest;
 
 class CategoryController extends WebController
 {
-    /**
-     * Category
-     * @var CategoryRepository
-     */
-    private $repository;
 
     /**
-     * Product
-     * @var ProductRepository
+     * Category Service
+     * @param  CategoryService
      */
-    private $product_repository;
+    private $categoryService;
 
-
-    public function __construct(CategoryRepository $categoryRepository, ProductRepository $productRepository)
+    /**
+     * Construct
+     */
+    public function __construct()
     {
         parent::__construct();
-        $this->repository = $categoryRepository;
-        $this->product_repository = $productRepository;
-        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:view')->only('index');
-        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:store')->only('store');
-        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:view');
+        $this->categoryService = app(CategoryService::class);
     }
 
     /**
@@ -68,24 +57,12 @@ class CategoryController extends WebController
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-
-            $request->merge([
-                'tag' => $this->product_repository->getTag()
-            ]);
-
-            $query = $this->repository->search($request);
-
-            return $this->showAllByBuilder(
-                $query,
-                $this->repository->transformer
-            );
-        }
         return Inertia::render('Core/Ecommerce/Admin/Category/Index', [
             'routes' => [
                 'index' => route('ecommerce.admin.categories.index'),
-                'create' => route('ecommerce.admin.categories.create')
+                'create' => route('ecommerce.admin.categories.create'),
             ],
+            'api' => RouteService::admin(), // api routes
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
         ]);
     }
@@ -100,9 +77,8 @@ class CategoryController extends WebController
         return Inertia::render('Core/Ecommerce/Admin/Category/Create', [
             'routes' => [
                 'index' => route('ecommerce.admin.categories.index'),
-                'create' => route('ecommerce.admin.categories.create'),
-                'store' => route('ecommerce.admin.categories.store'),
             ],
+            'api' => RouteService::admin(), // api routes
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
         ]);
     }
@@ -115,55 +91,18 @@ class CategoryController extends WebController
      */
     public function edit(Request $request, string $id)
     {
-        $model = $this->repository->find($id);
+        $data = $this->transform(
+            $this->categoryService->details($id),
+            CategoryTransformer::class
+        );
 
         return Inertia::render('Core/Ecommerce/Admin/Category/Create', [
-            'model' => fractal($model, $this->repository->transformer)->toArray()['data'],
+            'data' => $data,
             'routes' => [
                 'index' => route('ecommerce.admin.categories.index'),
-                'create' => route('ecommerce.admin.categories.create'),
-                'store' => route('ecommerce.admin.categories.store'),
             ],
+            'api' => RouteService::admin(),
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
         ]);
-    }
-
-    /**
-     * Create new resource
-     * @param \Illuminate\Http\Request $request
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function store(StoreRequest $request)
-    {
-        $request->merge([
-            'description' => Purify::clean($request->description),
-        ]);
-
-        if (!empty($request->filled('id')) && $this->repository->find($request->id)) {
-            $model = $this->repository->update($request->id, $request->toArray());
-            return $this->showOne($model, $this->repository->transformer);
-        }
-
-        $request->merge([
-            'slug' => normalizeSlug($request->name),
-            'tag' => $this->product_repository->getTag(),
-            'description' => Purify::clean($request->description),
-        ]);
-
-        $model = $this->repository->create($request->toArray());
-
-        return $this->showOne($model, $this->repository->transformer, 201);
-    }
-
-
-    /**
-     * Destroy resource
-     * @param string $category_id
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function destroy(string $category_id)
-    {
-        $model = $this->repository->delete($category_id);
-        return $this->showOne($model, $this->repository->transformer);
     }
 }

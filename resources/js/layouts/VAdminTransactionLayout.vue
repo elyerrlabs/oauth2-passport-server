@@ -95,12 +95,18 @@ export default {
         open(item) {
             window.location.href = item.route;
         },
-        
+
         isActive(item) {
-            return (
-                item.route ==
-                `${window.location.origin}${window.location.pathname}`
-            );
+            if (!item?.route) return false;
+
+            // Current query without params
+            const currentPath = window.location.pathname;
+
+            //Get only the path without query params
+            const itemPath = new URL(item.route, window.location.origin)
+                .pathname;
+
+            return currentPath === itemPath;
         },
     },
 };

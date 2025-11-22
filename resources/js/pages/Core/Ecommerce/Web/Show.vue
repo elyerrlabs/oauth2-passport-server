@@ -72,7 +72,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Discount Badge -->
                                 <div
                                     v-if="product.discount"
-                                    class="bg-gradient-to-r from-red-500 to-pink-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center w-fit"
+                                    class="bg-linear-to-r from-red-500 to-pink-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center w-fit"
                                 >
                                     <i class="fas fa-tag mr-1 text-xs"></i>
                                     {{ product.discount }}% OFF
@@ -81,7 +81,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Featured Badge -->
                                 <div
                                     v-if="product.featured"
-                                    class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center w-fit"
+                                    class="bg-linear-to-r from-yellow-400 to-yellow-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center w-fit"
                                 >
                                     <i class="fas fa-crown mr-1 text-xs"></i>
                                     {{ __("Featured") }}
@@ -90,7 +90,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- New Arrival Badge -->
                                 <div
                                     v-if="product.is_new"
-                                    class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center w-fit"
+                                    class="bg-linear-to-r from-green-500 to-emerald-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center w-fit"
                                 >
                                     <i class="fas fa-star mr-1 text-xs"></i>
                                     {{ __("New Arrival") }}
@@ -168,7 +168,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :key="index"
                                 @click="selectedImageIndex = index"
                                 :class="[
-                                    'cursor-pointer p-1 rounded-lg border transition-all duration-300 flex-shrink-0 bg-white dark:bg-gray-700 hover:shadow-md',
+                                    'cursor-pointer p-1 rounded-lg border transition-all duration-300 shrink-0 bg-white dark:bg-gray-700 hover:shadow-md',
                                     selectedImageIndex === index
                                         ? 'border-indigo-500 scale-105 shadow-sm ring-1 ring-indigo-200 dark:ring-indigo-600'
                                         : 'border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-500',
@@ -197,7 +197,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div class="flex flex-wrap gap-2">
                                         <div
                                             v-if="product.featured"
-                                            class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold flex items-center lg:hidden"
+                                            class="bg-linear-to-r from-yellow-400 to-yellow-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold flex items-center lg:hidden"
                                         >
                                             <i
                                                 class="fas fa-crown mr-1 text-xs"
@@ -206,7 +206,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                         <div
                                             v-if="product.bestseller"
-                                            class="bg-gradient-to-r from-purple-500 to-pink-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold flex items-center"
+                                            class="bg-linear-to-r from-purple-500 to-pink-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold flex items-center"
                                         >
                                             <i
                                                 class="fas fa-fire mr-1 text-xs"
@@ -215,7 +215,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                         <div
                                             v-if="product.free_shipping"
-                                            class="bg-gradient-to-r from-blue-500 to-cyan-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold flex items-center"
+                                            class="bg-linear-to-r from-blue-500 to-cyan-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold flex items-center"
                                         >
                                             <i
                                                 class="fas fa-shipping-fast mr-1 text-xs"
@@ -283,7 +283,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <!-- Price Section -->
                         <div
-                            class="p-4 sm:p-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-xl border border-blue-200 dark:border-blue-800 shadow-sm"
+                            class="p-4 sm:p-6 bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-xl border border-blue-200 dark:border-blue-800 shadow-sm"
                         >
                             <div
                                 class="flex flex-col sm:flex-row sm:items-end sm:justify-between space-y-3 sm:space-y-0"
@@ -350,7 +350,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :class="[
                                         'p-3 sm:p-4 rounded-xl border cursor-pointer transition-all transform hover:scale-[1.02] shadow-sm',
                                         form.variant_id === variant.id
-                                            ? 'bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 border-indigo-300 dark:border-indigo-600 ring-2 ring-indigo-100 dark:ring-indigo-900 shadow-md'
+                                            ? 'bg-linear-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 border-indigo-300 dark:border-indigo-600 ring-2 ring-indigo-100 dark:ring-indigo-900 shadow-md'
                                             : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg',
                                     ]"
                                 >
@@ -470,7 +470,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
                                 <button
                                     @click="addToCart"
-                                    class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-3 px-4 sm:px-6 rounded-xl font-bold flex items-center justify-center shadow-lg transition-all transform hover:scale-[1.02] hover:shadow-xl text-sm sm:text-base group"
+                                    class="bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-3 px-4 sm:px-6 rounded-xl font-bold flex items-center justify-center shadow-lg transition-all transform hover:scale-[1.02] hover:shadow-xl text-sm sm:text-base group"
                                 >
                                     <i
                                         class="fas fa-shopping-cart mr-2 sm:mr-3 text-xs sm:text-sm group-hover:scale-110 transition-transform"
@@ -479,7 +479,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </button>
                                 <button
                                     @click="buyNow"
-                                    class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 px-4 sm:px-6 rounded-xl font-bold flex items-center justify-center shadow-lg transition-all transform hover:scale-[1.02] hover:shadow-xl text-sm sm:text-base group"
+                                    class="bg-linear-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 px-4 sm:px-6 rounded-xl font-bold flex items-center justify-center shadow-lg transition-all transform hover:scale-[1.02] hover:shadow-xl text-sm sm:text-base group"
                                 >
                                     <i
                                         class="fas fa-bolt mr-2 sm:mr-3 text-xs sm:text-sm group-hover:scale-110 transition-transform"
@@ -649,7 +649,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700"
                 >
                     <div
-                        class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20"
+                        class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20"
                     >
                         <div
                             class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
@@ -701,11 +701,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 v-for="childProduct in childrenProducts"
                                 :key="childProduct.id"
                                 class="bg-white dark:bg-gray-700 rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group border border-gray-100 dark:border-gray-600 hover:border-indigo-200 dark:hover:border-indigo-500"
-                                @click="goTo(childProduct?.links?.show)"
+                                @click="goTo(childProduct?.web?.show)"
                             >
                                 <div class="flex items-start space-x-3">
                                     <!-- Product Image -->
-                                    <div class="flex-shrink-0">
+                                    <div class="shrink-0">
                                         <div
                                             class="w-14 h-14 sm:w-16 sm:h-16 bg-gray-50 dark:bg-gray-600 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-gray-200 dark:border-gray-500 group-hover:border-indigo-300 dark:group-hover:border-indigo-400 transition-colors"
                                         >
@@ -813,9 +813,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <!-- View Product Button -->
                                         <button
                                             @click.stop="
-                                                goTo(childProduct?.links?.show)
+                                                goTo(childProduct?.web?.show)
                                             "
-                                            class="w-full bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white py-2 px-3 rounded-lg font-semibold transition-all transform hover:scale-[1.02] shadow-md hover:shadow-lg flex items-center justify-center group/btn text-xs sm:text-sm"
+                                            class="w-full cursor-pointer bg-linear-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white py-2 px-3 rounded-lg font-semibold transition-all transform hover:scale-[1.02] shadow-md hover:shadow-lg flex items-center justify-center group/btn text-xs sm:text-sm"
                                         >
                                             <i
                                                 class="fas fa-eye mr-2 group-hover/btn:scale-110 transition-transform text-xs"
@@ -836,7 +836,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700"
                 >
                     <div
-                        class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20"
+                        class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600 bg-linear-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20"
                     >
                         <div
                             class="flex flex-col sm:flex-row sm:justify-between sm:items-center"
@@ -884,10 +884,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 v-for="product in relatedProducts"
                                 :key="product.id"
                                 class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group"
-                                @click="goTo(product?.links?.show)"
+                                @click="goTo(product?.web?.show)"
                             >
                                 <div
-                                    class="relative h-24 sm:h-32 bg-gradient-to-br from-gray-50 to-white dark:from-gray-600 dark:to-gray-700 flex items-center justify-center p-2 sm:p-3"
+                                    class="relative h-24 sm:h-32 bg-linear-to-br from-gray-50 to-white dark:from-gray-600 dark:to-gray-700 flex items-center justify-center p-2 sm:p-3"
                                 >
                                     <img
                                         :src="product.images[0]?.url"
@@ -897,7 +897,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <!-- Featured badge on related products -->
                                     <div
                                         v-if="product.featured"
-                                        class="absolute top-1 sm:top-2 left-1 sm:left-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-xs font-bold px-1 sm:px-2 py-1 rounded-full shadow-md flex items-center"
+                                        class="absolute top-1 sm:top-2 left-1 sm:left-2 bg-linear-to-r from-yellow-400 to-yellow-500 text-white text-xs font-bold px-1 sm:px-2 py-1 rounded-full shadow-md flex items-center"
                                     >
                                         <i
                                             class="fas fa-crown mr-1 text-xs"
@@ -941,7 +941,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </span>
                                         <button
                                             @click.stop="
-                                                goTo(product?.links?.show)
+                                                goTo(product?.web?.show)
                                             "
                                             class="bg-indigo-600 hover:bg-indigo-700 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg font-semibold text-xs transition-all transform hover:scale-105 shadow-md hover:shadow-lg flex items-center"
                                         >
@@ -1147,11 +1147,11 @@ export default {
         async getProduct() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes.show_api
+                    this.$page.props.api.product_show
                 );
 
                 if (res.status === 200) {
-                    this.product = res.data.data;
+                    this.product = res.data;
                     if (this.product.variants?.length) {
                         this.selectVariant(this.product.variants[0]);
                     }
@@ -1165,20 +1165,22 @@ export default {
         },
 
         async getRelatedProducts(item) {
+            console.log(item);
+            
             try {
-                const response = await this.$server.get(
-                    this.$page.props.api.ecommerce.search,
+                const res = await this.$server.get(
+                    this.$page.props.api.search,
                     {
                         params: {
                             random: true,
-                            per_page: 10,
-                            tags: item.tags.map((tag) => tag.name).join(","),
+                            per_page: 30,
+                            category: item.category.slug,
                         },
                     }
                 );
 
-                if (response.status === 200) {
-                    this.relatedProducts = response.data.data;
+                if (res.status === 200) {
+                    this.relatedProducts = res.data.data;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
@@ -1191,7 +1193,7 @@ export default {
             this.form.product_id = this.selectedVariant?.id || this.product.id;
             try {
                 const res = await this.$server.post(
-                    this.$page.props.api.ecommerce.orders,
+                    this.$page.props.api.orders,
                     this.form
                 );
                 if (res.status == 201) {

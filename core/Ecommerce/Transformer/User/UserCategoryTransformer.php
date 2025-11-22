@@ -67,13 +67,15 @@ class UserCategoryTransformer extends TransformerAbstract
             'parent' => fractal($category->parent, UserCategoryParentTransformer::class)->toArray()['data'] ?? [],
             'children' => fractal($category->children, UserCategoryChildrenTransformer::class)->toArray()['data'] ?? [],
             'links' => [
-                'index' => route('ecommerce.category', [
-                    'category' => $category->slug
-                ]),
-                'index_api' => route('api.ecommerce.category.show', [
+                'index' => route('api.ecommerce.web.category.show', [
                     'category' => $category->slug
                 ]),
             ],
+            'web' => [
+                'index' => route('ecommerce.category', [
+                    'category' => $category->slug
+                ]),
+            ]
         ];
     }
 }

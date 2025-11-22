@@ -24,26 +24,26 @@ namespace Core\Ecommerce\Http\Controllers\Api\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Http\Controllers\ApiController;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Core\Ecommerce\Repositories\ProductRepository;
+use App\Http\Controllers\ApiController;
+use Core\Ecommerce\Services\ProductService;
 use Core\Ecommerce\Transformer\User\UserProductTransformer;
 
 class ProductController extends ApiController
 {
     /**
-     * @var ProductRepository
+     * @var ProductService
      */
-    private $repository;
+    private $productService;
 
     /**
      * Construct
-     * @param  ProductRepository $productRepository
+     * @param  ProductService $productService
      */
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductService $productService)
     {
-        $this->repository = $productRepository;
+        $this->productService = $productService;
     }
 
     /**
@@ -53,7 +53,7 @@ class ProductController extends ApiController
      */
     public function index(Request $request)
     {
-        $query = $this->repository->searchForUsers($request);
+        $query = $this->productService->searchForUsers($request);
 
         return $this->showAllByBuilder($query, UserProductTransformer::class);
     }
@@ -66,7 +66,7 @@ class ProductController extends ApiController
      */
     public function productDetails(string $category_slug, string $product_slug)
     {
-        $model = $this->repository->findProductByCategory($category_slug, $product_slug);
+        $model = $this->productService->findProductByCategory($category_slug, $product_slug);
 
         return $this->showOne($model, UserProductTransformer::class);
     }

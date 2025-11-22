@@ -24,23 +24,18 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Services\RouteService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\CheckoutRepository;
-use Core\Ecommerce\Transformer\Admin\CheckoutTransformer;
 
 class OrderController extends WebController
 {
 
-    private $repository;
-
-
-    public function __construct(CheckoutRepository $checkoutRepository)
+    public function __construct()
     {
         parent::__construct();
         $this->middleware("userCanAny:administrator:ecommerce:full,administrator:ecommerce:view");
-        $this->repository = $checkoutRepository;
     }
 
     /**
@@ -49,18 +44,9 @@ class OrderController extends WebController
      */
     public function complete(Request $request)
     {
-        if ($request->wantsJson()) {
-            $query = $this->repository->searchForAdmin($request);
-
-            return $this->showAllByBuilder($query, CheckoutTransformer::class);
-        }
-
         return Inertia::render('Core/Ecommerce/Admin/Order/Complete', [
-            'routes' => [
-                'orders' => route("ecommerce.admin.orders.complete")
-            ],
+            'api' => RouteService::admin(),
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
-
         ]);
     }
 
@@ -71,16 +57,8 @@ class OrderController extends WebController
      */
     public function pending(Request $request)
     {
-        if ($request->wantsJson()) {
-            $query = $this->repository->searchForAdmin($request);
-
-            return $this->showAllByBuilder($query, CheckoutTransformer::class);
-        }
-
         return Inertia::render('Core/Ecommerce/Admin/Order/Pending', [
-            'routes' => [
-                'orders' => route("ecommerce.admin.orders.complete")
-            ],
+            'api' => RouteService::admin(),
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
         ]);
     }

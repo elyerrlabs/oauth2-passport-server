@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-admin-layout>
         <!-- Enhanced Header Section -->
         <div
-            class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white shadow-xl dark:from-blue-800 dark:via-purple-800 dark:to-indigo-900"
+            class="bg-linear-to-r from-blue-600 via-purple-600 to-indigo-700 text-white shadow-xl dark:from-blue-800 dark:via-purple-800 dark:to-indigo-900"
         >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div
@@ -31,7 +31,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <div class="mb-4 md:mb-0">
                         <h1
-                            class="text-2xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent"
+                            class="text-2xl md:text-4xl font-bold mb-2 bg-linear-to-r from-white to-blue-100 bg-clip-text text-transparent"
                         >
                             {{ __("Products Management") }}
                         </h1>
@@ -46,13 +46,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </p>
                     </div>
                     <div class="flex flex-wrap gap-3">
-                        <a
-                            :href="$page.props.routes.create"
+                        <button
+                            @click="router.visit($page.props.routes.create)"
                             class="px-4 py-2 font-medium bg-white/20 cursor-pointer hover:bg-white/30 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 backdrop-blur-sm border border-white/30 hover:border-white/50 shadow-md hover:shadow-lg"
                         >
                             <i class="mdi mdi-edit"></i>
                             {{ __("Create") }}
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -62,236 +62,128 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <div class="max-w-7xl mx-auto py-6 px-2">
             <!-- Enhanced Filter Section -->
             <div
-                class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden mb-6 transition-colors duration-300"
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 mb-6 transition-colors duration-300"
             >
-                <!-- Filter Header -->
-                <div
-                    class="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-blue-900/30 border-b border-gray-100 dark:border-gray-600"
-                >
-                    <button
-                        @click="filterExpanded = !filterExpanded"
-                        class="w-full p-6 flex items-center cursor-pointer justify-between text-left hover:bg-white/50 dark:hover:bg-gray-600/50 transition-all duration-300"
+                <div class="p-6">
+                    <h3
+                        class="text-lg font-bold text-gray-900 dark:text-white flex items-center mb-4"
                     >
-                        <div class="flex items-center space-x-4">
-                            <div
-                                class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg"
-                            >
-                                <i class="fas fa-filter text-white text-lg"></i>
-                            </div>
-                            <div>
-                                <h3
-                                    class="font-bold text-gray-900 dark:text-white text-lg"
-                                >
-                                    {{ filterHeaderText }}
-                                </h3>
-                                <p
-                                    class="text-gray-600 dark:text-gray-300 text-sm"
-                                >
-                                    {{ __("Filter and search products") }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <button
-                                @click.stop="showFilterHelp = true"
-                                class="w-10 h-10 flex items-center justify-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
-                                :title="__('Filter Help')"
-                            >
-                                <i class="fas fa-question-circle text-lg"></i>
-                            </button>
-                            <div
-                                class="w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-600 rounded-xl shadow-sm border border-gray-200 dark:border-gray-500"
-                            >
-                                <i
-                                    class="fas fa-chevron-down text-gray-600 dark:text-gray-300 transition-transform duration-300"
-                                    :class="{ 'rotate-180': filterExpanded }"
-                                ></i>
-                            </div>
-                        </div>
-                    </button>
-                </div>
+                        <i
+                            class="fas fa-filter mr-2 text-blue-600 dark:text-blue-400"
+                        ></i>
+                        {{ __("Filter Products") }}
+                    </h3>
 
-                <!-- Filter Content -->
-                <div
-                    v-if="filterExpanded"
-                    class="p-2 bg-white dark:bg-gray-800"
-                >
-                    <form @submit.prevent="getProducts" class="space-y-6">
-                        <!-- Search Inputs Grid -->
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-                        >
-                            <div
-                                v-for="(field, index) in filterFields"
-                                :key="index"
-                                class="group"
-                            >
-                                <label
-                                    class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"
-                                >
-                                    <i
-                                        :class="field.icon"
-                                        class="mr-2 text-blue-500 dark:text-blue-400"
-                                    ></i>
-                                    {{ __(field.label) }}
-                                </label>
-                                <div class="relative">
-                                    <i
-                                        :class="
-                                            field.icon +
-                                            ' absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-colors'
-                                        "
-                                    ></i>
-                                    <input
-                                        v-model="search[field.key]"
-                                        type="text"
-                                        :placeholder="__(field.placeholder)"
-                                        class="w-full pl-12 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                                        @input="debouncedGetProducts"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Stock and Price Filters -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div class="space-y-3">
-                                <label
-                                    class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center"
-                                >
-                                    <i
-                                        class="fas fa-boxes mr-2 text-blue-500 dark:text-blue-400"
-                                    ></i>
-                                    {{ __("Stock Level") }}
-                                </label>
-                                <div
-                                    class="flex space-x-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl"
-                                >
-                                    <select
-                                        v-model="search.stock_operator"
-                                        class="w-24 px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
-                                        @change="getProducts"
-                                    >
-                                        <option
-                                            v-for="op in operators"
-                                            :key="op.value"
-                                            :value="op.value"
-                                        >
-                                            {{ op.label }}
-                                        </option>
-                                    </select>
-                                    <input
-                                        v-model="search.stock"
-                                        type="number"
-                                        min="0"
-                                        class="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
-                                        :placeholder="__('Quantity')"
-                                        @input="debouncedGetProducts"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="space-y-3">
-                                <label
-                                    class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center"
-                                >
-                                    <i
-                                        class="fas fa-dollar-sign mr-2 text-green-500 dark:text-green-400"
-                                    ></i>
-                                    {{ __("Price Range") }}
-                                </label>
-                                <div
-                                    class="flex space-x-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl"
-                                >
-                                    <select
-                                        v-model="search.price_operator"
-                                        class="w-24 px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
-                                        @change="getProducts"
-                                    >
-                                        <option
-                                            v-for="op in operators"
-                                            :key="op.value"
-                                            :value="op.value"
-                                        >
-                                            {{ op.label }}
-                                        </option>
-                                    </select>
-                                    <input
-                                        v-model="search.price"
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        class="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm"
-                                        :placeholder="__('Amount')"
-                                        @input="debouncedGetProducts"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Active Filters -->
-                        <div
-                            v-if="activeFilterCount > 0"
-                            class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-blue-100 dark:border-blue-800"
-                        >
+                    <!-- Filter Form -->
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    >
+                        <!-- Name Search -->
+                        <div>
                             <label
-                                class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                             >
-                                <i
-                                    class="fas fa-filter mr-2 text-blue-600 dark:text-blue-400"
-                                ></i>
-                                {{ __("Active Filters") }} ({{
-                                    activeFilterCount
-                                }})
+                                {{ __("Product Name") }}
                             </label>
-                            <div class="flex flex-wrap gap-2">
-                                <span
-                                    v-for="(value, key) in activeFilters"
-                                    :key="key"
-                                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white dark:bg-gray-600 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-600 shadow-sm hover:shadow-md transition-shadow"
+                            <input
+                                type="text"
+                                v-model="search.name"
+                                @input="onFilterChange"
+                                :placeholder="__('Search by name...')"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
+                            />
+                        </div>
+
+                        <!-- Category -->
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                            >
+                                {{ __("Category") }}
+                            </label>
+                            <input
+                                type="text"
+                                v-model="search.category"
+                                @input="onFilterChange"
+                                :placeholder="__('Filter by category...')"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
+                            />
+                        </div>
+
+                        <!-- Stock Filter -->
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                            >
+                                {{ __("Stock") }}
+                            </label>
+                            <div class="flex space-x-2">
+                                <select
+                                    v-model="search.stock_operator"
+                                    @change="getProducts"
+                                    class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
                                 >
-                                    <i
-                                        class="fas fa-tag mr-2 text-blue-500 dark:text-blue-400"
-                                    ></i>
-                                    {{ filterLabels[key] }}: {{ value }}
-                                    <button
-                                        @click="clearFilter(key)"
-                                        class="ml-3 hover:text-blue-900 dark:hover:text-blue-100 transition-colors"
+                                    <option
+                                        v-for="op in operators"
+                                        :key="op.value"
+                                        :value="op.value"
                                     >
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </span>
+                                        {{ op.label }}
+                                    </option>
+                                </select>
+                                <input
+                                    type="number"
+                                    v-model="search.stock"
+                                    @input="onFilterChange"
+                                    :placeholder="__('Stock quantity...')"
+                                    class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
+                                />
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div
-                            class="flex justify-between items-center pt-6 border-t border-gray-100 dark:border-gray-600"
-                        >
-                            <button
-                                type="button"
-                                @click="resetFilters"
-                                class="px-6 py-3 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-300 flex items-center space-x-3 shadow-sm hover:shadow-md"
+                        <!-- Price Filter -->
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                             >
-                                <i class="fas fa-undo-alt"></i>
-                                <span class="font-medium">{{
-                                    __("Reset All Filters")
-                                }}</span>
-                            </button>
-                            <div class="text-right">
-                                <p
-                                    class="text-sm text-gray-600 dark:text-gray-400 font-medium"
+                                {{ __("Price") }}
+                            </label>
+                            <div class="flex space-x-2">
+                                <select
+                                    v-model="search.price_operator"
+                                    @change="getProducts"
+                                    class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
                                 >
-                                    {{ filteredResultsText }}
-                                </p>
-                                <p
-                                    class="text-xs text-gray-500 dark:text-gray-500"
-                                >
-                                    {{ __("Real-time filtering") }}
-                                </p>
+                                    <option
+                                        v-for="op in operators"
+                                        :key="op.value"
+                                        :value="op.value"
+                                    >
+                                        {{ op.label }}
+                                    </option>
+                                </select>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    v-model="search.price"
+                                    @input="onFilterChange"
+                                    :placeholder="__('Price amount...')"
+                                    class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
+                                />
                             </div>
                         </div>
-                    </form>
+
+                        <!-- Reset Button -->
+                        <div class="flex items-end">
+                            <button
+                                @click="resetFilters"
+                                class="w-full px-4 py-2 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/30 text-red-700 dark:text-red-300 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2"
+                            >
+                                <i class="fas fa-redo"></i>
+                                <span>{{ __("Reset Filters") }}</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -301,7 +193,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             >
                 <!-- Table Header -->
                 <div
-                    class="px-4 py-4 border-b border-gray-100 dark:border-gray-600 bg-gradient-to-r from-gray-50 to-white dark:from-gray-700 dark:to-gray-800"
+                    class="px-4 py-4 border-b border-gray-100 dark:border-gray-600 bg-linear-to-r from-gray-50 to-white dark:from-gray-700 dark:to-gray-800"
                 >
                     <div
                         class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
@@ -322,23 +214,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <i
                                     class="fas fa-chart-bar mr-2 text-green-500 dark:text-green-400"
                                 ></i>
-                                {{ __("Managing") }}
+                                {{ __("Showing") }}
                                 <span
                                     class="font-semibold text-gray-900 dark:text-white mx-1"
-                                    >{{ pagination.rowsNumber }}</span
+                                    >{{ products.length }}</span
                                 >
                                 {{ __("products") }}
                             </p>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <a
-                                :href="$page.props.routes.create"
-                                class="px-4 py-2 hidden font-medium bg-white/20 cursor-pointer hover:bg-white/30 text-shadow-gray-400 rounded-lg transition-all duration-300 lg:flex items-center space-x-2 backdrop-blur-sm border border-gray-300 dark:border-gray-600 shadow-md hover:shadow-lg"
+                            <button
+                                @click="router.visit($page.props.routes.create)"
+                                class="px-4 py-2 font-medium bg-white/20 cursor-pointer hover:bg-white/30 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 backdrop-blur-sm border border-white/30 hover:border-white/50 shadow-md hover:shadow-lg"
                             >
                                 <i class="mdi mdi-edit"></i>
                                 {{ __("Create") }}
-                            </a>
-
+                            </button>
                             <div
                                 class="flex items-center space-x-2 bg-white dark:bg-gray-600 rounded-xl px-3 py-2 border border-gray-200 dark:border-gray-500 shadow-sm"
                             >
@@ -383,7 +274,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="flex-1">
                                 <div class="flex items-center space-x-3 mb-2">
                                     <div
-                                        class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center"
+                                        class="w-10 h-10 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center"
                                     >
                                         <i
                                             class="fas fa-box text-blue-600 dark:text-blue-400"
@@ -460,13 +351,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             class="flex justify-end space-x-2 pt-3 border-t border-gray-100 dark:border-gray-500"
                         >
-                            <a
-                                :href="product.links.edit"
-                                class="px-3 py-1.5 bg-blue-500 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-1 shadow-sm hover:shadow-md text-xs"
+                            <button
+                                @click="
+                                    router.visit(
+                                        `${page.props.routes.index}/${product.id}/edit`
+                                    )
+                                "
+                                class="px-3 py-1.5 bg-blue-500 cursor-pointer hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-1 shadow-sm hover:shadow-md text-xs"
                             >
                                 <i class="fas fa-edit"></i>
                                 <span>{{ __("Edit") }}</span>
-                            </a>
+                            </button>
                             <v-delete :item="product" @deleted="getProducts" />
                         </div>
                     </div>
@@ -484,7 +379,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="flex-1">
                                 <div class="flex items-center space-x-3 mb-2">
                                     <div
-                                        class="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center"
+                                        class="w-12 h-12 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center"
                                     >
                                         <i
                                             class="fas fa-box text-blue-600 dark:text-blue-400"
@@ -561,13 +456,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             class="flex justify-end space-x-3 pt-4 border-t border-gray-100 dark:border-gray-500"
                         >
-                            <a
-                                :href="product.links.edit"
-                                class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                            <button
+                                @click="
+                                    router.visit(
+                                        `${page.props.routes.index}/${product.id}/edit`
+                                    )
+                                "
+                                class="px-4 py-2 cursor-pointer bg-blue-500 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
                             >
                                 <i class="fas fa-edit"></i>
                                 <span>{{ __("Edit") }}</span>
-                            </a>
+                            </button>
                             <v-delete :item="product" @deleted="getProducts" />
                         </div>
                     </div>
@@ -577,7 +476,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div class="hidden lg:block overflow-x-auto">
                     <table class="w-full">
                         <thead
-                            class="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-blue-900/30"
+                            class="bg-linear-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-blue-900/30"
                         >
                             <tr>
                                 <th
@@ -607,7 +506,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center space-x-4">
                                         <div
-                                            class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-lg flex items-center justify-center"
+                                            class="w-10 h-10 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-lg flex items-center justify-center"
                                         >
                                             <i
                                                 class="fas fa-box text-blue-600 dark:text-blue-400"
@@ -725,13 +624,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="px-6 py-4 whitespace-nowrap text-right"
                                 >
                                     <div class="flex justify-end space-x-2">
-                                        <a
-                                            :href="product.links.edit"
-                                            class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                                        <button
+                                            @click="
+                                                router.visit(
+                                                    `${page.props.routes.index}/${product.id}/edit`
+                                                )
+                                            "
+                                            class="px-4 py-2 bg-blue-500 cursor-pointer hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-sm hover:shadow-md"
                                         >
                                             <i class="fas fa-edit"></i>
                                             <span>{{ __("Edit") }}</span>
-                                        </a>
+                                        </button>
                                         <v-delete
                                             :item="product"
                                             @deleted="getProducts"
@@ -749,7 +652,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="text-center py-16"
                 >
                     <div
-                        class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg"
+                        class="w-24 h-24 bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg"
                     >
                         <i
                             class="fas fa-box-open text-gray-400 dark:text-gray-500 text-4xl"
@@ -760,31 +663,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         {{ __("No products found") }}
                     </h3>
-                    <p
-                        class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto"
-                    >
-                        {{
-                            activeFilterCount > 0
-                                ? __(
-                                      "Try adjusting your filters to see more results"
-                                  )
-                                : __(
-                                      "Get started by adding your first product to the catalog"
-                                  )
-                        }}
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        {{ __("Try adjusting your filters") }}
                     </p>
-                    <div class="flex justify-center space-x-4">
-                        <button
-                            v-if="activeFilterCount > 0"
-                            @click="resetFilters"
-                            class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl"
-                        >
-                            <i class="fas fa-filter-circle-xmark"></i>
-                            <span class="font-semibold">{{
-                                __("Reset Filters")
-                            }}</span>
-                        </button>
-                    </div>
+                    <button
+                        @click="resetFilters"
+                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 flex items-center space-x-2 mx-auto"
+                    >
+                        <i class="fas fa-redo"></i>
+                        <span>{{ __("Reset Filters") }}</span>
+                    </button>
                 </div>
 
                 <!-- Loading State -->
@@ -794,7 +682,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <div class="text-center">
                         <div
-                            class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                            class="w-16 h-16 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
                         >
                             <i
                                 class="fas fa-spinner fa-spin text-blue-600 dark:text-blue-400 text-2xl"
@@ -830,17 +718,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             {{ __("Showing") }}
                             <span
                                 class="font-bold text-gray-900 dark:text-white mx-1"
-                                >{{ paginationStart }}</span
-                            >
-                            {{ __("to") }}
-                            <span
-                                class="font-bold text-gray-900 dark:text-white mx-1"
-                                >{{ paginationEnd }}</span
+                                >{{
+                                    (search.page - 1) * search.per_page + 1
+                                }}-{{
+                                    Math.min(
+                                        search.page * search.per_page,
+                                        pages.total
+                                    )
+                                }}</span
                             >
                             {{ __("of") }}
                             <span
                                 class="font-bold text-blue-600 dark:text-blue-400 mx-1"
-                                >{{ pagination.rowsNumber }}</span
+                                >{{ pages.total }}</span
                             >
                             {{ __("products") }}
                         </p>
@@ -855,373 +745,144 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
             </div>
         </div>
-
-        <!-- Enhanced Filter Help Modal -->
-        <div
-            v-if="showFilterHelp"
-            class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-            @click="showFilterHelp = false"
-        >
-            <div
-                class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-95 hover:scale-100"
-                @click.stop
-            >
-                <div
-                    class="bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-800 dark:to-purple-900 text-white px-8 py-6"
-                >
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-2xl font-bold flex items-center">
-                            <i class="fas fa-life-ring mr-3"></i>
-                            {{ __("Filter Help Guide") }}
-                        </h3>
-                        <button
-                            @click="showFilterHelp = false"
-                            class="w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
-                        >
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="p-8 space-y-6 overflow-y-auto max-h-[60vh]">
-                    <!-- Operators Section -->
-                    <div
-                        class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6"
-                    >
-                        <h4
-                            class="font-bold text-gray-900 dark:text-white text-lg mb-4 flex items-center"
-                        >
-                            <i
-                                class="fas fa-filter mr-3 text-blue-600 dark:text-blue-400"
-                            ></i>
-                            {{ __("Filter Operators") }}
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div
-                                v-for="(op, index) in operatorExamples"
-                                :key="index"
-                                class="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600"
-                            >
-                                <code
-                                    class="font-mono bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded text-sm text-gray-900 dark:text-white"
-                                    >{{ op.symbol }}</code
-                                >
-                                <span
-                                    class="text-gray-700 dark:text-gray-300 font-medium"
-                                    >{{ __(op.description) }}</span
-                                >
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tips Section -->
-                    <div
-                        class="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-2xl p-6"
-                    >
-                        <h4
-                            class="font-bold text-gray-900 dark:text-white text-lg mb-4 flex items-center"
-                        >
-                            <i
-                                class="fas fa-lightbulb mr-3 text-yellow-500 dark:text-yellow-400"
-                            ></i>
-                            {{ __("Tips & Best Practices") }}
-                        </h4>
-                        <ul class="space-y-3">
-                            <li
-                                v-for="(tip, index) in helpTips"
-                                :key="index"
-                                class="flex items-start"
-                            >
-                                <i
-                                    class="fas fa-check-circle text-green-500 dark:text-green-400 mt-1 mr-3"
-                                ></i>
-                                <span
-                                    class="text-gray-700 dark:text-gray-300"
-                                    >{{ __(tip) }}</span
-                                >
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div
-                    class="px-8 py-6 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 flex justify-end"
-                >
-                    <button
-                        @click="showFilterHelp = false"
-                        class="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
-                    >
-                        {{ __("Got It") }}
-                    </button>
-                </div>
-            </div>
-        </div>
     </v-admin-layout>
 </template>
 
-<script>
-import VCreate from "./Create.vue";
+<script setup>
 import VDelete from "./Delete.vue";
 import VAdminLayout from "../../Components/VAdminLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
+import { usePage, router } from "@inertiajs/vue3";
+import { ref, onMounted } from "vue";
 
-export default {
-    components: {
-        VCreate,
-        VDelete,
-        VAdminLayout,
-        VPaginate,
-    },
+const page = usePage();
 
-    data() {
-        return {
-            filterExpanded: false,
-            loading: false,
-            showFilterHelp: false,
-            products: [],
-            pages: {
-                total_pages: 0,
-            },
-            search: {
-                page: 1,
-                per_page: 15,
-                name: "",
-                category: "",
-                model: "",
-                family: "",
-                stock: "",
-                stock_operator: "=",
-                price: "",
-                price_operator: "=",
-                order_by: "updated_at",
-                order_type: "desc",
-            },
-            operators: [
-                { label: "=", value: "=" },
-                { label: ">", value: ">" },
-                { label: ">=", value: ">=" },
-                { label: "<", value: "<" },
-                { label: "<=", value: "<=" },
-            ],
-            columns: [
-                "Product",
-                "Stock",
-                "Price",
-                "Published",
-                "Featured",
-                "Actions",
-            ],
-            filterLabels: {
-                name: __("Name"),
-                category: __("Category"),
-                model: __("Model"),
-                family: __("Family"),
-                stock: __("Stock"),
-                price: __("Price"),
-            },
-            filterFields: [
-                {
-                    key: "name",
-                    label: "Product Name",
-                    icon: "fas fa-tag",
-                    placeholder: "Search by name",
-                },
-                {
-                    key: "category",
-                    label: "Category",
-                    icon: "fas fa-folder",
-                    placeholder: "Search by category",
-                },
-                {
-                    key: "model",
-                    label: "Model",
-                    icon: "fas fa-cube",
-                    placeholder: "Search by model",
-                },
-                {
-                    key: "family",
-                    label: "Family",
-                    icon: "fas fa-users",
-                    placeholder: "Search by family",
-                },
-            ],
-            operatorExamples: [
-                { symbol: "=", description: "Equal to" },
-                { symbol: ">", description: "Greater than" },
-                { symbol: ">=", description: "Greater than or equal to" },
-                { symbol: "<", description: "Less than" },
-                { symbol: "<=", description: "Less than or equal to" },
-            ],
-            helpTips: [
-                "Text fields support partial matches and are case-insensitive",
-                "Empty filter fields are automatically ignored in the search",
-                "Use the reset button to quickly clear all active filters",
-                "Stock and price filters work with numeric comparisons",
-                "Combining multiple filters narrows down results further",
-                "Real-time filtering updates results as you type",
-            ],
-            debounceTimeout: null,
-        };
-    },
+const loading = ref(false);
+const products = ref([]);
+const pages = ref({
+    total: 0,
+    total_pages: 0,
+});
 
-    computed: {
-        pagination() {
-            return {
-                page: this.search.page,
-                rowsPerPage: this.search.per_page,
-                rowsNumber: this.pages.total_pages * this.search.per_page,
-            };
-        },
-        paginationStart() {
-            return (this.search.page - 1) * this.search.per_page + 1;
-        },
-        paginationEnd() {
-            const end = this.search.page * this.search.per_page;
-            return end > this.pagination.rowsNumber
-                ? this.pagination.rowsNumber
-                : end;
-        },
-        filterHeaderText() {
-            const count = this.activeFilterCount;
-            return count > 0
-                ? `${__("Active Filters")} (${count})`
-                : __("Filter Products");
-        },
-        activeFilterCount() {
-            return Object.keys(this.activeFilters).length;
-        },
-        activeFilters() {
-            const filters = {};
-            if (this.search.name) filters.name = this.search.name;
-            if (this.search.category) filters.category = this.search.category;
-            if (this.search.model) filters.model = this.search.model;
-            if (this.search.family) filters.family = this.search.family;
-            if (this.search.stock)
-                filters.stock = `${this.search.stock_operator} ${this.search.stock}`;
-            if (this.search.price)
-                filters.price = `${this.search.price_operator} ${this.search.price}`;
-            return filters;
-        },
-        filteredResultsText() {
-            if (this.loading) return __("Loading...");
-            if (this.products.length === 0)
-                return __("No products match your filters");
-            return __(
-                `${this.products.length} of ${this.pagination.rowsNumber} products shown`
-            );
-        },
-    },
+const search = ref({
+    page: 1,
+    per_page: 15,
+    name: "",
+    category: "",
+    stock: "",
+    stock_operator: "=",
+    price: "",
+    price_operator: "=",
+});
 
-    created() {
-        this.getProducts();
-    },
+const operators = ref([
+    { label: "=", value: "=" },
+    { label: ">", value: ">" },
+    { label: ">=", value: ">=" },
+    { label: "<", value: "<" },
+    { label: "<=", value: "<=" },
+]);
 
-    methods: {
-        getStockBadgeClass(stock) {
-            if (stock === null || stock === undefined)
-                return "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300";
-            if (stock > 50)
-                return "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg";
-            if (stock > 10)
-                return "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg";
-            if (stock > 0)
-                return "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg";
-            return "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg";
-        },
+const columns = ref([
+    "Product",
+    "Stock",
+    "Price",
+    "Published",
+    "Featured",
+    "Actions",
+]);
 
-        getStockIcon(stock) {
-            if (stock === null || stock === undefined)
-                return "fas fa-question-circle";
-            if (stock > 50) return "fas fa-boxes";
-            if (stock > 10) return "fas fa-box";
-            if (stock > 0) return "fas fa-exclamation-triangle";
-            return "fas fa-times-circle";
-        },
+let filterTimeout = null;
 
-        getColumnIcon(column) {
-            const icons = {
-                Product: "fas fa-tag",
-                Stock: "fas fa-boxes",
-                Price: "fas fa-dollar-sign",
-                Published: "fas fa-eye",
-                Featured: "fas fa-star",
-                Actions: "fas fa-cog",
-            };
-            return icons[column] || "fas fa-circle";
-        },
+onMounted(async () => {
+    await getProducts();
+});
 
-        onTableRequest(props) {
-            this.search.page = props.pagination.page;
-            this.search.per_page = props.pagination.rowsPerPage;
-            this.search.order_by = props.pagination.sortBy;
-            this.search.order_type = props.pagination.descending
-                ? "desc"
-                : "asc";
-            this.getProducts();
-        },
+const getStockBadgeClass = (stock) => {
+    if (stock === null || stock === undefined)
+        return "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300";
+    if (stock > 50)
+        return "bg-linear-to-r from-green-500 to-green-600 text-white shadow-lg";
+    if (stock > 10)
+        return "bg-linear-to-r from-yellow-500 to-yellow-600 text-white shadow-lg";
+    if (stock > 0)
+        return "bg-linear-to-r from-orange-500 to-orange-600 text-white shadow-lg";
+    return "bg-linear-to-r from-red-500 to-red-600 text-white shadow-lg";
+};
 
-        clearFilter(key) {
-            if (key === "stock") {
-                this.search.stock = "";
-                this.search.stock_operator = "=";
-            } else if (key === "price") {
-                this.search.price = "";
-                this.search.price_operator = "=";
-            } else {
-                this.search[key] = "";
+const getStockIcon = (stock) => {
+    if (stock === null || stock === undefined) return "fas fa-question-circle";
+    if (stock > 50) return "fas fa-boxes";
+    if (stock > 10) return "fas fa-box";
+    if (stock > 0) return "fas fa-exclamation-triangle";
+    return "fas fa-times-circle";
+};
+
+const getColumnIcon = (column) => {
+    const icons = {
+        Product: "fas fa-tag",
+        Stock: "fas fa-boxes",
+        Price: "fas fa-dollar-sign",
+        Published: "fas fa-eye",
+        Featured: "fas fa-star",
+        Actions: "fas fa-cog",
+    };
+    return icons[column] || "fas fa-circle";
+};
+
+const onFilterChange = () => {
+    // Reset to first page when filtering
+    search.value.page = 1;
+
+    // Debounce the API call
+    if (filterTimeout) clearTimeout(filterTimeout);
+    filterTimeout = setTimeout(() => {
+        getProducts();
+    }, 300);
+};
+
+const resetFilters = () => {
+    search.value.name = "";
+    search.value.category = "";
+    search.value.stock = "";
+    search.value.stock_operator = "=";
+    search.value.price = "";
+    search.value.price_operator = "=";
+    search.value.page = 1;
+
+    getProducts();
+};
+
+const getProducts = async () => {
+    loading.value = true;
+
+    try {
+        // Clean up empty values from search object
+        const cleanSearch = { ...search.value };
+        Object.keys(cleanSearch).forEach((key) => {
+            if (
+                cleanSearch[key] === "" ||
+                cleanSearch[key] === null ||
+                cleanSearch[key] === undefined
+            ) {
+                delete cleanSearch[key];
             }
-            this.getProducts();
-        },
+        });
 
-        resetFilters() {
-            this.search = {
-                ...this.search,
-                name: "",
-                category: "",
-                model: "",
-                family: "",
-                stock: "",
-                stock_operator: "=",
-                price: "",
-                price_operator: "=",
-                page: 1,
-            };
-            this.getProducts();
-        },
-
-        debouncedGetProducts() {
-            // Clear existing timeout
-            if (this.debounceTimeout) {
-                clearTimeout(this.debounceTimeout);
-            }
-
-            // Set new timeout
-            this.debounceTimeout = setTimeout(() => {
-                this.getProducts();
-            }, 500); // 500ms debounce
-        },
-
-        async getProducts() {
-            this.loading = true;
-            try {
-                const { data } = await this.$server.get(
-                    this.$page.props.routes["products"],
-                    {
-                        params: this.search,
-                    }
-                );
-
-                this.products = data.data;
-                this.pages = data.meta.pagination;
-                this.search.page = data.meta.pagination.current_page;
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
+        const res = await $server.get(page.props.api.products, {
+            params: cleanSearch,
+        });
+        if (res.status == 200) {
+            const values = res.data;
+            products.value = values.data;
+            pages.value = values.meta.pagination;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>

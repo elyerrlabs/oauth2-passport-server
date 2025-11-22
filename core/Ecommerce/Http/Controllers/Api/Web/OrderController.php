@@ -24,9 +24,9 @@ namespace Core\Ecommerce\Http\Controllers\Api\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Services\OrderService;
 use Illuminate\Http\Request;
-use App\Http\Controllers\ApiController; 
-use Core\Ecommerce\Repositories\OrderRepository;
+use App\Http\Controllers\ApiController;
 use Core\Ecommerce\Http\Requests\Order\StoreRequest;
 use Core\Ecommerce\Transformer\User\UserOrderTransformer;
 
@@ -36,12 +36,12 @@ class OrderController extends ApiController
      * Repository
      * @var 
      */
-    private $repository;
+    private $orderService;
 
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(OrderService $orderService)
     {
         parent::__construct();
-        $this->repository = $orderRepository;
+        $this->orderService = $orderService;
     }
 
     /**
@@ -51,7 +51,7 @@ class OrderController extends ApiController
      */
     public function index(Request $request)
     {
-        $query = $this->repository->searchForUser($request);
+        $query = $this->orderService->searchForUser($request);
 
         return $this->showAllByBuilder($query, UserOrderTransformer::class);
     }
@@ -67,7 +67,7 @@ class OrderController extends ApiController
             'user_id' => auth()->user()->id,
         ]);
 
-        $model = $this->repository->create($request->toArray());
+        $model = $this->orderService->create($request->toArray());
 
         return $this->showOne($model, UserOrderTransformer::class, 201);
     }
@@ -79,7 +79,7 @@ class OrderController extends ApiController
      */
     public function destroy(string $order_id)
     {
-        $this->repository->delete($order_id);
+        $this->orderService->delete($order_id);
 
         return $this->message(__("Order deleted successfully"), 200);
     }

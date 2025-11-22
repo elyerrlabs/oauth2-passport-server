@@ -69,9 +69,17 @@ class Product extends Master
         'published' => 'boolean'
     ];
 
+    /**
+     * Get tag
+     * @return string
+     */
+    public static function getTag()
+    {
+        return (new static())->tag;
+    }
+
 
     /**
-     *
      * @param mixed $value
      * @return void
      */

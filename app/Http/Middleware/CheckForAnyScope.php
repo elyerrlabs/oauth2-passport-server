@@ -43,23 +43,33 @@ class CheckForAnyScope extends middleware
      */
     public function handle(Request $request, Closure $next, string ...$scopes): Response
     {
-        // Retrieve token to the  request
-        $token = $request->user()->token();
-
-        // Checking authentication
-        if (!$request->user() || !$token || empty($token->client) || $token->revoked) {
+        // Verify authentication
+        if (!auth()->check()) {
             throw new AuthenticationException;
         }
 
-        // Use personal access token like a api key
-        if ($token->client->hasGrantType('personal_access')) {
+        // External API Calls
+        if ($request->bearerToken()) {
 
-            if (array_intersect($token->scopes, $scopes)) {
-                return $next($request);
+            // Retrieve token to the  request
+            $token = $request->user()->token();
+
+            // Verify token validation
+            if (!$token || empty($token->client) || $token->revoked) {
+                throw new AuthenticationException;
             }
 
-            throw new ReportError(__("You do not have the necessary permissions"), 403);
+            // Use personal access token like a api key
+            if ($token->client->hasGrantType('personal_access')) {
+
+                if (array_intersect($token->scopes, $scopes)) {
+                    return $next($request);
+                }
+
+                throw new ReportError(__("You do not have the necessary permissions"), 403);
+            }
         }
+
 
         // Check the user is admin set top level access
         if (auth()->user()->isAdmin()) {

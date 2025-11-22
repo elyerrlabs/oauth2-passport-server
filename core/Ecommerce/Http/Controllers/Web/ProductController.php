@@ -24,25 +24,19 @@ namespace Core\Ecommerce\Http\Controllers\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Services\RouteService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\ProductRepository;
 
 class ProductController extends WebController
 {
     /**
-     * @var ProductRepository
-     */
-    private $repository;
-
-    /**
      * Construct
-     * @param  ProductRepository $productRepository
      */
-    public function __construct(ProductRepository $productRepository)
+    public function __construct()
     {
-        $this->repository = $productRepository;
+        // public controller - disabled authentication
     }
 
     /**
@@ -54,12 +48,10 @@ class ProductController extends WebController
         return Inertia::render(
             'Core/Ecommerce/Web/Dashboard',
             [
-                'routes' => [
+                'routes' => [ // share web routes
                     'search' => route('ecommerce.search'),
-                    'dashboard' => route('ecommerce.dashboard'),
-                    'search_api' => route('api.ecommerce.search'),
-                    'categories_api' => route('api.ecommerce.categories.index'),
                 ],
+                'api' => RouteService::api() // share api route
             ]
         )->rootView('ecommerce');
     }
@@ -74,12 +66,11 @@ class ProductController extends WebController
         return Inertia::render(
             'Core/Ecommerce/Web/Search',
             [
-                'routes' => [
+                'routes' => [// share web routes
                     'dashboard' => route('ecommerce.dashboard'),
                     'search' => route('ecommerce.search'),
-                    'search_api' => route('api.ecommerce.search'),
-                    'categories_api' => route('api.ecommerce.categories.index'),
                 ],
+                'api' => RouteService::api() // share api route
             ]
         )->rootView('ecommerce');
     }
@@ -95,14 +86,11 @@ class ProductController extends WebController
         return Inertia::render(
             'Core/Ecommerce/Web/Search',
             [
-                'routes' => [
+                'routes' => [// share web routes
                     'dashboard' => route('ecommerce.dashboard'),
                     'search' => route('ecommerce.category', ['category' => $category]),
-                    'categories_api' => route('api.ecommerce.categories.index'),
-                    'search_api' => route('api.ecommerce.category.show', [
-                        'category' => $category
-                    ])
                 ],
+                'api' => RouteService::api() // share api route
             ]
         )->rootView('ecommerce');
     }
@@ -118,19 +106,20 @@ class ProductController extends WebController
         return Inertia::render(
             'Core/Ecommerce/Web/Show',
             [
-                'routes' => [
+                'routes' => [// share web routes
                     'search' => route('ecommerce.search'),
                     'dashboard' => route('ecommerce.dashboard'),
-                    'ecommerce' => route('ecommerce.search'),
                     'orders' => route('ecommerce.orders.index'),
                     'show' => route('ecommerce.category', [
                         'category' => $category_slug
                     ]),
-                    'show_api' => route('api.ecommerce.products.show', [
+                ],
+                'api' => RouteService::api([
+                    "product_show" => route('api.ecommerce.web.products.show', [
                         'category' => $category_slug,
                         'product' => $product_slug
                     ])
-                ],
+                ]) // share api route
             ]
         )->rootView('ecommerce');
     }

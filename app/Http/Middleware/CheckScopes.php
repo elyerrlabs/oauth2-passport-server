@@ -44,22 +44,32 @@ class CheckScopes extends middleware
      */
     public function handle(Request $request, Closure $next, string ...$scopes): Response
     {
-        // Retrieve token to the  request
-        $token = $request->user()->token();
 
-        // Checking Authentication
-        if (!$request->user() || !$token || empty($token->client) || $token->revoked) {
+        // Verify authentication
+        if (!auth()->check()) {
             throw new AuthenticationException;
         }
 
-        // Use personal access token like a api key
-        if ($token->client->hasGrantType('personal_access')) {
+        // External API Calls
+        if ($request->bearerToken()) {
 
-            if (empty(array_diff($scopes, $token->scopes))) {
-                return $next($request);
+            // Retrieve token to the  request
+            $token = $request->user()->token();
+
+            // Checking Authentication
+            if (!$token || empty($token->client) || $token->revoked) {
+                throw new AuthenticationException;
             }
 
-            throw new ReportError(__("You do not have the necessary permissions"), 403);
+            // Use personal access token like a api key
+            if ($token->client->hasGrantType('personal_access')) {
+
+                if (empty(array_diff($scopes, $token->scopes))) {
+                    return $next($request);
+                }
+
+                throw new ReportError(__("You do not have the necessary permissions"), 403);
+            }
         }
 
         // Verify the admin user and add top level

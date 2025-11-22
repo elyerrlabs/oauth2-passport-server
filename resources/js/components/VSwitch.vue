@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <div class="w-full">
         <!-- Header Section -->
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-1">
             <div class="flex items-center space-x-3">
                 <!-- Label -->
                 <label
@@ -69,10 +69,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Toggle Switch Container -->
         <div
-            class="flex items-center justify-between p-4 bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800/70 group"
+            class="flex items-center justify-between p-2 bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800/70 group"
         >
             <!-- Toggle Switch -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2">
                 <label class="flex items-center cursor-pointer group/switch">
                     <!-- Toggle Track -->
                     <div class="relative">
@@ -84,7 +84,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         />
                         <!-- Track -->
                         <div
-                            class="w-16 h-8 rounded-full transition-all duration-300 ease-in-out shadow-inner"
+                            class="w-16 h-7 rounded-full transition-all duration-300 ease-in-out shadow-inner"
                             :class="[
                                 localValue
                                     ? 'bg-green-500 dark:bg-green-600 group-hover/switch:bg-green-600 dark:group-hover/switch:bg-green-500'
@@ -94,7 +94,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         ></div>
                         <!-- Thumb -->
                         <div
-                            class="absolute left-1 top-1 bg-white dark:bg-gray-100 w-6 h-6 rounded-full shadow-lg transition-all duration-300 ease-in-out flex items-center justify-center group-hover/switch:shadow-xl"
+                            class="absolute left-1 top-1 bg-white dark:bg-gray-100 w-5 h-5 rounded-full shadow-lg transition-all duration-300 ease-in-out flex items-center justify-center group-hover/switch:shadow-xl"
                             :class="[
                                 localValue ? 'translate-x-8' : '',
                                 disabled ? 'opacity-70' : '',
@@ -137,8 +137,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </label>
             </div>
 
-            <!-- Status Icon -->
-            <div class="flex-shrink-0">
+            <!-- Status Icon 
+            <div class="shrink-0">
                 <div
                     class="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300"
                     :class="[
@@ -154,7 +154,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     ></i>
                     <i v-else class="mdi mdi-toggle-switch-off text-xl"></i>
                 </div>
-            </div>
+            </div>-->
         </div>
 
         <!-- Description (alternative to tooltip) -->

@@ -282,16 +282,16 @@ export default {
         },
 
         isActive(item) {
-            if (!item || !item.route || item.route === "#") return false;
+            if (!item?.route) return false;
 
+            // Current query without params
             const currentPath = window.location.pathname;
+
+            //Get only the path without query params
             const itemPath = new URL(item.route, window.location.origin)
                 .pathname;
 
-            return (
-                currentPath === itemPath ||
-                currentPath.startsWith(itemPath + "/")
-            );
+            return currentPath === itemPath;
         },
     },
 };

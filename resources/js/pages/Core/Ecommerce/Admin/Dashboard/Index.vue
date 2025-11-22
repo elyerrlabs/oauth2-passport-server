@@ -587,8 +587,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div
                                         class="text-sm font-semibold text-blue-600 dark:text-blue-400"
                                     >
-                                        {{ dashboard.currency_symbol
-                                        }}{{ product.price }}
+                                        {{ product.price }}
                                     </div>
                                     <div
                                         class="text-xs text-gray-500 dark:text-gray-400"

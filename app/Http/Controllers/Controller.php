@@ -23,11 +23,11 @@ namespace App\Http\Controllers;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
 use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Traits\Standard;
-use Elyerr\ApiResponse\Assets\JsonResponser;  
+use Elyerr\ApiResponse\Assets\JsonResponser;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Core\User\Transformer\User\AuthTransformer;
 use Illuminate\Routing\Controller as BaseController;
@@ -52,5 +52,32 @@ class Controller extends BaseController
         $user = fractal(Auth::user(), AuthTransformer::class);
 
         return json_decode(json_encode($user))->data;
+    }
+
+    /**
+     * Transform model data
+     * @param mixed $data
+     * @param mixed $transformer
+     */
+    public function transform($data, $transformer)
+    {
+        return fractal(
+            $data,
+            $transformer
+        )->toArray()['data'] ?? [];
+    }
+
+    /**
+     * Transform collection
+     * @param mixed $data
+     * @param mixed $transformer
+     * @return array
+     */
+    public function transformCollection($data, $transformer)
+    {
+        return fractal(
+            $data,
+            $transformer
+        )->toArray() ?? [];
     }
 }

@@ -27,21 +27,21 @@ namespace Core\Ecommerce\Http\Controllers\Api\Web;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
-use Core\Ecommerce\Repositories\CheckoutRepository; 
+use Core\Ecommerce\Services\CheckoutService;
 use Core\Ecommerce\Transformer\User\UserCheckoutTransformer;
 
 class CheckoutController extends ApiController
 {
     /**
      * Repository
-     * @var 
+     * @var CheckoutService
      */
-    private $repository;
+    private $checkoutService;
 
-    public function __construct(CheckoutRepository $paymentRepository)
+    public function __construct(CheckoutService $checkoutService)
     {
         parent::__construct();
-        $this->repository = $paymentRepository;
+        $this->checkoutService = $checkoutService;
 
     }
 
@@ -52,8 +52,16 @@ class CheckoutController extends ApiController
      */
     public function index(Request $request)
     {   // 
-        $query = $this->repository->search($request);
+        $query = $this->checkoutService->searchForUser($request);
 
         return $this->showAllByBuilder($query, UserCheckoutTransformer::class);
+    }
+
+
+    public function show($id)
+    {
+        $checkout = $this->checkoutService->details($id);
+
+        return $this->showOne($checkout, UserCheckoutTransformer::class);
     }
 }

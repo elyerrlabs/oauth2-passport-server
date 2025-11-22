@@ -24,6 +24,7 @@
 
 
 use Core\Transaction\Http\Controllers\Web\CheckoutController;
+use Core\Transaction\Http\Controllers\Web\TransactionManagerController;
 use Core\Transaction\Http\Controllers\Web\DeliveryAddressController;
 use Core\Transaction\Http\Controllers\Web\UserSubscriptionController;
 
@@ -56,4 +57,10 @@ Route::middleware(['throttle:transaction:web'])->group(function () {
         Route::post('addresses', [DeliveryAddressController::class, 'store'])->name('addresses.store');
         Route::delete('addresses/{id}', [DeliveryAddressController::class, 'destroy'])->name('addresses.delete');
     });
+
+
+    Route::get('/transactions', [
+        TransactionManagerController::class,
+        'index'
+    ])->name('transactions.index');
 });

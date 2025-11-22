@@ -24,32 +24,31 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Services\ProductService;
+use Core\Ecommerce\Transformer\Admin\ProductTransformer;
 use Inertia\Inertia;
+use Core\Ecommerce\Services\RouteService;
 use Illuminate\Http\Request;
-use Stevebauman\Purify\Facades\Purify;
 use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\ProductRepository;
-use Core\Ecommerce\Http\Requests\Product\StoreRequest;
 
 final class ProductController extends WebController
 {
-    /**
-     * ProductRepository
-     * @var ProductRepository
-     */
-    private $repository;
 
     /**
-     * Summary of __construct
-     * @param  ProductRepository $productRepository
+     * Product Service
+     * @var ProductService
      */
-    public function __construct(ProductRepository $productRepository)
+    private $productService;
+
+    /**
+     *Construct
+     *  
+     */
+    public function __construct()
     {
         parent::__construct();
-        $this->repository = $productRepository;
-        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:view')->only('index');
-        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:store')->only('store');
-        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
+        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:view');
+        $this->productService = app(ProductService::class);
     }
 
     /**
@@ -59,21 +58,14 @@ final class ProductController extends WebController
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-            $query = $this->repository->search($request);
-            //  $this->orderByBuilder($query, $this->repository->transformer);
-            return $this->showAllByBuilder($query, $this->repository->transformer);
-        }
-
         return Inertia::render(
             'Core/Ecommerce/Admin/Product/Index',
             [
                 'routes' => [
-                    'products' => route('ecommerce.admin.products.index'),
+                    'index' => route('ecommerce.admin.products.index'),
                     'create' => route('ecommerce.admin.products.create'),
-                    'categories' => route('ecommerce.admin.categories.index'),
-                    'currencies' => route('api.transaction.payments.currencies')
                 ],
+                'api' => RouteService::admin(), // api routes
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
         );
@@ -89,16 +81,12 @@ final class ProductController extends WebController
             'Core/Ecommerce/Admin/Product/Create',
             [
                 'routes' => [
-                    'products' => route('ecommerce.admin.products.index'),
-                    'create' => route('ecommerce.admin.products.create'),
-                    'store' => route('ecommerce.admin.products.store'),
-                    'categories' => route('ecommerce.admin.categories.index'),
-                    'currencies' => route('api.transaction.payments.currencies')
+                    'index' => route('ecommerce.admin.products.index'),
                 ],
+                'admin' => RouteService::admin(),
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
         );
-
     }
 
     /**
@@ -108,70 +96,18 @@ final class ProductController extends WebController
      */
     public function edit(string $id)
     {
-        $model = $this->repository->find($id);
+        $data = $this->transform($this->productService->find($id), ProductTransformer::class);
 
         return Inertia::render(
             'Core/Ecommerce/Admin/Product/Create',
             [
-                'model' => fractal($model, $this->repository->transformer)->toArray()['data'],
+                'data' => $data,
                 'routes' => [
-                    'products' => route('ecommerce.admin.products.index'),
-                    'store' => route('ecommerce.admin.products.store'),
-                    'categories' => route('ecommerce.admin.categories.index'),
-                    'currencies' => route('api.transaction.payments.currencies')
+                    'index' => route('ecommerce.admin.products.index'),
                 ],
+                'admin' => RouteService::admin(),
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
         );
-
-    }
-
-    /**
-     * Create new resource
-     * @param \Illuminate\Http\Request $request
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function store(StoreRequest $request)
-    {
-        $data = [
-            'id' => $request->input('id'),
-            'name' => $request->input('name'),
-            'slug' => normalizeSlug($request->input('name')),
-            'short_description' => Purify::clean($request->input('short_description')),
-            'description' => Purify::config('editor')->clean($request->input('description')),
-            'specification' => Purify::config('editor')->clean($request->input('specification')),
-            'stock' => $request->input('stock'),
-            'images' => $request->file('images'),
-            'category' => $request->input('category'),
-            'published' => $request->input('published'),
-            'featured' => $request->input('featured'),
-            'attributes' => $request->input('attributes') ?? [],
-            'tags' => $request->input('tags') ?? [],
-            'variants' => $request->input('variants', []),
-            'children_id' => $request->input('children_id', [])
-        ];
-
-        if (!empty($request->filled('id')) && $this->repository->find($request->id)) {
-
-            $product = $this->repository->update($request->id, $data);
-            return $this->showOne($product, $this->repository->transformer, 200);
-        }
-
-        $data['slug'] = normalizeSlug($request->input('name'));
-
-        $product = $this->repository->create($data);
-
-        return $this->showOne($product, $this->repository->transformer, 201);
-    }
-
-    /**
-     * Destroy resource
-     * @param string $category_id
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function destroy(string $category_id)
-    {
-        $model = $this->repository->delete($category_id);
-        return $this->showOne($model, $this->repository->transformer);
     }
 }

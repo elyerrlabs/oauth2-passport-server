@@ -20,14 +20,16 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="max-w-7xl mx-auto p-6">
+    <div
+        class="border border-dashed p-1 rounded-2xl text-gray-700 dark:text-gray-400"
+    >
         <!-- Component Description -->
         <div
-            class="mb-6 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 border border-blue-100 dark:border-gray-700 rounded-2xl shadow-sm"
+            class="mb-2 p-2 bg-linear-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 border border-blue-100 dark:border-gray-700 rounded-lg shadow-sm"
         >
-            <div class="flex items-start gap-4">
+            <div class="flex items-start gap-2">
                 <div
-                    class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+                    class="shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
                 >
                     <i
                         class="fas fa-cubes text-blue-600 dark:text-blue-400 text-lg"
@@ -35,12 +37,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
                 <div class="flex-1">
                     <h2
-                        class="text-xl font-bold text-gray-900 dark:text-white mb-2"
+                        class="text-lg font-bold text-gray-900 dark:text-white mb-2"
                     >
                         {{ __("What is a Variant?") }}
                     </h2>
                     <p
-                        class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"
+                        class="text-gray-700 dark:text-gray-300 leading-relaxed text-md mb-2"
                     >
                         {{
                             __(
@@ -49,7 +51,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         }}
                     </p>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
                         <div
                             class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-blue-100 dark:border-blue-900"
                         >
@@ -197,7 +199,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
             <button
                 @click="addVariant"
-                class="flex items-center gap-2 px-5 py-2.5 cursor-pointer bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
+                class="flex items-center gap-2 px-5 py-2.5 cursor-pointer bg-linear-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
             >
                 <i class="fas fa-plus-circle"></i>
                 <span>{{ __("Add Variant") }}</span>
@@ -209,7 +211,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div
                 v-for="(variant, index) in modelValue"
                 :key="index"
-                class="group bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-blue-200 dark:hover:border-blue-600"
+                class="group bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 p-2 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-blue-200 dark:hover:border-blue-600"
             >
                 <!-- Variant Header -->
                 <div
@@ -217,11 +219,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center"
+                            class="w-10 h-10 bg-linear-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center"
                         >
-                            <span class="text-white font-bold">{{
-                                index + 1
-                            }}</span>
+                            <span class="text-white font-bold">
+                                {{ index + 1 }}
+                            </span>
                         </div>
                         <div>
                             <h3
@@ -253,7 +255,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Variant Form -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 items-start">
                     <div>
                         <v-input
                             :label="__('Variant Name')"
@@ -281,7 +283,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <div v-if="variant?.id">
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-2 items-end">
                             <v-input
                                 :label="__('Update Stock')"
                                 v-model="variant.adjustment"
@@ -346,10 +348,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Empty State -->
         <div
             v-if="modelValue.length === 0"
-            class="text-center py-12 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600"
+            class="text-center py-12 bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600"
         >
             <div
-                class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                class="w-16 h-16 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl flex items-center justify-center mx-auto mb-4"
             >
                 <i
                     class="fas fa-cubes text-blue-500 dark:text-blue-400 text-2xl"
@@ -369,7 +371,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </p>
             <button
                 @click="addVariant"
-                class="inline-flex items-center cursor-pointer gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
+                class="inline-flex items-center cursor-pointer gap-2 px-6 py-3 bg-linear-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
             >
                 <i class="fas fa-plus-circle"></i>
                 <span>{{ __("Create First Variant") }}</span>
@@ -479,16 +481,7 @@ export default {
             if (!item.links?.destroy) {
                 this.modelValue.splice(index, 1);
 
-                // Show success notification with SweetAlert2
-                await this.$swal({
-                    title: __("Deleted!"),
-                    text: __("Variant has been deleted successfully."),
-                    icon: "success",
-                    timer: 2000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: "top-end",
-                });
+                $notify.success(__("Variant has been deleted successfully."));
 
                 this.$emit("update:modelValue", this.modelValue);
                 return;
@@ -500,25 +493,16 @@ export default {
                 if (res.status === 200) {
                     this.modelValue.splice(index, 1);
 
-                    await this.$swal({
-                        title: __("Deleted!"),
-                        text: __("Variant has been deleted successfully."),
-                        icon: "success",
-                        timer: 2000,
-                        showConfirmButton: false,
-                        toast: true,
-                        position: "top-end",
-                    });
+                    $notify.success(
+                        __("Variant has been deleted successfully.")
+                    );
                 }
             } catch (e) {
-                await this.$swal({
-                    title: __("Error!"),
-                    text: __(
+                $notify.error(
+                    __(
                         "There was an error deleting the variant. Please try again."
-                    ),
-                    icon: "error",
-                    confirmButtonText: __("OK"),
-                });
+                    )
+                );
             } finally {
                 this.$emit("update:modelValue", this.modelValue);
             }
@@ -527,7 +511,7 @@ export default {
         async getCurrencies() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.routes.currencies
+                    "/api/transaction/payments/currencies"
                 );
                 if (res.status == 200) {
                     this.currencies = res.data.data.map((item) => ({

@@ -82,10 +82,10 @@ class ProductTransformer extends TransformerAbstract
             'variants' => fractal($product->variants, VariantTransformer::class)->toArray()['data'],
             'children' => fractal($product->children, new ProductChildrenTransformer($product))->toArray()['data'] ?? [],
             'links' => [
-                'index' => route('ecommerce.admin.products.index'),
-                'store' => route('ecommerce.admin.products.store'),
-                'edit' => route('ecommerce.admin.products.edit', ['product' => $product->id]),
-                'destroy' => route('ecommerce.admin.products.destroy', ['product' => $product->id]),
+                'index' => route('api.ecommerce.admin.products.index'),
+                'store' => route('api.ecommerce.admin.products.store'),
+                'show' => route('api.ecommerce.admin.products.show', ['product' => $product->id]),
+                'destroy' => route('api.ecommerce.admin.products.destroy', ['product' => $product->id]),
             ]
         ];
     }

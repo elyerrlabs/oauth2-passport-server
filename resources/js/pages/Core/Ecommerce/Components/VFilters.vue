@@ -491,9 +491,7 @@ export default {
 
         async getFilters() {
             try {
-                const res = await this.$server.get(
-                    this.$page.props.api.ecommerce.filters
-                );
+                const res = await this.$server.get("/api/ecommerce/filters");
                 if (res.status == 200) {
                     this.filters = res.data.data;
                 }

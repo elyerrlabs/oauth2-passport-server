@@ -251,7 +251,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Orders List -->
-                    <div class="space-y-3 sm:space-y-4 ">
+                    <div class="space-y-3 sm:space-y-4">
                         <div
                             v-for="order in orders"
                             :key="order.id"
@@ -821,171 +821,149 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-admin-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from "vue";
 import VAdminLayout from "../../Components/VAdminLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
+import { usePage } from "@inertiajs/vue3";
 
-export default {
-    components: {
-        VAdminLayout,
-        VPaginate,
-    },
+const page = usePage();
+const orders = ref([]);
+const loading = ref(false);
+const pages = ref({
+    total_pages: 0,
+});
+const search = ref({
+    page: 1,
+    per_page: 15,
+});
+const expandedOrders = ref({});
 
-    data() {
-        return {
-            orders: [],
-            loading: false,
-            pages: {
-                total_pages: 0,
-            },
-            search: {
-                page: 1,
-                per_page: 15,
-            },
-            expandedOrders: {},
-        };
-    },
+const completedOrdersCount = computed(() => {
+    return orders.value.filter(
+        (order) =>
+            order.transaction.status === "successful" ||
+            order.transaction.status === "completed"
+    ).length;
+});
 
-    computed: {
-        completedOrdersCount() {
-            return this.orders.filter(
-                (order) =>
-                    order.transaction.status === "successful" ||
-                    order.transaction.status === "completed"
-            ).length;
-        },
+const pendingOrdersCount = computed(() => {
+    return orders.value.filter(
+        (order) =>
+            order.transaction.status === "pending" ||
+            order.transaction.status === "processing"
+    ).length;
+});
 
-        pendingOrdersCount() {
-            return this.orders.filter(
-                (order) =>
-                    order.transaction.status === "pending" ||
-                    order.transaction.status === "processing"
-            ).length;
-        },
+const failedOrdersCount = computed(() => {
+    return orders.value.filter(
+        (order) =>
+            order.transaction.status === "failed" ||
+            order.transaction.status === "cancelled"
+    ).length;
+});
 
-        failedOrdersCount() {
-            return this.orders.filter(
-                (order) =>
-                    order.transaction.status === "failed" ||
-                    order.transaction.status === "cancelled"
-            ).length;
-        },
-    },
+onMounted(() => {
+    getCheckouts();
+});
 
-    created() {
-        this.getCheckouts();
-    },
+async function getCheckouts() {
+    loading.value = true;
 
-    methods: {
-        async getCheckouts() {
-            this.loading = true;
+    try {
+        const res = await $server.get(page.props.api.orders, {
+            params: search.value,
+        });
+        if (res.status === 200) {
+            const values = res.data;
 
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.orders,
-                    { params: this.search }
-                );
-                if (res.status === 200) {
-                    const values = res.data;
-
-                    // Manejar la estructura de datos anidada
-                    if (values.data && typeof values.data === "object") {
-                        // Si los datos vienen como objeto con claves numéricas
-                        this.orders = Object.values(values.data);
-                    } else {
-                        this.orders = values.data || [];
-                    }
-
-                    this.pages = values.meta?.pagination || { total_pages: 0 };
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
+            if (values.data && typeof values.data === "object") {
+                orders.value = Object.values(values.data);
+            } else {
+                orders.value = values.data || [];
             }
-        },
 
-        getImageUrl(imagePath) {
-            // Si la URL ya es completa, devolverla tal cual
-            if (imagePath.startsWith("http")) {
-                return imagePath;
-            }
-            // Si es una ruta relativa, construir la URL completa
-            return `${window.location.origin}${imagePath}`;
-        },
+            pages.value = values.meta?.pagination || { total_pages: 0 };
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
+}
 
-        calculateItemTotal(item) {
-            // Calcular el total del item (precio * cantidad)
-            const price = parseFloat(item.price) || 0;
-            const quantity = item.quantity || 0;
-            const total = price * quantity;
+function getImageUrl(imagePath) {
+    if (imagePath.startsWith("http")) {
+        return imagePath;
+    }
+    return `${location.origin}${imagePath}`;
+}
 
-            // Formatear el total similar al formato_price
-            return total.toLocaleString("es-PE", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            });
-        },
+function calculateItemTotal(item) {
+    const price = parseFloat(item.price) || 0;
+    const quantity = item.quantity || 0;
+    const total = price * quantity;
 
-        orderNumberIcon(code) {
-            return code.slice(-1).toUpperCase();
-        },
+    return (total / 100 ).toFixed(2);
+}
 
-        toggleOrder(orderId) {
-            this.expandedOrders = {
-                ...this.expandedOrders,
-                [orderId]: !this.expandedOrders[orderId],
-            };
-        },
+function orderNumberIcon(code) {
+    return code.slice(-1).toUpperCase();
+}
 
-        getStatusBadgeClass(status) {
-            const baseClasses =
-                "px-3 py-1 rounded-full text-xs font-semibold capitalize";
-            const statusClasses = {
-                successful:
-                    "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700",
-                completed:
-                    "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700",
-                pending:
-                    "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700",
-                processing:
-                    "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700",
-                failed: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700",
-                cancelled:
-                    "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700",
-            };
-            return `${baseClasses} ${
-                statusClasses[status] ||
-                "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
-            }`;
-        },
+function toggleOrder(orderId) {
+    expandedOrders.value = {
+        ...expandedOrders.value,
+        [orderId]: !expandedOrders.value[orderId],
+    };
+}
 
-        getStatusTextClass(status) {
-            const baseClasses = "font-semibold capitalize";
-            const statusClasses = {
-                successful: "text-green-600 dark:text-green-400",
-                completed: "text-green-600 dark:text-green-400",
-                pending: "text-yellow-600 dark:text-yellow-400",
-                processing: "text-yellow-600 dark:text-yellow-400",
-                failed: "text-red-600 dark:text-red-400",
-                cancelled: "text-red-600 dark:text-red-400",
-            };
-            return `${baseClasses} ${
-                statusClasses[status] || "text-gray-600 dark:text-gray-400"
-            }`;
-        },
+function getStatusBadgeClass(status) {
+    const baseClasses =
+        "px-3 py-1 rounded-full text-xs font-semibold capitalize";
+    const statusClasses = {
+        successful:
+            "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700",
+        completed:
+            "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700",
+        pending:
+            "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700",
+        processing:
+            "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700",
+        failed: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700",
+        cancelled:
+            "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700",
+    };
+    return `${baseClasses} ${
+        statusClasses[status] ||
+        "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
+    }`;
+}
 
-        copyOrderId(orderCode) {
-            navigator.clipboard.writeText(orderCode);
-            this.$notify.success(__("Order ID copied to clipboard"));
-        },
+function getStatusTextClass(status) {
+    const baseClasses = "font-semibold capitalize";
+    const statusClasses = {
+        successful: "text-green-600 dark:text-green-400",
+        completed: "text-green-600 dark:text-green-400",
+        pending: "text-yellow-600 dark:text-yellow-400",
+        processing: "text-yellow-600 dark:text-yellow-400",
+        failed: "text-red-600 dark:text-red-400",
+        cancelled: "text-red-600 dark:text-red-400",
+    };
+    return `${baseClasses} ${
+        statusClasses[status] || "text-gray-600 dark:text-gray-400"
+    }`;
+}
 
-        copyToClipboard(text, label = "Text") {
-            navigator.clipboard.writeText(text);
-            this.$notify.success(`${label} ${__("copied to clipboard")}`);
-        },
-    },
-};
+function copyOrderId(orderCode) {
+    navigator.clipboard.writeText(orderCode);
+    $notify.success(__("Order ID copied to clipboard"));
+}
+
+function copyToClipboard(text, label = "Text") {
+    navigator.clipboard.writeText(text);
+    $notify.success(`${label} ${__("copied to clipboard")}`);
+}
 </script>

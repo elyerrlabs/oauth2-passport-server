@@ -49,7 +49,7 @@ class VariantTransformer extends TransformerAbstract
             'symbol' => getCurrencySymbol($variant->price->currency),
             'format_price' => $this->formatMoney($variant->price->amount),
             'links' => [
-                'destroy' => route('ecommerce.admin.products.variants.destroy', [
+                'destroy' => route('api.ecommerce.admin.products.variants.destroy', [
                     'product' => $variant->variantable_id,
                     'variant' => $variant->id
                 ])

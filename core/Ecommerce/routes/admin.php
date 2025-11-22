@@ -22,26 +22,18 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Ecommerce\Http\Controllers\Admin\CustomerController;
-use Core\Ecommerce\Http\Controllers\Admin\ProductChildrenController;
+use Core\Ecommerce\Http\Controllers\Admin\CustomerController; 
 use Core\Ecommerce\Http\Controllers\Admin\OrderController;
 use Core\Ecommerce\Http\Controllers\Admin\ProductController;
 use Core\Ecommerce\Http\Controllers\Admin\CategoryController;
-use Core\Ecommerce\Http\Controllers\Admin\DashboardController;
-use Core\Ecommerce\Http\Controllers\Admin\ProductTagController;
-use Core\Ecommerce\Http\Controllers\Admin\ProductAttributeController;
-use Core\Ecommerce\Http\Controllers\Admin\ProductVariantController;
+use Core\Ecommerce\Http\Controllers\Admin\DashboardController; 
 
 Route::middleware(['throttle:ecommerce:admin'])->group(function () {
 
     Route::get("/", [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::resource('categories', CategoryController::class)->except('show', 'update');
-    Route::resource('products', ProductController::class)->except('show', 'update');
-    Route::resource('products.tags', ProductTagController::class)->only('destroy');
-    Route::resource('products.attributes', ProductAttributeController::class)->only('destroy');
-    Route::resource('products.variants', ProductVariantController::class)->only('destroy');
-    Route::resource('products.children', ProductChildrenController::class)->only('destroy');
+    Route::resource('categories', CategoryController::class)->only('index', 'create', 'edit');
+    Route::resource('products', ProductController::class)->only('index', 'create', 'edit');
 
     Route::get('orders', [OrderController::class, 'complete'])->name('orders.complete');
     Route::get('orders/pending', [OrderController::class, 'pending'])->name('orders.pending');

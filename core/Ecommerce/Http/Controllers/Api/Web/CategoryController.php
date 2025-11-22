@@ -26,27 +26,27 @@ namespace Core\Ecommerce\Http\Controllers\Api\Web;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
-use Core\Ecommerce\Repositories\ProductRepository;
-use Core\Ecommerce\Repositories\CategoryRepository;
+use Core\Ecommerce\Services\ProductService;
+use Core\Ecommerce\Services\CategoryService;
 use Core\Ecommerce\Transformer\User\UserProductTransformer;
 use Core\Ecommerce\Transformer\User\UserCategoryTransformer;
 
 final class CategoryController extends ApiController
 {
     /**
-     * @var CategoryRepository
+     * @var CategoryService
      */
-    private $repository;
+    private $categoryService;
 
     /**
-     * Product Repository
+     * Product Service
      */
-    private $productRepository;
+    private $productService;
 
-    public function __construct(CategoryRepository $categoryRepository, ProductRepository $productRepository)
+    public function __construct(CategoryService $categoryService, ProductService $productService)
     {
-        $this->repository = $categoryRepository;
-        $this->productRepository = $productRepository;
+        $this->categoryService = $categoryService;
+        $this->productService = $productService;
     }
 
     /**
@@ -56,7 +56,7 @@ final class CategoryController extends ApiController
      */
     public function index(Request $request)
     {
-        $query = $this->repository->searchForUser($request);
+        $query = $this->categoryService->searchForUser($request);
 
         return $this->showAllByBuilder($query, UserCategoryTransformer::class);
 
@@ -70,7 +70,7 @@ final class CategoryController extends ApiController
      */
     public function show(Request $request, string $category = null)
     {
-        $query = $this->productRepository->searchForUsers(
+        $query = $this->productService->searchForUsers(
             $request,
             $category
         );

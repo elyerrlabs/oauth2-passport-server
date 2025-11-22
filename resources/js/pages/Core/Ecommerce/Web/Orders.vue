@@ -29,7 +29,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Cart Header -->
         <div
             v-if="!loading"
-            class="cart-header bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-6 md:py-8"
+            class="cart-header bg-linear-to-r from-purple-600 to-indigo-700 text-white py-6 md:py-8"
         >
             <div class="container mx-auto px-4 text-center">
                 <div class="flex items-center justify-center mb-3">
@@ -81,7 +81,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </p>
                         <a
                             :href="$page.props.routes.search"
-                            class="inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                            class="inline-flex items-center justify-center bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         >
                             <i class="fas fa-store mr-3"></i>
                             {{ __("Start Shopping") }}
@@ -143,7 +143,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
 
                             <!-- Product Image -->
-                            <div class="flex-shrink-0">
+                            <div class="shrink-0">
                                 <div
                                     class="w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
                                 >
@@ -156,11 +156,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
 
                             <!-- Product Info -->
-                            <div class="flex-grow min-w-0">
+                            <div class="grow min-w-0">
                                 <div
                                     class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2"
                                 >
-                                    <div class="flex-grow">
+                                    <div class="grow">
                                         <h4
                                             class="font-semibold text-gray-900 dark:text-white text-sm md:text-base leading-tight mb-1"
                                         >
@@ -471,7 +471,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 'w-full py-3 rounded-xl font-bold text-base flex items-center justify-center shadow-lg transition-all duration-200',
                                 selected_products.length === 0 || disabled
                                     ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed text-white'
-                                    : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white transform hover:-translate-y-0.5 hover:shadow-xl',
+                                    : 'bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white transform hover:-translate-y-0.5 hover:shadow-xl',
                             ]"
                         >
                             <i class="fas fa-lock mr-3"></i>
@@ -629,7 +629,7 @@ export default {
 
             try {
                 const res = await this.$server.post(
-                    this.$page.props.api.ecommerce.payments,
+                    this.$page.props.api.payments,
                     this.form
                 );
 
@@ -657,7 +657,7 @@ export default {
         async getOrders() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.api.ecommerce.orders,
+                    this.$page.props.api.orders,
                     { params: { per_page: 50 } }
                 );
 

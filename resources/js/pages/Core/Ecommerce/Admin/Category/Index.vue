@@ -40,13 +40,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </p>
                 </div>
                 <div class="w-full md:w-auto">
-                    <a
-                        :href="$page.props.routes.create"
+                    <button
+                        @click="router.visit($page.props.routes.create)"
                         class="inline-flex items-center py-2 px-4 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 cursor-pointer text-white rounded-full font-medium transition-colors duration-200 shadow-lg hover:shadow-xl"
                     >
                         <i class="fas fa-plus mr-2"></i>
                         {{ __("Create Category") }}
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -212,7 +212,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 class="text-xs text-gray-500 dark:text-gray-400"
                             >
-                                {{ formatDate(category.created_at) }}
+                                {{ category.created_at }}
                             </div>
                             <div class="flex items-center space-x-2">
                                 <a
@@ -346,7 +346,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-sm text-gray-500 dark:text-gray-400"
                                 >
-                                    {{ formatDate(category.created_at) }}
+                                    {{ category.created_at }}
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <a
@@ -509,13 +509,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div
                                         class="flex items-center justify-end space-x-2"
                                     >
-                                        <a
-                                            :href="category?.links?.edit"
+                                        <button
+                                            @click="
+                                                router.visit(
+                                                    `${page.props.routes.index}/${category.id}/edit`
+                                                )
+                                            "
                                             class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-sm rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
                                         >
                                             <i class="fas fa-edit mr-2"></i>
                                             {{ __("Edit") }}
-                                        </a>
+                                        </button>
                                         <v-delete
                                             :item="category"
                                             @deleted="getCategories"
@@ -610,83 +614,63 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-admin-layout>
 </template>
 
-<script>
-import VCreate from "./Create.vue";
+<script setup>
 import VDelete from "./Delete.vue";
 import VAdminLayout from "../../Components/VAdminLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
+import { usePage, router } from "@inertiajs/vue3";
+import { ref, onMounted } from "vue";
 
-export default {
-    components: {
-        VCreate,
-        VDelete,
-        VAdminLayout,
-        VPaginate,
-    },
+const page = usePage();
 
-    data() {
-        return {
-            categories: [],
-            loading: false,
-            searchTerm: "",
-            pages: {
-                total_pages: 0,
-                total: 0,
-            },
-            search: {
-                page: 1,
-                per_page: 15,
-            },
-            columns: [
-                "Name",
-                "Children",
-                "Products",
-                "Status",
-                "Featured",
-                "Actions",
-            ],
-        };
-    },
+const categories = ref([]);
+const loading = ref(false);
+const searchTerm = ref("");
+const pages = ref({
+    total_pages: 0,
+});
+const search = ref({
+    page: 1,
+    per_page: 15,
+});
 
-    created() {
-        this.getCategories();
-    },
+const columns = ref([
+    "Name",
+    "Children",
+    "Products",
+    "Status",
+    "Featured",
+    "Actions",
+]);
 
-    methods: {
-        formatDate(dateString) {
-            if (!dateString) return "-";
-            return new Date(dateString).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-            });
-        },
+onMounted(async () => {
+    await getCategories();
+});
 
-        handleSearch() {
-            this.search.name = this.searchTerm;
-            this.getCategories();
-        },
+const handleSearch = () => {
+    search.value.name = searchTerm.value;
+    getCategories();
+};
 
-        async getCategories() {
-            this.loading = true;
-            try {
-                const res = await $server.get(this.$page.props.routes.index, {
-                    params: this.search,
-                });
+const getCategories = async () => {
+    loading.value = true;
 
-                if (res.status == 200) {
-                    const values = res.data;
-                    this.categories = values.data;
-                    this.pages = values.meta.pagination;
-                }
-            } catch (error) {
-                if (error?.response?.data?.message) {
-                    $notify.error(error.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
+    try {
+        const res = await $server.get(page.props.api.categories, {
+            params: search.value,
+        });
+
+        if (res.status == 200) {
+            const values = res.data;
+            categories.value = values.data;
+            pages.value = values.meta.pagination;
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>

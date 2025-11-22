@@ -247,135 +247,116 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-admin-layout>
 </template>
 
-<script>
+<script setup>
 import VAdminLayout from "../../Components/VAdminLayout.vue";
 import VEditor from "@/components/VEditor.vue";
 import VFileUploader from "../../Components/VFileUploader.vue";
 import VInput from "@/components/VInput.vue";
 import VSwitch from "@/components/VSwitch.vue";
 import VFileViewer from "../../Components/VFileViewer.vue";
-import VError from "@/components/VError.vue";
 import VSelect from "@/components/VSelect.vue";
+import { router, usePage } from "@inertiajs/vue3";
+import { ref, onMounted } from "vue";
 
-export default {
-    components: {
-        VAdminLayout,
-        VEditor,
-        VFileUploader,
-        VInput,
-        VSwitch,
-        VFileViewer,
-        VError,
-        VSelect,
-    },
+const page = usePage();
 
-    data() {
-        return {
-            form: {
-                id: "",
-                name: "",
-                icon: "",
-                description: "",
-                published: false,
-                featured: false,
-                images: [],
-                parent_id: "",
+const form = ref({
+    id: "",
+    name: "",
+    icon: "",
+    description: "",
+    published: false,
+    featured: false,
+    images: [],
+    parent_id: "",
+});
+
+const errors = ref({});
+const current_images = ref([]);
+const disabled = ref(false);
+const categories = ref([]);
+const category_name = ref("");
+
+onMounted(async () => {
+    await getCategories();
+    loadData(page.props.data);
+});
+
+const loadData = (model) => {
+    if (model?.id) {
+        form.value = { ...model, images: [] };
+        current_images.value = model.images;
+        form.value.icon = model.icon.icon;
+        form.value.parent_id = model.parent?.id;
+    }
+};
+
+// Create or update category
+const create = async () => {
+    disabled.value = true;
+
+    const payload = new FormData();
+    payload.append("id", form.value.id);
+    payload.append("name", form.value.name);
+    payload.append("description", form.value.description);
+    payload.append("icon", form.value.icon);
+    payload.append("featured", form.value.featured ? 1 : 0);
+    payload.append("published", form.value.published ? 1 : 0);
+    payload.append("parent_id", form.value.parent_id);
+
+    if (form.value?.images?.length > 0) {
+        form.value.images.forEach((file) => {
+            payload.append("images[]", file);
+        });
+    }
+
+    try {
+        const res = await $server.post(page.props.api.categories, payload, {
+            headers: {
+                "Content-Type": "multipart/form-data",
             },
-            errors: {},
-            current_images: [],
-            disabled: false,
-            categories: [],
-            category_name: "",
-        };
-    },
+        });
 
-    created() {
-        this.getCategories();
-        this.loadData(this.$page.props.model);
-    },
+        if (res.status == 201) {
+            router.visit(`${page.props.routes.index}/${res.data.id}/edit`);
+        }
 
-    methods: {
-        loadData(model) {
-            if (model?.id) {
-                this.form = { ...model, images: [] };
-                this.current_images = model.images;
-                this.form.icon = model.icon.icon;
-                this.form.parent_id = model.parent?.id;
-            }
-        },
+        if (res.status === 200) {
+            $notify.success(__("Category updated successfully"));
 
-        async create() {
-            this.disabled = true;
-            const payload = new FormData();
+            loadData(res.data.data);
+        }
+    } catch (e) {
+        if (e?.response?.status == 422) {
+            errors.value = e.response.data.errors;
+        }
 
-            payload.append("id", this.form.id);
-            payload.append("name", this.form.name);
-            payload.append("description", this.form.description);
-            payload.append("icon", this.form.icon);
-            payload.append("featured", this.form.featured ? 1 : 0);
-            payload.append("published", this.form.published ? 1 : 0);
-            payload.append("parent_id", this.form.parent_id);
+        if (e?.response?.data?.message) {
+            $notify.error(__(e.response.data.message));
+        }
+    } finally {
+        disabled.value = false;
+    }
+};
 
-            if (this.form?.images?.length > 0) {
-                this.form.images.forEach((file) => {
-                    payload.append("images[]", file);
-                });
-            }
+const getCategories = async () => {
+    try {
+        const res = await $server.get(page.props.api.categories, {
+            params: {
+                name: category_name.value,
+                except_id: page.props?.data?.id ?? "",
+                per_page: 30,
+            },
+        });
 
-            try {
-                const res = await this.$server.post(
-                    this.$page.props.routes.store,
-                    payload,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                    }
-                );
-
-                if (res.status == 201) {
-                    window.location.href = res.data.data.links.edit;
-                }
-
-                if (res.status === 200) {
-                    $notify.success(__("Category updated successfully"));
-
-                    this.loadData(res.data.data);
-                }
-            } catch (e) {
-                if (e?.response?.status == 422) {
-                    this.errors = e.response.data.errors;
-                }
-
-                if (e?.response?.data?.message) {
-                    $notify.error(__(e.response.data.message));
-                }
-            } finally {
-                this.disabled = false;
-            }
-        },
-
-        async getCategories() {
-            const except_id = await this.$page.props.model?.id;
-            try {
-                const res = await $server.get(this.$page.props.routes.index, {
-                    params: {
-                        name: this.category_name,
-                        except_id: except_id,
-                        per_page: 30,
-                    },
-                });
-
-                if (res.status == 200) {
-                    this.categories = res.data.data;
-                }
-            } catch (error) {
-                if (e?.response?.data?.message) {
-                    $notify(e.response.data.message);
-                }
-            }
-        },
-    },
+        if (res.status == 200) {
+            categories.value = res.data.data;
+        }
+    } catch (error) {
+        if (e?.response?.data?.message) {
+            $notify(e.response.data.message);
+        }
+    }
 };
 </script>
 

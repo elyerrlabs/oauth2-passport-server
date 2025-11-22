@@ -21,7 +21,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div
-        class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
+        class="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
     >
         <v-header />
 
@@ -95,7 +95,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </p>
                 <a
                     :href="$page.props.routes.search"
-                    class="inline-flex items-center px-5 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                    class="inline-flex items-center px-5 py-3 bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
                 >
                     <i class="fas fa-shopping-cart mr-2"></i>
                     {{ __("Start Shopping") }}
@@ -128,7 +128,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="flex items-center space-x-5">
                             <div class="relative">
                                 <div
-                                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-sm"
+                                    class="w-12 h-12 rounded-xl bg-linear-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-sm"
                                 >
                                     {{ orderNumberIcon(order.code) }}
                                 </div>
@@ -437,16 +437,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     ></i>
                                     {{ __("View Receipt") }}
                                 </a>
-                                <button
-                                    v-if="canReorder(order)"
-                                    @click="reorder(order)"
-                                    class="inline-flex items-center px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 shadow-sm"
-                                >
-                                    <i
-                                        class="fas fa-reply mr-2 text-blue-500 dark:text-blue-400"
-                                    ></i>
-                                    {{ __("Reorder") }}
-                                </button>
+
                                 <button
                                     @click="copyOrderId(order.code)"
                                     class="inline-flex items-center px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 shadow-sm"
@@ -528,7 +519,7 @@ export default {
             this.loading = true;
             try {
                 const res = await this.$server.get(
-                    this.$page.props.api.ecommerce.checkouts,
+                    this.$page.props.api.checkouts,
                     {
                         params: this.search,
                     }
@@ -536,8 +527,6 @@ export default {
                 if (res.status === 200) {
                     this.orders = res.data.data;
                     this.pages = res.data.meta.pagination;
-                    this.search.current_page =
-                        res.data.meta.pagination.current_page;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
@@ -604,24 +593,13 @@ export default {
         },
 
         reorder(order) {
-            this.$q.notify({
-                message: `Adding items from order ${order.code} to cart`,
-                color: "positive",
-                icon: "add_shopping_cart",
-                timeout: 2000,
-            });
             // Implementation for reorder functionality
         },
 
         copyOrderId(orderCode) {
             navigator.clipboard.writeText(orderCode);
-            this.$swal.fire({
-                title: "Success",
-                text: "Order ID copied to clipboard",
-                icon: "success",
-                timer: 1500,
-                showConfirmButton: false,
-            });
+
+            $notify.success(__("Order ID copied to clipboard"));
         },
     },
 };

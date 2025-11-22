@@ -25,25 +25,12 @@ namespace Core\Ecommerce\Http\Controllers\Web;
  */
 
 use Inertia\Inertia;
+use Core\Ecommerce\Services\RouteService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\CheckoutRepository;
 
 class CheckoutController extends WebController
 {
-    /**
-     * Repository
-     * @var
-     */
-    private $repository;
-
-    public function __construct(CheckoutRepository $paymentRepository)
-    {
-        parent::__construct();
-        $this->repository = $paymentRepository;
-
-    }
-
     /**
      * Index
      * @param \Illuminate\Http\Request $request
@@ -57,7 +44,8 @@ class CheckoutController extends WebController
                 'routes' => [
                     'search' => route('ecommerce.search'),
                     'dashboard' => route('ecommerce.dashboard'),
-                ]
+                ],
+                'api' => RouteService::api(),
             ]
         )->rootView('ecommerce');
     }
