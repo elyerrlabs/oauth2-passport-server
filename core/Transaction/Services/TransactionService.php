@@ -400,7 +400,7 @@ class TransactionService
     {
         $query = $this->repository->query();
 
-        $query->where('', auth()->user()->id);
+        $query->where('user_id', auth()->user()->id);
 
         if ($request->filled('code')) {
             $query->where('code', $request->code);

@@ -65,6 +65,13 @@ return [
         ],
 
         "user_routes" => [
+            'transaction' => [
+                'id' => 'transaction',
+                'name' => __('My transactions'),
+                'route' => 'transaction.transactions.index',
+                'icon' => 'mdi-cash-edit',
+                'service' => true,
+            ],
             'my_subscription' => [
                 'id' => 'subscriptions',
                 'name' => __('My subscriptions'),
