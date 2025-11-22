@@ -43,12 +43,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- User Info (Desktop) -->
-            <div class="hidden lg:block text-left">
+            <div class="hidden lg:block lg:mx-2 text-left">
                 <div
                     class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-tight"
                 >
                     <template v-if="user?.id">
-                        {{ user.name }} {{ user.last_name }}
+                        {{ user.name }}
                     </template>
                     <template v-else>
                         {{ __("Guest") }}

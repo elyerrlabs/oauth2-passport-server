@@ -24,10 +24,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Theme Toggle Button -->
         <button
             @click="toggleDropdown"
-            class="flex items-center justify-center w-8 h-8 cursor-pointer rounded-xl bg-white dark:bg-gray-800 shadow-sm hover:shadow-md hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 group"
+            class="flex items-center justify-center w-8 h-8 cursor-pointer rounded-full bg-white dark:bg-gray-800 shadow-sm hover:shadow-md hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 group"
         >
             <!-- Animated Icon -->
-            <div class="relative w-5 h-5">
+            <div class="relative w-8 h-8">
                 <!-- Sun (Light) -->
                 <i
                     class="mdi mdi-white-balance-sunny text-2xl text-yellow-500 absolute inset-0 transition-all duration-300 transform"
