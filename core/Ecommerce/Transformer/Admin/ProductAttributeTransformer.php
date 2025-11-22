@@ -72,7 +72,7 @@ class ProductAttributeTransformer extends TransformerAbstract
             'stock' => $attribute->pivot->stock,
             //'unit_id'
             'links' => [
-                'destroy' => route('ecommerce.admin.products.attributes.destroy', [
+                'destroy' => route('api.ecommerce.admin.products.attributes.destroy', [
                     'product' => $this->product->id,
                     'attribute' => $attribute->id
                 ])

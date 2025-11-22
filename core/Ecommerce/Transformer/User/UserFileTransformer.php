@@ -25,7 +25,6 @@ namespace Core\Ecommerce\Transformer\User;
  */
 
 use Illuminate\Support\Facades\Storage;
-use Core\Ecommerce\Model\File;
 use League\Fractal\TransformerAbstract;
 
 class UserFileTransformer extends TransformerAbstract

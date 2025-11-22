@@ -1,7 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Http\Controllers\Admin;
-
+namespace Core\Ecommerce\Http\Controllers\Api\Admin;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,27 +23,27 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\ApiController;
 use Core\Ecommerce\Repositories\ProductRepository;
-use Core\Ecommerce\Transformer\Admin\ProductTransformer;
+use Core\Ecommerce\Services\ProductService;
 
-class ProductChildrenController extends WebController
+class ProductChildrenController extends ApiController
 {
     /**
      * ProductRepository
-     * @var ProductRepository
+     * @var ProductService
      */
-    private $repository;
+    private $productService;
 
     /**
      * Summary of __construct
      * @param  ProductRepository $productRepository
      */
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductService $productService)
     {
         parent::__construct();
-        $this->repository = $productRepository;
-        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
+        $this->productService = $productService;
+        $this->middleware('scope:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
     }
 
     /**
@@ -55,7 +54,7 @@ class ProductChildrenController extends WebController
      */
     public function destroy(string $product_id, string $children_id)
     {
-        $this->repository->deleteProductRelated($product_id, $children_id);
+        $this->productService->deleteProductRelated($product_id, $children_id);
         return $this->message(__('Child deleted successfully'));
     }
 }

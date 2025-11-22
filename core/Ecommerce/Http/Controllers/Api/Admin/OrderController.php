@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Http\Controllers\Admin;
+namespace Core\Ecommerce\Http\Controllers\Api\Admin;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,18 +24,26 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Ecommerce\Services\RouteService;
+use Core\Ecommerce\Services\CheckoutService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\ApiController;
+use Core\Ecommerce\Transformer\Admin\CheckoutTransformer;
 
-class OrderController extends WebController
+class OrderController extends ApiController
 {
+    /**
+     * Checkout Service
+     * @var CheckoutService
+     */
+    private $checkoutService;
 
-    public function __construct()
+
+    public function __construct(CheckoutService $checkoutService)
     {
         parent::__construct();
-        $this->middleware("userCanAny:administrator:ecommerce:full,administrator:ecommerce:view");
+        $this->middleware("scope:administrator:ecommerce:full,administrator:ecommerce:view");
+        $this->checkoutService = $checkoutService;
     }
 
     /**
@@ -44,10 +52,9 @@ class OrderController extends WebController
      */
     public function complete(Request $request)
     {
-        return Inertia::render('Core/Ecommerce/Admin/Order/Complete', [
-            'api' => RouteService::admin(),
-            'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
-        ]);
+        $query = $this->checkoutService->search($request);
+
+        return $this->showAllByBuilder($query, CheckoutTransformer::class);
     }
 
 
@@ -57,9 +64,8 @@ class OrderController extends WebController
      */
     public function pending(Request $request)
     {
-        return Inertia::render('Core/Ecommerce/Admin/Order/Pending', [
-            'api' => RouteService::admin(),
-            'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
-        ]);
+        $query = $this->checkoutService->search($request);
+
+        return $this->showAllByBuilder($query, CheckoutTransformer::class);
     }
 }

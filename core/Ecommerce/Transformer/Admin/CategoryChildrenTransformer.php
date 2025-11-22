@@ -68,11 +68,10 @@ class CategoryChildrenTransformer extends TransformerAbstract
             'images' => fractal($category->files, FileTransformer::class)->toArray()['data'] ?? [],
             'children' => fractal($category->children, CategoryChildrenTransformer::class)->toArray()['data'] ?? [],
             'links' => [
-                'index' => route('ecommerce.admin.categories.index'),
-                'create' => route('ecommerce.admin.categories.store'),
-                'store' => route('ecommerce.admin.categories.store'),
-                'edit' => route('ecommerce.admin.categories.edit', ['category' => $category->id]),
-                'destroy' => route('ecommerce.admin.categories.destroy', ['category' => $category->id]),
+                'index' => route('api.ecommerce.admin.categories.index'), 
+                'store' => route('api.ecommerce.admin.categories.store'),
+                'show' => route('api.ecommerce.admin.categories.show', ['category' => $category->id]),
+                'destroy' => route('api.ecommerce.admin.categories.destroy', ['category' => $category->id]),
             ]
         ];
     }

@@ -81,15 +81,17 @@ class UserProductTransformer extends TransformerAbstract
             'specification' => $product->specification,
             'children' => fractal($product->children, UserProductChildrenTransformer::class)->toArray()['data'] ?? [],
             'links' => [
-                'show' => route('ecommerce.products.show', [
-                    'category' => $product->category->slug,
-                    'product' => $product->slug
-                ]),
-                'show_api' => route('api.ecommerce.products.show', [
+                'show' => route('api.ecommerce.web.products.show', [
                     'category' => $product->category->slug,
                     'product' => $product->slug
                 ]),
             ],
+            'web' => [
+                'show' => route('ecommerce.products.show', [
+                    'category' => $product->category->slug,
+                    'product' => $product->slug
+                ]),
+            ]
         ];
     }
 

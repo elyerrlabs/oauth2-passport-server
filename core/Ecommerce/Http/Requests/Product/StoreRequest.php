@@ -93,8 +93,6 @@ class StoreRequest extends FormRequest
             'attributes.*.value' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
             'attributes.*.widget' => ['required', new UndefinedValues(), 'max:100', 'min:1'],
             'attributes.*.multiple' => ['required', new UndefinedValues(), new BooleanRule()],
-            'tags' => ['nullable', 'array'],
-            'tags.*.name' => ['max:100', 'min:1'],
             'variants' => ['array', 'required'],
             'variants.*.name' => ['string', 'required', 'max:150'],
             'variants.*.stock' => ['required', 'integer', 'min:0'],

@@ -23,17 +23,16 @@ namespace Core\Ecommerce\Repositories;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
 use Core\Ecommerce\Transformer\Admin\VariantTransformer;
 use Core\Ecommerce\Model\Variant;
-use Core\Ecommerce\Model\Order; 
+use Core\Ecommerce\Model\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Repositories\Contracts\Contracts;
 use Core\Ecommerce\Repositories\ProductRepository;
 
-class OrderRepository implements Contracts
+class OrderRepository
 {
     /**
      * Model
@@ -55,29 +54,12 @@ class OrderRepository implements Contracts
     }
 
     /**
-     * Search resource
-     * @param \Illuminate\Http\Request $request
+     * Create query
      * @return \Illuminate\Database\Eloquent\Builder<Order>
      */
-    public function search(Request $request)
+    public function query()
     {
         $query = $this->model->query();
-
-        return $query;
-    }
-
-    /**
-     * Search unpaid orders for user
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Database\Eloquent\Builder<Order>
-     */
-    public function searchForUser(Request $request)
-    {
-        $query = $this->model->query();
-
-        $query->where('user_id', auth()->user()->id);
-
-        $query->whereNull('checkout_id');
 
         $query->with([
             'user',
@@ -86,80 +68,40 @@ class OrderRepository implements Contracts
             'orderable.price'
         ]);
 
-        if ($request->filled('quantity')) {
-            $query->where('quantity', $request->quantity);
-        }
-
         return $query;
     }
 
 
     /**
-     * Create new Order
+     * Create order
      * @param array $data
      * @return Order|TModel|\Illuminate\Database\Eloquent\Model
      */
     public function create(array $data)
     {
-        $order = DB::transaction(function () use ($data) {
-
-            $variant = Variant::find($data['variant_id']);
-
-            $data['meta'] = $variant->variantable->toArray();
-            $data['meta']['category'] = $variant->variantable->category->toArray();
-            $data['meta']['variant'] = fractal($variant, VariantTransformer::class)->toArray()['data'];
-
-            unset($data['meta']['variant']['links']);
-
-            return $variant->orders()->create($data);
-        });
-
-        return $order;
+        return $this->model->create($data);
     }
 
     /**
-     * Search order
+     * Find Order
      * @param string $id
-     * @return Order|Order[]|TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>|\Illuminate\Database\Eloquent\Model|null
+     * @return object|\Illuminate\Database\Eloquent\Builder<Order>|\Illuminate\Database\Eloquent\Model|null
      */
     public function find(string $id)
     {
-        try {
-            return $this->model->find($id);
-        } catch (\Throwable $th) {
-            Log::error($th->getMessage(), [
-                'code' => $th->getCode(),
-                'trace' => $th->getTrace()
-            ]);
-        }
-
-        return null;
+        return $this->query()->where('id', $id)->first();
     }
 
     /**
-     * Summary of update
+     * Update order
      * @param string $id
      * @param array $data
-     * @return bool
+     * @return object|\Illuminate\Database\Eloquent\Builder<Order>|\Illuminate\Database\Eloquent\Model|null
      */
     public function update(string $id, array $data)
     {
-        return $this->model->where('id', $id)->update($data);
-    }
-
-    /**
-     * Delete order
-     * @param string $id
-     * @return Order|Order[]|TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>|\Illuminate\Database\Eloquent\Model|null
-     */
-    public function delete(string $id)
-    {
         $order = $this->find($id);
-
-        if (!empty($order) && empty($order->transaction_id)) {
-            $order->delete();
-        }
-
+        $order->update($data);
         return $order;
     }
 }

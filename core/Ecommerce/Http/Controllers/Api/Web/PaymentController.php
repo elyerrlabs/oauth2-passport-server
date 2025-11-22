@@ -24,22 +24,22 @@ namespace Core\Ecommerce\Http\Controllers\Api\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Http\Controllers\ApiController;
-use Core\Ecommerce\Repositories\CheckoutRepository;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
+use Core\Ecommerce\Services\CheckoutService;
 
 class PaymentController extends ApiController
 {
     /**
      * Repository
-     * @var 
+     * @var CheckoutService
      */
-    private $repository;
+    private $checkoutService;
 
-    public function __construct(CheckoutRepository $paymentRepository)
+    public function __construct(CheckoutService $checkoutService)
     {
         parent::__construct();
-        $this->repository = $paymentRepository;
+        $this->checkoutService = $checkoutService;
 
     }
 
@@ -65,7 +65,7 @@ class PaymentController extends ApiController
             'orders.*.variant_id' => ['exists:variants,id'],
             'orders.*.quantity' => ['required', 'integer', 'min:1'],
         ]);
-        
-        return $this->repository->create($request->toArray());
+
+        return $this->checkoutService->create($request->toArray());
     }
 }

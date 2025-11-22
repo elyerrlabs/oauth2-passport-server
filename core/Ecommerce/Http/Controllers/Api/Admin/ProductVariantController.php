@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Http\Controllers\Admin;
+namespace Core\Ecommerce\Http\Controllers\Api\Admin;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,23 +24,23 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\ProductRepository;
+use App\Http\Controllers\ApiController;
+use Core\Ecommerce\Services\ProductService;
 
-final class ProductVariantController extends WebController
+final class ProductVariantController extends ApiController
 {
 
     /**
      *  repository
-     * @var ProductRepository
+     * @var ProductService
      */
-    private $repository;
+    private $productService;
 
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductService $productService)
     {
         parent::__construct();
-        $this->repository = $productRepository;
-        $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
+        $this->productService = $productService;
+        $this->middleware('scope:administrator:ecommerce:full, administrator:ecommerce:delete')->only('destroy');
     }
 
     /**
@@ -51,7 +51,7 @@ final class ProductVariantController extends WebController
      */
     public function destroy(string $product_id, string $variant_id)
     {
-        $this->repository->deleteVariant($product_id, $variant_id);
+        $this->productService->deleteVariant($product_id, $variant_id);
 
         return $this->message(__('Variant removed successfully'), 200);
     }

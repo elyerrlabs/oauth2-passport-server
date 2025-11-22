@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ecommerce\Http\Controllers\Admin;
+namespace Core\Ecommerce\Http\Controllers\Api\Admin;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -24,16 +24,27 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Transformer\Admin\UserTransformer;
+use Core\Ecommerce\Services\CheckoutService;
 use Inertia\Inertia;
-use Core\Ecommerce\Services\RouteService;
 use Illuminate\Http\Request;
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\ApiController;
 
-class CustomerController extends WebController
+class CustomerController extends ApiController
 {
-    public function __construct()
+
+    /**
+     * Checkout service
+     * @var CheckoutService
+     */
+    private $checkoutService;
+
+
+    public function __construct(CheckoutService $checkoutService)
     {
-        $this->middleware("userCanAny:administrator:ecommerce:full,administrator:ecommerce:view");
+        parent::__construct();
+        $this->middleware("scope:administrator:ecommerce:full,administrator:ecommerce:view");
+        $this->checkoutService = $checkoutService;
     }
 
     /**
@@ -43,12 +54,8 @@ class CustomerController extends WebController
      */
     public function index(Request $request)
     {
-        return Inertia::render(
-            "Core/Ecommerce/Admin/Order/Customer",
-            [
-                'api' => RouteService::admin(),
-                'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
-            ]
-        );
+        $query = $this->checkoutService->listCustomers($request);
+
+        return $this->showAllByBuilder($query, UserTransformer::class);
     }
 }

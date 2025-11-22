@@ -25,24 +25,12 @@ namespace Core\Ecommerce\Http\Controllers\Web;
  */
 
 use Inertia\Inertia;
+use Core\Ecommerce\Services\RouteService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\Ecommerce\Repositories\OrderRepository;
 
 class OrderController extends WebController
 {
-    /**
-     * Repository
-     * @var
-     */
-    private $repository;
-
-    public function __construct(OrderRepository $orderRepository)
-    {
-        parent::__construct();
-        $this->repository = $orderRepository;
-    }
-
     /**
      * Index
      * @param \Illuminate\Http\Request $request
@@ -56,7 +44,8 @@ class OrderController extends WebController
                 'routes' => [
                     'search' => route('ecommerce.search'),
                     'dashboard' => route('ecommerce.dashboard'),
-                ]
+                ],
+                'api' => RouteService::api(),
             ]
         )->rootView('ecommerce');
     }

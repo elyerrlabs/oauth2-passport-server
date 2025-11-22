@@ -73,7 +73,7 @@ class ProductTagTransformer extends TransformerAbstract
             'name' => $tag->name,
             'slug' => $tag->slug,
             'links' => [
-                'destroy' => route('ecommerce.admin.products.tags.destroy', [
+                'destroy' => route('api.ecommerce.admin.products.tags.destroy', [
                     'product' => $this->product->id,
                     'tag' => $tag->id
                 ])

@@ -25,15 +25,9 @@ namespace Core\Ecommerce\Repositories;
  */
 
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Core\Transaction\Model\User;
-use Core\Ecommerce\Model\Variant;
 use Core\Transaction\Model\Checkout;
-use App\Repositories\Contracts\Contracts;
-use Core\Transaction\Model\DeliveryAddress;
-use Core\Transaction\Services\TransactionService; 
 
-class CheckoutRepository implements Contracts
+class CheckoutRepository
 {
     /**
      * Model
@@ -41,198 +35,66 @@ class CheckoutRepository implements Contracts
      */
     private $model;
 
-    /**
-     * Order repository
-     * @var
-     */
-    private $orderRepository;
-
-
-    /**
-     * Product repository
-     */
-    private $productRepository;
-
-    /**
-     * TransactionService
-     * @var TransactionService
-     */
-    private $transactionService;
 
     /**
      * Construct
      * @param \Core\Transaction\Model\Checkout $checkout
      */
-    public function __construct(Checkout $checkout, OrderRepository $orderRepository, ProductRepository $productRepository, transactionService $transactionService)
+    public function __construct(Checkout $checkout)
     {
         $this->model = $checkout;
-        $this->orderRepository = $orderRepository;
-        $this->productRepository = $productRepository;
-        $this->transactionService = app(TransactionService::class);
-    }
-    /**
-     * Search resources
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Database\Eloquent\Builder<Checkout>
-     */
-    public function search(Request $request)
-    {
-        $query = $this->model->query();
-
-        $query->orderByDesc('created_at');
-
-        $query->whereHas('orders', function ($query) {
-            $query->where('user_id', auth()->user()->id);
-        });
-
-        return $query;
     }
 
     /**
-     * Searcher for admins
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Database\Eloquent\Builder<Checkout>
+     * Query
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder<Checkout>
      */
-    public function searchForAdmin(Request $request)
+    public function query()
     {
         $query = $this->model->query();
 
         $query->with(['lastTransaction', 'orders', 'orders.orderable']);
 
-        $query->orderByDesc('created_at');
-
-        if ($request->filled('code')) {
-            $query->where('code', $request->code);
-        }
-
-        $query->whereHas('lastTransaction', function ($query) use ($request) {
-            if ($request->filled('transaction_code')) {
-                $query->where('code', $request->transaction_code);
-            }
-
-            $status = $request->filled('status') ? $request->status : config('billing.status.successful.id');
-            $query->where('status', $status);
-        });
-
-        if ($request->filled('user_id')) {
-            $query->whereHas('orders', function ($query) {
-                $query->where('user_id', auth()->user()->id);
-            });
-        }
-
         return $query;
     }
 
     /**
-     * Summary of listCustomers
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Database\Eloquent\Builder<Checkout>
-     */
-    public function listCustomers(Request $request)
-    {
-        $query = User::query();
-
-        $query->with([
-            'checkouts',
-            'checkouts.transactions'
-        ]);
-
-        $query->whereHas(
-            'checkouts.transactions',
-            function ($query) {
-                $query->where('status', 'successful');
-            }
-        );
-
-        if ($request->filled('user_id')) {
-            $query->where('id', $request->user_id);
-        }
-
-        return $query;
-    }
-
-    /**
-     * Create new checkout
+     * Create resource
      * @param array $data
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return Checkout|TModel|\Illuminate\Database\Eloquent\Model
      */
     public function create(array $data)
     {
-        // Join the same products
-        $products = collect($data['orders'])
-            ->groupBy('variant_id')
-            ->map(function ($items) {
-                return [
-                    'variant_id' => $items->first()['variant_id'],
-                    'total_quantity' => $items->sum('quantity'),
-                ];
-            });
-
-        //check total stock
-        foreach ($products as $item) {
-            $this->productRepository->verifyStock($item['variant_id'], $item['total_quantity']);
-        }
-
-        // Set delivery address
-        $delivery = DeliveryAddress::find($data['delivery'])->toArray();
-        unset($delivery['id']);
-        unset($delivery['user_id']);
-        unset($delivery['created_at']);
-        unset($delivery['updated_at']);
-
-        //Generate checkout
-        $checkout = $this->model->create([
-            'delivery_address' => $delivery,
-            'status' => config('billing.status.pending.id'),
-            'code' => $checkout_code = $this->generateCheckoutCode(),
-            'user_id' => auth()->user()->id,
-        ])->toArray();
-
-        // Add checkout id and update stock to the orders
-        foreach ($data['orders'] as $item) {
-            $this->orderRepository->update(
-                $item['id'],
-                [
-                    'quantity' => $item['quantity'],
-                    'checkout_id' => $checkout['id']
-                ]
-            );
-        }
-
-        // Prepare items to pay
-        foreach ($products as $item) {
-            $product = Variant::with(
-                [
-                    'variantable',
-                    'price'
-                ]
-            )->find($item['variant_id'])->toArray();
-
-            $checkout['items'][] = [
-                'price_data' => [
-                    'currency' => strtolower($product['price']['currency']),
-                    'unit_amount' => $product['price']['amount'],
-                    'product_data' => [
-                        'name' => $product['variantable']['name'],
-                    ],
-                ],
-                'quantity' => $item['total_quantity'],
-            ];
-        }
-
-        // Set the checkout order code
-        $checkout['checkout_code'] = $checkout_code;
-        $checkout['billing_period'] = config('billing.period.one_time.id');
-        $checkout['payment_method'] = $data['payment_method'];
-        $checkout['user_id'] = auth()->user()->id;
-
-        unset($checkout['code']);
-
-        return $this->transactionService->buy($checkout);
+        return $this->model->create($data);
     }
 
     /**
-     * Generate a checkout unique order code
+     * Find by id
+     * @param mixed $id
+     * @return object|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|null
+     */
+    public function find($id)
+    {
+        return $this->query()->where('id', $id)->first();
+    }
+
+    /**
+     * Update resource
+     * @param string $id
+     * @param array $data
+     * @return object|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|null
+     */
+    public function update(string $id, array $data)
+    {
+        $checkout = $this->find($id);
+
+        $checkout->update($data);
+
+        return $checkout;
+    }
+
+    /**
+     * Generate unique checkout code
      * @return string
      */
     public function generateCheckoutCode()
@@ -240,36 +102,5 @@ class CheckoutRepository implements Contracts
         $micro = explode(' ', microtime());
         $timestamp = date('YmdHis', (int) $micro[1]) . substr($micro[0], 2, 3);
         return 'CHK-' . $timestamp . '-' . strtoupper(Str::random(4));
-    }
-
-    /**
-     * Search specific resource
-     * @param string $id
-     * @return void
-     */
-    public function find(string $id)
-    {
-
-    }
-
-    /**
-     * Update specific resource
-     * @param string $id
-     * @param array $data
-     * @return void
-     */
-    public function update(string $id, array $data)
-    {
-
-    }
-
-    /**
-     * Delete specific resource
-     * @param string $id
-     * @return void
-     */
-    public function delete(string $id)
-    {
-
     }
 }

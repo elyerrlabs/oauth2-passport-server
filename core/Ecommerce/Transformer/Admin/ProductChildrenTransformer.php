@@ -88,7 +88,7 @@ class ProductChildrenTransformer extends TransformerAbstract
             'attributes' => fractal($product->attributes, new ProductAttributeTransformer($product))->toArray()['data'] ?? [],
             'variants' => fractal($product->variants, VariantTransformer::class)->toArray()['data'] ?? [],
             'links' => [
-                'delete' => route('ecommerce.admin.products.children.destroy', [
+                'delete' => route('api.ecommerce.admin.products.children.destroy', [
                     'product' => $this->parent->id,
                     'child' => $product->id,
                 ])

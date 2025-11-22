@@ -24,7 +24,7 @@ namespace Core\Ecommerce\Repositories;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
+
 use Illuminate\Support\Facades\Storage;
 use Core\Ecommerce\Model\Variant;
 use Core\Ecommerce\Transformer\Admin\TotalTransformer;
