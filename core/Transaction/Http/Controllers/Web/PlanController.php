@@ -61,7 +61,7 @@ class PlanController extends WebController
         $data = $this->planService->searchPlanForGuest($request)->paginate($per_page);
 
         return Inertia::render('Core/Transaction/Web/Plan', [
-            'data' => fractal($data, UserPlanTransformer::class)->toArray() ?? [],
+            'data' => $this->transformCollection($data, UserPlanTransformer::class),
             'routes' => [
                 'plans' => route('transaction.plans.index'),
                 'billing_period' => route('api.transaction.payments.billing-period'),

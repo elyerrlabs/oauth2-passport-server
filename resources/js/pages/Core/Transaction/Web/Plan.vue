@@ -43,42 +43,28 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div
                     class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4"
                 >
-                    <div class="flex flex-col sm:flex-row gap-2 items-center">
+                    <div
+                        class="grid grid-1 sm:grid-cols-2 lg:grid-cols-4 gap-2"
+                    >
                         <!-- Buscar -->
-                        <div class="flex-1 min-w-0">
-                            <div class="relative">
-                                <i
-                                    class="mdi mdi-magnify absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-slate-500 text-sm"
-                                ></i>
-                                <input
-                                    v-model="search.name"
-                                    type="text"
-                                    :placeholder="__('Search plans...')"
-                                    class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 cursor-text text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
-                                    @input="debouncedSearch"
-                                />
-                            </div>
-                        </div>
+                        <v-input
+                            v-model="search.name"
+                            :placeholder="__('Search plans...')"
+                            @input="debouncedSearch"
+                        />
 
-                        <!-- Filtro Periodo -->
-                        <div class="w-full sm:w-48">
-                            <select
-                                v-model="search.period"
-                                @change="getPlans"
-                                class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 cursor-pointer text-slate-900 dark:text-slate-100"
-                            >
-                                <option value="">
-                                    {{ __("All Billing Periods") }}
-                                </option>
-                                <option
-                                    v-for="period in availablePeriods"
-                                    :key="period"
-                                    :value="period"
-                                >
-                                    {{ formatPeriodName(period) }}
-                                </option>
-                            </select>
-                        </div>
+                        <v-select
+                            v-model="search.service"
+                            :options="services"
+                            value-key="name"
+                            @change="debouncedSearch"
+                        />
+
+                        <v-select
+                            v-model="search.period"
+                            :options="periods"
+                            @change="debouncedSearch"
+                        />
 
                         <!-- Reset -->
                         <button
@@ -303,10 +289,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Modal Detalles del Plan -->
-            <v-modal
-                v-model="showPlanDetails"
-                panel-class="w-full lg:w-7xl"
-            >
+            <v-modal v-model="showPlanDetails" panel-class="w-full lg:w-7xl">
                 <template #body>
                     <!-- Header -->
                     <div
@@ -621,9 +604,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 import VGuestLayout from "@/layouts/VGuestLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VSubscription from "@/components/VSubscription.vue";
+import VSelect from "@/components/VSelect.vue";
+import VInput from "@/components/VInput.vue";
 import VModal from "@/components/VModal.vue";
 import { ref, onMounted, computed } from "vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 
 const props = defineProps({
     data: {
@@ -635,6 +620,7 @@ const props = defineProps({
     },
 });
 
+const page = usePage();
 const plans = ref([]);
 const selected_plan = ref(null);
 const selected_plan_details = ref(null);
@@ -643,12 +629,15 @@ const selectedPlans = ref({}); // Track selected prices for each plan
 const showPlanDetails = ref(false);
 const showSubscription = ref(false);
 const loading = ref(false);
+const periods = ref([]);
+const services = ref([]);
 
 const search = useForm({
     page: 1,
     per_page: 9,
     name: "",
     period: "",
+    service: "",
 });
 
 const pages = ref({ total_pages: 0 });
@@ -665,10 +654,13 @@ const availablePeriods = computed(() => {
     return Array.from(periods);
 });
 
-onMounted(() => {
+onMounted(async () => {
     const values = props.data;
     plans.value = values.data;
     pages.value = values.meta.pagination;
+
+    await getPeriods();
+    await getServices();
 });
 
 // Methods
@@ -692,6 +684,28 @@ const formatDate = (date) => {
         month: "short",
         day: "numeric",
     });
+};
+
+const getPeriods = async () => {
+    try {
+        const res = await $server.get(
+            page.props.api.transactions.billing_period
+        );
+        if (res.status == 200) {
+            periods.value = res.data.data;
+        }
+    } catch (e) {}
+};
+
+const getServices = async () => {
+    try {
+        const res = await $server.get(
+            page.props.api.transactions.services_list
+        );
+        if (res.status == 200) {
+            services.value = res.data.data;
+        }
+    } catch (e) {}
 };
 
 const getUniqueServices = (scopes) => {
@@ -768,7 +782,7 @@ const getPlans = () => {
         preserveScroll: true,
         preserveState: true,
         onSuccess: (page) => {
-            const values = page.data;
+            const values = page.props.data;
             plans.value = values.data;
             pages.value = values.meta.pagination;
         },
@@ -796,6 +810,7 @@ const resetFilters = () => {
     search.name = "";
     search.period = "";
     search.page = 1;
+    search.service = "";
     getPlans();
 };
 </script>

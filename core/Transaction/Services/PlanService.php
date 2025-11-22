@@ -89,7 +89,7 @@ class PlanService
         $query = $this->planRepository->query();
 
         if ($request->filled('name')) {
-            $query->whereRaw("LOWER(name)", ["%" . strtolower($request->name) . "%"]);
+            $query->whereRaw("LOWER(name) LIKE ?", ["%" . strtolower($request->name) . "%"]);
         }
 
         // Search by billing period
