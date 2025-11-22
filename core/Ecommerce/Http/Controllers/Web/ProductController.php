@@ -31,6 +31,13 @@ use App\Http\Controllers\WebController;
 
 class ProductController extends WebController
 {
+    /**
+     * Construct
+     */
+    public function __construct()
+    {
+        // public controller - disabled authentication
+    }
 
     /**
      * dashboard
