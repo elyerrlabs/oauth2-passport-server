@@ -100,7 +100,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </span>
                     </template>
                     <template #option="{ option }">
-                        <span class="text-gray-700 p-2 dark:text-gray-200 block">
+                        <span
+                            class="text-gray-700 p-2 dark:text-gray-200 block"
+                        >
                             {{ option.emoji }} - {{ option.name_en }}
                         </span>
                     </template>
@@ -172,7 +174,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         format="yyyy-MM-dd"
                         model-type="format"
                         :placeholder="__('Select birthday')"
-                        :dark="isDarkMode"
+                        :dark="is_dark"
                         auto-apply
                         class="w-full"
                     />
@@ -220,13 +222,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
 import VModal from "@/components/VModal.vue";
 import VSelect from "@/components/VSelect.vue";
 import VInput from "@/components/VInput.vue";
 import VSwitch from "@/components/VSwitch.vue";
 import VError from "@/components/VError.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
+
+const is_dark = ref(false);
 
 // Emits
 const emits = defineEmits(["created", "updated"]);
@@ -255,10 +259,14 @@ const form = useForm({
 const countries = ref([]);
 const dial_codes = ref([]);
 
-// Computed
-const isDarkMode = computed(() => {
-    return document.documentElement.classList.contains("dark");
+onMounted(() => {
+    isDark();
+    window.addEventListener("theme-change", isDark);
 });
+
+const isDark = () => {
+    is_dark.value = localStorage.getItem("theme") == "light" ? false : true;
+};
 
 // Methods
 const close = () => {
