@@ -61,6 +61,8 @@ class UserDisableNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__("Account Disabled"))
             ->line(__("Dear user, your account has been suspended, and all associated credentials have been revoked."))

@@ -60,6 +60,8 @@ class MemberReactivateAccount extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__('Welcome Back! Your Account Has Been Reactivated'))
             ->greeting(__('Dear :name ,', ['name' => $notifiable->name]))

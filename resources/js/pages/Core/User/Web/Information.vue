@@ -231,7 +231,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             __('Select your birthday')
                                         "
                                         auto-apply
-                                        :dark="true"
+                                        :dark="is_dark"
                                     />
                                     <div
                                         class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none"
@@ -257,6 +257,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 >
                                     {{ form.errors.birthday[0] }}
                                 </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <v-select
+                                    :label="__('Language')"
+                                    v-model="form.lang"
+                                    :options="langs"
+                                    :error="form.errors.lang"
+                                />
                             </div>
                         </div>
 
@@ -321,16 +330,36 @@ const form = useForm({
     dial_code: "",
     phone: "",
     birthday: "",
+    lang: "",
 });
+
+const is_dark = ref(false);
 
 const countries = ref([]);
 const loading = ref(false);
+
+const langs = [
+    {
+        name: __("English"),
+        id: "en",
+    },
+    {
+        name: __("Spanish"),
+        id: "es",
+    },
+];
 
 onMounted(() => {
     Object.assign(form, page.props.user);
 
     getDialCode();
+    isDark();
+    window.addEventListener("theme-change", isDark);
 });
+
+const isDark = () => {
+    is_dark.value = localStorage.getItem("theme") == "light" ? false : true;
+};
 
 //
 const getDialCode = async () => {
@@ -359,6 +388,7 @@ const update = async () => {
         preserveState: true,
         onSuccess: () => {
             $notify.success(__("Information has been updated successfully"));
+            window.location.reload();
         },
         onFinish: () => {
             loading.value = false;

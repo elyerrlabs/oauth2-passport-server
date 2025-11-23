@@ -64,6 +64,8 @@ class RenewSuccessfully extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__('Subscription Renewed Successfully'))
             ->greeting(__('Hello :name', ['name' => $notifiable->name]))

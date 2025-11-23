@@ -211,6 +211,10 @@ if (!function_exists('setLanguage')) {
     {
         $lang = $locale ?? substr(request()->header('Accept-Language'), 0, 2);
 
+        if (auth()->check()) { // Only auth user
+            $lang = auth()->user()->lang;
+        }
+
         $path = base_path('lang') . '/' . $lang . '.json';
 
         if (!file_exists($path)) {

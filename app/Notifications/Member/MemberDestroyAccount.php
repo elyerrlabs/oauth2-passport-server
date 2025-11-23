@@ -61,6 +61,8 @@ class MemberDestroyAccount extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__("Deleted account."))
             ->greeting(__(

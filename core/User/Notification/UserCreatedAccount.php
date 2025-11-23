@@ -68,6 +68,8 @@ class UserCreatedAccount extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__("Welcome to Our Platform"))
             ->line(__("We are excited to inform you that your account has been successfully created. Below are your login details:"))

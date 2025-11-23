@@ -62,6 +62,8 @@ class UserUpdatedEmail extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__('Email Updated Successfully'))
             ->greeting(__('Hello!'))

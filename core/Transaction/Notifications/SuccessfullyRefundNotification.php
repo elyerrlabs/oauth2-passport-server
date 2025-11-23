@@ -63,6 +63,8 @@ class SuccessfullyRefundNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        app()->setLocale($notifiable->lang);
+
         $data = $this->data;
 
         return (new MailMessage)

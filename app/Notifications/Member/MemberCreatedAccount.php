@@ -63,6 +63,8 @@ class MemberCreatedAccount extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->lang);
+
         $link = $this->generateLink($notifiable);
 
         return (new MailMessage)

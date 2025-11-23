@@ -58,6 +58,7 @@ class User extends Auth
         'accept_cookies',
         'accept_terms',
         'last_connected',
+        'lang'
     ];
 
     /**
