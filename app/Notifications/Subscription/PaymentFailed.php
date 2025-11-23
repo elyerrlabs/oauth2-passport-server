@@ -64,6 +64,8 @@ class PaymentFailed extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__('Payment Failed'))
             ->greeting(__('Hello :nam', ['name' => $notifiable->name]))

@@ -58,6 +58,8 @@ class CheckoutNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__('Purchase Confirmation'))
             ->greeting(__('Hello :name', ['name' => $notifiable->name]))

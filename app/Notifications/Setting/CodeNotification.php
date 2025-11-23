@@ -67,6 +67,8 @@ class CodeNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__("Two Factor verification"))
             ->line(__("We have received a login application using the 2FA."))

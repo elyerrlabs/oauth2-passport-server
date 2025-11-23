@@ -71,6 +71,8 @@ class RequestSubscription extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__('Your Subscription Request is Being Processed'))
             ->greeting(__('Dear User,'))
@@ -91,7 +93,7 @@ class RequestSubscription extends Notification implements ShouldQueue
     {
         return [
             'title' => 'Subscription Request Received',
-            'message' => "Your subscription request with transaction code {$this->code} is being processed. You will be notified once it is confirmed.",
+            'message' => __("Your subscription request with transaction code :code is being processed. You will be notified once it is confirmed.", ['code' => $this->code]),
             'transaction_code' => $this->code,
             'url' => $this->url,
         ];

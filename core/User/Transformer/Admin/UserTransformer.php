@@ -73,6 +73,7 @@ class UserTransformer extends TransformerAbstract
             'commission_rate' => $user->partner ? $user->partner->commission_rate : 0,
             'full_phone' => $user->dial_code . " " . $user->phone,
             'm2fa' => $user->m2fa,
+            'lang' => $user->lang,
             'verify_email' => $user->verified_at ? true : false,
             'verified' => $this->format_date($user->verified_at),
             'created' => $this->format_date($user->created_at),

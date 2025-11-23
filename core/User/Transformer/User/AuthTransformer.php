@@ -72,6 +72,7 @@ class AuthTransformer extends TransformerAbstract
             'dial_code' => $user->dial_code,
             'full_phone' => $user->dial_code . " " . $user->phone,
             'm2fa' => $user->m2fa ? true : false,
+            'lang' => $user->lang,
             'groups' => $user->myGroups(),
             'verify_email' => $user->verified_at ? true : false,
             'verified' => $this->format_date($user->verified_at),

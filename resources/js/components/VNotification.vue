@@ -58,7 +58,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             >
                 <!-- Header -->
                 <div
-                    class="px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700"
+                    class="px-4 py-3 bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700"
                 >
                     <div class="flex items-center justify-between">
                         <h3
@@ -80,11 +80,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             v-for="n in unreadNotifications"
                             :key="n.id"
                             @click="markAsRead(n)"
-                            class="flex items-start p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-750 cursor-pointer transition-colors duration-150 group"
+                            class="flex items-start p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-600 cursor-pointer transition-colors duration-150 group"
                         >
-                            <div class="flex-shrink-0 mt-1">
+                            <div class="shrink-0 mt-1">
                                 <div
-                                    class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                                    class="w-10 h-10 bg-linear-to-br from-blue-500 to-purple-500 text-white rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200"
                                 >
                                     <i class="mdi mdi-email-alert text-lg"></i>
                                 </div>
@@ -93,12 +93,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <p
                                     class="text-sm font-semibold text-gray-900 dark:text-white truncate"
                                 >
-                                    {{ n.title }}
+                                    {{ __(n.title) }}
                                 </p>
                                 <p
                                     class="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2"
                                 >
-                                    {{ n.message }}
+                                    {{ __(n.message) }}
                                 </p>
                                 <div
                                     class="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-500"
@@ -107,7 +107,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <span>{{ n.created }}</span>
                                 </div>
                             </div>
-                            <div class="flex-shrink-0 ml-2">
+                            <div class="shrink-0 ml-2">
                                 <div
                                     class="w-2 h-2 bg-blue-500 rounded-full group-hover:bg-green-500 transition-colors duration-200"
                                 ></div>
@@ -143,13 +143,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Footer -->
                 <div
                     v-if="unreadNotifications.length"
-                    class="px-4 py-3 bg-white dark:bg-gray-750 border-t border-gray-200 dark:border-gray-700"
+                    class="px-4 py-3 bg-white dark:bg-gray-700 border-t border-gray-200 dark:border-gray-700"
                 >
                     <div class="flex justify-between items-center">
                         <button
                             @click="markAllAsRead"
                             :disabled="!unreadNotifications.length"
-                            class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                            class="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                         >
                             <i class="mdi mdi-check-all mr-1"></i>
                             {{ __("Mark all as read") }}

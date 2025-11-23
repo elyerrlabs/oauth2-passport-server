@@ -64,6 +64,8 @@ class ProcessRefundNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        app()->setLocale($notifiable->lang);
+
         $repository = app(TransactionRepository::class);
         $transaction = $repository->findByCode($this->transaction_code)->toArray();
 

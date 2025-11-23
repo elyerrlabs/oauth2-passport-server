@@ -63,6 +63,8 @@ class UserUpdatedPassword extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__('Password Updated Successfully'))
             ->greeting(__('Hello!'))

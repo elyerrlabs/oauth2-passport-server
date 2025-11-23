@@ -25,6 +25,7 @@ namespace App\Notifications\Subscription;
  */
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -63,6 +64,8 @@ class PaymentSuccessfully extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage)
             ->subject(__('Payment Confirmation'))
             ->greeting(__('Hello :name', ['name' => $notifiable->name]))

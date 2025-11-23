@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Http\Middleware;
-
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
  *
@@ -24,28 +22,28 @@ namespace App\Http\Middleware;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Closure;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class Lang
-{
+return new class extends Migration {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Run the migrations.
      */
-    public function handle(Request $request, Closure $next): Response
+    public function up(): void
     {
-        $locale = substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
-
-        // No Auth user
-        if (!auth()->check()) {
-            app()->setLocale($locale ?? 'en');
-        } else {// Only auth user 
-            app()->setLocale(auth()->user()->lang);
-        }
-        return $next($request);
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('lang', 30)->default('en');
+        });
     }
-}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('lang');
+        });
+    }
+};

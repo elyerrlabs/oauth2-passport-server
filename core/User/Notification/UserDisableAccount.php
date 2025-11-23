@@ -62,6 +62,8 @@ class UserDisableAccount extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->lang);
+
         return (new MailMessage())
             ->subject(__('Account Deactivation Notice'))
             ->greeting(__('Hello :name :last_name,', [
