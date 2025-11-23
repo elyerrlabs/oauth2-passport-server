@@ -227,7 +227,7 @@
 
                 <!-- Legal Links -->
                 <div class="grid grid-cols-1 gap-2 mb-6">
-                    <a href="{{ route('admin.policies.terms-and-conditions') }}"
+                    <a href="{{ route('legal.terms-and-conditions') }}"
                         class="group universal-hover universal-glass rounded-lg p-3 border-universal flex items-center">
                         <div class="w-8 h-8 accent-color-3 rounded-lg flex items-center justify-center mr-3">
                             <i class="mdi mdi-file-document-outline text-accent-3 text-sm"></i>
@@ -240,7 +240,7 @@
                             class="mdi mdi-chevron-right text-universal text-xs group-hover:text-accent-3 group-hover:translate-x-0.5 transition-all duration-300"></i>
                     </a>
 
-                    <a href="{{ route('admin.policies.policies-of-privacy') }}"
+                    <a href="{{ route('legal.policies-of-privacy') }}"
                         class="group universal-hover universal-glass rounded-lg p-3 border-universal flex items-center">
                         <div class="w-8 h-8 accent-color-1 rounded-lg flex items-center justify-center mr-3">
                             <i class="mdi mdi-shield-account-outline text-accent-1 text-sm"></i>
@@ -253,7 +253,7 @@
                             class="mdi mdi-chevron-right text-universal text-xs group-hover:text-accent-1 group-hover:translate-x-0.5 transition-all duration-300"></i>
                     </a>
 
-                    <a href="{{ route('admin.policies.policies-of-cookies') }}"
+                    <a href="{{ route('legal.policies-of-cookies') }}"
                         class="group universal-hover universal-glass rounded-lg p-3 border-universal flex items-center">
                         <div class="w-8 h-8 accent-color-2 rounded-lg flex items-center justify-center mr-3">
                             <i class="mdi mdi-cookie-outline text-accent-2 text-sm"></i>
