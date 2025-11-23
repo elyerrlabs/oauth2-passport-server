@@ -22,7 +22,7 @@
 # SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 # -----------------------------------------------------------------------------
 
-IMAGE="elyerr/oauth2-passport-server:v4.0.0"
+IMAGE="elyerr/oauth2-passport-server:v4.0.1"
 COMPOSE_FILE="docker-compose-prod.yml"
 ENV_FILE=".env"
 

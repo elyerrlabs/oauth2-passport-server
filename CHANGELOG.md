@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
-## Unreleased
+## 🛠️ v4.0.1
 
 -   Fixed filter for plan search.
 -   Added new module for users to view transactions.
