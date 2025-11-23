@@ -159,6 +159,16 @@ class UserService
     }
 
     /**
+     * Search user by email
+     * @param string $email
+     * @return \Core\User\Repositories\TModel|\Core\User\Repositories\TValue|null
+     */
+    public function findByEmail(string $email)
+    {
+        return $this->userRepository->findByEmail($email);
+    }
+
+    /**
      * Show detail
      * @param string $user_id
      */

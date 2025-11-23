@@ -25,6 +25,8 @@ namespace App\Http\Controllers\Web\Auth;
  */
 
 
+use Core\User\Notification\UserUpdatedPassword;
+use Core\User\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
@@ -60,7 +62,23 @@ class NewPasswordController extends WebController
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'min:8', 'max:100', 'confirmed', Rules\Password::defaults()],
+            'password' => [
+                'required',
+                'min:8',
+                'max:100',
+                'confirmed',
+                Rules\Password::defaults(),
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->filled('email')) {
+                        $user = app(UserService::class)->findByEmail($request->email);
+
+                        if (Hash::check($value, $user->password)) {
+                            $fail(__('The new password cannot be the same as the current password.'));
+                        }
+                    }
+
+                }
+            ],
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
@@ -73,7 +91,7 @@ class NewPasswordController extends WebController
                     'password' => Hash::make($request->password),
                 ])->save();
 
-                // event(new PasswordReset($user));
+                $user->notify(new UserUpdatedPassword());
             }
         );
 

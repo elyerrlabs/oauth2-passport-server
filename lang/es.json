@@ -3476,5 +3476,6 @@
   "We’re happy to let you know that your account has been successfully reactivated.": "Nos complace informarte que tu cuenta ha sido reactivada exitosamente.",
   "You can now log in and continue enjoying all your features and benefits.": "Ahora puedes iniciar sesión y continuar disfrutando de todas tus funciones y beneficios.",
   "Thank you for choosing to stay with us — we’re truly glad to have you back!": "Gracias por elegir quedarte con nosotros — ¡estamos realmente contentos de tenerte de vuelta!",
-  "Your password has been successfully updated. If this wasn’t you, please contact support immediately.": "Tu contraseña ha sido actualizada exitosamente. Si no fuiste tú, por favor contacta al soporte inmediatamente."
+  "Your password has been successfully updated. If this wasn’t you, please contact support immediately.": "Tu contraseña ha sido actualizada exitosamente. Si no fuiste tú, por favor contacta al soporte inmediatamente.",
+  "The new password cannot be the same as the current password.": "La contraseña no puede ser igual a la actual."
 }
