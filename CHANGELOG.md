@@ -24,9 +24,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 ## Unreleased
 
-- Fixed filter for plan search.
-- Added new module for users to view transactions.
-- Refactored eCommerce module layers to delegate responsibilities more clearly.
+-   Fixed filter for plan search.
+-   Added new module for users to view transactions.
+-   Refactored eCommerce module layers to delegate responsibilities more clearly.
+-   Updated lang
+-   Add support for language (English, Spanish)
+-   Updated dark mode support
 
 ## 🛠️ v4.0.0
 
