@@ -40,51 +40,7 @@ class Menu
     {
         $menus = [];
 
-        $config = config('menus');
-
-        /**
-         * Additional routes
-         */
-        $parent = [
-
-            "merge" => [
-
-                "admin_dashboard" => [
-                    "horizon" => [
-                        "name" => "Horizon",
-                        "route" => "horizon.index",
-                        "icon" => "mdi mdi-poll",
-                        "service" => "administrator:admin"
-                    ],
-                    "seo" => [
-                        "name" => "Seo",
-                        "route" => "admin.sitemaps.index",
-                        "icon" => "mdi mdi-sitemap-outline",
-                        "service" => "administrator:seo"
-                    ],
-                ],
-
-                "user_routes" => [
-                    // "ecommerce" => [ // group
-                    //     "id" => "my-route", // id
-                    //     "name" => __("My Route"),
-                    //     "route" => "example.route",
-                    //     "icon" => "mdi-store-cog",
-                    //     'service' => true // true or scope, example "administrator:role:view"
-                    // ],
-                ],
-
-                // Only parent api routes
-                "api" => [
-                    // example
-                    // 'ecommerce' => [ // paren group
-                    //    'search' => 'api.ecommerce.search', // route
-                    // ]
-                ]
-            ]
-        ];
-
-        $routes = array_merge_recursive($parent, $config);
+        $routes = config('menus');
 
         foreach ($routes as $key => $value) {
 
