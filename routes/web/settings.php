@@ -22,6 +22,7 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Http\Controllers\Web\Admin\Setting\SitemapController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Admin\Setting\SettingController;
 use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
@@ -57,4 +58,17 @@ Route::group([
     Route::get('terms-and-conditions', [PoliciesController::class, 'termsAndConditionForm'])->name('terms-and-conditions');
     Route::get('policies-of-privacy', [PoliciesController::class, 'policiesOfPrivacyForm'])->name('policies-of-privacy');
     Route::get('policies-of-cookies', [PoliciesController::class, 'policiesOfCookiesForm'])->name('policies-of-cookies');
+});
+
+
+Route::group([
+    'prefix' => 'sitemaps',
+    'as' => 'sitemaps.',
+    'middleware' => ['throttle:general:settings']
+], function () {
+
+    Route::get('', [SitemapController::class, 'index'])->name('index');
+    Route::post('', [SitemapController::class, 'store'])->name('store');
+    Route::delete('/reset', [SitemapController::class, 'reset'])->name('reset');
+    Route::delete('/{url}', [SitemapController::class, 'delete'])->name('delete');
 });

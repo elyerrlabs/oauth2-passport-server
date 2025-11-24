@@ -41,7 +41,7 @@ class Menu
         $menus = [];
 
         $config = config('menus');
-        
+
         /**
          * Additional routes
          */
@@ -55,6 +55,12 @@ class Menu
                         "route" => "horizon.index",
                         "icon" => "mdi mdi-poll",
                         "service" => "administrator:admin"
+                    ],
+                    "seo" => [
+                        "name" => "Seo",
+                        "route" => "admin.sitemaps.index",
+                        "icon" => "mdi mdi-sitemap-outline",
+                        "service" => "administrator:seo"
                     ],
                 ],
 
