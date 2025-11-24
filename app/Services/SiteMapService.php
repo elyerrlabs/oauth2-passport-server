@@ -25,7 +25,9 @@ namespace App\Services;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Spatie\Sitemap\Sitemap;
+use Illuminate\Http\Request;
 use Spatie\Sitemap\SitemapIndex;
 use Spatie\Sitemap\Tags\Sitemap as SitemapTag;
 use Spatie\Sitemap\Tags\Url;
@@ -59,6 +61,12 @@ class SiteMapService
      */
     private $uri;
 
+    /**
+     * Meta
+     * @var string
+     */
+    private $metafile;
+
 
     public function __construct()
     {
@@ -67,6 +75,7 @@ class SiteMapService
         $this->directory = public_path('sitemaps');
         $this->indexPath = public_path($sitemapName);
         $this->robot = public_path('robots.txt');
+        $this->metafile = base_path('resources/views/layouts/parts/meta.blade.php');
 
         // Create sitemap directory
         if (!is_dir($this->directory)) {
@@ -336,6 +345,31 @@ class SiteMapService
         file_put_contents($this->robot, $robotsContent);
 
         return true;
+    }
+
+    public function getMetaData()
+    {
+        $data = file_get_contents($this->metafile);
+
+        return $data;
+    }
+
+    /**
+     * Update meta data tags
+     * @param Request $request
+     * @throws ReportError
+     * @return bool
+     */
+    public function updateMetaData(Request $request): bool
+    {
+        try {
+            file_put_contents($this->metafile, $request->meta);
+
+            return true;
+
+        } catch (\Exception $e) {
+            throw new ReportError($e->getMessage(), $e->getCode());
+        }
     }
 
 }

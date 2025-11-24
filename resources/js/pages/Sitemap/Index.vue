@@ -20,7 +20,7 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <v-account-layout>
+    <v-seo-layout>
         <div class="p-6 space-y-6">
             <!-- Header Section -->
             <div class="flex justify-between items-center">
@@ -419,13 +419,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
             </template>
         </v-modal>
-    </v-account-layout>
+    </v-seo-layout>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
-import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import VSeoLayout from "@/layouts/VSeoLayout.vue";
 import VModal from "@/components/VModal.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
