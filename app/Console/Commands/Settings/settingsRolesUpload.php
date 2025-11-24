@@ -26,6 +26,7 @@ namespace App\Console\Commands\Settings;
 
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Core\User\Model\Role;
 use Core\User\Model\Group;
 use Core\User\Model\Scope;
@@ -148,6 +149,7 @@ class settingsRolesUpload extends Command
                             }
                         }
                     } catch (\Throwable $th) {
+                        Log::info($th->getMessage(), $th->getTrace());
                     }
                 }
             }
