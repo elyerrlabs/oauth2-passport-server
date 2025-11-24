@@ -24,11 +24,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 ## 🛠️ Unreleased
 
--   Fixed password update form.
--   Improved password update validation request.
+### Added
+
 -   Added support for sitemaps.
+-   Added section to manage and improve SEO meta tag content.
+-   Added Content Security Policy exceptions for Horizon, Monaco Editor, and Jodit Editor.
+
+### Improved
+
+-   Improved password update validation request.
 -   Updated language files.
+-   Updated lang
+
+### Fixed
+
+-   Fixed password update form.
 -   Fixed role translation issues.
+-   Fixed incorrect key handling for menu rendering in Vue layouts.
+
+---
 
 ## 🛠️ v4.0.1
 
