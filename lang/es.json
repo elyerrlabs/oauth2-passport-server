@@ -3509,5 +3509,10 @@
   "Improves your website's visibility on search engines.": "Mejora la visibilidad de tu sitio web en buscadores.",
   "read": "leer",
   "Read and access the details of the resource.": "Leer y acceder a los detalles del recurso.",
-  "Allows a user or group to safely restore settings, data, or resources to their default state.": "Permite a un usuario o grupo restaurar de forma segura configuraciones, datos o recursos a su estado predeterminado."
+  "Allows a user or group to safely restore settings, data, or resources to their default state.": "Permite a un usuario o grupo restaurar de forma segura configuraciones, datos o recursos a su estado predeterminado.",
+  "SEO Metadata Manager": "Gestor de Metadatos SEO",
+  "Here you can update the host metadata, including meta tags and SEO configurations associated with this domain.": "Aquí puedes actualizar los metadatos del host, incluyendo las meta etiquetas y configuraciones SEO asociadas con este dominio.",
+  "My transactions": "Mis transacciones",
+  "Update Metadata": "Actualizar Metadatos",
+  "Meta data has been updated successfully": "Los metadatos se han actualizado exitosamente"
 }
