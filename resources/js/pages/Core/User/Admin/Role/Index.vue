@@ -323,13 +323,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-sm text-gray-500 dark:text-gray-400"
                                 >
-                                    {{ role.slug }}
+                                    {{ __(role.slug) }}
                                 </div>
                                 <div
                                     v-if="role.description"
                                     class="text-sm text-gray-600 dark:text-gray-500 mt-1 line-clamp-1"
                                 >
-                                    {{ role.description }}
+                                    {{ __(role.description) }}
                                 </div>
                             </div>
 
