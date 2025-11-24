@@ -69,7 +69,7 @@ class ClientAdminController extends WebController
                 'clients' => route("admin.clients.index"),
                 'personal' => route("admin.clients.personal.store")
             ],
-            'admin_routes' => resolveInertiaRoutes(config('menus.admin_routes'))
+            'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);
     }
 

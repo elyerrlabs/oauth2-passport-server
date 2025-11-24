@@ -76,7 +76,7 @@ class GroupController extends WebController
             [
                 "data" => fractal($data, GroupTransformer::class)->toArray(),
                 "route" => route('user.admin.groups.index'),
-                'admin_routes' => resolveInertiaRoutes(config('menus.admin_routes'))
+                'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
             ]
         );
     }

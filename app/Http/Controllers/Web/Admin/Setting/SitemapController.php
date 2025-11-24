@@ -69,7 +69,7 @@ final class SitemapController extends WebController
                 'store' => route('admin.sitemaps.store'),
                 'reset' => route('admin.sitemaps.reset'),
             ],
-            'seo_menus' => resolveInertiaRoutes(config('menus.seo_menus')),
+            'menus' => resolveInertiaRoutes(config('menus.seo_menus')),
         ]);
     }
 
@@ -82,7 +82,7 @@ final class SitemapController extends WebController
                 'index' => route('admin.sitemaps.meta.form'),
                 'store' => route('admin.sitemaps.meta.update'),
             ],
-            'seo_menus' => resolveInertiaRoutes(config('menus.seo_menus')),
+            'menus' => resolveInertiaRoutes(config('menus.seo_menus')),
         ]);
     }
 

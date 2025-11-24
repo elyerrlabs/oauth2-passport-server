@@ -59,7 +59,7 @@ class DashboardController extends WebController
 
         return Inertia::render("Core/User/Admin/Dashboard/Index", [
             "route" => route("user.admin.dashboard"),
-            'admin_routes' => resolveInertiaRoutes(config('menus.admin_routes'))
+            'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);
     }
 }

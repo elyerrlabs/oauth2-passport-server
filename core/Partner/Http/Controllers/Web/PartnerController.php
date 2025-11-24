@@ -65,7 +65,7 @@ class PartnerController extends WebController
         return Inertia::render("Core/Partner/Web/Index", [
             "data" => $data,
             "route" => route("partner.dashboard"),
-            "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
+            "menus" => resolveInertiaRoutes(config('menus.partner_routes'))
         ]);
     }
 
@@ -80,7 +80,7 @@ class PartnerController extends WebController
 
         return Inertia::render("Core/Partner/Web/Refer", [
             "data" => fractal($partner, PartnerTransformer::class)->toArray()['data'] ?? [],
-            "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
+            "menus" => resolveInertiaRoutes(config('menus.partner_routes'))
         ]);
     }
 
@@ -99,7 +99,7 @@ class PartnerController extends WebController
         return Inertia::render("Core/Partner/Web/Sales", [
             "data" => fractal($data, TransactionTransformer::class)->toArray(),
             "route" => route("partner.sales"),
-            "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
+            "menus" => resolveInertiaRoutes(config('menus.partner_routes'))
         ]);
     }
 }

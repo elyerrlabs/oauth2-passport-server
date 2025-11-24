@@ -91,7 +91,7 @@ class PlanController extends WebController
             'routes' => [
                 'plans' => route('transaction.admin.plans.index'),
             ],
-            "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes'))
+            "menus" => resolveInertiaRoutes(config('menus.transaction_routes'))
         ]);
     }
 

@@ -67,7 +67,7 @@ class PartnerController extends WebController
             'routes' => [
                 'partners' => route('partner.admin.partner.index')
             ],
-            "partner_routes" => resolveInertiaRoutes(config('menus.partner_routes'))
+            "menus" => resolveInertiaRoutes(config('menus.partner_routes'))
         ]);
     }
 

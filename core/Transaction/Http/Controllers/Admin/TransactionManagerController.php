@@ -69,7 +69,7 @@ class TransactionManagerController extends WebController
             [
                 "data" => fractal($data, TransactionTransformer::class)->toArray() ?? [],
                 "route" => route('transaction.admin.transactions.index'),
-                "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes')),
+                "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
             ]
         );
     }
