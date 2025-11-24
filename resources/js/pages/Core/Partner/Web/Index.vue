@@ -822,7 +822,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import ApexCharts from "vue3-apexcharts";
-import VPartnerLayout from "@/layouts/VPartnerLayout.vue";
+import VPartnerLayout from "@/components/VGeneralLayout.vue";
 import { useForm } from "@inertiajs/vue3";
 
 export default {

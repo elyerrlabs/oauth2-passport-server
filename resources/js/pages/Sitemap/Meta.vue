@@ -59,7 +59,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script setup>
-import VSeoLayout from "@/layouts/VSeoLayout.vue";
+import VSeoLayout from "@/components/VGeneralLayout.vue";
 import VEditor from "@/components/VEditor.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { onMounted } from "vue";

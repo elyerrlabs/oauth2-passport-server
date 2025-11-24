@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <button
         @click="dialog = true"
-        class="w-full mt-2 px-4 py-2 border border-red-600 text-red-600 rounded-lg font-medium hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 flex items-center justify-center space-x-2"
+        class="w-full mt-2 px-4 py-2 border border-red-600 dark:border-red-300 text-red-600 dark:text-white rounded-lg font-medium hover:bg-red-50 dark:hover:bg-red-400 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 flex items-center justify-center space-x-2"
     >
         <svg
             class="w-5 h-5"
@@ -44,9 +44,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <template #body>
             <!-- Header -->
             <div
-                class="flex items-center justify-between p-6 border-b border-gray-200"
+                class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800"
             >
-                <h3 class="text-lg font-semibold text-gray-900">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                     {{ __("Cancel operation") }}
                 </h3>
                 <button
@@ -71,7 +71,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
             <!-- Content -->
             <div class="p-6">
-                <p class="text-gray-700">
+                <p class="text-gray-700 dark:text-white">
                     {{
                         __(
                             "Are you sure you want to cancel the process to payment?"
@@ -82,7 +82,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
             <!-- Actions -->
             <div
-                class="flex justify-between p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl"
+                class="flex justify-between p-6 border-t border-gray-700 dar:border-gray-700 bg-white dark:bg-gray-800 rounded-b-2xl"
             >
                 <button
                     @click="cancel"

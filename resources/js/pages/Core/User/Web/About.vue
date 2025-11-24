@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-account-layout>
         <div
-            class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-slate-800/50"
+            class="min-h-screen bg-linear-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-slate-800/50"
         >
             <!-- Compact Header Section -->
             <div class="px-4 sm:px-6 py-6 lg:px-8">
@@ -32,7 +32,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="flex items-center space-x-4">
                             <div class="relative">
                                 <div
-                                    class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md"
+                                    class="w-12 h-12 bg-linear-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md"
                                 >
                                     <span
                                         class="text-white font-semibold text-sm"
@@ -161,7 +161,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="group bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:border-blue-300 dark:hover:border-blue-400 hover:shadow-sm transition-all duration-200"
                                 >
                                     <div
-                                        class="p-4 bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg"
+                                        class="p-4 bg-linear-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg"
                                     >
                                         <div
                                             class="flex items-center justify-between mb-3"
@@ -171,12 +171,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             >
                                                 <i
                                                     class="mdi text-white text-xl"
-                                                    :class="getAppIcon(app)"
+                                                    :class="app.icon"
                                                 ></i>
                                             </div>
                                             <button
                                                 @click="openApplication(app)"
-                                                class="opacity-0 group-hover:opacity-100 w-6 h-6 bg-white/20 hover:bg-white/30 text-white rounded flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
+                                                class="opacity-0 cursor-pointer group-hover:opacity-100 w-6 h-6 bg-white/20 hover:bg-white/30 text-white rounded flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
                                             >
                                                 <i
                                                     class="mdi mdi-arrow-top-right text-xs"
@@ -188,23 +188,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             <h3
                                                 class="font-medium text-white text-sm mb-1 transition-colors line-clamp-1"
                                             >
-                                                {{ app.name }}
+                                                {{ __(app.name) }}
                                             </h3>
-                                            <p
-                                                class="text-blue-100 text-xs opacity-80 line-clamp-2"
-                                            >
-                                                {{
-                                                    app.description ||
-                                                    __(
-                                                        "No description available"
-                                                    )
-                                                }}
-                                            </p>
                                         </div>
 
                                         <button
                                             @click="openApplication(app)"
-                                            class="w-full bg-white/20 hover:bg-white/30 text-white py-2 px-3 rounded-md font-medium transition-all duration-200 text-xs flex items-center justify-center space-x-1 backdrop-blur-sm"
+                                            class="w-full bg-white/20 cursor-pointer hover:bg-white/30 text-white py-2 px-3 rounded-md font-medium transition-all duration-200 text-xs flex items-center justify-center space-x-1 backdrop-blur-sm"
                                         >
                                             <span>{{ __("Launch") }}</span>
                                             <i
@@ -249,7 +239,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="group bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:border-emerald-300 dark:hover:border-emerald-400 hover:shadow-sm transition-all duration-200"
                                 >
                                     <div
-                                        class="p-4 bg-gradient-to-br from-emerald-500 to-green-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg"
+                                        class="p-4 bg-linear-to-br from-emerald-500 to-green-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg"
                                     >
                                         <div
                                             class="flex items-center justify-between mb-3"
@@ -268,7 +258,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 @click="
                                                     openApplication(setting)
                                                 "
-                                                class="opacity-0 group-hover:opacity-100 w-6 h-6 bg-white/20 hover:bg-white/30 text-white rounded flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
+                                                class="opacity-0 cursor-pointer group-hover:opacity-100 w-6 h-6 bg-white/20 hover:bg-white/30 text-white rounded flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
                                             >
                                                 <i
                                                     class="mdi mdi-chevron-right text-xs"
@@ -280,27 +270,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             <h3
                                                 class="font-medium text-white text-sm mb-1 transition-colors line-clamp-1"
                                             >
-                                                {{ setting.name }}
+                                                {{ __(setting.name) }}
                                             </h3>
-                                            <p
-                                                class="text-emerald-100 text-xs opacity-80 line-clamp-2"
-                                            >
-                                                {{
-                                                    setting.description ||
-                                                    __(
-                                                        "Manage your preferences"
-                                                    )
-                                                }}
-                                            </p>
                                         </div>
 
                                         <button
                                             @click="openApplication(setting)"
-                                            class="w-full bg-white/20 hover:bg-white/30 text-white py-2 px-3 rounded-md font-medium transition-all duration-200 text-xs flex items-center justify-center space-x-1 backdrop-blur-sm"
+                                            class="w-full bg-white/20 cursor-pointer hover:bg-white/30 text-white py-2 px-3 rounded-md font-medium transition-all duration-200 text-xs flex items-center justify-center space-x-1 backdrop-blur-sm"
                                         >
                                             <span>{{ __("Configure") }}</span>
                                             <i
-                                                class="mdi mdi-chevron-right text-xs"
+                                                :class="[
+                                                    'mdi text-xs',
+                                                    setting.icon,
+                                                ]"
                                             ></i>
                                         </button>
                                     </div>
@@ -403,7 +386,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import VAccountLayout from "@/components/VAccountLayout.vue";
 import { router } from "@inertiajs/vue3";
 export default {
     components: {
@@ -454,7 +437,6 @@ export default {
 
     methods: {
         getAppIcon(app) {
-            
             const iconMap = {
                 dashboard: "mdi-view-dashboard-outline",
                 admin: "mdi-shield-account-outline",

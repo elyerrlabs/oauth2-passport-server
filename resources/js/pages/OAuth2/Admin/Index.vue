@@ -524,7 +524,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VAdminLayout from "@/layouts/VAdminLayout.vue";
+import VAdminLayout from "@/components/VGeneralLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
 import VUpdate from "./Update.vue";

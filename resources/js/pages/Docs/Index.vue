@@ -696,7 +696,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VGuestLayout from "@/layouts/VGuestLayout.vue";
+import VGuestLayout from "@/components/VGuestLayout.vue";
 
 export default {
     name: "DocumentationLinks",

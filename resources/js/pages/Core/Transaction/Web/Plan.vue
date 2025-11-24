@@ -601,7 +601,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script setup>
-import VGuestLayout from "@/layouts/VGuestLayout.vue";
+import VGuestLayout from "@/components/VGuestLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VSubscription from "@/components/VSubscription.vue";
 import VSelect from "@/components/VSelect.vue";

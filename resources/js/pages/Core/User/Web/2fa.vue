@@ -606,7 +606,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script setup>
 import { ref, onMounted } from "vue";
-import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import VAccountLayout from "@/components/VAccountLayout.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import VError from "@/components/VError.vue";
 
