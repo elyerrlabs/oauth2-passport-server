@@ -22,6 +22,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## 🛠️ Unreleased
+
+-   Fixed password update form.
+-   Improved password update validation request.
+-   Added support for sitemaps.
+-   Updated language files.
+-   Fixed role translation issues.
+
 ## 🛠️ v4.0.1
 
 -   Fixed filter for plan search.

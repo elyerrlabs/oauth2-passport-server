@@ -1,94 +1,98 @@
 [
-    {
-        "name": "full",
-        "description": "Full access"
-    },
-    {
-        "name": "view",
-        "description": "View and access the details of the resource."
-    },
-    {
-        "name": "read",
-        "description": "Read and access the details of the resource."
-    },
-    {
-        "name": "create",
-        "description": "Create new instances of the resource."
-    },
-    {
-        "name": "show",
-        "description": "Display detailed information about a specific resource."
-    },
-    {
-        "name": "update",
-        "description": "Modify existing instances of the resource."
-    },
-    {
-        "name": "destroy",
-        "description": "Delete existing instances of the resource."
-    },
-    {
-        "name": "disable",
-        "description": "Temporarily deactivate the resource."
-    },
-    {
-        "name": "enable",
-        "description": "Reactivate a previously disabled resource."
-    },
-    {
-        "name": "export",
-        "description": "Export data related to the resource in a specific format."
-    },
-    {
-        "name": "import",
-        "description": "Import data into the system to create or update the resource."
-    },
-    {
-        "name": "archive",
-        "description": "Move the resource to an archive state for long-term storage."
-    },
-    {
-        "name": "restore",
-        "description": "Restore a previously archived or deleted resource."
-    },
-    {
-        "name": "share",
-        "description": "Grant access to the resource to other users or groups."
-    },
-    {
-        "name": "history",
-        "description": "View the historical actions or changes made to the resource."
-    },
-    {
-        "name": "revoke",
-        "description": "Remove access or permissions previously granted to a user or group for the resource."
-    },
-    {
-        "name": "assign",
-        "description": "Grant access or permissions to a user or group for a specific resource."
-    },
-    {
-        "name": "execute",
-        "description": "Allows a user or group to run authorized commands within the system."
-    },
-    {
-        "name": "reset",
-        "description": "Allows a user or group to restore settings or data to their default state."
-    },
-    {
-        "name": "basic",
-        "description": "Provides access to essential features for individual users."
-    },
-    {
-        "name": "intermediate",
-        "description": "Includes additional features and support for growing needs."
-    },
-    {
-        "name": "advanced",
-        "description": "Unlocks all premium features with full access and support."
-    },
-    {
-        "name": "dashboard",
-        "description": "Grants full access to the dashboard, including analytics, user management, and system controls."
-    }
+  {
+    "name": "full",
+    "description": "Full access"
+  },
+  {
+    "name": "view",
+    "description": "View and access the details of the resource."
+  },
+  {
+    "name": "read",
+    "description": "Read and access the details of the resource."
+  },
+  {
+    "name": "create",
+    "description": "Create new instances of the resource."
+  },
+  {
+    "name": "show",
+    "description": "Display detailed information about a specific resource."
+  },
+  {
+    "name": "update",
+    "description": "Modify existing instances of the resource."
+  },
+  {
+    "name": "destroy",
+    "description": "Delete existing instances of the resource."
+  },
+  {
+    "name": "disable",
+    "description": "Temporarily deactivate the resource."
+  },
+  {
+    "name": "enable",
+    "description": "Reactivate a previously disabled resource."
+  },
+  {
+    "name": "export",
+    "description": "Export data related to the resource in a specific format."
+  },
+  {
+    "name": "import",
+    "description": "Import data into the system to create or update the resource."
+  },
+  {
+    "name": "archive",
+    "description": "Move the resource to an archive state for long-term storage."
+  },
+  {
+    "name": "restore",
+    "description": "Restore a previously archived or deleted resource."
+  },
+  {
+    "name": "share",
+    "description": "Grant access to the resource to other users or groups."
+  },
+  {
+    "name": "history",
+    "description": "View the historical actions or changes made to the resource."
+  },
+  {
+    "name": "revoke",
+    "description": "Remove access or permissions previously granted to a user or group for the resource."
+  },
+  {
+    "name": "assign",
+    "description": "Grant access or permissions to a user or group for a specific resource."
+  },
+  {
+    "name": "execute",
+    "description": "Allows a user or group to run authorized commands within the system."
+  },
+  {
+    "name": "reset",
+    "description": "Allows a user or group to restore settings or data to their default state."
+  },
+  {
+    "name": "basic",
+    "description": "Provides access to essential features for individual users."
+  },
+  {
+    "name": "intermediate",
+    "description": "Includes additional features and support for growing needs."
+  },
+  {
+    "name": "advanced",
+    "description": "Unlocks all premium features with full access and support."
+  },
+  {
+    "name": "dashboard",
+    "description": "Grants full access to the dashboard, including analytics, user management, and system controls."
+  },
+  {
+    "name": "reset",
+    "description": "Allows a user or group to safely restore settings, data, or resources to their default state."
+  }
 ]
