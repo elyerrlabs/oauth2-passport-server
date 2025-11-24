@@ -21,7 +21,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div
-        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-900/50 p-6 border border-gray-100 dark:border-gray-700"
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-900/50 p-2 border border-gray-100 dark:border-gray-700"
     >
         <!-- Label -->
         <label
@@ -33,7 +33,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Tabs -->
         <div
-            class="flex border-b border-gray-300 dark:border-gray-600 mb-4 space-x-2"
+            class="flex border-b border-gray-300 dark:border-gray-600 mb-2 space-x-2"
         >
             <button
                 v-for="tab in tabs"
@@ -88,6 +88,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <i class="fas fa-redo mr-1"></i>{{ __("Redo") }}
                 </button>
+                <!-- Nuevo botón de pantalla completa -->
+                <button
+                    type="button"
+                    class="toolbar-btn bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 hover:bg-orange-200 dark:hover:bg-orange-800"
+                    @click="toggleFullscreen"
+                >
+                    <i class="fas fa-expand mr-1"></i>{{ __("Fullscreen") }}
+                </button>
                 <button
                     type="button"
                     class="toolbar-btn bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-800"
@@ -118,8 +126,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
             <div
                 class="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden"
+                :class="{
+                    'fixed inset-0 z-50 !m-0 !rounded-none': isFullscreen,
+                }"
             >
-                <div ref="monacoEl" class="min-h-[500px]"></div>
+                <div
+                    ref="monacoEl"
+                    class="min-h-[500px]"
+                    :class="{ 'h-screen': isFullscreen }"
+                ></div>
+
+                <!-- Botón para salir de pantalla completa (solo visible en fullscreen) -->
+                <button
+                    v-if="isFullscreen"
+                    @click="toggleFullscreen"
+                    class="fixed top-4 right-4 z-60 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition-colors duration-200"
+                    :title="__('Exit Fullscreen')"
+                >
+                    <i class="fas fa-compress text-lg"></i>
+                </button>
             </div>
         </div>
 
@@ -170,6 +195,9 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
+const is_dark = ref(null);
+const isFullscreen = ref(false);
+
 const tabs = [
     { id: "editor", label: __("Editor"), icon: "fa-edit" },
     { id: "html", label: __("HTML Editor"), icon: "fa-code" },
@@ -187,12 +215,53 @@ let monacoEditor = null;
 let isMonacoInitialized = false;
 
 onMounted(async () => {
-    // Inicializa Jodit con el valor inicial
+    await initializeEditors();
+    window.addEventListener("theme-change", handleThemeChange);
+});
+
+onBeforeUnmount(() => {
+    destroyEditors();
+    window.removeEventListener("theme-change", handleThemeChange);
+});
+
+const handleThemeChange = async () => {
+    await destroyEditors();
+    await nextTick();
+    await initializeEditors();
+};
+
+const destroyEditors = () => {
+    if (monacoEditor) {
+        monacoEditor.dispose();
+        monacoEditor = null;
+    }
+    if (joditEditor) {
+        joditEditor.destruct();
+        joditEditor = null;
+    }
+    isMonacoInitialized = false;
+};
+
+const initializeEditors = async () => {
+    const theme = localStorage.getItem("theme") ?? "light";
+    is_dark.value = theme;
+    console.log("Initializing editors with theme:", theme);
+
+    await initializeJoditEditor(theme);
+    if (activeTab.value === "html") {
+        await initializeMonacoEditor(theme);
+    }
+};
+
+// JODIT EDITOR
+const initializeJoditEditor = async (theme = "light") => {
+    if (!editorEl.value) return;
+
+    const joditTheme = theme === "dark" ? "dark" : "default";
+
     joditEditor = createJoditEditor(editorEl.value, {
-        theme: document.documentElement.classList.contains("dark")
-            ? "dark"
-            : "default",
-        toolbarAdaptive: false,
+        theme: joditTheme,
+        toolbarAdaptive: true,
         minHeight: 400,
         events: {
             afterInit() {
@@ -201,7 +270,7 @@ onMounted(async () => {
         },
     });
 
-    // Sincroniza Jodit → Monaco + v-model + Preview
+    // Synchronize Jodit → Monaco + v-model + Preview
     joditEditor.events.on("keyup", () => {
         const val = joditEditor.value;
 
@@ -217,7 +286,7 @@ onMounted(async () => {
 
     await nextTick();
     updatePreview();
-});
+};
 
 watch(
     () => props.modelValue,
@@ -232,109 +301,161 @@ watch(
     }
 );
 
-function switchTab(tabId) {
+const switchTab = async (tabId) => {
     activeTab.value = tabId;
-    if (tabId === "html" && !isMonacoInitialized) initializeMonacoEditor();
+
+    if (tabId === "html" && !isMonacoInitialized) {
+        const theme = localStorage.getItem("theme") ?? "light";
+        await initializeMonacoEditor(theme);
+    }
+
     if (tabId === "preview") updatePreview();
-}
+};
 
-function initializeMonacoEditor() {
-    // Detecta el tema actual para Monaco
-    const isDark = document.documentElement.classList.contains("dark");
-    const monacoTheme = isDark ? "vs-dark" : "vs";
+//////////// MONACO EDITOR
+const initializeMonacoEditor = async (theme = "light") => {
+    if (!monacoEl.value) {
+        await nextTick();
+        if (!monacoEl.value) return;
+    }
 
-    monacoEditor = createMonacoEditor(monacoEl.value, {
-        value: props.modelValue,
-        language: language.value,
-        theme: monacoTheme,
-        automaticLayout: true,
-        minimap: { enabled: true },
-        scrollBeyondLastLine: false,
-        fontSize: 14,
-        lineNumbers: "on",
-        folding: true,
-        wordWrap: "on",
-        formatOnType: true,
-        formatOnPaste: true,
-        tabSize: 2,
-        insertSpaces: true,
-    });
+    // Si ya existe un editor Monaco, lo destruimos primero
+    if (monacoEditor) {
+        monacoEditor.dispose();
+        monacoEditor = null;
+    }
 
-    // Sincroniza Monaco → Jodit + v-model + Preview
-    monacoEditor.onDidChangeModelContent(() => {
-        const value = monacoEditor.getValue();
-        if (joditEditor && joditEditor.value !== value) {
-            joditEditor.value = value;
+    const monacoTheme = theme === "dark" ? "vs-dark" : "vs";
+
+    try {
+        monacoEditor = createMonacoEditor(monacoEl.value, {
+            value: props.modelValue,
+            language: language.value,
+            theme: monacoTheme,
+            automaticLayout: true,
+            minimap: { enabled: true },
+            scrollBeyondLastLine: false,
+            fontSize: 14,
+            lineNumbers: "on",
+            folding: true,
+            wordWrap: "on",
+            formatOnType: true,
+            formatOnPaste: true,
+            tabSize: 2,
+            insertSpaces: true,
+        });
+
+        // Agregar action personalizado para pantalla completa
+        monacoEditor.addAction({
+            id: "editor.action.fullscreen",
+            label: "Toggle Fullscreen",
+            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+            run: () => {
+                toggleFullscreen();
+            },
+        });
+
+        // Sincroniza Monaco → Jodit + v-model + Preview
+        monacoEditor.onDidChangeModelContent(() => {
+            const value = monacoEditor.getValue();
+            if (joditEditor && joditEditor.value !== value) {
+                joditEditor.value = value;
+            }
+            previewEl.value.innerHTML = value;
+            emit("update:modelValue", value);
+        });
+
+        isMonacoInitialized = true;
+        console.log("Monaco editor initialized with theme:", monacoTheme);
+    } catch (error) {
+        console.error("Error initializing Monaco editor:", error);
+    }
+};
+
+// Función para alternar pantalla completa
+const toggleFullscreen = () => {
+    isFullscreen.value = !isFullscreen.value;
+
+    if (isFullscreen.value) {
+        // Entrar en pantalla completa
+        document.body.style.overflow = "hidden";
+
+        // Forzar redimensionamiento de Monaco
+        if (monacoEditor) {
+            setTimeout(() => {
+                monacoEditor.layout();
+            }, 100);
         }
-        previewEl.value.innerHTML = value;
-        emit("update:modelValue", value);
-    });
+    } else {
+        // Salir de pantalla completa
+        document.body.style.overflow = "";
 
-    isMonacoInitialized = true;
-}
+        // Forzar redimensionamiento de Monaco
+        if (monacoEditor) {
+            setTimeout(() => {
+                monacoEditor.layout();
+            }, 100);
+        }
+    }
+};
 
-function formatHTML() {
+// Manejar la tecla Escape para salir de pantalla completa
+const handleEscapeKey = (event) => {
+    if (event.key === "Escape" && isFullscreen.value) {
+        toggleFullscreen();
+    }
+};
+
+// Agregar event listener para la tecla Escape
+watch(isFullscreen, (newValue) => {
+    if (newValue) {
+        document.addEventListener("keydown", handleEscapeKey);
+    } else {
+        document.removeEventListener("keydown", handleEscapeKey);
+    }
+});
+
+watch(language, (val) => {
+    if (monacoEditor) {
+        monaco.editor.setModelLanguage(monacoEditor.getModel(), val);
+    }
+});
+
+const formatHTML = () => {
     monacoEditor?.getAction("editor.action.formatDocument").run();
-}
+};
 
-function copyHTML() {
+const copyHTML = () => {
     const htmlContent = joditEditor?.value || props.modelValue;
     navigator.clipboard
         .writeText(htmlContent)
         .then(() => window.$notify?.success(__("Copied to clipboard!")))
         .catch((err) => window.$notify?.error(err));
-}
+};
 
-function undo() {
+const undo = () => {
     monacoEditor?.trigger("keyboard", "undo", null);
-}
+};
 
-function redo() {
+const redo = () => {
     monacoEditor?.trigger("keyboard", "redo", null);
-}
+};
 
-function toggleWrap() {
+const toggleWrap = () => {
+    if (!monacoEditor) return;
     const current = monacoEditor.getOption(monaco.editor.EditorOption.wordWrap);
     monacoEditor.updateOptions({ wordWrap: current === "on" ? "off" : "on" });
-}
+};
 
-function toggleMinimap() {
+const toggleMinimap = () => {
+    if (!monacoEditor) return;
     const current = monacoEditor.getOption(
         monaco.editor.EditorOption.minimap
     ).enabled;
     monacoEditor.updateOptions({ minimap: { enabled: !current } });
-}
+};
 
-function updatePreview() {
+const updatePreview = () => {
     previewEl.value.innerHTML = joditEditor?.value || props.modelValue;
-}
-
-watch(language, (val) => {
-    if (monacoEditor)
-        monaco.editor.setModelLanguage(monacoEditor.getModel(), val);
-});
-
-onBeforeUnmount(() => {
-    if (monacoEditor) monacoEditor.dispose();
-    if (joditEditor) joditEditor.destruct();
-});
+};
 </script>
-
-<style scoped>
-/* Transiciones suaves para cambios de tema */
-.bg-white,
-.bg-gray-100,
-.bg-blue-50,
-.bg-green-100,
-.bg-purple-100 {
-    transition: background-color 0.3s ease;
-}
-
-.dark .bg-gray-800,
-.dark .bg-gray-700,
-.dark .bg-blue-900\/30,
-.dark .bg-green-900\/30,
-.dark .bg-purple-900\/30 {
-    transition: background-color 0.3s ease;
-}
-</style>
