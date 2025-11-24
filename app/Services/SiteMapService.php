@@ -48,15 +48,22 @@ class SiteMapService
 
     /**
      * Robot
-     * @var 
+     * @var string
      */
     private $robot;
+
+
+    /**
+     * Uri
+     * @var string
+     */
+    private $uri;
 
 
     public function __construct()
     {
         $sitemapName = 'sitemap.xml';
-        $uri = config('app.url') . "/" . $sitemapName;
+        $this->uri = config('app.url') . "/" . $sitemapName;
         $this->directory = public_path('sitemaps');
         $this->indexPath = public_path($sitemapName);
         $this->robot = public_path('robots.txt');
@@ -65,7 +72,19 @@ class SiteMapService
         if (!is_dir($this->directory)) {
             mkdir($this->directory, 0777, true);
         }
+    }
 
+    /**
+     * Get full path of a sitemap file
+     */
+    public function getSitemap(string $filename): string
+    {
+        return $this->directory . '/' . $filename . '.xml';
+    }
+
+
+    public function updateRobot()
+    {
         // Init  robots.txt 
         if (!file_exists($this->robot)) {
             file_put_contents($this->robot, "User-agent: *\nDisallow:\n");
@@ -77,17 +96,9 @@ class SiteMapService
         $robotsContent = preg_replace('/^Sitemap:.*$/m', '', $robotsContent);
 
         // Update line
-        $robotsContent = trim($robotsContent) . "\nSitemap: $uri\n";
+        $robotsContent = trim($robotsContent) . "\nSitemap: $this->uri\n";
 
         file_put_contents($this->robot, $robotsContent);
-    }
-
-    /**
-     * Get full path of a sitemap file
-     */
-    public function getSitemap(string $filename): string
-    {
-        return $this->directory . '/' . $filename . '.xml';
     }
 
     /**
@@ -131,6 +142,8 @@ class SiteMapService
         ?string $changefreq = 'weekly',
         ?float $priority = 0.5
     ): bool {
+
+        $this->updateRobot();
 
         $path = $this->getSitemap($file);
 
@@ -316,6 +329,11 @@ class SiteMapService
                 }
             }
         }
+
+        // Reset robots.txt to block indexing
+        unlink($this->robot);
+        $robotsContent = "User-agent: *\nDisallow: /";
+        file_put_contents($this->robot, $robotsContent);
 
         return true;
     }
