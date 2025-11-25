@@ -22,6 +22,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## 🛠️ Unreleased
+
+### Added
+
+-   New File Service to centralize and manage all file operations.
+
+### Improved
+
+-   Image upload performance for products and categories by using temporary storage and internal file moves.
+-   Overall file handling flow for faster processing and reduced timeouts.
+
+### Fixed
+
+-   Middleware restriction to block non-GET requests for demo users.
+
 ## 🛠️ v4.0.3
 
 -   fix user scope for seo management
