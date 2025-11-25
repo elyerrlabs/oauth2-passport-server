@@ -22,6 +22,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## 🛠️ v4.0.3
+
+-   fix user scope for seo management
+
 ## 🛠️ v4.0.2
 
 ### Added
