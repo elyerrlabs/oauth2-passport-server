@@ -1,3 +1,7 @@
 *
+!favicon.png
+!index.php
+!.htaccess
+!robots.txt
 !.gitignore
 !.dockerignore
