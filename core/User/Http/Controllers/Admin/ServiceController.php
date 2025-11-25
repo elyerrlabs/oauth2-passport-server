@@ -99,7 +99,7 @@ class ServiceController extends WebController
             'groups' => fractal($groups, GroupTransformer::class)->toArray(),
             'roles' => fractal($roles, RoleTransformer::class)->toArray(),
             'route' => route("user.admin.services.index"),
-            'admin_routes' => resolveInertiaRoutes(config('menus.admin_routes'))
+            'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);
     }
 

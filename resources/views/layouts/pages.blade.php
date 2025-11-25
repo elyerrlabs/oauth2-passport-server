@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
 <head>
-    @include('layouts.parts.meta')
+    @include('layouts.editable.meta')
 
     @yield('title', config('app.name', 'OAuth2 Server'))
 

@@ -25,7 +25,10 @@ namespace App\Services;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Elyerr\ApiResponse\Exceptions\ReportError;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Sitemap\Sitemap;
+use Illuminate\Http\Request;
 use Spatie\Sitemap\SitemapIndex;
 use Spatie\Sitemap\Tags\Sitemap as SitemapTag;
 use Spatie\Sitemap\Tags\Url;
@@ -48,38 +51,51 @@ class SiteMapService
 
     /**
      * Robot
-     * @var 
+     * @var string
      */
     private $robot;
 
 
-    public function __construct()
+    /**
+     * Uri
+     * @var string
+     */
+    private $uri;
+
+    /**
+     * Meta
+     * @var string
+     */
+    private $metafile;
+
+    /**
+     * Storage
+     * @var string
+     */
+    private $storage;
+
+    /**
+     * Construct
+     * @param bool $disableBackup
+     */
+    public function __construct(bool $disableBackup = true)
     {
         $sitemapName = 'sitemap.xml';
-        $uri = config('app.url') . "/" . $sitemapName;
+        $this->uri = config('app.url') . "/" . $sitemapName;
         $this->directory = public_path('sitemaps');
         $this->indexPath = public_path($sitemapName);
         $this->robot = public_path('robots.txt');
+        $this->metafile = base_path('resources/views/layouts/editable/meta.blade.php');
+        $this->storage = "public";
 
         // Create sitemap directory
         if (!is_dir($this->directory)) {
             mkdir($this->directory, 0777, true);
         }
 
-        // Init  robots.txt 
-        if (!file_exists($this->robot)) {
-            file_put_contents($this->robot, "User-agent: *\nDisallow:\n");
+        if ($disableBackup) {
+            $this->backupFiles();
         }
-
-        $robotsContent = file_get_contents($this->robot);
-
-        // Delete Sitemap line
-        $robotsContent = preg_replace('/^Sitemap:.*$/m', '', $robotsContent);
-
-        // Update line
-        $robotsContent = trim($robotsContent) . "\nSitemap: $uri\n";
-
-        file_put_contents($this->robot, $robotsContent);
     }
 
     /**
@@ -124,13 +140,8 @@ class SiteMapService
     /**
      * Register entry into a specific sitemap file
      */
-    public function register(
-        string $file,
-        string $url,
-        ?string $image = null,
-        ?string $changefreq = 'weekly',
-        ?float $priority = 0.5
-    ): bool {
+    public function register(string $file, string $url, ?string $image = null, ?string $changefreq = 'weekly', ?float $priority = 0.5): bool
+    {
 
         $path = $this->getSitemap($file);
 
@@ -202,7 +213,6 @@ class SiteMapService
 
         return true;
     }
-
 
     /**
      * Create/update sitemap index
@@ -317,7 +327,121 @@ class SiteMapService
             }
         }
 
+        // Reset robots.txt to block indexing
+        unlink($this->robot);
+        $robotsContent = "User-agent: *\nDisallow: /";
+        file_put_contents($this->robot, $robotsContent);
+
         return true;
+    }
+
+
+    public function backupFiles()
+    {
+        $public = public_path();
+
+        Storage::disk('backups')->makeDirectory($this->storage);
+
+        $files = ['robots.txt', 'sitemap.xml'];
+
+        foreach ($files as $file) {
+            $from = "{$public}/{$file}";
+            $to = "{$this->storage}/{$file}";
+
+            if (file_exists($from)) {
+                $content = file_get_contents($from);
+
+                Storage::disk('backups')->put($to, $content);
+            }
+        }
+    }
+
+    /**
+     * Restore backup
+     * @return void
+     */
+    public function restorePublicFromBackup()
+    {
+        $public = public_path();
+
+        // Stop if directory does not exists
+        if (!Storage::disk('backups')->exists($this->storage)) {
+            return;
+        }
+
+        // Get ALL files from backup directory
+        $allFiles = Storage::disk('backups')->allFiles($this->storage);
+
+        foreach ($allFiles as $backupFile) {
+            // Convert backup path to public path
+            $relativePath = str_replace($this->storage . '/', '', $backupFile);
+            $publicPath = "{$public}/{$relativePath}";
+
+            // Copy file from backup to public (overwrites existing files)
+            $content = Storage::disk('backups')->get($backupFile);
+            file_put_contents($publicPath, $content);
+
+            // Set permissions to 644
+            chmod($publicPath, 0644);
+        }
+    }
+
+    /**
+     * Get metadata
+     * @return bool|string
+     */
+    public function getMetaData()
+    {
+        $data = file_get_contents($this->metafile);
+
+        return $data;
+    }
+
+    /**
+     * Get robot data
+     * @return bool|string
+     */
+    public function getRobotData()
+    {
+        $data = file_get_contents($this->robot);
+
+        return $data;
+    }
+
+    /**
+     * Update meta data tags
+     * @param Request $request
+     * @throws ReportError
+     * @return bool
+     */
+    public function updateRobotData(Request $request): bool
+    {
+        try {
+            file_put_contents($this->robot, $request->meta);
+
+            return true;
+
+        } catch (\Exception $e) {
+            throw new ReportError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Update meta data tags
+     * @param Request $request
+     * @throws ReportError
+     * @return bool
+     */
+    public function updateMetaData(Request $request): bool
+    {
+        try {
+            file_put_contents($this->metafile, $request->meta);
+
+            return true;
+
+        } catch (\Exception $e) {
+            throw new ReportError($e->getMessage(), $e->getCode());
+        }
     }
 
 }

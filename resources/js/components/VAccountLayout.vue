@@ -20,299 +20,139 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div class="min-h-screen bg-white dark:bg-gray-900 flex">
-        <!-- Sidebar Overlay (Mobile) -->
-        <div
-            v-if="isSidebarOpen"
-            class="fixed inset-0 bg-black/80 z-30 lg:hidden"
-            @click="toggleMenu"
-        ></div>
-
-        <!-- Enhanced Sidebar - Fixed on desktop -->
-        <aside
-            :class="[
-                'fixed lg:fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out lg:transform-none lg:translate-x-0 border-r border-gray-200 dark:border-gray-700 flex flex-col',
-                isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
-            ]"
-        >
-            <!-- User Profile Section -->
-            <div
-                class="p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0"
-                v-if="$page.props.user"
-            >
-                <div class="flex items-center space-x-3">
-                    <div
-                        class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg"
-                    >
-                        {{ userInitials }}
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p
-                            class="text-sm font-semibold text-gray-900 dark:text-white truncate"
-                        >
-                            {{ user.name }}
-                        </p>
-                        <p
-                            class="text-sm text-gray-500 dark:text-gray-400 truncate"
-                        >
-                            {{ user.email }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Scrollable Navigation -->
-            <div class="flex-1 overflow-y-auto">
-                <nav class="p-4 space-y-2">
-                    <!-- Account Section -->
-                    <div>
-                        <h3
-                            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
-                        >
-                            {{ __("Account") }}
-                        </h3>
-                        <button
-                            @click="open($page.props.user_dashboard)"
-                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
-                        >
-                            <div
-                                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
-                            >
-                                <i
-                                    :class="[
-                                        'mdi',
-                                        $page.props.user_dashboard.icon,
-                                        'text-white text-sm',
-                                    ]"
-                                ></i>
-                            </div>
-                            <span>{{
-                                __($page.props.user_dashboard.name)
-                            }}</span>
-                        </button>
-                    </div>
-
-                    <!-- Developers Section -->
-                    <div v-if="developers.show">
-                        <h3
-                            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 mt-6"
-                        >
-                            {{ __(developers.name) }}
-                        </h3>
-                        <button
-                            v-for="(item, index) in developers.menu"
-                            :key="index"
-                            @click="open(item)"
-                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
-                        >
-                            <div
-                                class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"
-                            >
-                                <i
-                                    :class="[
-                                        'mdi',
-                                        item.icon,
-                                        'text-white text-sm',
-                                    ]"
-                                ></i>
-                            </div>
-                            <span>{{ __(item.name) }}</span>
-                        </button>
-                    </div>
-
-                    <!-- Dashboards Section -->
-                    <div v-if="admin_dashboard.length">
-                        <h3
-                            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 mt-6"
-                        >
-                            {{ __("Dashboards") }}
-                        </h3>
-                        <button
-                            v-for="(item, index) in admin_dashboard"
-                            :key="index"
-                            @click="open(item)"
-                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
-                        >
-                            <div
-                                class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center"
-                            >
-                                <i
-                                    :class="[
-                                        'mdi',
-                                        item.icon,
-                                        'text-white text-sm',
-                                    ]"
-                                ></i>
-                            </div>
-                            <span>{{ __(item.name) }}</span>
-                        </button>
-                    </div>
-
-                    <!-- Policies Section -->
-                    <div
-                        class="pt-4 border-t border-gray-200 dark:border-gray-700"
-                    >
-                        <button
-                            v-for="(item, index) in $page.props.policies"
-                            :key="index"
-                            @click="open(item)"
-                            v-show="item.show"
-                            class="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
-                        >
-                            <div
-                                class="w-8 h-8 bg-gray-400 dark:bg-gray-600 rounded-lg flex items-center justify-center"
-                            >
-                                <i
-                                    :class="[
-                                        'mdi',
-                                        item.icon,
-                                        'text-white text-sm',
-                                    ]"
-                                ></i>
-                            </div>
-                            <span>{{ __(item.name) }}</span>
-                        </button>
-                    </div>
-                </nav>
-            </div>
-
-            <!-- Footer -->
-            <div
-                class="border-t border-gray-200 dark:border-gray-700 p-4 flex-shrink-0"
-            >
-                <p class="text-xs text-center text-gray-500 dark:text-gray-400">
-                    &copy; {{ new Date().getFullYear() }}
-                    {{ $page.props.org_name }}
-                </p>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col min-w-0 lg:ml-64">
-            <!-- Enhanced Header -->
-            <header
-                class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 z-20 sticky top-0"
-            >
-                <div
-                    class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8"
+    <v-layout>
+        <template #aside>
+            <!-- Developers Section -->
+            <div v-if="developers.show" class="mb-6">
+                <h3
+                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 mt-2"
                 >
-                    <div class="flex items-center space-x-4">
-                        <!-- Mobile menu button -->
-                        <button
-                            @click="toggleMenu"
-                            class="lg:hidden p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                    {{ __(developers.name) }}
+                </h3>
+                <div class="space-y-1">
+                    <button
+                        v-for="(item, index) in developers.menu"
+                        :key="index"
+                        @click="open(item)"
+                        class="w-full flex items-center cursor-pointer space-x-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-200 group"
+                        :class="[
+                            isActive(item)
+                                ? 'bg-blue-200 text-gray-700 dark:bg-gray-500 dark:text-white'
+                                : '',
+                        ]"
+                    >
+                        <div
+                            class="w-8 h-8 bg-linear-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200"
                         >
-                            <i class="mdi mdi-menu text-lg"></i>
-                        </button>
-
-                        <!-- App Title -->
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
-                            >
-                                <i
-                                    class="mdi mdi-view-dashboard text-white text-sm"
-                                ></i>
-                            </div>
-                            <h1
-                                class="text-xl font-semibold text-gray-900 dark:text-white"
-                            >
-                                {{ app_name }}
-                            </h1>
+                            <i
+                                :class="[
+                                    'mdi',
+                                    item.icon,
+                                    'text-white text-sm',
+                                ]"
+                            ></i>
                         </div>
-                    </div>
-
-                    <div class="flex items-center space-x-4">
-                        <v-notification />
-                        <v-profile />
-                    </div>
+                        <span class="font-medium">{{ __(item.name) }}</span>
+                    </button>
                 </div>
-            </header>
+            </div>
 
-            <!-- Page Content -->
-            <main class="flex-1 overflow-auto bg-white dark:bg-gray-900">
-                <div class="p-4 sm:p-6 lg:p-8">
-                    <slot />
+            <!-- Dashboards Section -->
+            <div v-if="admin_dashboard.length" class="mb-6">
+                <h3
+                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3"
+                >
+                    {{ __("Dashboards") }}
+                </h3>
+                <div class="space-y-1">
+                    <button
+                        v-for="(item, index) in admin_dashboard"
+                        :key="index"
+                        @click="open(item)"
+                        class="w-full flex items-center cursor-pointer space-x-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-200 group"
+                    >
+                        <div
+                            class="w-8 h-8 bg-linear-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200"
+                        >
+                            <i
+                                :class="[
+                                    'mdi',
+                                    item.icon,
+                                    'text-white text-sm',
+                                ]"
+                            ></i>
+                        </div>
+                        <span class="font-medium">{{ __(item.name) }}</span>
+                    </button>
                 </div>
-            </main>
-        </div>
-    </div>
+            </div>
+
+            <!-- Policies Section -->
+            <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h3
+                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3"
+                >
+                    {{ __("Policies & Legal") }}
+                </h3>
+                <div class="space-y-1">
+                    <button
+                        v-for="(item, index) in page.props.policies"
+                        :key="index"
+                        @click="open(item)"
+                        v-show="item.show"
+                        class="w-full flex items-center cursor-pointer space-x-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group"
+                    >
+                        <div
+                            class="w-8 h-8 bg-linear-to-br from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700 rounded-lg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200"
+                        >
+                            <i
+                                :class="[
+                                    'mdi',
+                                    item.icon,
+                                    'text-white text-sm',
+                                ]"
+                            ></i>
+                        </div>
+                        <span class="font-medium">{{ __(item.name) }}</span>
+                    </button>
+                </div>
+            </div>
+        </template>
+        <template #main>
+            <slot />
+        </template>
+    </v-layout>
 </template>
 
-<script>
-import VProfile from "@/components/VProfile.vue";
-import VNotification from "@/components/VNotification.vue";
+<script setup>
+import VLayout from "@/components/VLayout.vue";
+import { usePage, router } from "@inertiajs/vue3";
+import { ref, computed, onMounted } from "vue";
 
-export default {
-    components: {
-        VProfile,
-        VNotification,
-    },
+const page = usePage();
+const menus = ref([]);
+const admin_dashboard = ref([]);
+const developers = ref([]);
 
-    data() {
-        return {
-            isSidebarOpen: false,
-            user: {},
-            app_name: "",
-            menus: [],
-            admin_dashboard: [],
-            transaction_dashboard: [],
-            partner_dashboard: [],
-            settings: {},
-            developers: [],
-            ecommerce_dashboard: [],
-        };
-    },
+onMounted(() => {
+    menus.value = page.props.user_routes ?? [];
+    admin_dashboard.value = page.props.admin_dashboard ?? [];
+    developers.value = page.props.developers ?? [];
+});
 
-    computed: {
-        userInitials() {
-            if (!this.user || !this.user.name) return "U";
-            return this.user.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase();
-        },
-    },
+const open = (item) => {
+    window.location.href = item.route;
+};
 
-    created() {
-        this.user = this.$page.props.user ?? {};
-        this.app_name = this.$page.props.app_name ?? "";
-        this.menus = this.$page.props.user_routes ?? [];
-        this.admin_dashboard = this.$page.props.admin_dashboard ?? [];
-        this.developers = this.$page.props.developers ?? [];
-    },
+const isActive = (item) => {
+    if (!item?.route) return false;
 
-    mounted() {
-        this.setupEventListeners();
-    },
+    // Current query without params
+    const currentPath = window.location.pathname;
 
-    methods: {
-        open(item) {
-            window.location.href = item.route;
-            // Close sidebar on mobile after navigation
-            if (window.innerWidth < 1024) {
-                this.isSidebarOpen = false;
-            }
-        },
+    //Get only the path without query params
+    const itemPath = new URL(item.route, window.location.origin).pathname;
 
-        toggleMenu() {
-            this.isSidebarOpen = !this.isSidebarOpen;
-        },
-
-        handleResize() {
-            if (window.innerWidth >= 1024) {
-                this.isSidebarOpen = false;
-            }
-        },
-
-        setupEventListeners() {
-            window.addEventListener("resize", this.handleResize);
-        },
-    },
-
-    beforeUnmount() {
-        window.removeEventListener("resize", this.handleResize);
-    },
+    return currentPath === itemPath;
 };
 </script>

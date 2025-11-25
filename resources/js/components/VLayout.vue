@@ -41,7 +41,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             ]"
         >
             <div
-                class="p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0"
+                class="p-4 border-b border-gray-200 dark:border-gray-700 shrink-0"
                 v-if="$page.props.user && aside"
             >
                 <div class="flex items-center space-x-3">
@@ -80,7 +80,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             class="w-full flex items-center space-x-3 px-3 py-2 cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
                         >
                             <div
-                                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
+                                class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center"
                             >
                                 <i
                                     :class="[
@@ -100,10 +100,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
             <!-- Footer -->
             <div
-                class="border-t border-gray-200 dark:border-gray-700 p-4 flex-shrink-0"
+                class="border-t border-gray-200 dark:border-gray-700 p-4 shrink-0"
                 v-if="aside"
             >
-                <p class="text-xs text-center text-gray-500 dark:text-gray-400">
+                <p
+                    class="text-xs text-center text-gray-500 dark:text-gray-400 font-medium"
+                >
                     &copy; {{ new Date().getFullYear() }}
                     {{ $page.props.org_name }}
                 </p>

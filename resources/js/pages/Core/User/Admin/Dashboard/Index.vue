@@ -307,7 +307,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import ApexCharts from "vue3-apexcharts";
-import VAdminLayout from "@/layouts/VAdminLayout.vue";
+import VAdminLayout from "@/components/VGeneralLayout.vue";
 
 export default {
     components: {

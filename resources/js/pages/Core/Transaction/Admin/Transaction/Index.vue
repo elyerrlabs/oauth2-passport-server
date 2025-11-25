@@ -1360,7 +1360,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script setup>
-import VAdminTransactionLayout from "@/layouts/VAdminTransactionLayout.vue";
+import VAdminTransactionLayout from "@/components/VGeneralLayout.vue";
 import VTransactionActivate from "@/components/VTransactionActivate.vue";
 import VDetail from "./Detail.vue";
 import VInput from "@/components/VInput.vue";

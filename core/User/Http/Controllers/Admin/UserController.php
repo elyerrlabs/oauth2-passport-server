@@ -72,7 +72,7 @@ class UserController extends WebController
             "data" => fractal($data, UserTransformer::class)->toArray(),
             "route" => route('user.admin.users.index'),
             "scopes" => route('user.admin.scopes.index'),
-            'admin_routes' => resolveInertiaRoutes(config('menus.admin_routes'))
+            'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);
     }
 

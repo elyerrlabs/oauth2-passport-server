@@ -534,7 +534,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <script setup>
 import { ref, reactive, onMounted, onBeforeUnmount, computed } from "vue";
 import VUpdate from "./Update.vue";
-import VPartnerLayout from "@/layouts/VPartnerLayout.vue";
+import VPartnerLayout from "@/components/VGeneralLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 

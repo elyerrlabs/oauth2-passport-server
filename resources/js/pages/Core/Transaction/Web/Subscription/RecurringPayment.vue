@@ -60,14 +60,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <template #body>
             <!-- Content -->
             <div class="p-6">
-                <p class="text-gray-700">
+                <p class="text-gray-700 dark:text-white">
                     {{ __(dialogMessage) }}
                 </p>
             </div>
 
             <!-- Actions -->
             <div
-                class="flex justify-between p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl"
+                class="flex justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 rounded-b-2xl"
             >
                 <button
                     @click="recurringPayment"
@@ -77,7 +77,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </button>
                 <button
                     @click="dialog = false"
-                    class="px-6 py-2 border border-red-600 text-red-600 rounded-lg font-medium hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
+                    class="px-6 py-2 border border-red-600 text-red-600 dark:border-red-300 dark:text-red-400 rounded-lg font-medium hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
                 >
                     {{ __("Cancel") }}
                 </button>

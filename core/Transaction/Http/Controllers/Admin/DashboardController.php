@@ -53,7 +53,7 @@ class DashboardController extends WebController
 
         return Inertia::render("Core/Transaction/Admin/Dashboard/Index", [
             "route" => route("transaction.admin.dashboard"),
-            "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes')),
+            "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
             'status' => route('api.transaction.payments.status')
         ]);
     }

@@ -433,7 +433,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script setup>
 import { ref, onMounted } from "vue";
-import VPartnerLayout from "@/layouts/VPartnerLayout.vue";
+import VPartnerLayout from "@/components/VGeneralLayout.vue";
 import { usePage } from "@inertiajs/vue3";
 
 const page = usePage();

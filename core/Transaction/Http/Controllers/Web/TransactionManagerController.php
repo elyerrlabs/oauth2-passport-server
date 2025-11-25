@@ -67,7 +67,7 @@ class TransactionManagerController extends WebController
             [
                 "data" => $this->transformCollection($data, TransactionTransformer::class),
                 "route" => route('transaction.transactions.index'),
-                "transaction_routes" => resolveInertiaRoutes(config('menus.transaction_routes')),
+                "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
             ]
         );
     }

@@ -24,6 +24,7 @@ namespace App\Console\Commands\Settings;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Services\SiteMapService;
 use Artisan;
 use Illuminate\Console\Command;
 use App\Services\Settings\Setting;
@@ -62,6 +63,7 @@ class settingsSystem extends Command
         Artisan::call('settings:channels-upload');
         Artisan::call('passport:keys');
         Setting::setDefaultKeys();
+        (new SiteMapService(false))->restorePublicFromBackup();
         $this->loadConfig();
         $this->info("Server installed successfully");
         Log::info("Server installed successfully");

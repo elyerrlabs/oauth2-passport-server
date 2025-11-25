@@ -1,0 +1,89 @@
+<?php
+
+
+/**
+ * Copyright (c) 2025 Elvis Yerel Roman Concha
+ *
+ * This file is part of an open source project licensed under the
+ * "NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
+ *
+ * You may use, study, modify, and redistribute this file for personal,
+ * educational, or non-commercial research purposes only.
+ *
+ * Commercial use is strictly prohibited without prior written consent
+ * from the author.
+ *
+ * Combining this software with any project licensed for commercial use
+ * (such as AGPL) is not permitted without explicit authorization.
+ *
+ * This software supports OAuth 2.0 and OpenID Connect.
+ *
+ * Author Contact: yerel9212@yahoo.es
+ *
+ * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
+ */
+
+return [
+
+    "merge" => [
+
+        "admin_dashboard" => [
+            "horizon" => [
+                "name" => "Horizon",
+                "route" => "horizon.index",
+                "icon" => "mdi mdi-poll",
+                "service" => "administrator:admin"
+            ],
+            "seo" => [
+                "name" => "Seo",
+                "route" => "admin.sitemaps.index",
+                "icon" => "mdi mdi-sitemap-outline",
+                "service" => "administrator:seo"
+            ],
+        ],
+
+        //"user_routes" => [
+        // "ecommerce" => [ // group
+        //     "id" => "my-route", // id
+        //     "name" => __("My Route"),
+        //     "route" => "example.route",
+        //     "icon" => "mdi-store-cog",
+        //     'service' => true // true or scope, example "administrator:role:view"
+        // ],
+        // ],
+
+        // Only parent api routes
+        // "api" => [
+        // example
+        // 'ecommerce' => [ // paren group
+        //    'search' => 'api.ecommerce.search', // route
+        // ]
+        // ]
+
+    ],
+
+    "seo_menus" => [
+        [
+            "id" => "list_of_pages",
+            "name" => "List of pages",
+            "route" => "admin.sitemaps.index",
+            "icon" => "mdi-sitemap-outline",
+            'service' => "administrator:seo"
+
+        ],
+        [
+            "id" => "meta_tags",
+            "name" => "Meta tags",
+            "route" => "admin.sitemaps.meta.form",
+            "icon" => "mdi-code-block-tags",
+            'service' => "administrator:seo"
+        ],
+        [
+            "id" => "robot",
+            "name" => "Robot",
+            "route" => "admin.sitemaps.robot.form",
+            "icon" => "mdi-robot-angry-outline",
+            'service' => "administrator:seo"
+        ]
+    ],
+];

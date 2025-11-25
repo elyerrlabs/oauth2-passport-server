@@ -37,11 +37,14 @@ class SecureHeaders
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Share nonce key 
         $nonce = $this->generateNonce();
-
         view()->share('nonce', $nonce);
+
+        // Next request
         $response = $next($request);
 
+        // Enabled or disable csp policies
         if (config('system.csp_enabled', true)) {
 
             $response->headers->set("Referrer-Policy", "no-referrer");
@@ -52,7 +55,10 @@ class SecureHeaders
 
             //Ignore csp policies in this route
             if (!in_array($request->route()->getName(), ['passport.authorizations.authorize'])) {
-                $response->headers->set("Content-Security-Policy", $this->ContentSecurityPolicy($nonce));
+
+                $rules = str_starts_with($request->getRequestUri(), "/horizon") ? $this->horizonRules($nonce) : $this->GeneralContentSecurityPolicy($nonce);
+
+                $response->headers->set("Content-Security-Policy", $rules);
             }
         }
 
@@ -60,10 +66,10 @@ class SecureHeaders
     }
 
     /**
-     * Setting default content security policies
+     * General content security policies
      * @return string
      */
-    public function ContentSecurityPolicy($nonce)
+    public function GeneralContentSecurityPolicy($nonce)
     {
         $policies = [
             "base-uri 'self'",
@@ -72,15 +78,15 @@ class SecureHeaders
             "script-src-attr 'self' 'nonce-{$nonce}'",
             // "style-src 'self' $host 'unsafe-inline'",
             // "style-src-elem 'self' $host 'unsafe-inline'",
-            "style-src-attr 'self' 'unsafe-inline' 'nonce-{$nonce}'",
+            // "style-src-attr 'self' 'unsafe-inline' 'nonce-{$nonce}'",
             "media-src 'self'",
             "object-src 'self'",
             "child-src 'self'",
             "frame-src 'self' https://newassets.hcaptcha.com/ https://challenges.cloudflare.com",
             "frame-ancestors 'self'",
             "img-src 'self' data:",
-            "font-src 'self'",
-            //"connect-src 'self'",
+            "font-src 'self' ",
+            "connect-src 'self'",
             "form-action *",
             "worker-src *",
             "manifest-src 'self'",
@@ -97,5 +103,37 @@ class SecureHeaders
     public function generateNonce()
     {
         return bin2hex(random_bytes(16));
+    }
+
+    /**
+     * CSP for Laravel Horizon
+     * @param string $nonce
+     * @return string
+     */
+    private function horizonRules(string $nonce)
+    {
+        $policies = [
+            "base-uri 'self'",
+            "script-src 'self' 'unsafe-eval'",
+            "script-src-elem 'self' 'nonce-{$nonce}' 'sha256-jHRymoWpX/G1UN93sLvOZ0jns2+9joiABzpMmVTyQaM=' 'sha256-HCGvZvnn9Ow5Fmsy1okiNoxHy4LYqfXT0YizvjxFXYQ=' 'sha256-4/KjDz6RspshOkVOL67SRn3OR0Zk4z9UxkFJsd+E4Vw='",
+            "script-src-attr 'self' 'nonce-{$nonce}'",
+            // "style-src 'self'",
+            // "style-src-elem 'self' 'nonce-{$nonce}'",
+            "style-src-attr 'self' 'nonce-{$nonce}'",
+            "media-src 'self'",
+            "object-src 'self'",
+            "child-src 'self'",
+            "frame-src 'self'",
+            "frame-ancestors 'self'",
+            "img-src 'self' data:",
+            "font-src 'self' https://fonts.bunny.net/ data:",
+            "connect-src 'self'",
+            "form-action *",
+            "worker-src *",
+            "manifest-src 'self'",
+            "upgrade-insecure-requests",
+        ];
+
+        return implode(";", $policies);
     }
 }

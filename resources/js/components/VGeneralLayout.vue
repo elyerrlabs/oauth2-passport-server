@@ -23,9 +23,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-layout>
         <template #aside>
             <div
-                class="sidebar-container p-4 bg-white dark:bg-gray-900 min-h-full"
+                class="sidebar-container p-2 bg-white dark:bg-gray-800 min-h-full"
             >
-                <div class="sidebar-header mb-6">
+                <div class="sidebar-header mb-2">
                     <h2 class="text-lg font-bold text-gray-800 dark:text-white">
                         {{ __("Navigation") }}
                     </h2>
@@ -37,14 +37,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             @click="open(item)"
                             class="group"
                             :class="[
-                                'menu-item flex items-center px-4 py-3 cursor-pointer transition-all duration-300 rounded-xl border',
+                                'menu-item flex items-center px-2 py-1 cursor-pointer transition-all duration-300 rounded-xl',
                                 isActive(item)
-                                    ? 'bg-blue-500 text-white shadow-lg border-blue-600 transform scale-105'
-                                    : 'text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-md',
+                                    ? 'bg-blue-500 text-white shadow-lg   transform scale-105'
+                                    : 'text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800   hover:bg-white dark:hover:bg-gray-700 hover:shadow-md',
                             ]"
                         >
                             <div
-                                class="menu-icon w-10 h-10 rounded-xl flex items-center justify-center mr-3 transition-all duration-300"
+                                class="menu-icon w-8 h-8 rounded-xl flex items-center justify-center mr-3 transition-all duration-300"
                                 :class="
                                     isActive(item)
                                         ? 'bg-white/20 text-white'
@@ -85,14 +85,22 @@ const menus = ref([]);
 const page = usePage();
 
 onMounted(() => {
-    menus.value = page.props.admin_routes;
+    menus.value = page.props.menus;
 });
 
 const open = (item) => {
-    window.location.href = item.route;
+    router.visit(item.route);
 };
 
 const isActive = (item) => {
-    return item.route == `${window.location.origin}${window.location.pathname}`;
+    if (!item?.route) return false;
+
+    // Current query without params
+    const currentPath = window.location.pathname;
+
+    //Get only the path without query params
+    const itemPath = new URL(item.route, window.location.origin).pathname;
+
+    return currentPath === itemPath;
 };
 </script>

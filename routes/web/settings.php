@@ -67,8 +67,14 @@ Route::group([
     'middleware' => ['throttle:general:settings']
 ], function () {
 
-    Route::get('', [SitemapController::class, 'index'])->name('index');
-    Route::post('', [SitemapController::class, 'store'])->name('store');
-    Route::delete('/reset', [SitemapController::class, 'reset'])->name('reset');
-    Route::delete('/{url}', [SitemapController::class, 'delete'])->name('delete');
+    Route::get('/routes', [SitemapController::class, 'index'])->name('index');
+    Route::post('/routes', [SitemapController::class, 'updateMeta'])->name('store');
+    Route::delete('/routes/reset', [SitemapController::class, 'reset'])->name('reset');
+    Route::delete('/routes/{url}', [SitemapController::class, 'delete'])->name('delete');
+
+    Route::get('/meta', [SitemapController::class, 'metaForm'])->name('meta.form');
+    Route::post('/meta', [SitemapController::class, 'updateMetaForm'])->name('meta.update');
+
+    Route::get('/robot', [SitemapController::class, 'robotForm'])->name('robot.form');
+    Route::post('/robot', [SitemapController::class, 'updateRobot'])->name('robot.update');
 });

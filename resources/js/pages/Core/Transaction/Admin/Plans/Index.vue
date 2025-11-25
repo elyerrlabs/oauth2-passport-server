@@ -841,7 +841,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import VAdminTransactionLayout from "@/layouts/VAdminTransactionLayout.vue";
+import VAdminTransactionLayout from "@/components/VGeneralLayout.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
 import VRevokeScope from "./RevokeScope.vue";

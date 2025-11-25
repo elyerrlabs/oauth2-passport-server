@@ -390,7 +390,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 </template>
 
 <script>
-import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import VAccountLayout from "@/components/VAccountLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
 import VUpdate from "./Update.vue";

@@ -1250,7 +1250,7 @@ import VTransactionActivate from "@/components/VTransactionActivate.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
 import VPaginate from "@/components/VPaginate.vue";
-import VAccountLayout from "@/layouts/VAccountLayout.vue";
+import VAccountLayout from "@/components/VAccountLayout.vue";
 import { onMounted, ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 

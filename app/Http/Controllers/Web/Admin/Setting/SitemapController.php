@@ -68,8 +68,38 @@ final class SitemapController extends WebController
                 'index' => route('admin.sitemaps.index'),
                 'store' => route('admin.sitemaps.store'),
                 'reset' => route('admin.sitemaps.reset'),
-            ]
+            ],
+            'menus' => resolveInertiaRoutes(config('menus.seo_menus')),
         ]);
+    }
+
+
+    public function metaForm()
+    {
+        return Inertia::render('Sitemap/Meta', [
+            'data' => $this->sitemapService->getMetaData(),
+            'routes' => [
+                'index' => route('admin.sitemaps.meta.form'),
+                'store' => route('admin.sitemaps.meta.update'),
+            ],
+            'menus' => resolveInertiaRoutes(config('menus.seo_menus')),
+        ]);
+    }
+
+    /**
+     * Update meta data
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateMetaForm(Request $request)
+    {
+        $this->validate($request, [
+            'meta' => 'required',
+        ]);
+
+        $this->sitemapService->updateMetaData($request);
+
+        return redirect()->back();
     }
 
     /**
@@ -77,7 +107,7 @@ final class SitemapController extends WebController
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function updateMeta(Request $request)
     {
         $request->validate([
             'url' => [
@@ -143,6 +173,38 @@ final class SitemapController extends WebController
     public function reset()
     {
         $this->sitemapService->reset();
+        return redirect()->back();
+    }
+
+    /**
+     * Show robot form editor
+     * @return \Inertia\Response
+     */
+    public function robotForm()
+    {
+        return Inertia::render('Sitemap/Robot', [
+            'data' => $this->sitemapService->getRobotData(),
+            'routes' => [
+                'index' => route('admin.sitemaps.robot.form'),
+                'store' => route('admin.sitemaps.robot.update'),
+            ],
+            'menus' => resolveInertiaRoutes(config('menus.seo_menus')),
+        ]);
+    }
+
+    /**
+     * Updated robot.txt
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateRobot(Request $request)
+    {
+        $this->validate($request, [
+            'meta' => 'required',
+        ]);
+
+        $this->sitemapService->updateRobotData($request);
+
         return redirect()->back();
     }
 }
