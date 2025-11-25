@@ -38,6 +38,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <button
                 v-for="tab in tabs"
                 :key="tab.id"
+                v-show="tab.show"
                 type="button"
                 class="px-6 py-2 tab-btn rounded-t-lg transition-all duration-200 font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
                 :class="{
@@ -51,14 +52,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
 
         <!-- Jodit Tab -->
-        <div v-show="activeTab === 'editor'">
+        <div v-show="activeTab === 'editor' && jodit">
             <textarea ref="editorEl" class="min-h-[500px]">
                 {{ props.modelValue }}
             </textarea>
         </div>
 
         <!-- HTML Tab -->
-        <div v-show="activeTab === 'html'">
+        <div v-show="activeTab === 'html' && monaco">
             <div class="mb-2 flex flex-wrap items-center gap-2">
                 <button
                     type="button"
@@ -88,7 +89,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <i class="fas fa-redo mr-1"></i>{{ __("Redo") }}
                 </button>
-                <!-- Nuevo botón de pantalla completa -->
                 <button
                     type="button"
                     class="toolbar-btn bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 hover:bg-orange-200 dark:hover:bg-orange-800"
@@ -116,6 +116,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-xs border border-gray-300 dark:border-gray-600"
                 >
                     <option value="html">HTML</option>
+                    <option value="text">Text</option>
                     <option value="javascript">JavaScript</option>
                     <option value="css">CSS</option>
                     <option value="json">JSON</option>
@@ -149,7 +150,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
 
         <!-- Preview Tab -->
-        <div v-show="activeTab === 'preview'">
+        <div v-show="activeTab === 'preview' && preview">
             <div class="mb-2 flex justify-between items-center">
                 <label
                     class="text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -191,6 +192,22 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    monaco: {
+        type: Boolean,
+        default: true,
+    },
+    jodit: {
+        type: Boolean,
+        default: true,
+    },
+    preview: {
+        type: Boolean,
+        default: true,
+    },
+    lang: {
+        type: String,
+        default: "html",
+    },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -199,13 +216,23 @@ const is_dark = ref(null);
 const isFullscreen = ref(false);
 
 const tabs = [
-    { id: "editor", label: __("Editor"), icon: "fa-edit" },
-    { id: "html", label: __("HTML Editor"), icon: "fa-code" },
-    { id: "preview", label: __("Preview"), icon: "fa-eye" },
+    { id: "editor", label: __("Editor"), icon: "fa-edit", show: props.jodit },
+    {
+        id: "html",
+        label: __("HTML Editor"),
+        icon: "fa-code",
+        show: props.monaco,
+    },
+    {
+        id: "preview",
+        label: __("Preview"),
+        icon: "fa-eye",
+        show: props.preview,
+    },
 ];
 
 const activeTab = ref("editor");
-const language = ref("html");
+const language = ref("");
 const editorEl = ref(null);
 const monacoEl = ref(null);
 const previewEl = ref(null);
@@ -217,6 +244,7 @@ let isMonacoInitialized = false;
 onMounted(async () => {
     await initializeEditors();
     window.addEventListener("theme-change", handleThemeChange);
+    language.value = props.lang;
 });
 
 onBeforeUnmount(() => {
@@ -245,7 +273,10 @@ const destroyEditors = () => {
 const initializeEditors = async () => {
     const theme = localStorage.getItem("theme") ?? "light";
     is_dark.value = theme;
-    console.log("Initializing editors with theme:", theme);
+
+    if (!props.jodit && props.monaco) {
+        activeTab.value = "html";
+    }
 
     await initializeJoditEditor(theme);
     if (activeTab.value === "html") {
