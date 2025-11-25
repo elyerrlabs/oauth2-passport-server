@@ -27,14 +27,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 ### Added
 
 -   Added support for sitemaps.
--   Added section to manage and improve SEO meta tag content.
+-   Added SEO management section.
+-   Added support to edit `robots.txt`.
+-   Added real-time backup generation for `robots.txt` and `sitemap.xml`.
+-   Added automatic restoration of backed-up SEO files on every Docker container restart or when running `php artisan settings:system-start`.
+-   Added Docker volumes for data persistence:
+    -   `sitemaps:/var/www/public/sitemaps`
+    -   `cache:/var/www/storage/framework/cache`
+    -   `logs:/var/www/storage/logs`
+-   Added new `deploy-latest` option for deploying the `latest` image tag.
 -   Added Content Security Policy exceptions for Horizon, Monaco Editor, and Jodit Editor.
 
 ### Improved
 
 -   Improved password update validation request.
 -   Updated language files.
--   Updated lang
+-   Updated lang resources.
 
 ### Fixed
 
