@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
-## 🛠️ Unreleased
+## 🛠️ v4.0.2
 
 ### Added
 
