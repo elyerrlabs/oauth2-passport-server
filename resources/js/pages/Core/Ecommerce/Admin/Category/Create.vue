@@ -324,7 +324,8 @@ const create = async () => {
         if (res.status === 200) {
             $notify.success(__("Category updated successfully"));
 
-            loadData(res.data.data);
+            loadData(res.data);
+            errors.value = {};
         }
     } catch (e) {
         if (e?.response?.status == 422) {
