@@ -24,7 +24,6 @@ namespace App\Http\Middleware;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Illuminate\Support\Facades\Log;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Closure;
 use Illuminate\Http\Request;
@@ -41,15 +40,10 @@ class VerifyDemoUser
     {
         if (auth()->check() && auth()->user()->email == config("system.demo.email") && !$request->isMethod('get')) {
 
-            if ($request->wantsJson()) {
-
-                throw new ReportError(
-                    __("You do not have the required permissions. It seems you are logged in as a demo user."),
-                    403
-                );
-            }
-
-            return redirect()->back()->with('error', __("You do not have the required permissions. It seems you are logged in as a demo user."));
+            throw new ReportError(
+                __("You do not have the required permissions. It seems you are logged in as a demo user."),
+                403
+            );
         }
 
         return $next($request);
