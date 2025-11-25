@@ -36,6 +36,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 ### Fixed
 
 -   Middleware restriction to block non-GET requests for demo users.
+-   Fixed language auto-detection for demo users
 
 ## 🛠️ v4.0.3
 
