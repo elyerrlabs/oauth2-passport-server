@@ -80,7 +80,7 @@ class TransactionService
 
     /**
      * Package repository
-     * @var PackageRepository
+     * @var PackageService
      */
     private $packageService;
 
