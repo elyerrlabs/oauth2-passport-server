@@ -50,6 +50,8 @@ COPY docker/www.conf /etc/php84/php-fpm.d/www.conf
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/default.conf /etc/nginx/http.d/default.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh 
+COPY docker/php.ini /etc/php84/conf.d/99-custom.ini
+
 # supervisor config to manage services
 RUN mkdir -p /etc/supervisor.d \
     && cp docker/laravel.ini /etc/supervisor.d/laravel.ini \

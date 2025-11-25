@@ -45,7 +45,10 @@ services:
         volumes:
             - .env:/root/.env
             - app-secrets:/var/www/secrets
-            - files:/var/www/storage/app
+            - files:/var/www/storage/app 
+            - sitemaps:/var/www/public/sitemaps
+            - cache:/var/www/storage/framework/cache
+            - logs:/var/www/storage/logs
         command: sh -c "/usr/local/bin/entrypoint.sh"
         networks:
             - internal-net
@@ -55,6 +58,9 @@ volumes:
     pg-data:
     app-secrets:
     files:
+    sitemaps:
+    cache:
+    logs:
 
 networks:
     internal-net:

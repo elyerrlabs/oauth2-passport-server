@@ -22,9 +22,8 @@
 # SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 # -----------------------------------------------------------------------------
 
-
-IMAGE="elyerr/oauth2-passport-server:dev"
-COMPOSE_FILE="docker-compose-dev.yml"
+IMAGE="elyerr/oauth2-passport-server:latest"
+COMPOSE_FILE="docker-compose-latest.yml"
 ENV_FILE=".env"
 
 echo "Downloading image ..."
@@ -40,7 +39,7 @@ required_keys=(
     DB_PASSWORD
 )
 
-# Step 1: Ensure docker-compose-dev.yml exists
+# Step 1: Ensure docker-compose-prod.yml exists
 if [ ! -f "$COMPOSE_FILE" ]; then
     if [ -f "docker-compose.yml" ]; then
         cp docker-compose.yml "$COMPOSE_FILE"
@@ -71,6 +70,8 @@ for key in "${required_keys[@]}"; do
     fi
 done
 
+echo "[INFO] Environment variables validated successfully."
+
 # Replace image line under "app:"
 awk -v image="$IMAGE" '
 /^[[:space:]]*app:/ {
@@ -79,7 +80,7 @@ awk -v image="$IMAGE" '
     next
 }
 in_app && /^[[:space:]]*image:/ {
-    print "    image: " image
+    print "        image: " image
     next
 }
 /^[[:space:]]*[a-zA-Z0-9_-]+:/ && !/^[[:space:]]*app:/ {
@@ -87,15 +88,6 @@ in_app && /^[[:space:]]*image:/ {
 }
 { print }
 ' "$COMPOSE_FILE" > "$COMPOSE_FILE.tmp" && mv "$COMPOSE_FILE.tmp" "$COMPOSE_FILE"
-
-# Ensure name: oauth2-server-dev is set at the top of the compose file
-if grep -q "^name:" "$COMPOSE_FILE"; then
-    sed -i 's/^name:.*/name: oauth2-server-dev/' "$COMPOSE_FILE"
-    echo "[INFO] Updated 'name:' to 'oauth2-server-dev'"
-else
-    sed -i '1s/^/name: oauth2-server-dev\n/' "$COMPOSE_FILE"
-    echo "[INFO] Inserted 'name: oauth2-server-dev' at the top"
-fi
 
 echo "[INFO] Updated app service image to: $IMAGE"
 
