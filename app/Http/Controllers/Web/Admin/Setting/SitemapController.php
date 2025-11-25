@@ -107,7 +107,7 @@ final class SitemapController extends WebController
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function updateMeta(Request $request)
     {
         $request->validate([
             'url' => [
@@ -173,6 +173,38 @@ final class SitemapController extends WebController
     public function reset()
     {
         $this->sitemapService->reset();
+        return redirect()->back();
+    }
+
+    /**
+     * Show robot form editor
+     * @return \Inertia\Response
+     */
+    public function robotForm()
+    {
+        return Inertia::render('Sitemap/Robot', [
+            'data' => $this->sitemapService->getRobotData(),
+            'routes' => [
+                'index' => route('admin.sitemaps.robot.form'),
+                'store' => route('admin.sitemaps.robot.update'),
+            ],
+            'menus' => resolveInertiaRoutes(config('menus.seo_menus')),
+        ]);
+    }
+
+    /**
+     * Updated robot.txt
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateRobot(Request $request)
+    {
+        $this->validate($request, [
+            'meta' => 'required',
+        ]);
+
+        $this->sitemapService->updateRobotData($request);
+
         return redirect()->back();
     }
 }

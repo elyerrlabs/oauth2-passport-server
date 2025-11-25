@@ -77,6 +77,13 @@ return [
             "route" => "admin.sitemaps.meta.form",
             "icon" => "mdi-code-block-tags",
             'service' => "administrator:seo"
+        ],
+        [
+            "id" => "robot",
+            "name" => "Robot",
+            "route" => "admin.sitemaps.robot.form",
+            "icon" => "mdi-robot-angry-outline",
+            'service' => "administrator:seo"
         ]
     ],
 ];

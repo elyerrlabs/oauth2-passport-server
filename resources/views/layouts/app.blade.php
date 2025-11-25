@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="dark">
 
 <head>
-    @include('layouts.parts.meta')
+    @include('layouts.editable.meta')
 
     <link rel="icon" href="{{ config('app.url') }}/favicon.png" type="image/png">
 
