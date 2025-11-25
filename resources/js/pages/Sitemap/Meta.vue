@@ -43,7 +43,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Editor -->
-            <v-editor v-model="form.meta" :error="form.errors.meta" />
+            <v-editor
+                v-model="form.meta"
+                :error="form.errors.meta"
+                :jodit="false"
+                :preview="false"                
+            />
 
             <!-- Actions -->
             <div class="mt-6 flex justify-end">
