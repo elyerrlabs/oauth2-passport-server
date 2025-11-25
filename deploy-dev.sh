@@ -79,7 +79,7 @@ awk -v image="$IMAGE" '
     next
 }
 in_app && /^[[:space:]]*image:/ {
-    print "    image: " image
+    print "        image: " image
     next
 }
 /^[[:space:]]*[a-zA-Z0-9_-]+:/ && !/^[[:space:]]*app:/ {
