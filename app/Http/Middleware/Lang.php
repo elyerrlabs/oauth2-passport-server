@@ -44,7 +44,13 @@ class Lang
         if (!auth()->check()) {
             app()->setLocale($locale ?? 'en');
         } else {// Only auth user 
-            app()->setLocale(auth()->user()->lang);
+
+            // Detect system language for demo user
+            if (auth()->user()->email == config("system.demo.email")) {
+                app()->setLocale($locale ?? 'en');
+            } else { // No demo user
+                app()->setLocale(auth()->user()->lang);
+            }
         }
         return $next($request);
     }
