@@ -24,6 +24,8 @@ namespace Core\Ecommerce\Services;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Services\FileService;
+use Illuminate\Support\Facades\DB;
 use Core\Ecommerce\Model\Product;
 use Illuminate\Http\Request;
 use Core\Ecommerce\Model\Category;
@@ -40,10 +42,29 @@ final class CategoryService
      */
     private $categoryRepository;
 
+    /**
+     * FileService
+     * @var FileService
+     */
+    private $fileService;
 
     public function __construct()
     {
         $this->categoryRepository = app(CategoryRepository::class);
+        $this->fileService = app(FileService::class);
+    }
+
+    /**
+     * Storage to save image
+     * @param string $id
+     * @return string
+     */
+    public function getStorage(string $id = '')
+    {
+        if (empty($id)) {
+            return $this->categoryRepository->getStorage();
+        }
+        return $this->categoryRepository->getStorage() . '/' . $id;
     }
 
 
@@ -152,12 +173,23 @@ final class CategoryService
      */
     public function create(array $data)
     {
-        $data['tag'] = Product::getTag();
-        $model = $this->categoryRepository->create($data);
-        $this->createIcon($model, $data);
-        $this->createImage($model, $data);
+        return DB::transaction(function () use ($data) {
 
-        return $model;
+            $images = $this->fileService->processImage($data['images'] ?? []);
+
+            $data['tag'] = Product::getTag();
+            $model = $this->categoryRepository->create($data);
+            $this->createIcon($model, $data);
+            // $this->createImage($model, $data);
+
+            $this->fileService->saveImage(
+                $model,
+                $images,
+                $this->getStorage($model->id)
+            );
+
+            return $model;
+        });
     }
 
     /**
@@ -258,11 +290,32 @@ final class CategoryService
      */
     public function update(string $id, array $data)
     {
-        $model = $this->categoryRepository->update($id, $data);
+        DB::transaction(function () use ($id, $data) {
 
-        $this->createIcon($model, $data);
-        $this->createImage($model, $data);
-        return $model;
+            $images = $this->fileService->processImage($data['images'] ?? []);
+
+            $model = $this->categoryRepository->update($id, [
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'featured' => $data['featured'],
+                'published' => $data['published'],
+                'parent_id' => !in_array(
+                    strtolower($data['parent_id']),
+                    ['', ' ', 'undefined', 'null'],
+                    true
+                ) ? $data['parent_id'] : null
+            ]);
+
+            $this->createIcon($model, $data);
+            // $this->createImage($model, $data);
+            $this->fileService->saveImage(
+                $model,
+                $images,
+                $this->getStorage($model->id)
+            );
+        });
+
+        return $this->details($id);
     }
 
 

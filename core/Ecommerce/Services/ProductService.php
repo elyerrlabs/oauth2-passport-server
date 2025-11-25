@@ -26,6 +26,7 @@ namespace Core\Ecommerce\Services;
  */
 
 use Illuminate\Support\Str;
+use App\Services\FileService;
 use Illuminate\Http\Request;
 use Core\Ecommerce\Model\Product;
 use Core\Ecommerce\Model\Variant;
@@ -45,6 +46,12 @@ class ProductService
      */
     private $productRepository;
 
+    /**
+     * FileService
+     * @var FileService
+     */
+    private $fileService;
+
 
     /**
      * Construct
@@ -52,6 +59,20 @@ class ProductService
     public function __construct()
     {
         $this->productRepository = app(ProductRepository::class);
+        $this->fileService = app(FileService::class);
+    }
+
+    /**
+     * Storage to save image
+     * @param string $id
+     * @return string
+     */
+    public function getStorage(string $id = '')
+    {
+        if (empty($id)) {
+            return $this->productRepository->getStorage();
+        }
+        return $this->productRepository->getStorage() . '/' . $id;
     }
 
     /**
@@ -303,17 +324,26 @@ class ProductService
      */
     public function create(array $data)
     {
-
         return DB::transaction(function () use ($data) {
+
+            // Save image in the tmp directory
+            $images = $this->fileService->processImage($data['images'] ?? []);
 
             $data['category_id'] = $data['category'];
 
             $model = $this->productRepository->create($data);
             $this->createOrUpdateVariants($model, $data);
-            $this->createImage($model, $data);
             $this->createAttributes($model, $data);
+            // $this->createImage($model, $data);
             //$this->createTags($model, $data);
             $this->addChildren($model, $data);
+
+            // Save image
+            $this->fileService->saveImage(
+                $model,
+                $images,
+                $this->getStorage($model->id)
+            );
 
             return $model;
         });
@@ -520,16 +550,25 @@ class ProductService
     {
         DB::transaction(function () use ($id, $data) {
 
+            $images = $this->fileService->processImage($data['images']);
+
             $data['category_id'] = $data['category'];
 
             $model = $this->find($id);
             $model->update($data);
 
             $this->createOrUpdateVariants($model, $data);
-            $this->createImage($model, $data);
             $this->createAttributes($model, $data);
+            //$this->createImage($model, $data);
             // $this->createTags($model, $data);
             $this->addChildren($model, $data);
+
+            $this->fileService->saveImage(
+                $model,
+                $images,
+                $this->getStorage($model->id)
+            );
+
             return $model;
         });
 

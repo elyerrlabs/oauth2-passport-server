@@ -84,7 +84,8 @@ class StoreRequest extends FormRequest
                 Rule::requiredIf(function () {
                     return !$this->filled('id');
                 }),
-                'array'
+                'array',
+                'max:5'
             ],
             'images.*' => ['image', 'mimes:webp,jpg,jpeg,bmp,png', 'max:2048'],
             'attributes' => ['required', 'array'],
