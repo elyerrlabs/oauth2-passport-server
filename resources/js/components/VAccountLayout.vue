@@ -22,33 +22,35 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-layout>
         <template #aside>
-            <!-- Developers Section -->
-            <div v-if="developers.show" class="mb-6">
+            <!-- Dashboards Section -->
+            <div class="mb-6">
                 <h3
-                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 mt-2"
+                    class="text-xs font-semibold text-gray-500 flex items-center dark:text-gray-400 uppercase tracking-wider mb-3"
                 >
-                    {{ __(developers.name) }}
+                    <span
+                        class="mdi mdi-shield-crown-outline text-2xl me-2"
+                    ></span>
+                    {{ __("Administrator") }}
                 </h3>
                 <div class="space-y-1">
                     <button
-                        v-for="(item, index) in developers.menu"
+                        v-for="(item, index) in admin_dashboard"
                         :key="index"
                         @click="open(item)"
-                        class="w-full flex items-center cursor-pointer space-x-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-200 group"
-                        :class="[
-                            isActive(item)
-                                ? 'bg-blue-200 text-gray-700 dark:bg-gray-500 dark:text-white'
-                                : '',
-                        ]"
+                        class="group w-full flex items-center cursor-pointer gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50"
+                        :class="{
+                            'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm':
+                                isActive(item),
+                        }"
                     >
                         <div
-                            class="w-8 h-8 bg-linear-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200"
+                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-200 dark:bg-gray-700 transition-all duration-200 group-hover:scale-110 group-hover:bg-gray-300 dark:group-hover:bg-gray-600"
                         >
                             <i
                                 :class="[
                                     'mdi',
                                     item.icon,
-                                    'text-white text-sm',
+                                    'text-gray-600 dark:text-gray-300 text-base',
                                 ]"
                             ></i>
                         </div>
@@ -57,28 +59,38 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
             </div>
 
-            <!-- Dashboards Section -->
-            <div v-if="admin_dashboard.length" class="mb-6">
+            <!-- Developers Section -->
+            <div
+                v-if="developers.show"
+                class="pt-2 border-t border-gray-200 dark:border-gray-700"
+            >
                 <h3
-                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3"
+                    class="text-xs font-semibold flex items-center text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 mt-2"
                 >
-                    {{ __("Dashboards") }}
+                    <span
+                        class="mdi mdi-application-brackets-outline text-2xl me-2"
+                    ></span>
+                    {{ __(developers.name) }}
                 </h3>
                 <div class="space-y-1">
                     <button
-                        v-for="(item, index) in admin_dashboard"
+                        v-for="(item, index) in developers.menu"
                         :key="index"
                         @click="open(item)"
-                        class="w-full flex items-center cursor-pointer space-x-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-200 group"
+                        class="group w-full flex items-center cursor-pointer gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50"
+                        :class="{
+                            'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm':
+                                isActive(item),
+                        }"
                     >
                         <div
-                            class="w-8 h-8 bg-linear-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200"
+                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-200 dark:bg-gray-700 transition-all duration-200 group-hover:scale-110 group-hover:bg-gray-300 dark:group-hover:bg-gray-600"
                         >
                             <i
                                 :class="[
                                     'mdi',
                                     item.icon,
-                                    'text-white text-sm',
+                                    'text-gray-600 dark:text-gray-300 text-base',
                                 ]"
                             ></i>
                         </div>
@@ -90,8 +102,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Policies Section -->
             <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h3
-                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3"
+                    class="text-xs font-semibold flex items-center text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3"
                 >
+                    <span class="mdi mdi-file-sign text-2xl me-2"></span>
                     {{ __("Policies & Legal") }}
                 </h3>
                 <div class="space-y-1">
@@ -100,16 +113,94 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         :key="index"
                         @click="open(item)"
                         v-show="item.show"
-                        class="w-full flex items-center cursor-pointer space-x-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group"
+                        class="group w-full flex items-center cursor-pointer gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50"
+                        :class="{
+                            'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm':
+                                isActive(item),
+                        }"
                     >
                         <div
-                            class="w-8 h-8 bg-linear-to-br from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700 rounded-lg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200"
+                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-200 dark:bg-gray-700 transition-all duration-200 group-hover:scale-110 group-hover:bg-gray-300 dark:group-hover:bg-gray-600"
                         >
                             <i
                                 :class="[
                                     'mdi',
                                     item.icon,
-                                    'text-white text-sm',
+                                    'text-gray-600 dark:text-gray-300 text-base',
+                                ]"
+                            ></i>
+                        </div>
+                        <span class="font-medium">{{ __(item.name) }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <div
+                class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+            >
+                <h3
+                    class="text-xs font-semibold flex items-center text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3"
+                >
+                    <span class="mdi mdi-apps text-2xl me-2"></span>
+                    {{ __("My apps") }}
+                </h3>
+                <div class="space-y-1">
+                    <button
+                        v-for="(item, index) in $page.props?.user_routes"
+                        :key="index"
+                        @click="open(item)"
+                        class="group w-full flex items-center cursor-pointer gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50"
+                        :class="{
+                            'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm':
+                                isActive(item),
+                        }"
+                    >
+                        <div
+                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-200 dark:bg-gray-700 transition-all duration-200 group-hover:scale-110 group-hover:bg-gray-300 dark:group-hover:bg-gray-600"
+                        >
+                            <i
+                                :class="[
+                                    'mdi',
+                                    item.icon,
+                                    'text-gray-600 dark:text-gray-300 text-base',
+                                ]"
+                            ></i>
+                        </div>
+                        <span class="font-medium">{{ __(item.name) }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <div
+                class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+            >
+                <h3
+                    class="text-xs flex items-center font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3"
+                >
+                    <span
+                        class="mdi mdi-account-lock-outline text-2xl me-2"
+                    ></span>
+                    {{ __("User Settings") }}
+                </h3>
+                <div class="space-y-1">
+                    <button
+                        v-for="(item, index) in $page.props?.user_settings"
+                        :key="index"
+                        @click="open(item)"
+                        class="group w-full flex items-center cursor-pointer gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50"
+                        :class="{
+                            'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm':
+                                isActive(item),
+                        }"
+                    >
+                        <div
+                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-200 dark:bg-gray-700 transition-all duration-200 group-hover:scale-110 group-hover:bg-gray-300 dark:group-hover:bg-gray-600"
+                        >
+                            <i
+                                :class="[
+                                    'mdi',
+                                    item.icon,
+                                    'text-gray-600 dark:text-gray-300 text-base',
                                 ]"
                             ></i>
                         </div>

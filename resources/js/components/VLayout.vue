@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <div class="min-h-screen bg-white dark:bg-gray-900 flex">
         <!-- Sidebar Overlay (Mobile) -->
         <div
-            v-if="isSidebarOpen"
+            v-show="isSidebarOpen"
             class="fixed inset-0 bg-black/80 z-40 lg:hidden"
             @click="toggleMenu"
         ></div>
@@ -41,59 +41,39 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             ]"
         >
             <div
-                class="p-4 border-b border-gray-200 dark:border-gray-700 shrink-0"
-                v-if="$page.props.user && aside"
+                class="p-4 border-b border-gray-200 dark:border-gray-700 shrink-0 bg-white dark:bg-gray-900"
+                v-show="aside"
             >
-                <div class="flex items-center space-x-3">
-                    <div
-                        class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg"
+                <div class="flex items-center gap-4">
+                    <!-- Botón Home -->
+                    <button
+                        @click="open($page.props.user_dashboard)"
+                        class="w-11 h-11 lg:w-12 lg:h-12 bg-blue-600 rounded-full flex items-center justify-center text-white shadow hover:bg-blue-700 transition"
                     >
-                        {{ userInitials }}
-                    </div>
+                        <span
+                            :class="[
+                                'mdi',
+                                $page.props.user_dashboard.icon,
+                                'text-white text-xl lg:text-2xl',
+                            ]"
+                        ></span>
+                    </button>
+
+                    <!-- Nombre de app -->
                     <div class="flex-1 min-w-0">
-                        <p
-                            class="text-sm font-semibold text-gray-900 dark:text-white truncate"
+                        <a
+                            @click="open($page.props.user_dashboard)"
+                            class="text-base lg:text-lg font-semibold cursor-pointer text-gray-800 dark:text-gray-100 hover:underline truncate"
                         >
-                            {{ user.name }}
-                        </p>
-                        <p
-                            class="text-sm text-gray-500 dark:text-gray-400 truncate"
-                        >
-                            {{ user.email }}
-                        </p>
+                            {{ $page.props.app_name }}
+                        </a>
                     </div>
                 </div>
             </div>
 
             <!-- Scrollable Navigation -->
-            <div class="flex-1 overflow-y-auto" v-if="aside">
+            <div class="flex-1 overflow-y-auto" v-show="aside">
                 <nav class="p-4 space-y-2">
-                    <!-- Account Section -->
-                    <div>
-                        <h3
-                            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
-                        >
-                            {{ __("Account") }}
-                        </h3>
-                        <button
-                            @click="open($page.props.user_dashboard)"
-                            class="w-full flex items-center space-x-3 px-3 py-2 cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
-                        >
-                            <div
-                                class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center"
-                            >
-                                <i
-                                    :class="[
-                                        'mdi',
-                                        $page.props.user_dashboard.icon,
-                                        'text-white text-sm',
-                                    ]"
-                                ></i>
-                            </div>
-                            <span>{{ __("Home") }}</span>
-                        </button>
-                    </div>
-
                     <slot name="aside" />
                 </nav>
             </div>
@@ -101,13 +81,26 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <!-- Footer -->
             <div
                 class="border-t border-gray-200 dark:border-gray-700 p-4 shrink-0"
-                v-if="aside"
+                v-show="aside"
             >
                 <p
                     class="text-xs text-center text-gray-500 dark:text-gray-400 font-medium"
                 >
                     &copy; {{ new Date().getFullYear() }}
                     {{ $page.props.org_name }}
+                </p>
+
+                <p
+                    class="text-[11px] text-center text-gray-400 dark:text-gray-500 mt-1"
+                >
+                    Developer by
+                    <a
+                        href="https://t.me/elyerr"
+                        target="_blank"
+                        class="font-semibold text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                    >
+                        @elyerr
+                    </a>
                 </p>
             </div>
         </aside>
@@ -120,14 +113,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <header
                 class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 z-30 sticky top-0"
             >
-                <div
-                    class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8"
-                >
+                <div class="flex items-center justify-between h-16 px-4">
                     <div class="flex items-center space-x-4">
                         <!-- Mobile menu button -->
                         <button
                             @click="toggleMenu"
-                            class="lg:hidden p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                            class="lg:hidden p-2 rounded-md text-gray-600 cursor-pointer dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                         >
                             <i class="mdi mdi-menu text-lg"></i>
                         </button>
@@ -135,27 +126,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Toggle Sidebar Button (Desktop) -->
                         <button
                             @click="toggle"
-                            class="w-8 h-8 bg-blue-600 rounded-lg hidden lg:flex items-center justify-center hover:bg-blue-700 transition-colors duration-200"
+                            class="w-10 h-10 bg-blue-600 rounded-lg cursor-pointer hidden lg:flex items-center justify-center hover:bg-blue-700 transition-colors duration-200"
                             :title="
                                 aside ? __('Hide sidebar') : __('Show sidebar')
                             "
                         >
                             <i
                                 :class="[
-                                    'mdi text-white text-sm transition-transform duration-300',
+                                    'mdi text-white text-2xl transition-transform duration-300',
                                     aside
                                         ? 'mdi-chevron-left'
                                         : 'mdi-chevron-right',
                                 ]"
                             ></i>
                         </button>
-
-                        <!-- App Title -->
-                        <h1
-                            class="text-xl font-semibold text-gray-900 dark:text-white"
-                        >
-                            {{ app_name }}
-                        </h1>
                     </div>
 
                     <div class="flex items-center space-x-4">
