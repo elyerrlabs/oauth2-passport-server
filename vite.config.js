@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
-//import monacoEditorPlugin from "vite-plugin-monaco-editor-esm";
+import monacoEditorPlugin from "vite-plugin-monaco-editor-esm";
 import path from "path";
 
 export default defineConfig({
@@ -19,7 +19,7 @@ export default defineConfig({
       ],
       refresh: true,
     }),
-  //  monacoEditorPlugin(),
+    monacoEditorPlugin(),
     vue({
       template: {
         transformAssetUrls: {
@@ -35,7 +35,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ["monaco-editor"],
+    include: ["monaco-editor"],
   },
   build: {
     minify: "esbuild",
