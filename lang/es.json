@@ -3538,5 +3538,14 @@
   "Update Robots.txt": "Actualizar Robots.txt",
   "Robots.txt file has been updated successfully": "El archivo robots.txt se ha actualizado correctamente",
   "Comprehensive template applied successfully": "Plantilla completa aplicada correctamente",
-  "Reset to default configuration": "Restablecer a configuración por defecto"
+  "Reset to default configuration": "Restablecer a configuración por defecto",
+  "Drop images here or click to browse": "Suelta las imágenes aquí o haz clic para buscar",
+  "Supports JPG, PNG, WEBP, GIF • Max 5MB": "Soporta JPG, PNG, WEBP, GIF • Máx. 5MB",
+  "Browse": "Buscar",
+  "No images selected": "No hay imágenes seleccionadas",
+  "Your uploaded images will appear here": "Tus imágenes subidas aparecerán aquí",
+  "View Image": "Ver Imagen",
+  "Remove Image": "Eliminar Imagen",
+  "Valid file": "Archivo válido",
+  "File error": "Error en archivo"
 }
