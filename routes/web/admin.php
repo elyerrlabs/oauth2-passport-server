@@ -23,8 +23,7 @@
  */
 
 use Illuminate\Support\Facades\Route;
-use Rap2hpoutre\LaravelLogViewer\LogViewerController;
-use App\Http\Controllers\Web\Admin\Setting\TerminalController;
+use Rap2hpoutre\LaravelLogViewer\LogViewerController; 
 use App\Http\Controllers\Web\Admin\OAuth\ClientAdminController;
 use App\Http\Controllers\Web\Admin\Broadcasting\BroadcastController;
 
@@ -35,7 +34,6 @@ Route::middleware(['throttle:general:settings'])
     ->group(function () {
 
         //Route::resource('broadcasts', BroadcastController::class)->only('index', 'store', 'destroy');
-        //Route::resource('terminals', TerminalController::class)->only('index', 'store');
     
         Route::middleware(['auth', 'userCanAny:administrator:logs:full'])->group(function () {
             Route::get('/logs', [LogViewerController::class, 'index'])->name('logs');
