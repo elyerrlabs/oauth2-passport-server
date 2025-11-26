@@ -102,6 +102,7 @@ return [
             "route" => "user.admin.dashboard",
             "icon" => "mdi-view-dashboard",
             'service' => 'administrator:admin',
+            'position' => 1,
         ],
         [
             "id" => "groups",
@@ -109,6 +110,7 @@ return [
             "route" => "user.admin.groups.index",
             "icon" => "mdi-account-group",
             'service' => 'administrator:group',
+            'position' => 2,
         ],
         [
             "id" => "roles",
@@ -116,6 +118,7 @@ return [
             "route" => "user.admin.roles.index",
             "icon" => "mdi-format-list-group",
             'service' => 'administrator:role',
+            'position' => 3,
         ],
         [
             "id" => "services",
@@ -123,6 +126,7 @@ return [
             "route" => "user.admin.services.index",
             "icon" => "mdi-text-box-check",
             'service' => 'administrator:service',
+            'position' => 4,
         ],
         [
             "id" => "users",
@@ -130,13 +134,15 @@ return [
             "route" => "user.admin.users.index",
             "icon" => "mdi-account-multiple",
             'service' => 'administrator:user',
+            'position' => 5,
         ],
         [
             "id" => "clients",
-            "name" => __("Clients"),
+            "name" => __("Clients OAuth"),
             "route" => "admin.clients.index",
             "icon" => "mdi-apps",
             'service' => 'administrator:application',
+            'position' => 6,
         ],
     ]
 ];

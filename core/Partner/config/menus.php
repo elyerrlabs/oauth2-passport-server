@@ -38,15 +38,26 @@ return [
         ],
 
         "admin_dashboard" => [
-            
-            "partner" => [
-                "id" => "list",
-                "name" => __("Partners"),
-                "route" => "partner.admin.partner.index",
-                "icon" => "mdi-handshake-outline",
-                'service' => 'administrator:partner',
-            ]
+
+            /*  "partner" => [
+                  "id" => "list",
+                  "name" => __("Partners"),
+                  "route" => "partner.admin.partner.index",
+                  "icon" => "mdi-handshake-outline",
+                  'service' => 'administrator:partner',
+              ]*/
         ],
+    ],
+
+    "admin_routes" => [
+        [
+            "id" => "list",
+            "name" => __("Partners"),
+            "route" => "partner.admin.partner.index",
+            "icon" => "mdi-handshake-outline",
+            'service' => 'administrator:partner',
+            'position' => 7
+        ]
     ],
 
     "partner_routes" => [
@@ -66,17 +77,11 @@ return [
         ],
         [
             "id" => "sales",
-            "name" => __("Sales"),
+            "name" => __("My Sales"),
             "route" => "partner.sales",
             "icon" => "mdi-cash-multiple",
             'service' => 'reseller:partner',
         ],
-        [
-            "id" => "list",
-            "name" => __("Partners"),
-            "route" => "partner.admin.partner.index",
-            "icon" => "mdi-handshake-outline",
-            'service' => 'administrator:partner',
-        ]
+
     ]
 ];

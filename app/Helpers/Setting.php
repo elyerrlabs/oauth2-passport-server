@@ -190,12 +190,11 @@ if (!function_exists('resolveInertiaRoutes')) {
                     'icon' => $value['icon'] ?? null,
                     'route' => isset($value['route']) ? route($value['route']) : null,
                     'show' => $canShow,
+                    'position' => $value['position'] ?? 1,
                 ];
             }
         }
-
-        return $menus;
-
+        return collect($menus)->sortBy('position')->values()->all();
     }
 }
 

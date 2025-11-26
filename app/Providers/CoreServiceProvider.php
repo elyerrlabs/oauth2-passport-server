@@ -66,7 +66,7 @@ class CoreServiceProvider extends ServiceProvider
 
                 if (is_array($moduleConfig) && array_key_exists('module_enabled', $moduleConfig)) {
                     $key = 'module.' . strtolower($moduleName) . '.module.module_enabled';
-                    
+
                     if (config($key, true) == false) {
                         continue;
                     }
@@ -88,7 +88,8 @@ class CoreServiceProvider extends ServiceProvider
 
                     if (is_array($newConfig)) {
                         $existing = config($key, []);
-                        $merged = $this->recursiveMerge($existing, $newConfig);
+
+                        $merged = $this->mergeConfigSmart($existing, $newConfig);
                         config()->set($key, $merged);
                     }
                 }
@@ -125,16 +126,32 @@ class CoreServiceProvider extends ServiceProvider
         }
     }
 
-    private function recursiveMerge(array $base, array $merge): array
+    private function mergeConfigSmart(array $base, array $merge): array
     {
         foreach ($merge as $key => $value) {
+
             if (isset($base[$key]) && is_array($base[$key]) && is_array($value)) {
-                $base[$key] = $this->recursiveMerge($base[$key], $value);
+
+                if ($this->isNumericArray($base[$key]) && $this->isNumericArray($value)) {
+                    $base[$key] = array_values(array_merge($base[$key], $value));
+                    ksort($base);
+
+                } else { // Associative
+                    $base[$key] = $this->mergeConfigSmart($base[$key], $value);
+                    ksort($base);
+
+                }
             } else {
                 $base[$key] = $value;
+                ksort($base);
             }
         }
+        ksort($base);
         return $base;
     }
 
+    private function isNumericArray(array $array): bool
+    {
+        return array_keys($array) === range(0, count($array) - 1);
+    }
 }

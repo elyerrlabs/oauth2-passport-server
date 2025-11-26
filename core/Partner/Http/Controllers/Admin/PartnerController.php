@@ -61,13 +61,13 @@ class PartnerController extends WebController
         $page = $request->filled('per_page') ? $request->per_page : 15;
 
         $partners = $this->partnerService->listPartners($request)->paginate($page);
-
+        
         return Inertia::render("Core/Partner/Admin/Users/Index", [
             'data' => fractal($partners, UserTransformer::class)->toArray(),
             'routes' => [
                 'partners' => route('partner.admin.partner.index')
             ],
-            "menus" => resolveInertiaRoutes(config('menus.partner_routes'))
+            "menus" => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);
     }
 
