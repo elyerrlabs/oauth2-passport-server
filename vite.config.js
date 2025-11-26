@@ -1,8 +1,9 @@
+/** @type {import('vite').UserConfig} */
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
-import monacoEditorPlugin from "vite-plugin-monaco-editor-esm";
+//import monacoEditorPlugin from "vite-plugin-monaco-editor-esm";
 import path from "path";
 
 export default defineConfig({
@@ -18,7 +19,7 @@ export default defineConfig({
       ],
       refresh: true,
     }),
-    monacoEditorPlugin(),
+  //  monacoEditorPlugin(),
     vue({
       template: {
         transformAssetUrls: {
@@ -34,17 +35,17 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ["monaco-editor"],
+    exclude: ["monaco-editor"],
   },
   build: {
-    chunkSizeWarningLimit: 2000,
+    minify: "esbuild",
+    target: "esnext",
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
             if (id.includes("vue")) return "vendor-vue";
-            if (id.includes("quasar")) return "vendor-quasar";
-            if (id.includes("tailwind")) return "vendor-tailwind";
             return "vendor";
           }
         },
