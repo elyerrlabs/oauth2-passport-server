@@ -22,11 +22,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <div v-if="hasErrors">
         <span
-            class="px-3 p-2 my-2 rounded text-sm block mb-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
-            v-for="(item, index) in filteredErrors"
+            class="px-2 p-2 my-2 rounded text-sm block mb-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+            v-for="(error, index) in normalizedErrors"
             :key="index"
         >
-            {{ item }}
+            <div v-for="(item, i) in error" :key="i">
+                {{ item }}
+            </div>
         </span>
     </div>
 </template>
@@ -36,21 +38,47 @@ export default {
     props: {
         error: {
             type: [Array, Object, String],
-            required: true,
             default: () => ({ example: "example Error" }),
         },
     },
+
     computed: {
+        /**
+         * Devuelve un array limpio de errores (sin el ejemplo)
+         */
         filteredErrors() {
+            // Si es string → lo metemos en array
             if (typeof this.error === "string") {
+                if (this.error === "example Error") return [];
                 return [this.error];
             }
+
+            // Si es array u objeto → limpiamos
             return Object.values(this.error).filter(
                 (msg) => msg !== "example Error"
             );
         },
+
+        /**
+         * Normaliza todos los tipos de error a un array para que el template
+         * siempre pueda hacer v-for sin romper
+         */
+        normalizedErrors() {
+            return this.filteredErrors.map((err) => {
+                if (Array.isArray(err)) {
+                    return err;
+                }
+
+                if (typeof err === "object" && err !== null) {
+                    return Object.values(err);
+                }
+
+                return [err]; // string o valor simple
+            });
+        },
+
         hasErrors() {
-            return this.filteredErrors.length > 0;
+            return this.normalizedErrors.length > 0;
         },
     },
 };
