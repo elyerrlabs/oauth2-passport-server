@@ -356,13 +356,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     />
                 </div>
 
-                <div
-                    class="p-2 border-b border-gray-200 dark:border-gray-600"
-                    v-if="form.id"
-                >
-                    <v-file-viewer v-model="current_images" />
-                </div>
-
                 <!-- Action Buttons -->
                 <div class="p-6 bg-gray-50 dark:bg-gray-700/50">
                     <div
@@ -409,6 +402,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                 </div>
             </div>
+        </div>
+        <div
+            class="p-2 border mt-8 rounded-full border-gray-200 dark:border-gray-600"
+            v-if="form.id"
+        >
+            <v-file-viewer v-model="current_images" />
         </div>
     </v-admin-layout>
 </template>

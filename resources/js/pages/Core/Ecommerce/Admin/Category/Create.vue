@@ -202,9 +202,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :error="errors.images"
                             />
                         </div>
-                        <div class="space-y-6" v-if="current_images.length">
-                            <v-file-viewer v-model="current_images" />
-                        </div>
                     </div>
 
                     <!-- Form Actions -->
@@ -234,8 +231,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <span>
                                     {{
                                         form?.id
-                                            ? "Update Category"
-                                            : "Create Category"
+                                            ? __("Update Category")
+                                            : __("Create Category")
                                     }}
                                 </span>
                             </button>
@@ -243,6 +240,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="space-y-6 mt-8" v-if="current_images.length">
+            <v-file-viewer v-model="current_images" />
         </div>
     </v-admin-layout>
 </template>
