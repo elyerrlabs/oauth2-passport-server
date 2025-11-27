@@ -96,6 +96,9 @@ class ServiceService
             );
         }
 
+
+        $query->orderByDesc('updated_at');
+
         return $query;
     }
 

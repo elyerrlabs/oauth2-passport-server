@@ -20,45 +20,32 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <!-- Delete Button - Consistent with other action buttons -->
+    <!-- Delete Button -->
     <button
         v-if="scope?.gsr_id"
         @click="dialog = true"
-        class="relative group w-12 h-12 gap-2 border border-red-600 dark:border-red-400 px-4 py-2 text-red-600 dark:text-red-400 rounded-full hover:bg-red-600 dark:hover:bg-red-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800"
+        class="relative group rounded-full p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800"
     >
         <i class="mdi mdi-trash-can-outline text-lg"></i>
 
-        <!-- Tooltip - Same as other buttons -->
+        <!-- Tooltip -->
         <div
-            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-red-600 dark:bg-red-500 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
+            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-red-600 dark:bg-red-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
         >
             {{ __("Revoke Scope") }}
             <div
-                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-red-600 dark:border-t-red-500"
+                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-red-600 dark:border-t-red-700"
             ></div>
         </div>
     </button>
 
+    <!-- Delete Confirmation Modal -->
     <v-modal
         v-model="dialog"
         :title="__('Revoke Scope')"
-        panel-class="w-full lg:w-5xl"
+        panel-class="w-full lg:w-4xl"
     >
         <template #body>
-            <!-- Header -->
-            <div
-                class="bg-red-200 dark:bg-red-500 text-white rounded-t-2xl p-6 text-center"
-            >
-                <i class="mdi mdi-lock-remove text-4xl mb-3"></i>
-                <h3 class="text-xl font-bold">
-                    {{ __("Revoke Scope Access") }}
-                </h3>
-                <p class="text-red-100 dark:text-red-200 mt-1 text-sm">
-                    {{ __("This action is permanent") }}
-                </p>
-            </div>
-
-            <!-- Content -->
             <div class="p-6 space-y-4 text-center">
                 <!-- Confirmation Message -->
                 <p class="text-gray-700 dark:text-gray-300">
@@ -70,7 +57,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >?
                 </p>
 
-                <!-- Role Info -->
+                <!-- Scope Info Chips -->
                 <div class="flex justify-center gap-2 flex-wrap">
                     <span
                         class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-sm transition-colors duration-200"
@@ -153,6 +140,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </span>
                     </div>
                 </div>
+
+                <!-- Confirmation Input -->
+                <div class="space-y-3 pt-2">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __("To confirm, type the GSR ID below:") }}
+                    </p>
+                    <div class="flex justify-center">
+                        <code
+                            class="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg font-mono text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700 text-sm"
+                        >
+                            {{ scope.gsr_id }}
+                        </code>
+                    </div>
+                    <input
+                        v-model="confirmationText"
+                        type="text"
+                        class="w-full max-w-md mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-500 dark:bg-gray-800 dark:text-white transition-colors duration-200"
+                        :placeholder="__('Enter GSR ID')"
+                        @keyup.enter="handleConfirm"
+                    />
+                </div>
             </div>
 
             <!-- Actions -->
@@ -169,10 +177,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </button>
                 <button
                     @click="destroy"
-                    :disabled="loading"
+                    :disabled="!canDelete || loading"
                     :class="[
                         'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200',
-                        loading
+                        !canDelete || loading
                             ? 'bg-red-400 dark:bg-red-600 cursor-not-allowed'
                             : 'bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600 focus:ring-red-200 dark:focus:ring-red-800',
                     ]"
@@ -191,7 +199,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <script setup>
 import VModal from "@/components/VModal.vue";
 import { useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const emits = defineEmits(["deleted"]);
 const props = defineProps({
@@ -201,34 +209,47 @@ const props = defineProps({
     },
 });
 
-const dialog = ref(false);
 const loading = ref(false);
+const dialog = ref(false);
+const confirmationText = ref("");
+const form = useForm();
 
-const destroy = async () => {
+const canDelete = computed(() => {
+    return confirmationText.value === props.scope.gsr_id.toString();
+});
+
+const handleConfirm = () => {
+    if (canDelete.value && !loading.value) {
+        destroy();
+    }
+};
+
+const destroy = () => {
+    if (!canDelete.value || loading.value) {
+        return;
+    }
+
     loading.value = true;
-    const form = useForm();
 
     form.delete(props.scope.links.revoke, {
+        preserveScroll: true,
+        preserveState: true,
         onSuccess: () => {
             $notify.success(__("Scope revoked successfully"));
             emits("deleted");
             dialog.value = false;
+            confirmationText.value = "";
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+        onError: (e) => {
+            if (e.message) {
+                $notify.error(e.message);
+            } else {
+                $notify.error(__("An error occurred while revoking the scope"));
+            }
         },
     });
 };
 </script>
-
-<style scoped>
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-</style>

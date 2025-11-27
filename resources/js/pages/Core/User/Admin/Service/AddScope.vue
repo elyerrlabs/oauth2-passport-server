@@ -64,6 +64,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :error="form.errors.role_id"
                             :options="roles"
                             :required="true"
+                            searchable
                         />
                     </div>
                 </div>

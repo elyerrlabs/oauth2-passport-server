@@ -67,6 +67,8 @@ class RoleService
             $query->where('system', $request->system);
         }
 
+        $query->orderByDesc('updated_at');
+
         return $query;
     }
 

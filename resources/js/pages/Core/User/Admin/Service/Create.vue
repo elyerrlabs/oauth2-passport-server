@@ -64,15 +64,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         :required="true"
                         :label="__('Service Name')"
                         :placeholder="__('Enter service name')"
-                        :disabled="item?.system ? true : false"
+                        :disabled="item?.system"
                     />
 
                     <div class="flex items-end">
                         <v-switch
+                            v-show="item?.system"
                             v-model="form.system"
                             :error="form.errors.system"
                             :label="__('System Service')"
-                            :disabled="item?.system ? true : false"
+                            :disabled="item?.system"
                             :placeholder="
                                 __(
                                     'System services have special permissions and cannot be deleted'
@@ -89,6 +90,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     :label="__('Description')"
                     :required="true"
                     :placeholder="__('Enter service description...')"
+                    :disabled="item?.system"
                 />
 
                 <!-- Group and Visibility -->
@@ -101,6 +103,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         :label="__('Group')"
                         :error="form.errors.group_id"
                         v-if="!item?.id"
+                        :disabled="item?.system"
                     />
 
                     <v-select
@@ -110,6 +113,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         :options="visibilityOptions"
                         :required="true"
                         :error="form.errors.visibility"
+                        :disabled="item?.system"
                     />
                 </div>
             </div>
@@ -210,7 +214,7 @@ onMounted(() => {
 });
 
 const open = () => {
-    form.reset();
+    form.resetAndClearErrors();
 
     const values = props.item;
 
@@ -243,7 +247,7 @@ const createOrUpdate = () => {
             },
         });
     } else {
-        form.post(page.props.route.services, {
+        form.post(page.props.route, {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {

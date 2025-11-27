@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\User\Http\Controllers\Admin;
 
 /**
@@ -19,11 +20,12 @@ namespace Core\User\Http\Controllers\Admin;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
 use Core\User\Services\GroupService;
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Core\User\Transformer\Admin\RoleTransformer;
 use Core\User\Services\RoleService;
 use Core\User\Transformer\Admin\ServiceTransformer;
@@ -95,9 +97,9 @@ class ServiceController extends WebController
 
         // Render vue component
         return Inertia::render("Core/User/Admin/Service/Index", [
-            'data' => fractal($data, ServiceTransformer::class)->toArray(),
-            'groups' => fractal($groups, GroupTransformer::class)->toArray(),
-            'roles' => fractal($roles, RoleTransformer::class)->toArray(),
+            'data' => $this->transformCollection($data, ServiceTransformer::class),
+            'groups' => $this->transformCollection($groups, GroupTransformer::class),
+            'roles' => $this->transformCollection($roles, RoleTransformer::class),
             'route' => route("user.admin.services.index"),
             'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);
@@ -123,6 +125,14 @@ class ServiceController extends WebController
      */
     public function update(ServiceUpdateRequest $request, Service $service)
     {
+        throw_if(
+            $service->system,
+            new ReportError(
+                __("This is a system service and cannot be modified. If you believe this is an error, please contact the administrator."),
+                403
+            )
+        );
+
         $this->serviceService->update($service->id, $request->toArray());
 
         return redirect()->route('user.admin.services.index');
