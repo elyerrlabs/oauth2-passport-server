@@ -26,6 +26,7 @@ namespace Core\User\Http\Requests;
 
 use App\Rules\BooleanRule;
 use Core\User\Model\Group;
+use Core\User\Services\GroupService;
 use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -52,9 +53,9 @@ class GroupStoreRequest extends FormRequest
                 'required',
                 'max:100',
                 function ($attribute, $value, $fail) {
-                    $slug = normalizeSlug($value); 
+                    $slug = normalizeSlug($value);
 
-                    $checkSlug = Group::where('slug', $slug)->first();
+                    $checkSlug = app(GroupService::class)->findBySlug($slug);
                     if ($checkSlug) {
                         $fail(__("The :attribute already exists", ['attribute' => $attribute]));
                     }

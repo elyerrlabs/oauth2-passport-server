@@ -48,7 +48,9 @@ class GroupRepository
      */
     public function query()
     {
-        return $this->model->query();
+        $query = $this->model->query();
+        $query->withTrashed();
+        return $query;
     }
 
     /**
@@ -85,7 +87,7 @@ class GroupRepository
      */
     public function find(string $id)
     {
-        return $this->model->find($id);
+        return $this->query()->where('id', $id)->first();
     }
 
     /**
@@ -94,6 +96,6 @@ class GroupRepository
      */
     public function findBySlug(string $slug)
     {
-        return $this->model->whereRaw("LOWER(slug) = ?", [strtolower($slug)])->first();
+        return $this->query()->whereRaw("LOWER(slug) = ?", [strtolower($slug)])->first();
     }
 }

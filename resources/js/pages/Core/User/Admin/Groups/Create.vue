@@ -56,7 +56,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         v-model="form.name"
                         :error="form.errors.name"
                         :required="true"
-                        :disabled="isEdit"
+                        :disabled="item?.system"
                     />
 
                     <v-textarea
@@ -65,13 +65,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         :error="form.errors.description"
                         :placeholder="__('Write a short description...')"
                         :required="true"
+                        :disabled="item?.system"
                     />
 
                     <v-switch
+                        v-show="item?.id"
                         :label="__('System Group')"
                         v-model="form.system"
-                        :disabled="isEdit"
-                        :help-text="
+                        :disabled="item?.system"
+                        :placeholder="
                             __(
                                 'System groups have special permissions and cannot be deleted.'
                             )

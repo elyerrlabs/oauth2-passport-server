@@ -27,6 +27,7 @@ namespace Core\User\Http\Controllers\Admin;
 use Core\User\Services\GroupService;
 use Core\User\Transformer\Admin\GroupTransformer;
 use Elyerr\ApiResponse\Assets\JsonResponser;
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Inertia\Inertia;
 use Core\User\Model\Group;
 use Illuminate\Http\Request;
@@ -105,6 +106,14 @@ class GroupController extends WebController
             'description' => ['nullable', 'max:200'],
         ]);
 
+        throw_if(
+            $group->system,
+            new ReportError(
+                __("This is a system group and cannot be modified. If you believe this is an error, please contact the administrator."),
+                403
+            )
+        );
+
         $this->groupService->update($group->id, $request->toArray());
 
         return redirect()->route('user.admin.groups.index');
@@ -112,12 +121,12 @@ class GroupController extends WebController
 
     /**
      *  Destroy resource
-     * @param \Core\User\Model\Group $group
+     * @param string $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Group $group)
+    public function destroy(string $id)
     {
-        $this->groupService->delete($group->id);
+        $this->groupService->delete($id);
 
         return redirect()->route('user.admin.groups.index');
     }

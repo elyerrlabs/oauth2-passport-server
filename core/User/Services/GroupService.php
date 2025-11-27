@@ -78,7 +78,7 @@ class GroupService
             'name' => $data['name'],
             'slug' => $data['name'],
             'description' => $data['description'],
-            'system' => $data['system'],
+            //'system' => $data['system'],
         ]);
     }
 
@@ -90,6 +90,15 @@ class GroupService
     public function detail(string $id)
     {
         return $this->groupRepository->find($id);
+    }
+
+    /**
+     * Find by slug
+     * @param string $slug
+     */
+    public function findBySlug(string $slug)
+    {
+        return $this->groupRepository->findBySlug($slug);
     }
 
     /**
@@ -116,17 +125,16 @@ class GroupService
     {
         $model = $this->groupRepository->find($id);
 
+        throw_if($model->system, new ReportError(
+            __("This is a system group and cannot be deleted. If you believe this is an error, please contact the administrator."),
+            403
+        ));
+
         if ($model->services()->count() === 0 && $model->users()->count()) {
             new ReportError(__("This action cannot be completed because this group is currently in use by another resource."), 403);
         }
 
-        throw_if($model->system, new ReportError(__("This group cannot be deleted because it is a system group."), 403));
-
-        collect(Group::groupByDefault())->map(function ($value, $key) use ($model) {
-            throw_if($value->name == $model->name, new ReportError(__("This group cannot be deleted because it is a system group."), 403));
-        });
-
-        $model->delete();
+        $model->forceDelete();
 
         return $model;
     }
