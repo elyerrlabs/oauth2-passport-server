@@ -3549,5 +3549,22 @@
   "Valid file": "Archivo válido",
   "File error": "Error en archivo",
   "User Settings": "Configuracion de usuario",
-  "My Apps": "Applicaciones"
+  "My Apps": "Applicaciones",
+  "This is a system group and cannot be modified. If you believe this is an error, please contact the administrator.": "Este es un grupo del sistema y no puede ser modificado. Si cree que esto es un error, comuníquese con el administrador.",
+  "This is a system group and cannot be deleted. If you believe this is an error, please contact the administrator.": "Este es un grupo del sistema y no puede ser eliminado. Si cree que esto es un error, comuníquese con el administrador.",
+  "This action is irreversible": "Esta acción es irreversible",
+  "Please type the group name (:name) to confirm deletion.": "Por favor, escribe el nombre del grupo :name para confirmar la eliminación.",
+  "Type the group name to confirm": "Escribe el nombre del grupo para confirmar",
+  "Warning:": "Advertencia:",
+  "All data associated with this group will be permanently deleted and cannot be recovered.": "Todos los datos asociados a este grupo serán eliminados permanentemente y no podrán recuperarse.",
+  "Please type the group name to confirm deletion.": "Por favor, escribe el nombre del grupo para confirmar la eliminación.",
+  "This is a system role and cannot be modified. If you believe this is an error, please contact the administrator.": "Este es un role del sistema y no puede ser modificado. Si cree que esto es un error, comuníquese con el administrador.",
+  "This is a system role and cannot be deleted. If you believe this is an error, please contact the administrator.": "Este es un role del sistema y no puede ser eliminado. Si cree que esto es un error, comuníquese con el administrador.",
+  "Warning: This is a system group. Deleting it may affect application functionality.": "Advertencia: Este es un grupo del sistema. Eliminarlo puede afectar la funcionalidad de la aplicación.",
+  "Warning: This action cannot be undone. All associated data will be permanently deleted.": "Advertencia: Esta acción no se puede deshacer. Todos los datos asociados se eliminarán permanentemente.",
+  "To confirm, type the group name below:": "Para confirmar, escribe el nombre del grupo a continuación:",
+  "System groups are protected and cannot be deleted.": "Los grupos del sistema están protegidos y no se pueden eliminar.",
+  "To confirm, type the role name below:": "Para confirmar, escribe el nombre del rol a continuación:",
+  "System roles are protected and cannot be deleted.": "Los roles del sistema están protegidos y no se pueden eliminar.",
+  "An error occurred while deleting the role": "Ocurrió un error al eliminar el rol"
 }
