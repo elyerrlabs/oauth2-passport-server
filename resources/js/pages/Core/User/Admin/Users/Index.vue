@@ -171,13 +171,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </label>
                         <select
                             v-model="search.per_page"
-                            @change="getUsers"
+                            @change="changePage"
                             class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
                         >
                             <option value="10">10</option>
                             <option value="15">15</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                            <option value="500">500</option>
                         </select>
                     </div>
                 </div>
@@ -513,6 +516,12 @@ const viewOptions = computed(() => {
 const searchTimeout = ref(null);
 
 // Methods
+
+const changePage = () => {
+    search.page = 1;
+    getUsers();
+};
+
 const debouncedSearch = () => {
     clearTimeout(searchTimeout.value);
     searchTimeout.value = setTimeout(() => {

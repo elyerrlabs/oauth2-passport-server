@@ -86,7 +86,7 @@ class UserService
         $query = $this->userRepository->query();
 
         // Add users trashed
-        $query->orderByDesc('created_at');
+        $query->orderByDesc('updated_at');
 
         if ($request->filled('name')) {
             $query->whereRaw("LOWER(name) like ?", ["%" . strtolower($request->name) . "%"]);

@@ -67,9 +67,9 @@ class UserController extends WebController
         $page = $request->filled('per_page') ? $request->per_page : 15;
 
         $data = $this->userService->search($request)->paginate($page);
-       
+
         return Inertia::render("Core/User/Admin/Users/Index", [
-            "data" => fractal($data, UserTransformer::class)->toArray(),
+            "data" => $this->transformCollection($data, UserTransformer::class),
             "route" => route('user.admin.users.index'),
             "scopes" => route('user.admin.scopes.index'),
             'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
@@ -124,7 +124,7 @@ class UserController extends WebController
 
         return back();
     }
- 
+
     /**
      * Enable user account
      * @param string $id
