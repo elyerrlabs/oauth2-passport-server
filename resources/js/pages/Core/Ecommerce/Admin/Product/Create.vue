@@ -54,6 +54,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </p>
                     </div>
                 </div>
+                <a
+                    v-if="form?.id"
+                    target="_blank"
+                    :href="$page.props.routes.preview"
+                    class="text-gray-200 font-medium bg-blue-600 px-3 py-2 rounded"
+                >
+                    {{ __("Preview") }}
+                </a>
             </div>
 
             <!-- Main Content Card -->

@@ -104,10 +104,44 @@ final class ProductController extends WebController
                 'data' => $data,
                 'routes' => [
                     'index' => route('ecommerce.admin.products.index'),
+                    'preview' => route('ecommerce.admin.product.preview', [
+                        'category' => $data['category']['slug'],
+                        'product' => $data['slug'],
+                    ]),
                 ],
                 'admin' => RouteService::admin(),
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
             ]
         );
+    }
+
+
+    /**
+     * show product details as a user
+     * @param string $category
+     * @param string $product
+     * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
+     */
+    public function viewAsUser(string $category_slug, string $product_slug)
+    {
+        return Inertia::render(
+            'Core/Ecommerce/Web/Show',
+            [
+                'routes' => [// share web routes
+                    'search' => route('ecommerce.search'),
+                    'dashboard' => route('ecommerce.dashboard'),
+                    'orders' => route('ecommerce.orders.index'),
+                    'show' => route('ecommerce.category', [
+                        'category' => $category_slug
+                    ]),
+                ],
+                'api' => RouteService::api([
+                    "product_show" => route('api.ecommerce.admin.preview.product', [
+                        'category' => $category_slug,
+                        'product' => $product_slug
+                    ])
+                ]) // share api route
+            ]
+        )->rootView('ecommerce');
     }
 }

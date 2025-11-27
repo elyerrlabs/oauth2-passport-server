@@ -44,11 +44,14 @@ Route::group([
 ], function () {
 
     Route::resource('categories', AdminCategoryController::class)->except('create', 'edit', 'update');
+
     Route::resource('products', AdminProductController::class)->except('create', 'edit', 'update');
     Route::resource('products.tags', ProductTagController::class)->only('destroy');
     Route::resource('products.attributes', ProductAttributeController::class)->only('destroy');
     Route::resource('products.variants', ProductVariantController::class)->only('destroy');
     Route::resource('products.children', ProductChildrenController::class)->only('destroy');
+    
+    Route::get('/preview/{category}/{product}', [AdminProductController::class, 'viewAsUser'])->name('preview.product');
 
     Route::get('orders', [AdminOrderController::class, 'complete'])->name('orders.complete');
     Route::get('orders/pending', [AdminOrderController::class, 'pending'])->name('orders.pending');

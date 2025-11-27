@@ -307,16 +307,42 @@ class ProductService
      * @param string $product_slug
      * @return \Core\Ecommerce\Model\Product|\Illuminate\Database\Eloquent\Builder<\Core\Ecommerce\Model\Product>|\Illuminate\Database\Eloquent\Model
      */
+    public function findProductByCategoryForUser(string $category_slug, string $product_slug)
+    {
+        $query = $this->productRepository->query();
+
+        $query->where('published', true);
+
+        $query->whereHas(
+            'category',
+            function ($query) use ($category_slug) {
+                $query->where('slug', $category_slug);
+            }
+        )->where('slug', $product_slug);
+
+        return $query->firstOrFail();
+    }
+
+    /**
+     * Summary of findProductByCategory
+     * @param string $category_slug
+     * @param string $product_slug
+     * @return Product|\Illuminate\Database\Eloquent\Builder<Product>|\Illuminate\Database\Eloquent\Model
+     */
     public function findProductByCategory(string $category_slug, string $product_slug)
     {
-        return $this->productRepository->query()
-            ->whereHas(
-                'category',
-                function ($query) use ($category_slug) {
-                    $query->where('slug', $category_slug);
-                }
-            )->where('slug', $product_slug)->firstOrFail();
+        $query = $this->productRepository->query();
+
+        $query->whereHas(
+            'category',
+            function ($query) use ($category_slug) {
+                $query->where('slug', $category_slug);
+            }
+        )->where('slug', $product_slug);
+
+        return $query->firstOrFail();
     }
+
 
     /**
      * Create new resource

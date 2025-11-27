@@ -22,11 +22,11 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Ecommerce\Http\Controllers\Admin\CustomerController; 
+use Core\Ecommerce\Http\Controllers\Admin\CustomerController;
 use Core\Ecommerce\Http\Controllers\Admin\OrderController;
 use Core\Ecommerce\Http\Controllers\Admin\ProductController;
 use Core\Ecommerce\Http\Controllers\Admin\CategoryController;
-use Core\Ecommerce\Http\Controllers\Admin\DashboardController; 
+use Core\Ecommerce\Http\Controllers\Admin\DashboardController;
 
 Route::middleware(['throttle:ecommerce:admin'])->group(function () {
 
@@ -34,6 +34,10 @@ Route::middleware(['throttle:ecommerce:admin'])->group(function () {
 
     Route::resource('categories', CategoryController::class)->only('index', 'create', 'edit');
     Route::resource('products', ProductController::class)->only('index', 'create', 'edit');
+    Route::get(
+        'products/preview/{category}/{product}',
+        [ProductController::class, 'viewAsUser']
+    )->name('product.preview');
 
     Route::get('orders', [OrderController::class, 'complete'])->name('orders.complete');
     Route::get('orders/pending', [OrderController::class, 'pending'])->name('orders.pending');

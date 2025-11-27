@@ -25,6 +25,7 @@ namespace Core\Ecommerce\Http\Controllers\Api\Admin;
  */
 
 use Core\Ecommerce\Services\ProductService;
+use Core\Ecommerce\Transformer\User\UserProductTransformer;
 use Core\Ecommerce\Transformer\Admin\ProductTransformer;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Inertia\Inertia;
@@ -131,5 +132,19 @@ final class ProductController extends ApiController
                 403
             );
         }
+    }
+
+
+    /**
+     * show product details as a users
+     * @param string $category
+     * @param string $product
+     * @return mixed|\Illuminate\Http\JsonResponse|\Inertia\Response
+     */
+    public function viewAsUser(string $category_slug, string $product_slug)
+    {
+        $model = $this->productService->findProductByCategory($category_slug, $product_slug);
+
+        return $this->showOne($model, UserProductTransformer::class);
     }
 }

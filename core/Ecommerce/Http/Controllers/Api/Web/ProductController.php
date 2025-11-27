@@ -66,7 +66,7 @@ class ProductController extends ApiController
      */
     public function productDetails(string $category_slug, string $product_slug)
     {
-        $model = $this->productService->findProductByCategory($category_slug, $product_slug);
+        $model = $this->productService->findProductByCategoryForUser($category_slug, $product_slug);
 
         return $this->showOne($model, UserProductTransformer::class);
     }
