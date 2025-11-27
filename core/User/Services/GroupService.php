@@ -78,7 +78,7 @@ class GroupService
             'name' => $data['name'],
             'slug' => $data['name'],
             'description' => $data['description'],
-            //'system' => $data['system'],
+            'system' => $data['system'] ?? false,
         ]);
     }
 

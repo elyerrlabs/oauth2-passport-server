@@ -98,7 +98,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </label>
                         <select
                             v-model="search.per_page"
-                            @change="getGroups"
+                            @change="changePage"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                         >
                             <option value="10">10</option>
@@ -285,9 +285,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </span>
                     </div>
 
-                    <p
-                        class="text-sm text-gray-600 dark:text-gray-300 mb-3 "
-                    >
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
                         {{ __(group.description) }}
                     </p>
 
@@ -350,7 +348,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <td
                                         class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"
                                     >
-                                        <div class=" max-w-xs">
+                                        <div class="max-w-xs">
                                             {{ __(group.description) }}
                                         </div>
                                     </td>
@@ -494,6 +492,11 @@ onMounted(() => {
     groups.value = values.data;
     pages.value = values.meta.pagination;
 });
+
+const changePage = () => {
+    search.page = 1;
+    getGroups();
+};
 
 const getGroups = () => {
     loading.value = true;

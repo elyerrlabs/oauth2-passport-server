@@ -69,7 +69,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     />
 
                     <v-switch
-                        v-show="item?.id"
+                        v-show="item?.id | item?.system"
                         :label="__('System Group')"
                         v-model="form.system"
                         :disabled="item?.system"
@@ -161,7 +161,7 @@ const form = useForm({
 
 // Methods
 const open = () => {
-    form.errors = {};
+    form.resetAndClearErrors();
     if (props.item?.id) {
         form.name = props.item.name;
         form.description = props.item.description;

@@ -81,7 +81,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     ]"
                 >
                     <div class="flex items-start gap-2">
-                        <i class="mdi mdi-alert mt-0.5 flex-shrink-0"></i>
+                        <i class="mdi mdi-alert mt-0.5 shrink-0"></i>
                         <span class="text-sm text-left">
                             {{
                                 item.system
@@ -93,6 +93,47 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                       )
                             }}
                         </span>
+                    </div>
+                </div>
+
+                <!-- Confirmation Input (solo para roles no system) -->
+                <div v-if="!item.system" class="space-y-3 pt-2">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __("To confirm, type the role name below:") }}
+                    </p>
+                    <div class="flex justify-center">
+                        <code
+                            class="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg font-mono text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700 text-sm"
+                        >
+                            {{ item.slug }}
+                        </code>
+                    </div>
+                    <input
+                        v-model="confirmationText"
+                        type="text"
+                        class="w-full max-w-md mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-500 dark:bg-gray-800 dark:text-white transition-colors duration-200"
+                        :placeholder="__('Enter role name')"
+                        @keyup.enter="handleConfirm"
+                    />
+                </div>
+
+                <!-- System Role Warning -->
+                <div v-if="item.system" class="pt-2">
+                    <div
+                        class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4"
+                    >
+                        <div
+                            class="flex items-center gap-2 justify-center text-purple-800 dark:text-purple-300"
+                        >
+                            <i class="mdi mdi-shield-lock"></i>
+                            <span class="text-sm font-medium">
+                                {{
+                                    __(
+                                        "System roles are protected and cannot be deleted."
+                                    )
+                                }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -110,11 +151,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     {{ __("Cancel") }}
                 </button>
                 <button
+                    v-if="!item.system"
                     @click="destroy"
-                    :disabled="loading"
+                    :disabled="!canDelete || loading"
                     :class="[
                         'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200',
-                        loading
+                        !canDelete || loading
                             ? 'bg-red-400 dark:bg-red-600 cursor-not-allowed'
                             : 'bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600 focus:ring-red-200 dark:focus:ring-red-800',
                     ]"
@@ -133,7 +175,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <script setup>
 import VModal from "@/components/VModal.vue";
 import { useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const emits = defineEmits(["deleted"]);
 const props = defineProps({
@@ -145,9 +187,24 @@ const props = defineProps({
 
 const loading = ref(false);
 const dialog = ref(false);
+const confirmationText = ref("");
 const form = useForm();
 
+const canDelete = computed(() => {
+    return confirmationText.value === props.item.slug;
+});
+
+const handleConfirm = () => {
+    if (canDelete.value && !loading.value) {
+        destroy();
+    }
+};
+
 const destroy = () => {
+    if (!canDelete.value || loading.value) {
+        return;
+    }
+
     loading.value = true;
 
     form.delete(props.item.links.destroy, {
@@ -157,26 +214,18 @@ const destroy = () => {
             $notify.success(__("Role deleted successfully"));
             emits("deleted");
             dialog.value = false;
+            confirmationText.value = "";
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+        onError: (e) => {
+            if (e.message) {
+                $notify.error(e.message);
+            } else {
+                $notify.error(__("An error occurred while deleting the role"));
+            }
         },
     });
 };
 </script>
-
-<style scoped>
-.backdrop-blur-sm {
-    backdrop-filter: blur(4px);
-}
-
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-</style>

@@ -110,11 +110,10 @@ class RoleService
     {
         $model = $this->roleRepository->find($id);
 
-        collect(Role::rolesByDefault())->map(function ($value, $key) use ($model) {
-            throw_if($value->name == $model->name, new ReportError(__("This action cannot be completed because this role is a system role and cannot be deleted."), 403));
-        });
-
-        throw_if($model->system, new ReportError(__("This action cannot be completed because this role is a system role and cannot be deleted."), 403));
+        throw_if($model->system, new ReportError(
+            __("This is a system role and cannot be deleted. If you believe this is an error, please contact the administrator."),
+            403
+        ));
 
         throw_if($model->scopes()->count() > 0, new ReportError(__("This action cannot be completed because this role is currently assigned to one or more scopes and cannot be deleted."), 403));
 

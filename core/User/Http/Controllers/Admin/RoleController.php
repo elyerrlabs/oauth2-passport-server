@@ -24,12 +24,12 @@ namespace Core\User\Http\Controllers\Admin;
  */
 
 use Core\User\Transformer\Admin\RoleTransformer;
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Inertia\Inertia;
 use Core\User\Model\Role;
 use Illuminate\Http\Request;
 use Core\User\Services\RoleService;
 use App\Http\Controllers\WebController;
-use Core\User\Repositories\RoleRepository;
 use Core\User\Http\Requests\RoleStoreRequest;
 use Core\User\Http\Requests\RoleUpdateRequest;
 
@@ -95,6 +95,13 @@ class RoleController extends WebController
      */
     public function update(RoleUpdateRequest $request, Role $role)
     {
+        throw_if(
+            $role->system,
+            new ReportError(
+                __("This is a system role and cannot be modified. If you believe this is an error, please contact the administrator."),
+                403
+            )
+        );
         $this->roleService->update($role->id, $request->toArray());
 
         return redirect()->route('user.admin.roles.index');

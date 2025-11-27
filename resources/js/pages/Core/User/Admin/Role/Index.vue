@@ -114,7 +114,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </label>
                     <select
                         v-model="search.per_page"
-                        @change="getRoles"
+                        @change="changePage"
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
                     >
                         <option value="10">10</option>
@@ -455,6 +455,11 @@ onMounted(() => {
 // methods
 const clearFilters = () => {
     search.reset();
+    getRoles();
+};
+
+const changePage = () => {
+    search.page = 1;
     getRoles();
 };
 

@@ -54,20 +54,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     :placeholder="__('Enter role name')"
                     :required="true"
                     :error="form.errors.name"
-                    :disabled="item?.id ? true : false"
+                    :disabled="item?.system"
                 />
 
                 <div class="flex items-end">
                     <v-switch
+                         v-show="item?.id | item?.system"
                         :label="__('System Role')"
                         v-model="form.system"
                         :error="form.errors.system"
-                        :help-text="
+                        :placeholder="
                             __(
                                 'System roles have special permissions and cannot be deleted.'
                             )
                         "
-                        :disabled="item?.id ? true : false"
+                        :disabled="item?.id"
                     />
                 </div>
             </div>
@@ -79,6 +80,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     :placeholder="__('Enter role description...')"
                     :required="true"
                     :error="form.errors.description"
+                    :disabled="item?.system"
                 />
             </div>
 
