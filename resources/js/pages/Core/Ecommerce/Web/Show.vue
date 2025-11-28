@@ -102,13 +102,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             >
                                 <button
                                     @click.stop="prevImage"
-                                    class="bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md transition-all hover:scale-110 border border-gray-300 dark:border-gray-500"
+                                    class="bg-white/80 dark:bg-gray-800/80 cursor-pointer hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md transition-all hover:scale-110 border border-gray-300 dark:border-gray-500"
                                 >
                                     <i class="fas fa-chevron-left text-xs"></i>
                                 </button>
                                 <button
                                     @click.stop="nextImage"
-                                    class="bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md transition-all hover:scale-110 border border-gray-300 dark:border-gray-500"
+                                    class="bg-white/80 dark:bg-gray-800/80 cursor-pointer hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md transition-all hover:scale-110 border border-gray-300 dark:border-gray-500"
                                 >
                                     <i class="fas fa-chevron-right text-xs"></i>
                                 </button>
@@ -277,7 +277,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         @click="decreaseQuantity"
                                         :disabled="form.quantity <= 1"
                                         :class="[
-                                            'px-3 py-1 transition-all text-sm',
+                                            'px-3 py-1 transition-all text-sm cursor-pointer',
                                             form.quantity <= 1
                                                 ? 'text-gray-400 cursor-not-allowed'
                                                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-500',
@@ -294,7 +294,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         @click="increaseQuantity"
                                         :disabled="form.quantity >= maxQuantity"
                                         :class="[
-                                            'px-3 py-1 transition-all text-sm',
+                                            'px-3 py-1 transition-all text-sm cursor-pointer',
                                             form.quantity >= maxQuantity
                                                 ? 'text-gray-400 cursor-not-allowed'
                                                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-500',
@@ -309,7 +309,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div class="grid grid-cols-2 gap-3">
                                 <button
                                     @click="addToCart"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded font-medium flex items-center justify-center shadow-sm transition-colors text-sm group"
+                                    class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white py-3 rounded font-medium flex items-center justify-center shadow-sm transition-colors text-sm group"
                                 >
                                     <i
                                         class="fas fa-shopping-cart mr-2 group-hover:scale-110 transition-transform text-xs"
@@ -318,7 +318,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </button>
                                 <button
                                     @click="buyNow"
-                                    class="bg-orange-500 hover:bg-orange-600 text-white py-3 rounded font-medium flex items-center justify-center shadow-sm transition-colors text-sm group"
+                                    class="bg-orange-500 hover:bg-orange-600 cursor-pointer text-white py-3 rounded font-medium flex items-center justify-center shadow-sm transition-colors text-sm group"
                                 >
                                     <i
                                         class="fas fa-bolt mr-2 group-hover:scale-110 transition-transform text-xs"
@@ -371,7 +371,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :key="tab.id"
                                 @click="activeTab = tab.id"
                                 :class="[
-                                    'tab-button py-3 font-medium text-sm transition-all border-b-2 flex items-center whitespace-nowrap',
+                                    'tab-button py-3 font-medium text-sm  cursor-pointer transition-all border-b-2 flex items-center whitespace-nowrap',
                                     activeTab === tab.id
                                         ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400'
                                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-transparent',
@@ -421,7 +421,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 }}
                             </p>
                             <button
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium text-xs transition-colors"
+                                class="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded font-medium text-xs transition-colors"
                             >
                                 {{ __("Write a Review") }}
                             </button>
@@ -621,23 +621,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                     </div>
 
-                    <div class="p-4">
+                    <div class="md:p-4">
                         <div
-                            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
+                            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 md:gap-3"
                         >
                             <div
                                 v-for="product in relatedProducts"
                                 :key="product.id"
-                                class="bg-white dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 overflow-hidden cursor-pointer hover:shadow-md transition-all duration-300 group"
+                                class="bg-white dark:bg-gray-700 rounded border border-gray-50 dark:border-gray-600 overflow-hidden cursor-pointer hover:shadow-md transition-all duration-300 group"
                                 @click="goTo(product?.web?.show)"
                             >
                                 <div
-                                    class="relative h-20 bg-gray-50 dark:bg-gray-600 flex items-center justify-center p-2"
+                                    class="bg-gray-50 dark:bg-gray-600 flex items-center justify-center p-2"
                                 >
                                     <img
                                         :src="product.images[0]?.url"
                                         :alt="product.name"
-                                        class="h-12 object-contain transition-transform duration-300 group-hover:scale-110"
+                                        class="object-contain w-full transition-transform duration-300 group-hover:scale-110"
                                     />
                                     <!-- Featured badge -->
                                     <div
@@ -668,7 +668,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             @click.stop="
                                                 goTo(product?.web?.show)
                                             "
-                                            class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded font-medium text-xs transition-all transform hover:scale-105 shadow-sm flex items-center"
+                                            class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-2 py-1 rounded font-medium text-xs transition-all transform hover:scale-105 shadow-sm flex items-center"
                                         >
                                             <i
                                                 class="fas fa-shopping-bag mr-1 text-xs"
@@ -698,7 +698,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 />
                 <button
                     @click="isZoomed = false"
-                    class="absolute top-4 right-4 text-white text-2xl bg-black/50 hover:bg-black/70 rounded-full w-10 h-10 flex items-center justify-center transition-all hover:scale-110 border border-white/20"
+                    class="absolute top-4 right-4 cursor-pointer text-white text-2xl bg-black/50 hover:bg-black/70 rounded-full w-10 h-10 flex items-center justify-center transition-all hover:scale-110 border border-white/20"
                 >
                     <i class="fas fa-times"></i>
                 </button>
@@ -710,13 +710,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 >
                     <button
                         @click.stop="prevImage"
-                        class="bg-white/20 hover:bg-white/30 text-white rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-sm transition-all hover:scale-110 border border-white/30"
+                        class="bg-white/20 hover:bg-white/30 cursor-pointer text-white rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-sm transition-all hover:scale-110 border border-white/30"
                     >
                         <i class="fas fa-chevron-left text-lg"></i>
                     </button>
                     <button
                         @click.stop="nextImage"
-                        class="bg-white/20 hover:bg-white/30 text-white rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-sm transition-all hover:scale-110 border border-white/30"
+                        class="bg-white/20 hover:bg-white/30 cursor-pointer text-white rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-sm transition-all hover:scale-110 border border-white/30"
                     >
                         <i class="fas fa-chevron-right text-lg"></i>
                     </button>
