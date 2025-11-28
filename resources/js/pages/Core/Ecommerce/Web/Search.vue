@@ -337,7 +337,7 @@ export default {
             },
             search: {
                 page: 1,
-                per_page: 500,
+                per_page: 100,
                 random: true,
             },
             loading: true,
