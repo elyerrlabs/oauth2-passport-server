@@ -59,7 +59,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <div class="space-y-3">
                         <!-- Main Image -->
                         <div
-                            class="relative bg-white dark:bg-gray-700 rounded-lg overflow-hidden group border border-gray-300 dark:border-gray-600"
+                            class="relative bg-white dark:bg-gray-700 rounded-lg overflow-hidden group"
                         >
                             <!-- Badges Container -->
                             <div class="absolute top-2 left-2 z-10 space-y-1">
@@ -89,7 +89,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         product?.images[selectedImageIndex]?.url
                                     "
                                     :alt="product.name"
-                                    class="max-h-full max-w-full object-contain transition-transform duration-300 cursor-zoom-in"
+                                    class="w-full object-contain transition-transform duration-300 cursor-zoom-in"
                                     :class="{ 'scale-150': isZoomed }"
                                     @click="toggleZoom"
                                 />
