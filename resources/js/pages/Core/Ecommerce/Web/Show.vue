@@ -38,7 +38,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </a>
                 <i class="fas fa-chevron-right mx-2 text-xs"></i>
                 <a
-                    :href="product?.category?.links?.index"
+                    :href="product?.category?.web?.index"
                     class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-xs"
                 >
                     {{ product?.category?.name }}
