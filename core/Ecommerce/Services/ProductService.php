@@ -355,9 +355,17 @@ class ProductService
             // Save image in the tmp directory
             $images = $this->fileService->processImage($data['images'] ?? []);
 
-            $data['category_id'] = $data['category'];
+            $model = $this->productRepository->create([
+                'name' => $data['name'],
+                'slug' => $data['slug'],
+                'short_description' => $data['short_description'],
+                'description' => $data['description'] ?? null,
+                'specification' => $data['specification'] ?? null,
+                'featured' => $data['featured'] ?? false,
+                'published' => $data['published'] ?? true,
+                'category_id' => $data["category"],
+            ]);
 
-            $model = $this->productRepository->create($data);
             $this->createOrUpdateVariants($model, $data);
             $this->createAttributes($model, $data);
             // $this->createImage($model, $data);
