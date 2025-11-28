@@ -3570,5 +3570,6 @@
   "This is a system service and cannot be modified. If you believe this is an error, please contact the administrator.": "Este es un servicio del sistema y no puede ser modificado. Si cree que esto es un error, comuníquese con el administrador.",
   "To confirm, type the service name below:": "Para confirmar, escribe el nombre del servicio a continuación:",
   "System services are protected and cannot be deleted.": "Los servicios del sistema están protegidos y no se pueden eliminar.",
-  "An error occurred while deleting the service": "Ocurrió un error al eliminar el servicio"
+  "An error occurred while deleting the service": "Ocurrió un error al eliminar el servicio",
+  "left :number": "Quedan :number"
 }

@@ -89,18 +89,47 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div v-if="!loading">
                     <!-- Products Grid -->
                     <div
-                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
+                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center"
                     >
                         <div
                             v-for="product in products"
                             :key="product.id"
-                            class="bg-white dark:bg-gray-800 cursor-pointer rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all duration-300 group"
+                            class="bg-white dark:bg-gray-800 cursor-pointer rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all duration-300 group w-full max-w-[200px]"
                             @click="goTo(product?.web?.show)"
                         >
                             <!-- Product Image Container -->
                             <div
                                 class="relative aspect-square overflow-hidden bg-gray-50 dark:bg-gray-700"
                             >
+                                <!-- Stock Overlays Centered -->
+                                <div
+                                    v-if="!product.stock"
+                                    class="absolute inset-0 flex items-center justify-center bg-black/50 dark:bg-black/70 z-10"
+                                >
+                                    <span
+                                        class="text-sm font-bold text-white bg-red-500 px-3 py-2 rounded-lg"
+                                    >
+                                        {{ __("Out of Stock") }}
+                                    </span>
+                                </div>
+
+                                <div
+                                    v-else-if="
+                                        product.stock > 0 && product.stock < 10
+                                    "
+                                    class="absolute top-2 left-2 z-10"
+                                >
+                                    <span
+                                        class="text-xs font-bold px-2 py-1 rounded bg-orange-500 text-white"
+                                    >
+                                        {{
+                                            __(":stock left", {
+                                                ":stock": product.stock,
+                                            })
+                                        }}
+                                    </span>
+                                </div>
+
                                 <!-- Image Slider -->
                                 <div
                                     class="absolute inset-0 flex transition-transform duration-500 ease-in-out"
@@ -126,29 +155,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Discount Badge -->
                                 <div
                                     v-if="product.discount"
-                                    class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded"
+                                    class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10"
                                 >
                                     -{{ product.discount }}%
-                                </div>
-
-                                <!-- Featured Badge -->
-                                <div
-                                    v-if="product.featured"
-                                    class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded"
-                                >
-                                    <i class="fas fa-star mr-1"></i>
                                 </div>
 
                                 <!-- Slider Controls -->
                                 <button
                                     @click.stop="prevImage(product.id)"
-                                    class="absolute left-1 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                                    class="absolute left-1 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 z-20"
                                 >
                                     <i class="fas fa-chevron-left text-xs"></i>
                                 </button>
                                 <button
                                     @click.stop="nextImage(product.id)"
-                                    class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                                    class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 z-20"
                                 >
                                     <i class="fas fa-chevron-right text-xs"></i>
                                 </button>
@@ -156,7 +177,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Slider Indicators -->
                                 <div
                                     v-if="product.images.length > 1"
-                                    class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1"
+                                    class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1 z-10"
                                 >
                                     <div
                                         v-for="(img, index) in product.images"
@@ -178,9 +199,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <!-- Product Details -->
                             <div class="p-3">
                                 <h3
-                                    class="font-medium text-gray-900 dark:text-white text-xs leading-tight line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
+                                    class="font-medium flex justify-between items-center text-gray-900 dark:text-white text-xs leading-tight line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
                                 >
                                     {{ product.name }}
+
+                                    <!-- Featured Badge -->
+                                    <span
+                                        v-show="product.featured"
+                                        class="bg-yellow-500/80 text-red-600 text-xs h-8 w-8 flex justify-center items-center rounded-full animate-[spin_2s_linear_infinite] shadow-sm"
+                                        aria-hidden="true"
+                                    >
+                                        <i class="fas fa-star"></i>
+                                    </span>
                                 </h3>
 
                                 <p
@@ -189,46 +219,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     {{ product.category.name }}
                                 </p>
 
-                                <!-- Rating Section -->
-                                <div
-                                    class="flex items-center mb-2"
-                                    v-if="product.rating"
-                                >
-                                    <div class="flex items-center">
-                                        <div class="flex text-yellow-400 mr-1">
-                                            <i
-                                                v-for="star in 5"
-                                                :key="star"
-                                                class="fas fa-star text-xs"
-                                                :class="{
-                                                    'text-gray-300 dark:text-gray-600':
-                                                        star > product.rating,
-                                                }"
-                                            ></i>
-                                        </div>
-                                        <span
-                                            class="text-gray-600 dark:text-gray-400 text-xs font-medium"
-                                        >
-                                            {{ product.rating }}
-                                        </span>
-                                    </div>
-                                </div>
-
                                 <!-- Price Section -->
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-baseline space-x-1">
                                         <span
-                                            class="text-sm font-bold text-red-600 dark:text-red-400"
+                                            class="text-sm font-bold text-green-600 dark:text-red-400"
                                         >
                                             {{ product.symbol }}
                                             {{ product.format_price }}
-                                        </span>
-                                        <span
-                                            v-if="product.originalPrice"
-                                            class="text-gray-400 dark:text-gray-500 line-through text-xs"
-                                        >
-                                            {{ product.symbol
-                                            }}{{ product.originalPrice }}
                                         </span>
                                     </div>
 
@@ -241,20 +239,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             class="fas fa-shopping-cart text-xs"
                                         ></i>
                                     </button>
-                                </div>
-
-                                <!-- Stock Status -->
-                                <div v-if="product.stock_status" class="mt-2">
-                                    <span
-                                        class="text-xs font-medium px-2 py-0.5 rounded-full"
-                                        :class="
-                                            product.stock_status === 'in_stock'
-                                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                                                : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
-                                        "
-                                    >
-                                        {{ __(product.stock_status) }}
-                                    </span>
                                 </div>
                             </div>
                         </div>

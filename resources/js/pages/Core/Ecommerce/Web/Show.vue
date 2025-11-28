@@ -31,7 +31,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             >
                 <a
                     :href="$page.props.routes.search"
-                    class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors flex items-center text-xs"
+                    class="text-blue-600 hover:text-blue-800 uppercase dark:text-blue-400 dark:hover:text-blue-300 transition-colors flex items-center text-xs"
                 >
                     <i class="fas fa-home mr-1"></i>
                     {{ __("Home") }}
@@ -39,23 +39,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <i class="fas fa-chevron-right mx-2 text-xs"></i>
                 <a
                     :href="product?.category?.web?.index"
-                    class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-xs"
+                    class="text-blue-600 hover:text-blue-800 uppercase dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-xs"
                 >
                     {{ product?.category?.name }}
                 </a>
                 <i class="fas fa-chevron-right mx-2 text-xs"></i>
                 <span
-                    class="text-gray-800 dark:text-gray-200 font-medium text-xs"
-                    >{{ product?.name }}</span
+                    class="text-gray-800 uppercase dark:text-gray-200 font-medium text-xs"
                 >
+                    {{ product?.name }}
+                </span>
             </div>
 
             <!-- Product Section -->
             <div
                 class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-6"
             >
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
-                    <!-- Product Gallery - Más compacta -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 p-2">
+                    <!-- Product Gallery-->
                     <div class="space-y-3">
                         <!-- Main Image -->
                         <div
@@ -63,17 +64,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         >
                             <!-- Badges Container -->
                             <div class="absolute top-2 left-2 z-10 space-y-1">
-                                <!-- Discount Badge -->
-                                <div
-                                    v-if="product.discount"
-                                    class="bg-red-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center w-fit"
-                                >
-                                    -{{ product.discount }}%
-                                </div>
                                 <!-- Featured Badge -->
                                 <div
                                     v-if="product.featured"
-                                    class="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center w-fit"
+                                    class="bg-yellow-500/80 text-white px-4 py-2 rounded text-xs font-bold flex items-center w-fit"
                                 >
                                     <i class="fas fa-crown mr-1 text-xs"></i>
                                     {{ __("Featured") }}
@@ -93,6 +87,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     :class="{ 'scale-150': isZoomed }"
                                     @click="toggleZoom"
                                 />
+
+                                <!-- Stock Overlays Centered -->
+                                <div
+                                    v-show="!product.stock"
+                                    class="absolute inset-0 flex items-center pointer-events-none justify-center bg-black/20 dark:bg-black/10 z-10"
+                                >
+                                    <span
+                                        class="text-sm font-bold text-white bg-red-500 py-2 px-4 rounded-lg"
+                                    >
+                                        {{ __("Out of Stock") }}
+                                    </span>
+                                </div>
                             </div>
 
                             <!-- Navigation Arrows -->
@@ -153,7 +159,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <!-- Header -->
                         <div class="space-y-2">
                             <h1
-                                class="text-lg font-semibold text-gray-900 dark:text-white leading-tight"
+                                class="text-lg font-semibold uppercase text-gray-900 dark:text-white leading-tight"
                             >
                                 {{ product.name }}
                             </h1>
@@ -172,6 +178,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     >4.2 (42 {{ __("reviews") }})</span
                                 >
                                 <span
+                                    v-if="product.stock"
                                     class="text-green-600 dark:text-green-400 text-xs font-medium flex items-center"
                                 >
                                     <i
@@ -179,10 +186,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     ></i>
                                     {{ __("In Stock") }}
                                 </span>
+
+                                <span
+                                    v-else
+                                    class="text-red-600 dark:text-green-400 text-xs font-medium flex items-center"
+                                >
+                                    <i
+                                        class="fas fa-check-circle mr-1 text-xs"
+                                    ></i>
+                                    {{ __("Out of Stock") }}
+                                </span>
                             </div>
                         </div>
 
-                        <!-- Price Section - Estilo AliExpress -->
+                        <!-- Price Section   -->
                         <div
                             class="p-3 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600"
                         >
@@ -223,7 +240,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                         </div>
 
-                        <!-- Short Description - Mejor posicionada -->
+                        <!-- Short Description  -->
                         <div
                             v-if="description"
                             class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed bg-blue-50 dark:bg-blue-900/20 rounded p-3 border border-blue-200 dark:border-blue-800"
@@ -252,7 +269,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 >
                                     <div class="flex items-center gap-2">
                                         <span
-                                            class="font-medium text-sm whitespace-nowrap"
+                                            class="font-medium uppercase text-sm whitespace-nowrap"
                                         >
                                             {{ variant.name }}
                                         </span>
@@ -308,8 +325,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                             <div class="grid grid-cols-2 gap-3">
                                 <button
+                                    :disabled="!product.stock"
                                     @click="addToCart"
-                                    class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white py-3 rounded font-medium flex items-center justify-center shadow-sm transition-colors text-sm group"
+                                    :class="[
+                                        'py-3 rounded font-medium flex items-center justify-center shadow-sm transition-colors text-sm group cursor-pointer ',
+                                        product.stock
+                                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                            : 'bg-gray-800/70 text-gray-200',
+                                    ]"
                                 >
                                     <i
                                         class="fas fa-shopping-cart mr-2 group-hover:scale-110 transition-transform text-xs"
@@ -317,8 +340,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     {{ __("Add to Cart") }}
                                 </button>
                                 <button
+                                    :disabled="!product.stock"
                                     @click="buyNow"
-                                    class="bg-orange-500 hover:bg-orange-600 cursor-pointer text-white py-3 rounded font-medium flex items-center justify-center shadow-sm transition-colors text-sm group"
+                                    :class="[
+                                        'cursor-pointer py-3 rounded font-medium flex items-center justify-center shadow-sm transition-colors text-sm group',
+                                        product.stock
+                                            ? 'bg-orange-500 hover:bg-orange-600  text-white'
+                                            : 'bg-gray-800/70 text-gray-200',
+                                    ]"
                                 >
                                     <i
                                         class="fas fa-bolt mr-2 group-hover:scale-110 transition-transform text-xs"
@@ -537,23 +566,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             <span
                                                 class="text-xs font-medium px-2 py-1 rounded-full"
                                                 :class="
-                                                    childProduct.stock > 0
+                                                    childProduct.stock
                                                         ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
                                                         : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
                                                 "
                                             >
                                                 <i
                                                     :class="
-                                                        childProduct.stock > 0
+                                                        !childProduct.stock
                                                             ? 'fas fa-check-circle mr-1 text-xs'
                                                             : 'fas fa-times-circle mr-1 text-xs'
                                                     "
                                                 ></i>
                                                 {{
-                                                    childProduct.stock > 0
+                                                    childProduct.stock
                                                         ? __("In Stock")
                                                         : __("Out of Stock")
                                                 }}
+                                                {{ childProduct.stock }}
                                             </span>
                                         </div>
 
@@ -637,7 +667,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <img
                                         :src="product.images[0]?.url"
                                         :alt="product.name"
-                                        class="object-contain w-full transition-transform duration-300 group-hover:scale-110"
+                                        class="object-contain w-full h-20 transition-transform duration-300 group-hover:scale-110"
                                     />
                                     <!-- Featured badge -->
                                     <div
@@ -649,15 +679,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         ></i>
                                     </div>
                                 </div>
-                                <div class="p-2">
+                                <div
+                                    class="p-2 flex flex-col justify-center items-center"
+                                >
                                     <h3
                                         class="font-medium text-gray-900 dark:text-white text-xs mb-1 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
                                     >
                                         {{ product.name }}
                                     </h3>
-                                    <div
-                                        class="flex items-center justify-between"
-                                    >
+                                    <div class="">
                                         <span
                                             class="text-xs font-bold text-blue-600 dark:text-blue-400"
                                         >
@@ -668,7 +698,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             @click.stop="
                                                 goTo(product?.web?.show)
                                             "
-                                            class="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-2 py-1 rounded font-medium text-xs transition-all transform hover:scale-105 shadow-sm flex items-center"
+                                            class="bg-blue-600 mt-4 hover:bg-blue-700 cursor-pointer text-white px-2 py-1 rounded font-medium text-xs transition-all transform hover:scale-105 shadow-sm flex items-center"
                                         >
                                             <i
                                                 class="fas fa-shopping-bag mr-1 text-xs"
