@@ -373,6 +373,20 @@ export default {
     },
 
     methods: {
+        scrollToTop() {
+            // Smooth scroll to top of the page
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+
+            // Alternative: Scroll to the main content area
+            // const mainElement = document.querySelector('main');
+            // if (mainElement) {
+            //     mainElement.scrollIntoView({ behavior: 'smooth' });
+            // }
+        },
+
         sortProducts() {
             switch (this.sortBy) {
                 case "price-low":
@@ -404,20 +418,23 @@ export default {
             this.products = [...this.products];
         },
 
-        filters(event) {
+        async filters(event) {
             const params = {
                 ...this.search,
                 ...event,
             };
-            this.getProducts(params);
+            await this.getProducts(params);
+            this.scrollToTop();
         },
 
-        changePage() {
+        async changePage() {
             const params = {
                 ...this.getParams(),
                 ...this.search,
             };
-            this.getProducts(params);
+            await this.getProducts(params);
+            // Scroll to top when page changes
+            this.scrollToTop();
         },
 
         nextImage(productId) {
@@ -453,6 +470,8 @@ export default {
             };
             this.sortBy = "featured";
             this.getProducts();
+            // Scroll to top when clearing filters
+            this.scrollToTop();
         },
 
         getParams() {
@@ -483,6 +502,16 @@ export default {
                     const values = res.data;
                     this.products = values.data;
                     this.pages = values.meta.pagination;
+
+                    // Initialize image indexes for new products
+                    this.products.forEach((product) => {
+                        if (!(product.id in this.currentImageIndex)) {
+                            this.currentImageIndex[product.id] = 0;
+                        }
+                    });
+
+                    // Apply sorting
+                    this.sortProducts();
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
