@@ -44,7 +44,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Main Category Item -->
                 <div
                     class="flex items-center px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-blue-200 dark:hover:border-blue-800"
-                    @click="goTo(category.links?.index)"
+                    @click="goTo(category.web?.index)"
                 >
                     <!-- Category Icon/Image -->
                     <div
@@ -244,48 +244,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-/* Custom scrollbar for the menu */
-.max-h-screen {
-    scrollbar-width: thin;
-    scrollbar-color: #cbd5e0 transparent;
-}
-
-.max-h-screen::-webkit-scrollbar {
-    width: 4px;
-}
-
-.max-h-screen::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.max-h-screen::-webkit-scrollbar-thumb {
-    background-color: #cbd5e0;
-    border-radius: 2px;
-}
-
-.max-h-screen::-webkit-scrollbar-thumb:hover {
-    background-color: #a0aec0;
-}
-
-/* Dark mode scrollbar */
-.dark .max-h-screen {
-    scrollbar-color: #4a5568 transparent;
-}
-
-.dark .max-h-screen::-webkit-scrollbar-thumb {
-    background-color: #4a5568;
-}
-
-.dark .max-h-screen::-webkit-scrollbar-thumb:hover {
-    background-color: #718096;
-}
-
-/* Ensure text doesn't overflow */
-.truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-</style>
