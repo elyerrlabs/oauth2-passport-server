@@ -22,10 +22,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-header />
     <!-- Main Content -->
-    <main class="w-full xl:w-7xl mx-auto px-4 py-6">
-        <div class="flex flex-col lg:flex-row gap-6">
+    <main class="w-full max-w-7xl mx-auto px-4 py-4">
+        <div class="flex flex-col lg:flex-row gap-4">
             <!-- Filters Sidebar -->
-            <div class="lg:w-80">
+            <div class="lg:w-64">
                 <v-filters @changed="filters" />
             </div>
 
@@ -33,35 +33,35 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <div class="flex-1">
                 <!-- Search and Sort Header -->
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-3 md:p-6 mb-6"
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-4"
                 >
                     <div
-                        class="flex flex-col sm:flex-row justify-between items-start md:items-center gap-4"
+                        class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
                     >
                         <div>
                             <h1
-                                class="text-lg md:text-2xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-1"
+                                class="text-base font-bold text-gray-900 dark:text-white mb-1"
                             >
                                 {{ __("Products") }}
                             </h1>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            <p class="text-gray-600 dark:text-gray-400 text-xs">
                                 {{ products.length }}
                                 {{ __("products found") }}
                             </p>
                         </div>
 
-                        <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-3">
                             <div class="flex items-center">
                                 <label
                                     for="sort"
-                                    class="text-gray-700 dark:text-gray-300 font-medium mr-3 text-sm"
+                                    class="text-gray-700 dark:text-gray-300 font-medium mr-2 text-xs"
                                 >
                                     {{ __("Sort by") }}:
                                 </label>
                                 <select
                                     id="sort"
                                     v-model="sortBy"
-                                    class="border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm min-w-[180px]"
+                                    class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs min-w-[160px]"
                                 >
                                     <option value="featured">
                                         {{ __("Featured") }}
@@ -89,17 +89,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div v-if="!loading">
                     <!-- Products Grid -->
                     <div
-                        class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"
+                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
                     >
                         <div
                             v-for="product in products"
                             :key="product.id"
-                            class="bg-white dark:bg-gray-800 cursor-pointer rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-xl dark:hover:shadow-gray-900/50 transition-all duration-300 hover:-translate-y-1 group"
+                            class="bg-white dark:bg-gray-800 cursor-pointer rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all duration-300 group"
                             @click="goTo(product?.web?.show)"
                         >
                             <!-- Product Image Container -->
                             <div
-                                class="relative aspect-4/3 overflow-hidden bg-gray-50 dark:bg-gray-700"
+                                class="relative aspect-square overflow-hidden bg-gray-50 dark:bg-gray-700"
                             >
                                 <!-- Image Slider -->
                                 <div
@@ -113,17 +113,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <div
                                         v-for="(img, index) in product.images"
                                         :key="index"
-                                        class="w-full h-full shrink-0 flex items-center justify-center"
+                                        class="w-full h-full shrink-0 flex items-center justify-center p-2"
                                     >
                                         <img
                                             :src="img.url"
                                             :alt="product.name"
-                                            class="w-full h-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
-                                            :class="{
-                                                'object-cover': imageNeedsCover(
-                                                    img.url
-                                                ),
-                                            }"
+                                            class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                                         />
                                     </div>
                                 </div>
@@ -131,38 +126,37 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Discount Badge -->
                                 <div
                                     v-if="product.discount"
-                                    class="absolute top-3 left-3 bg-linear-to-r from-red-500 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
+                                    class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded"
                                 >
-                                    {{ product.discount }}% OFF
+                                    -{{ product.discount }}%
                                 </div>
 
                                 <!-- Featured Badge -->
                                 <div
                                     v-if="product.featured"
-                                    class="absolute top-3 right-3 bg-linear-to-r from-yellow-400 to-yellow-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
+                                    class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded"
                                 >
                                     <i class="fas fa-star mr-1"></i>
-                                    {{ __("Featured") }}
                                 </div>
 
                                 <!-- Slider Controls -->
                                 <button
                                     @click.stop="prevImage(product.id)"
-                                    class="absolute left-3 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-8 h-8 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                                    class="absolute left-1 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
                                 >
-                                    <i class="fas fa-chevron-left text-sm"></i>
+                                    <i class="fas fa-chevron-left text-xs"></i>
                                 </button>
                                 <button
                                     @click.stop="nextImage(product.id)"
-                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-8 h-8 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                                    class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
                                 >
-                                    <i class="fas fa-chevron-right text-sm"></i>
+                                    <i class="fas fa-chevron-right text-xs"></i>
                                 </button>
 
                                 <!-- Slider Indicators -->
                                 <div
                                     v-if="product.images.length > 1"
-                                    class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1.5"
+                                    class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1"
                                 >
                                     <div
                                         v-for="(img, index) in product.images"
@@ -170,50 +164,38 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         @click.stop="
                                             setImageIndex(product.id, index)
                                         "
-                                        class="w-2 h-2 rounded-full cursor-pointer transition-all duration-300"
+                                        class="w-1.5 h-1.5 rounded-full cursor-pointer transition-all duration-300"
                                         :class="
                                             currentImageIndex[product.id] ===
                                             index
                                                 ? 'bg-white dark:bg-gray-200 scale-125'
-                                                : 'bg-white/60 dark:bg-gray-200/60 hover:bg-white/80 dark:hover:bg-gray-200/80'
+                                                : 'bg-white/60 dark:bg-gray-200/60 hover:bg-white/80'
                                         "
                                     ></div>
                                 </div>
-
-                                <!-- Quick Actions Overlay -->
-                                <div
-                                    class="absolute inset-0 bg-black/0 group-hover:bg-black/5 dark:group-hover:bg-black/20 transition-all duration-300"
-                                ></div>
                             </div>
 
                             <!-- Product Details -->
-                            <div class="p-5">
-                                <div
-                                    class="flex justify-between items-start mb-2"
+                            <div class="p-3">
+                                <h3
+                                    class="font-medium text-gray-900 dark:text-white text-xs leading-tight line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1"
                                 >
-                                    <h3
-                                        class="font-semibold text-gray-900 dark:text-white text-sm leading-tight line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex-1 mr-2"
-                                    >
-                                        {{ product.name }}
-                                    </h3>
-                                    <i
-                                        class="fas fa-heart text-gray-300 dark:text-gray-600 hover:text-red-500 transition-colors mt-0.5 shrink-0"
-                                    ></i>
-                                </div>
+                                    {{ product.name }}
+                                </h3>
 
                                 <p
-                                    class="text-gray-500 dark:text-gray-400 text-xs mb-3"
+                                    class="text-gray-500 dark:text-gray-400 text-xs mb-2"
                                 >
                                     {{ product.category.name }}
                                 </p>
 
                                 <!-- Rating Section -->
                                 <div
-                                    class="flex items-center mb-3"
+                                    class="flex items-center mb-2"
                                     v-if="product.rating"
                                 >
                                     <div class="flex items-center">
-                                        <div class="flex text-yellow-400 mr-2">
+                                        <div class="flex text-yellow-400 mr-1">
                                             <i
                                                 v-for="star in 5"
                                                 :key="star"
@@ -230,30 +212,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             {{ product.rating }}
                                         </span>
                                     </div>
-                                    <span
-                                        class="text-gray-400 dark:text-gray-500 mx-2 text-xs"
-                                        >•</span
-                                    >
-                                    <span
-                                        class="text-gray-500 dark:text-gray-400 text-xs"
-                                    >
-                                        {{ product.reviews }}
-                                        {{ __("reviews") }}
-                                    </span>
                                 </div>
 
                                 <!-- Price Section -->
                                 <div class="flex items-center justify-between">
-                                    <div class="flex items-baseline space-x-2">
+                                    <div class="flex items-baseline space-x-1">
                                         <span
-                                            class="text-lg font-bold text-gray-900 dark:text-white"
+                                            class="text-sm font-bold text-red-600 dark:text-red-400"
                                         >
                                             {{ product.symbol }}
                                             {{ product.format_price }}
                                         </span>
                                         <span
                                             v-if="product.originalPrice"
-                                            class="text-gray-400 dark:text-gray-500 line-through text-sm"
+                                            class="text-gray-400 dark:text-gray-500 line-through text-xs"
                                         >
                                             {{ product.symbol
                                             }}{{ product.originalPrice }}
@@ -261,21 +233,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     </div>
 
                                     <!-- Add to Cart Button -->
-
                                     <button
                                         @click.stop="goTo(product?.web?.show)"
-                                        class="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 p-2 cursor-pointer rounded-xl hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white transition-all duration-300 transform group-hover:scale-110 shadow-sm"
+                                        class="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 p-1.5 cursor-pointer rounded hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm"
                                     >
                                         <i
-                                            class="fas fa-shopping-cart text-sm"
+                                            class="fas fa-shopping-cart text-xs"
                                         ></i>
                                     </button>
                                 </div>
 
                                 <!-- Stock Status -->
-                                <div v-if="product.stock_status" class="mt-3">
+                                <div v-if="product.stock_status" class="mt-2">
                                     <span
-                                        class="text-xs font-medium px-2 py-1 rounded-full"
+                                        class="text-xs font-medium px-2 py-0.5 rounded-full"
                                         :class="
                                             product.stock_status === 'in_stock'
                                                 ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
@@ -290,7 +261,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Load More Button -->
-                    <div class="mt-12 text-center" v-if="products.length > 0">
+                    <div class="mt-6 text-center" v-if="products.length > 0">
                         <v-paginate
                             v-model="search.page"
                             :total-pages="pages.total_pages"
@@ -301,22 +272,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- No Results Message -->
                     <div
                         v-if="products.length === 0 && !loading"
-                        class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center"
+                        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center"
                     >
                         <div class="max-w-md mx-auto">
                             <div
-                                class="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6"
+                                class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4"
                             >
                                 <i
-                                    class="fas fa-search text-3xl text-gray-400 dark:text-gray-500"
+                                    class="fas fa-search text-xl text-gray-400 dark:text-gray-500"
                                 ></i>
                             </div>
                             <h3
-                                class="text-xl font-semibold text-gray-900 dark:text-white mb-3"
+                                class="text-base font-semibold text-gray-900 dark:text-white mb-2"
                             >
                                 {{ __("No products found") }}
                             </h3>
-                            <p class="text-gray-500 dark:text-gray-400 mb-6">
+                            <p
+                                class="text-gray-500 dark:text-gray-400 text-xs mb-4"
+                            >
                                 {{
                                     __(
                                         "Try adjusting your search or filter criteria to find what you're looking for."
@@ -325,9 +298,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </p>
                             <button
                                 @click="clearFilters"
-                                class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-medium px-6 py-3 rounded-xl transition-colors duration-300 inline-flex items-center"
+                                class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-medium px-4 py-2 rounded transition-colors duration-300 inline-flex items-center text-xs"
                             >
-                                <i class="fas fa-times mr-2"></i>
+                                <i class="fas fa-times mr-1"></i>
                                 {{ __("Clear All Filters") }}
                             </button>
                         </div>
@@ -400,10 +373,6 @@ export default {
     },
 
     methods: {
-        imageNeedsCover(imageUrl) {
-            return false;
-        },
-
         sortProducts() {
             switch (this.sortBy) {
                 case "price-low":
@@ -529,47 +498,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.aspect-\[4\/3\] {
-    aspect-ratio: 4/3;
-}
-
-/* Responsive grid adjustments */
-@media (min-width: 1536px) {
-    .grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
-
-@media (min-width: 1280px) and (max-width: 1535px) {
-    .grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@media (min-width: 1024px) and (max-width: 1279px) {
-    .grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 480px) and (max-width: 767px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-</style>
