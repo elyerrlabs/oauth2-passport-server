@@ -25,6 +25,7 @@ namespace Core\Ecommerce\Http\Controllers\Api\Admin;
  */
 
 use Core\Ecommerce\Services\ProductService;
+use Illuminate\Support\Facades\Log;
 use Core\Ecommerce\Transformer\User\UserProductTransformer;
 use Core\Ecommerce\Transformer\Admin\ProductTransformer;
 use Elyerr\ApiResponse\Exceptions\ReportError;
@@ -92,7 +93,6 @@ final class ProductController extends ApiController
             'short_description' => Purify::clean($request->input('short_description')),
             'description' => Purify::config('editor')->clean($request->input('description')),
             'specification' => Purify::config('editor')->clean($request->input('specification')),
-            'stock' => $request->input('stock'),
             'images' => $request->file('images'),
             'category' => $request->input('category'),
             'published' => $request->input('published'),

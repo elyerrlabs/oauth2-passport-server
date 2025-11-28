@@ -56,7 +56,6 @@ class Product extends Master
         'featured',
         'published',
         'category_id',
-        'parent_id'
     ];
 
     /**
