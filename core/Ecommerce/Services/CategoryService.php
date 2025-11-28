@@ -177,8 +177,15 @@ final class CategoryService
 
             $images = $this->fileService->processImage($data['images'] ?? []);
 
-            $data['tag'] = Product::getTag();
-            $model = $this->categoryRepository->create($data);
+            $model = $this->categoryRepository->create([
+                'name' => $data['name'],
+                'slug' => $data['slug'],
+                'tag' => Product::getTag(),
+                'description' => $data['description'],
+                'featured' => $data['featured'] ?? false,
+                'published' => $data['published'] ?? false,
+            ]);
+
             $this->createIcon($model, $data);
             // $this->createImage($model, $data);
 
