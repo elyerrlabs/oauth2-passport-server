@@ -265,7 +265,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <v-paginate
                             v-model="search.page"
                             :total-pages="pages.total_pages"
-                            @change="getProducts"
+                            @change="changePage"
                         />
                     </div>
 
@@ -337,7 +337,7 @@ export default {
             },
             search: {
                 page: 1,
-                per_page: 100,
+                per_page: 500,
                 random: true,
             },
             loading: true,
@@ -412,6 +412,14 @@ export default {
             this.getProducts(params);
         },
 
+        changePage() {
+            const params = {
+                ...this.getParams(),
+                ...this.search,
+            };
+            this.getProducts(params);
+        },
+
         nextImage(productId) {
             const product = this.products.find((p) => p.id === productId);
             if (product && product.images.length > 1) {
@@ -440,7 +448,7 @@ export default {
             // Clear all filters and refresh
             this.search = {
                 page: 1,
-                per_page: 50,
+                per_page: 150,
                 random: true,
             };
             this.sortBy = "featured";
@@ -463,7 +471,6 @@ export default {
             this.loading = true;
             const queryString = new URLSearchParams(params).toString();
             const newUrl = `${window.location.pathname}?${queryString}`;
-
             try {
                 const res = await this.$server.get(
                     this.$page.props.api.search,
@@ -473,23 +480,15 @@ export default {
                 );
 
                 if (res.status === 200) {
-                    this.products = res.data.data;
-                    this.pages = res.data.meta.pagination;
-
-                    // Initialize image indexes for new products
-                    this.products.forEach((product) => {
-                        if (!this.currentImageIndex[product.id]) {
-                            this.$set(this.currentImageIndex, product.id, 0);
-                        }
-                    });
-
-                    // Apply sorting
-                    this.sortProducts();
+                    const values = res.data;
+                    this.products = values.data;
+                    this.pages = values.meta.pagination;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
                     $notify.error(e.response.data.message);
                 }
+                console.log(e);
             } finally {
                 this.loading = false;
                 window.history.pushState({}, "", newUrl);
