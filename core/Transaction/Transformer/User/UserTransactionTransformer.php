@@ -67,7 +67,7 @@ class UserTransactionTransformer extends TransformerAbstract
             'renew' => $transaction->renew ? true : false,
             'session_id' => $transaction->session_id,
             'payment_intent_id' => $transaction->payment_intent_id,
-            'payment_url' => $transaction->payment_url,
+            'payment_url' => $transaction->payment_url ?? $transaction->response['url'],
             'meta' => $transaction->meta,
             'created' => $this->format_date($transaction->created_at),
             'updated' => $this->format_date($transaction->updated_at),
