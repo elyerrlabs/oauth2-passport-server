@@ -20,450 +20,318 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div
-        class="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
-    >
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
         <v-header />
 
         <!-- Header -->
         <div
-            class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
+            class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
         >
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
                         <div
-                            class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl"
+                            class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg"
                         >
                             <i
-                                class="fas fa-shopping-bag text-purple-600 dark:text-purple-400 text-xl"
+                                class="fas fa-shopping-bag text-red-600 dark:text-red-400 text-lg"
                             ></i>
                         </div>
                         <div>
                             <h1
-                                class="text-2xl font-bold text-gray-800 dark:text-white"
+                                class="text-xl font-bold text-gray-900 dark:text-white"
                             >
-                                {{ __("Order History") }}
+                                {{ __("My Orders") }}
                             </h1>
-                            <p class="text-gray-500 dark:text-gray-400 mt-1">
-                                {{ __("Review your past purchases") }}
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">
+                                {{ __("Track and manage your orders") }}
                             </p>
                         </div>
                     </div>
                     <button
                         v-if="orders.length > 0"
                         @click="getCheckouts"
-                        class="p-3 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-300 shadow-sm"
+                        class="p-2 bg-white dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 hover:border-red-300 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
                         :disabled="loading"
                         :class="{ 'opacity-50 cursor-not-allowed': loading }"
                     >
                         <i
-                            class="fas fa-sync-alt text-purple-600 dark:text-purple-400"
+                            class="fas fa-sync-alt text-red-600 dark:text-red-400 text-sm"
                             :class="{ 'animate-spin': loading }"
                         ></i>
-                        <span class="sr-only">{{ __("Refresh orders") }}</span>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <!-- Empty State -->
             <div
                 v-if="orders.length === 0 && !loading"
-                class="text-center bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-8 max-w-md mx-auto border border-gray-100 dark:border-gray-700"
+                class="text-center bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 max-w-md mx-auto"
             >
                 <div
-                    class="inline-flex items-center justify-center w-20 h-20 bg-purple-100 dark:bg-purple-900/30 rounded-full mb-6"
+                    class="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full mb-4"
                 >
                     <i
-                        class="fas fa-box-open text-3xl text-purple-500 dark:text-purple-400"
+                        class="fas fa-box-open text-2xl text-red-500 dark:text-red-400"
                     ></i>
                 </div>
                 <h3
-                    class="text-xl font-semibold text-gray-800 dark:text-white mb-2"
+                    class="text-lg font-semibold text-gray-900 dark:text-white mb-2"
                 >
-                    {{ __("No orders yet") }}
+                    {{ __("No orders found") }}
                 </h3>
-                <p class="text-gray-500 dark:text-gray-400 mb-6">
-                    {{
-                        __(
-                            "Your order history will appear here once you make a purchase"
-                        )
-                    }}
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">
+                    {{ __("You haven't placed any orders yet") }}
                 </p>
                 <a
                     :href="$page.props.routes.search"
-                    class="inline-flex items-center px-5 py-3 bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                    class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors duration-200"
                 >
-                    <i class="fas fa-shopping-cart mr-2"></i>
+                    <i class="fas fa-shopping-cart mr-2 text-sm"></i>
                     {{ __("Start Shopping") }}
                 </a>
             </div>
 
-            <!-- Orders -->
-            <div v-else-if="orders.length > 0" class="space-y-5">
+            <!-- Orders List -->
+            <div v-else-if="orders.length > 0" class="space-y-4">
                 <div
                     v-for="order in orders"
                     :key="order.id"
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-md dark:hover:shadow-gray-900/50 transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700"
+                    class="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800"
                 >
                     <!-- Order Header -->
-                    <button
-                        class="w-full flex items-center justify-between p-6 text-left cursor-pointer transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700"
-                        :class="{
-                            'border-l-4 border-emerald-500':
-                                order.transaction.status === 'successful',
-                            'border-l-4 border-amber-500':
-                                order.transaction.status === 'pending',
-                            'border-l-4 border-rose-500':
-                                order.transaction.status === 'failed',
-                        }"
-                        @click="
-                            expandedOrder =
-                                expandedOrder === order.id ? null : order.id
-                        "
+                    <div
+                        class="p-4 border-b border-gray-100 dark:border-gray-600"
                     >
-                        <div class="flex items-center space-x-5">
-                            <div class="relative">
-                                <div
-                                    class="w-12 h-12 rounded-xl bg-linear-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-sm"
-                                >
-                                    {{ orderNumberIcon(order.code) }}
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+                        >
+                            <div
+                                class="flex flex-col sm:flex-row sm:items-center gap-3"
+                            >
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex items-center space-x-2">
+                                        <span
+                                            class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                        >
+                                            {{ __("Order") }}:
+                                        </span>
+                                        <span
+                                            class="text-sm font-bold text-gray-900 dark:text-white"
+                                        >
+                                            #{{ order.code }}
+                                        </span>
+                                    </div>
+                                    <div
+                                        class="w-px h-4 bg-gray-300 dark:bg-gray-600"
+                                    ></div>
+                                    <div class="flex items-center space-x-2">
+                                        <span
+                                            class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                        >
+                                            {{ __("Transaction") }}:
+                                        </span>
+                                        <span
+                                            class="text-sm font-mono text-gray-900 dark:text-white"
+                                        >
+                                            {{
+                                                order.transaction_code || "N/A"
+                                            }}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div
-                                    class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white dark:bg-gray-800 border-2 border-white dark:border-gray-800 flex items-center justify-center"
-                                    :class="{
-                                        'bg-emerald-500':
-                                            order.transaction.status ===
-                                            'successful',
-                                        'bg-amber-500':
-                                            order.transaction.status ===
-                                            'pending',
-                                        'bg-rose-500':
-                                            order.transaction.status ===
-                                            'failed',
-                                    }"
-                                >
-                                    <i
-                                        class="text-xs text-white"
-                                        :class="{
-                                            'fas fa-check':
-                                                order.transaction.status ===
-                                                'successful',
-                                            'fas fa-clock':
-                                                order.transaction.status ===
-                                                'pending',
-                                            'fas fa-times':
-                                                order.transaction.status ===
-                                                'failed',
-                                        }"
-                                    ></i>
-                                </div>
-                            </div>
-                            <div>
-                                <p
-                                    class="font-semibold text-gray-800 dark:text-white"
-                                >
-                                    {{ __("Order") }} #{{ order.code }}
-                                </p>
-                                <p
-                                    class="text-sm text-gray-500 dark:text-gray-400 mt-1"
+                                    class="w-px h-4 bg-gray-300 dark:bg-gray-600 sm:block hidden"
+                                ></div>
+                                <span
+                                    class="text-sm text-gray-500 dark:text-gray-400"
                                 >
                                     {{
                                         formatCompactDate(
                                             order.transaction.created
                                         )
                                     }}
-                                </p>
+                                </span>
                             </div>
-                        </div>
 
-                        <div class="text-right flex items-center space-x-4">
-                            <div>
+                            <div class="flex items-center space-x-4">
                                 <span
-                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                                    class="inline-flex items-center px-2 py-1 rounded text-xs font-medium"
                                     :class="{
-                                        'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300':
+                                        'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400':
                                             order.transaction.status ===
                                             'successful',
-                                        'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300':
+                                        'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400':
                                             order.transaction.status ===
                                             'pending',
-                                        'bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-300':
+                                        'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400':
                                             order.transaction.status ===
-                                            'failed',
+                                            'expired',
                                     }"
                                 >
-                                    {{ formatStatus(order.transaction.status) }}
+                                    {{ __(order.transaction.status) }}
                                 </span>
-                                <p
-                                    class="font-bold text-gray-800 dark:text-white text-lg mt-1"
+                                <span
+                                    :class="[
+                                        'text-lg font-bold text-red-600 dark:text-red-400',
+                                        order.transaction.status == 'expired'
+                                            ? 'line-through'
+                                            : '',
+                                    ]"
                                 >
                                     {{ order.transaction.total }}
                                     {{ order.transaction.currency }}
-                                </p>
+                                </span>
                             </div>
-                            <i
-                                class="fas text-gray-400 transition-transform duration-300"
-                                :class="
-                                    expandedOrder === order.id
-                                        ? 'fa-chevron-up'
-                                        : 'fa-chevron-down'
-                                "
-                            ></i>
                         </div>
-                    </button>
+                    </div>
 
-                    <!-- Expanded Content -->
-                    <transition
-                        enter-active-class="transition-all duration-300 ease-out"
-                        leave-active-class="transition-all duration-200 ease-in"
-                        enter-class="opacity-0 max-h-0"
-                        enter-to-class="opacity-100 max-h-96"
-                        leave-class="opacity-100 max-h-96"
-                        leave-to-class="opacity-0 max-h-0"
-                    >
-                        <div
-                            v-if="expandedOrder === order.id"
-                            class="p-6 border-t border-gray-100 dark:border-gray-700 space-y-6 bg-gray-50 dark:bg-gray-900"
-                        >
-                            <!-- Transaction -->
-                            <section
-                                class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm"
+                    <!-- Order Items -->
+                    <div class="p-4">
+                        <div class="space-y-3">
+                            <div
+                                v-for="item in order.orders"
+                                :key="item.id"
+                                class="flex items-center space-x-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
                             >
-                                <h4
-                                    class="flex items-center text-base font-semibold text-gray-800 dark:text-white mb-4"
-                                >
-                                    <div
-                                        class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mr-3"
+                                <img
+                                    :src="item.images[0]?.url"
+                                    :alt="item.meta.name"
+                                    class="w-16 h-16 rounded border border-gray-200 dark:border-gray-600 object-cover"
+                                />
+                                <div class="flex-1 min-w-0">
+                                    <h3
+                                        class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 mb-1"
                                     >
-                                        <i
-                                            class="fas fa-receipt text-purple-600 dark:text-purple-400"
-                                        ></i>
-                                    </div>
-                                    {{ __("Transaction Details") }}
-                                </h4>
-                                <div
-                                    class="grid grid-cols-1 md:grid-cols-3 gap-5"
-                                >
+                                        {{ item.meta.name }}
+                                    </h3>
                                     <div
-                                        class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                                        class="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400"
                                     >
                                         <span
-                                            class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1"
-                                            >Status</span
+                                            >{{ __("Qty") }}:
+                                            {{ item.quantity }}</span
                                         >
-                                        <p
-                                            class="font-semibold"
-                                            :class="{
-                                                'text-emerald-600 dark:text-emerald-400':
-                                                    order.transaction.status ===
-                                                    'successful',
-                                                'text-amber-600 dark:text-amber-400':
-                                                    order.transaction.status ===
-                                                    'pending',
-                                                'text-rose-600 dark:text-rose-400':
-                                                    order.transaction.status ===
-                                                    'failed',
-                                            }"
-                                        >
-                                            {{
-                                                formatStatus(
-                                                    order.transaction.status
-                                                )
-                                            }}
-                                        </p>
-                                    </div>
-                                    <div
-                                        class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                                    >
                                         <span
-                                            class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1"
-                                            >{{ __("Payment Method") }}</span
-                                        >
-                                        <p
-                                            class="font-semibold text-gray-800 dark:text-white"
-                                        >
-                                            {{
-                                                formatPaymentMethod(
-                                                    order.transaction
-                                                        .payment_method
-                                                )
-                                            }}
-                                        </p>
-                                    </div>
-                                    <div
-                                        class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                                    >
-                                        <span
-                                            class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1"
-                                            >{{ __("Total Amount") }}</span
-                                        >
-                                        <p
-                                            class="font-bold text-lg text-purple-600 dark:text-purple-400"
-                                        >
-                                            {{ order.transaction.total }}
-                                            {{ order.transaction.currency }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <!-- Delivery -->
-                            <section
-                                class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm"
-                            >
-                                <h4
-                                    class="flex items-center text-base font-semibold text-gray-800 dark:text-white mb-4"
-                                >
-                                    <div
-                                        class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-3"
-                                    >
-                                        <i
-                                            class="fas fa-location-dot text-blue-600 dark:text-blue-400"
-                                        ></i>
-                                    </div>
-                                    {{ __("Delivery Address") }}
-                                </h4>
-                                <div
-                                    class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-5 flex justify-between items-start border border-blue-100 dark:border-blue-800"
-                                >
-                                    <div>
-                                        <p
-                                            class="font-semibold text-gray-800 dark:text-white"
-                                        >
-                                            {{
-                                                order.delivery_address.full_name
-                                            }}
-                                        </p>
-                                        <p
-                                            class="text-gray-700 dark:text-gray-300 mt-1"
-                                        >
-                                            {{ order.delivery_address.address }}
-                                        </p>
-                                        <p
-                                            class="text-gray-600 dark:text-gray-400 text-sm mt-1"
-                                        >
-                                            {{ order.delivery_address.city }},
-                                            {{ order.delivery_address.country }}
-                                        </p>
-                                        <p
-                                            class="flex items-center text-gray-600 dark:text-gray-400 text-sm mt-2"
-                                        >
-                                            <i
-                                                class="fas fa-phone text-xs mr-2 text-gray-500 dark:text-gray-400"
-                                            ></i>
-                                            {{ order.delivery_address.phone }}
-                                        </p>
-                                    </div>
-                                    <a
-                                        v-if="order.delivery_address.whatsapp"
-                                        :href="order.delivery_address.whatsapp"
-                                        target="_blank"
-                                        class="p-3 bg-green-100 dark:bg-green-900/30 hover:bg-green-200 dark:hover:bg-green-800 text-green-700 dark:text-green-400 rounded-xl transition-colors duration-200"
-                                        title="Contact via WhatsApp"
-                                    >
-                                        <i class="fab fa-whatsapp text-xl"></i>
-                                    </a>
-                                </div>
-                            </section>
-
-                            <!-- Items -->
-                            <section
-                                class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm"
-                            >
-                                <h4
-                                    class="flex items-center text-base font-semibold text-gray-800 dark:text-white mb-4"
-                                >
-                                    <div
-                                        class="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center mr-3"
-                                    >
-                                        <i
-                                            class="fas fa-box text-amber-600 dark:text-amber-400"
-                                        ></i>
-                                    </div>
-                                    {{ __("Order Items") }} ({{
-                                        order.orders.length
-                                    }})
-                                </h4>
-                                <div class="space-y-3">
-                                    <div
-                                        v-for="item in order.orders"
-                                        :key="item.id"
-                                        class="flex items-center p-4 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-xl transition-colors duration-200"
-                                    >
-                                        <img
-                                            :src="item.images[0]?.url"
-                                            :alt="item.meta.name"
-                                            class="w-16 h-16 rounded-lg object-cover shadow-sm mr-4 border border-gray-200 dark:border-gray-600"
-                                        />
-                                        <div class="flex-1">
-                                            <p
-                                                class="font-semibold text-gray-800 dark:text-white"
-                                            >
-                                                {{ item.meta.name }}
-                                            </p>
-                                            <p
-                                                class="text-sm text-gray-500 dark:text-gray-400 mt-1"
-                                            >
-                                                {{ __("Quantity") }}:
-                                                {{ item.quantity }}
-                                            </p>
-                                        </div>
-                                        <p
-                                            class="font-bold text-purple-600 dark:text-purple-400 text-lg"
+                                            class="text-red-600 dark:text-red-400 font-bold"
                                         >
                                             {{ item.currency }}
                                             {{ item.format_price }}
-                                        </p>
+                                        </span>
                                     </div>
                                 </div>
-                            </section>
+                                <div class="flex items-center space-x-2">
+                                    <button
+                                        @click.stop="goTo(item.web.product)"
+                                        class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-medium rounded transition-colors duration-200 cursor-pointer"
+                                    >
+                                        {{ __("Buy Again") }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                            <!-- Actions -->
+                    <!-- Order Footer -->
+                    <div
+                        class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
+                    >
+                        <div
+                            class="flex flex-wrap items-center justify-between gap-3"
+                        >
                             <div
-                                class="flex flex-wrap gap-3 pt-5 border-t border-gray-200 dark:border-gray-600"
+                                class="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400"
                             >
-                                <a
-                                    v-if="order.transaction.payment_url"
-                                    :href="order.transaction.payment_url"
-                                    target="_blank"
-                                    class="inline-flex items-center px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 shadow-sm"
-                                >
+                                <span class="flex items-center">
                                     <i
-                                        class="fas fa-receipt mr-2 text-purple-500 dark:text-purple-400"
+                                        class="fas fa-credit-card mr-1 text-xs"
                                     ></i>
-                                    {{ __("View Receipt") }}
-                                </a>
+                                    {{
+                                        formatPaymentMethod(
+                                            order.transaction.payment_method
+                                        )
+                                    }}
+                                </span>
+                                <span class="flex items-center">
+                                    <i
+                                        class="fas fa-location-dot mr-1 text-xs"
+                                    ></i>
+                                    {{ order.delivery_address.city }}
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button
+                                    v-if="order.transaction.payment_url"
+                                    @click.stop="
+                                        openReceipt(
+                                            order.transaction.payment_url
+                                        )
+                                    "
+                                    :class="[
+                                        'px-3 py-1.5 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 text-xs font-medium rounded   transition-colors duration-200 cursor-pointer',
+                                        setStatusColor(
+                                            order.transaction.status
+                                        ),
+                                    ]"
+                                >
+                                    <i class="fas fa-receipt mr-1"></i>
+                                    {{ setStatus(order.transaction.status) }}
+                                </button>
+                                <button
+                                    @click.stop="copyOrderId(order.code)"
+                                    class="px-3 py-1.5 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 text-xs font-medium rounded hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer"
+                                >
+                                    <i class="fas fa-copy mr-1"></i>
+                                    {{ __("Copy Order ID") }}
+                                </button>
+                                <button
+                                    v-if="order.transaction_code"
+                                    @click.stop="
+                                        copyTransactionCode(
+                                            order.transaction_code
+                                        )
+                                    "
+                                    class="px-3 py-1.5 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 text-xs font-medium rounded hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer"
+                                >
+                                    <i class="fas fa-copy mr-1"></i>
+                                    {{ __("Copy Transaction") }}
+                                </button>
 
                                 <button
-                                    @click="copyOrderId(order.code)"
-                                    class="inline-flex items-center px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 shadow-sm"
+                                    @click.stop="goTo(order.web.show)"
+                                    class="px-3 py-1.5 bg-blue-700 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-100 dark:text-gray-300 text-xs font-medium rounded hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors duration-200 cursor-pointer"
                                 >
-                                    <i
-                                        class="fas fa-copy mr-2 text-gray-500 dark:text-gray-400"
-                                    ></i>
-                                    {{ __("Copy Order ID") }}
+                                    {{ __("Details") }}
                                 </button>
                             </div>
                         </div>
-                    </transition>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-6 flex justify-center" v-if="orders.length > 0">
+                <v-paginate
+                    v-model="search.page"
+                    :total-pages="pages.total_pages"
+                    @change="changePage"
+                />
             </div>
         </main>
 
         <!-- Loading -->
         <div
             v-if="loading"
-            class="fixed inset-0 bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center z-50"
+            class="fixed inset-0 bg-white dark:bg-gray-900 bg-opacity-90 flex items-center justify-center z-50"
         >
             <div class="text-center">
                 <div
-                    class="w-16 h-16 border-4 border-purple-200 dark:border-purple-800 border-t-purple-600 dark:border-t-purple-400 rounded-full animate-spin mb-4"
+                    class="w-12 h-12 border-4 border-red-200 dark:border-red-800 border-t-red-500 dark:border-t-red-400 rounded-full animate-spin mb-3"
                 ></div>
-                <p class="text-gray-700 dark:text-gray-300 font-medium">
+                <p class="text-gray-700 dark:text-gray-300 text-sm font-medium">
                     {{ __("Loading orders...") }}
                 </p>
             </div>
@@ -473,14 +341,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import VHeader from "../../Components/VHeader.vue";
+import VPaginate from "@/components/VPaginate.vue";
+import { router } from "@inertiajs/vue3";
 
 export default {
     components: {
         VHeader,
+        VPaginate,
     },
 
     data() {
         return {
+            dialog: false,
+            selectedOrder: null,
             orders: [],
             loading: false,
             pages: {
@@ -488,9 +361,8 @@ export default {
             },
             search: {
                 page: 1,
-                per_page: 15,
+                per_page: 20,
             },
-            expandedOrder: null,
         };
     },
 
@@ -502,17 +374,37 @@ export default {
         "search.page"(value) {
             this.getCheckouts();
         },
-        "search.per_page"(value) {
-            if (value) {
-                this.search.per_page = value;
-                this.getCheckouts();
-            }
-        },
     },
 
     methods: {
         changePage(event) {
             this.search.page = event;
+        },
+
+        setStatus(status) {
+            switch (status) {
+                case "pending":
+                    return __("Pay Now");
+                case "expired":
+                    return __("Expired");
+                case "successful":
+                    return __("View Receipt");
+                default:
+                    break;
+            }
+        },
+
+        setStatusColor(status) {
+            switch (status) {
+                case "pending":
+                    return "bg-yellow-500 text-white";
+                case "expired":
+                    return "bg-red-500 text-white";
+                case "successful":
+                    return "bg-green-500 text-white";
+                default:
+                    break;
+            }
         },
 
         async getCheckouts() {
@@ -530,26 +422,14 @@ export default {
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
-                    this.$q.notify({
-                        type: "negative",
-                        message: e.response.data.message,
-                        timeout: 3000,
-                    });
+                    $notify.error(e.response.data.message);
                 }
             } finally {
                 this.loading = false;
             }
         },
 
-        formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-            });
-        },
+        openOrderDetails(order) {},
 
         formatCompactDate(dateString) {
             return new Date(dateString).toLocaleDateString("en-US", {
@@ -559,20 +439,14 @@ export default {
             });
         },
 
-        orderNumberIcon(code) {
-            // Get the last character of order code for avatar
-            return code.slice(-1).toUpperCase();
-        },
-
-        formatStatus(status) {
-            const statusMap = {
-                successful: "Successful",
-                failed: "Failed",
-                pending: "Pending",
-                refunded: "Refunded",
-                cancelled: "Cancelled",
-            };
-            return statusMap[status] || status;
+        formatFullDate(dateString) {
+            return new Date(dateString).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+            });
         },
 
         formatPaymentMethod(method) {
@@ -581,26 +455,45 @@ export default {
                 card: "Credit Card",
                 paypal: "PayPal",
                 bank_transfer: "Bank Transfer",
+                stripe: "Stripe",
             };
             return methodMap[method] || method;
         },
 
-        canReorder(order) {
-            return (
-                order.transaction.status === "successful" ||
-                order.transaction.status === "completed"
-            );
+        goTo(link) {
+            router.visit(link);
         },
 
-        reorder(order) {
-            // Implementation for reorder functionality
+        openReceipt(url) {
+            window.open(url, "_blank");
         },
 
         copyOrderId(orderCode) {
             navigator.clipboard.writeText(orderCode);
-
             $notify.success(__("Order ID copied to clipboard"));
+        },
+
+        copyTransactionCode(transactionCode) {
+            navigator.clipboard.writeText(transactionCode);
+            $notify.success(__("Transaction code copied to clipboard"));
         },
     },
 };
 </script>
+
+<style>
+.is-expired::after {
+    content: "EXPIRED";
+    white-space: nowrap;
+    position: fixed;
+    top: 50%;
+    left: -100%;
+    width: 300%;
+    font: 900 6vw/1 system-ui, sans-serif;
+    color: rgba(0, 0, 0, 0.07);
+    transform: rotate(-30deg);
+    z-index: 9999;
+    pointer-events: none;
+    animation: scroll-demo 20s linear infinite;
+}
+</style>
