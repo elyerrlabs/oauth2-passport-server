@@ -1,5 +1,6 @@
 import axios from "axios";
 
+axios.defaults.timeout = 20000;
 // Header to set local time for the user
 axios.defaults.headers.common["X-LOCALTIME"] =
   Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -12,7 +13,6 @@ axios.defaults.headers.common["Accept-Language"] = navigator.language;
 window.axios = axios;
 
 export const $server = axios.create({
-  timeout: 5000,
   withCredentials: true,
   headers: {
     Accept: "application/json",
