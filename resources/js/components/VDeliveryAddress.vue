@@ -247,7 +247,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     v-model="form.district"
                                     :error="errors.district"
                                     :label="__('District')"
-                                    :required="true"
                                     :placeholder="__('Enter your district')"
                                 />
                             </div>
