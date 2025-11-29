@@ -85,6 +85,12 @@ class UserCheckoutTransformer extends TransformerAbstract
             "updated_at" => $this->format_date($checkout->updated_at),
             'links' => [
                 'index' => route('api.ecommerce.web.checkouts.index'),
+            ],
+            'web' => [
+                'index' => route('ecommerce.checkouts.index'),
+                'show' => route('ecommerce.checkouts.show', [
+                    'checkout' => $checkout->id
+                ]),
             ]
         ];
     }

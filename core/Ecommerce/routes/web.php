@@ -34,7 +34,7 @@ Route::middleware(['throttle:ecommerce:web'])
         ], function () {
 
             Route::resource('orders', OrderController::class)->only('index');
-            Route::resource('checkouts', CheckoutController::class)->only(['index']);
+            Route::resource('checkouts', CheckoutController::class)->only(['index', 'show']);
         });
 
         Route::get('', [ProductController::class, 'dashboard'])->name('dashboard');

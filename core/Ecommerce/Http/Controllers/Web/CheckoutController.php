@@ -24,6 +24,8 @@ namespace Core\Ecommerce\Http\Controllers\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Services\CheckoutService;
+use Core\Ecommerce\Transformer\User\UserCheckoutTransformer;
 use Inertia\Inertia;
 use Core\Ecommerce\Services\RouteService;
 use Illuminate\Http\Request;
@@ -31,6 +33,18 @@ use App\Http\Controllers\WebController;
 
 class CheckoutController extends WebController
 {
+    /**
+     * Checkout service
+     * @var CheckoutService
+     */
+    private $checkoutService;
+
+    public function __construct(CheckoutService $checkoutService)
+    {
+        parent::__construct();
+        $this->checkoutService = $checkoutService;
+    }
+
     /**
      * Index
      * @param \Illuminate\Http\Request $request
@@ -45,6 +59,29 @@ class CheckoutController extends WebController
                     'search' => route('ecommerce.search'),
                     'dashboard' => route('ecommerce.dashboard'),
                 ],
+                'api' => RouteService::api(),
+            ]
+        )->rootView('ecommerce');
+    }
+
+    /**
+     * Refund product
+     * @param Request $request
+     * @return \Inertia\Response
+     */
+    public function show(string $id)
+    {
+        $data = $this->checkoutService->details($id);
+
+        return Inertia::render(
+            'Core/Ecommerce/Web/Checkout/Details',
+            [
+                'data' => $this->transform($data, UserCheckoutTransformer::class),
+                'routes' => [
+                    'search' => route('ecommerce.search'),
+                    'dashboard' => route('ecommerce.dashboard'),
+                ],
+
                 'api' => RouteService::api(),
             ]
         )->rootView('ecommerce');
