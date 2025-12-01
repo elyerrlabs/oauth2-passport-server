@@ -53,8 +53,8 @@ class RefundTransformer extends TransformerAbstract
             'transaction' => fractal($refund->refundable, TransactionTransformer::class)->toArray()['data'] ?? [],
             'appeal' => fractal($refund->children, static::class)->toArray()['data'] ?? [],
             'links' => [
-                'index' => route('api.transaction.admin.refund.index'),
-                'update' => route('api.transaction.admin.refund.update', ['id' => $refund->id]),
+                'index' => route('api.transaction.admin.refunds.index'),
+                'update' => route('api.transaction.admin.refunds.update', ['id' => $refund->id]),
             ]
         ];
     }
