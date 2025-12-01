@@ -20,10 +20,12 @@ namespace Core\Transaction\Services\Payment;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- * 
+ *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Services\FileService;
+use Illuminate\Support\Facades\DB;
 use Core\Transaction\Repositories\RefundRepository;
 use Core\Transaction\Jobs\ProcessRefundJob;
 use Core\Transaction\Repositories\TransactionRepository;
@@ -32,7 +34,6 @@ use Illuminate\Http\Request;
 
 class RefundService
 {
-
     /**
      * Refund repository
      * @var RefundRepository
@@ -41,16 +42,35 @@ class RefundService
 
     /**
      * Transaction repository
-     * @var 
+     * @var
      */
     private $transactionRepository;
+
+    /**
+     * File service
+     * @var FileService
+     */
+    private $fileService;
 
     public function __construct()
     {
         $this->refundRepository = app(RefundRepository::class);
         $this->transactionRepository = app(TransactionRepository::class);
+        $this->fileService = app(FileService::class);
     }
 
+    /**
+     * Storage to save image
+     * @param string $id
+     * @return string
+     */
+    public function getStorage(string $id = '')
+    {
+        if (empty($id)) {
+            return $this->refundRepository->getStorage();
+        }
+        return $this->refundRepository->getStorage() . '/' . $id;
+    }
     /**
      * Search data for admins
      * @param \Illuminate\Http\Request $request
@@ -140,9 +160,24 @@ class RefundService
             throw new ReportError(__('A refund has already been issued for this transaction.'), 409);
         }
 
-        $data['currency'] = $transaction->currency;
+        return DB::transaction(function () use ($data, $transaction) {
 
-        return $transaction->refund()->create($data);
+            $images = $this->fileService->processImage($data['evidence']);
+
+            $data['currency'] = $transaction->currency;
+
+            $refund = $transaction->refund()->create($data);
+
+            $this->fileService->saveImage(
+                $refund,
+                $images,
+                $this->getStorage($refund->id),
+                'local'
+            );
+
+            return $refund;
+        });
+
     }
 
     /**
