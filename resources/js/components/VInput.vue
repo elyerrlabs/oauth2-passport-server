@@ -42,7 +42,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             }"
             :disabled="disabled"
         />
-
+        <div v-if="helper"
+            class="bg-blue-100 mt-1 rounded text-justify flex items-center p-2"
+        >
+            <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+            <small class="text-sm text-blue-900">
+                {{ helper }}
+            </small>
+        </div>
         <v-error :error="error" />
     </div>
 </template>
@@ -57,9 +64,10 @@ const props = defineProps({
     type: { type: String, default: "text" },
     placeholder: { type: String, default: null },
     required: { type: Boolean, default: false },
-    error: { type: [Array,String], default: [] },
+    error: { type: [Array, String], default: [] },
     digits: { type: Number, default: 2 },
     disabled: { type: Boolean, default: false },
+    helper: { Type: String, default: null },
 });
 
 const emit = defineEmits(["update:modelValue", "input"]);
