@@ -74,6 +74,6 @@ class RefundController extends ApiController
 
         $model = $this->refundService->createForUser($request->toArray());
 
-        return $this->showOne($model, UserRefundTransformer::class);
+        return $this->showOne($model, UserRefundTransformer::class, 201);
     }
 }
