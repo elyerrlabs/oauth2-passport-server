@@ -54,6 +54,8 @@ Route::group([
     Route::post('/m2fa/authorize', [CodeController::class, 'requestToken2FA'])->name('2fa.authorize');
     Route::post('/m2fa/activate', [CodeController::class, 'factor2faEnableOrDisable'])->name('2fa.activate');
 
+
+    Route::get('/files/{id}/owner/{owner_id}', [FileController::class, 'show'])->name('files.show');
     Route::delete('/files/{id}/owner/{owner_id}', [FileController::class, 'destroy'])->name('files.delete');
 
     Route::prefix('notifications')
