@@ -53,7 +53,13 @@ class CheckoutRepository
     {
         $query = $this->model->query();
 
-        $query->with(['lastTransaction', 'orders', 'orders.orderable']);
+        $query->with([
+            'lastTransaction',
+            'lastTransaction.refund',
+            'lastTransaction.refund.files',
+            'orders',
+            'orders.orderable'
+        ]);
 
         return $query;
     }
