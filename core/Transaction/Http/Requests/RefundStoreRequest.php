@@ -63,7 +63,7 @@ class RefundStoreRequest extends FormRequest
                     }
                 }
             ],
-            'evidence' => ['required', 'array', 'max:20'],
+            'evidence' => ['required', 'array', 'max:10'],
             'transaction_code' => ['required', 'exists:transactions,code'],
             'evidence.*' => [
                 'file',
