@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers\Web\Admin\File;
- 
+
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
  *
@@ -24,7 +24,8 @@ namespace App\Http\Controllers\Web\Admin\File;
  */
 
 use App\Http\Controllers\WebController;
-use App\Repositories\FileRepository;
+use Illuminate\Support\Facades\Storage;
+use App\Services\FileService;
 
 class FileController extends WebController
 {
@@ -33,11 +34,12 @@ class FileController extends WebController
      * Repositories
      * @var 
      */
-    private $repository;
+    private $fileService;
 
-    public function __construct(FileRepository $fileRepository)
+    public function __construct(FileService $fileService)
     {
-        $this->repository = $fileRepository;
+        parent::__construct();
+        $this->fileService = $fileService;
     }
 
     /**
@@ -48,8 +50,29 @@ class FileController extends WebController
      */
     public function destroy(string $id, string $owner_id)
     {
-        $model = $this->repository->deleted($id, $owner_id);
+        $model = $this->fileService->deleted($id, $owner_id);
 
         return $this->showOne($model);
     }
+
+
+    public function show(string $id, string $owner_id)
+    {
+        $file = $this->fileService->findForUser($id, $owner_id);
+
+        $path = Storage::disk($file->disk)->path($file->path);
+
+        if (!file_exists($path))
+            abort(404);
+
+        return response()->make(
+            file_get_contents($path),
+            200,
+            [
+                'Content-Type' => $file->mime_type,
+                'Content-Disposition' => 'inline'
+            ]
+        );
+    }
+
 }

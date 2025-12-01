@@ -24,32 +24,109 @@ namespace App\Services;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Repositories\FileRepository;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Support\Facades\Storage;
 
 class FileService
 {
+
+    /**
+     * File repository
+     * @var FileRepository
+     */
+    private $fileRepository;
+
+
+    /**
+     * Construct
+     * @param FileRepository $fileRepository
+     */
+    public function __construct(FileRepository $fileRepository)
+    {
+        $this->fileRepository = $fileRepository;
+    }
+
+    /**
+     * Find file
+     * @param string $id
+     * @return \App\Models\Common\File|null
+     */
+    public function find(string $id)
+    {
+        return $this->fileRepository->find($id);
+    }
+
+    /**
+     * Search file for user
+     * @param string $id
+     * @param string $owner_id
+     * @return \App\Models\Common\File|null
+     */
+    public function findForUser(string $id, string $owner_id)
+    {
+        $model = $this->fileRepository->find($id);
+
+        throw_if(
+            empty($model),
+            new ReportError(__('File does not exists'), 404)
+        );
+
+        throw_if(
+            $model->fileable_id != $owner_id,
+            new ReportError(__('File does not exists'), 404)
+        );
+
+        return $model;
+    }
+
+    /**
+     * Delete file
+     * @param string $id
+     * @param string $owner_id
+     */
+    public function deleted(string $id, string $owner_id)
+    {
+        $model = $this->fileRepository->find($id);
+
+        throw_if(
+            empty($model),
+            new ReportError(__('File does not exists'), 404)
+        );
+
+        throw_if(
+            $model->fileable_id != $owner_id,
+            new ReportError(__('File does not exists'), 404)
+        );
+
+        if (!empty($model)) {
+            Storage::delete($model->path);
+
+            $model->delete();
+        }
+
+        return $model;
+    }
+
     /**
      * Process Image
      * @param string $id
      * @param array $images images
      * @return array
      */
-    public function processImage(mixed $images = [])
+    public function processImage(mixed $images = [], string $disk = 'tmp')
     {
         if (empty($images)) {
             return [];
         }
-        Storage::disk('local')->makeDirectory('temp');
 
         $paths = [];
-
 
         foreach ($images as $key => $file) {
 
             if ($file instanceof \Illuminate\Http\UploadedFile) {
 
-                $path = $file->store('temp', 'local');
+                $path = $file->store('', 'tmp');
 
                 $paths[$key] = $path;
             }
@@ -60,20 +137,19 @@ class FileService
 
     /**
      * Save image
-     * @param mixed $model object of model
-     * @param array $data image url
-     * @param string $dirpath  path to save images
+     * @param mixed $model
+     * @param array $images
+     * @param string $dirpath
+     * @param string $disk
+     * @param string $visibility
      * @throws ReportError
      * @return void
      */
-    public function saveImage(mixed $model, array $images, string $dirpath)
+    public function saveImage(mixed $model, array $images, string $dirpath, string $disk = 'public', string $visibility = 'private')
     {
         if (empty($images)) {
             return;
         }
-
-        // Create destination directory
-        Storage::disk('public')->makeDirectory($dirpath);
 
         if (empty($model)) {
             throw new ReportError(__(
@@ -83,9 +159,8 @@ class FileService
         }
 
         foreach ($images as $path) {
-
             // Example path -> "temp/xxxx.jpg"
-            if (!Storage::disk('local')->exists($path)) {
+            if (!Storage::disk('tmp')->exists($path)) {
                 continue;
             }
 
@@ -97,14 +172,15 @@ class FileService
             $newPath = $dirpath . "/" . $filename;
 
             // Move file (relative → relative)
-            Storage::disk('public')->put(
+            Storage::disk($disk)->put(
                 $newPath,
-                Storage::disk('local')->get($from)
+                Storage::disk('tmp')->get($from)
             );
-            Storage::disk('local')->delete($from);
+
+            Storage::disk('tmp')->delete($from);
 
             // Absolute path to read metadata
-            $absolute = Storage::disk('public')->path($newPath);
+            $absolute = Storage::disk($disk)->path($newPath);
 
             // Metadata
             $extension = pathinfo($absolute, PATHINFO_EXTENSION);
@@ -117,9 +193,9 @@ class FileService
                 'original_name' => $filename,
                 'mime_type' => $mime,
                 'extension' => $extension,
-                'disk' => 'public',
+                'disk' => $disk,
                 'size' => $size,
-                'visibility' => 'public',
+                'visibility' => $visibility,
                 'path' => $newPath,
             ]);
         }

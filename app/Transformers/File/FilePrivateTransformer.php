@@ -27,7 +27,7 @@ namespace App\Transformers\File;
 use App\Models\Common\File;
 use League\Fractal\TransformerAbstract;
 
-class FileTransformer extends TransformerAbstract
+class FilePrivateTransformer extends TransformerAbstract
 {
     /**
      * List of resources to automatically include
@@ -81,7 +81,6 @@ class FileTransformer extends TransformerAbstract
             'visibility' => $file->visibility,
             'links' => [
                 'show' => route('user.files.show', ['id' => $file->id, 'owner_id' => $this->owner_id]),
-                'delete' => route('user.files.delete', ['id' => $file->id, 'owner_id' => $this->owner_id])
             ]
         ];
     }

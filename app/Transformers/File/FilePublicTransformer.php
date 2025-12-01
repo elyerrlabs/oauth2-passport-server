@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Transformers\File;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -26,29 +26,42 @@ namespace App\Repositories;
 
 use App\Models\Common\File;
 use Illuminate\Support\Facades\Storage;
+use League\Fractal\TransformerAbstract;
 
-class FileRepository
+class FilePublicTransformer extends TransformerAbstract
 {
-
-    private $model;
-
-    public function __construct(File $file)
-    {
-        $this->model = $file;
-    }
-
-    public function query()
-    {
-        return $this->model->query();
-    }
+    /**
+     * List of resources to automatically include
+     *
+     * @var array
+     */
+    protected array $defaultIncludes = [
+        //
+    ];
 
     /**
-     * Find resource
-     * @param string $id
-     * @return File|null
+     * List of resources possible to include
+     *
+     * @var array
      */
-    public function find(string $id): File|null
+    protected array $availableIncludes = [
+        //
+    ];
+    
+
+    /**
+     * A Fractal transformer.
+     *
+     * @return array
+     */
+    public function transform(File $file)
     {
-        return $this->query()->where('id', $id)->first();
+        return [
+            'name' => $file->name,
+            'mime_type' => $file->mime_type,
+            'extension' => $file->extension,
+            'size' => $file->size,
+            'url' => Storage::url($file->path),
+        ];
     }
 }
