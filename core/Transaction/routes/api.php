@@ -42,8 +42,8 @@ Route::middleware(['throttle:transaction:api'])->group(function () {
         'as' => 'users.'
     ], function () {
 
-        Route::get("/refund", [UserRefundController::class, 'index'])->name('refund.index');
-        Route::post("/refund", [UserRefundController::class, 'store'])->name('refund.store');
+        Route::get("/refunds", [UserRefundController::class, 'index'])->name('refunds.index');
+        Route::post("/refunds", [UserRefundController::class, 'store'])->name('refunds.store');
     });
 
     Route::group([
@@ -51,7 +51,7 @@ Route::middleware(['throttle:transaction:api'])->group(function () {
         'as' => 'admin.'
     ], function () {
 
-        Route::get("/refund", [AdminRefundController::class, 'index'])->name('refund.index');
-        Route::put("/refund/{id}", [AdminRefundController::class, 'update'])->name('refund.update');
+        Route::get("/refunds", [AdminRefundController::class, 'index'])->name('refunds.index');
+        Route::put("/refunds/{id}", [AdminRefundController::class, 'update'])->name('refunds.update');
     });
 });
