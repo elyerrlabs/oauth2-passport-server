@@ -62,6 +62,7 @@ class TransactionTransformer extends TransformerAbstract
             'type' => $transaction->type,
             'status' => $transaction->status,
             'total' => $this->formatMoney($transaction->total),
+            'cents' => $transaction->total,
             'payment_method' => $transaction->payment_method,
             'billing_period' => $transaction->billing_period,
             'renew' => $transaction->renew ? true : false,

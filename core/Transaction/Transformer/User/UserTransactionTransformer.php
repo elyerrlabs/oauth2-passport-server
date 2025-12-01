@@ -62,6 +62,7 @@ class UserTransactionTransformer extends TransformerAbstract
             'currency' => strtoupper($transaction->currency),
             'status' => $transaction->status,
             'total' => $this->formatMoney($transaction->total),
+            'cents' => $transaction->total,
             'payment_method' => $transaction->payment_method,
             'billing_period' => $transaction->billing_period,
             'renew' => $transaction->renew ? true : false,
@@ -69,6 +70,7 @@ class UserTransactionTransformer extends TransformerAbstract
             'payment_intent_id' => $transaction->payment_intent_id,
             'payment_url' => $transaction->payment_url ?? $transaction->response['url'],
             'meta' => $transaction->meta,
+            'refund' => fractal($transaction->refund, UserRefundTransformer::class)->toArray()['data'] ?? [],
             'created' => $this->format_date($transaction->created_at),
             'updated' => $this->format_date($transaction->updated_at),
             'links' => [
