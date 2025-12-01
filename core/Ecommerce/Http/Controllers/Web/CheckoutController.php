@@ -78,10 +78,10 @@ class CheckoutController extends WebController
             [
                 'data' => $this->transform($data, UserCheckoutTransformer::class),
                 'routes' => [
+                    'show' => route('ecommerce.checkouts.show', ['checkout' => $id]),
                     'search' => route('ecommerce.search'),
                     'dashboard' => route('ecommerce.dashboard'),
                 ],
-
                 'api' => RouteService::api(),
             ]
         )->rootView('ecommerce');
