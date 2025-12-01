@@ -154,6 +154,7 @@ class Menu
             "captcha" => static::captcha(),
             "app_name" => config('app.name'),
             "org_name" => config("app.org_name"),
+            "org_support_email" => config('mail.from.address'),
             "user" => static::authenticated_user(),
             "guest_routes" => [
                 "home_page" => url(config('system.home_page')),

@@ -49,7 +49,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                     </div>
                     <button
-                        v-if="orders.length > 0"
+                        v-if="orders.length"
                         @click="getCheckouts"
                         class="p-2 bg-white dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 hover:border-red-300 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
                         :disabled="loading"
@@ -68,7 +68,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <!-- Empty State -->
             <div
-                v-if="orders.length === 0 && !loading"
+                v-if="orders.length == 0 && !loading"
                 class="text-center bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 max-w-md mx-auto"
             >
                 <div
@@ -96,7 +96,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Orders List -->
-            <div v-else-if="orders.length > 0" class="space-y-4">
+            <div v-else class="space-y-4">
                 <div
                     v-for="order in orders"
                     :key="order.id"
@@ -137,9 +137,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <span
                                             class="text-sm font-mono text-gray-900 dark:text-white"
                                         >
-                                            {{
-                                                order.transaction_code || "N/A"
-                                            }}
+                                            {{ order.transaction_code }}
                                         </span>
                                     </div>
                                 </div>
@@ -149,11 +147,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <span
                                     class="text-sm text-gray-500 dark:text-gray-400"
                                 >
-                                    {{
-                                        formatCompactDate(
-                                            order.transaction.created
-                                        )
-                                    }}
+                                    {{ order?.transaction?.created }}
                                 </span>
                             </div>
 
@@ -162,28 +156,28 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="inline-flex items-center px-2 py-1 rounded text-xs font-medium"
                                     :class="{
                                         'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400':
-                                            order.transaction.status ===
+                                            order?.transaction?.status ===
                                             'successful',
                                         'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400':
-                                            order.transaction.status ===
+                                            order?.transaction?.status ===
                                             'pending',
                                         'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400':
-                                            order.transaction.status ===
+                                            order?.transaction?.status ===
                                             'expired',
                                     }"
                                 >
-                                    {{ __(order.transaction.status) }}
+                                    {{ order?.transaction?.status }}
                                 </span>
                                 <span
                                     :class="[
                                         'text-lg font-bold text-red-600 dark:text-red-400',
-                                        order.transaction.status == 'expired'
+                                        order?.transaction?.status == 'expired'
                                             ? 'line-through'
                                             : '',
                                     ]"
                                 >
-                                    {{ order.transaction.total }}
-                                    {{ order.transaction.currency }}
+                                    {{ order?.transaction?.total }}
+                                    {{ order?.transaction?.currency }}
                                 </span>
                             </div>
                         </div>
@@ -199,14 +193,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             >
                                 <img
                                     :src="item.images[0]?.url"
-                                    :alt="item.meta.name"
+                                    :alt="item?.meta?.name"
                                     class="w-16 h-16 rounded border border-gray-200 dark:border-gray-600 object-cover"
                                 />
                                 <div class="flex-1 min-w-0">
                                     <h3
                                         class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 mb-1"
                                     >
-                                        {{ item.meta.name }}
+                                        {{ item?.meta?.name }}
                                     </h3>
                                     <div
                                         class="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400"
@@ -251,7 +245,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     ></i>
                                     {{
                                         formatPaymentMethod(
-                                            order.transaction.payment_method
+                                            order?.transaction?.payment_method
                                         )
                                     }}
                                 </span>
@@ -259,7 +253,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <i
                                         class="fas fa-location-dot mr-1 text-xs"
                                     ></i>
-                                    {{ order.delivery_address.city }}
+                                    {{ order?.delivery_address?.city }}
                                 </span>
                             </div>
                             <div class="flex items-center space-x-2">
@@ -366,8 +360,8 @@ export default {
         };
     },
 
-    created() {
-        this.getCheckouts();
+    async created() {
+        await this.getCheckouts();
     },
 
     watch: {
@@ -417,13 +411,15 @@ export default {
                     }
                 );
                 if (res.status === 200) {
-                    this.orders = res.data.data;
-                    this.pages = res.data.meta.pagination;
+                    const values = res.data;
+                    this.orders = values.data;
+                    //this.pages = values.meta.pagination;
                 }
             } catch (e) {
                 if (e?.response?.data?.message) {
                     $notify.error(e.response.data.message);
                 }
+                console.log(e);
             } finally {
                 this.loading = false;
             }

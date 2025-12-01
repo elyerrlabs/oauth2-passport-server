@@ -25,31 +25,28 @@ namespace Core\Transaction\Transformer\User;
  */
 
 use App\Models\Common\Refund;
+use App\Transformers\File\FilePrivateTransformer;
+use App\Transformers\File\FileTransformer;
 use League\Fractal\TransformerAbstract;
 
 class UserRefundTransformer extends TransformerAbstract
 {
     public function transform(Refund $refund)
     {
-
         return [
             'id' => $refund->id,
             'reason' => $refund->reason,
             'description' => $refund->description,
             'amount' => $refund->amount,
-            'currency' => $refund->currency,
+            'currency' => strtoupper($refund->currency),
             'type' => $refund->type, // 'refund','appeal'
             'status' => $refund->status, //'pending', 'under_review', 'approved', 'waiting_for_return','processing','completed','rejected','canceled'
-            'customer' => [
-                'name' => $refund->user->name,
-                'last_name' => $refund->user->last_name,
-                'email' => $refund->user->email,
-            ],
             'appeal' => fractal($refund->children, static::class)->toArray()['data'] ?? [],
-            'links' => [
-                'index' => route('api.transaction.admin.refund.index'),
-                'update' => route('api.transaction.admin.refund.update', ['id' => $refund->id]),
-            ]
+            'files' => fractal($refund->files, new FilePrivateTransformer($refund->id))->toArray()['data'] ?? [],
+            /*'links' => [
+                'index' => route('api.transaction.users.refunds.index'),
+                'store' => route('api.transaction.users.refunds.store'),
+            ],*/
         ];
     }
 }
