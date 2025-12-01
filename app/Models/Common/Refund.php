@@ -146,6 +146,6 @@ class Refund extends Master
      */
     public function files()
     {
-        return $this->morphMany(File::class, 'fillable');
+        return $this->morphMany(File::class, 'fileable');
     }
 }
