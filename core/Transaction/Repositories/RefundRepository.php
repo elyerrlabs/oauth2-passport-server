@@ -35,12 +35,27 @@ class RefundRepository
     private $model;
 
     /**
+     * String
+     * @var string
+     */
+    private $storage;
+    /**
      * Construct
      * @param \Core\Transaction\Model\Refund $refund
      */
     public function __construct(Refund $refund)
     {
         $this->model = $refund;
+        $this->storage = "refunds";
+    }
+
+    /**
+     * Get Storage
+     * @return string
+     */
+    public function getStorage()
+    {
+        return $this->storage;
     }
 
     /**
@@ -55,7 +70,7 @@ class RefundRepository
             [
                 'transactions',
                 'appeal',
-                'refund',
+                'files',
                 'user',
                 'handledBy'
             ]
