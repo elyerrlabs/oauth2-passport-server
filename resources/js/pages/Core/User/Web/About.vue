@@ -503,9 +503,7 @@ export default {
         },
 
         openApplication(app) {
-            if (app.route) {
-                router.visit(app.route);
-            }
+            window.location.href = app.route;
         },
 
         formatLastLogin() {
