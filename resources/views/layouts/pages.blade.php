@@ -27,7 +27,7 @@
     @stack('modals')
 
 
-    <script>
+    <script nonce="{{ $nonce }}">
         (function() {
             const savedTheme = localStorage.getItem('theme');
             const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
