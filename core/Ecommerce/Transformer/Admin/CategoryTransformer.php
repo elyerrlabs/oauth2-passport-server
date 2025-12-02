@@ -24,7 +24,7 @@ namespace Core\Ecommerce\Transformer\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Transformers\File\FileTransformer; 
+use App\Transformers\File\FileTransformer;
 use Core\Ecommerce\Transformer\User\UserIconTransformer;
 use League\Fractal\TransformerAbstract;
 
@@ -63,7 +63,7 @@ class CategoryTransformer extends TransformerAbstract
             'featured' => $category->featured ? true : false,
             'published' => $category->published ? true : false,
             'icon' => fractal($category->icon, UserIconTransformer::class)->toArray()['data'] ?? [],
-            'images' => fractal($category->files, FileTransformer::class)->toArray()['data'] ?? [],
+            'images' => fractal($category->files, new FileTransformer($category->id))->toArray()['data'] ?? [],
             'parent' => fractal($category->parent, CategoryParentTransformer::class)->toArray()['data'] ?? [],
             'children' => fractal($category->children, CategoryChildrenTransformer::class)->toArray()['data'] ?? [],
             'links' => [

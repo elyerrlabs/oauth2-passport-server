@@ -76,7 +76,7 @@ class ProductTransformer extends TransformerAbstract
             'description' => $product->description,
             'specification' => $product->specification,
             'category' => fractal($product->category, CategoryTransformer::class)->toArray()['data'],
-            'images' => fractal($product->files, FileTransformer::class)->toArray()['data'] ?? [],
+            'images' => fractal($product->files, new FileTransformer($product->id))->toArray()['data'] ?? [],
             'tags' => fractal($product->tags, new ProductTagTransformer($product))->toArray()['data'] ?? [],
             'attributes' => fractal($product->attributes, new ProductAttributeTransformer($product))->toArray()['data'] ?? [],
             'variants' => fractal($product->variants, VariantTransformer::class)->toArray()['data'],
