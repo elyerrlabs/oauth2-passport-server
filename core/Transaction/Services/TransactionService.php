@@ -352,7 +352,7 @@ class TransactionService
         // Search by email
         if ($request->filled('email')) {
             $query->whereHas(
-                'owner',
+                'user',
                 function ($query) use ($request) {
                     $query->whereRaw("LOWER(email) like ?", ["%" . strtolower($request->email) . "%"]);
                 }
@@ -369,7 +369,7 @@ class TransactionService
         // Search by name
         if ($request->filled('name')) {
             $query->whereHas(
-                'owner',
+                'activatedBy',
                 function ($query) use ($request) {
                     $query->whereRaw("LOWER(name) like ?", ["%" . strtolower($request->name) . "%"]);
                 }
