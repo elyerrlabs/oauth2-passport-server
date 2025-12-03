@@ -30,7 +30,6 @@ use Core\User\Model\User;
 use Core\Partner\Model\Partner;
 use Core\Transaction\Model\Refund;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Core\Transaction\Transformer\Admin\TransactionTransformer;
 
 class Transaction extends Master
 {
@@ -118,6 +117,10 @@ class Transaction extends Master
         return $this->belongsTo(Partner::class);
     }
 
+    /**
+     * Refund
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
     public function refund()
     {
         return $this->morphOne(Refund::class, 'refundable');

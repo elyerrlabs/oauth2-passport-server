@@ -25,8 +25,8 @@ namespace Core\Transaction\Http\Controllers\Api\Web;
  */
 
 use App\Http\Controllers\ApiController;
-use Core\Transaction\Http\Requests\RefundStoreRequest;
-use Core\Transaction\Services\Payment\RefundService;
+use Core\Transaction\Services\RefundService;
+use Core\Transaction\Http\Requests\RefundStoreRequest; 
 use Core\Transaction\Transformer\User\UserRefundTransformer;
 use Illuminate\Http\Request;
 
@@ -40,7 +40,7 @@ class RefundController extends ApiController
 
     /**
      * Refund service
-     * @param \Core\Transaction\Services\Payment\RefundService $refundService
+     * @param \Core\Transaction\Services\RefundService $refundService
      */
     public function __construct(RefundService $refundService)
     {

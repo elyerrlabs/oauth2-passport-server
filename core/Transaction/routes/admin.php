@@ -23,6 +23,7 @@
  */
 
 use Core\Transaction\Http\Controllers\Admin\PlanController;
+use Core\Transaction\Http\Controllers\Admin\RefundController;
 use Core\Transaction\Http\Controllers\Admin\DashboardController;
 use Core\Transaction\Http\Controllers\Admin\PlanPriceController;
 use Core\Transaction\Http\Controllers\Admin\PlanScopeController;
@@ -30,15 +31,11 @@ use Core\Transaction\Http\Controllers\Admin\TransactionManagerController;
 
 Route::middleware(['throttle:transaction:admin'])->group(function () {
 
-    Route::get('/dashboard', [
-        DashboardController::class,
-        'dashboard'
-    ])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('/transactions', [
-        TransactionManagerController::class,
-        'index'
-    ])->name('transactions.index');
+    Route::get('/transactions', [TransactionManagerController::class, 'index'])->name('transactions.index');
+
+    Route::resource('/refunds', RefundController::class)->only('index', 'show', 'update');
 
 
     if (config('module.transaction.module.routes.plans_enabled', true)) {

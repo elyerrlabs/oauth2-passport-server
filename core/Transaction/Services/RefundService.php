@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Transaction\Services\Payment;
+namespace Core\Transaction\Services;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -71,20 +71,40 @@ class RefundService
         }
         return $this->refundRepository->getStorage() . '/' . $id;
     }
+
     /**
      * Search data for admins
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Database\Eloquent\Builder<Refund>
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Builder<\Core\Transaction\Model\Refund>
      */
     public function search(Request $request)
     {
         $query = $this->refundRepository->query();
 
+        $query->orderByDesc('created_at');
+
+        if ($request->filled('type')) {
+            $query->whereRaw(
+                'LOWER(type) LIKE ?',
+                ["%" . strtolower($request->type) . "%"]
+            );
+        }
+
+        if ($request->filled('status')) {
+            $query->whereRaw(
+                'LOWER(status) LIKE ?',
+                ["%" . strtolower($request->status) . "%"]
+            );
+        }
+
         if ($request->filled('name')) {
             $query->whereHas(
                 'user',
                 function ($query) use ($request) {
-                    $query->whereRaw("LOWER(name) like", ["%" . strtolower($request->name) . "%"]);
+                    $query->whereRaw(
+                        "LOWER(name) LIKE ?",
+                        ["%" . strtolower($request->name) . "%"]
+                    );
                 }
             );
         }
@@ -93,7 +113,10 @@ class RefundService
             $query->whereHas(
                 'user',
                 function ($query) use ($request) {
-                    $query->whereRaw("LOWER(email) like", ["%" . strtolower($request->email) . "%"]);
+                    $query->whereRaw(
+                        "LOWER(email) LIKE ?",
+                        ["%" . strtolower($request->email) . "%"]
+                    );
                 }
             );
         }
@@ -101,12 +124,16 @@ class RefundService
         // Search by transaction code
         if ($request->filled('code')) {
             $query->whereHas(
-                'transaction',
+                'transactions',
                 function ($query) use ($request) {
-                    $query->whereRaw("LOWER(code) like ?", ["%" . strtolower($request->code) . "%"]);
+                    $query->whereRaw(
+                        "LOWER(code) LIKE ?",
+                        ["%" . strtolower($request->code) . "%"]
+                    );
                 }
             );
         }
+
 
         return $query;
     }
@@ -133,6 +160,20 @@ class RefundService
         }
 
         return $query;
+    }
+
+    /**
+     * Find refund
+     * @param string $id
+     * @return \Core\Transaction\Model\Refund|\Core\Transaction\Repositories\TValue|null
+     */
+    public function find(string $id)
+    {
+        $model = $this->refundRepository->find($id);
+
+        throw_if(empty($model), new ReportError(__('Refund not be found'), 404));
+
+        return $model;
     }
 
     /**

@@ -57,7 +57,7 @@ return [
 
             "transactions" => [
                 "id" => "transaction",
-                "name" => __("Transaction"),
+                "name" => __("Transactions"),
                 "route" => "transaction.admin.dashboard",
                 "icon" => "mdi-swap-vertical",
                 'service' => "administrator:transactions"
@@ -103,6 +103,13 @@ return [
             'route' => 'transaction.admin.transactions.index',
             'icon' => 'mdi-cash',
             'service' => "administrator:transactions",
+        ],
+        [
+            'id' => 'refund',
+            'name' => 'Refunds',
+            'route' => "transaction.admin.refunds.index",
+            'icon' => "mdi-cash-refund",
+            'service' => 'administrator:refund',
         ],
         [
             "id" => "plans",

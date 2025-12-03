@@ -774,10 +774,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <!-- Supporting Evidence Section -->
                         <div
-                            v-if="
-                                data.transaction.refund.files &&
-                                data.transaction.refund.files.length > 0
-                            "
+                            v-if="data?.transaction?.refund?.files?.length"
                             class="mb-6"
                         >
                             <h4

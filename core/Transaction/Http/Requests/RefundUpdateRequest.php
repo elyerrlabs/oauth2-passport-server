@@ -46,7 +46,46 @@ class RefundUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', Rule::in(Refund::statuses())]
+            'status' => [
+                'required',
+                Rule::in(Refund::statuses()),
+                function ($attribute, $value, $fail) {
+
+                    $status = $this->order($this->refund->status);
+
+                    if (!in_array($value, $status)) {
+                        $fail(__('There are no transition rules defined for the current status :stat', ['stat' => $value]));
+                    }
+                }
+            ]
         ];
+    }
+
+
+    public function order($index)
+    {
+        $status = [
+            'pending' => [
+                'processing'
+            ],
+            'processing' => [
+                'under_review'
+            ],
+            'under_review' => [
+                'approved',
+                'rejected',
+            ],
+            'approved' => [
+                'waiting_for_return',
+            ],
+            'waiting_for_return' => [
+                'refunding'
+            ],
+            'refunding' => [
+                'completed'
+            ],
+        ];
+
+        return $status[$index] ?: false;
     }
 }

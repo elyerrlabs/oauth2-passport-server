@@ -25,25 +25,30 @@ namespace Core\Transaction\Transformer\Admin;
  */
 
 use App\Models\Common\Refund;
+use App\Transformers\File\FilePrivateTransformer;
+use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class RefundTransformer extends TransformerAbstract
 {
+
+    use Asset;
+
     public function transform(Refund $refund)
     {
-
         return [
             'id' => $refund->id,
             'reason' => $refund->reason,
             'description' => $refund->description,
-            'amount' => $refund->amount,
-            'currency' => $refund->currency,
+            'cents' => $refund->amount,
+            'amount' => $this->formatMoney($refund->amount),
+            'currency' => strtoupper($refund->currency),
             'type' => $refund->type, // 'refund','appeal'
             'status' => $refund->status, //'pending', 'under_review', 'approved', 'waiting_for_return','processing','completed','rejected','canceled'
-            'customer' => [
-                'name' => $refund->customer->name,
-                'last_name' => $refund->customer->last_name,
-                'email' => $refund->customer->email,
+            'user' => [
+                'name' => $refund->user->name,
+                'last_name' => $refund->user->last_name,
+                'email' => $refund->user->email,
             ],
             'handled' => [
                 'name' => $refund->handledBy->name ?? '',
@@ -52,9 +57,11 @@ class RefundTransformer extends TransformerAbstract
             ],
             'transaction' => fractal($refund->refundable, TransactionTransformer::class)->toArray()['data'] ?? [],
             'appeal' => fractal($refund->children, static::class)->toArray()['data'] ?? [],
-            'links' => [
-                'index' => route('api.transaction.admin.refunds.index'),
-                'update' => route('api.transaction.admin.refunds.update', ['id' => $refund->id]),
+            'files' => fractal($refund->files, new FilePrivateTransformer($refund->id))->toArray()['data'] ?? [],
+            'web' => [
+                'index' => route('transaction.admin.refunds.index'),
+                'show' => route('transaction.admin.refunds.show', ['refund' => $refund->id]),
+                'update' => route('transaction.admin.refunds.update', ['refund' => $refund->id]),
             ]
         ];
     }
