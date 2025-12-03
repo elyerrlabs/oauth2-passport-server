@@ -94,6 +94,11 @@
                 </div>
 
                 <form action="{{ route('admin.settings.update') }}" method="post" autocomplete="off" class="p-1 md:p-6">
+                    <!-- These hidden inputs act as decoys to prevent the browser from autofilling real username and password fields. -->
+                    <input id="name" type="text" class="hidden" />
+                    <input id="password" type="password" class="hidden" />
+                    <!-- Please do not remove-->
+
                     @method('put')
                     @csrf
                     <input type="hidden" name="current_route" value="{{ url()->current() }}">
