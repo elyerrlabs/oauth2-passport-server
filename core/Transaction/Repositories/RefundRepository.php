@@ -68,11 +68,12 @@ class RefundRepository
 
         $query->with(
             [
-                'transactions',
+                'transaction',
                 'appeal',
                 'files',
                 'user',
-                'handledBy'
+                'assignedTo',
+                'assignedBy',
             ]
         );
 
