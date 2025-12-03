@@ -207,7 +207,15 @@ class RefundService
 
             $data['currency'] = $transaction->currency;
 
-            $refund = $transaction->refund()->create($data);
+            $refund = $transaction->refund()->create([
+                'reason' => $data['reason'],
+                'description' => $data['description'],
+                'amount' => $data['amount'],
+                'currency' => $data['currency'],
+                'type' => $data['type'] ?? 'refund',
+                'status' => $data['status'] ?? 'pending',
+                'user_id' => $data['user_id'],
+            ]);
 
             $this->fileService->saveImage(
                 $refund,
