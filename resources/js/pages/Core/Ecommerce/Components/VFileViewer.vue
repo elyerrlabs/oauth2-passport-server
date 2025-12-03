@@ -135,7 +135,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Image Preview -->
                                 <img
                                     v-if="isImage(file.mime_type)"
-                                    :src="file.url"
+                                    :src="file?.links?.show"
                                     :alt="file.name"
                                     class="w-full h-full object-cover"
                                 />
@@ -233,7 +233,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             >
                                 <img
                                     v-if="isImage(file.mime_type)"
-                                    :src="file.url"
+                                    :src="file?.links?.show"
                                     :alt="file.name"
                                     class="w-12 h-12 object-cover rounded-lg"
                                 />
@@ -347,7 +347,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         >
                             <img
                                 v-if="isImage(previewFile.mime_type)"
-                                :src="previewFile.url"
+                                :src="previewFile?.links?.show"
                                 :alt="previewFile.name"
                                 class="max-w-full max-h-full object-contain"
                             />
