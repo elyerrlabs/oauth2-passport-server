@@ -24,7 +24,6 @@
 
 use Core\Transaction\Http\Controllers\Api\Web\RefundController as UserRefundController;
 use Core\Transaction\Http\Controllers\Api\Web\PaymentController;
-use Core\Transaction\Http\Controllers\Api\Admin\RefundController as AdminRefundController;
 
 Route::middleware(['throttle:transaction:api'])->group(function () {
 
@@ -44,5 +43,6 @@ Route::middleware(['throttle:transaction:api'])->group(function () {
 
         Route::get("/refunds", [UserRefundController::class, 'index'])->name('refunds.index');
         Route::post("/refunds", [UserRefundController::class, 'store'])->name('refunds.store');
+        Route::put("/refunds/cancel/{id}", [UserRefundController::class, 'cancel'])->name('refunds.cancel');
     });
 });

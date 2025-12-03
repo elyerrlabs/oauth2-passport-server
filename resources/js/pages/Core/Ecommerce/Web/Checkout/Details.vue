@@ -32,7 +32,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             >
                 <!-- Header -->
                 <div
-                    class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-600"
+                    class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600"
                 >
                     <div class="flex items-center space-x-3">
                         <div
@@ -44,7 +44,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div>
                             <h2
-                                class="text-xl font-bold text-gray-900 dark:text-white"
+                                class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                             >
                                 {{ __("Order Details") }}
                             </h2>
@@ -55,7 +55,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                     <a
                         :href="data.web?.index"
-                        class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer flex items-center"
+                        class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer flex items-center justify-center w-full sm:w-auto"
                     >
                         <i class="fas fa-arrow-left mr-2"></i>
                         {{ __("Back to Orders") }}
@@ -63,8 +63,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Order Summary -->
-                <div class="p-6">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="p-4 sm:p-6">
+                    <div
+                        class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6"
+                    >
                         <!-- Transaction Details -->
                         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                             <h3
@@ -76,7 +78,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ __("Transaction Information") }}
                             </h3>
                             <div class="space-y-3 text-sm">
-                                <div class="flex justify-between items-center">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0"
+                                >
                                     <span
                                         class="text-gray-600 dark:text-gray-400"
                                         >{{ __("Status") }}:</span
@@ -102,7 +106,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         }}
                                     </span>
                                 </div>
-                                <div class="flex justify-between items-center">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0"
+                                >
                                     <span
                                         class="text-gray-600 dark:text-gray-400"
                                         >{{ __("Payment Method") }}:</span
@@ -117,7 +123,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         }}
                                     </span>
                                 </div>
-                                <div class="flex justify-between items-center">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0"
+                                >
                                     <span
                                         class="text-gray-600 dark:text-gray-400"
                                         >{{ __("Transaction Code") }}:</span
@@ -128,20 +136,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         {{ data.transaction_code }}
                                     </span>
                                 </div>
-                                <div class="flex justify-between items-center">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0"
+                                >
                                     <span
                                         class="text-gray-600 dark:text-gray-400"
                                         >{{ __("Order Date") }}:</span
                                     >
                                     <span class="text-gray-900 dark:text-white">
-                                        {{
-                                            formatFullDate(
-                                                data.transaction?.created
-                                            )
-                                        }}
+                                        {{ data.transaction?.created }}
                                     </span>
                                 </div>
-                                <div class="flex justify-between items-center">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0"
+                                >
                                     <span
                                         class="text-gray-600 dark:text-gray-400"
                                         >{{ __("Total Amount") }}:</span
@@ -165,7 +173,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 {{ __("Delivery Information") }}
                             </h3>
                             <div class="space-y-3 text-sm">
-                                <div class="flex justify-between items-center">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0"
+                                >
                                     <span
                                         class="text-gray-600 dark:text-gray-400"
                                         >{{ __("City") }}:</span
@@ -179,13 +189,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         }}
                                     </span>
                                 </div>
-                                <div class="flex justify-between items-start">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-0"
+                                >
                                     <span
                                         class="text-gray-600 dark:text-gray-400"
                                         >{{ __("Address") }}:</span
                                     >
                                     <span
-                                        class="font-medium text-gray-900 dark:text-white text-right max-w-[200px]"
+                                        class="font-medium text-gray-900 dark:text-white sm:text-right max-w-[200px]"
                                     >
                                         {{
                                             data.delivery_address?.address ||
@@ -193,7 +205,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         }}
                                     </span>
                                 </div>
-                                <div class="flex justify-between items-center">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0"
+                                >
                                     <span
                                         class="text-gray-600 dark:text-gray-400"
                                         >{{ __("Phone") }}:</span
@@ -207,7 +221,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         }}
                                     </span>
                                 </div>
-                                <div class="flex justify-between items-center">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0"
+                                >
                                     <span
                                         class="text-gray-600 dark:text-gray-400"
                                         >{{ __("WhatsApp") }}:</span
@@ -216,7 +232,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         v-if="data.delivery_address?.whatsapp"
                                         :href="data.delivery_address.whatsapp"
                                         target="_blank"
-                                        class="text-green-600 dark:text-green-400 hover:underline flex items-center"
+                                        class="text-green-600 dark:text-green-400 hover:underline flex items-center justify-end sm:justify-start"
                                     >
                                         <i class="fab fa-whatsapp mr-1"></i>
                                         {{ __("Contact") }}
@@ -245,18 +261,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 :key="item.id"
                                 class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600"
                             >
-                                <div class="flex items-start space-x-4">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-start gap-4"
+                                >
                                     <!-- Product Image -->
                                     <div class="shrink-0">
                                         <img
                                             v-if="item.images?.[0]?.url"
                                             :src="item.images[0].url"
                                             :alt="item.meta?.name"
-                                            class="w-20 h-20 rounded-lg border border-gray-200 dark:border-gray-600 object-cover"
+                                            class="w-20 h-20 rounded-lg border border-gray-200 dark:border-gray-600 object-cover mx-auto sm:mx-0"
                                         />
                                         <div
                                             v-else
-                                            class="w-20 h-20 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 flex items-center justify-center"
+                                            class="w-20 h-20 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 flex items-center justify-center mx-auto sm:mx-0"
                                         >
                                             <i
                                                 class="fas fa-image text-gray-400"
@@ -266,14 +284,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                     <div class="flex-1 min-w-0">
                                         <h4
-                                            class="font-medium text-gray-900 dark:text-white mb-2"
+                                            class="font-medium text-gray-900 dark:text-white mb-2 text-center sm:text-left"
                                         >
                                             {{ item.meta?.name }}
                                         </h4>
 
                                         <!-- Product Details Grid -->
                                         <div
-                                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm mb-3"
+                                            class="grid grid-cols-2 gap-3 text-sm mb-3"
                                         >
                                             <div>
                                                 <span
@@ -292,6 +310,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             <div>
                                                 <span
                                                     class="text-gray-600 dark:text-gray-400 block text-xs"
+                                                    >{{ __("Quantity") }}:</span
+                                                >
+                                                <p
+                                                    class="font-medium text-gray-900 dark:text-white"
+                                                >
+                                                    {{ item.quantity }}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <span
+                                                    class="text-gray-600 dark:text-gray-400 block text-xs"
                                                     >{{ __("Variant") }}:</span
                                                 >
                                                 <p
@@ -301,17 +330,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                         item.meta?.variant
                                                             ?.name || __("N/A")
                                                     }}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <span
-                                                    class="text-gray-600 dark:text-gray-400 block text-xs"
-                                                    >{{ __("Quantity") }}:</span
-                                                >
-                                                <p
-                                                    class="font-medium text-gray-900 dark:text-white"
-                                                >
-                                                    {{ item.quantity }}
                                                 </p>
                                             </div>
                                             <div>
@@ -332,7 +350,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                                         <!-- Additional Information -->
                                         <div
-                                            class="flex flex-wrap items-center gap-3 text-xs"
+                                            class="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs mb-3"
                                         >
                                             <span
                                                 class="px-2 py-1 rounded"
@@ -364,26 +382,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             </span>
                                         </div>
 
-                                        <!-- Product Description -->
-                                        <div
-                                            v-if="item.meta?.short_description"
-                                            class="mt-3 text-xs text-gray-600 dark:text-gray-400"
-                                        >
-                                            <div
-                                                v-html="
-                                                    item.meta.short_description
-                                                "
-                                            ></div>
-                                        </div>
-
                                         <!-- Product Links -->
                                         <div
-                                            class="flex items-center gap-2 mt-3"
+                                            class="flex items-center justify-center sm:justify-start gap-2"
                                         >
                                             <a
                                                 v-if="item.web?.product"
                                                 :href="item.web.product"
-                                                class="px-3 py-1 bg-green-600 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-100 dark:text-gray-300 text-xs font-medium rounded hover:bg-green-700 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer flex items-center"
+                                                class="px-3 py-1.5 bg-green-600 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-100 dark:text-gray-300 text-xs font-medium rounded hover:bg-green-700 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer flex items-center"
                                             >
                                                 <i
                                                     class="fas fa-shopping-cart mr-1"
@@ -399,19 +405,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Action Buttons -->
                     <div
-                        class="flex flex-wrap gap-3 pt-6 border-t border-gray-200 dark:border-gray-600"
+                        class="flex flex-wrap gap-2 sm:gap-3 pt-6 border-t border-gray-200 dark:border-gray-600"
                     >
                         <button
-                            v-if="data.transaction?.status != 'expired'"
+                            v-if="
+                                data.transaction?.status != 'expired' &&
+                                data.transaction?.payment_url
+                            "
                             @click="openReceipt(data.transaction.payment_url)"
-                            class="px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer flex items-center"
+                            class="px-3 sm:px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer flex items-center justify-center w-full sm:w-auto"
                         >
                             <i class="fas fa-receipt mr-2"></i>
                             {{ __("View Receipt") }}
                         </button>
                         <button
                             @click="copyOrderId(data.code)"
-                            class="px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer flex items-center"
+                            class="px-3 sm:px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer flex items-center justify-center w-full sm:w-auto"
                         >
                             <i class="fas fa-copy mr-2"></i>
                             {{ __("Copy Order ID") }}
@@ -419,625 +428,348 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <button
                             v-if="data.transaction_code"
                             @click="copyTransactionCode(data.transaction_code)"
-                            class="px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer flex items-center"
+                            class="px-3 sm:px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors duration-200 cursor-pointer flex items-center justify-center w-full sm:w-auto"
                         >
                             <i class="fas fa-copy mr-2"></i>
-                            {{ __("Copy Transaction Code") }}
+                            {{ __("Copy Transaction") }}
                         </button>
                         <v-refund
                             :item="data"
                             v-if="!data?.transaction?.refund?.id"
                             @created="getCheckout"
                         />
+
+                        <v-cancel
+                            v-if="isCancel(data)"
+                            :item="data"
+                            @canceled="getCheckout"
+                        />
                     </div>
 
                     <!-- Refund Status Section -->
                     <div v-if="data.transaction?.refund?.id" class="mt-8">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3
-                                class="font-semibold text-gray-900 dark:text-white flex items-center"
-                            >
-                                <i
-                                    class="fas fa-undo-alt mr-2 text-red-500"
-                                ></i>
-                                {{ __("Refund Status") }}
-                            </h3>
-                            <span
-                                class="px-3 py-1 rounded-full text-sm font-medium"
-                                :class="
-                                    getRefundStatusClass(
-                                        data.transaction.refund.status
-                                    )
-                                "
-                            >
-                                {{
-                                    formatRefundStatus(
-                                        data.transaction.refund.status
-                                    )
-                                }}
-                            </span>
-                        </div>
-
-                        <!-- Refund Information Card -->
+                        <!-- Refund Status Banner -->
                         <div
-                            class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mb-4"
+                            class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 rounded-lg p-4 mb-6 border border-blue-200 dark:border-blue-700"
                         >
                             <div
-                                class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm"
+                                class="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                             >
-                                <div>
-                                    <span
-                                        class="text-blue-700 dark:text-blue-300 font-medium"
-                                        >{{ __("Requested Amount") }}:</span
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="p-2 bg-blue-100 dark:bg-blue-800/40 rounded-lg"
                                     >
-                                    <p
-                                        class="text-blue-800 dark:text-blue-200 text-lg font-bold"
-                                    >
-                                        {{
-                                            formatMoney(
-                                                data.transaction.refund.amount
-                                            )
-                                        }}
-                                        {{ data.transaction.refund.currency }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <span
-                                        class="text-blue-700 dark:text-blue-300 font-medium"
-                                        >{{ __("Reason") }}:</span
-                                    >
-                                    <p class="text-blue-800 dark:text-blue-200">
-                                        {{ data.transaction.refund.reason }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <span
-                                        class="text-blue-700 dark:text-blue-300 font-medium"
-                                        >{{ __("Description") }}:</span
-                                    >
-                                    <p class="text-blue-800 dark:text-blue-200">
-                                        {{
-                                            data.transaction.refund.description
-                                        }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Refund Timeline -->
-                        <div
-                            class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-4"
-                        >
-                            <h4
-                                class="font-semibold text-gray-900 dark:text-white mb-4 flex items-center"
-                            >
-                                <i
-                                    class="fas fa-history mr-2 text-blue-500"
-                                ></i>
-                                {{ __("Refund Process Timeline") }}
-                            </h4>
-                            <div class="space-y-4">
-                                <!-- Main Refund Timeline -->
-                                <div class="flex items-start space-x-4">
-                                    <div class="flex flex-col items-center">
-                                        <div
-                                            class="w-3 h-3 bg-blue-500 rounded-full"
-                                        ></div>
-                                        <div
-                                            class="w-0.5 h-16 bg-blue-500 mt-1"
-                                        ></div>
+                                        <i
+                                            class="fas fa-undo-alt text-blue-600 dark:text-blue-400 text-lg"
+                                        ></i>
                                     </div>
-                                    <div class="flex-1 pb-4">
-                                        <div
-                                            class="flex items-center justify-between mb-1"
+                                    <div>
+                                        <h3
+                                            class="font-bold text-gray-900 dark:text-white text-lg"
                                         >
-                                            <span
-                                                class="font-medium text-gray-900 dark:text-white"
-                                                >{{
-                                                    __(
-                                                        "Refund Request Submitted"
-                                                    )
-                                                }}</span
-                                            >
-                                            <span
-                                                class="text-xs text-gray-500 dark:text-gray-400"
-                                            >
-                                                {{
-                                                    formatFullDate(
-                                                        data.transaction
-                                                            ?.created
-                                                    )
-                                                }}
-                                            </span>
-                                        </div>
+                                            {{ __("Refund Request") }}
+                                        </h3>
                                         <p
-                                            class="text-sm text-gray-600 dark:text-gray-400 mb-2"
+                                            class="text-sm text-gray-600 dark:text-gray-400"
+                                        >
+                                            {{ __("Current Status") }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-center sm:text-right mb-1">
+                                        <span
+                                            class="text-lg font-bold text-blue-600 dark:text-blue-400"
                                         >
                                             {{
-                                                __(
-                                                    "Your refund request has been received and is now in the system."
+                                                formatMoney(
+                                                    data.transaction.refund
+                                                        .amount
                                                 )
                                             }}
-                                        </p>
-                                        <div
-                                            class="bg-white dark:bg-gray-600 rounded p-3 border border-gray-200 dark:border-gray-500"
-                                        >
-                                            <p
-                                                class="text-sm text-gray-700 dark:text-gray-300"
-                                            >
-                                                <strong
-                                                    >{{
-                                                        __("Request Details")
-                                                    }}:</strong
-                                                >
-                                                {{
-                                                    data.transaction.refund
-                                                        .reason
-                                                }}
-                                            </p>
-                                            <p
-                                                class="text-sm text-gray-700 dark:text-gray-300 mt-1"
-                                            >
-                                                <strong
-                                                    >{{ __("Amount") }}:</strong
-                                                >
-                                                {{
-                                                    formatMoney(
-                                                        data.transaction.refund
-                                                            .amount
-                                                    )
-                                                }}
-                                                {{
-                                                    data.transaction.refund
-                                                        .currency
-                                                }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Current Status Steps -->
-                                <div
-                                    v-for="step in getTimelineSteps(
-                                        data.transaction.refund.status
-                                    )"
-                                    :key="step.status"
-                                    class="flex items-start space-x-4"
-                                >
-                                    <div class="flex flex-col items-center">
-                                        <div
-                                            class="w-3 h-3 rounded-full"
-                                            :class="
-                                                step.completed
-                                                    ? 'bg-green-500'
-                                                    : step.current
-                                                    ? 'bg-blue-500 animate-pulse'
-                                                    : 'bg-gray-300 dark:bg-gray-600'
-                                            "
-                                        ></div>
-                                        <div
-                                            v-if="!step.last"
-                                            class="w-0.5 h-16 mt-1"
-                                            :class="
-                                                step.completed
-                                                    ? 'bg-green-500'
-                                                    : 'bg-gray-300 dark:bg-gray-600'
-                                            "
-                                        ></div>
-                                    </div>
-                                    <div class="flex-1 pb-4">
-                                        <div
-                                            class="flex items-center justify-between mb-1"
-                                        >
-                                            <span
-                                                class="font-medium"
-                                                :class="
-                                                    step.completed
-                                                        ? 'text-green-600 dark:text-green-400'
-                                                        : step.current
-                                                        ? 'text-blue-600 dark:text-blue-400'
-                                                        : 'text-gray-900 dark:text-white'
-                                                "
-                                            >
-                                                {{ step.title }}
-                                            </span>
-                                            <span
-                                                v-if="step.completed"
-                                                class="text-xs text-green-600 dark:text-green-400 flex items-center"
-                                            >
-                                                <i
-                                                    class="fas fa-check mr-1"
-                                                ></i>
-                                                {{ __("Completed") }}
-                                            </span>
-                                            <span
-                                                v-else-if="step.current"
-                                                class="text-xs text-blue-600 dark:text-blue-400 flex items-center"
-                                            >
-                                                <i
-                                                    class="fas fa-spinner fa-spin mr-1"
-                                                ></i>
-                                                {{ __("In Progress") }}
-                                            </span>
-                                            <span
-                                                v-else
-                                                class="text-xs text-gray-500 dark:text-gray-400"
-                                            >
-                                                {{ __("Pending") }}
-                                            </span>
-                                        </div>
-                                        <p
-                                            class="text-sm text-gray-600 dark:text-gray-400 mb-2"
-                                        >
-                                            {{ step.description }}
-                                        </p>
-                                        <div
-                                            v-if="step.details"
-                                            class="bg-white dark:bg-gray-600 rounded p-3 border border-gray-200 dark:border-gray-500"
-                                        >
-                                            <p
-                                                class="text-sm text-gray-700 dark:text-gray-300"
-                                            >
-                                                {{ step.details }}
-                                            </p>
-                                            <p
-                                                v-if="step.estimatedTime"
-                                                class="text-xs text-gray-500 dark:text-gray-400 mt-1"
-                                            >
-                                                <i
-                                                    class="fas fa-clock mr-1"
-                                                ></i>
-                                                {{ step.estimatedTime }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Rejected or Canceled State -->
-                                <div
-                                    v-if="
-                                        ['rejected', 'canceled'].includes(
-                                            data.transaction.refund.status
-                                        )
-                                    "
-                                    class="flex items-start space-x-4"
-                                >
-                                    <div class="flex flex-col items-center">
-                                        <div
-                                            class="w-3 h-3 bg-red-500 rounded-full"
-                                        ></div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <div
-                                            class="flex items-center justify-between mb-1"
-                                        >
-                                            <span
-                                                class="font-medium text-red-600 dark:text-red-400"
-                                            >
-                                                {{
-                                                    data.transaction.refund
-                                                        .status === "rejected"
-                                                        ? __("Refund Rejected")
-                                                        : __("Refund Canceled")
-                                                }}
-                                            </span>
-                                            <span
-                                                class="text-xs text-red-600 dark:text-red-400 flex items-center"
-                                            >
-                                                <i
-                                                    class="fas fa-times mr-1"
-                                                ></i>
-                                                {{ __("Final Status") }}
-                                            </span>
-                                        </div>
-                                        <p
-                                            class="text-sm text-gray-600 dark:text-gray-400 mb-2"
-                                        >
                                             {{
-                                                data.transaction.refund
-                                                    .status === "rejected"
-                                                    ? __(
-                                                          "Your refund request has been reviewed and unfortunately could not be approved."
-                                                      )
-                                                    : __(
-                                                          "The refund process has been canceled."
-                                                      )
+                                                data.transaction.refund.currency
                                             }}
-                                        </p>
+                                        </span>
+                                    </div>
+                                    <span
+                                        class="px-4 py-2 rounded-lg font-bold shadow-sm inline-block animate-pulse"
+                                        :class="
+                                            getCurrentStatusClass(
+                                                data.transaction.refund.status
+                                            )
+                                        "
+                                    >
+                                        {{
+                                            formatRefundStatus(
+                                                data.transaction.refund.status
+                                            )
+                                        }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Refund Description -->
+                        <div class="mb-6">
+                            <div
+                                class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-4"
+                            >
+                                <div
+                                    class="flex items-center justify-between mb-3"
+                                >
+                                    <h4
+                                        class="font-semibold text-gray-900 dark:text-white flex items-center"
+                                    >
+                                        <i
+                                            class="fas fa-file-alt mr-2 text-blue-500"
+                                        ></i>
+                                        {{ __("Description") }}
+                                    </h4>
+                                    <span
+                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                    >
+                                        {{ data.transaction.refund.reason }}
+                                    </span>
+                                </div>
+
+                                <div
+                                    v-if="data.transaction.refund.description"
+                                    class="bg-gray-50 dark:bg-gray-600 rounded p-4 max-h-48 overflow-y-auto"
+                                >
+                                    <pre
+                                        class="text-gray-700 dark:text-gray-300 text-sm whitespace-pre-wrap font-sans"
+                                        >{{
+                                            data.transaction.refund.description
+                                        }}</pre
+                                    >
+                                </div>
+                                <div v-else class="text-center py-6">
+                                    <i
+                                        class="fas fa-comment-slash text-gray-400 text-2xl mb-2"
+                                    ></i>
+                                    <p class="text-gray-500 dark:text-gray-400">
+                                        {{
+                                            __(
+                                                "No detailed description provided"
+                                            )
+                                        }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- All Status Timeline -->
+                        <div class="mb-6">
+                            <h4
+                                class="font-semibold text-gray-900 dark:text-white mb-4"
+                            >
+                                {{ __("Refund Status Progress") }}
+                            </h4>
+                            <div
+                                class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600"
+                            >
+                                <!-- Timeline for mobile -->
+                                <div class="sm:hidden">
+                                    <div class="relative">
+                                        <!-- Timeline line -->
                                         <div
-                                            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded p-3"
-                                        >
-                                            <p
-                                                class="text-sm text-red-700 dark:text-red-300"
+                                            class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"
+                                        ></div>
+
+                                        <div class="space-y-6">
+                                            <div
+                                                v-for="statusInfo in getAllStatuses()"
+                                                :key="statusInfo.status"
+                                                class="relative pl-10"
                                             >
-                                                <strong
-                                                    >{{
-                                                        __("Next Steps")
-                                                    }}:</strong
+                                                <!-- Status circle -->
+                                                <div
+                                                    class="absolute left-0 top-0"
                                                 >
-                                                {{
-                                                    data.transaction.refund
-                                                        .status === "rejected"
-                                                        ? __(
-                                                              "You can submit an appeal if you believe this decision was made in error. Contact our support team for more details."
-                                                          )
-                                                        : __(
-                                                              "If this was done in error, please contact our support team immediately."
-                                                          )
-                                                }}
-                                            </p>
+                                                    <div
+                                                        class="w-8 h-8 rounded-full flex items-center justify-center border-2"
+                                                        :class="
+                                                            getStatusCircleClass(
+                                                                statusInfo
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            :class="
+                                                                getStatusIcon(
+                                                                    statusInfo.status
+                                                                ) + ' text-xs'
+                                                            "
+                                                        ></i>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Status info -->
+                                                <div class="min-h-8">
+                                                    <div
+                                                        class="flex items-center justify-between mb-1"
+                                                    >
+                                                        <span
+                                                            class="font-medium"
+                                                            :class="
+                                                                getStatusTextClass(
+                                                                    statusInfo
+                                                                )
+                                                            "
+                                                        >
+                                                            {{
+                                                                formatRefundStatus(
+                                                                    statusInfo.status
+                                                                )
+                                                            }}
+                                                        </span>
+                                                        <span
+                                                            v-if="
+                                                                statusInfo.current
+                                                            "
+                                                            class="text-xs animate-pulse"
+                                                        >
+                                                            <i
+                                                                class="fas fa-circle text-blue-500"
+                                                            ></i>
+                                                        </span>
+                                                    </div>
+                                                    <p
+                                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                                    >
+                                                        {{
+                                                            getStatusDescription(
+                                                                statusInfo.status
+                                                            )
+                                                        }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Timeline for desktop -->
+                                <div class="hidden sm:block">
+                                    <div class="relative">
+                                        <!-- Timeline line -->
+                                        <div
+                                            class="absolute left-0 right-0 top-1/2 h-0.5 bg-gray-300 dark:bg-gray-600"
+                                        ></div>
+
+                                        <div
+                                            class="flex justify-between items-center relative"
+                                        >
+                                            <div
+                                                v-for="statusInfo in getAllStatuses()"
+                                                :key="statusInfo.status"
+                                                class="flex flex-col items-center"
+                                            >
+                                                <!-- Status circle -->
+                                                <div
+                                                    class="w-10 h-10 rounded-full flex items-center justify-center border-4 mb-2"
+                                                    :class="
+                                                        getStatusCircleClass(
+                                                            statusInfo
+                                                        )
+                                                    "
+                                                >
+                                                    <i
+                                                        :class="
+                                                            getStatusIcon(
+                                                                statusInfo.status
+                                                            )
+                                                        "
+                                                    ></i>
+                                                </div>
+
+                                                <!-- Status label -->
+                                                <span
+                                                    class="text-xs font-medium text-center px-2"
+                                                    :class="
+                                                        getStatusTextClass(
+                                                            statusInfo
+                                                        )
+                                                    "
+                                                >
+                                                    {{
+                                                        formatRefundStatus(
+                                                            statusInfo.status
+                                                        )
+                                                    }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Supporting Evidence Section -->
+                        <!-- Supporting Files -->
                         <div
                             v-if="data?.transaction?.refund?.files?.length"
                             class="mb-6"
                         >
                             <h4
-                                class="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"
+                                class="font-semibold text-gray-900 dark:text-white mb-4"
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="w-5 h-5 text-blue-500"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                >
-                                    <path
-                                        d="M15.172 7l-6.586 6.586a2 2 0 002.828 2.828L18 9.828m-4.828-2.828L6 14.172a4 4 0 105.657 5.657L21 10.485"
-                                    />
-                                </svg>
-                                {{ __("Supporting Evidence Documents") }}
+                                {{ __("Supporting Documents") }}
                             </h4>
-
                             <div
-                                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"
                             >
                                 <div
                                     v-for="file in data.transaction.refund
                                         .files"
                                     :key="file.id"
-                                    class="rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+                                    @click="openFile(file)"
+                                    class="group cursor-pointer bg-gray-50 dark:bg-gray-700 rounded-lg p-2 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200"
                                 >
-                                    <!-- Previsualización si es imagen -->
+                                    <!-- Image thumbnail -->
                                     <div
                                         v-if="
                                             file.mime_type.startsWith('image/')
                                         "
-                                        class="w-full h-40 bg-gray-100 dark:bg-gray-800 overflow-hidden"
+                                        class="w-full aspect-square bg-gray-100 dark:bg-gray-600 rounded mb-2 overflow-hidden"
                                     >
                                         <img
                                             :src="file.links.show"
-                                            alt="Preview"
-                                            class="w-full h-full object-cover"
+                                            :alt="file.original_name"
+                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                                         />
                                     </div>
-
-                                    <!-- Ícono genérico si NO es imagen -->
+                                    <!-- Document icon -->
                                     <div
                                         v-else
-                                        class="w-full h-40 flex items-center justify-center bg-gray-100 dark:bg-gray-800"
+                                        class="w-full aspect-square bg-gray-100 dark:bg-gray-600 rounded mb-2 flex items-center justify-center"
                                     >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            class="w-12 h-12 text-gray-500"
-                                            viewBox="0 0 24 24"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                d="M16.5 2h-9A2.5 2.5 0 005 4.5v15A2.5 2.5 0 007.5 22h9a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0016.5 2zm-1 14h-7v-2h7v2zm0-4h-7V10h7v2zm0-4h-7V6h7v2z"
-                                            />
-                                        </svg>
+                                        <i
+                                            :class="
+                                                getFileIcon(file.mime_type) +
+                                                ' text-blue-500 text-xl'
+                                            "
+                                        ></i>
                                     </div>
-
-                                    <!-- Información -->
-                                    <div class="p-4">
-                                        <div
-                                            class="font-medium text-gray-900 dark:text-white truncate"
-                                        >
-                                            {{ file.original_name }}
-                                        </div>
-
-                                        <div
-                                            class="text-sm text-gray-500 dark:text-gray-300 mt-1"
-                                        >
-                                            {{ file.mime_type }} ·
-                                            {{ Math.round(file.size / 1024) }}
-                                            KB
-                                        </div>
-
-                                        <a
-                                            :href="file.links.show"
-                                            target="_blank"
-                                            class="mt-3 inline-flex items-center gap-1 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-                                        >
-                                            {{ __("View Document") }}
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                class="w-4 h-4"
-                                                viewBox="0 0 24 24"
-                                                fill="currentColor"
-                                            >
-                                                <path
-                                                    d="M13 5h6v6h-2V8.414l-7.293 7.293-1.414-1.414L15.586 7H13V5z"
-                                                />
-                                                <path
-                                                    d="M5 5h5V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-5h-2v5H5V5z"
-                                                />
-                                            </svg>
-                                        </a>
-                                    </div>
+                                    <p
+                                        class="text-xs font-medium text-gray-900 dark:text-white truncate text-center"
+                                    >
+                                        {{ file.original_name }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Appeal History Section -->
-                        <div
-                            v-if="
-                                data.transaction.refund.appeal &&
-                                data.transaction.refund.appeal.length > 0
-                            "
-                            class="mb-4"
-                        >
-                            <h4
-                                class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center"
+                        <!-- Refund Actions -->
+                        <div class="flex flex-wrap gap-2">
+                            <button
+                                @click="contactSupport"
+                                class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer flex items-center justify-center w-full sm:w-auto"
                             >
-                                <i
-                                    class="fas fa-gavel mr-2 text-orange-500"
-                                ></i>
-                                {{ __("Appeal History") }}
-                                <span
-                                    class="ml-2 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 text-xs px-2 py-1 rounded-full"
-                                >
-                                    {{ data.transaction.refund.appeal.length }}
-                                    {{ __("appeal(s)") }}
-                                </span>
-                            </h4>
-                            <div class="space-y-4">
-                                <div
-                                    v-for="(appeal, index) in data.transaction
-                                        .refund.appeal"
-                                    :key="appeal.id"
-                                    class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-lg p-4"
-                                >
-                                    <div
-                                        class="flex items-center justify-between mb-3"
-                                    >
-                                        <div class="flex items-center">
-                                            <span
-                                                class="font-medium text-orange-800 dark:text-orange-300"
-                                            >
-                                                {{ __("Appeal Request") }} #{{
-                                                    index + 1
-                                                }}
-                                            </span>
-                                            <span
-                                                class="ml-3 text-xs px-2 py-1 rounded-full"
-                                                :class="
-                                                    getRefundStatusClass(
-                                                        appeal.status
-                                                    )
-                                                "
-                                            >
-                                                {{
-                                                    formatRefundStatus(
-                                                        appeal.status
-                                                    )
-                                                }}
-                                            </span>
-                                        </div>
-                                        <span
-                                            class="text-xs text-orange-600 dark:text-orange-400"
-                                        >
-                                            {{ __("Submitted on") }}
-                                            {{
-                                                formatFullDate(
-                                                    appeal.created_at
-                                                )
-                                            }}
-                                        </span>
-                                    </div>
-                                    <div
-                                        class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm"
-                                    >
-                                        <div>
-                                            <strong
-                                                class="text-orange-700 dark:text-orange-400"
-                                                >{{
-                                                    __("Appeal Reason")
-                                                }}:</strong
-                                            >
-                                            <p
-                                                class="text-orange-600 dark:text-orange-300 mt-1"
-                                            >
-                                                {{ appeal.reason }}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <strong
-                                                class="text-orange-700 dark:text-orange-400"
-                                                >{{
-                                                    __("Detailed Explanation")
-                                                }}:</strong
-                                            >
-                                            <p
-                                                class="text-orange-600 dark:text-orange-300 mt-1"
-                                            >
-                                                {{ appeal.description }}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <strong
-                                                class="text-orange-700 dark:text-orange-400"
-                                                >{{
-                                                    __("Requested Amount")
-                                                }}:</strong
-                                            >
-                                            <p
-                                                class="text-orange-600 dark:text-orange-300 mt-1 font-bold"
-                                            >
-                                                {{ formatMoney(appeal.amount) }}
-                                                {{ appeal.currency }}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <strong
-                                                class="text-orange-700 dark:text-orange-400"
-                                                >{{
-                                                    __("Appeal Type")
-                                                }}:</strong
-                                            >
-                                            <p
-                                                class="text-orange-600 dark:text-orange-300 mt-1 capitalize"
-                                            >
-                                                {{
-                                                    appeal.type ||
-                                                    __("refund appeal")
-                                                }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <!-- Appeal Evidence -->
-                                    <div
-                                        v-if="
-                                            appeal.files &&
-                                            appeal.files.length > 0
-                                        "
-                                        class="mt-3 pt-3 border-t border-orange-200 dark:border-orange-600"
-                                    >
-                                        <strong
-                                            class="text-orange-700 dark:text-orange-400 text-sm"
-                                            >{{
-                                                __("Additional Evidence")
-                                            }}:</strong
-                                        >
-                                        <div class="flex flex-wrap gap-2 mt-2">
-                                            <span
-                                                v-for="(
-                                                    file, fileIndex
-                                                ) in appeal.files"
-                                                :key="fileIndex"
-                                                class="text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-2 py-1 rounded"
-                                            >
-                                                <i
-                                                    class="fas fa-paperclip mr-1"
-                                                ></i>
-                                                {{ file.name || __("File") }}
-                                                {{ fileIndex + 1 }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                <i class="fas fa-headset mr-2"></i>
+                                {{ __("Contact Support") }}
+                            </button>
 
-                        <!-- Refund Action Buttons -->
-                        <div
-                            class="flex flex-wrap gap-3 pt-4 border-t border-gray-200 dark:border-gray-600"
-                        >
                             <button
                                 v-if="
                                     canSubmitAppeal(
@@ -1045,80 +777,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     )
                                 "
                                 @click="openAppealModal"
-                                class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer flex items-center"
+                                class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer flex items-center justify-center w-full sm:w-auto"
                             >
                                 <i class="fas fa-gavel mr-2"></i>
-                                {{ __("Submit Appeal Request") }}
+                                {{ __("Submit Appeal") }}
                             </button>
-                            <button
-                                @click="downloadRefundDetails"
-                                class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer flex items-center"
-                            >
-                                <i class="fas fa-download mr-2"></i>
-                                {{ __("Download Refund Details") }}
-                            </button>
-
-                            <button
-                                @click="contactSupport"
-                                class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer flex items-center"
-                            >
-                                <i class="fas fa-headset mr-2"></i>
-                                {{ __("Contact Support Team") }}
-                            </button>
-                            <button
-                                v-if="
-                                    canSubmitNewRefund(
-                                        data.transaction.refund.status
-                                    )
-                                "
-                                @click="openNewRefundModal"
-                                class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer flex items-center"
-                            >
-                                <i class="fas fa-undo-alt mr-2"></i>
-                                {{ __("Submit New Refund Request") }}
-                            </button>
-                        </div>
-
-                        <!-- Help Information -->
-                        <div
-                            class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mt-4"
-                        >
-                            <h5
-                                class="font-semibold text-gray-900 dark:text-white mb-2 flex items-center"
-                            >
-                                <i
-                                    class="fas fa-info-circle mr-2 text-blue-500"
-                                ></i>
-                                {{ __("Need Help With Your Refund?") }}
-                            </h5>
-                            <div
-                                class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400"
-                            >
-                                <div>
-                                    <p class="mb-2">
-                                        <strong
-                                            >{{
-                                                __("Refund Processing Time")
-                                            }}:</strong
-                                        >
-                                        {{
-                                            __(
-                                                "Typically 5-10 business days after approval"
-                                            )
-                                        }}
-                                    </p>
-                                    <p class="mb-2">
-                                        <strong
-                                            >{{ __("Payment Method") }}:</strong
-                                        >
-                                        {{
-                                            __(
-                                                "Refunds are processed to your original payment method"
-                                            )
-                                        }}
-                                    </p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1142,6 +805,7 @@ import { useForm, usePage } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 import VHeader from "../../Components/VHeader.vue";
 import VRefund from "./Refund.vue";
+import VCancel from "./Cancel.vue";
 
 const page = usePage();
 const data = ref({});
@@ -1149,17 +813,6 @@ const data = ref({});
 const formatMoney = (cents) => {
     if (!cents) return "0.00";
     return (cents / 100).toFixed(2);
-};
-
-const formatFullDate = (dateString) => {
-    if (!dateString) return __("N/A");
-    return new Date(dateString).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    });
 };
 
 const formatStatus = (status) => {
@@ -1171,6 +824,15 @@ const formatStatus = (status) => {
         cancelled: __("Cancelled"),
     };
     return statusMap[status] || status;
+};
+
+const isCancel = (item) => {
+    return (
+        item?.transaction?.refund?.id &&
+        !["canceled", "completed", "refunding", "rejected"].includes(
+            item?.transaction?.refund?.status
+        )
+    );
 };
 
 const formatPaymentMethod = (method) => {
@@ -1186,170 +848,155 @@ const formatPaymentMethod = (method) => {
 
 const formatRefundStatus = (status) => {
     const statusMap = {
-        pending: __("Under Review"),
+        pending: __("Pending"),
+        processing: __("Processing"),
         under_review: __("Under Review"),
         approved: __("Approved"),
         waiting_for_return: __("Waiting for Return"),
-        processing: __("Processing Refund"),
-        completed: __("Refund Completed"),
+        refunding: __("Refunding"),
+        completed: __("Completed"),
         rejected: __("Rejected"),
         canceled: __("Canceled"),
     };
     return statusMap[status] || status;
 };
 
-const getRefundStatusClass = (status) => {
+const getCurrentStatusClass = (status) => {
     const classMap = {
-        pending:
-            "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300",
-        under_review:
-            "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300",
-        approved:
-            "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300",
-        waiting_for_return:
-            "bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300",
-        processing:
-            "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300",
-        completed:
-            "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300",
-        rejected:
-            "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300",
-        canceled:
-            "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300",
+        pending: "bg-yellow-500 text-white",
+        processing: "bg-blue-500 text-white",
+        under_review: "bg-blue-500 text-white",
+        approved: "bg-green-500 text-white",
+        waiting_for_return: "bg-orange-500 text-white",
+        refunding: "bg-purple-500 text-white",
+        completed: "bg-green-500 text-white",
+        rejected: "bg-red-500 text-white",
+        canceled: "bg-gray-500 text-white",
     };
-    return (
-        classMap[status] ||
-        "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300"
-    );
+    return classMap[status] || "bg-gray-500 text-white";
 };
 
-const getTimelineSteps = (currentStatus) => {
-    const steps = [
-        {
-            status: "under_review",
-            title: __("Under Review"),
-            description: __(
-                "Our team is carefully reviewing your refund request and the provided evidence."
-            ),
-            details: __(
-                "We verify the details and check if your request meets our refund policy requirements."
-            ),
-            estimatedTime: __("Estimated time: 1-2 business days"),
-            completed: [
-                "approved",
-                "waiting_for_return",
-                "processing",
-                "completed",
-            ].includes(currentStatus),
-            current: currentStatus === "under_review",
-            last: false,
-        },
-        {
-            status: "approved",
-            title: __("Approved"),
-            description: __(
-                "Your refund request has been approved and we're preparing to process your refund."
-            ),
-            details: __(
-                "The approved amount will be refunded to your original payment method."
-            ),
-            estimatedTime: __("Refund will be processed within 24 hours"),
-            completed: [
-                "waiting_for_return",
-                "processing",
-                "completed",
-            ].includes(currentStatus),
-            current: currentStatus === "approved",
-            last: false,
-        },
-        {
-            status: "processing",
-            title: __("Processing Refund"),
-            description: __(
-                "The refund is being processed by our payment system and your bank."
-            ),
-            details: __(
-                "The funds are being transferred back to your original payment method."
-            ),
-            estimatedTime: __(
-                "Typically takes 3-5 business days to appear in your account"
-            ),
-            completed: ["completed"].includes(currentStatus),
-            current: currentStatus === "processing",
-            last: false,
-        },
-        {
-            status: "completed",
-            title: __("Refund Completed"),
-            description: __(
-                "The refund has been successfully processed and the funds should be in your account."
-            ),
-            details: __(
-                "Check your bank statement or payment method for the refund transaction."
-            ),
-            estimatedTime: __("Process completed successfully"),
-            completed: currentStatus === "completed",
-            current: currentStatus === "completed",
-            last: true,
-        },
+const getAllStatuses = () => {
+    const currentStatus = data.value.transaction?.refund?.status;
+    const statusHistory = data.value.transaction?.refund?.status_history || {};
+
+    const allStatuses = [
+        "pending",
+        "processing",
+        "under_review",
+        "approved",
+        "waiting_for_return",
+        "refunding",
+        "completed",
+        "rejected",
+        "canceled",
     ];
 
-    if (currentStatus === "waiting_for_return") {
-        steps.splice(2, 0, {
-            status: "waiting_for_return",
-            title: __("Waiting for Item Return"),
-            description: __(
-                "We need you to return the item to complete the refund process."
-            ),
-            details: __(
-                "Please follow the return instructions provided by our team. The refund will be processed once we receive the item."
-            ),
-            estimatedTime: __("Please return within 14 days"),
-            completed: false,
-            current: true,
-            last: false,
-        });
-    }
+    return allStatuses.map((status) => {
+        const isCompleted =
+            getStatusIndex(status) <= getStatusIndex(currentStatus);
+        const isCurrent = status === currentStatus;
 
-    return steps.filter(
-        (step) =>
-            !(
-                currentStatus === "rejected" &&
-                ["processing", "completed"].includes(step.status)
-            ) &&
-            !(
-                currentStatus === "canceled" &&
-                ["processing", "completed"].includes(step.status)
-            )
-    );
+        return {
+            status,
+            completed: isCompleted && !isCurrent,
+            current: isCurrent,
+            date: statusHistory[status] || null,
+        };
+    });
+};
+
+const getStatusIndex = (status) => {
+    const order = [
+        "pending",
+        "processing",
+        "under_review",
+        "approved",
+        "waiting_for_return",
+        "refunding",
+        "completed",
+        "rejected",
+        "canceled",
+    ];
+    return order.indexOf(status);
+};
+
+const getStatusCircleClass = (statusInfo) => {
+    if (statusInfo.completed) {
+        return "bg-green-500 border-green-500 text-white";
+    } else if (statusInfo.current) {
+        return "bg-blue-500 border-blue-500 text-white animate-pulse";
+    } else if (["rejected", "canceled"].includes(statusInfo.status)) {
+        return "bg-red-500 border-red-500 text-white";
+    } else {
+        return "bg-gray-300 dark:bg-gray-600 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400";
+    }
+};
+
+const getStatusTextClass = (statusInfo) => {
+    if (statusInfo.completed) {
+        return "text-green-600 dark:text-green-400";
+    } else if (statusInfo.current) {
+        return "text-blue-600 dark:text-blue-400 font-bold";
+    } else if (["rejected", "canceled"].includes(statusInfo.status)) {
+        return "text-red-600 dark:text-red-400";
+    } else {
+        return "text-gray-600 dark:text-gray-400";
+    }
+};
+
+const getStatusIcon = (status) => {
+    const iconMap = {
+        pending: "fas fa-clock",
+        processing: "fas fa-cog",
+        under_review: "fas fa-search",
+        approved: "fas fa-check-circle",
+        waiting_for_return: "fas fa-truck",
+        refunding: "fas fa-money-bill-wave",
+        completed: "fas fa-flag-checkered",
+        rejected: "fas fa-times-circle",
+        canceled: "fas fa-ban",
+    };
+    return iconMap[status] || "fas fa-circle";
+};
+
+const getStatusDescription = (status) => {
+    const descriptionMap = {
+        pending: __("Refund request has been submitted"),
+        processing: __("Request is being processed"),
+        under_review: __("Under review by our team"),
+        approved: __("Refund has been approved"),
+        waiting_for_return: __("Waiting for item return"),
+        refunding: __("Processing payment refund"),
+        completed: __("Refund has been completed"),
+        rejected: __("Refund request was rejected"),
+        canceled: __("Refund request was canceled"),
+    };
+    return descriptionMap[status] || __("Status update");
+};
+
+const getFileIcon = (mimeType) => {
+    if (mimeType.startsWith("image/")) return "fas fa-image";
+    if (mimeType.includes("pdf")) return "fas fa-file-pdf";
+    if (mimeType.includes("word") || mimeType.includes("document"))
+        return "fas fa-file-word";
+    if (mimeType.includes("excel") || mimeType.includes("spreadsheet"))
+        return "fas fa-file-excel";
+    if (mimeType.includes("zip") || mimeType.includes("compressed"))
+        return "fas fa-file-archive";
+    return "fas fa-file";
+};
+
+const openFile = (file) => {
+    window.open(file.links.show, "_blank");
 };
 
 const canSubmitAppeal = (status) => {
-    return ["rejected", "canceled"].includes(status);
-};
-
-const canSubmitNewRefund = (status) => {
-    return !status || ["rejected", "canceled", "completed"].includes(status);
+    return ["rejected"].includes(status);
 };
 
 const openAppealModal = () => {
-    alert(
-        __(
-            "Appeal feature coming soon! You will be able to submit an appeal with additional evidence and explanations."
-        )
-    );
-};
-
-const openNewRefundModal = () => {
-    alert(__("New refund request feature coming soon!"));
-};
-
-const downloadRefundDetails = () => {
-    alert(
-        __(
-            "Download feature coming soon! You will be able to download a PDF with all refund details."
-        )
-    );
+    alert(__("Appeal feature coming soon!"));
 };
 
 const contactSupport = () => {
@@ -1365,7 +1012,9 @@ const contactSupport = () => {
 };
 
 const openReceipt = (url) => {
-    window.open(url, "_blank");
+    if (url) {
+        window.open(url, "_blank");
+    }
 };
 
 const getCheckout = () => {
@@ -1396,3 +1045,17 @@ onMounted(() => {
     data.value = page.props.data;
 });
 </script>
+
+<style scoped>
+/* Custom scrollbar for description */
+pre {
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+    .aspect-square {
+        aspect-ratio: 1 / 1;
+    }
+}
+</style>

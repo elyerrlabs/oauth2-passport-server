@@ -25,8 +25,9 @@ namespace Core\Transaction\Http\Controllers\Api\Web;
  */
 
 use App\Http\Controllers\ApiController;
+use Core\Transaction\Model\Refund;
 use Core\Transaction\Services\RefundService;
-use Core\Transaction\Http\Requests\RefundStoreRequest; 
+use Core\Transaction\Http\Requests\RefundStoreRequest;
 use Core\Transaction\Transformer\User\UserRefundTransformer;
 use Illuminate\Http\Request;
 
@@ -75,5 +76,17 @@ class RefundController extends ApiController
         $model = $this->refundService->createForUser($request->toArray());
 
         return $this->showOne($model, UserRefundTransformer::class, 201);
+    }
+
+    /**
+     * Cancel operation
+     * @param string $id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function cancel(string $id)
+    {
+        $this->refundService->cancel($id);
+
+        return $this->message(__("Refund has been cancelled successfully"), 200);
     }
 }

@@ -23,8 +23,8 @@ namespace Core\Transaction\Transformer\User;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
- 
-use App\Transformers\File\FilePrivateTransformer; 
+
+use App\Transformers\File\FilePrivateTransformer;
 use Core\Transaction\Model\Refund;
 use League\Fractal\TransformerAbstract;
 
@@ -42,10 +42,11 @@ class UserRefundTransformer extends TransformerAbstract
             'status' => $refund->status, //'pending', 'under_review', 'approved', 'waiting_for_return','processing','completed','rejected','canceled'
             'appeal' => fractal($refund->children, static::class)->toArray()['data'] ?? [],
             'files' => fractal($refund->files, new FilePrivateTransformer($refund->id))->toArray()['data'] ?? [],
-            /*'links' => [
+            'links' => [
                 'index' => route('api.transaction.users.refunds.index'),
                 'store' => route('api.transaction.users.refunds.store'),
-            ],*/
+                'cancel' => route('api.transaction.users.refunds.cancel', ['id' => $refund->id]),
+            ],
         ];
     }
 }

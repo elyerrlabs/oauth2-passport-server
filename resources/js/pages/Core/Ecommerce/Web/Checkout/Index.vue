@@ -166,7 +166,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             'expired',
                                     }"
                                 >
-                                    {{ order?.transaction?.status }}
+                                    {{ __(order?.transaction?.status ?? "") }}
                                 </span>
                                 <span
                                     :class="[
@@ -179,6 +179,65 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     {{ order?.transaction?.total }}
                                     {{ order?.transaction?.currency }}
                                 </span>
+                            </div>
+                        </div>
+
+                        <!-- Refund Status Banner -->
+                        <div
+                            v-if="order?.transaction?.refund?.id"
+                            class="mt-4 p-3 rounded-lg border animate-pulse"
+                            :class="
+                                getRefundBannerClass(order?.transaction?.refund)
+                            "
+                        >
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="flex items-center justify-center w-8 h-8 rounded-full bg-white/80"
+                                    >
+                                        <i
+                                            :class="
+                                                getRefundIcon(
+                                                    order?.transaction?.refund
+                                                )
+                                            "
+                                        ></i>
+                                    </div>
+                                    <div>
+                                        <h4
+                                            class="font-semibold"
+                                            :class="
+                                                getRefundTextClass(
+                                                    order?.transaction?.refund
+                                                )
+                                            "
+                                        >
+                                            {{ __("Refund") }}
+                                            {{
+                                                getRefundStatusText(
+                                                    order?.transaction?.refund
+                                                )
+                                            }}
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <span
+                                        class="text-sm font-medium px-3 py-1 rounded-full bg-white/80"
+                                        :class="
+                                            getRefundBadgeClass(
+                                                order?.transaction?.refund
+                                            )
+                                        "
+                                    >
+                                        {{
+                                            formatRefundStatus(
+                                                order?.transaction?.refund
+                                                    ?.status
+                                            )
+                                        }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -401,6 +460,185 @@ export default {
             }
         },
 
+        // Refund related methods
+        formatRefundStatus(status) {
+            const statusMap = {
+                pending: __("Pending"),
+                processing: __("Processing"),
+                under_review: __("Under Review"),
+                approved: __("Approved"),
+                waiting_for_return: __("Waiting Return"),
+                refunding: __("Refunding"),
+                completed: __("Completed"),
+                rejected: __("Rejected"),
+                canceled: __("Canceled"),
+            };
+            return statusMap[status] || status;
+        },
+
+        getRefundBannerClass(refund) {
+            const baseClass = "border-l-4 ";
+            const status = refund?.status;
+
+            switch (status) {
+                case "pending":
+                case "under_review":
+                    return (
+                        baseClass +
+                        "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-400 dark:border-yellow-500"
+                    );
+                case "processing":
+                case "refunding":
+                case "waiting_for_return":
+                    return (
+                        baseClass +
+                        "bg-blue-50 dark:bg-blue-900/20 border-blue-400 dark:border-blue-500"
+                    );
+                case "approved":
+                    return (
+                        baseClass +
+                        "bg-green-50 dark:bg-green-900/20 border-green-400 dark:border-green-500"
+                    );
+                case "completed":
+                    return (
+                        baseClass +
+                        "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-400 dark:border-emerald-500"
+                    );
+                case "rejected":
+                    return (
+                        baseClass +
+                        "bg-red-50 dark:bg-red-900/20 border-red-400 dark:border-red-500"
+                    );
+                case "canceled":
+                    return (
+                        baseClass +
+                        "bg-gray-100 dark:bg-gray-700 border-gray-400 dark:border-gray-500"
+                    );
+                default:
+                    return (
+                        baseClass +
+                        "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-400 dark:border-yellow-500"
+                    );
+            }
+        },
+
+        getRefundIcon(refund) {
+            const status = refund?.status;
+            let iconClass = "fas ";
+
+            switch (status) {
+                case "pending":
+                case "under_review":
+                    iconClass +=
+                        "fa-clock text-yellow-600 dark:text-yellow-400";
+                    break;
+                case "processing":
+                case "refunding":
+                    iconClass +=
+                        "fa-spinner fa-spin text-blue-600 dark:text-blue-400";
+                    break;
+                case "waiting_for_return":
+                    iconClass +=
+                        "fa-truck-arrow-rotate-right text-blue-600 dark:text-blue-400";
+                    break;
+                case "approved":
+                    iconClass +=
+                        "fa-check-circle text-green-600 dark:text-green-400";
+                    break;
+                case "completed":
+                    iconClass +=
+                        "fa-circle-check text-emerald-600 dark:text-emerald-400";
+                    break;
+                case "rejected":
+                    iconClass +=
+                        "fa-circle-xmark text-red-600 dark:text-red-400";
+                    break;
+                case "canceled":
+                    iconClass += "fa-ban text-gray-600 dark:text-gray-400";
+                    break;
+                default:
+                    iconClass +=
+                        "fa-rotate-left text-yellow-600 dark:text-yellow-400";
+            }
+
+            return iconClass;
+        },
+
+        getRefundTextClass(refund) {
+            const status = refund?.status;
+
+            switch (status) {
+                case "pending":
+                case "under_review":
+                    return "text-yellow-800 dark:text-yellow-300";
+                case "processing":
+                case "refunding":
+                case "waiting_for_return":
+                    return "text-blue-800 dark:text-blue-300";
+                case "approved":
+                    return "text-green-800 dark:text-green-300";
+                case "completed":
+                    return "text-emerald-800 dark:text-emerald-300";
+                case "rejected":
+                    return "text-red-800 dark:text-red-300";
+                case "canceled":
+                    return "text-gray-800 dark:text-gray-300";
+                default:
+                    return "text-yellow-800 dark:text-yellow-300";
+            }
+        },
+
+        getRefundBadgeClass(refund) {
+            const status = refund?.status;
+
+            switch (status) {
+                case "pending":
+                case "under_review":
+                    return "text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/40";
+                case "processing":
+                case "refunding":
+                case "waiting_for_return":
+                    return "text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/40";
+                case "approved":
+                    return "text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40";
+                case "completed":
+                    return "text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/40";
+                case "rejected":
+                    return "text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/40";
+                case "canceled":
+                    return "text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/40";
+                default:
+                    return "text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/40";
+            }
+        },
+
+        getRefundStatusText(refund) {
+            const status = refund?.status;
+
+            switch (status) {
+                case "pending":
+                    return __("Pending Review");
+                case "under_review":
+                    return __("Under Review");
+                case "processing":
+                    return __("Processing Request");
+                case "approved":
+                    return __("Approved");
+                case "waiting_for_return":
+                    return __("Waiting for Item Return");
+                case "refunding":
+                    return __("Processing Payment Refund");
+                case "completed":
+                    return __("Successfully Completed");
+                case "rejected":
+                    return __("Request Rejected");
+                case "canceled":
+                    return __("Canceled");
+                default:
+                    return __("Requested");
+            }
+        },
+
         async getCheckouts() {
             this.loading = true;
             try {
@@ -476,20 +714,3 @@ export default {
     },
 };
 </script>
-
-<style>
-.is-expired::after {
-    content: "EXPIRED";
-    white-space: nowrap;
-    position: fixed;
-    top: 50%;
-    left: -100%;
-    width: 300%;
-    font: 900 6vw/1 system-ui, sans-serif;
-    color: rgba(0, 0, 0, 0.07);
-    transform: rotate(-30deg);
-    z-index: 9999;
-    pointer-events: none;
-    animation: scroll-demo 20s linear infinite;
-}
-</style>

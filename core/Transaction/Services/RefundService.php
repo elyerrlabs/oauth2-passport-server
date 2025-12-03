@@ -267,9 +267,8 @@ class RefundService
     {
         $model = $this->refundRepository->find($id);
 
-        // Stop updated
-        if ($model->status == "canceled") {
-            throw new ReportError(__('This refund request has already been closed and cannot be modified.'), 409);
+        if (in_array($model->status, ["canceled", "completed", "refunding", "rejected"])) {
+            throw new ReportError(__('This refund request cannot be modified.'), 403);
         }
 
         $model->status = "canceled";
@@ -299,6 +298,4 @@ class RefundService
 
         return $model;
     }
-
-
 }
