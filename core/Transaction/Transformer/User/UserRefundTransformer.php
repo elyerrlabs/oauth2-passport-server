@@ -23,10 +23,9 @@ namespace Core\Transaction\Transformer\User;
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use App\Models\Common\Refund;
-use App\Transformers\File\FilePrivateTransformer;
-use App\Transformers\File\FileTransformer;
+ 
+use App\Transformers\File\FilePrivateTransformer; 
+use Core\Transaction\Model\Refund;
 use League\Fractal\TransformerAbstract;
 
 class UserRefundTransformer extends TransformerAbstract

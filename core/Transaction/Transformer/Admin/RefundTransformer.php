@@ -24,8 +24,8 @@ namespace Core\Transaction\Transformer\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Models\Common\Refund;
 use App\Transformers\File\FilePrivateTransformer;
+use Core\Transaction\Model\Refund;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 

@@ -21,9 +21,9 @@
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use App\Models\Common\Refund;
+ 
 use Illuminate\Database\Migrations\Migration;
+use Core\Transaction\Model\Refund;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
