@@ -118,11 +118,11 @@ class Transaction extends Master
     }
 
     /**
-     * Refund
-     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     * Has refund
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function refund()
     {
-        return $this->morphOne(Refund::class, 'refundable');
+        return $this->hasOne(Refund::class, 'transaction_id');
     }
 }
