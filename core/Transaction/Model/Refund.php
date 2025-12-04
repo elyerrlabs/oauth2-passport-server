@@ -25,10 +25,9 @@ namespace Core\Transaction\Model;
  */
 
 use App\Models\Master;
-use App\Models\Common\File;
-use Core\User\Model\User;
-use App\Repositories\Contracts\Dynamic;
-use Illuminate\Database\Eloquent\Model;
+use Core\Transaction\Model\User;
+use App\Models\Common\File; 
+use App\Repositories\Contracts\Dynamic; 
 use Core\Transaction\Model\Transaction;
 
 class Refund extends Master
@@ -169,5 +168,14 @@ class Refund extends Master
     public function transaction()
     {
         return $this->morphOne(Transaction::class, 'transactionable');
+    }
+
+    /**
+     * Parent transaction
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parentTransaction()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id');
     }
 }

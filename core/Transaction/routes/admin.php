@@ -35,6 +35,8 @@ Route::middleware(['throttle:transaction:admin'])->group(function () {
 
     Route::get('/transactions', [TransactionManagerController::class, 'index'])->name('transactions.index');
 
+    Route::get('/refunds/list/users', [RefundController::class, 'listUsersForRefundAssignment'])->name('refunds.list.users');
+    Route::put('/refunds/{id}/assign', [RefundController::class, 'assignTo'])->name('refunds.assignto');
     Route::resource('/refunds', RefundController::class)->only('index', 'show', 'update');
 
 

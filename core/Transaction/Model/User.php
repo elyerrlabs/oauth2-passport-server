@@ -25,6 +25,7 @@ namespace Core\Transaction\Model;
  */
 
 use Core\Transaction\Model\DeliveryAddress;
+use Core\Transaction\Model\Refund;
 use Core\Transaction\Model\PaymentProvider;
 
 class User extends \Core\User\Model\User
@@ -68,5 +69,33 @@ class User extends \Core\User\Model\User
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'user_id');
+    }
+
+    /**
+     * Has refund
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function refunds()
+    {
+        return $this->hasMany(Refund::class, 'user_id');
+    }
+
+    /**
+     * Refund Assign to
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function refundAssignTo()
+    {
+        return $this->hasMany(Refund::class, 'assigned_to');
+    }
+
+
+    /**
+     * Refund Assign by
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function refundAssignBy()
+    {
+        return $this->hasMany(Refund::class, 'assigned_by');
     }
 }

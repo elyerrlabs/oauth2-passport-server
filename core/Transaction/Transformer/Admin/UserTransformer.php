@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Transaction\Repositories;
+namespace Core\Transaction\Transformer\Admin;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -20,44 +20,48 @@ namespace Core\Transaction\Repositories;
  * This software supports OAuth 2.0 and OpenID Connect.
  *
  * Author Contact: yerel9212@yahoo.es
- *
+ * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use League\Fractal\TransformerAbstract;
 use Core\Transaction\Model\User;
 
-class UserRepository extends \Core\User\Repositories\UserRepository
+class UserTransformer extends TransformerAbstract
 {
-    /**
-     * Model
-     * @var User
-     */
-    private $model;
 
-
-    public function __construct(User $user)
-    {
-        $this->model = $user;
-    }
 
     /**
-     * query
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder<User>
+     * List of resources to automatically include
+     *
+     * @var array
      */
-    public function query()
+    protected array $defaultIncludes = [
+        //
+    ];
+
+    /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected array $availableIncludes = [
+        //
+    ];
+
+    /**
+     * A Fractal transformer.
+     *
+     * @return array
+     */
+    public function transform(User $user)
     {
-        $query = $this->model->query();
 
-        $query->with([
-            'checkouts',
-            'checkouts.transactions',
-            'activatedByTransactions',
-            // 'refundAssignTo',
-            //  'refundAssignBy',
-            //'refunds',
-            'userScopes.scope.service'
-        ]);
-
-        return $query;
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+        ];
     }
 }

@@ -46,22 +46,32 @@ class RefundTransformer extends TransformerAbstract
             'type' => $refund->type, // 'refund','appeal'
             'status' => $refund->status, //'pending', 'under_review', 'approved', 'waiting_for_return','processing','completed','rejected','canceled'
             'user' => [
+                'id' => $refund->user->id,
                 'name' => $refund->user->name,
                 'last_name' => $refund->user->last_name,
                 'email' => $refund->user->email,
             ],
-            'handled' => [
-                'name' => $refund->handledBy->name ?? '',
-                'last_name' => $refund->handledBy->last_name ?? '',
-                'email' => $refund->handledBy->email ?? '',
+            'assigned_by' => [
+                'id' => $refund->assignedBy->id ?? '',
+                'name' => $refund->assignedBy->name ?? '',
+                'last_name' => $refund->assignedBy->last_name ?? '',
+                'email' => $refund->assignedBy->email ?? '',
             ],
-            'transaction' => fractal($refund->refundable, TransactionTransformer::class)->toArray()['data'] ?? [],
+            'assigned_to' => [
+                'id' => $refund->assignedTo->id ?? '',
+                'name' => $refund->assignedTo->name ?? '',
+                'last_name' => $refund->assignedTo->last_name ?? '',
+                'email' => $refund->assignedTo->email ?? '',
+            ],
+            'parent_transaction' => fractal($refund->parentTransaction, TransactionTransformer::class)->toArray()['data'] ?? [],
+            'transaction' => fractal($refund->transaction, TransactionTransformer::class)->toArray()['data'] ?? [],
             'appeal' => fractal($refund->children, static::class)->toArray()['data'] ?? [],
             'files' => fractal($refund->files, new FilePrivateTransformer($refund->id))->toArray()['data'] ?? [],
             'web' => [
                 'index' => route('transaction.admin.refunds.index'),
                 'show' => route('transaction.admin.refunds.show', ['refund' => $refund->id]),
                 'update' => route('transaction.admin.refunds.update', ['refund' => $refund->id]),
+                'assignTo' => route('transaction.admin.refunds.assignto', ['id' => $refund->id]),
             ]
         ];
     }

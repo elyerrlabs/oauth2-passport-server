@@ -81,8 +81,16 @@ class RefundService
     {
         $query = $this->refundRepository->query();
 
+        // Order by last refund created
         $query->orderByDesc('created_at');
 
+        // Filter by assigned refunds
+        if ($request->filled('assigned') && !filter_var($request->assigned, FILTER_VALIDATE_BOOL)) {
+            $query->doesntHave('assignedTo');
+        }
+
+
+        // Filter by type
         if ($request->filled('type')) {
             $query->whereRaw(
                 'LOWER(type) LIKE ?',
@@ -90,6 +98,7 @@ class RefundService
             );
         }
 
+        // Filter by status
         if ($request->filled('status')) {
             $query->whereRaw(
                 'LOWER(status) LIKE ?',
@@ -97,6 +106,7 @@ class RefundService
             );
         }
 
+        // Filter by owner refunds
         if ($request->filled('name')) {
             $query->whereHas(
                 'user',
@@ -109,9 +119,11 @@ class RefundService
             );
         }
 
+        // Filter by owner email
         if ($request->filled('email')) {
+
             $query->whereHas(
-                'user',
+                'assignedTo',
                 function ($query) use ($request) {
                     $query->whereRaw(
                         "LOWER(email) LIKE ?",
@@ -121,10 +133,10 @@ class RefundService
             );
         }
 
-        // Search by transaction code
+        // Filter by transaction code
         if ($request->filled('code')) {
             $query->whereHas(
-                'transactions',
+                'parentTransaction',
                 function ($query) use ($request) {
                     $query->whereRaw(
                         "LOWER(code) LIKE ?",
@@ -133,7 +145,6 @@ class RefundService
                 }
             );
         }
-
 
         return $query;
     }
@@ -295,6 +306,33 @@ class RefundService
         $model->push();
 
         // send notification
+
+        return $model;
+    }
+
+    /**
+     * Assign to
+     * @param string $id
+     * @param string $assigned_to
+     * @throws ReportError
+     * @return \Core\Transaction\Model\Refund|\Core\Transaction\Repositories\TValue|null
+     */
+    public function assignTo(string $id, string $assigned_to)
+    {
+        $model = $this->refundRepository->find($id);
+
+        if (empty($model)) {
+            throw new ReportError(__('This refund cannot be found.'), 404);
+        }
+
+        if (in_array($model->status, ["canceled", "completed", "refunding", "rejected"])) {
+            throw new ReportError(__('This refund request cannot be modified.'), 403);
+        }
+
+        $model->assigned_to = $assigned_to;
+        $model->assigned_by = auth()->user()->id;
+
+        $model->push();
 
         return $model;
     }

@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 <template>
     <v-admin-transaction-layout>
         <!-- Header Section -->
-        <div class="my-2">
+        <div class="mb-4">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
                 {{ __("Refund Management") }}
             </h1>
@@ -32,17 +32,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
 
         <!-- Search and Filters -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-4">
             <v-input
                 :label="__('Transaction code')"
                 v-model="search.code"
                 @input="getRefunds"
             />
 
-            <v-input
-                :label="__('Email')"
+            <v-select
+                :label="__('Assigned to the User')"
                 v-model="search.email"
-                @input="getRefunds"
+                :options="users"
+                searchable
+                @search="listUsers"
+                clearable
+                label-key="name"
+                value-key="email"
+                :placeholder="__('Search by name ...')"
+                @change="getRefunds"
+            />
+
+            <v-switch
+                :label="__('Assigned')"
+                v-model="search.assigned"
+                @change="getRefunds"
             />
 
             <v-select
@@ -67,12 +80,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             class="font-bold text-gray-900 dark:text-white text-base"
                         >
-                            {{ refund.transaction?.owner?.name }}
+                            {{ refund.parent_transaction?.owner?.name }}
                         </div>
                         <div
                             class="text-xs text-blue-600 dark:text-blue-400 font-medium"
                         >
-                            {{ refund.transaction?.code }}
+                            {{ refund.parent_transaction?.code }}
                         </div>
                     </div>
                     <div
@@ -94,7 +107,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             class="text-lg font-bold text-green-600 dark:text-green-400"
                         >
-                            {{ refund.transaction?.refund?.amount }}
+                            {{ refund.parent_transaction?.refund?.amount }}
                             {{ refund.currency }}
                         </div>
                     </div>
@@ -107,7 +120,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div
                             class="text-sm font-semibold text-gray-700 dark:text-gray-300"
                         >
-                            {{ refund.transaction?.created }}
+                            {{ refund.parent_transaction?.created }}
                         </div>
                     </div>
                 </div>
@@ -129,7 +142,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700"
                 >
                     <div class="text-xs text-gray-500 dark:text-gray-400">
-                        {{ refund.transaction?.payment_method }}
+                        {{ refund.parent_transaction?.payment_method }}
                     </div>
                     <a
                         :href="refund.links?.update"
@@ -155,12 +168,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 class="text-lg font-bold text-gray-900 dark:text-white"
                             >
-                                {{ refund.transaction?.owner?.name }}
+                                {{ refund.parent_transaction?.owner?.name }}
                             </div>
                             <div
                                 class="text-sm text-blue-600 dark:text-blue-400"
                             >
-                                {{ refund.transaction?.owner?.email }}
+                                {{ refund.parent_transaction?.owner?.email }}
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
@@ -186,7 +199,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 class="text-sm font-mono text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/30 p-2 rounded"
                             >
-                                {{ refund.transaction?.code }}
+                                {{ refund.parent_transaction?.code }}
                             </div>
                         </div>
 
@@ -200,7 +213,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 class="text-lg font-bold text-green-600 dark:text-green-400"
                             >
-                                {{ refund.transaction?.refund?.amount }}<br />
+                                {{ refund.parent_transaction?.refund?.amount
+                                }}<br />
                                 <span class="text-xs">{{
                                     refund.currency
                                 }}</span>
@@ -217,7 +231,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 class="text-sm font-semibold text-gray-700 dark:text-gray-300"
                             >
-                                {{ refund.transaction?.total }}
+                                {{ refund.parent_transaction?.total }}
                             </div>
                         </div>
                     </div>
@@ -233,7 +247,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 class="text-xs text-gray-500 dark:text-gray-400"
                             >
-                                {{ refund.transaction?.created }}
+                                {{ refund.parent_transaction?.created }}
                             </div>
                         </div>
                         <p
@@ -262,7 +276,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <span
                                 class="text-sm text-gray-600 dark:text-gray-400"
                             >
-                                {{ refund.transaction?.payment_method }}
+                                {{ refund.parent_transaction?.payment_method }}
                             </span>
                         </div>
                         <a
@@ -326,16 +340,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 class="text-sm font-bold text-gray-900 dark:text-white"
                                             >
                                                 {{
-                                                    refund.transaction?.owner
-                                                        ?.name
+                                                    refund.parent_transaction
+                                                        ?.owner?.name
                                                 }}
                                             </div>
                                             <div
                                                 class="text-xs text-blue-600 dark:text-blue-400"
                                             >
                                                 {{
-                                                    refund.transaction?.owner
-                                                        ?.email
+                                                    refund.parent_transaction
+                                                        ?.owner?.email
                                                 }}
                                             </div>
                                         </div>
@@ -352,7 +366,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             <div
                                                 class="text-sm font-mono text-gray-700 dark:text-gray-300"
                                             >
-                                                {{ refund.transaction?.code }}
+                                                {{
+                                                    refund.parent_transaction
+                                                        ?.code
+                                                }}
                                             </div>
                                         </div>
 
@@ -372,7 +389,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 />
                                             </svg>
                                             {{
-                                                refund.transaction
+                                                refund.parent_transaction
                                                     ?.payment_method
                                             }}
                                         </div>
@@ -407,7 +424,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 class="text-sm text-gray-700 dark:text-gray-300"
                                             >
                                                 {{
-                                                    refund.transaction?.created
+                                                    refund.parent_transaction
+                                                        ?.created
                                                 }}
                                             </div>
                                         </div>
@@ -422,7 +440,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             <div
                                                 class="text-sm font-semibold text-gray-700 dark:text-gray-300"
                                             >
-                                                {{ refund.transaction?.total }}
+                                                {{
+                                                    refund.parent_transaction
+                                                        ?.total
+                                                }}
                                             </div>
                                         </div>
                                     </div>
@@ -442,8 +463,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                                 class="text-xl font-bold text-green-600 dark:text-green-400"
                                             >
                                                 {{
-                                                    refund.transaction?.refund
-                                                        ?.amount
+                                                    refund.parent_transaction
+                                                        ?.refund?.amount
                                                 }}
                                                 <span class="text-sm">{{
                                                     refund.currency
@@ -472,19 +493,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Action -->
                                 <td class="px-6 py-4">
                                     <div
-                                        class="flex flex-col items-center justify-center h-full"
+                                        class="flex flex-col items-center justify-center gap-2 h-full"
                                     >
                                         <a
                                             :href="refund.web?.show"
-                                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg text-center transition-colors shadow-sm hover:shadow"
+                                            class="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white py-2 px-4 rounded text-center transition-colors shadow-sm hover:shadow"
                                         >
                                             {{ __("View Details") }}
                                         </a>
-                                        <div
-                                            class="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center"
-                                        >
-                                            {{ __("Click to review") }}
-                                        </div>
+
+                                        <v-assign-to
+                                            :item="refund"
+                                            @assigned="getRefunds"
+                                        />
                                     </div>
                                 </td>
                             </tr>
@@ -522,7 +543,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </div>
 
         <!-- Pagination -->
-        <div v-if="refunds.length > 0" class="mt-6">
+        <div v-if="refunds.length > 0">
             <v-pagination
                 v-model="search.page"
                 :total-pages="pages.total_pages"
@@ -536,6 +557,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 import VAdminTransactionLayout from "@/components/VGeneralLayout.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
+import VSwitch from "@/components/VSwitch.vue";
+import VAssignTo from "./VAssignTo.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 
@@ -547,8 +570,11 @@ const search = useForm({
     per_page: 15,
     code: "",
     email: "",
-    status: "",
+    status: "pending",
+    assigned: false,
 });
+
+const users = ref([]);
 
 const pages = ref({
     total_pages: 0,
@@ -567,9 +593,8 @@ const statusOptions = [
 ];
 
 onMounted(() => {
-    const values = page.props.data;
-    refunds.value = values.data;
-    pages.value = values.meta.pagination;
+    getRefunds();
+    listUsers();
 });
 
 // Methods
@@ -583,6 +608,21 @@ const getRefunds = () => {
             pages.value = values.meta.pagination;
         },
     });
+};
+
+const listUsers = async (text = "") => {
+    try {
+        const res = await $server.get("/transaction/admin/refunds/list/users", {
+            params: {
+                name: text,
+                per_page: 20,
+            },
+        });
+
+        if (res.status == 200) {
+            users.value = res.data.data;
+        }
+    } catch (err) {}
 };
 
 const getStatusColorClass = (status) => {

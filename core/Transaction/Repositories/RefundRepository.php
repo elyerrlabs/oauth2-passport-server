@@ -68,6 +68,7 @@ class RefundRepository
 
         $query->with(
             [
+                'parentTransaction',
                 'transaction',
                 'appeal',
                 'files',
