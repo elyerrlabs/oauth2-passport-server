@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Value Indicator -->
                 <span
-                    class="text-xs font-medium px-2.5 py-1 rounded-full border transition-all duration-200 shadow-sm"
+                    class="text-xs font-medium px-2.5 rounded-full border transition-all duration-200 shadow-sm"
                     :class="
                         localValue
                             ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800'
@@ -69,7 +69,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
         <!-- Toggle Switch Container -->
         <div
-            class="flex items-center justify-between p-2 bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800/70 group"
+            class="flex items-center justify-between px-2 py-1.5 bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800/70 group"
         >
             <!-- Toggle Switch -->
             <div class="flex items-center space-x-2">
