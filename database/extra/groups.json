@@ -35,6 +35,40 @@
         ]
       },
       {
+        "name": "refunds",
+        "description": "Manage and track refund requests and their status.",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0,
+            "web": 1
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0,
+            "web": 1
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0,
+            "web": 1
+          },
+          {
+            "name": "assign",
+            "public": 0,
+            "active": 1,
+            "api_key": 0,
+            "web": 1
+          }
+        ]
+      },
+      {
         "name": "seo",
         "description": "Improves your website's visibility on search engines.",
         "actions": [
