@@ -23,7 +23,7 @@ namespace Core\User\Model;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Models\Common\Order; 
+use App\Models\Common\Order;
 use Core\Transaction\Model\Refund;
 use App\Models\Auth;
 use App\Repositories\Contracts\Dynamic;
@@ -115,16 +115,6 @@ class User extends Auth
 
         return false;
     }
-
-    /**
-     * Terminals
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function terminals()
-    {
-        return $this->hasMany(Terminal::class);
-    }
-
 
     public function orders()
     {
