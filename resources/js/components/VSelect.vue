@@ -24,7 +24,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Label -->
         <label
             v-if="label"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
             {{ label }} <span v-if="required" class="text-red-500">*</span>
             <small
@@ -41,7 +41,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             <button
                 type="button"
                 @click="toggleDropdown"
-                class="flex items-center justify-between w-full px-4 py-2 text-left border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm bg-white dark:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                class="flex items-center justify-between w-full px-4 py-1 text-left border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm bg-white dark:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 :class="{
                     'ring-2 ring-blue-500 border-blue-500 dark:border-blue-400':
                         isOpen,
@@ -50,7 +50,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 :disabled="loading"
             >
                 <!-- Selected slot -->
-                <span class="truncate flex-1 text-left">
+                <span class="truncate flex-1 py-1.5 text-left">
                     <template v-if="$slots.selected">
                         <slot
                             name="selected"
