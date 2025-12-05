@@ -206,6 +206,91 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                         </div>
 
+                        <div class="p-5">
+                            <div class="flex items-center space-x-3 mb-5">
+                                <div
+                                    class="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg flex items-center justify-center"
+                                >
+                                    <i
+                                        class="mdi mdi-cog-outline text-emerald-600 dark:text-emerald-400 text-sm"
+                                    ></i>
+                                </div>
+                                <div>
+                                    <h2
+                                        class="text-base font-semibold text-slate-800 dark:text-white"
+                                    >
+                                        {{ __("Admin apps") }}
+                                    </h2>
+                                    <p
+                                        class="text-xs text-slate-500 dark:text-slate-400"
+                                    >
+                                        {{ __("Manage your admin apps") }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3"
+                            >
+                                <div
+                                    v-for="(setting, index) in $page.props
+                                        .admin_routes"
+                                    :key="index"
+                                    class="group bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:border-emerald-300 dark:hover:border-emerald-400 hover:shadow-sm transition-all duration-200"
+                                >
+                                    <div
+                                        class="p-4 bg-linear-to-br from-emerald-500 to-green-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg"
+                                    >
+                                        <div
+                                            class="flex items-center justify-between mb-3"
+                                        >
+                                            <div
+                                                class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-xs"
+                                            >
+                                                <i
+                                                    class="mdi text-white text-xl"
+                                                    :class="
+                                                        getSettingIcon(setting)
+                                                    "
+                                                ></i>
+                                            </div>
+                                            <button
+                                                @click="
+                                                    openApplication(setting)
+                                                "
+                                                class="opacity-0 cursor-pointer group-hover:opacity-100 w-6 h-6 bg-white/20 hover:bg-white/30 text-white rounded flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
+                                            >
+                                                <i
+                                                    class="mdi mdi-chevron-right text-xs"
+                                                ></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <h3
+                                                class="font-medium text-white text-sm mb-1 transition-colors line-clamp-1"
+                                            >
+                                                {{ __(setting.name) }}
+                                            </h3>
+                                        </div>
+
+                                        <button
+                                            @click="openApplication(setting)"
+                                            class="w-full bg-white/20 cursor-pointer hover:bg-white/30 text-white py-2 px-3 rounded-md font-medium transition-all duration-200 text-xs flex items-center justify-center space-x-1 backdrop-blur-sm"
+                                        >
+                                            <span>{{ __("Configure") }}</span>
+                                            <i
+                                                :class="[
+                                                    'mdi text-xs',
+                                                    setting.icon,
+                                                ]"
+                                            ></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Settings Section - More Compact -->
                         <div class="p-5">
                             <div class="flex items-center space-x-3 mb-5">
@@ -387,7 +472,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script>
 import VAccountLayout from "@/components/VAccountLayout.vue";
-import { router } from "@inertiajs/vue3";
 export default {
     components: {
         VAccountLayout,
@@ -512,19 +596,4 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-}
-
-.line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-}
-</style>
+ 

@@ -64,6 +64,16 @@ return [
             ],
         ],
 
+        "admin_routes" => [
+            'refunds' => [
+                'id' => 'review-refund',
+                'name' => __('Review refunds'),
+                'route' => "transaction.admin.refunds.review.index",
+                'icon' => "mdi-credit-card-refund-outline",
+                'service' => 'administrator:refunds',
+            ]
+        ],
+
         "user_routes" => [
             'transaction' => [
                 'id' => 'transaction',
@@ -109,7 +119,7 @@ return [
             'name' => 'Refunds',
             'route' => "transaction.admin.refunds.index",
             'icon' => "mdi-cash-refund",
-            'service' => 'administrator:refund',
+            'service' => 'administrator:refunds',
         ],
         [
             "id" => "plans",
