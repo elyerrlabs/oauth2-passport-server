@@ -94,5 +94,9 @@
   {
     "name": "reset",
     "description": "Allows a user or group to safely restore settings, data, or resources to their default state."
+  },
+  {
+    "name": "review",
+    "description": "Enables a user or group to review and assess configurations, data, or resources for correctness and quality."
   }
 ]

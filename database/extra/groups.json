@@ -65,6 +65,13 @@
             "active": 1,
             "api_key": 0,
             "web": 1
+          },
+          {
+            "name": "review",
+            "public": 0,
+            "active": 1,
+            "api_key": 0,
+            "web": 1
           }
         ]
       },
