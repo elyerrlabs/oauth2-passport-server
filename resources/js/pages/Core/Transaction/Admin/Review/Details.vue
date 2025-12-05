@@ -1,6 +1,3 @@
-<!--
-    <v-admin-transaction-layout>
--->
 <template>
     <v-account-layout>
         <div class="mb-6">

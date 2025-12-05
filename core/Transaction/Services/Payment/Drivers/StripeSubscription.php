@@ -250,7 +250,7 @@ class StripeSubscription implements PaymentMethod
             'amount' => $transaction['refund']['amount'],
             'metadata' => [
                 'transaction_code' => $this->transactionService->generateTransactionCode(),
-                'user_id' => $transaction['owner']['id'],
+                'user_id' => $transaction['user']['id'],
                 'method' => config('billing.methods.stripe.key'),
                 'type' => 'refund',
                 'refund_id' => $transaction['refund']['id'],

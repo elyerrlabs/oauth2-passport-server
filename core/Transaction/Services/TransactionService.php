@@ -24,26 +24,22 @@ namespace Core\Transaction\Services;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Core\Transaction\Repositories\RefundRepository;
-use Core\Transaction\Transformer\Admin\PackageTransformer;
+use Core\Transaction\Services\RefundService;
+use Illuminate\Support\Facades\Log;
 use Exception;
 use Core\Transaction\Notifications\ProcessRefundNotification;
 use App\Notifications\Subscription\PaymentFailed;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Core\Ecommerce\Model\Order;
 use Core\Ecommerce\Model\Variant;
-use Core\Transaction\Model\Refund;
 use Illuminate\Support\Facades\DB;
 use Core\Transaction\Model\Checkout;
 use Core\User\Repositories\UserRepository;
 use Elyerr\ApiResponse\Assets\JsonResponser;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Core\Partner\Repositories\PartnerRepository;
-use Core\Transaction\Repositories\PlanRepository;
 use App\Notifications\Checkout\CheckoutNotification;
-use Core\Transaction\Repositories\PackageRepository;
 use App\Notifications\Subscription\RenewSuccessfully;
 use Core\Transaction\Services\Payment\PaymentManager;
 use App\Notifications\Subscription\PaymentSuccessfully;
@@ -98,9 +94,9 @@ class TransactionService
 
     /**
      * Refund service
-     * @var RefundRepository
+     * @var RefundService
      */
-    private $refundRepository;
+    private $refundService;
 
     /**
      * Construct
@@ -115,7 +111,7 @@ class TransactionService
         $this->packageService = app(PackageService::class);
         $this->planService = app(PlanService::class);
         $this->partnerRepository = app(PartnerRepository::class);
-        $this->refundRepository = app(RefundRepository::class);
+        $this->refundService = app(RefundService::class);
     }
 
     /**
@@ -238,7 +234,9 @@ class TransactionService
      */
     public function handledSuccessfullyRefund(array $meta)
     {
+        // Search transaction
         $transaction = $this->repository->findByCode($meta['metadata']['transaction_code']);
+        // Update transaction data
         $transaction->payment_method_id = $meta['payment_method'];
         $transaction->payment_intent_id = $meta['payment_intent'];
         $transaction->response = $meta;
@@ -247,6 +245,12 @@ class TransactionService
 
         $transaction->push();
 
+        // update status refund to completed
+        $this->refundService->updateStatus($transaction->refund->id, [
+            'status' => 'completed'
+        ]);
+
+        // Send user notification
         $this->userRepository->find($transaction->user_id)
             ->notify(new SuccessfullyRefundNotification($transaction->toArray()));
     }
@@ -337,7 +341,7 @@ class TransactionService
         // Prepare query
         $query = $this->repository->query();
 
-        $query->orderByDesc("created_at");
+        $query->orderByDesc("updated_at");
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -686,8 +690,8 @@ class TransactionService
     public function generateTransactionRefund($refund)
     {
         // Find refund and create transaction
-        $this->refundRepository->find($refund->metadata->refund_id)
-            ->transactions()->create([
+        $this->refundService->find($refund->metadata->refund_id)
+            ->transaction()->create([
                     'total' => $refund->amount,
                     'currency' => $refund->currency,
                     'type' => config("billing.types.refund.id"),

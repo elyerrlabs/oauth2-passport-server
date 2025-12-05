@@ -90,6 +90,10 @@ class RefundService
         }
 
 
+        if ($request->filled('assigned_to')) {
+            $query->where('assigned_to', "=", $request->assigned_to);
+        }
+
         // Filter by type
         if ($request->filled('type')) {
             $query->whereRaw(
@@ -241,7 +245,7 @@ class RefundService
     }
 
     /**
-     * Update refund
+     * 
      * @param string $id
      * @param array $data
      * @throws \Elyerr\ApiResponse\Exceptions\ReportError
@@ -249,24 +253,25 @@ class RefundService
      */
     public function updateStatus(string $id, array $data)
     {
-        $model = $this->refundRepository->find($id);
+        return DB::transaction(function () use ($id, $data) {
 
-        // Stop updated
-        if (in_array($model->status, ["rejected", "canceled"])) {
-            throw new ReportError(__('This refund request has already been closed and cannot be modified.'), 409);
-        }
+            $model = $this->refundRepository->find($id);
 
-        $model->fill($data);
+            // Stop updated
+            if (in_array($model->status, ["rejected", "canceled"])) {
+                throw new ReportError(__('This refund request has already been closed and cannot be modified.'), 409);
+            }
 
-        $model->handled_id = auth()->user()->id;
-        $model->push();
+            $model->fill($data);
 
-        // Dispatch job to refund to the user
-        if ($model->status == 'refunding') {
-            ProcessRefundJob::dispatch($model->refundable->code);
-        }
+            $model->status = $data['status'];
+            $model->push();
 
-        return $model;
+            // Dispatch job to refund to the user
+            if ($model->status == 'refunding') {
+                ProcessRefundJob::dispatch($model->parentTransaction->code);
+            }
+        });
     }
 
     /**
