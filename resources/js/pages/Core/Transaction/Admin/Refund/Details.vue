@@ -16,13 +16,15 @@
                     <p
                         class="mt-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate"
                     >
-                        {{ __("Review and process refund request") }} #
-                        {{ data.parent_transaction?.code }}
+                        {{ __("Review and process refund request") }}
+                        <span v-if="data?.transaction?.code">
+                            # {{ data.transaction.code }}
+                        </span>
                     </p>
                 </div>
                 <div class="flex items-center space-x-2 sm:space-x-3">
                     <a
-                        :href="data.web?.index"
+                        :href="data?.web?.index"
                         class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-xs sm:text-sm font-normal text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
                     >
                         <svg
@@ -44,8 +46,15 @@
             </div>
         </div>
 
+        <!-- Loading State -->
+        <div v-if="loading" class="flex justify-center items-center h-64">
+            <div
+                class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+            ></div>
+        </div>
+
         <!-- Main Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <!-- Left Column: Refund Details -->
             <div class="lg:col-span-2 space-y-4 sm:space-y-6">
                 <!-- Status Header with Timeline -->
@@ -59,36 +68,37 @@
                             <div class="flex flex-wrap items-center gap-2 mb-2">
                                 <div
                                     :class="`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold ${getStatusColorClass(
-                                        data.status
+                                        data?.status
                                     )}`"
                                 >
-                                    {{ getStatusLabel(data.status) }}
+                                    {{ getStatusLabel(data?.status) }}
                                 </div>
                                 <div
                                     class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate"
                                 >
-                                    {{ __("ID") }}:
-                                    {{ data.parent_transaction?.code }}
+                                    {{ __("Refund ID") }}:
+                                    {{ truncateId(data?.id) }}
                                 </div>
                             </div>
                             <h2
                                 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate"
                             >
                                 {{ __("Refund Request for") }}
-                                {{ data.parent_transaction?.owner?.name }}
+                                {{ data?.user?.name }}
+                                {{ data?.user?.last_name }}
                             </h2>
                             <div
                                 class="mt-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400"
                             >
                                 {{ __("Created") }}:
-                                {{ data.parent_transaction?.created }}
+                                {{ data.created }}
                             </div>
                         </div>
                         <div class="text-right mt-2 md:mt-0">
                             <div
                                 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white"
                             >
-                                {{ data.amount }} {{ data.currency }}
+                                {{ data?.amount }} {{ data?.currency }}
                             </div>
                             <div
                                 class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1"
@@ -99,8 +109,8 @@
                                 class="text-xs text-gray-400 dark:text-gray-500 mt-0.5"
                             >
                                 {{ __("Original Amount") }}:
-                                {{ data.parent_transaction?.total }}
-                                {{ data.currency }}
+                                {{ data?.transaction?.total }}
+                                {{ data?.currency }}
                             </div>
                         </div>
                     </div>
@@ -159,7 +169,7 @@
                                     >
                                         <div
                                             :class="`font-medium truncate ${
-                                                data.status ===
+                                                data?.status ===
                                                 statusPoint.status
                                                     ? 'text-blue-600 dark:text-blue-400'
                                                     : isStatusPassed(
@@ -223,7 +233,7 @@
                                         <div class="ml-6">
                                             <div
                                                 :class="`text-xs font-medium truncate ${
-                                                    data.status ===
+                                                    data?.status ===
                                                     statusPoint.status
                                                         ? 'text-blue-600 dark:text-blue-400'
                                                         : isStatusPassed(
@@ -310,9 +320,9 @@
                     </div>
                 </div>
 
-                <!-- Customer & Transaction Information -->
+                <!-- Transaction Cards Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                    <!-- Customer Card -->
+                    <!-- Original Transaction Card -->
                     <div
                         class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-5"
                     >
@@ -322,95 +332,7 @@
                             <h3
                                 class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white"
                             >
-                                {{ __("Customer Information") }}
-                            </h3>
-                            <div
-                                class="p-1.5 sm:p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg"
-                            >
-                                <svg
-                                    class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="1.5"
-                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="space-y-3 sm:space-y-4">
-                            <div>
-                                <div
-                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
-                                >
-                                    {{ __("Full Name") }}
-                                </div>
-                                <div
-                                    class="text-sm font-medium text-gray-900 dark:text-white truncate"
-                                >
-                                    {{ data.user?.name }}
-                                    {{ data.user?.last_name }}
-                                </div>
-                            </div>
-                            <div>
-                                <div
-                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
-                                >
-                                    {{ __("Email Address") }}
-                                </div>
-                                <div
-                                    class="text-sm text-gray-900 dark:text-white truncate"
-                                >
-                                    {{ data.user?.email }}
-                                </div>
-                            </div>
-                            <div>
-                                <div
-                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
-                                >
-                                    {{ __("Assigned To") }}
-                                </div>
-                                <div
-                                    class="text-sm text-gray-900 dark:text-white flex items-center gap-2 truncate"
-                                >
-                                    <div
-                                        class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-500 flex-shrink-0"
-                                    ></div>
-                                    {{ data.assigned_to?.name }}
-                                    {{ data.assigned_to?.last_name }}
-                                </div>
-                            </div>
-                            <div>
-                                <div
-                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
-                                >
-                                    {{ __("Assigned By") }}
-                                </div>
-                                <div
-                                    class="text-sm text-gray-900 dark:text-white truncate"
-                                >
-                                    {{ data.assigned_by?.name }}
-                                    {{ data.assigned_by?.last_name }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Transaction Card -->
-                    <div
-                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-5"
-                    >
-                        <div
-                            class="flex items-center justify-between mb-3 sm:mb-4"
-                        >
-                            <h3
-                                class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white"
-                            >
-                                {{ __("Transaction Details") }}
+                                {{ __("Original Transaction") }}
                             </h3>
                             <div
                                 class="p-1.5 sm:p-2 bg-green-100 dark:bg-green-900/20 rounded-lg"
@@ -440,7 +362,7 @@
                                 <div
                                     class="text-xs sm:text-sm font-mono font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900/30 p-2 rounded truncate"
                                 >
-                                    {{ data.parent_transaction?.code }}
+                                    {{ data?.transaction?.code }}
                                 </div>
                             </div>
                             <div>
@@ -452,9 +374,7 @@
                                 <div
                                     class="text-sm text-gray-900 dark:text-white capitalize truncate"
                                 >
-                                    {{
-                                        data.parent_transaction?.payment_method
-                                    }}
+                                    {{ data?.transaction?.payment_method }}
                                 </div>
                             </div>
                             <div>
@@ -466,25 +386,31 @@
                                 <div
                                     class="text-sm text-gray-900 dark:text-white truncate"
                                 >
-                                    {{ data.parent_transaction?.total }}
-                                    {{ data.currency }}
+                                    {{ data?.transaction?.total }}
+                                    {{ data?.currency }}
                                 </div>
                             </div>
                             <div>
                                 <div
                                     class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
                                 >
-                                    {{ __("Refund Amount") }}
+                                    {{ __("Status") }}
                                 </div>
                                 <div
-                                    class="text-sm font-medium text-amber-600 dark:text-amber-400 truncate"
+                                    :class="`inline-flex items-center px-2 py-1 rounded text-xs font-semibold ${getTransactionStatusColor(
+                                        data?.transaction?.status
+                                    )}`"
                                 >
-                                    {{ data.amount }} {{ data.currency }}
+                                    {{
+                                        getTransactionStatusLabel(
+                                            data?.transaction?.status
+                                        )
+                                    }}
                                 </div>
                             </div>
-                            <div v-if="data.parent_transaction?.payment_url">
+                            <div v-if="data?.transaction?.payment_url">
                                 <a
-                                    :href="data.parent_transaction.payment_url"
+                                    :href="data.transaction.payment_url"
                                     target="_blank"
                                     class="inline-flex items-center text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors truncate"
                                 >
@@ -508,6 +434,239 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Refund Transaction Card (Only when exists) -->
+                    <div
+                        v-if="data?.transactionable"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-5"
+                    >
+                        <div
+                            class="flex items-center justify-between mb-3 sm:mb-4"
+                        >
+                            <h3
+                                class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Refund Transaction") }}
+                            </h3>
+                            <div
+                                class="p-1.5 sm:p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg"
+                            >
+                                <svg
+                                    class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="1.5"
+                                        d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="space-y-3 sm:space-y-4">
+                            <div>
+                                <div
+                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                >
+                                    {{ __("Refund Transaction ID") }}
+                                </div>
+                                <div
+                                    class="text-xs sm:text-sm font-mono font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900/30 p-2 rounded truncate"
+                                >
+                                    {{ data.transactionable?.code }}
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                >
+                                    {{ __("Refund Amount") }}
+                                </div>
+                                <div
+                                    class="text-sm font-medium text-amber-600 dark:text-amber-400 truncate"
+                                >
+                                    {{ data.transactionable?.total }}
+                                    {{ data.currency }}
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                >
+                                    {{ __("Status") }}
+                                </div>
+                                <div
+                                    :class="`inline-flex items-center px-2 py-1 rounded text-xs font-semibold ${getTransactionStatusColor(
+                                        data.transactionable?.status
+                                    )}`"
+                                >
+                                    {{
+                                        getTransactionStatusLabel(
+                                            data.transactionable?.status
+                                        )
+                                    }}
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                >
+                                    {{ __("Created") }}
+                                </div>
+                                <div
+                                    class="text-sm text-gray-900 dark:text-white truncate"
+                                >
+                                    {{ data.transactionable?.created }}
+                                </div>
+                            </div>
+                            <div v-if="data.transactionable?.payment_intent_id">
+                                <div
+                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                >
+                                    {{ __("Payment Intent") }}
+                                </div>
+                                <div
+                                    class="text-xs font-mono text-gray-600 dark:text-gray-400 truncate"
+                                >
+                                    {{
+                                        truncateId(
+                                            data.transactionable
+                                                .payment_intent_id
+                                        )
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Card -->
+                    <div
+                        class="md:col-span-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-5"
+                    >
+                        <div
+                            class="flex items-center justify-between mb-3 sm:mb-4"
+                        >
+                            <h3
+                                class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Customer Information") }}
+                            </h3>
+                            <div
+                                class="p-1.5 sm:p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg"
+                            >
+                                <svg
+                                    class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="1.5"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6"
+                        >
+                            <div>
+                                <div
+                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                >
+                                    {{ __("Full Name") }}
+                                </div>
+                                <div
+                                    class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                                >
+                                    {{ data?.user?.name }}
+                                    {{ data?.user?.last_name }}
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                >
+                                    {{ __("Email Address") }}
+                                </div>
+                                <div
+                                    class="text-sm text-gray-900 dark:text-white truncate"
+                                >
+                                    {{ data?.user?.email }}
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                >
+                                    {{ __("Customer ID") }}
+                                </div>
+                                <div
+                                    class="text-xs font-mono text-gray-600 dark:text-gray-400 truncate"
+                                >
+                                    {{ truncateId(data?.user?.id) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Assignment Info -->
+                        <div
+                            class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+                        >
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <div
+                                        class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                    >
+                                        {{ __("Assigned To") }}
+                                    </div>
+                                    <div
+                                        class="text-sm text-gray-900 dark:text-white flex items-center gap-2 truncate"
+                                    >
+                                        <div
+                                            class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-500 flex-shrink-0"
+                                        ></div>
+                                        <span v-if="data?.assigned_to?.name">
+                                            {{ data.assigned_to?.name }}
+                                            {{ data.assigned_to?.last_name }}
+                                        </span>
+                                        <span
+                                            v-else
+                                            class="text-gray-400 italic"
+                                        >
+                                            {{ __("Not assigned") }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div
+                                        class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                    >
+                                        {{ __("Assigned By") }}
+                                    </div>
+                                    <div
+                                        class="text-sm text-gray-900 dark:text-white truncate"
+                                    >
+                                        <span v-if="data?.assigned_by?.name">
+                                            {{ data.assigned_by?.name }}
+                                            {{ data.assigned_by?.last_name }}
+                                        </span>
+                                        <span
+                                            v-else
+                                            class="text-gray-400 italic"
+                                        >
+                                            {{ __("Not assigned") }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Refund Details -->
@@ -524,7 +683,7 @@
                             <h3
                                 class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white"
                             >
-                                {{ __("Refund Reason") }}
+                                {{ __("Refund Details") }}
                             </h3>
                             <div
                                 class="p-1.5 sm:p-2 bg-amber-100 dark:bg-amber-900/20 rounded-lg"
@@ -546,19 +705,45 @@
                         </div>
 
                         <div class="space-y-3 sm:space-y-4">
-                            <div>
-                                <div
-                                    class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2"
-                                >
-                                    {{ __("Reason") }}
-                                </div>
-                                <div
-                                    class="bg-gray-50 dark:bg-gray-900/30 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700"
-                                >
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
                                     <div
-                                        class="text-sm text-gray-900 dark:text-white font-medium break-words"
+                                        class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2"
                                     >
-                                        {{ data.reason }}
+                                        {{ __("Reason") }}
+                                    </div>
+                                    <div
+                                        class="bg-gray-50 dark:bg-gray-900/30 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700"
+                                    >
+                                        <div
+                                            class="text-sm text-gray-900 dark:text-white font-medium break-words"
+                                        >
+                                            {{ data?.reason }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div
+                                        class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                                    >
+                                        {{ __("Refund Amount") }}
+                                    </div>
+                                    <div
+                                        class="bg-gray-50 dark:bg-gray-900/30 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700"
+                                    >
+                                        <div
+                                            class="text-2xl font-bold text-amber-600 dark:text-amber-400"
+                                        >
+                                            {{ data?.amount }}
+                                            {{ data?.currency }}
+                                        </div>
+                                        <div
+                                            class="text-sm text-gray-500 dark:text-gray-400 mt-1"
+                                        >
+                                            {{ __("From original amount of") }}
+                                            {{ data?.transaction?.total }}
+                                            {{ data?.currency }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -575,12 +760,14 @@
                                     <div
                                         class="text-sm text-gray-900 dark:text-white whitespace-pre-wrap break-words"
                                     >
-                                        {{ data.description }}
+                                        {{ data?.description }}
                                     </div>
                                     <div
                                         class="mt-2 text-xs text-gray-500 dark:text-gray-400 text-right"
                                     >
-                                        {{ data.description?.length || 0 }}/1000
+                                        {{
+                                            data?.description?.length || 0
+                                        }}/1000
                                         {{ __("characters") }}
                                     </div>
                                 </div>
@@ -589,7 +776,7 @@
                     </div>
 
                     <!-- Files Section -->
-                    <div v-if="data.files?.length" class="p-4 sm:p-5">
+                    <div v-if="data?.files?.length" class="p-4 sm:p-5">
                         <h4
                             class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2"
                         >
@@ -778,10 +965,10 @@
                                 <div class="flex items-center justify-between">
                                     <div
                                         :class="`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold ${getStatusColorClass(
-                                            data.status
+                                            data?.status
                                         )}`"
                                     >
-                                        {{ getStatusLabel(data.status) }}
+                                        {{ getStatusLabel(data?.status) }}
                                     </div>
                                     <div
                                         class="text-xs text-blue-500 dark:text-blue-400 whitespace-nowrap"
@@ -860,7 +1047,7 @@
                                     type="submit"
                                     :disabled="
                                         form.processing ||
-                                        form.status === data.status ||
+                                        form.status === data?.status ||
                                         !form.status
                                     "
                                     :class="`w-full flex justify-center items-center py-2.5 sm:py-3 px-4 border border-transparent rounded-lg text-xs sm:text-sm font-semibold text-white transition-all duration-200 ${
@@ -868,7 +1055,7 @@
                                             ? 'bg-blue-400 cursor-not-allowed'
                                             : 'bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
                                     } ${
-                                        form.status === data.status ||
+                                        form.status === data?.status ||
                                         !form.status
                                             ? 'opacity-50 cursor-not-allowed'
                                             : ''
@@ -952,6 +1139,7 @@ import { ref, onMounted, computed } from "vue";
 
 const page = usePage();
 const data = ref({});
+const loading = ref(true);
 
 // Status workflow definition
 const statusWorkflow = {
@@ -991,38 +1179,50 @@ const form = useForm({
 
 // Computed properties
 const isStatusLocked = computed(() => {
-    return finalStatuses.includes(data.value.status);
+    return finalStatuses.includes(data.value?.status);
 });
 
 const availableStatusOptions = computed(() => {
-    const currentStatus = data.value.status;
+    const currentStatus = data.value?.status;
     if (!currentStatus || !statusWorkflow[currentStatus]) return [];
     return statusWorkflow[currentStatus];
 });
 
 onMounted(() => {
-    data.value = page.props.data;
-    form.status = data.value.status;
+    if (page.props.data) {
+        data.value = page.props.data;
+        form.status = data.value.status;
+    }
+    loading.value = false;
 });
 
 // Methods
 const submitForm = () => {
-    if (!form.status || form.status === data.value.status) return;
+    if (!form.status || form.status === data.value?.status) return;
 
-    form.put(data.value.web?.update, {
+    form.put(data.value?.web?.update, {
         preserveScroll: true,
         onSuccess: () => {
-            data.value = page.props.data;
+            if (page.props.data) {
+                data.value = page.props.data;
+            }
         },
     });
 };
 
 const resetForm = () => {
     form.reset();
-    form.status = data.value.status;
+    form.status = data.value?.status;
+};
+
+const truncateId = (id) => {
+    if (!id) return "";
+    if (id.length <= 8) return id;
+    return id.substring(0, 8) + "...";
 };
 
 const getStatusLabel = (status) => {
+    if (!status) return "";
     const statusMap = {
         pending: __("Pending"),
         processing: __("Processing"),
@@ -1038,6 +1238,7 @@ const getStatusLabel = (status) => {
 
 // Short version for timeline display on small screens
 const getStatusLabelShort = (status) => {
+    if (!status) return "";
     const statusMap = {
         pending: __("Pending"),
         processing: __("Processing"),
@@ -1052,6 +1253,8 @@ const getStatusLabelShort = (status) => {
 };
 
 const getStatusColorClass = (status) => {
+    if (!status)
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300";
     const colors = {
         pending:
             "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300",
@@ -1076,6 +1279,35 @@ const getStatusColorClass = (status) => {
     );
 };
 
+const getTransactionStatusColor = (status) => {
+    if (!status)
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300";
+    const colors = {
+        successful:
+            "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+        pending:
+            "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300",
+        failed: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+        refunded:
+            "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+    };
+    return (
+        colors[status] ||
+        "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300"
+    );
+};
+
+const getTransactionStatusLabel = (status) => {
+    if (!status) return "";
+    const statusMap = {
+        successful: __("Successful"),
+        pending: __("Pending"),
+        failed: __("Failed"),
+        refunded: __("Refunded"),
+    };
+    return statusMap[status] || status;
+};
+
 const getTimelinePointClass = (status) => {
     if (!isStatusActiveOrPassed(status)) {
         return "bg-gray-300 dark:bg-gray-600";
@@ -1095,15 +1327,31 @@ const getTimelinePointClass = (status) => {
     return colorMap[status] || "bg-gray-500";
 };
 
+const formatDate = (dateString) => {
+    if (!dateString) return "";
+    try {
+        const date = new Date(dateString);
+        return (
+            date.toLocaleDateString() +
+            " " +
+            date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        );
+    } catch (error) {
+        return dateString;
+    }
+};
+
 const isStatusPassed = (status) => {
     const statusOrder = timelinePoints.map((s) => s.status);
-    const currentIndex = statusOrder.indexOf(data.value.status);
+    const currentIndex = statusOrder.indexOf(data.value?.status);
     const targetIndex = statusOrder.indexOf(status);
+
+    if (currentIndex === -1 || targetIndex === -1) return false;
 
     // For rejected path
     if (
         status === "rejected" &&
-        ["under_review", "processing", "pending"].includes(data.value.status)
+        ["under_review", "processing", "pending"].includes(data.value?.status)
     ) {
         return false;
     }
@@ -1112,7 +1360,7 @@ const isStatusPassed = (status) => {
 };
 
 const isStatusActiveOrPassed = (status) => {
-    if (status === data.value.status) return true;
+    if (status === data.value?.status) return true;
     return isStatusPassed(status);
 };
 </script>

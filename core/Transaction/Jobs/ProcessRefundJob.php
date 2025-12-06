@@ -33,8 +33,8 @@ class ProcessRefundJob implements ShouldQueue
     use Queueable;
 
     /**
-     * Transaction code
-     * @var 
+     * Original transaction code
+     * @var string
      */
     public $transaction_code;
 

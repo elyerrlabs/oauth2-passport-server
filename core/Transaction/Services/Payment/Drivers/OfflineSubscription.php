@@ -30,7 +30,7 @@ use Illuminate\Support\Str;
 use Core\Transaction\Model\PaymentProvider;
 use Core\Transaction\Model\User;
 use Illuminate\Support\Fluent;
-use Core\Transaction\Model\Transaction; 
+use Core\Transaction\Model\Transaction;
 use Core\Transaction\Services\Payment\Contracts\PaymentMethod;
 
 class OfflineSubscription implements PaymentMethod
@@ -45,12 +45,12 @@ class OfflineSubscription implements PaymentMethod
      * Transaction service
      * @var TransactionService
      */
-    private $serviceTransaction;
+    private $transactionService;
 
 
     public function __construct()
     {
-        $this->serviceTransaction = app(TransactionService::class);
+        $this->transactionService = app(TransactionService::class);
     }
 
     /**
@@ -71,11 +71,11 @@ class OfflineSubscription implements PaymentMethod
         }, ['currency' => null, 'total' => 0]);
 
         $meta = [
-            'id' => $this->serviceTransaction->generateSessionId(),
+            'id' => $this->transactionService->generateSessionId(),
             'customer' => $provider->customer_id,
             'currency' => $result['currency'],
             'amount_total' => $result['total'],
-            'payment_intent' => $this->serviceTransaction->generateIntent(),
+            'payment_intent' => $this->transactionService->generateIntent(),
             'metadata' => [
                 'user_id' => $provider->user->id,
                 'transaction_code' => $data['transaction_code'],
@@ -137,7 +137,7 @@ class OfflineSubscription implements PaymentMethod
         $response["status"] = config('billing.status.successful.name');
         $response["receipt_url"] = route('transaction.checkout.success') . "?code={$response['metadata']['transaction_code']}";
 
-        $this->serviceTransaction->HandledSuccessfullyPayment($response, 'succeed');
+        $this->transactionService->HandledSuccessfullyPayment($response, 'succeed');
     }
 
     /**
@@ -189,19 +189,27 @@ class OfflineSubscription implements PaymentMethod
     }
 
     /**
-     * Summary of refund 
+     * Refund transaction
      * @param array $transaction
-     * @return void
+     * @return array
      */
     public function refund(array $transaction)
     {
-        if (
-            !auth()->user()->hasAccess([
-                'administrator:transactions:full',
-                'administrator:transactions:update'
-            ])
-        ) {
-            throw new ReportError(__("You don’t have permission to perform this action"), 403);
-        }
+        $refund = [
+            'payment_method' => $transaction['payment_method_id'],
+            'payment_intent' => $transaction['payment_intent_id'],
+            'amount' => $transaction['refund']['amount'],
+            'currency' => $transaction['refund']['currency'],
+            'receipt_url' => '',
+            'metadata' => [
+                'transaction_code' => $this->transactionService->generateTransactionCode(),
+                'user_id' => $transaction['user']['id'],
+                'method' => config('billing.methods.offline.key'),
+                'type' => 'refund',
+                'refund_id' => $transaction['refund']['id'],
+            ],
+        ];
+
+        return $refund;
     }
 }

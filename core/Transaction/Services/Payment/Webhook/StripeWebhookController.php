@@ -110,7 +110,7 @@ class StripeWebhookController extends Controller
                 SuccessfullyPaymentJob::dispatch($metadata, 'succeed');
                 break;
 
-            case "charge.refunded":
+            case "charge.refund.updated": 
                 SuccessfullyRefundJob::dispatch($metadata);
                 break;
 

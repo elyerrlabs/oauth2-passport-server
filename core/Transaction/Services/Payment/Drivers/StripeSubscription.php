@@ -240,12 +240,12 @@ class StripeSubscription implements PaymentMethod
     /**
      * Transaction refund
      * @param array $transaction
-     * @return \Stripe\Refund
+     * @return array
      */
     public function refund(array $transaction)
     {
         //Generate a new payment intent to renew package
-        return StripeRefund::create([
+        $refund = StripeRefund::create([
             'payment_intent' => $transaction['payment_intent_id'],
             'amount' => $transaction['refund']['amount'],
             'metadata' => [
@@ -256,5 +256,7 @@ class StripeSubscription implements PaymentMethod
                 'refund_id' => $transaction['refund']['id'],
             ],
         ]);
+        
+        return $refund->toArray();
     }
 }

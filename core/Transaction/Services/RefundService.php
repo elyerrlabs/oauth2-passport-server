@@ -203,6 +203,7 @@ class RefundService
             throw new ReportError(__('Transaction code does not exists'), 404);
         }
 
+        // Retrieve the original transaction by code for the current user who's make the request
         $transaction = $this->transactionRepository->findByCodeForUser(
             $data['transaction_code'],
             auth()->user()->id
@@ -218,10 +219,13 @@ class RefundService
 
         return DB::transaction(function () use ($data, $transaction) {
 
+            // Save image in the temp directory
             $images = $this->fileService->processImage($data['evidence']);
 
+            // Set the currency for the original transaction to request refund
             $data['currency'] = $transaction->currency;
 
+            // Create new refund for the transaction original transaction
             $refund = $transaction->refund()->create([
                 'reason' => $data['reason'],
                 'description' => $data['description'],
@@ -232,6 +236,7 @@ class RefundService
                 'user_id' => $data['user_id'],
             ]);
 
+            // Set the all evidences incoming for the new refund
             $this->fileService->saveImage(
                 $refund,
                 $images,
@@ -255,6 +260,7 @@ class RefundService
     {
         return DB::transaction(function () use ($id, $data) {
 
+            // Retrieve the refund by id
             $model = $this->refundRepository->find($id);
 
             // Stop updated
@@ -262,12 +268,11 @@ class RefundService
                 throw new ReportError(__('This refund request has already been closed and cannot be modified.'), 409);
             }
 
-            $model->fill($data);
-
+            // Update status
             $model->status = $data['status'];
             $model->push();
 
-            // Dispatch job to refund to the user
+            // Dispatch job to refund to the user if it the refund is accepted 
             if ($model->status == 'refunding') {
                 ProcessRefundJob::dispatch($model->parentTransaction->code);
             }

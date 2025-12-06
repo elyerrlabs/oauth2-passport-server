@@ -25,6 +25,7 @@ namespace Core\Transaction\Services;
  */
 
 use Core\Transaction\Services\RefundService;
+use Core\Transaction\Jobs\SuccessfullyRefundJob;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use Core\Transaction\Notifications\ProcessRefundNotification;
@@ -121,7 +122,7 @@ class TransactionService
      */
     public function handledRefund()
     {
-        // find the transaction
+        // find the original transaction to refund money
         $transaction = $this->repository->findByCode($this->transaction_code);
 
         if (empty($transaction)) {
@@ -234,25 +235,28 @@ class TransactionService
      */
     public function handledSuccessfullyRefund(array $meta)
     {
-        // Search transaction
-        $transaction = $this->repository->findByCode($meta['metadata']['transaction_code']);
-        // Update transaction data
-        $transaction->payment_method_id = $meta['payment_method'];
-        $transaction->payment_intent_id = $meta['payment_intent'];
-        $transaction->response = $meta;
-        $transaction->payment_url = $meta["receipt_url"];
-        $transaction->status = config('billing.status.successful.id');
+        DB::transaction(function () use ($meta) {
 
-        $transaction->push();
+            // Search transaction
+            $transaction = $this->repository->findByCode($meta['metadata']['transaction_code']);
+            // Update transaction data
+            $transaction->payment_method_id = $meta['payment_method'] ?? null;
+            $transaction->payment_intent_id = $meta['payment_intent'] ?? null;
+            $transaction->response = $meta;
+            $transaction->payment_url = $meta["receipt_url"] ?? null;
+            $transaction->status = config('billing.status.successful.id');
 
-        // update status refund to completed
-        $this->refundService->updateStatus($transaction->refund->id, [
-            'status' => 'completed'
-        ]);
+            $transaction->push();
+            Log::info("transaction ", $transaction->toArray());
+            // update status refund to completed
+            $this->refundService->updateStatus($transaction->transactionable->id, [
+                'status' => 'completed'
+            ]);
 
-        // Send user notification
-        $this->userRepository->find($transaction->user_id)
-            ->notify(new SuccessfullyRefundNotification($transaction->toArray()));
+            // Send user notification
+            $this->userRepository->find($transaction->user_id)
+                ->notify(new SuccessfullyRefundNotification($transaction->toArray()));
+        });
     }
 
     /**
@@ -404,6 +408,7 @@ class TransactionService
     {
         $query = $this->repository->query();
 
+        $query->orderByDesc("updated_at");
         $query->where('user_id', auth()->user()->id);
 
         if ($request->filled('code')) {
@@ -685,30 +690,41 @@ class TransactionService
 
     /**
      * Generate a new transaction for refund
-     * @param mixed $refund
+     * @param array $refund
+     * @return void
      */
-    public function generateTransactionRefund($refund)
+    public function generateTransactionRefund(array $refund)
     {
         // Find refund and create transaction
-        $this->refundService->find($refund->metadata->refund_id)
+        $this->refundService->find($refund['metadata']['refund_id'])
             ->transaction()->create([
-                    'total' => $refund->amount,
-                    'currency' => $refund->currency,
-                    'type' => config("billing.types.refund.id"),
+                    'total' => $refund['amount'],
+                    'currency' => $refund['currency'],
+                    'type' => $refund['metadata']['type'],
                     'status' => config("billing.status.processing.id"),
                     'billing_period' => config('billing.period.one_time.id'),
                     'session_id' => null,
                     'payment_url' => null,
-                    'response' => $refund->toArray(),
-                    'payment_method' => $refund->metadata->method,
-                    'payment_intent_id' => $refund->payment_intent,
-                    'code' => $refund->metadata->transaction_code,
-                    'user_id' => $refund->metadata->user_id
+                    'response' => $refund,
+                    'payment_method' => $refund['metadata']['method'],
+                    'payment_intent_id' => $refund['payment_intent'],
+                    'code' => $refund['metadata']['transaction_code'],
+                    'user_id' => $refund['metadata']['user_id']
                 ]);
 
         // Notification to the user about the process
-        $this->userRepository->find($refund->metadata->user_id)
-            ->notify(new ProcessRefundNotification($refund->metadata->transaction_code));
+        $this->userRepository->find($refund['metadata']['user_id'])
+            ->notify(new ProcessRefundNotification($refund['metadata']['transaction_code']));
+
+
+        // For offline payments, the refund is approved immediately because the customer 
+        // is physically present and has already provided the required evidence. Since 
+        // there is no external provider or webhook to validate the refund, and the 
+        // money exchange is handled by mutual agreement, no additional confirmation 
+        // signal is required. Therefore, we mark the refund as successful right away.
+        if ($refund['metadata']['method'] == config('billing.methods.offline.key')) {
+            SuccessfullyRefundJob::dispatch($refund);
+        }
     }
 
     /**
