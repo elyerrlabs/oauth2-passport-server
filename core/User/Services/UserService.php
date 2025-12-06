@@ -206,7 +206,7 @@ class UserService
             "city" => $data['city'] ?? null,
             "address" => $data['address'] ?? null,
             "birthday" => $data['birthday'] ?? null,
-            "lang" => $data['lang'] ?? null,
+            "lang" => $data['lang'] ?? 'en',
         ]);
 
         // Update cache
