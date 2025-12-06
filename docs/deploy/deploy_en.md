@@ -185,7 +185,7 @@ php artisan passport:keys --force
     - `payment_intent.payment_failed`
     - `checkout.session.expired`
     - `charge.succeeded`
-    - `charge.refunded`
+    - `charge.refund.updated`
 
 ### Offline Payment
 
