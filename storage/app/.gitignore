@@ -3,3 +3,4 @@
 !backups/
 !.gitignore
 !.dockerignore
+!upload
