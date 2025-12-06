@@ -206,7 +206,7 @@ if (!function_exists('setLanguage')) {
      * @param string $locale
      * @return Illuminate\Http\JsonResponse
      */
-    function setLanguage(string $locale = null)
+    function setLanguage(string $locale = '')
     {
         $lang = $locale ?? substr(request()->header('Accept-Language'), 0, 2);
 
