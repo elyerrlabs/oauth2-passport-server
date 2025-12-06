@@ -38,7 +38,7 @@ class VerifyDemoUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->email == config("system.demo.email") && !$request->isMethod('get')) {
+        if (auth()->check() && config("system.demo.enabled") && auth()->user()->email == config("system.demo.email") && !$request->isMethod('get')) {
 
             throw new ReportError(
                 __("You do not have the required permissions. It seems you are logged in as a demo user."),
