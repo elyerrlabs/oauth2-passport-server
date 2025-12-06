@@ -80,6 +80,19 @@ class RegisterClientController extends WebController
 
         $user = $this->userService->registerCustomer($request->toArray());
 
+        // Email verification settings
+        if (!config('system.registration.email.verification', false)) {
+
+            // Auto login
+            auth()->login($user);   
+
+            // Redirect to the user profile
+            return redirect()->route('user.profile')->with(
+                'status',
+                __('Your account has been registered successfully')
+            );
+        }
+
         $user->notify(new MemberCreatedAccount());
 
         return redirect()->route('login')->with(

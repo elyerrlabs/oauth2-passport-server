@@ -585,6 +585,7 @@ class UserService
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
                 'birthday' => $data['birthday'] ?? null,
+                'verified_at' => config('system.registration.email.verification', false) ? null : now(), // if it the email verification is true, so the field is null otherwise is now()
                 'accept_terms' => $data['accept_terms'],
                 'accept_cookies' => $data['accept_cookies']
             ]);

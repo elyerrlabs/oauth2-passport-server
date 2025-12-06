@@ -6,7 +6,7 @@
         <!-- Header Section -->
         <div class="w-full lg:w-1/4 sticky top-4">
             <div
-                class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 text-white p-5 rounded-2xl shadow-lg">
+                class="bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 text-white p-5 rounded-2xl shadow-lg">
                 <div class="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mb-4">
                     <i class="mdi mdi-shield-account text-2xl"></i>
                 </div>
@@ -114,7 +114,7 @@
                         <i class="mdi mdi-account-clock text-blue-600 dark:text-blue-400 text-xl"></i>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                        {{ __('Age Verification') }}
+                        {{ __('Registration settings') }}
                     </h3>
                 </div>
 
@@ -137,6 +137,31 @@
                                     <option value="1" {{ config('system.birthday.active') ? 'selected' : '' }}>
                                         {{ __('Enabled') }}</option>
                                     <option value="0" {{ !config('system.birthday.active') ? 'selected' : '' }}>
+                                        {{ __('Disabled') }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <div
+                            class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors duration-300">
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">
+                                    {{ __('Email verification') }}
+                                </label>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ __('Require users to verify their email address during registration') }}
+                                </p>
+                            </div>
+                            <div class="ml-4">
+                                <select name="system[registration][email][verification]"
+                                    class="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors duration-300">
+                                    <option value="1"
+                                        {{ config('system.registration.email.verification') ? 'selected' : '' }}>
+                                        {{ __('Enabled') }}</option>
+                                    <option value="0"
+                                        {{ !config('system.registration.email.verification') ? 'selected' : '' }}>
                                         {{ __('Disabled') }}</option>
                                 </select>
                             </div>
@@ -171,7 +196,7 @@
                 <!-- Header -->
                 <div class="flex items-center mb-6">
                     <div
-                        class="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 rounded-xl mr-3">
+                        class="flex items-center justify-center w-12 h-12 bg-linear-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 rounded-xl mr-3">
                         <i class="mdi mdi-monitor-eye text-yellow-600 dark:text-yellow-400 text-2xl"></i>
                     </div>
                     <div>

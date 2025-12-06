@@ -9,7 +9,7 @@
     <aside id="sidebar"
         class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-md overflow-y-auto z-40 transform transition-transform duration-300 lg:translate-x-0 -translate-x-full">
 
-        <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center bg-white justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                 <i class="mdi mdi-cog-outline text-blue-600 dark:text-blue-400"></i>
                 {{ __('Settings') }}
@@ -64,7 +64,7 @@
 
         <!-- HEADER -->
         <nav
-            class="bg-gray-25 dark:bg-gray-800 text-gray-800 dark:text-white py-4 shadow flex justify-between items-center px-6 sticky top-0 z-30">
+            class="bg-white dark:bg-gray-800 text-gray-800 dark:text-white py-4 shadow flex justify-between items-center px-6 sticky top-0 z-30">
             <div class="flex items-center gap-3">
                 <button id="open-sidebar" class="lg:hidden text-white hover:text-blue-200 focus:outline-none">
                     <i class="mdi mdi-menu text-2xl"></i>
