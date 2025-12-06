@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-layout>
         <template #aside>
             <!-- Dashboards Section -->
-            <div class="mb-6">
+            <div class="mb-6" v-if="admin_dashboard.length">
                 <h3
                     class="text-xs font-semibold text-gray-500 flex items-center dark:text-gray-400 uppercase tracking-wider mb-3"
                 >

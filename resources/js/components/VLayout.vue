@@ -48,7 +48,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <!-- Botón Home -->
                     <button
                         @click="open($page.props.user_dashboard)"
-                        class="w-11 h-11 lg:w-12 lg:h-12 bg-blue-600 rounded-full flex items-center justify-center text-white shadow hover:bg-blue-700 transition"
+                        class="w-11 h-11 lg:w-12 lg:h-12 bg-blue-600 cursor-pointer rounded-full flex items-center justify-center text-white shadow hover:bg-blue-700 transition"
                     >
                         <span
                             :class="[
