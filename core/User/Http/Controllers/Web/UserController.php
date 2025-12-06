@@ -58,7 +58,7 @@ class UserController extends WebController
     public function profile()
     {
         return Inertia::render("Core/User/Web/Information", [
-            'route' => route('user.update'),
+            'route' => route('user.profile'),
         ]);
     }
 
@@ -71,7 +71,7 @@ class UserController extends WebController
     {
         $this->userService->update(auth()->user()->id, $request->toArray());
 
-        return redirect()->back();
+        return redirect()->route('user.profile');
     }
 
     /**
@@ -92,6 +92,6 @@ class UserController extends WebController
     {
         $this->userService->updatePassword(auth()->user()->id, $request->toArray());
 
-        return redirect()->back();
+        return redirect()->route('user.password');
     }
 }

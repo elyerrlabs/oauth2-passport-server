@@ -106,7 +106,7 @@ class CodeController extends WebController
     {
         $this->authService->generateNewToken2FA($request);
 
-        return redirect()->back();
+        return redirect()->route('user.2fa.request');
     }
 
     /**
@@ -118,6 +118,6 @@ class CodeController extends WebController
     {
         $user = $this->authService->enabledOrDisabled($request);
 
-        return redirect()->back();
+        return redirect()->route('user.2fa.request');
     }
 }
