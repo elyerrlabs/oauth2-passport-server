@@ -3822,5 +3822,22 @@
   "characters": "caracteres",
   "Admin apps": "Aplicaciones administrativas",
   "Manage your admin apps": "Administra tus applicaciones administrativas",
-  "Refunds": "Reembolsos"
+  "Refunds": "Reembolsos",
+  "Original Transaction": "Transacción Original",
+  "Refund Transaction": "Transacción de Reembolso",
+  "Refund Transaction ID": "ID de Transacción de Reembolso",
+  "From original amount of": "Del monto original de",
+  "Refund Details": "Detalles del Reembolso",
+  "Review": "Revisión",
+  "Waiting": "Esperando",
+  "payment": "pago",
+  "refund": "reembolso",
+  "offline": "fuera de línea",
+  "card": "tarjeta",
+  "bank_transfer": "transferencia bancaria",
+  "paypal": "PayPal",
+  "stripe": "Stripe",
+  "pdf": "PDF",
+  "image": "imagen",
+  "document": "documento"
 }
