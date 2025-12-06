@@ -3839,5 +3839,9 @@
   "stripe": "Stripe",
   "pdf": "PDF",
   "image": "imagen",
-  "document": "documento"
+  "document": "documento",
+  "Registration settings": "Configuracion de registro",
+  "Email verification": "Verificación de correo electrónico",
+  "Your account has been registered successfully": "Tu cuenta ha sido registrada exitosamente",
+  "Require users to verify their email address during registration": "Requerir que los usuarios verifiquen su correo electrónico durante el registro"
 }
