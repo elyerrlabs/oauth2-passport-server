@@ -47,7 +47,7 @@ class SecureHeaders
         // Enabled or disable csp policies
         if (config('system.csp_enabled', true)) {
 
-            $response->headers->set("Referrer-Policy", "no-referrer");
+            $response->headers->set("Referrer-Policy", "same-origin");
             $response->headers->set("X-Content-Type-Options", "nosniff");
             $response->headers->set("X-Frame-Options", "DENY");
             $response->headers->set("Permissions-Policy", "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), speaker=(self), display-capture=()");
