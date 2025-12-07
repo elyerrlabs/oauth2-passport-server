@@ -26,10 +26,13 @@ namespace Core\Transaction\Transformer\User;
 
 use App\Transformers\File\FilePrivateTransformer;
 use Core\Transaction\Model\Refund;
+use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class UserRefundTransformer extends TransformerAbstract
 {
+    use Asset;
+
     public function transform(Refund $refund)
     {
         return [
@@ -42,6 +45,8 @@ class UserRefundTransformer extends TransformerAbstract
             'status' => $refund->status, //'pending', 'under_review', 'approved', 'waiting_for_return','processing','completed','rejected','canceled'
             'appeal' => fractal($refund->children, static::class)->toArray()['data'] ?? [],
             'files' => fractal($refund->files, new FilePrivateTransformer($refund->id))->toArray()['data'] ?? [],
+            'created' => $this->format_date($refund->created_at),
+            'updated' => $this->format_date($refund->updated_at),
             'links' => [
                 'index' => route('api.transaction.users.refunds.index'),
                 'store' => route('api.transaction.users.refunds.store'),

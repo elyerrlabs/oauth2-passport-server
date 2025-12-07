@@ -117,7 +117,7 @@
                                 value="{{ config('billing.renew.grace_period_days') }}" min="0"
                                 class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 transition-colors duration-300">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-400 dark:text-gray-500">days</span>
+                                <span class="text-gray-400 dark:text-gray-500">{{ __('days') }}</span>
                             </div>
                         </div>
                         <small class="block mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -125,6 +125,26 @@
                             {{ __('Days after expiration when renewal is still possible') }}
                         </small>
                     </div>
+
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {{ __('Grace Period to Refund') }}
+                        </label>
+                        <div class="relative">
+                            <input type="number" name="billing[refund][grace_period_days]"
+                                value="{{ config('billing.refund.grace_period_days', 60) }}" min="0"
+                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 transition-colors duration-300">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-400 dark:text-gray-500">{{ __('days') }}</span>
+                            </div>
+                        </div>
+                        <small class="block mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            <i class="mdi mdi-information-outline mr-1"></i>
+                            {{ __('Days after creation when refund is still possible') }}
+                        </small>
+                    </div>
+
                 </div>
             </div>
 

@@ -213,6 +213,12 @@ class RefundService
             throw new ReportError(__('No transaction found for this refund request.'), 404);
         }
 
+        $last_day = $transaction->created_at->addDays(config('billing.refund.grace_period_days', 60));
+
+        if (now() > $last_day) {
+            throw new ReportError(__("Refund Failed: The request cannot be processed because the refund date has already passed. Please contact support for further assistance."), 400);
+        }
+
         if (!empty($transaction->refund)) {
             throw new ReportError(__('A refund has already been issued for this transaction.'), 409);
         }
@@ -250,7 +256,7 @@ class RefundService
     }
 
     /**
-     * 
+     *
      * @param string $id
      * @param array $data
      * @throws \Elyerr\ApiResponse\Exceptions\ReportError
@@ -272,7 +278,7 @@ class RefundService
             $model->status = $data['status'];
             $model->push();
 
-            // Dispatch job to refund to the user if it the refund is accepted 
+            // Dispatch job to refund to the user if it the refund is accepted
             if ($model->status == 'refunding') {
                 ProcessRefundJob::dispatch($model->parentTransaction->code);
             }

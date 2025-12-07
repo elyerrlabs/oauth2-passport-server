@@ -73,10 +73,39 @@ class UserTransactionTransformer extends TransformerAbstract
             'refund' => fractal($transaction->refund, UserRefundTransformer::class)->toArray()['data'] ?? [],
             'created' => $this->format_date($transaction->created_at),
             'updated' => $this->format_date($transaction->updated_at),
+            'refund_expiration_date' => $this->getExpirationDate($transaction),
+            'refund_expired' => $this->hasExpired($transaction),
             'links' => [
                 'activate' => route('transaction.transactions.activate', ['transaction' => $transaction->id]),
                 'cancel' => route('transaction.subscriptions.cancel', ['transaction_id' => $transaction->id])
             ]
         ];
+    }
+
+
+    /**
+     * Expiration date
+     * @param mixed $transaction
+     * @return string
+     */
+    public function getExpirationDate($transaction)
+    {
+        return $this->format_date(
+            $transaction->created_at->addDays(
+                config('billing.refund.grace_period_days', 60)
+            )
+        );
+    }
+
+    /**
+     * Verify is it the expiration of transaction
+     * @param mixed $transaction
+     * @return bool
+     */
+    public function hasExpired($transaction)
+    {
+
+        $last_day = $transaction->created_at->addDays(config('billing.refund.grace_period_days', 60));
+        return now() > $last_day ? true : false;
     }
 }
