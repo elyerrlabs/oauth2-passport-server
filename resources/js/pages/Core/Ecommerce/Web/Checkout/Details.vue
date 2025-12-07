@@ -64,6 +64,172 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Order Summary -->
                 <div class="p-4 sm:p-6">
+                    <!-- Refund Expiration Info - Prominent Display -->
+                    <div
+                        v-if="data.transaction?.status === 'successful'"
+                        class="mb-6"
+                    >
+                        <div
+                            class="rounded-xl p-4 border-2"
+                            :class="
+                                getRefundExpirationClass(
+                                    data.transaction?.refund_expired
+                                )
+                            "
+                        >
+                            <div
+                                class="flex flex-col sm:flex-row sm:items-center gap-4"
+                            >
+                                <div class="flex items-center space-x-3 flex-1">
+                                    <div
+                                        class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full"
+                                        :class="
+                                            getRefundExpirationIconClass(
+                                                data.transaction?.refund_expired
+                                            )
+                                        "
+                                    >
+                                        <i
+                                            :class="
+                                                getRefundExpirationIcon(
+                                                    data.transaction
+                                                        ?.refund_expired
+                                                )
+                                            "
+                                        ></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3
+                                            class="font-bold text-lg mb-1"
+                                            :class="
+                                                getRefundExpirationTextClass(
+                                                    data.transaction
+                                                        ?.refund_expired
+                                                )
+                                            "
+                                        >
+                                            {{
+                                                getRefundExpirationTitle(
+                                                    data.transaction
+                                                        ?.refund_expired
+                                                )
+                                            }}
+                                        </h3>
+                                        <p
+                                            class="text-sm"
+                                            :class="
+                                                getRefundExpirationDescClass(
+                                                    data.transaction
+                                                        ?.refund_expired
+                                                )
+                                            "
+                                        >
+                                            {{
+                                                getRefundExpirationDescription(
+                                                    data.transaction
+                                                )
+                                            }}
+                                        </p>
+                                        <div
+                                            v-if="
+                                                !data.transaction
+                                                    ?.refund_expired
+                                            "
+                                            class="mt-3 space-y-2"
+                                        >
+                                            <!-- Countdown Timer -->
+                                            <div
+                                                class="flex items-center space-x-3"
+                                            >
+                                                <div
+                                                    class="flex items-center space-x-1"
+                                                >
+                                                    <i
+                                                        class="fas fa-clock text-sm"
+                                                        :class="
+                                                            getRefundExpirationIconColor(
+                                                                data.transaction
+                                                                    ?.refund_expired
+                                                            )
+                                                        "
+                                                    ></i>
+                                                    <span
+                                                        class="text-sm font-semibold"
+                                                        :class="
+                                                            getRefundExpirationTextClass(
+                                                                data.transaction
+                                                                    ?.refund_expired
+                                                            )
+                                                        "
+                                                    >
+                                                        {{
+                                                            formatTimeRemaining(
+                                                                data.transaction
+                                                                    ?.refund_expiration_date
+                                                            )
+                                                        }}
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    class="text-xs text-gray-600 dark:text-gray-400"
+                                                >
+                                                    {{ __("Expiration") }}:
+                                                    {{
+                                                        formatDate(
+                                                            data.transaction
+                                                                ?.refund_expiration_date
+                                                        )
+                                                    }}
+                                                </div>
+                                            </div>
+
+                                            <!-- Progress Bar -->
+                                            <div
+                                                class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2"
+                                            >
+                                                <div
+                                                    class="h-2 rounded-full transition-all duration-500"
+                                                    :class="
+                                                        getRefundExpirationProgressClass(
+                                                            data.transaction
+                                                                ?.refund_expired
+                                                        )
+                                                    "
+                                                    :style="{
+                                                        width:
+                                                            getRefundExpirationProgress(
+                                                                data.transaction
+                                                                    ?.refund_expiration_date
+                                                            ) + '%',
+                                                    }"
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Button -->
+                                <div
+                                    v-if="!data.transaction?.refund_expired"
+                                    class="mt-4 sm:mt-0"
+                                >
+                                    <button
+                                        @click="requestRefund(data)"
+                                        class="px-4 py-2 font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow flex items-center justify-center w-full sm:w-auto"
+                                        :class="
+                                            getRefundRequestButtonClass(
+                                                data.transaction?.refund_expired
+                                            )
+                                        "
+                                    >
+                                        <i class="fas fa-rotate-left mr-2"></i>
+                                        {{ __("Request Refund") }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div
                         class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6"
                     >
@@ -985,6 +1151,133 @@ const getFileIcon = (mimeType) => {
     if (mimeType.includes("zip") || mimeType.includes("compressed"))
         return "fas fa-file-archive";
     return "fas fa-file";
+};
+
+// New methods for refund expiration info
+const getRefundExpirationClass = (isExpired) => {
+    return isExpired
+        ? "bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/40 dark:to-gray-900/30 border-gray-300 dark:border-gray-600"
+        : "bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border-emerald-400 dark:border-emerald-700";
+};
+
+const getRefundExpirationIconClass = (isExpired) => {
+    return isExpired
+        ? "bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700"
+        : "bg-gradient-to-br from-emerald-100 to-green-100 dark:from-emerald-800 dark:to-green-800";
+};
+
+const getRefundExpirationIcon = (isExpired) => {
+    return isExpired
+        ? "fas fa-clock text-gray-600 dark:text-gray-400"
+        : "fas fa-clock-rotate-left text-emerald-600 dark:text-emerald-400";
+};
+
+const getRefundExpirationIconColor = (isExpired) => {
+    return isExpired
+        ? "text-gray-600 dark:text-gray-400"
+        : "text-emerald-600 dark:text-emerald-400";
+};
+
+const getRefundExpirationTextClass = (isExpired) => {
+    return isExpired
+        ? "text-gray-800 dark:text-gray-300"
+        : "text-emerald-800 dark:text-emerald-300";
+};
+
+const getRefundExpirationDescClass = (isExpired) => {
+    return isExpired
+        ? "text-gray-600 dark:text-gray-400"
+        : "text-emerald-700 dark:text-emerald-400";
+};
+
+const getRefundExpirationTitle = (isExpired) => {
+    return isExpired ? __("Refund Period Expired") : __("Refund Available");
+};
+
+const getRefundExpirationDescription = (transaction) => {
+    if (transaction?.refund_expired) {
+        return __(
+            "The refund period for this order has ended. You can no longer request a refund."
+        );
+    } else {
+        return __(
+            "You have a limited time to request a refund for this order."
+        );
+    }
+};
+
+const getRefundRequestButtonClass = (isExpired) => {
+    return isExpired
+        ? "bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-not-allowed opacity-60"
+        : "bg-emerald-500 hover:bg-emerald-600 text-white hover:shadow-md";
+};
+
+const getRefundExpirationProgressClass = (isExpired) => {
+    return isExpired
+        ? "bg-gray-400 dark:bg-gray-600"
+        : "bg-gradient-to-r from-emerald-400 to-green-400 dark:from-emerald-500 dark:to-green-500";
+};
+
+const getRefundExpirationProgress = (expirationDate) => {
+    if (!expirationDate) return 100;
+
+    const now = new Date();
+    const expiration = new Date(expirationDate);
+    const created = new Date(data.value.transaction?.created);
+
+    const totalDuration = expiration - created;
+    const elapsed = now - created;
+
+    if (elapsed <= 0) return 0;
+    if (elapsed >= totalDuration) return 100;
+
+    return Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+};
+
+const formatTimeRemaining = (expirationDate) => {
+    if (!expirationDate) return "";
+
+    const now = new Date();
+    const expiration = new Date(expirationDate);
+    const diffMs = expiration - now;
+
+    if (diffMs <= 0) return __("Expired");
+
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 0) return __("Expires today");
+    if (diffDays === 1) return __("1 day remaining");
+    if (diffDays <= 7) return __(`${diffDays} days remaining`);
+    if (diffDays <= 30) return __(`${Math.ceil(diffDays / 7)} weeks remaining`);
+
+    const diffMonths = Math.ceil(diffDays / 30);
+    return __(`${diffMonths} months remaining`);
+};
+
+const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+};
+
+// Refund request action
+const requestRefund = (order) => {
+    if (order?.transaction?.refund_expired) {
+        if (typeof $notify !== "undefined") {
+            $notify.warning(__("Refund period has expired for this order"));
+        }
+        return;
+    }
+
+    if (typeof $notify !== "undefined") {
+        $notify.info(__("Refund request feature will be implemented soon"));
+    }
 };
 
 const openFile = (file) => {
