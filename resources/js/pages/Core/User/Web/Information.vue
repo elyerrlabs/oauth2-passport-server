@@ -380,7 +380,7 @@ const getDialCode = async () => {
     }
 };
 
-const update = async () => {
+const update = () => {
     loading.value = true;
 
     form.put(page.props.route, {
