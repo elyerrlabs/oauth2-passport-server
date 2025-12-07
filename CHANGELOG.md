@@ -22,11 +22,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
-## 🛠️ Unreleased
+## 🛠️ v4.0.4
 
 ### Added
 
 -   New File Service to centralize and manage all file operations.
+-   Support to manage refunds
+-   Service refunds added
+-   New role (review) added
+-   Add Auto login support after account creation
+-   Updated settings (Payment, Security)
 
 ### Improved
 
@@ -37,6 +42,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 -   Middleware restriction to block non-GET requests for demo users.
 -   Fixed language auto-detection for demo users
+-   Fixed Middleware to check demo user
+-   Fixed Content Security Policy(CSP) 
 -   updated eCommerce components
 -   Fixed menu ordering inconsistencies.
 -   Moved Manage Partner into the Administrator menu.
