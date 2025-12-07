@@ -130,7 +130,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             {{
                                                 option
                                                     ? `${option.emoji} - ${option.name_en}`
-                                                    : __("Select dial code")
+                                                    : __("Choose your country")
                                             }}
                                         </span>
                                     </template>
