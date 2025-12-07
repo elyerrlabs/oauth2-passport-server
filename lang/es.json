@@ -3843,5 +3843,7 @@
   "Registration settings": "Configuracion de registro",
   "Email verification": "Verificación de correo electrónico",
   "Your account has been registered successfully": "Tu cuenta ha sido registrada exitosamente",
-  "Require users to verify their email address during registration": "Requerir que los usuarios verifiquen su correo electrónico durante el registro"
+  "Require users to verify their email address during registration": "Requerir que los usuarios verifiquen su correo electrónico durante el registro",
+  "Days after creation when refund is still possible": "Días después de la creación cuando el reembolso aún es posible",
+  "Refund Failed: The request cannot be processed because the refund date has already passed. Please contact support for further assistance": "Reembolso fallido: No se puede procesar la solicitud porque la fecha del reembolso ya ha pasado. Por favor, contacta al soporte para obtener más ayuda."
 }
