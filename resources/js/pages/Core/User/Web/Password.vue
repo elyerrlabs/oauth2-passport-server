@@ -635,7 +635,7 @@ const isFormValid = computed(
         passwordStrength.value >= 0.4
 );
 
-async function update() {
+function update() {
     loading.value = true;
 
     form.put(page.props.user.links.change_password, {

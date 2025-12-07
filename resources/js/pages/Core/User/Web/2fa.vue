@@ -640,7 +640,7 @@ const requestCode = () => {
     });
 };
 
-async function activateFactor() {
+function activateFactor() {
     loading.value = true;
 
     form.post(user.value.links.f2a_activate, {
