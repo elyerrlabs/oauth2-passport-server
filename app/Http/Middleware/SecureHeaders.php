@@ -114,11 +114,11 @@ class SecureHeaders
     {
         $policies = [
             "base-uri 'self'",
-            "script-src 'self' 'unsafe-eval'",
-            "script-src-elem 'self' 'nonce-{$nonce}' 'sha256-jHRymoWpX/G1UN93sLvOZ0jns2+9joiABzpMmVTyQaM=' 'sha256-HCGvZvnn9Ow5Fmsy1okiNoxHy4LYqfXT0YizvjxFXYQ=' 'sha256-4/KjDz6RspshOkVOL67SRn3OR0Zk4z9UxkFJsd+E4Vw='",
+            "script-src 'self' 'nonce-{$nonce}'",
+            "script-src-elem 'self' 'nonce-{$nonce}'",
             "script-src-attr 'self' 'nonce-{$nonce}'",
-            // "style-src 'self'",
-            // "style-src-elem 'self' 'nonce-{$nonce}'",
+            "style-src 'self'",
+            "style-src-elem 'self' 'nonce-{$nonce}'",
             "style-src-attr 'self' 'nonce-{$nonce}'",
             "media-src 'self'",
             "object-src 'self'",

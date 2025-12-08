@@ -22,6 +22,12 @@
       "role": "Owner"
     }
   ],
+  "repositories": [
+    {
+      "type": "github",
+      "url": "https://github.com/elyerr/horizon.git"
+    }
+  ],
   "require": {
     "php": "^8.2.0",
     "elyerr/api-response": "^1.0",
@@ -29,7 +35,7 @@
     "inertiajs/inertia-laravel": "^2.0",
     "jeremy379/laravel-openid-connect": "^3.0",
     "laravel/framework": "^12.0",
-    "laravel/horizon": "^5.39",
+    "laravel/horizon": "main-dev",
     "laravel/passport": "13.0",
     "laravel/tinker": "^2.7",
     "predis/predis": "^2.0",
