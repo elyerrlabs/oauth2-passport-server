@@ -22,6 +22,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## 🛠️ v4.0.5
+
+-   switch to custom Horizon fork with full CSP support
+
 ## 🛠️ v4.0.4
 
 ### Added
@@ -43,7 +47,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -   Middleware restriction to block non-GET requests for demo users.
 -   Fixed language auto-detection for demo users
 -   Fixed Middleware to check demo user
--   Fixed Content Security Policy(CSP) 
+-   Fixed Content Security Policy(CSP)
 -   updated eCommerce components
 -   Fixed menu ordering inconsistencies.
 -   Moved Manage Partner into the Administrator menu.
