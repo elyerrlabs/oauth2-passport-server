@@ -79,6 +79,7 @@ class AuthTransformer extends TransformerAbstract
             'created' => $this->format_date($user->created_at),
             'updated' => $this->format_date($user->updated_at),
             'disabled' => $this->format_date($user->deleted_at),
+            'last_connected' => $this->format_date($user->last_connected),
             'links' => [
                 'update' => route('user.update'),
                 'change_password' => route('user.change.password'),
