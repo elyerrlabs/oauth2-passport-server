@@ -36,8 +36,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 >
                                     <span
                                         class="text-white font-semibold text-sm"
-                                        >{{ userInitials }}</span
                                     >
+                                        {{ userInitials }}
+                                    </span>
                                 </div>
                                 <div
                                     class="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white dark:border-slate-900"
@@ -67,7 +68,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-sm font-semibold text-slate-700 dark:text-slate-300 text-center"
                                 >
-                                    {{ userRoutes.length }}
+                                    {{ $page.props.user_rotes?.length }}
                                 </div>
                                 <div
                                     class="text-xs text-slate-500 dark:text-slate-400"
@@ -233,7 +234,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3"
                             >
                                 <div
-                                    v-for="(setting, index) in $page.props
+                                    v-for="(setting, index) in page.props
                                         .admin_routes"
                                     :key="index"
                                     class="group bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:border-emerald-300 dark:hover:border-emerald-400 hover:shadow-sm transition-all duration-200"
@@ -249,9 +250,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             >
                                                 <i
                                                     class="mdi text-white text-xl"
-                                                    :class="
-                                                        getSettingIcon(setting)
-                                                    "
+                                                    :class="setting.icon"
                                                 ></i>
                                             </div>
                                             <button
@@ -319,8 +318,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3"
                             >
                                 <div
-                                    v-for="(setting, index) in userSettings"
-                                    :key="'setting-' + index"
+                                    v-for="(setting, index) in $page.props
+                                        .user_settings"
+                                    :key="index"
                                     class="group bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:border-emerald-300 dark:hover:border-emerald-400 hover:shadow-sm transition-all duration-200"
                                 >
                                     <div
@@ -334,9 +334,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             >
                                                 <i
                                                     class="mdi text-white text-xl"
-                                                    :class="
-                                                        getSettingIcon(setting)
-                                                    "
+                                                    :class="setting.icon"
                                                 ></i>
                                             </div>
                                             <button
@@ -392,7 +390,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <p
                                         class="text-sm font-semibold text-slate-700 dark:text-slate-300"
                                     >
-                                        {{ userRoutes.length }}
+                                        {{ $page.props.user_routes.length }}
                                     </p>
                                 </div>
                                 <i
@@ -413,7 +411,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <p
                                         class="text-sm font-semibold text-slate-700 dark:text-slate-300"
                                     >
-                                        {{ userSettings.length }}
+                                        {{ $page.props.user_settings.length }}
                                     </p>
                                 </div>
                                 <i
@@ -434,7 +432,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <p
                                         class="text-sm font-semibold text-slate-700 dark:text-slate-300"
                                     >
-                                        {{ formatLastLogin() }}
+                                        {{ user.last_connected }}
                                     </p>
                                 </div>
                                 <i
@@ -470,130 +468,26 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-account-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
 import VAccountLayout from "@/components/VAccountLayout.vue";
-export default {
-    components: {
-        VAccountLayout,
-    },
-    data() {
-        return {
-            refreshing: false,
-            searchTerm: "",
-        };
-    },
+import { usePage } from "@inertiajs/vue3";
 
-    computed: {
-        user() {
-            return this.$page.props.user;
-        },
+const page = usePage();
+const searchTerm = ref("");
+const user = ref(page.props.user);
 
-        userInitials() {
-            return `${this.user.name?.[0] || ""}${
-                this.user.last_name?.[0] || ""
-            }`.toUpperCase();
-        },
+const userInitials = computed(() => {
+    return `${user.value.name?.[0] || ""}${
+        user.value.last_name?.[0] || ""
+    }`.toUpperCase();
+});
 
-        userRoutes() {
-            return Object.values(this.$page.props.user_routes || {}).sort(
-                (a, b) => a.name.localeCompare(b.name)
-            );
-        },
+const filteredApplications = computed(() => {
+    if (!searchTerm.value) return page.props.user_routes;
 
-        userSettings() {
-            return Object.values(this.$page.props.user_settings || {}).sort(
-                (a, b) => a.name.localeCompare(b.name)
-            );
-        },
-
-        filteredApplications() {
-            if (!this.searchTerm) return this.userRoutes;
-
-            const searchLower = this.searchTerm.toLowerCase();
-            return this.userRoutes.filter(
-                (app) =>
-                    app.name.toLowerCase().includes(searchLower) ||
-                    (app.description &&
-                        app.description.toLowerCase().includes(searchLower))
-            );
-        },
-    },
-
-    methods: {
-        getAppIcon(app) {
-            const iconMap = {
-                dashboard: "mdi-view-dashboard-outline",
-                admin: "mdi-shield-account-outline",
-                reports: "mdi-chart-bar",
-                analytics: "mdi-chart-line",
-                settings: "mdi-cog-outline",
-                users: "mdi-account-group-outline",
-                files: "mdi-folder-outline",
-                messages: "mdi-email-outline",
-                calendar: "mdi-calendar-outline",
-                tasks: "mdi-checkbox-marked-outline",
-                finance: "mdi-cash-multiple",
-                inventory: "mdi-package-variant",
-                crm: "mdi-account-tie-outline",
-                hr: "mdi-briefcase-outline",
-                projects: "mdi-briefcase-outline",
-                support: "mdi-headset",
-                marketing: "mdi-bullhorn-outline",
-                sales: "mdi-trending-up",
-                default: "mdi-application-outline",
-            };
-
-            const appName = app.name?.toLowerCase() || "";
-            const appIcon = app.icon || "";
-
-            for (const [key, icon] of Object.entries(iconMap)) {
-                if (appName.includes(key) || appIcon.includes(key)) {
-                    return icon;
-                }
-            }
-
-            return iconMap.default;
-        },
-
-        getSettingIcon(setting) {
-            const iconMap = {
-                profile: "mdi-account-outline",
-                password: "mdi-lock-outline",
-                security: "mdi-shield-account-outline",
-                notifications: "mdi-bell-outline",
-                privacy: "mdi-eye-off-outline",
-                preferences: "mdi-tune",
-                billing: "mdi-credit-card-outline",
-                subscription: "mdi-star-outline",
-                integrations: "mdi-puzzle-outline",
-                api: "mdi-key-chain",
-                team: "mdi-account-group-outline",
-                appearance: "mdi-palette-outline",
-                language: "mdi-translate",
-                backup: "mdi-cloud-upload-outline",
-                default: "mdi-cog-outline",
-            };
-
-            const settingName = setting.name?.toLowerCase() || "";
-            const settingIcon = setting.icon || "";
-
-            for (const [key, icon] of Object.entries(iconMap)) {
-                if (settingName.includes(key) || settingIcon.includes(key)) {
-                    return icon;
-                }
-            }
-
-            return iconMap.default;
-        },
-
-        openApplication(app) {
-            window.location.href = app.route;
-        },
-
-        formatLastLogin() {
-            return "Today";
-        },
-    },
-};
+    return page.props.user_routes.filter((app) =>
+        app.name.toLowerCase().includes(searchTerm.value.toLowerCase())
+    );
+});
 </script>
- 

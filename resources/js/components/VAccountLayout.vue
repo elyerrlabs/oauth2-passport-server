@@ -23,7 +23,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     <v-layout>
         <template #aside>
             <!-- Dashboards Section -->
-            <div class="mb-6" v-if="admin_dashboard.length">
+            <div class="mb-6" v-if="$page.props.admin_dashboard?.length">
                 <h3
                     class="text-xs font-semibold text-gray-500 flex items-center dark:text-gray-400 uppercase tracking-wider mb-3"
                 >
@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </h3>
                 <div class="space-y-1">
                     <button
-                        v-for="(item, index) in admin_dashboard"
+                        v-for="(item, index) in $page.props.admin_dashboard"
                         :key="index"
                         @click="open(item)"
                         class="group w-full flex items-center cursor-pointer gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50"
@@ -61,7 +61,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
             <!-- Developers Section -->
             <div
-                v-if="developers.show"
+                v-if="$page.props.developers.show"
                 class="pt-2 border-t border-gray-200 dark:border-gray-700"
             >
                 <h3
@@ -70,11 +70,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <span
                         class="mdi mdi-application-brackets-outline text-2xl me-2"
                     ></span>
-                    {{ __(developers.name) }}
+                    {{ __($page.props.developers.name) }}
                 </h3>
                 <div class="space-y-1">
                     <button
-                        v-for="(item, index) in developers.menu"
+                        v-for="(item, index) in $page.props.developers.menu"
                         :key="index"
                         @click="open(item)"
                         class="group w-full flex items-center cursor-pointer gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50"
@@ -217,19 +217,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <script setup>
 import VLayout from "@/components/VLayout.vue";
-import { usePage, router } from "@inertiajs/vue3";
-import { ref, computed, onMounted } from "vue";
+import { usePage } from "@inertiajs/vue3";
 
 const page = usePage();
-const menus = ref([]);
-const admin_dashboard = ref([]);
-const developers = ref([]);
-
-onMounted(() => {
-    menus.value = page.props.user_routes ?? [];
-    admin_dashboard.value = page.props.admin_dashboard ?? [];
-    developers.value = page.props.developers ?? [];
-});
 
 const open = (item) => {
     window.location.href = item.route;
