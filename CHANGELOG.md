@@ -22,6 +22,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## Unreleased
+
+### Fixes
+
+-   Added support for selecting the currency in the eCommerce dashboard.
+
+### Performance & UI Improvements
+
+-   Simplified CSS rules and reduced heavy layout operations on small screens.
+-   Removed non-essential shadows, blurs, and transitions that caused frame drops on mobile.
+-   Improved responsive behavior for charts and dashboard components.
+-   Ensured smoother scrolling and faster interactions on low-end devices.
+
+### Development
+
+-   Enabled `dotenv` usage inside Vite config.
+-   `VITE_HOST` is now used to dynamically define the dev server host.
+-   Change applies exclusively to the development environment.
+
+---
+
 ## 🛠️ v4.0.5
 
 -   switch to custom Horizon fork with full CSP support
