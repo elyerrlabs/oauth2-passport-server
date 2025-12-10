@@ -48,7 +48,7 @@ class DashboardRepository
         $end = now()->format('Y-m-d');
 
         if ($request->filled('currency')) {
-            $currency = $request->currency;
+            $currency = strtolower($request->currency);
         }
 
         if ($request->filled('start')) {
@@ -76,9 +76,16 @@ class DashboardRepository
         $data['currency_symbol'] = getCurrencySymbol(strtoupper($currency));
 
         // Lower products
-        $data['products_lower_stock'] = Product::whereHas('variants', function ($query) use ($request) {
-            $query->where('stock', '<=', $request->stock);
-        })->count();
+        $data['products_lower_stock'] = Product::whereHas(
+            'variants',
+            function ($query) use ($request, $currency) {
+                $query->where('stock', '<=', $request->stock);
+
+                $query->whereHas('price', function ($query) use ($currency) {
+                    $query->where('currency', $currency);
+                });
+            }
+        )->count();
 
         // Total stock
         $data['products_stock_total'] = Variant::sum('stock');
@@ -86,13 +93,13 @@ class DashboardRepository
         // Transaction by range 
         $data['transactions_total'] = $this->formatMoney(Transaction::query()
             ->whereBetween('created_at', [$request->start, $request->end])
-            ->where('currency', $request->currency)->sum('total'));
+            ->whereRaw('LOWER(currency) = ?', [$currency])->sum('total'));
 
         // Transaction by day
         $data['transactions_today'] = $this->formatMoney(Transaction::whereBetween('created_at', [
             now()->format('Y-m-d') . ' 00:00:00',
             now()->format('Y-m-d') . ' 23:59:00',
-        ])->where('currency', $request->currency)->sum('total'));
+        ])->whereRaw('LOWER(currency) = ?', [$currency])->sum('total'));
 
         // Product pending
         $data['products_pending'] = Checkout::whereHas(
@@ -107,7 +114,12 @@ class DashboardRepository
 
         // Retrieve the 10 last checkouts
         $data['checkouts'] = Checkout::with(['user', 'lastTransaction'])
-            ->whereHas('lastTransaction')
+            ->whereHas(
+                'lastTransaction',
+                function ($query) use ($currency) {
+                    $query->whereRaw('LOWER(currency) = ?', [$currency]);
+                }
+            )
             ->limit(10)
             ->get()
             ->map(function ($item) {
@@ -165,7 +177,7 @@ class DashboardRepository
         $time = searchByDate($type);
 
         $transactions = Transaction::query();
-        $transactions->where('currency', $request->currency);
+        $transactions->whereRaw('LOWER(currency) = ?', [$request->currency]);
         $transactions->whereBetween('created_at', [$request->start, $request->end]);
 
         $transactions = $transactions->selectRaw("TO_CHAR(created_at, '{$time}') as range,  SUM(total) as total")

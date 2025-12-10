@@ -47,11 +47,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 }}
                             </p>
                         </div>
-                        <div class="flex items-center">
+                        <div class="flex items-center justify-around gap-2">
+                            <!-- Currency Select -->
+                            <div class="min-w-80">
+                                <v-select
+                                    :options="currencies"
+                                    label-key="name"
+                                    value-key="code"
+                                    v-model="search.currency"
+                                    @change="getData"
+                                />
+                            </div>
+
                             <!-- Refresh Button -->
                             <button
                                 @click="getData"
-                                class="p-2 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                                class="p-2 flex items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
                                 :title="__('Refresh data')"
                             >
                                 <svg
@@ -60,7 +71,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     viewBox="0 0 24 24"
                                 >
                                     <path
-                                        d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                                        d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 
+                   7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6
+                   s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
                                     />
                                 </svg>
                             </button>
@@ -101,12 +114,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                                 >
-                                    {{ dashboard.currency_symbol
-                                    }}{{
-                                        formatNumber(
-                                            dashboard.transactions_total
-                                        )
-                                    }}
+                                    {{ dashboard.currency_symbol }}
+                                    {{ dashboard.transactions_total }}
                                 </div>
                                 <div
                                     class="text-xs text-gray-500 dark:text-gray-400"
@@ -146,12 +155,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                                 >
-                                    {{ dashboard.currency_symbol
-                                    }}{{
-                                        formatNumber(
-                                            dashboard.transactions_today
-                                        )
-                                    }}
+                                    {{ dashboard.currency_symbol }}
+                                    {{ dashboard.transactions_today }}
                                 </div>
                                 <div
                                     class="text-xs text-gray-500 dark:text-gray-400"
@@ -191,11 +196,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                                 >
-                                    {{
-                                        formatNumber(
-                                            dashboard.products_stock_total
-                                        )
-                                    }}
+                                    {{ dashboard.products_stock_total }}
                                 </div>
                                 <div
                                     class="text-xs text-gray-500 dark:text-gray-400"
@@ -235,9 +236,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <div
                                     class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                                 >
-                                    {{
-                                        formatNumber(dashboard.products_pending)
-                                    }}
+                                    {{ dashboard.products_pending }}
                                 </div>
                                 <div
                                     class="text-xs text-gray-500 dark:text-gray-400"
@@ -488,8 +487,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         <td
                                             class="px-4 sm:px-6 py-4 text-sm text-gray-900 dark:text-white text-right"
                                         >
-                                            {{ dashboard.currency_symbol
-                                            }}{{ checkout.total }}
+                                            {{ checkout.total }}
                                         </td>
                                         <td
                                             class="px-4 sm:px-6 py-4 text-center"
@@ -579,7 +577,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="flex items-center p-4 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
                             >
                                 <div
-                                    class="flex-shrink-0 h-10 w-10 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600"
+                                    class="shrink-0 h-10 w-10 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600"
                                 >
                                     <img
                                         :src="
@@ -628,6 +626,7 @@ import { ref, onMounted } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import VAdminLayout from "../../Components/VAdminLayout.vue";
 import { usePage } from "@inertiajs/vue3";
+import VSelect from "@/components/VSelect.vue";
 
 const page = usePage();
 const apexchart = VueApexCharts;
@@ -644,6 +643,12 @@ const dashboard = ref({
     transactions: [],
     checkouts: [],
     top_products: [],
+});
+
+const currencies = ref([]);
+
+const search = ref({
+    currency: "USD",
 });
 
 const revenue = ref([]);
@@ -727,8 +732,7 @@ const todaySalesChartOptions = ref({
             dataLabels: {
                 name: { fontSize: "12px" },
                 value: {
-                    formatter: (val) =>
-                        dashboard.value.currency_symbol + formatNumber(val),
+                    formatter: (val) => dashboard.value.currency_symbol + val,
                     fontSize: "24px",
                 },
             },
@@ -743,6 +747,22 @@ const todaySalesChartSeries = ref([0]);
 // Functions
 const detectTheme = () => {
     isDark.value = document.documentElement.classList.contains("dark");
+};
+
+/**
+ * Fetch currencies from API
+ */
+const getCurrencies = async () => {
+    try {
+        const res = await $server.get(page.props.api.transactions.currencies);
+        if (res.status === 200) {
+            currencies.value = res.data.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
 };
 
 const formatNumber = (num) => {
@@ -763,7 +783,9 @@ const formatDate = (dateString) => {
 
 const getData = async () => {
     try {
-        const res = await $server.get(page.props.routes.dashboard);
+        const res = await $server.get(page.props.routes.dashboard, {
+            params: search.value,
+        });
         if (res.status == 200) {
             dashboard.value = res.data;
             checkouts.value = res.data.checkouts || [];
@@ -863,6 +885,7 @@ const viewOrder = (order) => {
 onMounted(() => {
     detectTheme();
     getData();
+    getCurrencies();
 });
 </script>
 
