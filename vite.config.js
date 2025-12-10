@@ -5,8 +5,14 @@ import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import monacoEditorPlugin from "vite-plugin-monaco-editor-esm";
 import path from "path";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default defineConfig({
+  server: {
+    host: process.env.VITE_HOST,
+    port: 5173,
+  },
   plugins: [
     tailwindcss(),
     laravel({
