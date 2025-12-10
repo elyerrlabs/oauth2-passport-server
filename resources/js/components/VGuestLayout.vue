@@ -20,23 +20,22 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div
-        class="min-h-screen bg-linear-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800"
-    >
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
         <!-- Header -->
         <header
-            class="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/60 dark:bg-gray-900/95 dark:border-gray-700/60 sticky top-0 z-50"
+            class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50"
         >
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-20">
-                    <!-- Logo y Branding -->
-                    <div class="flex items-center space-x-4">
+            <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo and Branding -->
+                    <div class="flex items-center gap-2 sm:gap-3">
                         <button
                             @click="homePage"
-                            class="group p-3 rounded-2xl bg-linear-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/30 dark:focus:ring-blue-600/30"
+                            class="p-2 sm:p-3 rounded-lg bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600"
+                            aria-label="Home"
                         >
                             <svg
-                                class="w-6 h-6 transform group-hover:scale-110 transition-transform"
+                                class="w-5 h-5 sm:w-6 sm:h-6"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -51,12 +50,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </button>
                         <div class="flex flex-col">
                             <span
-                                class="tex-md lg:text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent"
+                                class="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-white truncate"
                             >
                                 {{ $page.props.app_name }}
                             </span>
                             <span
-                                class="text-xs text-gray-500 dark:text-gray-400 font-medium"
+                                class="text-xs text-gray-500 dark:text-gray-400"
                             >
                                 {{ __("Premium Platform") }}
                             </span>
@@ -64,16 +63,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
 
                     <!-- Navigation Actions -->
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center gap-2 sm:gap-3">
                         <!-- Plan Button -->
                         <button
                             v-if="plan?.name"
                             @click="open(plan?.route)"
-                            class="group px-6 py-3 bg-linear-to-r from-emerald-500 to-green-600 dark:from-emerald-600 dark:to-green-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-emerald-600 hover:to-green-700 dark:hover:from-emerald-500 dark:hover:to-green-600 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 dark:focus:ring-emerald-600/30"
+                            class="px-3 sm:px-4 py-2 bg-green-600 dark:bg-green-700 text-white rounded-lg font-medium hover:bg-green-700 dark:hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-600 text-sm sm:text-base"
                         >
-                            <span class="flex items-center space-x-2">
+                            <span class="flex items-center gap-1 sm:gap-2">
                                 <svg
-                                    class="w-4 h-4 group-hover:animate-pulse"
+                                    class="w-3 h-3 sm:w-4 sm:h-4"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -85,38 +84,41 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         d="M13 10V3L4 14h7v7l9-11h-7z"
                                     />
                                 </svg>
-                                <span>{{ __(plan?.name) }}</span>
+                                <span
+                                    class="truncate max-w-[80px] sm:max-w-none"
+                                    >{{ __(plan?.name) }}</span
+                                >
                             </span>
                         </button>
 
                         <!-- Auth Buttons -->
                         <div
                             v-if="!$page.props.user?.id"
-                            class="hidden lg:flex items-center space-x-3"
+                            class="hidden lg:flex items-center gap-2"
                         >
                             <button
                                 v-if="$page.props.allow_register"
                                 @click="
                                     open($page.props.auth_routes['register'])
                                 "
-                                class="px-6 py-3 border-2 border-blue-500 dark:border-blue-600 text-blue-600 dark:text-blue-400 rounded-xl font-semibold hover:bg-blue-500 dark:hover:bg-blue-600 hover:text-white transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/30 dark:focus:ring-blue-600/30"
+                                class="px-3 sm:px-4 py-2 border border-blue-500 dark:border-blue-600 text-blue-600 dark:text-blue-400 rounded-lg font-medium hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 text-sm sm:text-base"
                             >
                                 {{ __("Register") }}
                             </button>
                             <button
                                 @click="open($page.props.auth_routes.login)"
-                                class="px-6 py-3 bg-linear-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-blue-600 hover:to-indigo-700 dark:hover:from-blue-500 dark:hover:to-indigo-600 focus:outline-none focus:ring-4 focus:ring-blue-500/30 dark:focus:ring-blue-600/30"
+                                class="px-3 sm:px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 text-sm sm:text-base"
                             >
                                 {{ __("Login") }}
                             </button>
                         </div>
 
                         <!-- User Profile -->
-                        <div class="flex items-center space-x-4">
+                        <div class="flex items-center gap-2 sm:gap-3">
                             <div>
                                 <v-theme />
                             </div>
-                            <div class="hidden md:block">
+                            <div class="hidden sm:block">
                                 <v-notification />
                             </div>
                             <v-profile />
@@ -127,24 +129,35 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         </header>
 
         <!-- Main Content Area -->
-        <main class="max-w-7xl mx-auto py-2 md:py-4 lg:py-8 px-2 lg:px-8">
+        <main class="max-w-7xl mx-auto py-4 px-3 sm:px-4 lg:px-6">
             <div
-                class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/60 dark:border-gray-700/60"
+                class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow border border-gray-200 dark:border-gray-700"
             >
                 <slot />
             </div>
         </main>
 
-        <!-- Floating Elements for Visual Interest -->
+        <!-- Mobile Auth Buttons -->
         <div
-            class="fixed top-1/4 left-5 w-4 h-4 bg-blue-400/30 dark:bg-blue-500/20 rounded-full animate-pulse"
-        ></div>
-        <div
-            class="fixed top-1/3 right-10 w-6 h-6 bg-purple-400/20 dark:bg-purple-500/15 rounded-full animate-bounce"
-        ></div>
-        <div
-            class="fixed bottom-1/4 left-10 w-3 h-3 bg-emerald-400/40 dark:bg-emerald-500/25 rounded-full animate-pulse delay-1000"
-        ></div>
+            v-if="!$page.props.user?.id"
+            class="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 p-3 z-40"
+        >
+            <div class="flex gap-2 max-w-7xl mx-auto">
+                <button
+                    v-if="$page.props.allow_register"
+                    @click="open($page.props.auth_routes['register'])"
+                    class="flex-1 px-4 py-3 border border-blue-500 dark:border-blue-600 text-blue-600 dark:text-blue-400 rounded-lg font-medium hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600"
+                >
+                    {{ __("Register") }}
+                </button>
+                <button
+                    @click="open($page.props.auth_routes.login)"
+                    class="flex-1 px-4 py-3 bg-blue-600 dark:bg-blue-700 text-white rounded-lg font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600"
+                >
+                    {{ __("Login") }}
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -173,7 +186,6 @@ export default {
     methods: {
         open(url) {
             const currentUrl = window.location.href;
-
             const path = url.startsWith("/")
                 ? url
                 : new URL(url, window.location.origin).pathname;
@@ -192,14 +204,9 @@ export default {
 
         isActive(item) {
             if (!item?.route) return false;
-
-            // Current query without params
             const currentPath = window.location.pathname;
-
-            //Get only the path without query params
             const itemPath = new URL(item.route, window.location.origin)
                 .pathname;
-
             return currentPath === itemPath;
         },
 
@@ -209,3 +216,33 @@ export default {
     },
 };
 </script>
+
+<style>
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Touch improvements */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Better scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Responsive text sizing */
+@media (max-width: 640px) {
+    .text-truncate-mobile {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+</style>

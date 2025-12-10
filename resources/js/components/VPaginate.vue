@@ -71,7 +71,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         page === '...'
                             ? 'text-gray-400 dark:text-gray-500 cursor-default px-2'
                             : currentPage === page
-                            ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-200 dark:shadow-blue-900/50 hover:from-blue-700 hover:to-blue-800 scale-105'
+                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-blue-900/50 hover:from-blue-700 hover:to-blue-800 scale-105'
                             : 'text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 border border-transparent',
                     ]"
                     :disabled="page === '...'"
@@ -143,7 +143,7 @@ export default {
         },
         maxVisible: {
             type: Number,
-            default: 7,
+            default: 5,
         },
     },
     data() {

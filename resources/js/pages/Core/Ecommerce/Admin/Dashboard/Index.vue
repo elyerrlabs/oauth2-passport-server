@@ -22,22 +22,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 <template>
     <v-admin-layout>
-        <div
-            class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
-        >
+        <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
             <!-- Header -->
             <div
                 class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
             >
-                <div class="px-6 py-4">
-                    <div class="flex items-center justify-between">
+                <div class="px-4 sm:px-6 py-4">
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    >
                         <div>
                             <h1
-                                class="text-2xl font-bold text-gray-900 dark:text-white"
+                                class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white"
                             >
                                 {{ __("Dashboard Overview") }}
                             </h1>
-                            <p class="text-gray-600 dark:text-gray-300 mt-1">
+                            <p
+                                class="text-sm text-gray-600 dark:text-gray-300 mt-1"
+                            >
                                 {{
                                     __(
                                         "Welcome back! Here's what's happening with your store today."
@@ -45,11 +47,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 }}
                             </p>
                         </div>
-                        <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
                             <!-- Refresh Button -->
                             <button
                                 @click="getData"
-                                class="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors duration-200"
+                                class="p-2 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
                                 :title="__('Refresh data')"
                             >
                                 <svg
@@ -68,21 +70,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </div>
 
             <!-- Main Content -->
-            <div class="p-4 lg:p-6">
+            <div class="p-4 sm:p-6">
                 <!-- Stats Grid -->
                 <div
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8"
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
                 >
                     <!-- Total Sales -->
                     <div
-                        class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow"
                     >
-                        <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center justify-between mb-3">
                             <div
-                                class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-2xl"
+                                class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg"
                             >
                                 <svg
-                                    class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                                    class="w-5 h-5 text-blue-600 dark:text-blue-400"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -97,7 +99,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                             <div class="text-right">
                                 <div
-                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                    class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                                 >
                                     {{ dashboard.currency_symbol
                                     }}{{
@@ -107,32 +109,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     }}
                                 </div>
                                 <div
-                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                    class="text-xs text-gray-500 dark:text-gray-400"
                                 >
                                     {{ __("Total Sales") }}
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
-                        >
-                            <div
-                                class="bg-blue-500 h-2 rounded-full transition-all duration-500"
-                                style="width: 75%"
-                            ></div>
+                        <div class="text-xs text-gray-400 dark:text-gray-500">
+                            {{ __("All time revenue") }}
                         </div>
                     </div>
 
                     <!-- Today Sales -->
                     <div
-                        class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow"
                     >
-                        <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center justify-between mb-3">
                             <div
-                                class="p-3 bg-green-100 dark:bg-green-900/30 rounded-2xl"
+                                class="p-2 bg-green-100 dark:bg-green-900 rounded-lg"
                             >
                                 <svg
-                                    class="w-6 h-6 text-green-600 dark:text-green-400"
+                                    class="w-5 h-5 text-green-600 dark:text-green-400"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -147,7 +144,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                             <div class="text-right">
                                 <div
-                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                    class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                                 >
                                     {{ dashboard.currency_symbol
                                     }}{{
@@ -157,32 +154,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     }}
                                 </div>
                                 <div
-                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                    class="text-xs text-gray-500 dark:text-gray-400"
                                 >
                                     {{ __("Today Sales") }}
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
-                        >
-                            <div
-                                class="bg-green-500 h-2 rounded-full transition-all duration-500"
-                                style="width: 85%"
-                            ></div>
+                        <div class="text-xs text-gray-400 dark:text-gray-500">
+                            {{ __("Today's revenue") }}
                         </div>
                     </div>
 
                     <!-- Total Products -->
                     <div
-                        class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow"
                     >
-                        <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center justify-between mb-3">
                             <div
-                                class="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-2xl"
+                                class="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg"
                             >
                                 <svg
-                                    class="w-6 h-6 text-orange-600 dark:text-orange-400"
+                                    class="w-5 h-5 text-orange-600 dark:text-orange-400"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -197,7 +189,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                             <div class="text-right">
                                 <div
-                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                    class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                                 >
                                     {{
                                         formatNumber(
@@ -206,32 +198,27 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     }}
                                 </div>
                                 <div
-                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                    class="text-xs text-gray-500 dark:text-gray-400"
                                 >
                                     {{ __("Total Products") }}
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
-                        >
-                            <div
-                                class="bg-orange-500 h-2 rounded-full transition-all duration-500"
-                                style="width: 65%"
-                            ></div>
+                        <div class="text-xs text-gray-400 dark:text-gray-500">
+                            {{ __("In stock items") }}
                         </div>
                     </div>
 
                     <!-- Pending Orders -->
                     <div
-                        class="stat-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow"
                     >
-                        <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center justify-between mb-3">
                             <div
-                                class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl"
+                                class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg"
                             >
                                 <svg
-                                    class="w-6 h-6 text-purple-600 dark:text-purple-400"
+                                    class="w-5 h-5 text-purple-600 dark:text-purple-400"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -246,68 +233,42 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                             <div class="text-right">
                                 <div
-                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                    class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                                 >
                                     {{
                                         formatNumber(dashboard.products_pending)
                                     }}
                                 </div>
                                 <div
-                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                    class="text-xs text-gray-500 dark:text-gray-400"
                                 >
                                     {{ __("Pending Orders") }}
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
-                        >
-                            <div
-                                class="bg-purple-500 h-2 rounded-full transition-all duration-500"
-                                style="width: 45%"
-                            ></div>
+                        <div class="text-xs text-gray-400 dark:text-gray-500">
+                            {{ __("Awaiting processing") }}
                         </div>
                     </div>
                 </div>
 
                 <!-- Charts Section -->
-                <div
-                    class="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 mb-6 lg:mb-8"
-                >
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                     <!-- Sales Overview Chart -->
                     <div
-                        class="xl:col-span-2 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300"
+                        class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
                     >
-                        <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center justify-between mb-4">
                             <h3
-                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                                class="text-base sm:text-lg font-bold text-gray-900 dark:text-white"
                             >
                                 {{ __("Sales Overview (Last 30 Days)") }}
                             </h3>
-                            <div class="flex items-center space-x-2">
-                                <button
-                                    class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors"
-                                >
-                                    <svg
-                                        class="w-5 h-5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
                         </div>
                         <div class="chart-container">
                             <apexchart
                                 type="area"
-                                height="350"
+                                height="300"
                                 :options="salesChartOptions"
                                 :series="salesChartSeries"
                             />
@@ -316,11 +277,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Revenue Distribution -->
                     <div
-                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
                     >
-                        <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center justify-between mb-4">
                             <h3
-                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                                class="text-base sm:text-lg font-bold text-gray-900 dark:text-white"
                             >
                                 {{ __("Revenue Distribution") }}
                             </h3>
@@ -328,7 +289,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="chart-container">
                             <apexchart
                                 type="donut"
-                                height="350"
+                                height="300"
                                 :options="revenueChartOptions"
                                 :series="revenueChartSeries"
                             />
@@ -337,16 +298,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Second Row Charts -->
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-6 lg:mb-8"
-                >
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                     <!-- Top Selling Products -->
                     <div
-                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
                     >
-                        <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center justify-between mb-4">
                             <h3
-                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                                class="text-base sm:text-lg font-bold text-gray-900 dark:text-white"
                             >
                                 {{ __("Top Selling Products") }}
                             </h3>
@@ -354,7 +313,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="chart-container">
                             <apexchart
                                 type="bar"
-                                height="300"
+                                height="250"
                                 :options="topProductsChartOptions"
                                 :series="topProductsChartSeries"
                             />
@@ -363,11 +322,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Today's Sales Progress -->
                     <div
-                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 transition-colors duration-300"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
                     >
-                        <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center justify-between mb-4">
                             <h3
-                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                                class="text-base sm:text-lg font-bold text-gray-900 dark:text-white"
                             >
                                 {{ __("Today's Sales Progress") }}
                             </h3>
@@ -375,7 +334,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <div class="chart-container">
                             <apexchart
                                 type="radialBar"
-                                height="300"
+                                height="250"
                                 :options="todaySalesChartOptions"
                                 :series="todaySalesChartSeries"
                             />
@@ -384,17 +343,17 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Data Tables Section -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-                    <!-- Recent Orders -->
+                <div class="space-y-6">
+                    <!-- Recent Orders - Mobile Cards / Desktop Table -->
                     <div
-                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-300 overflow-hidden"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
                     >
                         <div
-                            class="px-6 py-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50"
+                            class="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50"
                         >
                             <div class="flex items-center justify-between">
                                 <h3
-                                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                                    class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white"
                                 >
                                     {{ __("Recent Orders") }}
                                 </h3>
@@ -405,39 +364,99 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </button>
                             </div>
                         </div>
-                        <div class="overflow-x-auto">
+
+                        <!-- Mobile View - Cards -->
+                        <div
+                            class="sm:hidden divide-y divide-gray-200 dark:divide-gray-600"
+                        >
+                            <div
+                                v-for="checkout in checkouts"
+                                :key="checkout.id"
+                                class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
+                            >
+                                <div
+                                    class="flex items-center justify-between mb-2"
+                                >
+                                    <div
+                                        class="font-medium text-gray-900 dark:text-white"
+                                    >
+                                        #{{ checkout.id }}
+                                    </div>
+                                    <span
+                                        class="text-xs font-medium px-2 py-1 rounded-full"
+                                        :class="
+                                            getStatusClasses(checkout.status)
+                                        "
+                                    >
+                                        {{ checkout.status }}
+                                    </span>
+                                </div>
+                                <div
+                                    class="text-sm text-gray-600 dark:text-gray-300 mb-2"
+                                >
+                                    {{ checkout.customer }}
+                                </div>
+                                <div
+                                    class="flex items-center justify-between text-sm"
+                                >
+                                    <div
+                                        class="text-gray-500 dark:text-gray-400"
+                                    >
+                                        {{ formatDate(checkout.date) }}
+                                    </div>
+                                    <div
+                                        class="font-semibold text-gray-900 dark:text-white"
+                                    >
+                                        {{ dashboard.currency_symbol
+                                        }}{{ checkout.total }}
+                                    </div>
+                                </div>
+                                <div class="mt-3 flex justify-end">
+                                    <button
+                                        @click="viewOrder(checkout)"
+                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium transition-colors"
+                                        :title="__('View order details')"
+                                    >
+                                        {{ __("View Details") }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Desktop View - Table -->
+                        <div class="hidden sm:block overflow-x-auto">
                             <table class="w-full">
                                 <thead>
                                     <tr
                                         class="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-600"
                                     >
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                            class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                                         >
                                             {{ __("Order") }}
                                         </th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                            class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                                         >
                                             {{ __("Customer") }}
                                         </th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                            class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                                         >
                                             {{ __("Date") }}
                                         </th>
                                         <th
-                                            class="px-6 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                            class="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                                         >
                                             {{ __("Total") }}
                                         </th>
                                         <th
-                                            class="px-6 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                            class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                                         >
                                             {{ __("Status") }}
                                         </th>
                                         <th
-                                            class="px-6 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                                            class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                                         >
                                             {{ __("Actions") }}
                                         </th>
@@ -449,34 +468,34 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     <tr
                                         v-for="checkout in checkouts"
                                         :key="checkout.id"
-                                        class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-200 group"
+                                        class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
                                     >
                                         <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"
+                                            class="px-4 sm:px-6 py-4 text-sm font-medium text-gray-900 dark:text-white"
                                         >
                                             #{{ checkout.id }}
                                         </td>
                                         <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300"
+                                            class="px-4 sm:px-6 py-4 text-sm text-gray-600 dark:text-gray-300"
                                         >
                                             {{ checkout.customer }}
                                         </td>
                                         <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300"
+                                            class="px-4 sm:px-6 py-4 text-sm text-gray-600 dark:text-gray-300"
                                         >
                                             {{ formatDate(checkout.date) }}
                                         </td>
                                         <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white text-right"
+                                            class="px-4 sm:px-6 py-4 text-sm text-gray-900 dark:text-white text-right"
                                         >
                                             {{ dashboard.currency_symbol
                                             }}{{ checkout.total }}
                                         </td>
                                         <td
-                                            class="px-6 py-4 whitespace-nowrap text-center"
+                                            class="px-4 sm:px-6 py-4 text-center"
                                         >
                                             <span
-                                                class="inline-flex px-3 py-1 text-xs font-semibold rounded-full border transition-all duration-200 transform group-hover:scale-105"
+                                                class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full"
                                                 :class="
                                                     getStatusClasses(
                                                         checkout.status
@@ -495,11 +514,11 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                             </span>
                                         </td>
                                         <td
-                                            class="px-6 py-4 whitespace-nowrap text-center"
+                                            class="px-4 sm:px-6 py-4 text-center"
                                         >
                                             <button
                                                 @click="viewOrder(checkout)"
-                                                class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 p-1 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                                                class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
                                                 :title="
                                                     __('View order details')
                                                 "
@@ -533,14 +552,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Top Products List -->
                     <div
-                        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-300 overflow-hidden"
+                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
                     >
                         <div
-                            class="px-6 py-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50"
+                            class="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50"
                         >
                             <div class="flex items-center justify-between">
                                 <h3
-                                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                                    class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white"
                                 >
                                     {{ __("Top Selling Products") }}
                                 </h3>
@@ -557,10 +576,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             <div
                                 v-for="product in topProducts"
                                 :key="product.id"
-                                class="flex items-center p-4 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-200 group"
+                                class="flex items-center p-4 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
                             >
                                 <div
-                                    class="flex-shrink-0 h-12 w-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-600"
+                                    class="flex-shrink-0 h-10 w-10 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600"
                                 >
                                     <img
                                         :src="
@@ -571,19 +590,19 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="h-full w-full object-cover"
                                     />
                                 </div>
-                                <div class="ml-4 flex-1 min-w-0">
+                                <div class="ml-3 flex-1 min-w-0">
                                     <div
                                         class="text-sm font-medium text-gray-900 dark:text-white truncate"
                                     >
                                         {{ product.name }}
                                     </div>
                                     <div
-                                        class="text-sm text-gray-500 dark:text-gray-400"
+                                        class="text-xs text-gray-500 dark:text-gray-400"
                                     >
                                         {{ product.category }}
                                     </div>
                                 </div>
-                                <div class="ml-4 text-right">
+                                <div class="ml-3 text-right">
                                     <div
                                         class="text-sm font-semibold text-blue-600 dark:text-blue-400"
                                     >
@@ -604,528 +623,251 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-admin-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import VAdminLayout from "../../Components/VAdminLayout.vue";
+import { usePage } from "@inertiajs/vue3";
 
-export default {
-    components: {
-        apexchart: VueApexCharts,
-        VAdminLayout,
+const page = usePage();
+const apexchart = VueApexCharts;
+
+// Refs
+const isDark = ref(false);
+const dashboard = ref({
+    currency_symbol: "",
+    transactions_total: 0,
+    transactions_today: 0,
+    products_stock_total: 0,
+    products_pending: 0,
+    products_lower_stock: 0,
+    transactions: [],
+    checkouts: [],
+    top_products: [],
+});
+
+const revenue = ref([]);
+const checkouts = ref([]);
+const topProducts = ref([]);
+
+// Graphics options
+const salesChartOptions = ref({
+    chart: {
+        type: "area",
+        height: 300,
+        toolbar: { show: true },
+        background: "transparent",
     },
-
-    data() {
-        return {
-            isDark: false,
-            dashboard: {
-                currency_symbol: "$",
-                transactions_total: 0,
-                transactions_today: 0,
-                products_stock_total: 0,
-                products_pending: 0,
-                products_lower_stock: 0,
-                transactions: [],
-                checkouts: [],
-                top_products: [],
-            },
-            revenue: [],
-            checkouts: [],
-            topProducts: [],
-
-            // Chart options with theme support
-            salesChartOptions: {
-                chart: {
-                    type: "area",
-                    height: 350,
-                    toolbar: {
-                        show: true,
-                        tools: {
-                            download: true,
-                            selection: true,
-                            zoom: true,
-                            zoomin: true,
-                            zoomout: true,
-                            pan: true,
-                            reset: true,
-                        },
-                    },
-                    background: "transparent",
-                },
-                theme: {
-                    mode: "light",
-                },
-                colors: ["#3B82F6"],
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    curve: "smooth",
-                    width: 3,
-                },
-                fill: {
-                    type: "gradient",
-                    gradient: {
-                        shadeIntensity: 1,
-                        opacityFrom: 0.7,
-                        opacityTo: 0.3,
-                        stops: [0, 90, 100],
-                    },
-                },
-                xaxis: {
-                    categories: [],
-                    labels: {
-                        style: {
-                            colors: "#6B7280",
-                        },
-                    },
-                    axisBorder: {
-                        show: false,
-                    },
-                    axisTicks: {
-                        show: false,
-                    },
-                },
-                yaxis: {
-                    labels: {
-                        style: {
-                            colors: "#6B7280",
-                        },
-                        formatter: (val) =>
-                            this.dashboard.currency_symbol +
-                            this.formatNumber(val),
-                    },
-                },
-                grid: {
-                    borderColor: "#F3F4F6",
-                    strokeDashArray: 4,
-                },
-                tooltip: {
-                    y: {
-                        formatter: (val) =>
-                            this.dashboard.currency_symbol +
-                            this.formatNumber(val),
-                    },
-                },
-            },
-
-            salesChartSeries: [],
-
-            revenueChartOptions: {
-                chart: {
-                    type: "donut",
-                    background: "transparent",
-                },
-                theme: {
-                    mode: "light",
-                },
-                labels: [],
-                colors: ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444"],
-                legend: {
-                    position: "bottom",
-                    labels: {
-                        colors: "#6B7280",
-                    },
-                },
-                dataLabels: {
-                    enabled: true,
-                    formatter: (val) => val.toFixed(1) + "%",
-                    style: {
-                        fontSize: "12px",
-                        fontWeight: "bold",
-                    },
-                },
-                plotOptions: {
-                    pie: {
-                        donut: {
-                            labels: {
-                                show: true,
-                                name: {
-                                    show: true,
-                                    fontSize: "14px",
-                                    color: "#6B7280",
-                                },
-                                value: {
-                                    show: true,
-                                    fontSize: "20px",
-                                    fontWeight: "bold",
-                                    color: "#111827",
-                                    formatter: (val) =>
-                                        this.dashboard.currency_symbol +
-                                        this.formatNumber(val),
-                                },
-                                total: {
-                                    show: true,
-                                    label: __("Total Revenue"),
-                                    color: "#6B7280",
-                                    formatter: () =>
-                                        this.dashboard.currency_symbol +
-                                        this.formatNumber(
-                                            this.revenue.reduce(
-                                                (sum, item) => sum + item.total,
-                                                0
-                                            )
-                                        ),
-                                },
-                            },
-                        },
-                    },
-                },
-                tooltip: {
-                    y: {
-                        formatter: (val) =>
-                            this.dashboard.currency_symbol +
-                            this.formatNumber(val),
-                    },
-                },
-            },
-
-            revenueChartSeries: [],
-
-            topProductsChartOptions: {
-                chart: {
-                    type: "bar",
-                    toolbar: { show: false },
-                    background: "transparent",
-                },
-                theme: {
-                    mode: "light",
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 8,
-                        horizontal: true,
-                    },
-                },
-                colors: ["#10B981"],
-                dataLabels: {
-                    enabled: false,
-                },
-                xaxis: {
-                    categories: [],
-                    labels: {
-                        style: {
-                            colors: "#6B7280",
-                        },
-                    },
-                },
-                yaxis: {
-                    labels: {
-                        style: {
-                            colors: "#6B7280",
-                        },
-                    },
-                },
-                grid: {
-                    borderColor: "#F3F4F6",
-                    strokeDashArray: 4,
-                },
-                tooltip: {
-                    y: {
-                        formatter: (val) => val + " " + __("units sold"),
-                    },
-                },
-            },
-
-            topProductsChartSeries: [],
-
-            todaySalesChartOptions: {
-                chart: {
-                    type: "radialBar",
-                    background: "transparent",
-                },
-                theme: {
-                    mode: "light",
-                },
-                plotOptions: {
-                    radialBar: {
-                        startAngle: -135,
-                        endAngle: 225,
-                        hollow: {
-                            margin: 0,
-                            size: "70%",
-                            background: "transparent",
-                            position: "front",
-                        },
-                        track: {
-                            background: "#F3F4F6",
-                            strokeWidth: "67%",
-                            margin: 0,
-                        },
-                        dataLabels: {
-                            show: true,
-                            name: {
-                                offsetY: -10,
-                                color: "#6B7280",
-                                fontSize: "13px",
-                            },
-                            value: {
-                                formatter: (val) =>
-                                    this.dashboard.currency_symbol +
-                                    this.formatNumber(val),
-                                color: "#111827",
-                                fontSize: "30px",
-                                show: true,
-                            },
-                        },
-                    },
-                },
-                fill: {
-                    type: "gradient",
-                    gradient: {
-                        shade: "dark",
-                        type: "horizontal",
-                        shadeIntensity: 0.5,
-                        gradientToColors: ["#10B981"],
-                        inverseColors: true,
-                        opacityFrom: 1,
-                        opacityTo: 1,
-                        stops: [0, 100],
-                    },
-                },
-                stroke: {
-                    lineCap: "round",
-                },
-                labels: [__("Today Sales")],
-            },
-
-            todaySalesChartSeries: [],
-        };
-    },
-
-    created() {
-        this.detectTheme();
-        this.getData();
-    },
-
-    methods: {
-        detectTheme() {
-            this.isDark = document.documentElement.classList.contains("dark");
-            this.updateChartThemes();
-        },
-
-        updateChartThemes() {
-            const themeMode = this.isDark ? "dark" : "light";
-            const textColor = this.isDark ? "#9CA3AF" : "#6B7280";
-            const backgroundColor = this.isDark ? "#1F2937" : "#FFFFFF";
-            const gridColor = this.isDark ? "#374151" : "#F3F4F6";
-
-            // Update all chart themes
-            const charts = [
-                "salesChartOptions",
-                "revenueChartOptions",
-                "topProductsChartOptions",
-                "todaySalesChartOptions",
-            ];
-
-            charts.forEach((chartName) => {
-                if (this[chartName]) {
-                    this[chartName] = {
-                        ...this[chartName],
-                        theme: { mode: themeMode },
-                        chart: {
-                            ...this[chartName].chart,
-                            background: "transparent",
-                        },
-                    };
-
-                    // Update specific properties for each chart type
-                    if (this[chartName].xaxis) {
-                        this[chartName].xaxis.labels.style.colors = textColor;
-                    }
-                    if (this[chartName].yaxis) {
-                        this[chartName].yaxis.labels.style.colors = textColor;
-                    }
-                    if (this[chartName].grid) {
-                        this[chartName].grid.borderColor = gridColor;
-                    }
-                    if (
-                        this[chartName].legend &&
-                        this[chartName].legend.labels
-                    ) {
-                        this[chartName].legend.labels.colors = textColor;
-                    }
-                }
-            });
-        },
-
-        formatNumber(num) {
-            return parseFloat(num || 0).toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            });
-        },
-
-        formatDate(dateString) {
-            if (!dateString) return "-";
-            return new Date(dateString).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-            });
-        },
-
-        async getData() {
-            try {
-                const res = await this.$server.get(
-                    this.$page.props.routes.dashboard
-                );
-
-                if (res.status == 200) {
-                    this.dashboard = res.data;
-                    this.checkouts = res.data.checkouts || [];
-                    this.topProducts = res.data.top_products || [];
-                    this.revenue = res.data.revenue || [];
-                    this.todaySalesChartSeries = [
-                        res.data.transactions_today || 0,
-                    ];
-                    this.renderSales();
-                    this.renderTopProducts();
-                    this.renderRevenue();
-                }
-            } catch (e) {
-                console.error("Error fetching dashboard data:", e);
-            }
-        },
-
-        renderTopProducts() {
-            this.topProductsChartOptions = {
-                ...this.topProductsChartOptions,
-                xaxis: {
-                    ...this.topProductsChartOptions.xaxis,
-                    categories: this.topProducts.map(
-                        (item) => item.name || item.category
-                    ),
-                },
-            };
-
-            this.topProductsChartSeries = [
-                {
-                    name: __("Units Sold"),
-                    data: this.topProducts.map((item) => item.sold || 0),
-                },
-            ];
-        },
-
-        renderRevenue() {
-            const totalRevenue = this.revenue.reduce(
-                (sum, item) => sum + (item.total || 0),
-                0
-            );
-
-            this.revenueChartOptions = {
-                ...this.revenueChartOptions,
-                labels: this.revenue.map((item) => item.name || "Unknown"),
-            };
-
-            this.revenueChartSeries = this.revenue.map(
-                (item) => item.total || 0
-            );
-        },
-
-        renderSales() {
-            this.salesChartSeries = [
-                {
-                    name: __("Sales"),
-                    data: (this.dashboard.transactions || []).map(
-                        (item) => item.total || 0
-                    ),
-                },
-            ];
-
-            this.salesChartOptions = {
-                ...this.salesChartOptions,
-                xaxis: {
-                    ...this.salesChartOptions.xaxis,
-                    categories: (this.dashboard.transactions || []).map(
-                        (item) => item.date || ""
-                    ),
-                },
-            };
-        },
-
-        getStatusClasses(status) {
-            const statusClasses = {
-                successful:
-                    "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700",
-                pending:
-                    "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700",
-                failed: "bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700",
-                refunded:
-                    "bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-700",
-            };
-
-            return (
-                statusClasses[status] ||
-                "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600"
-            );
-        },
-
-        getStatusDotClass(status) {
-            const dotClasses = {
-                successful: "bg-green-500",
-                pending: "bg-yellow-500",
-                failed: "bg-red-500",
-                refunded: "bg-blue-500",
-            };
-
-            return dotClasses[status] || "bg-gray-500";
-        },
-
-        viewOrder(order) {
-            if (order.link) {
-                window.location.href = order.link;
-            }
+    colors: ["#3B82F6"],
+    dataLabels: { enabled: false },
+    stroke: { curve: "smooth", width: 2 },
+    xaxis: { categories: [] },
+    yaxis: {
+        labels: {
+            formatter: (val) =>
+                dashboard.value.currency_symbol + formatNumber(val),
         },
     },
+    tooltip: {
+        y: {
+            formatter: (val) =>
+                dashboard.value.currency_symbol + formatNumber(val),
+        },
+    },
+});
+
+const salesChartSeries = ref([]);
+
+const revenueChartOptions = ref({
+    chart: {
+        type: "donut",
+        background: "transparent",
+    },
+    labels: [],
+    colors: ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444"],
+    legend: { position: "bottom" },
+    dataLabels: { enabled: true },
+    tooltip: {
+        y: {
+            formatter: (val) =>
+                dashboard.value.currency_symbol + formatNumber(val),
+        },
+    },
+});
+
+const revenueChartSeries = ref([]);
+
+const topProductsChartOptions = ref({
+    chart: {
+        type: "bar",
+        toolbar: { show: false },
+        background: "transparent",
+    },
+    plotOptions: {
+        bar: { borderRadius: 4, horizontal: true },
+    },
+    colors: ["#10B981"],
+    dataLabels: { enabled: false },
+    xaxis: { categories: [] },
+    tooltip: {
+        y: { formatter: (val) => val + " " + __("units sold") },
+    },
+});
+
+const topProductsChartSeries = ref([]);
+
+const todaySalesChartOptions = ref({
+    chart: {
+        type: "radialBar",
+        background: "transparent",
+    },
+    plotOptions: {
+        radialBar: {
+            hollow: { size: "70%" },
+            dataLabels: {
+                name: { fontSize: "12px" },
+                value: {
+                    formatter: (val) =>
+                        dashboard.value.currency_symbol + formatNumber(val),
+                    fontSize: "24px",
+                },
+            },
+        },
+    },
+    colors: ["#10B981"],
+    labels: [__("Today Sales")],
+});
+
+const todaySalesChartSeries = ref([0]);
+
+// Functions
+const detectTheme = () => {
+    isDark.value = document.documentElement.classList.contains("dark");
 };
+
+const formatNumber = (num) => {
+    return parseFloat(num || 0).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+};
+
+const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    return new Date(dateString).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
+};
+
+const getData = async () => {
+    try {
+        const res = await $server.get(page.props.routes.dashboard);
+        if (res.status == 200) {
+            dashboard.value = res.data;
+            checkouts.value = res.data.checkouts || [];
+            topProducts.value = res.data.top_products || [];
+            revenue.value = res.data.revenue || [];
+            todaySalesChartSeries.value = [res.data.transactions_today || 0];
+            renderSales();
+            renderTopProducts();
+            renderRevenue();
+        }
+    } catch (e) {
+        console.error("Error fetching dashboard data:", e);
+    }
+};
+
+const renderTopProducts = () => {
+    topProductsChartOptions.value = {
+        ...topProductsChartOptions.value,
+        xaxis: {
+            categories: topProducts.value.map(
+                (item) => item.name || item.category
+            ),
+        },
+    };
+
+    topProductsChartSeries.value = [
+        {
+            name: __("Units Sold"),
+            data: topProducts.value.map((item) => item.sold || 0),
+        },
+    ];
+};
+
+const renderRevenue = () => {
+    revenueChartOptions.value = {
+        ...revenueChartOptions.value,
+        labels: revenue.value.map((item) => item.name || "Unknown"),
+    };
+
+    revenueChartSeries.value = revenue.value.map((item) => item.total || 0);
+};
+
+const renderSales = () => {
+    salesChartSeries.value = [
+        {
+            name: __("Sales"),
+            data: (dashboard.value.transactions || []).map(
+                (item) => item.total || 0
+            ),
+        },
+    ];
+
+    salesChartOptions.value = {
+        ...salesChartOptions.value,
+        xaxis: {
+            categories: (dashboard.value.transactions || []).map(
+                (item) => item.date || ""
+            ),
+        },
+    };
+};
+
+const getStatusClasses = (status) => {
+    const statusClasses = {
+        successful:
+            "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300",
+        pending:
+            "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300",
+        failed: "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300",
+        refunded:
+            "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300",
+    };
+
+    return (
+        statusClasses[status] ||
+        "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300"
+    );
+};
+
+const getStatusDotClass = (status) => {
+    const dotClasses = {
+        successful: "bg-green-500",
+        pending: "bg-yellow-500",
+        failed: "bg-red-500",
+        refunded: "bg-blue-500",
+    };
+
+    return dotClasses[status] || "bg-gray-500";
+};
+
+const viewOrder = (order) => {
+    if (order.link) {
+        window.location.href = order.link;
+    }
+};
+
+onMounted(() => {
+    detectTheme();
+    getData();
+});
 </script>
 
 <style scoped>
-.stat-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.stat-card:hover {
-    transform: translateY(-4px);
-}
-
 .chart-container {
     position: relative;
-}
-
-/* Smooth transitions for dark mode */
-* {
-    transition: background-color 0.3s ease, border-color 0.3s ease,
-        color 0.3s ease;
-}
-
-/* Custom scrollbar for tables */
-.overflow-x-auto::-webkit-scrollbar {
-    height: 6px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-.dark .overflow-x-auto::-webkit-scrollbar-track {
-    background: #374151;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 3px;
-}
-
-.dark .overflow-x-auto::-webkit-scrollbar-thumb {
-    background: #4b5563;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
-.dark .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
 }
 </style>

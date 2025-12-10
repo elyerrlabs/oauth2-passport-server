@@ -21,30 +21,30 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <v-admin-layout>
-        <!-- Header Section -->
+        <!-- Header -->
         <div
-            class="min-h-screen bg-linear-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/20 py-6 px-4 sm:px-6 lg:px-3 transition-colors duration-300"
+            class="min-h-screen bg-gray-50 dark:bg-gray-900 py-4 sm:py-6 px-3 sm:px-6"
         >
             <!-- Page Header -->
             <div
-                class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8"
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6"
             >
-                <div class="flex items-center space-x-4 mb-4 sm:mb-0">
+                <div class="flex items-center gap-3">
                     <div
-                        class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center shadow-sm"
+                        class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center"
                     >
                         <i
-                            class="fas fa-edit text-blue-600 dark:text-blue-400 text-xl"
+                            class="fas fa-edit text-blue-600 dark:text-blue-400"
                         ></i>
                     </div>
                     <div>
                         <h1
-                            class="text-2xl font-bold text-gray-900 dark:text-white"
+                            class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white"
                         >
                             {{
                                 form.id
-                                    ? __("Update product")
-                                    : __("Add new product")
+                                    ? __("Update Product")
+                                    : __("Create Product")
                             }}
                         </h1>
                         <p
@@ -58,110 +58,85 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     v-if="form?.id"
                     target="_blank"
                     :href="$page.props.routes.preview"
-                    class="text-gray-200 font-medium bg-blue-600 px-3 py-2 rounded"
+                    class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition-colors"
                 >
                     {{ __("Preview") }}
                 </a>
             </div>
 
-            <!-- Main Content Card -->
+            <!-- Main Content -->
             <div
-                class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-300 dark:border-gray-600 overflow-hidden transition-colors duration-300"
+                class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
             >
-                <!-- Basic Information Section -->
-                <div class="p-4 border-b border-gray-300 dark:border-gray-600">
+                <!-- Basic Information -->
+                <div
+                    class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600"
+                >
                     <h3
-                        class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center space-x-2"
+                        class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
                     >
-                        <i
-                            class="fas fa-info-circle text-blue-500 dark:text-blue-400"
-                        ></i>
-                        <span>{{ __("Basic Information") }}</span>
+                        {{ __("Basic Information") }}
                     </h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Product Search -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <!-- Product Name -->
                         <div>
                             <v-input
-                                :label="__('Name')"
+                                :label="__('Product Name')"
                                 v-model="form.name"
                                 :error="errors.name"
-                                :placeholder="__('Enter product name...')"
+                                :placeholder="__('Enter product name')"
                                 :required="true"
                             />
                         </div>
 
+                        <!-- Category Select -->
                         <div>
-                            <!---->
                             <v-select
                                 v-model="form.category"
                                 :options="categories"
-                                :label="__('Categories')"
+                                :label="__('Category')"
                                 :required="true"
                                 :error="errors.category"
                                 searchable
                                 @search="searchCategories"
                             >
-                                <!-- Selected items -->
                                 <template #selected="{ option }">
                                     <div
                                         v-if="option"
                                         class="flex items-center"
                                     >
-                                        <div
-                                            class="font-semibold text-gray-800 dark:text-gray-200"
+                                        <span
+                                            class="font-medium text-gray-800 dark:text-gray-200"
                                         >
-                                            <i
-                                                v-if="option.icon?.icon"
-                                                :class="[
-                                                    'mdi me-3',
-                                                    option.icon.icon,
-                                                ]"
-                                            ></i>
-                                            <span>{{ option?.name }}</span>
-                                        </div>
+                                            {{ option?.name }}
+                                        </span>
                                     </div>
-
                                     <span
                                         v-else
-                                        class="font-semibold text-gray-800 dark:text-gray-200 block"
+                                        class="text-gray-500 dark:text-gray-400"
                                     >
-                                        {{ __("Select menu") }}
+                                        {{ __("Select category") }}
                                     </span>
                                 </template>
 
-                                <!-- Option list -->
                                 <template #option="{ option }">
                                     <div
-                                        class="flex items-center gap-3 p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                                        class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                     >
-                                        <div>
-                                            <span
-                                                class="font-semibold text-gray-800 dark:text-gray-200 block"
-                                            >
-                                                {{ option.name }}
-                                            </span>
-                                            <div
-                                                class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
-                                            >
-                                                <i
-                                                    v-if="option.icon?.icon"
-                                                    :class="[
-                                                        'mdi',
-                                                        option.icon.icon,
-                                                    ]"
-                                                ></i>
-                                                <span>{{ option?.name }}</span>
-                                            </div>
-                                        </div>
+                                        <span
+                                            class="font-medium text-gray-800 dark:text-gray-200"
+                                        >
+                                            {{ option.name }}
+                                        </span>
                                     </div>
                                 </template>
                             </v-select>
                         </div>
                     </div>
 
-                    <!-- Toggle Switches -->
-                    <div class="grid grid-cols-2 gap-2 my-4">
+                    <!-- Toggles -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                         <v-switch
                             v-model="form.published"
                             :label="__('Published')"
@@ -173,171 +148,141 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :error="errors.featured"
                         />
                     </div>
+                </div>
 
-                    <div class="space-y-6">
-                        <!-- Title -->
-                        <div>
-                            <h1
-                                class="text-2xl font-bold text-gray-800 dark:text-white mb-2"
-                            >
-                                {{ __("Add Related Products") }}
-                            </h1>
-                            <p class="text-gray-500 dark:text-gray-400 text-sm">
-                                {{
-                                    __(
-                                        "Select one or more products to associate as related items."
-                                    )
-                                }}
-                            </p>
-                        </div>
-
-                        <!-- Product Selector -->
-                        <v-select
-                            clearable
-                            searchable
-                            :multiple="true"
-                            :options="products"
-                            v-model="form.children_id"
-                            @search="searchProduct"
-                            :placeholder="__('Search products...')"
-                            class="w-full"
+                <!-- Related Products -->
+                <div
+                    class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600"
+                >
+                    <div class="mb-4">
+                        <h3
+                            class="text-lg font-semibold text-gray-900 dark:text-white mb-2"
                         >
-                            <!-- Option list -->
-                            <template #option="{ option }">
-                                <div
-                                    v-if="option.name"
-                                    class="flex items-center justify-between gap-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
-                                >
-                                    <div class="flex items-center gap-3">
-                                        <img
-                                            class="w-10 h-10 rounded"
-                                            :src="option.images[0]?.url"
-                                            :alt="option.name"
-                                        />
-                                        <div>
-                                            <span
-                                                class="font-semibold text-gray-800 dark:text-gray-200 block"
-                                            >
-                                                {{ option.name }}
-                                            </span>
-                                            <div
-                                                class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
-                                            >
-                                                <i
-                                                    v-if="
-                                                        option.category?.icon
-                                                            ?.icon
-                                                    "
-                                                    :class="[
-                                                        'mdi',
-                                                        option.category.icon
-                                                            .icon,
-                                                    ]"
-                                                ></i>
-                                                <span>{{
-                                                    option.category?.name
-                                                }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span
-                                        class="font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap"
-                                    >
-                                        {{ option.symbol }}
-                                        {{ option.format_price }}
-                                    </span>
-                                </div>
-                            </template>
-                        </v-select>
+                            {{ __("Related Products") }}
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            {{ __("Select related products for this item") }}
+                        </p>
+                    </div>
 
-                        <!-- Related Products List -->
-                        <div v-if="form.children.length" class="mt-6">
-                            <h2
-                                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3"
-                            >
-                                {{ __("Selected Related Products") }}
-                            </h2>
-
+                    <!-- Product Selector -->
+                    <v-select
+                        clearable
+                        searchable
+                        :multiple="true"
+                        :options="products"
+                        v-model="form.children_id"
+                        @search="searchProduct"
+                        :placeholder="__('Search products...')"
+                        class="w-full mb-4"
+                    >
+                        <template #option="{ option }">
                             <div
-                                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                                v-if="option.name"
+                                class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            >
+                                <img
+                                    class="w-8 h-8 rounded"
+                                    :src="option.images[0]?.links?.show"
+                                    :alt="option.name"
+                                />
+                                <div class="flex-1 min-w-0">
+                                    <p
+                                        class="font-medium text-gray-800 dark:text-gray-200 truncate"
+                                    >
+                                        {{ option.name }}
+                                    </p>
+                                    <p
+                                        class="text-xs text-gray-500 dark:text-gray-400 truncate"
+                                    >
+                                        {{ option.category?.name }}
+                                    </p>
+                                </div>
+                                <span
+                                    class="font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap"
+                                >
+                                    {{ option.symbol }}
+                                    {{ option.format_price }}
+                                </span>
+                            </div>
+                        </template>
+                    </v-select>
+
+                    <!-- Selected Products -->
+                    <div v-if="form.children.length" class="mt-6">
+                        <h4
+                            class="text-base font-medium text-gray-700 dark:text-gray-300 mb-3"
+                        >
+                            {{ __("Selected Related Products") }}
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div
+                                v-for="(item, index) in form.children"
+                                :key="item.id"
+                                class="flex items-center justify-between gap-3 p-3 rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700"
                             >
                                 <div
-                                    v-for="(item, index) in form.children"
-                                    :key="item.id"
-                                    class="flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md dark:hover:shadow-gray-700/30 transition-all bg-white dark:bg-gray-700"
+                                    class="flex items-center gap-3 flex-1 min-w-0"
                                 >
-                                    <div class="flex items-center gap-3">
-                                        <img
-                                            :src="item.images[0]?.url"
-                                            :alt="item.name"
-                                            class="w-12 h-12 rounded"
-                                        />
-                                        <div>
-                                            <p
-                                                class="font-semibold text-gray-800 dark:text-gray-200"
-                                            >
-                                                {{ item.name }}
-                                            </p>
-                                            <p
-                                                class="text-blue-600 dark:text-blue-400 font-bold text-sm"
-                                            >
-                                                {{ item.symbol }}
-                                                {{ item.format_price }}
-                                            </p>
-                                            <div
-                                                v-if="item.category"
-                                                class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
-                                            >
-                                                <i
-                                                    v-if="
-                                                        item.category.icon?.icon
-                                                    "
-                                                    :class="[
-                                                        'mdi',
-                                                        item.category.icon.icon,
-                                                    ]"
-                                                ></i>
-                                                <span>{{
-                                                    item.category.name
-                                                }}</span>
-                                            </div>
-                                        </div>
+                                    <img
+                                        :src="item.images[0]?.url"
+                                        :alt="item.name"
+                                        class="w-10 h-10 rounded"
+                                    />
+                                    <div class="flex-1 min-w-0">
+                                        <p
+                                            class="font-medium text-gray-800 dark:text-gray-200 truncate"
+                                        >
+                                            {{ item.name }}
+                                        </p>
+                                        <p
+                                            class="text-blue-600 dark:text-blue-400 font-bold text-sm"
+                                        >
+                                            {{ item.symbol }}
+                                            {{ item.format_price }}
+                                        </p>
                                     </div>
-                                    <button
-                                        @click="
-                                            deleteRelatedProduct(item, index)
-                                        "
-                                        class="flex items-center justify-center w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-sm transition-colors"
-                                        title="Remove"
-                                    >
-                                        <i class="mdi mdi-delete text-lg"></i>
-                                    </button>
                                 </div>
+                                <button
+                                    @click="deleteRelatedProduct(item, index)"
+                                    class="w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
+                                    :title="__('Remove')"
+                                >
+                                    <i class="mdi mdi-delete text-sm"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="p-2 border-b border-gray-200 dark:border-gray-600">
+                <!-- Attributes -->
+                <div
+                    class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600"
+                >
                     <v-attributes
                         v-model="form.attributes"
                         :error="errors.attributes"
                     />
                 </div>
 
-                <div class="p-2 border-b border-gray-300 dark:border-gray-600">
+                <!-- Variants -->
+                <div
+                    class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600"
+                >
                     <v-variant
                         v-model="form.variants"
                         :error="errors.variants"
                     />
                 </div>
 
-                <!-- Descriptions Section -->
-                <div class="p-2 border-b border-gray-200 dark:border-gray-600">
-                    <div class="space-y-6">
+                <!-- Descriptions -->
+                <div
+                    class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600"
+                >
+                    <div class="space-y-4">
                         <v-editor
                             v-model="form.short_description"
-                            :label="__('Short description')"
+                            :label="__('Short Description')"
                             :error="errors.short_description"
                             :required="true"
                         />
@@ -347,75 +292,62 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :error="errors.specification"
                             :required="true"
                         />
-
                         <v-editor
                             v-model="form.description"
-                            :label="__('Full description')"
+                            :label="__('Full Description')"
                             :error="errors.description"
                             :required="true"
                         />
                     </div>
                 </div>
 
-                <div class="p-2 border-b border-gray-200 dark:border-gray-600">
+                <!-- Images -->
+                <div
+                    class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600"
+                >
                     <v-file-uploader
                         v-model="form.images"
                         :error="errors.images"
                     />
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="p-6 bg-gray-50 dark:bg-gray-700/50">
+                <!-- Actions -->
+                <div class="p-4 sm:p-6 bg-gray-50 dark:bg-gray-700/50">
                     <div
-                        class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0"
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                     >
-                        <div
-                            class="text-sm text-gray-600 dark:text-gray-400 flex items-center space-x-2"
-                        >
-                            <i
-                                class="fas fa-info-circle text-blue-400 dark:text-blue-300"
-                            ></i>
-                            <span>{{
-                                __(
-                                    "Fill in all required fields to save the product"
-                                )
-                            }}</span>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            {{ __("Fill all required fields to continue") }}
                         </div>
-                        <div class="flex items-center space-x-3">
+                        <div>
                             <button
                                 @click="create"
                                 :disabled="disabled"
-                                :class="[
-                                    'px-6 py-3 rounded-lg cursor-pointer font-medium flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow',
-                                    disabled
-                                        ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                                        : 'bg-linear-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 text-white hover:from-green-600 hover:to-green-700 dark:hover:from-green-700 dark:hover:to-green-800',
-                                ]"
+                                class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <i
-                                    class="fas"
+                                    class="fas mr-2"
                                     :class="
                                         disabled
                                             ? 'fa-spinner fa-spin'
                                             : 'fa-check'
                                     "
                                 ></i>
-                                <span>{{
+                                {{
                                     form.id
                                         ? __("Update Product")
                                         : __("Create Product")
-                                }}</span>
+                                }}
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div
-            class="p-2 border mt-8 rounded-full border-gray-200 dark:border-gray-600"
-            v-if="form.id"
-        >
-            <v-file-viewer v-model="current_images" />
+
+            <!-- Image Viewer -->
+            <div v-if="form.id" class="mt-6">
+                <v-file-viewer v-model="current_images" />
+            </div>
         </div>
     </v-admin-layout>
 </template>
@@ -477,7 +409,6 @@ const loadData = (model) => {
             images: [],
             children_id: [],
         };
-
         errors.value = {};
     }
 };
@@ -508,7 +439,6 @@ const getCurrencies = async () => {
     }
 };
 
-// Get Categories
 const getCategories = async () => {
     try {
         const res = await $server.get(page.props.admin.categories, {
@@ -531,33 +461,33 @@ const create = async () => {
     disabled.value = true;
     const payload = new FormData();
 
-    // Append basic fields
+    // Basic fields
     Object.keys(form.value).forEach((key) => {
         if (key !== "attributes" && key !== "images") {
-            //const value = key === "stock" ? current_stock.value : form.value[key];
             payload.append(key, form.value[key]);
         }
     });
 
-    // Append attributes
+    // Attributes
     form.value.attributes.forEach((attr, index) => {
         Object.keys(attr).forEach((key) => {
             payload.append(`attributes[${index}][${key}]`, attr[key]);
         });
     });
 
-    // Append images
+    // Images
     form.value.images.forEach((file) => {
         payload.append("images[]", file);
     });
 
+    // Variants
     form.value.variants.forEach((variant, index) => {
         Object.keys(variant).forEach((key) => {
             payload.append(`variants[${index}][${key}]`, variant[key]);
         });
     });
 
-    // add related products
+    // Related products
     form.value.children_id.forEach((item) => {
         payload.append("children_id[]", item);
     });
@@ -567,9 +497,8 @@ const create = async () => {
             headers: { "Content-Type": "multipart/form-data" },
         });
 
-        // Redirect after creation product
         if (res.status == 201) {
-            $notify.success(__("New product has been created successfully."));
+            $notify.success(__("Product created successfully"));
             const url = `${page.props.routes.index}/${res.data.id}/edit`;
             router.visit(url);
             return;
@@ -578,7 +507,7 @@ const create = async () => {
         if (res.status == 200) {
             loadData(res.data);
             getProducts();
-            $notify.success(__("New product has been updated successfully."));
+            $notify.success(__("Product updated successfully"));
         }
     } catch (e) {
         if (e.response?.data?.errors) {
@@ -594,13 +523,11 @@ const create = async () => {
 };
 
 const getProducts = async () => {
-    //  const except_ids = await form.children.map((item) => item.id);
     try {
         const res = await $server.get(page.props.admin.products, {
             params: {
                 name: searchTermProduct.value,
                 per_page: 20,
-                //      except_id: except_ids,
             },
         });
 
@@ -622,9 +549,8 @@ const deleteRelatedProduct = async (item, index) => {
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: __("Yes, delete it"),
-            cancelButtonText: "Cancel",
+            cancelButtonText: __("Cancel"),
             confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
         });
 
         if (result.isConfirmed) {
@@ -633,10 +559,7 @@ const deleteRelatedProduct = async (item, index) => {
             if (res.status === 200) {
                 form.value.children.splice(index, 1);
                 getProducts();
-
-                $notify.success(
-                    __("The related product has been successfully removed.")
-                );
+                $notify.success(__("Related product removed successfully"));
             }
         }
     } catch (e) {

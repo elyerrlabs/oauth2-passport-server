@@ -24,12 +24,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Menu Button -->
         <button
             @click="toggleMenu"
-            class="flex items-center p-1 md:p-2 bg-white dark:bg-gray-800 cursor-pointer rounded-xl shadow-sm hover:shadow-md hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 group"
+            class="flex items-center p-1 md:p-2 bg-white dark:bg-gray-800 cursor-pointer rounded-xl shadow-sm hover:shadow hover:border-gray-300 dark:hover:border-gray-600 transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 group"
         >
             <!-- User Avatar -->
             <div class="shrink-0">
                 <div
-                    class="p-2 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-inner group-hover:shadow-md transition-shadow"
+                    class="p-2 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white shadow-sm group-hover:shadow transition-shadow"
                 >
                     <template v-if="user?.id">
                         <span class="text-sm">
@@ -80,25 +80,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Dropdown Menu -->
         <transition
             enter-active-class="transition ease-out duration-200"
-            enter-from-class="opacity-0 scale-95 translate-y-2"
-            enter-to-class="opacity-100 scale-100 translate-y-0"
+            enter-from-class="opacity-0 translate-y-2"
+            enter-to-class="opacity-100 translate-y-0"
             leave-active-class="transition ease-in duration-150"
-            leave-from-class="opacity-100 scale-100 translate-y-0"
-            leave-to-class="opacity-0 scale-95 translate-y-2"
+            leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 translate-y-2"
         >
             <div
                 v-if="menuOpen"
-                class="absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl ring-1 ring-black/5 dark:ring-white/10 z-50 overflow-hidden"
+                class="absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl ring-1 ring-black/10 dark:ring-white/10 z-50 overflow-hidden"
             >
                 <!-- User Info Section -->
                 <div
                     v-if="user?.id"
-                    class="p-4 bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-gray-100 dark:border-gray-700"
+                    class="p-4 bg-blue-50 dark:bg-blue-900/20 border-b border-gray-100 dark:border-gray-700"
                 >
                     <div class="flex items-center space-x-3">
                         <div class="shrink-0">
                             <div
-                                class="w-12 h-12 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-lg"
+                                class="w-12 h-12 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white shadow"
                             >
                                 <span class="text-lg font-semibold">
                                     {{ getUserInitials }}
@@ -129,12 +129,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Guest Info Section -->
                 <div
                     v-else
-                    class="p-4 bg-linear-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 border-b border-gray-100 dark:border-gray-700"
+                    class="p-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700"
                 >
                     <div class="flex items-center space-x-3">
                         <div class="shrink-0">
                             <div
-                                class="w-12 h-12 rounded-full bg-gray-400 dark:bg-gray-600 flex items-center justify-center text-white shadow-lg"
+                                class="w-12 h-12 rounded-full bg-gray-400 dark:bg-gray-600 flex items-center justify-center text-white shadow"
                             >
                                 <i class="mdi mdi-account-outline text-xl"></i>
                             </div>
@@ -161,10 +161,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <a
                             href="/"
                             @click.prevent="homePage"
-                            class="w-full text-left px-4 py-3 hover:bg-white dark:hover:bg-gray-700 flex items-center transition-all duration-200 group cursor-pointer"
+                            class="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center transition-colors duration-150 group cursor-pointer"
                         >
                             <div
-                                class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform"
+                                class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3"
                             >
                                 <i
                                     class="mdi mdi-home text-blue-600 dark:text-blue-400 text-lg"
@@ -190,10 +190,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <a
                             :href="userDashboardRoute"
                             @click.prevent="myAccount"
-                            class="w-full text-left px-4 py-3 hover:bg-white dark:hover:bg-gray-700 flex items-center transition-all duration-200 group cursor-pointer"
+                            class="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center transition-colors duration-150 group cursor-pointer"
                         >
                             <div
-                                class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform"
+                                class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3"
                             >
                                 <i
                                     class="mdi mdi-account-cog text-green-600 dark:text-green-400 text-lg"
@@ -218,10 +218,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     <li class="block lg:hidden" v-if="!user?.id">
                         <a
                             @click="open($page.props.auth_routes.login)"
-                            class="w-full text-left px-4 py-3 hover:bg-white dark:hover:bg-gray-700 flex items-center transition-all duration-200 group cursor-pointer"
+                            class="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center transition-colors duration-150 group cursor-pointer"
                         >
                             <div
-                                class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform"
+                                class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3"
                             >
                                 <i
                                     class="mdi mdi-login text-blue-600 dark:text-blue-400 text-lg"
@@ -248,10 +248,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         <a
                             @click="open($page.props.auth_routes.register)"
-                            class="w-full text-left px-4 py-3 hover:bg-white dark:hover:bg-gray-700 flex items-center transition-all duration-200 group cursor-pointer"
+                            class="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center transition-colors duration-150 group cursor-pointer"
                         >
                             <div
-                                class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform"
+                                class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3"
                             >
                                 <i
                                     class="mdi mdi-login text-blue-600 dark:text-blue-400 text-lg"
@@ -277,10 +277,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <a
                             :href="logoutRoute"
                             @click.prevent="goTo(logoutRoute)"
-                            class="w-full text-left px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center transition-all duration-200 group cursor-pointer"
+                            class="w-full text-left px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/10 flex items-center transition-colors duration-150 group cursor-pointer"
                         >
                             <div
-                                class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform"
+                                class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-3"
                             >
                                 <i
                                     class="mdi mdi-logout text-red-600 dark:text-red-400 text-lg"
@@ -304,7 +304,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                 <!-- Footer -->
                 <div
-                    class="px-4 py-3 bg-white dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700"
+                    class="px-4 py-3 bg-gray-50 dark:bg-gray-900/30 border-t border-gray-100 dark:border-gray-700"
                 >
                     <div
                         class="text-xs text-gray-500 dark:text-gray-400 text-center"

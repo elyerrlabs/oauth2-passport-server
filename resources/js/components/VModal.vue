@@ -35,7 +35,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-y-auto">
-                <div class="flex items-center justify-center p-1 lg:p-4 text-center">
+                <div
+                    class="flex items-center justify-center p-1 lg:p-4 text-center"
+                >
                     <TransitionChild
                         as="template"
                         enter="duration-300 ease-out"
@@ -47,7 +49,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         <DialogPanel
                             :class="[
-                                'transform rounded-2xl bg-white dark:bg-gray-800 p-6 text-left align-middle shadow-xl transition-all',
+                                'transform rounded-2xl bg-white dark:bg-gray-800 p-2 lg:p-6 text-left align-middle shadow-xl transition-all',
                                 panelClass,
                             ]"
                         >
@@ -71,7 +73,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </button>
                             </DialogTitle>
                             <div
-                                class="lg:p-6 text-gray-700 dark:text-gray-300 flex-grow"
+                                class="md:p-4 text-gray-700 dark:text-gray-300 grow"
                             >
                                 <slot name="body" />
                             </div>

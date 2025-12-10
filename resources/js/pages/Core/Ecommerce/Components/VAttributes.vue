@@ -21,28 +21,24 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
     <div
-        class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-8"
+        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-6"
     >
-        <div
-            class="mb-2 p-4 bg-linear-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-blue-100 dark:border-gray-700 shadow-sm"
-        >
-            <div class="flex items-start gap-2 mb-4">
+        <!-- Header -->
+        <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-600">
+            <div class="flex items-start gap-3">
                 <div
-                    class="shrink-0 w-8 h-8 bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg"
+                    class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
                 >
-                    <i class="fas fa-pencil-alt text-white text-lg"></i>
+                    <i class="fas fa-pencil-alt text-white"></i>
                 </div>
-                <div class="flex-1">
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">
+                <div>
+                    <h2
+                        class="text-base sm:text-lg font-bold text-gray-900 dark:text-white"
+                    >
                         {{ __("Product Attributes") }}
                     </h2>
                     <p
-                        class="text-md text-gray-700 dark:text-gray-300 font-medium"
-                    >
-                        {{ __("Manage product attributes and variations") }}
-                    </p>
-                    <p
-                        class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed"
+                        class="text-gray-700 dark:text-gray-300 text-xs sm:text-sm mt-1 leading-relaxed"
                     >
                         {{
                             __(
@@ -53,22 +49,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
             </div>
         </div>
+
         <!-- Content -->
-        <div class="p-2">
+        <div class="p-3 sm:p-4">
             <!-- Empty State -->
             <div v-if="modelValue.length === 0" class="text-center py-4">
                 <div
-                    class="w-10 h-10 bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-3xl flex items-center justify-center mx-auto shadow-inner"
+                    class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center mx-auto"
                 >
-                    <i
-                        class="fas fa-tags text-gray-400 dark:text-gray-500 text-lg"
-                    ></i>
+                    <i class="fas fa-tags text-gray-400 dark:text-gray-500"></i>
                 </div>
-                <h4 class="text-lg font-bold text-gray-900 dark:text-white">
+                <h4
+                    class="text-base font-bold text-gray-900 dark:text-white mt-2"
+                >
                     {{ __("No attributes added yet") }}
                 </h4>
                 <p
-                    class="text-gray-600 dark:text-gray-400 text-md mb-2 max-w-md mx-auto"
+                    class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm max-w-md mx-auto mt-1"
                 >
                     {{
                         __(
@@ -78,49 +75,50 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </p>
                 <button
                     @click="addAttribute"
-                    class="inline-flex items-center cursor-pointer gap-3 px-4 py-2 bg-linear-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    class="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center mx-auto transition-colors"
                 >
-                    <i class="fas fa-plus-circle text-lg"></i>
-                    <span class="text-md">{{ __("Add First Attribute") }}</span>
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    {{ __("Add First Attribute") }}
                 </button>
-
                 <v-error :error="error" />
             </div>
 
             <!-- Attributes Grid -->
-            <div v-else class="space-y-1">
+            <div v-else class="space-y-3">
                 <div
                     v-for="(attr, index) in modelValue"
                     :key="index"
-                    class="group bg-linear-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-800 rounded-2xl border-2 border-gray-100 dark:border-gray-600 p-2 shadow-sm hover:shadow-2xl transition-all duration-300 hover:border-blue-200 dark:hover:border-blue-600"
+                    class="bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-3 sm:p-4"
                 >
                     <!-- Attribute Header -->
                     <div
-                        class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-2 pb-2 border-b border-gray-200 dark:border-gray-600"
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pb-3 border-b border-gray-200 dark:border-gray-600"
                     >
-                        <div class="flex items-end gap-4">
+                        <div class="flex items-center gap-3">
                             <div
-                                class="w-12 h-12 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md"
+                                class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-lg flex items-center justify-center"
                             >
-                                <span class="text-white font-bold text-lg">
+                                <span
+                                    class="text-white font-bold text-sm sm:text-base"
+                                >
                                     {{ index + 1 }}
                                 </span>
                             </div>
-                            <div>
+                            <div class="flex-1 min-w-0">
                                 <h4
-                                    class="text-xl font-bold text-gray-900 dark:text-white"
+                                    class="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate"
                                 >
                                     {{ __("Attribute") }} #{{ index + 1 }}
                                 </h4>
                                 <p
                                     v-if="attr.name"
-                                    class="text-blue-600 dark:text-blue-400 font-medium"
+                                    class="text-blue-600 dark:text-blue-400 text-xs sm:text-sm truncate"
                                 >
                                     {{ attr.name }}
                                 </p>
                                 <p
                                     v-else
-                                    class="text-gray-500 dark:text-gray-400 text-sm"
+                                    class="text-gray-500 dark:text-gray-400 text-xs"
                                 >
                                     {{ __("Unnamed attribute") }}
                                 </p>
@@ -128,70 +126,123 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <button
                             @click="deleteAttribute(index)"
-                            class="flex items-center gap-2 px-4 py-2 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 border border-transparent hover:border-red-200 dark:hover:border-red-800 font-medium"
+                            class="mt-2 sm:mt-0 px-3 py-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded text-sm transition-colors flex items-center justify-center w-full sm:w-auto"
                         >
-                            <i class="fas fa-trash-alt"></i>
+                            <i class="fas fa-trash-alt mr-1.5"></i>
                             <span>{{ __("Delete attribute") }}</span>
                         </button>
                     </div>
 
-                    <!-- Form Grid -->
+                    <!-- Form Fields -->
                     <div
-                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-end"
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 items-start"
                     >
+                        <!-- Name -->
                         <div>
                             <v-input
                                 :label="__('Attribute Name')"
                                 v-model="attr.name"
                                 :required="true"
                                 :placeholder="__('e.g., Color, Size, Material')"
+                                size="small"
                             />
+                            <div
+                                class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                            >
+                                {{
+                                    __("A descriptive name for this attribute")
+                                }}
+                            </div>
                             <v-error
                                 v-if="error[index]"
                                 :error="error[index]['name']"
                             />
                         </div>
+
+                        <!-- Type -->
                         <div>
                             <v-select
                                 :label="__('Data Type')"
                                 :options="typeOptions"
                                 v-model="attr.type"
                                 :required="true"
+                                size="small"
                             />
+                            <div
+                                class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                            >
+                                {{
+                                    __("The type of data this attribute holds")
+                                }}
+                            </div>
                             <v-error
                                 v-if="error[index]"
                                 :error="error[index]['type']"
                             />
                         </div>
+
+                        <!-- Widget -->
                         <div>
                             <v-select
                                 :label="__('Display Widget')"
                                 :options="widgetOptions"
                                 v-model="attr.widget"
                                 :required="true"
+                                size="small"
                             />
+                            <div
+                                class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                            >
+                                {{
+                                    __(
+                                        "How this attribute will be displayed to customers"
+                                    )
+                                }}
+                            </div>
                             <v-error
                                 v-if="error[index]"
                                 :error="error[index]['widget']"
                             />
                         </div>
-                        <div>
+
+                        <!-- Value -->
+                        <div class="sm:col-span-2 lg:col-span-1">
                             <v-input
                                 :label="__('Attribute Value')"
                                 v-model="attr.value"
                                 :required="true"
                                 :placeholder="__('e.g., Red, Large, Cotton')"
+                                size="small"
                             />
+                            <div
+                                class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                            >
+                                {{ __("The actual value for this attribute") }}
+                            </div>
                             <v-error
                                 v-if="error[index]"
                                 :error="error[index]['value']"
                             />
                         </div>
-                        <div>
-                            <v-switch
-                                :label="__('Multiple Values')"
-                                v-model="attr.multiple"
-                            />
+
+                        <!-- Multiple Values -->
+                        <div class="sm:col-span-2 lg:col-span-1">
+                            <div class="mb-1">
+                                <v-switch
+                                    :label="__('Multiple Values')"
+                                    v-model="attr.multiple"
+                                    size="small"
+                                />
+                            </div>
+                            <div
+                                class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                            >
+                                {{
+                                    __(
+                                        "Allow multiple values for this attribute"
+                                    )
+                                }}
+                            </div>
                             <v-error
                                 v-if="error[index]"
                                 :error="error[index]['multiple']"
@@ -205,14 +256,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Add Button -->
         <div
             v-if="modelValue.length > 0"
-            class="border-t border-gray-200 dark:border-gray-600 bg-linear-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-8 py-6"
+            class="border-t border-gray-200 dark:border-gray-600 p-3 sm:p-4"
         >
             <button
                 @click="addAttribute"
-                class="mx-auto cursor-pointer px-3 py-2 bg-linear-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 hover:from-green-600 hover:to-green-700 dark:hover:from-green-700 dark:hover:to-green-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
+                class="w-full sm:w-auto px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center justify-center transition-colors"
             >
-                <i class="fas fa-plus-circle text-xl"></i>
-                <span class="text-md">{{ __("Add New Attribute") }}</span>
+                <i class="fas fa-plus-circle mr-2"></i>
+                {{ __("Add New Attribute") }}
             </button>
         </div>
     </div>
@@ -254,7 +305,6 @@ export default {
                 { name: "Checkbox", id: "checkbox" },
                 { name: "Select", id: "select" },
             ],
-            lastValidState: [],
         };
     },
 
@@ -286,31 +336,25 @@ export default {
                 cancelButtonColor: "#3085d6",
                 confirmButtonText: __("Yes, delete it!"),
                 cancelButtonText: __("Cancel"),
-                reverseButtons: true,
-                focusCancel: true,
             });
 
-            // If user cancels, return early
             if (!result.isConfirmed) {
                 return;
             }
 
-            // Local attribute (no server link)
+            // Local attribute
             if (!item.links?.destroy) {
                 this.modelValue.splice(index, 1);
-
                 $notify.success(__("Attribute has been deleted successfully."));
-
                 this.$emit("update:modelValue", this.modelValue);
                 return;
             }
 
-            // Server deletion required
+            // Server deletion
             try {
                 const res = await this.$server.delete(item.links.destroy);
                 if (res.status === 200) {
                     this.modelValue.splice(index, 1);
-
                     $notify.success(
                         __("Attribute has been deleted successfully.")
                     );

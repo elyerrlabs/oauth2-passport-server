@@ -32,10 +32,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
     <button
         v-else
-        class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-xl px-6 py-3 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer font-semibold"
+        class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-xl px-6 py-2 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer font-semibold"
         @click="open"
     >
-        <i class="mdi mdi-plus text-md md:text-lg"></i>
+        <i class="mdi mdi-plus text-sm md:text-md md:text-lg"></i>
         <span>{{ __("Create New Plan") }}</span>
     </button>
 
@@ -51,7 +51,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <div
                     class="bg-white dark:bg-gray-800 rounded-2xl p-1 sm:p-2 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
-                    <div class="flex items-center space-x-3 mb-4">
+                    <div class="flex items-center p-4 mb-4">
                         <div
                             class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center"
                         >
@@ -59,9 +59,9 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 class="mdi mdi-information text-blue-600 dark:text-blue-400 text-lg"
                             ></i>
                         </div>
-                        <div>
+                        <div class="p-4">
                             <h3
-                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                                class="text-sm lg:text-lg font-semibold text-gray-900 dark:text-white"
                             >
                                 {{ __("Plan Information") }}
                             </h3>
@@ -140,7 +140,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div>
                             <h3
-                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                                class="text-sm lg:text-lg font-semibold text-gray-900 dark:text-white"
                             >
                                 {{ __("Pricing Configuration") }}
                             </h3>
@@ -223,10 +223,10 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Add Price Button -->
                     <button
-                        class="w-full mt-4 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white border border-green-500 dark:border-green-600 rounded-xl px-4 py-3 flex items-center justify-center gap-2 transition-all duration-200 transform hover:scale-105 cursor-pointer font-semibold shadow-lg hover:shadow-xl"
+                        class="w-full mt-4 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white border border-green-500 dark:border-green-600 rounded-xl px-4 py-2 flex items-center justify-between gap-2 transition-all duration-200 transform hover:scale-105 cursor-pointer font-semibold shadow-lg hover:shadow-xl"
                         @click="addPrice"
                     >
-                        <i class="mdi mdi-plus-circle text-lg"></i>
+                        <i class="mdi mdi-plus-circle text-sm lg:text-lg"></i>
                         {{ __("Add Pricing Option") }}
                     </button>
                 </div>
@@ -245,7 +245,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         </div>
                         <div>
                             <h3
-                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                                class="text-sm lg:text-lg font-semibold text-gray-900 dark:text-white"
                             >
                                 {{ __("Access Scopes") }}
                             </h3>
@@ -327,7 +327,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     ></i>
                                 </button>
 
-                                <div class="flex-shrink-0 mr-4">
+                                <div class="shrink-0 mr-4">
                                     <div
                                         class="w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-200"
                                         :class="
@@ -341,7 +341,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         ></i>
                                     </div>
                                 </div>
-                                <div class="flex-grow">
+                                <div class="grow">
                                     <div
                                         class="font-semibold text-gray-900 dark:text-white"
                                     >
@@ -367,7 +367,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         ID: {{ scope.gsr_id }}
                                     </div>
                                 </div>
-                                <div class="flex-shrink-0">
+                                <div class="shrink-0">
                                     <div
                                         class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors duration-200"
                                         :class="

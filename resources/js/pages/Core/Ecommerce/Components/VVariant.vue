@@ -1,48 +1,23 @@
-<!--
-Copyright (c) 2025 Elvis Yerel Roman Concha
-
-This file is part of an open source project licensed under the
-"NON-COMMERCIAL USE LICENSE - OPEN SOURCE PROJECT" (Effective Date: 2025-08-03).
-
-You may use, study, modify, and redistribute this file for personal,
-educational, or non-commercial research purposes only.
-
-Commercial use is strictly prohibited without prior written consent
-from the author.
-
-Combining this software with any project licensed for commercial use
-(such as AGPL) is not permitted without explicit authorization.
-
-This software supports OAuth 2.0 and OpenID Connect.
-
-Author Contact: yerel9212@yahoo.es
-
-SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
--->
 <template>
     <div
-        class="border border-dashed p-1 rounded-2xl text-gray-700 dark:text-gray-400"
+        class="border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4"
     >
-        <!-- Component Description -->
-        <div
-            class="mb-2 p-2 bg-linear-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 border border-blue-100 dark:border-gray-700 rounded-lg shadow-sm"
-        >
-            <div class="flex items-start gap-2">
+        <!-- Header -->
+        <div class="mb-4 sm:mb-6">
+            <div class="flex items-start gap-3 mb-4">
                 <div
-                    class="shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+                    class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
                 >
-                    <i
-                        class="fas fa-cubes text-blue-600 dark:text-blue-400 text-lg"
-                    ></i>
+                    <i class="fas fa-cubes text-white"></i>
                 </div>
-                <div class="flex-1">
+                <div>
                     <h2
-                        class="text-lg font-bold text-gray-900 dark:text-white mb-2"
+                        class="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-1"
                     >
                         {{ __("What is a Variant?") }}
                     </h2>
                     <p
-                        class="text-gray-700 dark:text-gray-300 leading-relaxed text-md mb-2"
+                        class="text-gray-700 dark:text-gray-300 text-xs sm:text-sm leading-relaxed"
                     >
                         {{
                             __(
@@ -50,190 +25,153 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             )
                         }}
                     </p>
+                </div>
+            </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                        <div
-                            class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-blue-100 dark:border-blue-900"
-                        >
-                            <div
-                                class="w-8 h-8 bg-blue-500 rounded flex items-center justify-center"
-                            >
-                                <i class="fas fa-tag text-white text-xs"></i>
-                            </div>
-                            <div>
-                                <h3
-                                    class="font-semibold text-gray-900 dark:text-white text-sm"
-                                >
-                                    {{ __("Name") }}
-                                </h3>
-                                <p
-                                    class="text-gray-600 dark:text-gray-400 text-xs"
-                                >
-                                    {{
-                                        __(
-                                            "A short label for the variant (e.g. '128GB')"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-green-100 dark:border-green-900"
-                        >
-                            <div
-                                class="w-8 h-8 bg-green-500 rounded flex items-center justify-center"
-                            >
-                                <i class="fas fa-cubes text-white text-xs"></i>
-                            </div>
-                            <div>
-                                <h3
-                                    class="font-semibold text-gray-900 dark:text-white text-sm"
-                                >
-                                    {{ __("Stock") }}
-                                </h3>
-                                <p
-                                    class="text-gray-600 dark:text-gray-400 text-xs"
-                                >
-                                    {{
-                                        __(
-                                            "The available quantity for this variant"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-yellow-100 dark:border-yellow-900"
-                        >
-                            <div
-                                class="w-8 h-8 bg-yellow-500 rounded flex items-center justify-center"
-                            >
-                                <i
-                                    class="fas fa-dollar-sign text-white text-xs"
-                                ></i>
-                            </div>
-                            <div>
-                                <h3
-                                    class="font-semibold text-gray-900 dark:text-white text-sm"
-                                >
-                                    {{ __("Price") }}
-                                </h3>
-                                <p
-                                    class="text-gray-600 dark:text-gray-400 text-xs"
-                                >
-                                    {{
-                                        __(
-                                            "The cost of this variant, independent from the base product"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-purple-100 dark:border-purple-900"
-                        >
-                            <div
-                                class="w-8 h-8 bg-purple-500 rounded flex items-center justify-center"
-                            >
-                                <i class="fas fa-globe text-white text-xs"></i>
-                            </div>
-                            <div>
-                                <h3
-                                    class="font-semibold text-gray-900 dark:text-white text-sm"
-                                >
-                                    {{ __("Currency") }}
-                                </h3>
-                                <p
-                                    class="text-gray-600 dark:text-gray-400 text-xs"
-                                >
-                                    {{
-                                        __(
-                                            "The currency in which the price is defined"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
+            <!-- Quick Info Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+                <div
+                    class="flex items-start gap-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded"
+                >
                     <div
-                        class="flex items-center gap-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-100 dark:border-indigo-800"
+                        class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center flex-shrink-0 mt-0.5"
                     >
-                        <div
-                            class="w-8 h-8 bg-indigo-500 rounded flex items-center justify-center"
+                        <i class="fas fa-tag text-white text-xs"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p
+                            class="text-xs font-medium text-gray-900 dark:text-white"
                         >
-                            <i class="fas fa-align-left text-white text-xs"></i>
-                        </div>
-                        <div>
-                            <h3
-                                class="font-semibold text-gray-900 dark:text-white text-sm"
-                            >
-                                {{ __("Description") }}
-                            </h3>
-                            <p class="text-gray-600 dark:text-gray-400 text-xs">
-                                {{
-                                    __(
-                                        "Optional short description for this variant to clarify details and specifications"
-                                    )
-                                }}
-                            </p>
-                        </div>
+                            {{ __("Name") }}
+                        </p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">
+                            {{
+                                __(
+                                    "A short label for the variant (e.g. '128GB')"
+                                )
+                            }}
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="flex items-start gap-2 p-2 bg-green-50 dark:bg-green-900/20 rounded"
+                >
+                    <div
+                        class="w-6 h-6 bg-green-600 rounded flex items-center justify-center flex-shrink-0 mt-0.5"
+                    >
+                        <i class="fas fa-cubes text-white text-xs"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p
+                            class="text-xs font-medium text-gray-900 dark:text-white"
+                        >
+                            {{ __("Stock") }}
+                        </p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">
+                            {{ __("The available quantity for this variant") }}
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="flex items-start gap-2 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded"
+                >
+                    <div
+                        class="w-6 h-6 bg-yellow-600 rounded flex items-center justify-center flex-shrink-0 mt-0.5"
+                    >
+                        <i class="fas fa-dollar-sign text-white text-xs"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p
+                            class="text-xs font-medium text-gray-900 dark:text-white"
+                        >
+                            {{ __("Price") }}
+                        </p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">
+                            {{
+                                __(
+                                    "The cost of this variant, independent from the base product"
+                                )
+                            }}
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="flex items-start gap-2 p-2 bg-purple-50 dark:bg-purple-900/20 rounded"
+                >
+                    <div
+                        class="w-6 h-6 bg-purple-600 rounded flex items-center justify-center flex-shrink-0 mt-0.5"
+                    >
+                        <i class="fas fa-globe text-white text-xs"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p
+                            class="text-xs font-medium text-gray-900 dark:text-white"
+                        >
+                            {{ __("Currency") }}
+                        </p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">
+                            {{
+                                __("The currency in which the price is defined")
+                            }}
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Header -->
+        <!-- Add Button -->
         <div
-            class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700"
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4"
         >
             <div class="flex-1">
-                <h1
-                    class="text-xl font-bold text-gray-900 dark:text-white mb-1"
+                <h3
+                    class="text-sm sm:text-base font-bold text-gray-900 dark:text-white"
                 >
                     {{ __("Manage Variants") }}
-                </h1>
-                <p class="text-gray-600 dark:text-gray-400 text-sm">
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">
                     {{ __("Add and configure different product variations") }}
                 </p>
             </div>
             <button
                 @click="addVariant"
-                class="flex items-center gap-2 px-5 py-2.5 cursor-pointer bg-linear-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
+                class="px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm flex items-center justify-center transition-colors w-full sm:w-auto"
             >
-                <i class="fas fa-plus-circle"></i>
+                <i class="fas fa-plus-circle mr-2"></i>
                 <span>{{ __("Add Variant") }}</span>
             </button>
         </div>
 
         <!-- Variants List -->
-        <div class="space-y-4">
+        <div v-if="modelValue.length > 0" class="space-y-3">
             <div
                 v-for="(variant, index) in modelValue"
                 :key="index"
-                class="group bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 p-2 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-blue-200 dark:hover:border-blue-600"
+                class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 p-3 sm:p-4"
             >
                 <!-- Variant Header -->
                 <div
-                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-gray-700"
+                    class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pb-3 border-b border-gray-200 dark:border-gray-600"
                 >
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2">
                         <div
-                            class="w-10 h-10 bg-linear-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center"
+                            class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-lg flex items-center justify-center"
                         >
-                            <span class="text-white font-bold">
+                            <span
+                                class="text-white font-bold text-sm sm:text-base"
+                            >
                                 {{ index + 1 }}
                             </span>
                         </div>
-                        <div>
-                            <h3
-                                class="text-lg font-bold text-gray-900 dark:text-white"
+                        <div class="flex-1 min-w-0">
+                            <h4
+                                class="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate"
                             >
                                 {{ __("Variant") }} #{{ index + 1 }}
-                            </h3>
+                            </h4>
                             <p
                                 v-if="variant.name"
-                                class="text-blue-600 dark:text-blue-400 font-medium text-sm"
+                                class="text-blue-600 dark:text-blue-400 text-xs sm:text-sm truncate"
                             >
                                 {{ variant.name }}
                             </p>
@@ -247,20 +185,25 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     </div>
                     <button
                         @click="removeVariant(index)"
-                        class="flex items-center gap-1.5 cursor-pointer px-3 py-1.5 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded transition-all duration-200 border border-transparent hover:border-red-200 dark:hover:border-red-800 text-sm"
+                        class="mt-2 sm:mt-0 px-3 py-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded text-sm transition-colors flex items-center justify-center w-full sm:w-auto"
                     >
-                        <i class="fas fa-trash-alt"></i>
-                        <span class="font-medium">{{ __("Remove") }}</span>
+                        <i class="fas fa-trash-alt mr-1.5"></i>
+                        <span>{{ __("Remove") }}</span>
                     </button>
                 </div>
 
                 <!-- Variant Form -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 items-start">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Name -->
                     <div>
                         <v-input
                             :label="__('Variant Name')"
                             v-model="variant.name"
                             :required="true"
+                            :placeholder="
+                                __('e.g., 128GB, Red, Limited Edition')
+                            "
+                            size="small"
                         />
                         <v-error
                             v-if="error[index]"
@@ -268,6 +211,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         />
                     </div>
 
+                    <!-- Stock -->
                     <div>
                         <v-input
                             :label="__('Stock Quantity')"
@@ -275,6 +219,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             :required="true"
                             type="number"
                             :disabled="variant?.id ? true : false"
+                            size="small"
                         />
                         <v-error
                             v-if="error[index]"
@@ -282,39 +227,59 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         />
                     </div>
 
-                    <div v-if="variant?.id">
-                        <div class="grid grid-cols-2 gap-2 items-end">
-                            <v-input
-                                :label="__('Update Stock')"
-                                v-model="variant.adjustment"
-                                type="number"
-                                @input="calculateStock(variant)"
-                            />
-                            <v-switch
-                                v-model="variant.decrease"
-                                :label="__('Decrease')"
-                                @change="calculateStock(variant)"
-                            />
-                        </div>
-                        <span
-                            class="font-semibold text-gray-800 dark:text-gray-200"
+                    <!-- Stock Adjustment (if editing) -->
+                    <div v-if="variant?.id" class="sm:col-span-2">
+                        <div
+                            class="bg-gray-50 dark:bg-gray-700 rounded p-3 mb-2"
                         >
-                            {{ __("Current stock") }} :
-                            {{ variant.stock_temp }}
-                        </span>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end"
+                            >
+                                <div>
+                                    <v-input
+                                        :label="__('Update Stock')"
+                                        v-model="variant.adjustment"
+                                        type="number"
+                                        @input="calculateStock(variant)"
+                                        size="small"
+                                    />
+                                </div>
+                                <div>
+                                    <v-switch
+                                        v-model="variant.decrease"
+                                        :label="__('Decrease')"
+                                        @change="calculateStock(variant)"
+                                        size="small"
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                class="text-xs text-gray-600 dark:text-gray-400 mt-2"
+                            >
+                                {{ __("Current stock") }}:
+                                <span class="font-semibold">{{
+                                    variant.stock_temp
+                                }}</span>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Price -->
                     <div>
                         <v-input
                             :label="__('Price')"
                             v-model="variant.price"
                             :required="true"
                             type="money"
+                            size="small"
                         />
                         <v-error
                             v-if="error[index]"
                             :error="error[index]['price']"
                         />
                     </div>
+
+                    <!-- Currency -->
                     <div>
                         <v-select
                             v-model="variant.currency"
@@ -323,6 +288,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             value-key="code"
                             label-key="name"
                             :required="true"
+                            size="small"
                         />
                         <v-error
                             v-if="error[index]"
@@ -330,11 +296,23 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         />
                     </div>
 
-                    <div class="lg:col-span-2">
+                    <!-- Description -->
+                    <div class="sm:col-span-2">
+                        <div
+                            class="mb-2 text-xs text-gray-600 dark:text-gray-400"
+                        >
+                            {{
+                                __(
+                                    "Optional short description for this variant to clarify details and specifications"
+                                )
+                            }}
+                        </div>
                         <v-textarea
                             :label="__('Description')"
                             v-model="variant.description"
                             :required="true"
+                            :rows="3"
+                            size="small"
                         />
                         <v-error
                             v-if="error[index]"
@@ -348,20 +326,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <!-- Empty State -->
         <div
             v-if="modelValue.length === 0"
-            class="text-center py-12 bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600"
+            class="text-center py-6 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-600"
         >
             <div
-                class="w-16 h-16 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mx-auto mb-3"
             >
-                <i
-                    class="fas fa-cubes text-blue-500 dark:text-blue-400 text-2xl"
-                ></i>
+                <i class="fas fa-cubes text-blue-600 dark:text-blue-400"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white mb-1">
                 {{ __("No variants yet") }}
             </h3>
             <p
-                class="text-gray-600 dark:text-gray-400 mb-4 max-w-md mx-auto text-sm"
+                class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-4 max-w-md mx-auto"
             >
                 {{
                     __(
@@ -371,12 +347,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             </p>
             <button
                 @click="addVariant"
-                class="inline-flex items-center cursor-pointer gap-2 px-6 py-3 bg-linear-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm flex items-center mx-auto transition-colors"
             >
-                <i class="fas fa-plus-circle"></i>
-                <span>{{ __("Create First Variant") }}</span>
+                <i class="fas fa-plus-circle mr-2"></i>
+                {{ __("Create First Variant") }}
             </button>
-            <v-error v-for="(value, index) in error" :error="value" />
+            <v-error
+                v-for="(value, index) in error"
+                :key="index"
+                :error="value"
+            />
         </div>
     </div>
 </template>
@@ -409,22 +389,17 @@ export default {
     emits: ["update:modelValue"],
     data() {
         return {
-            errors: {},
             currencies: [],
-            current_stock: 0,
-            update_stock: 0,
-            decrease: false,
         };
     },
 
     created() {
         this.getCurrencies();
     },
+
     methods: {
         calculateStock(variant) {
-            if (!variant?.id) {
-                return;
-            }
+            if (!variant?.id) return;
 
             let stock = Number(variant.stock_temp);
             const adjustment = Number(variant.adjustment) || 0;
@@ -447,11 +422,6 @@ export default {
                 description: "",
             });
             this.$emit("update:modelValue", this.modelValue);
-            $notify.success(
-                __(
-                    "Nuw variant section has been added, please complete the information"
-                )
-            );
         },
 
         async removeVariant(index) {
@@ -468,41 +438,23 @@ export default {
                 cancelButtonColor: "#3085d6",
                 confirmButtonText: __("Yes, delete it!"),
                 cancelButtonText: __("Cancel"),
-                reverseButtons: true,
-                focusCancel: true,
             });
 
-            // If user cancels, return early
-            if (!result.isConfirmed) {
-                return;
-            }
+            if (!result.isConfirmed) return;
 
-            // Local attribute (no server link)
             if (!item.links?.destroy) {
                 this.modelValue.splice(index, 1);
-
-                $notify.success(__("Variant has been deleted successfully."));
-
                 this.$emit("update:modelValue", this.modelValue);
                 return;
             }
 
-            // Server deletion required
             try {
                 const res = await this.$server.delete(item.links.destroy);
                 if (res.status === 200) {
                     this.modelValue.splice(index, 1);
-
-                    $notify.success(
-                        __("Variant has been deleted successfully.")
-                    );
                 }
             } catch (e) {
-                $notify.error(
-                    __(
-                        "There was an error deleting the variant. Please try again."
-                    )
-                );
+                console.error("Error deleting variant:", e);
             } finally {
                 this.$emit("update:modelValue", this.modelValue);
             }
@@ -520,9 +472,7 @@ export default {
                     }));
                 }
             } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
+                console.error("Error loading currencies:", e);
             }
         },
     },

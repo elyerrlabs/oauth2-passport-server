@@ -20,31 +20,29 @@ Author Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
 <template>
-    <div
-        class="bg-linear-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 min-h-screen p-4"
-    >
+    <div class="bg-gray-50 dark:bg-gray-900 p-3">
         <div class="max-w-7xl mx-auto">
             <!-- Header compacto -->
-            <header class="text-center mb-6">
+            <header class="text-center mb-4">
                 <h1
-                    class="text-2xl font-bold text-gray-800 dark:text-white mb-2"
+                    class="text-xl font-bold text-gray-800 dark:text-white mb-1"
                 >
                     {{ __("Upload Files") }}
                 </h1>
-                <p class="text-gray-600 dark:text-gray-400 text-sm">
+                <p class="text-gray-600 dark:text-gray-400 text-xs">
                     {{ __("Drag & drop or select files to upload") }}
                 </p>
             </header>
 
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
                 <!-- Upload Area Compact -->
                 <div
                     @dragover.prevent="dragOver = true"
                     @dragleave="dragOver = false"
                     @drop.prevent="handleDrop"
-                    class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer transition-all duration-300 mb-6"
+                    class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-3 text-center cursor-pointer transition-colors mb-4"
                     :class="{
-                        'bg-blue-50 dark:bg-blue-900/20 border-blue-400 dark:border-blue-500 scale-105 shadow-md':
+                        'bg-blue-50 dark:bg-blue-900/20 border-blue-400 dark:border-blue-500':
                             dragOver,
                         'hover:border-blue-300 dark:hover:border-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700/50':
                             !dragOver,
@@ -52,33 +50,29 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     @click="selectFiles"
                 >
                     <div
-                        class="flex items-center justify-center space-x-4 py-2"
+                        class="flex flex-col sm:flex-row sm:items-center gap-3"
                     >
                         <div
-                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center flex-shrink-0"
+                            class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto sm:mx-0"
                         >
                             <i
-                                class="fas fa-cloud-upload-alt text-blue-500 dark:text-blue-400 text-lg"
+                                class="fas fa-cloud-upload-alt text-blue-500 dark:text-blue-400"
                             ></i>
                         </div>
-                        <div class="text-left flex-1">
+                        <div class="text-center sm:text-left flex-1">
                             <p
-                                class="text-gray-700 dark:text-gray-300 font-medium text-sm"
+                                class="text-gray-700 dark:text-gray-300 font-medium text-xs sm:text-sm"
                             >
                                 {{ __("Drop files here or click to browse") }}
                             </p>
                             <p
-                                class="text-gray-500 dark:text-gray-400 text-xs mt-1"
+                                class="text-gray-500 dark:text-gray-400 text-xs mt-0.5"
                             >
-                                {{
-                                    __(
-                                        "Supports Images, PDF, MP4, AVI, MOV, MPEG"
-                                    )
-                                }}
+                                {{ __("Images, PDF, Videos") }}
                             </p>
                         </div>
                         <button
-                            class="px-4 py-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors flex-shrink-0"
+                            class="px-3 py-1.5 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded text-xs sm:text-sm font-medium transition-colors"
                         >
                             {{ __("Browse") }}
                         </button>
@@ -94,25 +88,29 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Files Grid -->
-                <div v-if="files.length > 0" class="mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2
-                            class="text-lg font-semibold text-gray-800 dark:text-white flex items-center"
-                        >
-                            <i
-                                class="fas fa-files text-blue-500 dark:text-blue-400 mr-2"
-                            ></i>
-                            {{ __("Selected Files") }}
-                            <span
-                                class="ml-2 text-blue-500 dark:text-blue-400 text-sm font-normal bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded-full"
+                <div v-if="files.length > 0" class="mb-4">
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3"
+                    >
+                        <div class="flex items-center">
+                            <h2
+                                class="text-base font-semibold text-gray-800 dark:text-white flex items-center"
                             >
-                                {{ files.length }}
-                            </span>
-                        </h2>
+                                <i
+                                    class="fas fa-files text-blue-500 dark:text-blue-400 mr-2"
+                                ></i>
+                                {{ __("Selected") }}
+                                <span
+                                    class="ml-2 text-blue-500 dark:text-blue-400 text-xs bg-blue-100 dark:bg-blue-900/30 px-1.5 rounded"
+                                >
+                                    {{ files.length }}
+                                </span>
+                            </h2>
+                        </div>
 
-                        <div class="flex items-center space-x-3">
+                        <div class="flex items-center gap-2">
                             <span
-                                class="text-gray-600 dark:text-gray-400 text-sm bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full"
+                                class="text-gray-600 dark:text-gray-400 text-xs bg-gray-100 dark:bg-gray-700 px-2 rounded"
                             >
                                 <i
                                     class="fas fa-hdd text-gray-400 dark:text-gray-500 mr-1"
@@ -121,7 +119,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </span>
                             <button
                                 @click="clearAll"
-                                class="px-3 py-1 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg text-sm transition-colors"
+                                class="px-2 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded text-xs transition-colors"
                             >
                                 {{ __("Clear All") }}
                             </button>
@@ -130,15 +128,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                     <!-- Responsive Grid -->
                     <div
-                        class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3"
+                        class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2"
                     >
                         <div
                             v-for="(file, index) in files"
                             :key="index"
-                            class="relative group bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 overflow-hidden transition-all duration-300 hover:shadow-md hover:scale-102"
+                            class="relative group bg-white dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 overflow-hidden transition-colors"
                             :class="[
                                 errors[index]
-                                    ? 'border-2 border-red-500 dark:border-red-400'
+                                    ? 'border-red-500 dark:border-red-400'
                                     : 'hover:border-blue-300 dark:hover:border-blue-500',
                             ]"
                         >
@@ -155,56 +153,45 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Video Preview -->
                                 <div
                                     v-else-if="isVideo(file.type)"
-                                    class="w-full h-full bg-purple-50 dark:bg-purple-900/20 flex flex-col items-center justify-center p-4 relative"
+                                    class="w-full h-full bg-purple-50 dark:bg-purple-900/20 flex flex-col items-center justify-center p-2"
                                 >
                                     <i
-                                        class="fas fa-film text-purple-500 dark:text-purple-400 text-2xl mb-2"
+                                        class="fas fa-film text-purple-500 dark:text-purple-400 text-lg mb-1"
                                     ></i>
                                     <span
-                                        class="text-purple-600 dark:text-purple-300 text-xs font-medium text-center"
+                                        class="text-purple-600 dark:text-purple-300 text-xs text-center"
                                     >
                                         {{ __("Video") }}
                                     </span>
-                                    <div
-                                        class="absolute bottom-2 left-2 right-2"
-                                    >
-                                        <div
-                                            class="w-full bg-purple-200 dark:bg-purple-700 rounded-full h-1"
-                                        >
-                                            <div
-                                                class="bg-purple-500 dark:bg-purple-400 h-1 rounded-full w-1/3"
-                                            ></div>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <!-- PDF Preview -->
                                 <div
                                     v-else-if="isPDF(file.type)"
-                                    class="w-full h-full bg-red-50 dark:bg-red-900/20 flex flex-col items-center justify-center p-4"
+                                    class="w-full h-full bg-red-50 dark:bg-red-900/20 flex flex-col items-center justify-center p-2"
                                 >
                                     <i
-                                        class="fas fa-file-pdf text-red-500 dark:text-red-400 text-3xl mb-2"
+                                        class="fas fa-file-pdf text-red-500 dark:text-red-400 text-xl mb-1"
                                     ></i>
                                     <span
-                                        class="text-red-600 dark:text-red-300 text-xs font-medium text-center"
+                                        class="text-red-600 dark:text-red-300 text-xs text-center"
                                     >
-                                        {{ __("PDF Document") }}
+                                        {{ __("PDF") }}
                                     </span>
                                 </div>
 
                                 <!-- Default File Preview -->
                                 <div
                                     v-else
-                                    class="w-full h-full bg-gray-100 dark:bg-gray-600 flex flex-col items-center justify-center p-4"
+                                    class="w-full h-full bg-gray-100 dark:bg-gray-600 flex flex-col items-center justify-center p-2"
                                 >
                                     <i
-                                        class="fas fa-file text-gray-500 dark:text-gray-400 text-3xl mb-2"
+                                        class="fas fa-file text-gray-500 dark:text-gray-400 text-xl mb-1"
                                     ></i>
                                     <span
-                                        class="text-gray-600 dark:text-gray-300 text-xs font-medium text-center"
+                                        class="text-gray-600 dark:text-gray-300 text-xs text-center"
                                     >
-                                        {{ __("Document") }}
+                                        {{ __("File") }}
                                     </span>
                                 </div>
 
@@ -213,48 +200,39 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                     class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-1"
                                 >
                                     <button
-                                        v-if="isImage(file.type)"
-                                        @click.stop="
-                                            viewFile(file.preview, 'image')
+                                        v-if="
+                                            isImage(file.type) ||
+                                            isVideo(file.type) ||
+                                            isPDF(file.type)
                                         "
-                                        class="p-1.5 bg-blue-500 hover:bg-blue-600 rounded text-white transition-colors"
-                                        :title="__('View Image')"
-                                    >
-                                        <i class="fas fa-eye text-xs"></i>
-                                    </button>
-                                    <button
-                                        v-else-if="isVideo(file.type)"
                                         @click.stop="
-                                            viewFile(file.preview, 'video')
+                                            viewFile(
+                                                file.preview,
+                                                isImage(file.type)
+                                                    ? 'image'
+                                                    : isVideo(file.type)
+                                                    ? 'video'
+                                                    : 'pdf'
+                                            )
                                         "
-                                        class="p-1.5 bg-blue-500 hover:bg-blue-600 rounded text-white transition-colors"
-                                        :title="__('Play Video')"
-                                    >
-                                        <i class="fas fa-play text-xs"></i>
-                                    </button>
-                                    <button
-                                        v-else-if="isPDF(file.type)"
-                                        @click.stop="
-                                            viewFile(file.preview, 'pdf')
-                                        "
-                                        class="p-1.5 bg-blue-500 hover:bg-blue-600 rounded text-white transition-colors"
-                                        :title="__('View PDF')"
+                                        class="p-1 bg-blue-500 hover:bg-blue-600 rounded text-white transition-colors"
+                                        :title="__('View')"
                                     >
                                         <i class="fas fa-eye text-xs"></i>
                                     </button>
                                     <button
                                         @click.stop="removeFile(index)"
-                                        class="p-1.5 bg-red-500 hover:bg-red-600 rounded text-white transition-colors"
-                                        :title="__('Remove File')"
+                                        class="p-1 bg-red-500 hover:bg-red-600 rounded text-white transition-colors"
+                                        :title="__('Remove')"
                                     >
                                         <i class="fas fa-trash text-xs"></i>
                                     </button>
                                 </div>
 
                                 <!-- File Type Badge -->
-                                <div class="absolute top-1 left-1">
+                                <div class="absolute top-0.5 left-0.5">
                                     <span
-                                        class="px-1.5 py-0.5 bg-black/70 text-white text-xs rounded"
+                                        class="px-1 bg-black/70 text-white text-2xs rounded"
                                         :class="{
                                             'bg-blue-600': isImage(file.type),
                                             'bg-purple-600': isVideo(file.type),
@@ -272,40 +250,44 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <!-- Video Duration Badge -->
                                 <div
                                     v-if="isVideo(file.type)"
-                                    class="absolute top-1 right-1"
+                                    class="absolute top-0.5 right-0.5"
                                 >
                                     <span
-                                        class="px-1.5 py-0.5 bg-black/70 text-white text-xs rounded"
+                                        class="px-1 bg-black/70 text-white text-2xs rounded"
                                     >
-                                        <i class="fas fa-clock mr-1"></i>
                                         {{ file.duration || "0:00" }}
                                     </span>
                                 </div>
                             </div>
 
                             <!-- File Info -->
-                            <div class="p-2">
+                            <div class="p-1.5">
                                 <p
-                                    class="text-xs font-medium text-gray-800 dark:text-white truncate mb-1"
+                                    class="text-2xs xs:text-xs font-medium text-gray-800 dark:text-white truncate mb-0.5"
                                     :title="file.name"
                                 >
-                                    {{ truncateName(file.name, 18) }}
+                                    {{
+                                        truncateName(
+                                            file.name,
+                                            isMobile ? 12 : 15
+                                        )
+                                    }}
                                 </p>
                                 <div class="flex items-center justify-between">
                                     <p
-                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                        class="text-2xs xs:text-xs text-gray-500 dark:text-gray-400"
                                     >
                                         {{ formatFileSize(file.size) }}
                                     </p>
                                     <i
-                                        class="fas fa-check-circle text-green-500 text-xs"
+                                        class="fas fa-check-circle text-green-500 text-2xs"
                                         v-if="!errors[index]"
-                                        :title="__('Valid file')"
+                                        :title="__('Valid')"
                                     ></i>
                                     <i
-                                        class="fas fa-exclamation-triangle text-red-500 text-xs"
+                                        class="fas fa-exclamation-triangle text-red-500 text-2xs"
                                         v-if="errors[index]"
-                                        :title="__('File error')"
+                                        :title="__('Error')"
                                     ></i>
                                 </div>
                             </div>
@@ -314,15 +296,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 </div>
 
                 <!-- Empty State Compact -->
-                <div v-else class="text-center py-8">
+                <div v-else class="text-center py-6">
                     <i
-                        class="fas fa-file text-gray-300 dark:text-gray-600 text-3xl mb-3"
+                        class="fas fa-file text-gray-300 dark:text-gray-600 text-2xl mb-2"
                     ></i>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm">
+                    <p class="text-gray-500 dark:text-gray-400 text-xs">
                         {{ __("No files selected") }}
                     </p>
-                    <p class="text-gray-400 dark:text-gray-500 text-xs mt-1">
-                        {{ __("Your uploaded files will appear here") }}
+                    <p class="text-gray-400 dark:text-gray-500 text-2xs mt-0.5">
+                        {{ __("Uploaded files will appear here") }}
                     </p>
                 </div>
             </div>
@@ -339,21 +321,21 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
             >
                 <div
                     v-if="previewFile"
-                    class="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+                    class="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-3"
                     @click="previewFile = null"
                 >
                     <div class="relative max-w-4xl max-h-full w-full">
                         <img
                             v-if="previewType === 'image'"
                             :src="previewFile"
-                            class="max-w-full max-h-96 object-contain rounded-lg"
+                            class="max-w-full max-h-80 object-contain rounded"
                             alt="Preview"
                         />
                         <video
                             v-else-if="previewType === 'video'"
                             :src="previewFile"
                             controls
-                            class="max-w-full max-h-96 rounded-lg bg-black"
+                            class="max-w-full max-h-80 rounded bg-black"
                         >
                             {{
                                 __(
@@ -364,12 +346,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         <iframe
                             v-else-if="previewType === 'pdf'"
                             :src="previewFile"
-                            class="w-full h-96 rounded-lg bg-white"
+                            class="w-full h-80 rounded bg-white"
                             frameborder="0"
                         ></iframe>
                         <button
                             @click="previewFile = null"
-                            class="absolute -top-10 right-0 text-white text-xl hover:text-gray-300 transition-colors"
+                            class="absolute -top-8 right-0 text-white text-lg hover:text-gray-300 transition-colors"
                         >
                             <i class="fas fa-times"></i>
                         </button>
@@ -396,8 +378,17 @@ const dragOver = ref(false);
 const previewFile = ref(null);
 const previewType = ref(null);
 const errors = ref([]);
+const isMobile = ref(false);
 
-// Formatos de video soportados
+const checkMobile = () => {
+    isMobile.value = window.innerWidth < 640;
+};
+
+onMounted(() => {
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+});
+
 const supportedVideoFormats = [
     "video/mp4",
     "video/avi",
@@ -407,7 +398,6 @@ const supportedVideoFormats = [
     "video/x-m4v",
 ];
 
-// Formatos de archivo soportados
 const supportedFormats = [
     "image/jpeg",
     "image/jpg",
@@ -469,11 +459,7 @@ const processFiles = async (fileList) => {
     const newFiles = [];
 
     for (let file of fileList) {
-        // Validar tipos de archivo permitidos
         if (!isSupportedFileType(file.type)) {
-            alert(
-                `File type ${file.type} is not supported. Supported types: images, PDF, and videos (MP4, AVI, MOV, MPEG).`
-            );
             continue;
         }
 
@@ -491,15 +477,13 @@ const processFiles = async (fileList) => {
             uploading: false,
         };
 
-        // Si es video, intentar obtener duración
         if (isVideo(file.type)) {
-            await getVideoDuration(file)
-                .then((duration) => {
-                    fileData.duration = formatDuration(duration);
-                })
-                .catch(() => {
-                    fileData.duration = "0:00";
-                });
+            try {
+                const duration = await getVideoDuration(file);
+                fileData.duration = formatDuration(duration);
+            } catch {
+                fileData.duration = "0:00";
+            }
         }
 
         files.value.push(fileData);
@@ -538,11 +522,9 @@ const formatDuration = (seconds) => {
 
 const removeFile = (index) => {
     files.value.splice(index, 1);
-
     errors.value = Object.fromEntries(
         Object.entries(errors.value).filter(([key]) => key != index)
     );
-
     emitUpdate();
 };
 
@@ -556,44 +538,26 @@ const viewFile = (url, type) => {
     previewType.value = type;
 };
 
-const isImage = (type) => {
-    return type && type.startsWith("image/");
-};
-
-const isVideo = (type) => {
-    return type && type.startsWith("video/");
-};
-
-const isPDF = (type) => {
-    return type === "application/pdf";
-};
-
-const isSupportedFileType = (type) => {
-    return supportedFormats.some(
+const isImage = (type) => type && type.startsWith("image/");
+const isVideo = (type) => type && type.startsWith("video/");
+const isPDF = (type) => type === "application/pdf";
+const isSupportedFileType = (type) =>
+    supportedFormats.some(
         (format) =>
             type.startsWith(format) ||
             format.startsWith(type) ||
             supportedFormats.includes(type)
     );
-};
 
-const truncateName = (name, length = 15) => {
-    if (name.length > length) {
-        return name.substring(0, length - 3) + "...";
-    }
-    return name;
-};
-
-const getFileExtension = (filename) => {
-    return filename.split(".").pop().toUpperCase();
-};
-
+const truncateName = (name, length = 15) =>
+    name.length > length ? name.substring(0, length - 3) + "..." : name;
+const getFileExtension = (filename) => filename.split(".").pop().toUpperCase();
 const formatFileSize = (bytes) => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
 };
 
 const totalFilesSize = computed(() => {
@@ -604,7 +568,6 @@ const totalFilesSize = computed(() => {
     return formatFileSize(totalBytes);
 });
 
-// Función para emitir la actualización del v-model
 const emitUpdate = () => {
     const fileObjects = files.value.map((file) => file.file);
     emit("update:modelValue", fileObjects);
@@ -612,15 +575,32 @@ const emitUpdate = () => {
 </script>
 
 <style scoped>
-/* Responsive breakpoints for the grid */
-@media (max-width: 475px) {
-    .xs\:grid-cols-2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+.text-2xs {
+    font-size: 0.625rem; /* 10px */
+    line-height: 0.875rem; /* 14px */
+}
+
+@media (max-width: 375px) {
+    .xs\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
-/* Smooth scaling */
-.hover\:scale-102:hover {
-    transform: scale(1.02);
+@media (min-width: 475px) {
+    .xs\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 475px) {
+    .text-2xs {
+        font-size: 0.5rem; /* 8px */
+        line-height: 0.75rem; /* 12px */
+    }
+
+    .px-1 {
+        padding-left: 0.15rem;
+        padding-right: 0.15rem;
+    }
 }
 </style>
