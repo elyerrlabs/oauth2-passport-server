@@ -1478,7 +1478,6 @@
   "Product Images": "Imágenes de Producto",
   "Delete Product": "Eliminar Producto",
   "Are you sure you want to delete": "¿Estás seguro de que quieres eliminar",
-
   "Products Management": "Gestión de Productos",
   "Manage your product inventory and catalog": "Gestiona tu inventario y catálogo de productos",
   "Filter Help": "Ayuda de Filtros",
@@ -3937,5 +3936,20 @@
   "Refund has been completed": "El reembolso ha sido completado",
   "Refund request was rejected": "La solicitud de reembolso fue rechazada",
   "Refund request was canceled": "La solicitud de reembolso fue cancelada",
-  "Status update": "Actualización de estado"
+  "Status update": "Actualización de estado",
+  "Products Available": "Productos Disponibles",
+  "Total products in inventory": "Total de productos en inventario",
+  "Successful Transactions": "Transacciones Exitosas",
+  "Total revenue from completed transactions": "Ingresos totales de transacciones completadas",
+  "Pending Refund": "Reembolso Pendiente",
+  "Total amount pending refund": "Monto total pendiente de reembolso",
+  "Successfully Refunded": "Reembolsado Exitosamente",
+  "Total amount refunded to customers": "Monto total reembolsado a clientes",
+  "Today's Sales": "Ventas de Hoy",
+  "Revenue generated today": "Ingresos generados hoy",
+  "Number of completed transactions": "Número de transacciones completadas",
+  "Transactions Timeline": "Línea de Tiempo de Transacciones",
+  "Recent Transactions": "Transacciones Recientes",
+  "Last updated": "Última actualización",
+  "Transaction Amount": "Monto de Transacción"
 }
