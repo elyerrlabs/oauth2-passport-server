@@ -151,6 +151,37 @@
         const iconDark = document.getElementById("icon-dark");
         const iconAuto = document.getElementById("icon-auto");
 
+        // Helper function to safely update classes
+        function updateElementClasses(element, classesToAdd = [], classesToRemove = []) {
+            // Process classes to remove
+            const removeClasses = [];
+            classesToRemove.forEach(cls => {
+                if (cls && typeof cls === 'string' && cls.trim()) {
+                    removeClasses.push(...cls.split(' ').filter(c => c && c.trim()));
+                }
+            });
+
+            // Remove duplicates and empty strings
+            const uniqueRemoveClasses = [...new Set(removeClasses.filter(c => c))];
+            uniqueRemoveClasses.forEach(cls => {
+                element.classList.remove(cls);
+            });
+
+            // Process classes to add
+            const addClasses = [];
+            classesToAdd.forEach(cls => {
+                if (cls && typeof cls === 'string' && cls.trim()) {
+                    addClasses.push(...cls.split(' ').filter(c => c && c.trim()));
+                }
+            });
+
+            // Remove duplicates and empty strings
+            const uniqueAddClasses = [...new Set(addClasses.filter(c => c))];
+            uniqueAddClasses.forEach(cls => {
+                element.classList.add(cls);
+            });
+        }
+
         // -----------------------------------------
         // Apply Theme
         // -----------------------------------------
@@ -164,6 +195,7 @@
                     "light";
             }
 
+            // Remove theme classes and add new one
             document.documentElement.classList.remove("light", "dark");
             document.documentElement.classList.add(effective);
 
@@ -187,19 +219,17 @@
             iconAuto.classList.toggle("scale-100", selectedTheme === "auto");
             iconAuto.classList.toggle("scale-0", selectedTheme !== "auto");
 
-            // Update button border color based on theme
-            btn.classList.remove(
-                'border-amber-300', 'border-blue-300', 'border-gray-300',
-                'dark:border-amber-700', 'dark:border-blue-700', 'dark:border-gray-700'
+            // Update button border colors
+            updateElementClasses(btn,
+                selectedTheme === 'light' ? ['border-amber-300', 'dark:border-amber-700'] :
+                selectedTheme === 'dark' ? ['border-blue-300', 'dark:border-blue-700'] : ['border-gray-300',
+                    'dark:border-gray-700'
+                ],
+                [
+                    'border-amber-300', 'border-blue-300', 'border-gray-300',
+                    'dark:border-amber-700', 'dark:border-blue-700', 'dark:border-gray-700'
+                ]
             );
-
-            if (selectedTheme === 'light') {
-                btn.classList.add('border-amber-300', 'dark:border-amber-700');
-            } else if (selectedTheme === 'dark') {
-                btn.classList.add('border-blue-300', 'dark:border-blue-700');
-            } else {
-                btn.classList.add('border-gray-300', 'dark:border-gray-700');
-            }
         }
 
         // Initial theme application
@@ -289,6 +319,7 @@
                 const check = el.querySelector(".check");
                 const iconBox = el.querySelector("div > div");
                 const theme = themes.find(t => t.value === val);
+                const textDiv = el.querySelector('div:nth-child(3)');
 
                 if (val === selectedTheme) {
                     // Apply active styles
@@ -296,46 +327,52 @@
                     el.classList.remove("hover:scale-[1.02]");
 
                     // Update background
-                    const bgDiv = iconBox;
-                    bgDiv.className = `w-10 h-10 rounded-xl flex items-center justify-center 
-                                     transition-all duration-300 shadow-sm ${theme.borderColor} ${theme.activeBg}`;
+                    updateElementClasses(iconBox,
+                        [theme.activeBg, theme.borderColor],
+                        [theme.inactiveBg]
+                    );
 
                     // Update icon color
-                    const icon = bgDiv.querySelector('i');
+                    const icon = iconBox.querySelector('i');
                     icon.className = `text-lg ${theme.icon} ${theme.activeColor}`;
 
                     // Show checkmark
                     check.classList.remove("hidden");
-                    check.querySelector('div').classList.remove("scale-0");
-                    check.querySelector('div').classList.add("scale-100");
+                    const checkIcon = check.querySelector('div');
+                    checkIcon.classList.remove("scale-0");
+                    checkIcon.classList.add("scale-100");
 
                     // Update text colors
-                    const textDiv = el.querySelector('div:nth-child(3)');
-                    textDiv.classList.add(theme.activeColor);
-                    textDiv.classList.remove('text-gray-800', 'dark:text-gray-100');
+                    updateElementClasses(textDiv,
+                        [theme.activeColor],
+                        ['text-gray-800', 'dark:text-gray-100', theme.inactiveColor]
+                    );
                 } else {
                     // Reset to inactive styles
                     el.classList.remove("shadow-sm", "scale-[1.01]");
                     el.classList.add("hover:scale-[1.02]");
 
                     // Update background
-                    const bgDiv = iconBox;
-                    bgDiv.className = `w-10 h-10 rounded-xl flex items-center justify-center 
-                                     transition-all duration-300 shadow-sm ${theme.borderColor} ${theme.inactiveBg}`;
+                    updateElementClasses(iconBox,
+                        [theme.inactiveBg, theme.borderColor],
+                        [theme.activeBg]
+                    );
 
                     // Update icon color
-                    const icon = bgDiv.querySelector('i');
+                    const icon = iconBox.querySelector('i');
                     icon.className = `text-lg ${theme.icon} ${theme.inactiveColor}`;
 
                     // Hide checkmark
                     check.classList.add("hidden");
-                    check.querySelector('div').classList.add("scale-0");
-                    check.querySelector('div').classList.remove("scale-100");
+                    const checkIcon = check.querySelector('div');
+                    checkIcon.classList.add("scale-0");
+                    checkIcon.classList.remove("scale-100");
 
                     // Reset text colors
-                    const textDiv = el.querySelector('div:nth-child(3)');
-                    textDiv.classList.remove(theme.activeColor, 'text-gray-800', 'dark:text-gray-100');
-                    textDiv.classList.add('text-gray-800', 'dark:text-gray-100');
+                    updateElementClasses(textDiv,
+                        ['text-gray-800', 'dark:text-gray-100'],
+                        [theme.activeColor, theme.inactiveColor]
+                    );
                 }
             });
         }
