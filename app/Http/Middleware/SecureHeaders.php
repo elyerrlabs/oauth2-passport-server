@@ -45,7 +45,7 @@ class SecureHeaders
         $response = $next($request);
 
         // Enabled or disable csp policies
-        if (config('system.csp_enabled', true)) {
+        if (config('system.csp_enabled', false)) {
 
             $response->headers->set("Referrer-Policy", "same-origin");
             $response->headers->set("X-Content-Type-Options", "nosniff");
@@ -55,10 +55,10 @@ class SecureHeaders
 
             //Ignore csp policies in this route
             if (!in_array($request->route()->getName(), ['passport.authorizations.authorize'])) {
-
-                $rules = str_starts_with($request->getRequestUri(), "/horizon") ? $this->horizonRules($nonce) : $this->GeneralContentSecurityPolicy($nonce);
-
-                $response->headers->set("Content-Security-Policy", $rules);
+                $response->headers->set(
+                    "Content-Security-Policy",
+                    $this->GeneralContentSecurityPolicy($nonce)
+                );
             }
         }
 
@@ -76,16 +76,16 @@ class SecureHeaders
             "script-src 'self'",
             "script-src-elem 'self' 'nonce-{$nonce}'",
             "script-src-attr 'self' 'nonce-{$nonce}'",
-            // "style-src 'self' $host 'unsafe-inline'",
-            // "style-src-elem 'self' $host 'unsafe-inline'",
-            // "style-src-attr 'self' 'unsafe-inline' 'nonce-{$nonce}'",
+            "style-src 'self'",
+            "style-src-elem 'self' 'nonce-{$nonce}'",
+            "style-src-attr 'self' 'nonce-{$nonce}'",
             "media-src 'self'",
             "object-src 'self'",
             "child-src 'self'",
             "frame-src 'self' https://newassets.hcaptcha.com/ https://challenges.cloudflare.com",
             "frame-ancestors 'self'",
             "img-src 'self' data: blob:",
-            "font-src 'self' ",
+            "font-src 'self' https://fonts.bunny.net/ data:",
             "connect-src 'self'",
             "form-action *",
             "worker-src *",
@@ -103,37 +103,5 @@ class SecureHeaders
     public function generateNonce()
     {
         return bin2hex(random_bytes(16));
-    }
-
-    /**
-     * CSP for Laravel Horizon
-     * @param string $nonce
-     * @return string
-     */
-    private function horizonRules(string $nonce)
-    {
-        $policies = [
-            "base-uri 'self'",
-            "script-src 'self' 'nonce-{$nonce}'",
-            "script-src-elem 'self' 'nonce-{$nonce}'",
-            "script-src-attr 'self' 'nonce-{$nonce}'",
-            "style-src 'self'",
-            "style-src-elem 'self' 'nonce-{$nonce}'",
-            "style-src-attr 'self' 'nonce-{$nonce}'",
-            "media-src 'self'",
-            "object-src 'self'",
-            "child-src 'self'",
-            "frame-src 'self'",
-            "frame-ancestors 'self'",
-            "img-src 'self' data:",
-            "font-src 'self' https://fonts.bunny.net/ data:",
-            "connect-src 'self'",
-            "form-action *",
-            "worker-src *",
-            "manifest-src 'self'",
-            "upgrade-insecure-requests",
-        ];
-
-        return implode(";", $policies);
     }
 }
