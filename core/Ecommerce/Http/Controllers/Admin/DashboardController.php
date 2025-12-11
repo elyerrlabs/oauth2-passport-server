@@ -24,21 +24,24 @@ namespace Core\Ecommerce\Http\Controllers\Admin;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Core\Ecommerce\Services\DashboardService;
 use Illuminate\Http\Request;
-use App\Models\Common\Category;
-use Core\Ecommerce\Repositories\DashboardRepository;
 use Inertia\Inertia;
-use Core\Ecommerce\Model\Product;
 use App\Http\Controllers\WebController;
 
 final class DashboardController extends WebController
 {
-    private $repository;
 
-    public function __construct(DashboardRepository $dashboardRepository)
+    /**
+     * DashboardService
+     * @var DashboardService
+     */
+    private $dashboardService;
+
+    public function __construct(DashboardService $dashboardService)
     {
         parent::__construct();
-        $this->repository = $dashboardRepository;
+        $this->dashboardService = $dashboardService;
         $this->middleware('userCanAny:administrator:ecommerce:full, administrator:ecommerce:dashboard');
     }
 
@@ -51,7 +54,7 @@ final class DashboardController extends WebController
     {
 
         if ($request->wantsJson()) {
-            return $this->repository->dashboard($request);
+            return $this->dashboardService->dashboard($request);
         }
 
         return Inertia::render(
