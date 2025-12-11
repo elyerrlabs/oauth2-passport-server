@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
-## Unreleased
+## 🛠️ v4.0.6
 
 ### Fixes
 
@@ -34,6 +34,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -   Removed non-essential shadows, blurs, and transitions that caused frame drops on mobile.
 -   Improved responsive behavior for charts and dashboard components.
 -   Ensured smoother scrolling and faster interactions on low-end devices.
+-   Improve design for eCommerce
 
 ### Development
 
