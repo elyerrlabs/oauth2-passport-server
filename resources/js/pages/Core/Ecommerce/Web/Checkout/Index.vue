@@ -197,7 +197,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
                         <!-- Refund Expiration Info - Mobile Optimized -->
                         <div
-                            v-if="order?.transaction?.status === 'successful'"
+                            v-show="!order?.transaction?.refund?.id"
                             class="mb-3"
                         >
                             <div
@@ -210,7 +210,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             >
                                 <div class="flex items-start space-x-3 mb-2">
                                     <div
-                                        class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full mt-0.5"
+                                        class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full mt-0.5"
                                         :class="
                                             getRefundExpirationIconClass(
                                                 order?.transaction
@@ -307,32 +307,12 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                    v-if="!order?.transaction?.refund_expired"
-                                    class="flex justify-end pt-2 border-t border-gray-200 dark:border-gray-700/50"
-                                >
-                                    <button
-                                        @click="requestRefund(order)"
-                                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 w-full justify-center sm:w-auto"
-                                        :class="
-                                            getRefundRequestButtonClass(
-                                                order?.transaction
-                                                    ?.refund_expired
-                                            )
-                                        "
-                                    >
-                                        <i
-                                            class="fas fa-rotate-left mr-1.5 text-xs"
-                                        ></i>
-                                        {{ __("Request Refund") }}
-                                    </button>
-                                </div>
                             </div>
                         </div>
 
                         <!-- Refund Status Banner - Mobile Optimized -->
                         <div
-                            v-if="order?.transaction?.refund?.id"
+                            v-show="order?.transaction?.refund?.id"
                             class="p-3 rounded-lg border animate-pulse"
                             :class="
                                 getRefundBannerClass(order?.transaction?.refund)
@@ -343,7 +323,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             >
                                 <div class="flex items-center space-x-3">
                                     <div
-                                        class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-white/80"
+                                        class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-white/80"
                                     >
                                         <i
                                             :class="
@@ -405,7 +385,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 <img
                                     :src="item.images[0]?.url"
                                     :alt="item?.meta?.name"
-                                    class="w-12 h-12 sm:w-16 sm:h-16 rounded border border-gray-200 dark:border-gray-600 object-cover flex-shrink-0"
+                                    class="w-12 h-12 sm:w-16 sm:h-16 rounded border border-gray-200 dark:border-gray-600 object-cover shrink-0"
                                 />
                                 <div class="flex-1 min-w-0">
                                     <h3
@@ -429,7 +409,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         </span>
                                     </div>
                                 </div>
-                                <div class="flex-shrink-0">
+                                <div class="shrink-0">
                                     <button
                                         @click.stop="goTo(item.web.product)"
                                         class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-medium rounded transition-colors duration-200 cursor-pointer whitespace-nowrap"

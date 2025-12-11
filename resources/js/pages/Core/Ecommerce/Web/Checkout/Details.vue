@@ -65,10 +65,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 <!-- Order Summary -->
                 <div class="p-4 sm:p-6">
                     <!-- Refund Expiration Info - Prominent Display -->
-                    <div
-                        v-if="data.transaction?.status === 'successful'"
-                        class="mb-6"
-                    >
+                    <div v-if="!data.transaction?.refund?.id" class="mb-6">
                         <div
                             class="rounded-xl p-4 border-2"
                             :class="
@@ -82,7 +79,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             >
                                 <div class="flex items-center space-x-3 flex-1">
                                     <div
-                                        class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full"
+                                        class="shrink-0 flex items-center justify-center w-10 h-10 rounded-full"
                                         :class="
                                             getRefundExpirationIconClass(
                                                 data.transaction?.refund_expired
@@ -209,23 +206,6 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 </div>
 
                                 <!-- Action Button -->
-                                <div
-                                    v-if="!data.transaction?.refund_expired"
-                                    class="mt-4 sm:mt-0"
-                                >
-                                    <button
-                                        @click="requestRefund(data)"
-                                        class="px-4 py-2 font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow flex items-center justify-center w-full sm:w-auto"
-                                        :class="
-                                            getRefundRequestButtonClass(
-                                                data.transaction?.refund_expired
-                                            )
-                                        "
-                                    >
-                                        <i class="fas fa-rotate-left mr-2"></i>
-                                        {{ __("Request Refund") }}
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
