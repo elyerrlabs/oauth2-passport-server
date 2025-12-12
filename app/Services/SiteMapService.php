@@ -47,7 +47,7 @@ class SiteMapService
      * Directory
      * @var string
      */
-    private $indexPath;
+    private $sitemapPath;
 
     /**
      * Robot
@@ -74,23 +74,29 @@ class SiteMapService
      */
     private $storage;
 
+
+    private $sitemapIndexName;
+
     /**
      * Construct
      * @param bool $disableBackup
      */
     public function __construct(bool $disableBackup = true)
     {
-        $sitemapName = 'sitemap.xml';
-        $this->uri = config('app.url') . "/" . $sitemapName;
         $this->directory = public_path('sitemaps');
-        $this->indexPath = public_path($sitemapName);
+
+        $this->sitemapIndexName = "index.xml";
+        $this->sitemapPath = "{$this->directory}/{$this->sitemapIndexName}";
+
+        $this->uri = config('app.url') . $this->sitemapPath;
+
         $this->robot = public_path('robots.txt');
         $this->metafile = base_path('resources/views/layouts/editable/meta.blade.php');
         $this->storage = "public";
 
         // Create sitemap directory
         if (!is_dir($this->directory)) {
-            mkdir($this->directory, 0777, true);
+            mkdir($this->directory, 0644, true);
         }
 
         if ($disableBackup) {
@@ -223,14 +229,16 @@ class SiteMapService
 
         foreach (glob($this->directory . '/*.xml') as $file) {
             $fileName = basename($file);
-
+            if ($fileName == $this->sitemapIndexName) {
+                continue;
+            }
             $index->add(
                 SitemapTag::create(url('sitemaps/' . $fileName))
                     ->setLastModificationDate(now())
             );
         }
 
-        $index->writeToFile($this->indexPath);
+        $index->writeToFile($this->sitemapPath);
     }
 
     /**
@@ -311,11 +319,6 @@ class SiteMapService
      */
     public function reset()
     {
-        // Delete index file
-        if (file_exists($this->indexPath)) {
-            unlink($this->indexPath);
-        }
-
         // Delete all sitemap files inside the directory
         if (is_dir($this->directory)) {
             $files = glob($this->directory . '/*.xml');
@@ -342,7 +345,7 @@ class SiteMapService
 
         Storage::disk('backups')->makeDirectory($this->storage);
 
-        $files = ['robots.txt', 'sitemap.xml'];
+        $files = ['robots.txt'];
 
         foreach ($files as $file) {
             $from = "{$public}/{$file}";

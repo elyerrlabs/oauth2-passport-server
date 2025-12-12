@@ -144,7 +144,7 @@ final class SitemapController extends WebController
         ]);
 
         $this->sitemapService->register(
-            'sitemap',
+            'pages',
             $request->url,
             $request->image,
             $request->changefreq ?? 'weekly',

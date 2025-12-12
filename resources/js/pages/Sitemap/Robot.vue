@@ -400,7 +400,7 @@ const form = useForm({
 
 // Computed properties for real-time URL detection
 const currentDomain = computed(() => window.location.origin);
-const sitemapUrl = computed(() => `${currentDomain.value}/sitemap.xml`);
+const sitemapUrl = computed(() => `${currentDomain.value}/sitemaps/index.xml`);
 
 onMounted(() => {
     form.meta = page.props.data || generateDefaultTemplate();
