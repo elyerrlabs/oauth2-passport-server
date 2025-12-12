@@ -36,10 +36,6 @@ import "sweetalert2/dist/sweetalert2.min.css";
 //icons https://pictogrammers.com/library/mdi/
 import "@mdi/font/css/materialdesignicons.css";
 
-//Vue date picker
-import { VueDatePicker } from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
-
 setupI18n();
 window.__ = __;
 window.$notify = $notify;
@@ -58,10 +54,8 @@ createInertiaApp({
     app.config.globalProperties.$server = $server;
     app.config.globalProperties.__ = __;
 
-    app.component("VueDatePicker", VueDatePicker);
     app.use(plugin);
     app.use(VueSweetalert2);
-    //  app.use(i18n);
     app.mount(el);
   },
 });
