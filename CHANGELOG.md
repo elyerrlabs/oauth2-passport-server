@@ -22,6 +22,32 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+* Modular asset discovery system: Vite now automatically detects JavaScript and SCSS entrypoints inside each module.
+* Support for multiple JS/SCSS files per module (e.g., `app.js`, `admin.js`, `public.js`).
+* Ability for modules to use Blade views, Vue components, or Inertia pages seamlessly.
+* Fallback system that checks for module-specific assets first, then falls back to the main `resources/` directory.
+
+### Changed
+
+* Rewritten internal Vite helper logic to dynamically prepend module paths.
+* Updated path resolution to remove absolute base paths and generate clean relative paths (e.g., `core/Ecommerce/resources/js/app.js`).
+* Improved behavior of the `@vite()` directive to remain fully compatible with Laravel defaults while adding module-level resolution.
+
+### Fixed
+
+* Added validation to ensure only existing module asset files are included.
+* Ensured stable and predictable asset resolution whether routes belong to a module or the main application.
+
+### Improved
+
+* Project structure is now fully modularized while maintaining a unified workflow.
+* Modules can now reuse main application components without additional configuration.
+
+
 ## 🛠️ v4.0.6
 
 ### Fixes
