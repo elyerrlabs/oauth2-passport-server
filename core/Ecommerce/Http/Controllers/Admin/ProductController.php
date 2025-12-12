@@ -59,7 +59,7 @@ final class ProductController extends WebController
     public function index(Request $request)
     {
         return Inertia::render(
-            'Core/Ecommerce/Admin/Product/Index',
+            'Admin/Product/Index',
             [
                 'routes' => [
                     'index' => route('ecommerce.admin.products.index'),
@@ -78,7 +78,7 @@ final class ProductController extends WebController
     public function create()
     {
         return Inertia::render(
-            'Core/Ecommerce/Admin/Product/Create',
+            'Admin/Product/Create',
             [
                 'routes' => [
                     'index' => route('ecommerce.admin.products.index'),
@@ -99,7 +99,7 @@ final class ProductController extends WebController
         $data = $this->transform($this->productService->find($id), ProductTransformer::class);
 
         return Inertia::render(
-            'Core/Ecommerce/Admin/Product/Create',
+            'Admin/Product/Create',
             [
                 'data' => $data,
                 'routes' => [
@@ -125,7 +125,7 @@ final class ProductController extends WebController
     public function viewAsUser(string $category_slug, string $product_slug)
     {
         return Inertia::render(
-            'Core/Ecommerce/Web/Show',
+            'Web/Show',
             [
                 'routes' => [// share web routes
                     'search' => route('ecommerce.search'),

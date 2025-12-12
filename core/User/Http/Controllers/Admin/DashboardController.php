@@ -57,7 +57,7 @@ class DashboardController extends WebController
             return $this->repository->user($request);
         }
 
-        return Inertia::render("Core/User/Admin/Dashboard/Index", [
+        return Inertia::render("Admin/Dashboard/Index", [
             "route" => route("user.admin.dashboard"),
             'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);

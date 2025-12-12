@@ -57,7 +57,7 @@ class CategoryController extends WebController
      */
     public function index(Request $request)
     {
-        return Inertia::render('Core/Ecommerce/Admin/Category/Index', [
+        return Inertia::render('Admin/Category/Index', [
             'routes' => [
                 'index' => route('ecommerce.admin.categories.index'),
                 'create' => route('ecommerce.admin.categories.create'),
@@ -74,7 +74,7 @@ class CategoryController extends WebController
      */
     public function create()
     {
-        return Inertia::render('Core/Ecommerce/Admin/Category/Create', [
+        return Inertia::render('Admin/Category/Create', [
             'routes' => [
                 'index' => route('ecommerce.admin.categories.index'),
             ],
@@ -96,7 +96,7 @@ class CategoryController extends WebController
             CategoryTransformer::class
         );
 
-        return Inertia::render('Core/Ecommerce/Admin/Category/Create', [
+        return Inertia::render('Admin/Category/Create', [
             'data' => $data,
             'routes' => [
                 'index' => route('ecommerce.admin.categories.index'),

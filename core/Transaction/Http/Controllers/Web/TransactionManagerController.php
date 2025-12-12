@@ -63,7 +63,7 @@ class TransactionManagerController extends WebController
         $data = $this->transactionService->searchForUser($request)->paginate($per_page);
 
         return Inertia::render(
-            "Core/Transaction/Web/Transaction",
+            "Web/Transaction",
             [
                 "data" => $this->transformCollection($data, TransactionTransformer::class),
                 "route" => route('transaction.transactions.index'),

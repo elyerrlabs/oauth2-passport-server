@@ -96,7 +96,7 @@ class ServiceController extends WebController
         $roles = $this->roleService->search($request)->paginate(100);
 
         // Render vue component
-        return Inertia::render("Core/User/Admin/Service/Index", [
+        return Inertia::render("Admin/Service/Index", [
             'data' => $this->transformCollection($data, ServiceTransformer::class),
             'groups' => $this->transformCollection($groups, GroupTransformer::class),
             'roles' => $this->transformCollection($roles, RoleTransformer::class),

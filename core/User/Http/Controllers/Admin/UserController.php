@@ -68,7 +68,7 @@ class UserController extends WebController
 
         $data = $this->userService->search($request)->paginate($page);
 
-        return Inertia::render("Core/User/Admin/Users/Index", [
+        return Inertia::render("Admin/Users/Index", [
             "data" => $this->transformCollection($data, UserTransformer::class),
             "route" => route('user.admin.users.index'),
             "scopes" => route('user.admin.scopes.index'),

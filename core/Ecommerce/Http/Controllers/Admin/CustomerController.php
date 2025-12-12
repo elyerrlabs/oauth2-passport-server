@@ -44,7 +44,7 @@ class CustomerController extends WebController
     public function index(Request $request)
     {
         return Inertia::render(
-            "Core/Ecommerce/Admin/Order/Customer",
+            "Admin/Order/Customer",
             [
                 'api' => RouteService::admin(),
                 'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))

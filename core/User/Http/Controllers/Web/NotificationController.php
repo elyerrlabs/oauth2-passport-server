@@ -55,7 +55,7 @@ class NotificationController extends WebController
             return $this->repository->listAllNotifications();
         }
 
-        return Inertia::render("Core/User/Web/Notification/Index", [
+        return Inertia::render("Web/Notification/Index", [
             'route' => [
                 'all' => route('user.notification.index'),
                 'unread' => route('user.notification.unread')

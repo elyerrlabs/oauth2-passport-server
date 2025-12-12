@@ -54,7 +54,7 @@ class HomePageController extends WebController
             return $this->repository->user($request);
         }
 
-        return Inertia::render("Core/User/Web/About", [
+        return Inertia::render("Web/About", [
             'route' => route('user.dashboard'),
         ]);
     }

@@ -85,7 +85,7 @@ class PlanController extends WebController
         ]);
         $services = $this->serviceService->searchForGuest($request)->get();
 
-        return Inertia::render("Core/Transaction/Admin/Plans/Index", [
+        return Inertia::render("Admin/Plans/Index", [
             'data' => fractal($data, PlanTransformer::class)->toArray(),
             'services' => fractal($services, ServiceTransformer::class)->toArray()['data'] ?? [],
             'routes' => [

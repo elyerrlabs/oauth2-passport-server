@@ -65,7 +65,7 @@ class TransactionManagerController extends WebController
         $data = $this->transactionService->search($request)->paginate($per_page);
 
         return Inertia::render(
-            "Core/Transaction/Admin/Transaction/Index",
+            "Admin/Transaction/Index",
             [
                 "data" => fractal($data, TransactionTransformer::class)->toArray() ?? [],
                 "route" => route('transaction.admin.transactions.index'),

@@ -57,7 +57,7 @@ class UserController extends WebController
      */
     public function profile()
     {
-        return Inertia::render("Core/User/Web/Information", [
+        return Inertia::render("Web/Information", [
             'route' => route('user.profile'),
         ]);
     }
@@ -80,7 +80,7 @@ class UserController extends WebController
      */
     public function formToChangePassword()
     {
-        return Inertia::render("Core/User/Web/Password");
+        return Inertia::render("Web/Password");
     }
 
     /**

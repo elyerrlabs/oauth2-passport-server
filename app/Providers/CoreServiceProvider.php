@@ -24,6 +24,8 @@ namespace App\Providers;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use Inertia\Inertia;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -60,6 +62,14 @@ class CoreServiceProvider extends ServiceProvider
             $migrationPath = $modulePath . '/migrations';
             $routesPath = $modulePath . '/routes';
 
+            // Load views
+            $pathView = $modulePath . '/resources/views';
+            $this->loadViewsFrom($pathView, ucfirst($moduleName));
+
+            //Module root
+            $moduleRootPath = Str::after($modulePath, base_path() . '/');
+
+
             $module = $configPath . "/module.php";
             if (file_exists($module)) {
                 $moduleConfig = include $module;
@@ -95,19 +105,42 @@ class CoreServiceProvider extends ServiceProvider
                 }
             }
 
+            // Discovery routes
             if (is_dir($routesPath)) {
                 if (file_exists($routesPath . '/admin.php')) {
-                    Route::prefix(strtolower($moduleName) . '/admin')
-                        ->as(strtolower($moduleName) . '.admin.')
-                        ->middleware('web')
-                        ->group($routesPath . '/admin.php');
+                    Route::group([
+                        'prefix' => strtolower($moduleName) . '/admin',
+                        'as' => strtolower($moduleName) . '.admin.',
+                        'middleware' => ['web'],
+                        'module' => ucfirst($moduleName),
+                        'module_path' => $moduleRootPath
+                    ], function () use ($routesPath) {
+                        require $routesPath . '/admin.php';
+                    });
                 }
 
                 if (file_exists($routesPath . '/web.php')) {
-                    Route::prefix(strtolower($moduleName))
-                        ->as(strtolower($moduleName) . '.')
-                        ->middleware('web')
-                        ->group($routesPath . '/web.php');
+                    Route::group([
+                        'prefix' => strtolower($moduleName),
+                        'as' => strtolower($moduleName) . ".",
+                        'middleware' => ['web'],
+                        'module' => ucfirst($moduleName),
+                        'module_path' => $moduleRootPath
+                    ], function () use ($routesPath) {
+                        require $routesPath . '/web.php';
+                    });
+                }
+
+
+                if (file_exists($routesPath . '/public.php')) {
+                    Route::group([
+                        'as' => strtolower($moduleName) . '.',
+                        'middleware' => ['web'],
+                        'module' => ucfirst($moduleName),
+                        'module_path' => $moduleRootPath
+                    ], function () use ($routesPath) {
+                        require $routesPath . '/public.php';
+                    });
                 }
 
                 if (file_exists($routesPath . '/api.php')) {
@@ -116,16 +149,16 @@ class CoreServiceProvider extends ServiceProvider
                         ->middleware('api')
                         ->group($routesPath . '/api.php');
                 }
-
-                if (file_exists($routesPath . '/public.php')) {
-                    Route:: as(strtolower($moduleName) . '.')
-                        ->middleware('web')
-                        ->group($routesPath . '/public.php');
-                }
             }
         }
     }
 
+    /**
+     * Merge configs
+     * @param array $base
+     * @param array $merge
+     * @return array
+     */
     private function mergeConfigSmart(array $base, array $merge): array
     {
         foreach ($merge as $key => $value) {
@@ -150,6 +183,11 @@ class CoreServiceProvider extends ServiceProvider
         return $base;
     }
 
+    /**
+     * Verify arrays
+     * @param array $array
+     * @return bool
+     */
     private function isNumericArray(array $array): bool
     {
         return array_keys($array) === range(0, count($array) - 1);

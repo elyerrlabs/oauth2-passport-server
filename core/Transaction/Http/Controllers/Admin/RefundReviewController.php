@@ -77,7 +77,7 @@ class RefundReviewController extends WebController
         $data = $this->refundService->search($request)->paginate($page);
 
         return Inertia::render(
-            'Core/Transaction/Admin/Review/Index',
+            'Admin/Review/Index',
             [
                 'data' => $this->transformCollection($data, RefundReviewTransformer::class),
                 'routes' => [
@@ -98,7 +98,7 @@ class RefundReviewController extends WebController
         $data = $this->refundService->find($id);
 
         return Inertia::render(
-            "Core/Transaction/Admin/Review/Details",
+            "Admin/Review/Details",
             [
                 'data' => $this->transform($data, RefundReviewTransformer::class),
                 'routes' => [

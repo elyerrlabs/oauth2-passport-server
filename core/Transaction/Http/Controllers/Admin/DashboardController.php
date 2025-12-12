@@ -51,7 +51,7 @@ class DashboardController extends WebController
             return $this->repository->transaction($request);
         }
 
-        return Inertia::render("Core/Transaction/Admin/Dashboard/Index", [
+        return Inertia::render("Admin/Dashboard/Index", [
             "route" => route("transaction.admin.dashboard"),
             "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
             'status' => route('api.transaction.payments.status')

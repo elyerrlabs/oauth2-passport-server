@@ -60,7 +60,7 @@ class PlanController extends WebController
 
         $data = $this->planService->searchPlanForGuest($request)->paginate($per_page);
 
-        return Inertia::render('Core/Transaction/Web/Plan', [
+        return Inertia::render('Web/Plan', [
             'data' => $this->transformCollection($data, UserPlanTransformer::class),
             'routes' => [
                 'plans' => route('transaction.plans.index'),

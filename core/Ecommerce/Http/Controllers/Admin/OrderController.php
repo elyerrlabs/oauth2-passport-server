@@ -44,7 +44,7 @@ class OrderController extends WebController
      */
     public function complete(Request $request)
     {
-        return Inertia::render('Core/Ecommerce/Admin/Order/Complete', [
+        return Inertia::render('Admin/Order/Complete', [
             'api' => RouteService::admin(),
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
         ]);
@@ -57,7 +57,7 @@ class OrderController extends WebController
      */
     public function pending(Request $request)
     {
-        return Inertia::render('Core/Ecommerce/Admin/Order/Pending', [
+        return Inertia::render('Admin/Order/Pending', [
             'api' => RouteService::admin(),
             'ecommerce_menus' => resolveInertiaRoutes(config('menus.ecommerce_menus'))
         ]);

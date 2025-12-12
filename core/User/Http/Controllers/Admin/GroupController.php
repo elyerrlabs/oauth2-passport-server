@@ -73,7 +73,7 @@ class GroupController extends WebController
         $data = $this->groupService->search($request)->paginate($page);
 
         return Inertia::render(
-            "Core/User/Admin/Groups/Index",
+            "Admin/Groups/Index",
             [
                 "data" => fractal($data, GroupTransformer::class)->toArray(),
                 "route" => route('user.admin.groups.index'),

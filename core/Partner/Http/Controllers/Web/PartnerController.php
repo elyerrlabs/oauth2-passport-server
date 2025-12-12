@@ -61,8 +61,8 @@ class PartnerController extends WebController
     public function dashboard(Request $request)
     {
         $data = $this->partnerService->partnerDashboard($request);
-        
-        return Inertia::render("Core/Partner/Web/Index", [
+
+        return Inertia::render("Web/Index", [
             "data" => $data,
             "route" => route("partner.dashboard"),
             "menus" => resolveInertiaRoutes(config('menus.partner_routes'))
@@ -78,7 +78,7 @@ class PartnerController extends WebController
     {
         $partner = $this->partnerService->details(auth()->user()->id);
 
-        return Inertia::render("Core/Partner/Web/Refer", [
+        return Inertia::render("Web/Refer", [
             "data" => fractal($partner, PartnerTransformer::class)->toArray()['data'] ?? [],
             "menus" => resolveInertiaRoutes(config('menus.partner_routes'))
         ]);
@@ -96,7 +96,7 @@ class PartnerController extends WebController
 
         $data = $this->partnerService->listLastTransactions($request)->paginate($page);
 
-        return Inertia::render("Core/Partner/Web/Sales", [
+        return Inertia::render("Web/Sales", [
             "data" => fractal($data, TransactionTransformer::class)->toArray(),
             "route" => route("partner.sales"),
             "menus" => resolveInertiaRoutes(config('menus.partner_routes'))

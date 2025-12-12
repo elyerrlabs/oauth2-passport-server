@@ -58,7 +58,7 @@ final class DashboardController extends WebController
         }
 
         return Inertia::render(
-            'Core/Ecommerce/Admin/Dashboard/Index',
+            'Admin/Dashboard/Index',
             [
                 'routes' => [
                     'dashboard' => route('ecommerce.admin.dashboard')

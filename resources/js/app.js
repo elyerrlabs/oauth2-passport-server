@@ -19,16 +19,16 @@
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-import "../css/app.css";
+import "@css/app.css";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import { setupI18n, __ } from "./config/locale.js";
-import "./config/notify.js";
-import "./config/editor.js";
+import { setupI18n, __ } from "@/config/locale.js";
+import "@/config/notify.js";
+import "@/config/editor.js";
 
 //import { $echo } from "./config/echo.js";
-import { $server } from "./config/axios.js";
+import { $server } from "@/config/axios.js";
 
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
@@ -61,7 +61,6 @@ createInertiaApp({
     app.component("VueDatePicker", VueDatePicker);
     app.use(plugin);
     app.use(VueSweetalert2);
-    //  app.use(i18n);
     app.mount(el);
   },
 });

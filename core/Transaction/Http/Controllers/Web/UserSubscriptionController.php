@@ -67,7 +67,7 @@ class UserSubscriptionController extends WebController
         $data = $this->packageService->searchForUser($request)->paginate($page);
 
         return Inertia::render(
-            "Core/Transaction/Web/Subscription/Index",
+            "Web/Subscription/Index",
             [
                 'data' => fractal($data, UserPackageTransformer::class)->toArray() ?? [],
                 'route' => route('transaction.subscriptions.index')
@@ -85,7 +85,7 @@ class UserSubscriptionController extends WebController
     {
         $data = $this->packageService->findByTransactionCode($transaction_code);
 
-        return Inertia::render('Core/Transaction/Web/Subscription/Detail', [
+        return Inertia::render('Web/Subscription/Detail', [
             'data' => fractal($data, UserPackageTransformer::class)->toArray()['data'] ?? [],
             'routes' => [
                 'plans' => route('transaction.plans.index'),

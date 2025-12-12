@@ -53,7 +53,7 @@ class CheckoutController extends WebController
     public function index(Request $request)
     {
         return Inertia::render(
-            'Core/Ecommerce/Web/Checkout/Index',
+            'Web/Checkout/Index',
             [
                 'routes' => [
                     'search' => route('ecommerce.search'),
@@ -61,7 +61,7 @@ class CheckoutController extends WebController
                 ],
                 'api' => RouteService::api(),
             ]
-        )->rootView('ecommerce');
+        );
     }
 
     /**
@@ -74,7 +74,7 @@ class CheckoutController extends WebController
         $data = $this->checkoutService->details($id);
 
         return Inertia::render(
-            'Core/Ecommerce/Web/Checkout/Details',
+            'Web/Checkout/Details',
             [
                 'data' => $this->transform($data, UserCheckoutTransformer::class),
                 'routes' => [
@@ -84,6 +84,6 @@ class CheckoutController extends WebController
                 ],
                 'api' => RouteService::api(),
             ]
-        )->rootView('ecommerce');
+        );
     }
 }

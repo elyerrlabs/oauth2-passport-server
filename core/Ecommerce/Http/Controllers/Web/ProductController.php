@@ -46,7 +46,7 @@ class ProductController extends WebController
     public function dashboard()
     {
         return Inertia::render(
-            'Core/Ecommerce/Web/Dashboard',
+            'Web/Dashboard',
             [
                 'routes' => [ // share web routes
                     'search' => route('ecommerce.search'),
@@ -64,7 +64,7 @@ class ProductController extends WebController
     public function index(Request $request)
     {
         return Inertia::render(
-            'Core/Ecommerce/Web/Search',
+            'Web/Search',
             [
                 'routes' => [// share web routes
                     'dashboard' => route('ecommerce.dashboard'),
@@ -84,7 +84,7 @@ class ProductController extends WebController
     public function category(Request $request, string $category = null)
     {
         return Inertia::render(
-            'Core/Ecommerce/Web/Search',
+            'Web/Search',
             [
                 'routes' => [// share web routes
                     'dashboard' => route('ecommerce.dashboard'),
@@ -104,7 +104,7 @@ class ProductController extends WebController
     public function productDetails(string $category_slug, string $product_slug)
     {
         return Inertia::render(
-            'Core/Ecommerce/Web/Show',
+            'Web/Show',
             [
                 'routes' => [// share web routes
                     'search' => route('ecommerce.search'),

@@ -39,7 +39,7 @@ class OrderController extends WebController
     public function index(Request $request)
     {
         return Inertia::render(
-            'Core/Ecommerce/Web/Orders',
+            'Web/Orders',
             [
                 'routes' => [
                     'search' => route('ecommerce.search'),
@@ -47,6 +47,6 @@ class OrderController extends WebController
                 ],
                 'api' => RouteService::api(),
             ]
-        )->rootView('ecommerce');
+        );
     }
 }
