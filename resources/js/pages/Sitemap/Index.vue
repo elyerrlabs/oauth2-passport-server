@@ -24,7 +24,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
         <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
             <!-- Header Section -->
             <div
-                class="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3"
+                class="flex flex-col md:flex-row md:justify-between gap-2"
             >
                 <div class="flex-1 min-w-0">
                     <h1
@@ -181,10 +181,8 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                         :key="index"
                         class="p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
-                        <div
-                            class="flex flex-col xs:flex-row xs:items-start xs:justify-between gap-3"
-                        >
-                            <div class="flex-1 min-w-0">
+                        <div class="flex flex-col md:flex-row md:justify-between gap-3">
+                            <div class="flex min-w-0">
                                 <!-- URL with number -->
                                 <div
                                     class="font-medium text-blue-700 dark:text-blue-400 text-sm mb-2"
@@ -217,7 +215,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="flex items-center gap-1"
                                     >
                                         <svg
-                                            class="w-3 h-3 flex-shrink-0"
+                                            class="w-3 h-3 shrink-0"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -239,7 +237,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                         class="flex items-center gap-1"
                                     >
                                         <svg
-                                            class="w-3 h-3 flex-shrink-0"
+                                            class="w-3 h-3 shrink-0"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -366,7 +364,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     >
                         <div class="flex items-start gap-2">
                             <svg
-                                class="w-4 h-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
+                                class="w-4 h-4 text-red-600 dark:text-red-400 mt-0.5 shrink-0"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
