@@ -22,7 +22,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
-## [Unreleased]
+##  🛠️ v4.0.7
 
 ### Added
 
@@ -41,12 +41,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 * Added validation to ensure only existing module asset files are included.
 * Ensured stable and predictable asset resolution whether routes belong to a module or the main application.
+* Fixed SEO sitemap generator
 
 ### Improved
 
 * Project structure is now fully modularized while maintaining a unified workflow.
 * Modules can now reuse main application components without additional configuration.
 
+-----
 
 ## 🛠️ v4.0.6
 
