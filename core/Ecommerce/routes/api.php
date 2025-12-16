@@ -40,7 +40,7 @@ use Core\Ecommerce\Http\Controllers\Api\Web\CategoryController;
 Route::group([
     'prefix' => 'admin',
     'as' => 'admin.',
-    'middleware' => ['throttle:ecommerce:api_admin', 'wants.json']
+    'middleware' => ['throttle:core:ecommerce:api_admin', 'wants.json']
 ], function () {
 
     Route::resource('categories', AdminCategoryController::class)->except('create', 'edit', 'update');
@@ -61,7 +61,7 @@ Route::group([
 Route::group(
     [
         'as' => 'web.',
-        'middleware' => ['throttle:ecommerce:api_web', 'wants.json']
+        'middleware' => ['throttle:core:ecommerce:api_web', 'wants.json']
     ],
     function () {
 

@@ -23,14 +23,14 @@
  */
 
 use Illuminate\Support\Facades\Route;
-use Rap2hpoutre\LaravelLogViewer\LogViewerController; 
+use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 use App\Http\Controllers\Web\Admin\OAuth\ClientAdminController;
 use App\Http\Controllers\Web\Admin\Broadcasting\BroadcastController;
 
 
 
 
-Route::middleware(['throttle:general:settings'])
+Route::middleware(['throttle:system:general:settings'])
     ->group(function () {
 
         //Route::resource('broadcasts', BroadcastController::class)->only('index', 'store', 'destroy');
@@ -42,7 +42,7 @@ Route::middleware(['throttle:general:settings'])
 
 
 
-Route::middleware(['throttle:general:passport'])
+Route::middleware(['throttle:system:general:passport'])
     ->group(function () {
 
         Route::resource('/clients', ClientAdminController::class)->except('edit', 'create');

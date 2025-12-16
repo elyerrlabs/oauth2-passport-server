@@ -57,66 +57,75 @@
                 @endphp
 
                 <div class="space-y-6">
-                    @foreach ($rateLimits as $module => $items)
+                    @foreach ($rateLimits as $module => $groups)
                         <div
-                            class="p-2 bg-slate-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-slate-100 dark:hover:bg-gray-600 transition-colors duration-300">
+                            class="p-2 bg-slate-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 hover:bg-slate-100 dark:hover:bg-gray-600 transition-colors duration-300">
                             <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
                                 <i class="mdi mdi-puzzle-outline mr-2 text-blue-600 dark:text-blue-400"
                                     aria-hidden="true"></i>
                                 {{ ucfirst($module) }} {{ __('Module') }}
                             </h4>
 
-                            <div class="grid grid-cols-1 gap-5">
-                                @foreach ($items as $key => $config)
-                                    <div
-                                        class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-sm dark:hover:shadow-gray-700 transition-shadow duration-300">
-                                        <h5
-                                            class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center">
-                                            <i class="mdi mdi-cog-outline mr-2 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"></i>
-                                            {{ config("rate_limit.$module.$key.name") }}
-                                        </h5>
+                            @foreach ($groups as $group => $items)
+                                <div class="grid grid-cols-1 gap-2 border border-gray-300 rounded  mb-4 p-2">
+                                    <h5 class="text-md font-semibold text-gray-800 dark:text-gray-200  flex items-center">
+                                        <i class="mdi mdi-puzzle-outline mr-2 text-blue-600 dark:text-blue-400"></i>
+                                        {{ ucfirst($group) }}
+                                    </h5>
+                                    @foreach ($items as $key => $values)
+                                        <div
+                                            class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:shadow-sm dark:hover:shadow-gray-700 transition-shadow duration-300">
+                                            <h6
+                                                class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+                                                <i class="mdi mdi-cog-outline mr-2 text-gray-500 dark:text-gray-400"
+                                                    aria-hidden="true"></i>
+                                                {{ ucfirst(str_replace('_', ' ', $key)) }}:
+                                                {{ config("rate_limit.$module.$group.$key.name") }}
+                                            </h6>
 
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div class="space-y-2">
-                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                    {{ __('Requests per Minute') }}
-                                                </label>
-                                                <div class="relative">
-                                                    <input type="number"
-                                                        name="rate_limit[{{ $module }}][{{ $key }}][limit]"
-                                                        class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-colors duration-300"
-                                                        value="{{ $config['limit'] ?? 60 }}" min="1"
-                                                        placeholder="60">
-                                                    <div
-                                                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                        <i class="mdi mdi-counter text-gray-400 dark:text-gray-500"
-                                                            aria-hidden="true"></i>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div class="space-y-2">
+                                                    <label
+                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        {{ __('Requests per Minute') }}
+                                                    </label>
+                                                    <div class="relative">
+                                                        <input type="number"
+                                                            name="rate_limit[{{ $module }}][{{ $group }}][{{ $key }}][limit]"
+                                                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-colors duration-300"
+                                                            value="{{ config("rate_limit.{$module}.{$group}.{$key}.limit", 60) }}"
+                                                            min="1" placeholder="60">
+                                                        <div
+                                                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                            <i class="mdi mdi-counter text-gray-400 dark:text-gray-500"
+                                                                aria-hidden="true"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="space-y-2">
-                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                    {{ __('Block Time (minutes)') }}
-                                                </label>
-                                                <div class="relative">
-                                                    <input type="number"
-                                                        name="rate_limit[{{ $module }}][{{ $key }}][block_time]"
-                                                        class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-colors duration-300"
-                                                        value="{{ $config['block_time'] ?? 1 }}" min="1"
-                                                        placeholder="1">
-                                                    <div
-                                                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                        <i class="mdi mdi-clock-outline text-gray-400 dark:text-gray-500"
-                                                            aria-hidden="true"></i>
+                                                <div class="space-y-2">
+                                                    <label
+                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        {{ __('Block Time (minutes)') }}
+                                                    </label>
+                                                    <div class="relative">
+                                                        <input type="number"
+                                                            name="rate_limit[{{ $module }}][{{ $group }}][{{ $key }}][block_time]"
+                                                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-colors duration-300"
+                                                            value="{{ config("rate_limit.{$module}.{$group}.{$key}.block_time", 60) }}"
+                                                            min="1" placeholder="1">
+                                                        <div
+                                                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                            <i class="mdi mdi-clock-outline text-gray-400 dark:text-gray-500"
+                                                                aria-hidden="true"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
-                            </div>
+                                    @endforeach
+                                </div>
+                            @endforeach
                         </div>
                     @endforeach
                 </div>

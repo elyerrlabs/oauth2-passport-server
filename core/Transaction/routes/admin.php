@@ -30,7 +30,7 @@ use Core\Transaction\Http\Controllers\Admin\PlanScopeController;
 use Core\Transaction\Http\Controllers\Admin\RefundReviewController;
 use Core\Transaction\Http\Controllers\Admin\TransactionManagerController;
 
-Route::middleware(['throttle:transaction:admin'])->group(function () {
+Route::middleware(['throttle:core:transaction:admin'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
@@ -44,7 +44,7 @@ Route::middleware(['throttle:transaction:admin'])->group(function () {
     Route::put('/refunds/{id}/assign', [RefundController::class, 'assignTo'])->name('refunds.assignto');
     Route::resource('/refunds', RefundController::class)->only('index', 'show', 'update');
 
-    if (config('module.transaction.module.routes.plans_enabled', true)) {
+    if (config('routes.core.transaction.plans.status', true)) {
 
         Route::resource('/plans', PlanController::class)->except('edit', 'create');
 

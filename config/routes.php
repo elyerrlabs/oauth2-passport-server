@@ -22,29 +22,37 @@
 
 return [
 
-    'admin' => [
-        'dashboard' => true,
-        'groups' => true,
-        'roles' => true,
-        'services' => true,
-        'users' => true,
-        'clients' => true,
-        'broadcast' => true,
-        'plans' => true,
-        'transactions' => true,
-        'terminal' => true,
-        'settings' => true,
+    "system" => [
 
+        "clients" => [
+            "oauth_developers" => [
+                "status" => true,
+                "description" => "Disabled developer options for clients, include oauth api and oauth clients"
+            ],
+            "api" => [
+                "status" => true,
+                "description" => "Disabled API options for users"
+            ],
+            "oauth" => [
+                "status" => true,
+                "description" => "Disabled oauth2 and openID clients creation for users"
+            ]
+        ],
+
+        'guest' => [
+            'register' => [
+                "status" => true,
+                "description" => "Disabled users registration to the system"
+            ],
+            'documentation' => [
+                "status" => true,
+                "description" => "Disabled documentation section to the system"
+            ],
+            'landing' => [
+                "status" => true,
+                "description" => "Disabled landing page to the system"
+            ]
+        ]
     ],
-
-    'users' => [
-        'developers' => true,
-        'api' => true,
-        'clients' => true
-    ],
-
-    'guest' => [
-        'register' => true
-    ]
 
 ];

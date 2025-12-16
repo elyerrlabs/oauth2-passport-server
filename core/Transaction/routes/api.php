@@ -25,7 +25,7 @@
 use Core\Transaction\Http\Controllers\Api\Web\RefundController as UserRefundController;
 use Core\Transaction\Http\Controllers\Api\Web\PaymentController;
 
-Route::middleware(['throttle:transaction:api'])->group(function () {
+Route::middleware(['throttle:core:transaction:api'])->group(function () {
 
     Route::get('/payments/billing-period', [PaymentController::class, 'billingPeriod'])->name('payments.billing-period');
     Route::get('/payments/currencies', [PaymentController::class, 'currencies'])->name('payments.currencies');

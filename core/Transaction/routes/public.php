@@ -38,17 +38,17 @@
 use Core\Transaction\Http\Controllers\Web\PlanController;
 use Core\Transaction\Services\Payment\Webhook\StripeWebhookController;
 
-if (config('module.transaction.module.routes.subscriptions_enabled', true)) {
+if (config('routes.core.transaction.subscriptions.status', true)) {
 
     Route::get('/plans', [PlanController::class, 'index'])
         ->name('plans.index')
-        ->middleware(['throttle:transaction:public']);
+        ->middleware(['throttle:core:transaction:public']);
 }
 
 Route::group([
     'prefix' => 'webhook',
     'as' => 'webhook.',
-    'middleware' => ['throttle:transaction:webhook']
+    'middleware' => ['throttle:core:transaction:webhook']
 ], function () {
 
     Route::post('/stripe', [StripeWebhookController::class, 'handle']);

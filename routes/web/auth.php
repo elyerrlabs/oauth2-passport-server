@@ -31,7 +31,7 @@ use App\Http\Controllers\Web\Auth\AuthenticatedSessionController;
 
 Route::group([
     'prefix' => "auth",
-    'middleware' => ['throttle:general:auth']
+    'middleware' => ['throttle:system:general:auth']
 ], function () {
 
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -44,11 +44,11 @@ Route::group([
     Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 
     Route::match(['GET', 'POST'], '/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
+     
     /**
      * Register user account
      */
-    if (config('routes.guest.register', true)) {
+    if (config('routes.system.guest.register.status', true)) {
         Route::get('/register', [RegisterClientController::class, 'register'])->name('register');
         Route::post('/register', [RegisterClientController::class, 'store'])->middleware('captcha');
     }

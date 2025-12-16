@@ -224,26 +224,6 @@ class SettingController extends WebController
      */
     public function modules()
     {
-        $modulesPath = base_path('core');
-
-        $keys = [];
-
-        foreach (File::directories($modulesPath) as $modulePath) {
-            $moduleName = basename($modulePath);
-            $configPath = $modulePath . '/config';
-
-            $module = $configPath . "/module.php";
-            if (file_exists($module)) {
-                $config = include $module;
-
-                if (isset($config['name']) && isset($config['module_enabled'])) {
-                    $data = $this->transformRequest($config);
-                    $keys[strtolower($moduleName)][] = 'module.' . strtolower($moduleName) . '.module.name';
-                    $keys[strtolower($moduleName)][] = 'module.' . strtolower($moduleName) . '.module.module_enabled';
-                }
-            }
-        }
-
-        return view('settings.section.modules', compact('keys'));
+        return view('settings.section.modules');
     }
 }

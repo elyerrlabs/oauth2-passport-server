@@ -26,7 +26,7 @@ use Core\Ecommerce\Http\Controllers\Web\CheckoutController;
 use Core\Ecommerce\Http\Controllers\Web\OrderController;
 use Core\Ecommerce\Http\Controllers\Web\ProductController;
 
-Route::middleware(['throttle:ecommerce:web'])
+Route::middleware(['throttle:core:ecommerce:web'])
     ->group(function () {
 
         Route::group([

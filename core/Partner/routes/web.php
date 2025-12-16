@@ -24,7 +24,7 @@
 
 use Core\Partner\Http\Controllers\Web\PartnerController;
 
-Route::middleware(['throttle:partner:web'])->group(function () {
+Route::middleware(['throttle:core:partner:web'])->group(function () {
 
     Route::get('dashboard', [PartnerController::class, 'dashboard'])->name('dashboard');
     Route::get('sales', [PartnerController::class, 'sales'])->name('sales');

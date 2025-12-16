@@ -25,16 +25,16 @@ return [
     /**
      * Global settings
      */
-    'partner' => [
-        'admin' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => 'Rate Limit for Admin routes'
-        ],
-        'web' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => 'Rate Limit for Web routes'
-        ],
+    'admin' => [
+        'limit' => 300,
+        'block_time' => 120,
+        'name' => 'Rate Limit for Admin routes'
     ],
+    'web' => [
+        'limit' => 300,
+        'block_time' => 120,
+        'name' => 'Rate Limit for Web routes'
+    ],
+    // add custom rate limits
+
 ];

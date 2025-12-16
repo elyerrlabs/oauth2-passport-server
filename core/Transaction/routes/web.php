@@ -28,7 +28,7 @@ use Core\Transaction\Http\Controllers\Web\TransactionManagerController;
 use Core\Transaction\Http\Controllers\Web\DeliveryAddressController;
 use Core\Transaction\Http\Controllers\Web\UserSubscriptionController;
 
-Route::middleware(['throttle:transaction:web'])->group(function () {
+Route::middleware(['throttle:core:transaction:web'])->group(function () {
 
     if (config('module.transaction.module.routes.subscriptions_enabled', true)) {
         Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');

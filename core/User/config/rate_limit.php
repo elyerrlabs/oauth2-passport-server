@@ -25,16 +25,16 @@ return [
     /**
      * Global settings
      */
-    'user' => [
-        'admin' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => __('Rate Limit for Admin routes')
-        ],
-        'web' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => __('Rate Limit for Web routes')
-        ],
+
+    'admin' => [
+        'limit' => 300,
+        'block_time' => 120,
+        'name' => __('Rate Limit for Admin routes')
     ],
+    'web' => [
+        'limit' => 300,
+        'block_time' => 120,
+        'name' => __('Rate Limit for Web routes')
+    ],
+
 ];

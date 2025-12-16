@@ -27,13 +27,13 @@ use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Home\HomeController;
 
-Route::middleware(['throttle:general:public'])->group(function () {
+Route::middleware(['throttle:system:general:public'])->group(function () {
 
-    if (config('routes.guest.landing', true)) {
+    if (config('routes.system.guest.landing.status', true)) {
         Route::get("/", [HomeController::class, 'homePage'])->name('welcome');
     }
 
-    if (config('routes.documentation.index', true)) {
+    if (config('routes.system.guest.documentation.status', true)) {
         Route::get("/documentation", [DocumentationController::class, 'index'])->name('documentation.index');
     }
 

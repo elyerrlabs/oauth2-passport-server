@@ -25,31 +25,29 @@ return [
     /**
      * Global settings
      */
-    'transaction' => [
-        'admin' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => __('Rate Limit for Admin routes')
-        ],
-        'web' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => __('Rate Limit for Web routes')
-        ],
-        'webhook' => [
-            'limit' => 1000,
-            'block_time' => 60,
-            'name' => __('Rate Limit for Webhook routes')
-        ],
-        'api' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => __('Rate Limit for API routes')
-        ],
-        'public' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => __('Rate Limit for API routes')
-        ],
+    'admin' => [
+        'limit' => 300,
+        'block_time' => 120,
+        'name' => __('Rate Limit for Admin routes')
+    ],
+    'web' => [
+        'limit' => 300,
+        'block_time' => 120,
+        'name' => __('Rate Limit for Web routes')
+    ],
+    'webhook' => [
+        'limit' => 1000,
+        'block_time' => 60,
+        'name' => __('Rate Limit for Webhook routes')
+    ],
+    'api' => [
+        'limit' => 300,
+        'block_time' => 120,
+        'name' => __('Rate Limit for API routes')
+    ],
+    'public' => [
+        'limit' => 300,
+        'block_time' => 120,
+        'name' => __('Rate Limit for API routes')
     ],
 ];

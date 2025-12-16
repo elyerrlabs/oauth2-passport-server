@@ -204,7 +204,7 @@ return [
         App\Providers\HorizonServiceProvider::class,
         App\Providers\CoreServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\ModulesServiceProvider::class,
+     //   App\Providers\ModulesServiceProvider::class,
         App\Providers\MorphServiceProvider::class
 
     ],

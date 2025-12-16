@@ -25,46 +25,48 @@ return [
     /**
      * Global settings
      */
-    'general' => [
-        'api' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => 'Rate Limit for API'
-        ],
-        'gateway' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => 'Rate Limit for Gateway'
-        ],
-        'token' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => 'Rate Limit Oauth2 and OpenID Connect'
-        ],
-        'passport' => [
-            'limit' => 30,
-            'block_time' => 60,
-            'name' => 'Rate Limit for passport routes'
-        ],
-        'broadcast' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => "Rate Limit for Broadcasting"
-        ],
-        'settings' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => "Rate Limit for Settings"
-        ],
-        'auth' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => "Rate Limit for Auth routes"
-        ],
-        'public' => [
-            'limit' => 300,
-            'block_time' => 120,
-            'name' => "Rate Limit for Public routes"
+    "system" => [
+        'general' => [
+            'api' => [
+                'limit' => 300,
+                'block_time' => 120,
+                'name' => 'Rate Limit for API'
+            ],
+            'gateway' => [
+                'limit' => 300,
+                'block_time' => 120,
+                'name' => 'Rate Limit for Gateway'
+            ],
+            'token' => [
+                'limit' => 300,
+                'block_time' => 120,
+                'name' => 'Rate Limit Oauth2 and OpenID Connect'
+            ],
+            'passport' => [
+                'limit' => 30,
+                'block_time' => 60,
+                'name' => 'Rate Limit for passport routes'
+            ],
+            'broadcast' => [
+                'limit' => 300,
+                'block_time' => 120,
+                'name' => "Rate Limit for Broadcasting"
+            ],
+            'settings' => [
+                'limit' => 300,
+                'block_time' => 120,
+                'name' => "Rate Limit for Settings"
+            ],
+            'auth' => [
+                'limit' => 300,
+                'block_time' => 120,
+                'name' => "Rate Limit for Auth routes"
+            ],
+            'public' => [
+                'limit' => 300,
+                'block_time' => 120,
+                'name' => "Rate Limit for Public routes"
+            ],
         ],
     ],
 ];

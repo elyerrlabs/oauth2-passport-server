@@ -21,7 +21,7 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-return [
-    'name' => 'eCommerce Module',
-    'module_enabled' => true
+return [ 
+    "name" => "eCommerce Module",
+    "module_enabled" => true
 ];

@@ -28,7 +28,7 @@ use Core\Ecommerce\Http\Controllers\Admin\ProductController;
 use Core\Ecommerce\Http\Controllers\Admin\CategoryController;
 use Core\Ecommerce\Http\Controllers\Admin\DashboardController;
 
-Route::middleware(['throttle:ecommerce:admin'])->group(function () {
+Route::middleware(['throttle:core:ecommerce:admin'])->group(function () {
 
     Route::get("/", [DashboardController::class, 'dashboard'])->name('dashboard');
 

@@ -42,7 +42,7 @@ use Laravel\Passport\Http\Controllers\ApproveDeviceAuthorizationController;
 Route::group([
     'as' => 'passport.',
     'prefix' => config('passport.path', 'oauth'),
-    'middleware' => ['throttle:general:passport']
+    'middleware' => ['throttle:system:general:passport']
 ], function () {
 
     Route::get(
@@ -165,7 +165,7 @@ Route::group([
 
 
 Route::group([
-    'middleware' => ['throttle:general:token']
+    'middleware' => ['throttle:system:general:token']
 ], function () {
 
     if (config('openid.routes.jwks', true)) {

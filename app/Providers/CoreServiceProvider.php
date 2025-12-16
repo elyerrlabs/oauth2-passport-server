@@ -24,7 +24,6 @@ namespace App\Providers;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -61,76 +60,126 @@ class CoreServiceProvider extends ServiceProvider
             $configPath = $modulePath . '/config';
             $migrationPath = $modulePath . '/migrations';
             $routesPath = $modulePath . '/routes';
-
-            // Load views
             $pathView = $modulePath . '/resources/views';
-            $this->loadViewsFrom($pathView, ucfirst($moduleName));
-
-            //Module root
-            $moduleRootPath = Str::after($modulePath, base_path() . '/');
-
-
             $module = $configPath . "/module.php";
-            if (file_exists($module)) {
-                $moduleConfig = include $module;
-
-                if (is_array($moduleConfig) && array_key_exists('module_enabled', $moduleConfig)) {
-                    $key = 'module.' . strtolower($moduleName) . '.module.module_enabled';
-
-                    if (config($key, true) == false) {
-                        continue;
-                    }
-                }
-            }
 
             if (is_dir($migrationPath)) {
                 $this->loadMigrationsFrom($migrationPath);
             }
 
-            if (is_dir($configPath)) {
-                foreach (File::files($configPath) as $configFile) {
-                    if ($configFile->getExtension() !== 'php') {
-                        continue;
+            // Read config dir
+            foreach (glob($configPath . "/*.php") as $file) {
+                // Config file name
+                $key = basename($file, '.php');
+
+                // Check if the module is active
+                if ($key == 'module') {
+                    // Load config
+                    $moduleConfig = include $file;
+
+                    // verify keys
+                    if (is_array($moduleConfig) && array_key_exists('module_enabled', $moduleConfig)) {
+
+                        $newkey = 'module.core.' . strtolower($moduleName) . '.module.module_enabled';
+                        $value = isset($moduleConfig['module_enabled']) ? $moduleConfig['module_enabled'] : true;
+
+                        if (config($newkey, true) == false) {
+                            continue;
+                        }
                     }
+                }
 
-                    $key = $configFile->getFilenameWithoutExtension();
-                    $newConfig = include $configFile->getPathname();
+                // Merge configs
+                switch ($key) {
+                    case 'rate_limit':
+                        $currentConfig = config('rate_limit', []);
+                        $rate_limit['core'][strtolower($moduleName)] = include $file;
 
-                    if (is_array($newConfig)) {
-                        $existing = config($key, []);
-
-                        $merged = $this->mergeConfigSmart($existing, $newConfig);
+                        $merged = $this->mergeConfigSmart($rate_limit, $currentConfig);
                         config()->set($key, $merged);
-                    }
+                        break;
+
+                    case 'routes':
+                        $currentConfig = config('routes', []);
+                        $routes['core'][strtolower($moduleName)] = include $file;
+
+                        $merged = $this->mergeConfigSmart($routes, $currentConfig);
+                        config()->set($key, $merged);
+                        break;
+
+                    case 'module':
+                        $currentConfig = config('module', []);
+                        $modules['core'][strtolower($moduleName)] = include $file;
+
+                        $merged = $this->mergeConfigSmart($modules, $currentConfig);
+                        config()->set($key, $merged);
+                        break;
+
+                    case 'menus': // Merge Menus
+                        $currentConfig = config($key, []);
+                        $menus = include $file;
+
+                        $merged = $this->mergeConfigSmart($menus, $currentConfig);
+                        config()->set($key, $merged);
+
+                        break;
+                    case 'auth':
+                        $currentConfig = config('auth');
+                        $auth = include $file;
+
+                        $merged = $this->mergeConfigSmart($currentConfig, $auth);
+                        config()->set('auth', $merged);
+                        break;
+                    default:
+                        $this->mergeConfigFrom($file, $key);
+                        break;
                 }
             }
 
+            // Load views
+            $this->loadViewsFrom($pathView, ucfirst($moduleName));
+
+            //Module root
+            $moduleRootPath = Str::after($modulePath, base_path() . '/');
+
             // Discovery routes
             if (is_dir($routesPath)) {
-                if (file_exists($routesPath . '/admin.php')) {
-                    Route::group([
-                        'prefix' => strtolower($moduleName) . '/admin',
-                        'as' => strtolower($moduleName) . '.admin.',
-                        'middleware' => ['web'],
-                        'module' => ucfirst($moduleName),
-                        'module_path' => $moduleRootPath
-                    ], function () use ($routesPath) {
-                        require $routesPath . '/admin.php';
-                    });
-                }
 
-                if (file_exists($routesPath . '/web.php')) {
-                    Route::group([
-                        'prefix' => strtolower($moduleName),
-                        'as' => strtolower($moduleName) . ".",
-                        'middleware' => ['web'],
-                        'module' => ucfirst($moduleName),
-                        'module_path' => $moduleRootPath
-                    ], function () use ($routesPath) {
-                        require $routesPath . '/web.php';
-                    });
-                }
+                Route::prefix('system')->group(
+                    function () use ($routesPath, $moduleRootPath, $moduleName) {
 
+                        if (file_exists($routesPath . '/admin.php')) {
+                            Route::group([
+                                'prefix' => strtolower($moduleName) . '/admin',
+                                'as' => strtolower($moduleName) . '.admin.',
+                                'middleware' => ['web'],
+                                'module' => ucfirst($moduleName),
+                                'module_path' => $moduleRootPath
+                            ], function () use ($routesPath) {
+                                require $routesPath . '/admin.php';
+                            });
+                        }
+
+                        if (file_exists($routesPath . '/web.php')) {
+                            Route::group([
+                                'prefix' => strtolower($moduleName),
+                                'as' => strtolower($moduleName) . ".",
+                                'middleware' => ['web'],
+                                'module' => ucfirst($moduleName),
+                                'module_path' => $moduleRootPath
+                            ], function () use ($routesPath) {
+                                require $routesPath . '/web.php';
+                            });
+                        }
+
+                        if (file_exists($routesPath . '/api.php')) {
+                            Route::prefix("api/" . strtolower($moduleName))
+                                ->as('api.' . strtolower($moduleName) . '.')
+                                ->middleware('api')
+                                ->group($routesPath . '/api.php');
+                        }
+                    }
+                );
 
                 if (file_exists($routesPath . '/public.php')) {
                     Route::group([
@@ -143,12 +192,6 @@ class CoreServiceProvider extends ServiceProvider
                     });
                 }
 
-                if (file_exists($routesPath . '/api.php')) {
-                    Route::prefix("api/" . strtolower($moduleName))
-                        ->as('api.' . strtolower($moduleName) . '.')
-                        ->middleware('api')
-                        ->group($routesPath . '/api.php');
-                }
             }
         }
     }
@@ -192,4 +235,6 @@ class CoreServiceProvider extends ServiceProvider
     {
         return array_keys($array) === range(0, count($array) - 1);
     }
+
+
 }

@@ -157,25 +157,25 @@ class Menu
             "org_support_email" => config('mail.from.address'),
             "user" => static::authenticated_user(),
             "guest_routes" => [
-                "home_page" => url(config('system.home_page')),
+                "home_page" => "/",
             ],
             "developers" => [
                 'id' => 'dev',
                 'name' => __('Developers'),
                 'icon' => 'mdi-tools',
-                'show' => intval(config('routes.users.developers')) ? true : false,
+                'show' => intval(config('routes.system.clients.oauth_developers.status', true)) ? true : false,
                 'menu' => [
                     [
                         'name' => __('Applications'),
                         'route' => Route::has('passport.clients.index') ? route('passport.clients.index') : '',
                         'icon' => 'mdi-connection',
-                        'show' => intval(config('routes.users.clients')) ? true : false
+                        'show' => intval(config('routes.system.clients.oauth.status')) ? true : false
                     ],
                     [
                         'name' => __('API Key'),
                         'route' => Route::has('passport.personal.tokens.index') ? route('passport.personal.tokens.index') : '',
                         'icon' => 'mdi-xml',
-                        'show' => intval(config('routes.users.api')) ? true : false,
+                        'show' => intval(config('routes.system.clients.api.status')) ? true : false,
                     ],
                 ]
             ],
