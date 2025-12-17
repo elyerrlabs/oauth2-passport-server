@@ -89,45 +89,36 @@ class CoreServiceProvider extends ServiceProvider
                     }
                 }
 
+                $currentConfig = config($key, []);
+                $loadFile = include $file;
+
                 // Merge configs
                 switch ($key) {
                     case 'rate_limit':
-                        $currentConfig = config('rate_limit', []);
-                        $rate_limit['core'][strtolower($moduleName)] = include $file;
-
+                        $rate_limit['core'][strtolower($moduleName)] = $loadFile;
                         $merged = $this->mergeConfigSmart($rate_limit, $currentConfig);
                         config()->set($key, $merged);
                         break;
 
                     case 'routes':
-                        $currentConfig = config('routes', []);
-                        $routes['core'][strtolower($moduleName)] = include $file;
-
+                        $routes['core'][strtolower($moduleName)] = $loadFile;
                         $merged = $this->mergeConfigSmart($routes, $currentConfig);
                         config()->set($key, $merged);
                         break;
 
                     case 'module':
-                        $currentConfig = config('module', []);
-                        $modules['core'][strtolower($moduleName)] = include $file;
-
+                        $modules['core'][strtolower($moduleName)] = $loadFile;
                         $merged = $this->mergeConfigSmart($modules, $currentConfig);
                         config()->set($key, $merged);
                         break;
 
                     case 'menus': // Merge Menus
-                        $currentConfig = config($key, []);
-                        $menus = include $file;
-
-                        $merged = $this->mergeConfigSmart($menus, $currentConfig);
+                        $merged = $this->mergeConfigSmart($loadFile, $currentConfig);
                         config()->set($key, $merged);
 
                         break;
                     case 'auth':
-                        $currentConfig = config('auth');
-                        $auth = include $file;
-
-                        $merged = $this->mergeConfigSmart($currentConfig, $auth);
+                        $merged = $this->mergeConfigSmart($currentConfig, $loadFile);
                         config()->set('auth', $merged);
                         break;
                     default:
@@ -235,6 +226,4 @@ class CoreServiceProvider extends ServiceProvider
     {
         return array_keys($array) === range(0, count($array) - 1);
     }
-
-
 }
