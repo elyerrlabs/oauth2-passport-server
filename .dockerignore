@@ -19,6 +19,7 @@
 !LICENSE
 !package.json
 !package-lock.json
-!vite.config.js
+!webpack.mix.js
+!third-party
 !.gitignore
 !.dockerignore
