@@ -69,3 +69,9 @@ RUN apk add --no-cache --virtual .build-deps npm unzip \
     && apk del .build-deps \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/* \
     && rm -rf /var/www/docker
+
+RUN rm -rf resources/js \
+    && rm -rf core/Partner/resources/js \
+    && rm -rf core/Transaction/resources/js \
+    && rm -rf core/User/resources/js \
+    && rm -rf webpack.mix.js
