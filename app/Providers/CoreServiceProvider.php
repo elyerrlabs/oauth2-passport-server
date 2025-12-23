@@ -145,6 +145,7 @@ class CoreServiceProvider extends ServiceProvider
                                 'as' => strtolower($moduleName) . '.admin.',
                                 'middleware' => ['web'],
                                 'module' => ucfirst($moduleName),
+                                'module_type' => 'core',
                                 'module_path' => $moduleRootPath
                             ], function () use ($routesPath) {
                                 require $routesPath . '/admin.php';
@@ -157,6 +158,7 @@ class CoreServiceProvider extends ServiceProvider
                                 'as' => strtolower($moduleName) . ".",
                                 'middleware' => ['web'],
                                 'module' => ucfirst($moduleName),
+                                'module_type' => 'core',
                                 'module_path' => $moduleRootPath
                             ], function () use ($routesPath) {
                                 require $routesPath . '/web.php';
@@ -177,6 +179,7 @@ class CoreServiceProvider extends ServiceProvider
                         'as' => strtolower($moduleName) . '.',
                         'middleware' => ['web'],
                         'module' => ucfirst($moduleName),
+                        'module_type' => 'core',
                         'module_path' => $moduleRootPath
                     ], function () use ($routesPath) {
                         require $routesPath . '/public.php';
