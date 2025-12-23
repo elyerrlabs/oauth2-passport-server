@@ -9,5 +9,5 @@
 @endsection
 
 @push('js')
-    <script nonce={{ $nonce }} src="{{ asset('js/app.js') }}"></script>
+    <script nonce={{ $nonce }} src="{{ asset('js/core/user/app.js') }}"></script>
 @endpush

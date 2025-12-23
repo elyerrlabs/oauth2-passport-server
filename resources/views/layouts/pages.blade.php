@@ -8,7 +8,7 @@
 
     @include('layouts.parts.favicon')
 
-    @vite(['resources/js/pages.js'])
+    <link nonce={{ $nonce }} href="{{ asset('css/app.css') }}" rel="stylesheet" />
 
     @stack('head')
     @stack('css')
@@ -23,6 +23,7 @@
 
     @yield('footer')
     <x-privacy />
+    <script nonce={{ $nonce }} src="{{ asset('js/pages.js') }}"></script>
     @stack('js')
     @stack('modals')
 

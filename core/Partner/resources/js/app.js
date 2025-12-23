@@ -19,21 +19,14 @@
  *
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-import "@css/app.css";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
-import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { setupI18n, __ } from "@/config/locale.js";
 import "@/config/notify.js";
 
 //import { $echo } from "./config/echo.js";
 import { $server } from "@/config/axios.js";
-
 import VueSweetalert2 from "vue-sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
-
-//icons https://pictogrammers.com/library/mdi/
-import "@mdi/font/css/materialdesignicons.css";
 
 setupI18n();
 window.__ = __;
@@ -41,11 +34,7 @@ window.$notify = $notify;
 window.$server = $server;
 
 createInertiaApp({
-  resolve: (name) =>
-    resolvePageComponent(
-      `./pages/${name}.vue`,
-      import.meta.glob("./pages/**/*.vue")
-    ),
+  resolve: (name) => require(`./pages/${name}.vue`).default,
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) });
 
@@ -57,4 +46,4 @@ createInertiaApp({
     app.use(VueSweetalert2);
     app.mount(el);
   },
-});
+}); 

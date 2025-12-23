@@ -53,7 +53,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LaravelAccessTokenRepository::class, AccessTokenRepository::class);
         $this->app->bind(\Inertia\ResponseFactory::class, \App\Support\ResponseFactory::class);
         $this->app->bind(\Illuminate\Contracts\Routing\ResponseFactory::class, \App\Support\RoutingResponseFactory::class);
-        $this->app->bind(\Illuminate\Foundation\Vite::class, \App\Support\Vite::class);
     }
 
     /**

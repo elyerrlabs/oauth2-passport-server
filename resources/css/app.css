@@ -1,5 +1,18 @@
+@import 'tailwindcss' source(none);
 @import "flatpickr";
-@import 'tailwindcss';
 @import '@fortawesome/fontawesome-free/css/all.min.css';
+@import "sweetalert2/dist/sweetalert2.min.css";
+@import "@mdi/font/css/materialdesignicons.css";
+@import '@vuepic/vue-datepicker/dist/main.css';
+@import "notyf/notyf.min.css";
+@import "jodit/es2021/jodit.min.css";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
+@source "../../storage/framework/views/*.php";
+@source "../**/*.blade.php";
+@source "../**/*.js";
+@source "../../core/**/resources/view/*.blade.php";
+@source "../../core/**/resources/js/*.js";
+@source "../../core/**/resources/css/*.css";
+@source "../../core/**/resources/js/**/**/*.vue";
+@source "../**/*.vue";

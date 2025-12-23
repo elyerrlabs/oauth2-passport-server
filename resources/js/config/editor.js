@@ -1,5 +1,4 @@
 import { Jodit } from "jodit";
-import "jodit/es2021/jodit.min.css";
 import "jodit/esm/plugins/all.js";
 window.Jodit = Jodit;
 
@@ -11,7 +10,7 @@ import * as monaco from "monaco-editor";
 window.monaco = monaco;
 
 // Import individual workers
-import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+/*import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
 import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
@@ -26,7 +25,7 @@ self.MonacoEnvironment = {
     if (label === "typescript" || label === "javascript") return new tsWorker();
     return new editorWorker();
   },
-};
+};*/
 
 // --------------------- MONACO ---------------------
 

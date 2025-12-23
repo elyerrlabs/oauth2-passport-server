@@ -20,7 +20,6 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 import flatpickr from "flatpickr";
-import "@css/app.css";
 import "@/config/notify.js";
 import "@/config/editor.js";
 
