@@ -23,8 +23,8 @@
  */
 
 use Illuminate\Support\Facades\Route;
-use Core\User\Http\Controllers\Web\UserController;
-use App\Http\Controllers\Web\Account\CodeController;
+use Core\User\Http\Controllers\Web\CodeController;
+use Core\User\Http\Controllers\Web\UserController; 
 use Core\User\Http\Controllers\Web\HomePageController;
 use App\Http\Controllers\Web\Admin\File\FileController;
 use Core\User\Http\Controllers\Web\NotificationController;

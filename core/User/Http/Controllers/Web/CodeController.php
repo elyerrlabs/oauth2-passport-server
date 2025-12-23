@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Web\Account;
+namespace Core\User\Http\Controllers\Web;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -23,21 +23,11 @@ namespace App\Http\Controllers\Web\Account;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use DateTime;
 use App\Services\AuthService;
-use DateInterval;
 use Inertia\Inertia;
-use Core\User\Model\User;
-use App\Support\CacheKeys;
-use App\Models\Setting\Code;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\WebController;
-use App\Http\Middleware\Auth2faMiddleware;
 use Elyerr\ApiResponse\Assets\JsonResponser;
-use Elyerr\ApiResponse\Exceptions\ReportError;
 
 class CodeController extends WebController
 {
@@ -93,7 +83,7 @@ class CodeController extends WebController
      */
     public function formToRequestToken()
     {
-        return Inertia::render("Core/User/Web/2fa");
+        return Inertia::render("Web/2fa");
     }
 
     /**
