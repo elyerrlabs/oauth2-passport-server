@@ -23,9 +23,9 @@ namespace Core\User\Http\Controllers\Web;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Services\AuthService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Core\User\Services\AuthService;
 use App\Http\Controllers\WebController;
 use Elyerr\ApiResponse\Assets\JsonResponser;
 
@@ -41,7 +41,7 @@ class CodeController extends WebController
 
     /**
      * Construct
-     * @param \App\Services\AuthService $authService
+     * @param  AuthService $authService
      */
     public function __construct(AuthService $authService)
     {
@@ -106,6 +106,10 @@ class CodeController extends WebController
      */
     public function factor2faEnableOrDisable(Request $request)
     {
+        $this->validate($request, [ 
+            'token' => ['required']
+        ]);
+
         $user = $this->authService->enabledOrDisabled($request);
 
         return redirect()->route('user.2fa.request');

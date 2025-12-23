@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services;
+namespace Core\User\Services;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
@@ -25,18 +25,18 @@ namespace App\Services;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-
-use App\Models\Setting\Code;
+ 
+use DateTime;
+use DateInterval;
+use Core\User\Model\Code;
+use Core\User\Model\User;
 use App\Support\CacheKeys;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Elyerr\ApiResponse\Exceptions\ReportError;
-use Illuminate\Support\Facades\Hash;
 use App\Notifications\Setting\CodeNotification;
-use Illuminate\Support\Facades\Auth;
-use Core\User\Model\User;
-use DateInterval;
-use DateTime;
-use Illuminate\Http\Request;
 
 class AuthService
 {

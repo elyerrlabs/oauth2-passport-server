@@ -23,14 +23,11 @@ namespace App\Http\Middleware;
  * 
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
-
-use App\Services\AuthService;
+ 
 use Closure;
-use Core\User\Model\User;
-use App\Models\Setting\Code;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Notifications\Setting\CodeNotification;
+use Core\User\Model\User; 
+use Illuminate\Http\Request; 
+use Core\User\Services\AuthService;
 
 class Auth2faMiddleware
 {

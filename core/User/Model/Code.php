@@ -1,5 +1,5 @@
 <?php
-namespace App\Models\Setting;
+namespace Core\User\Model;
 
 /**
  * Copyright (c) 2025 Elvis Yerel Roman Concha
