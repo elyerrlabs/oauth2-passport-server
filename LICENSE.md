@@ -24,12 +24,12 @@ This includes, but is not limited to:
 
 It is also prohibited for third-party services to connect to or integrate with the Software if such services generate direct or indirect income through such connection or integration, **without the prior, express, and written consent of the author**.
 
-## `/modules` License Exception
+## `/third-party` License Exception
 
-The /modules directory is excluded from the scope of this license. Each module located inside /modules is considered an independent component and must include its own license and author attribution.
+The **/third-party** directory is excluded from the scope of this license. Each module located inside **/third-party** is considered an independent component and must include its own license and author attribution.
 
 However, if a module is used to generate economic or commercial benefits within the host software, explicit authorization from the host software author is required.
-Without such authorization, modules may only be used in development and testing environments, and commercial use is strictly prohibited.
+Without such authorization, **/third-party** modules may only be used in development and testing environments, and commercial use is strictly prohibited.
 
 ---
 
