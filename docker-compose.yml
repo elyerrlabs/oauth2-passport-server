@@ -49,6 +49,7 @@ services:
             - sitemaps:/var/www/public/sitemaps
             - cache:/var/www/storage/framework/cache
             - logs:/var/www/storage/logs
+            - third-party:/var/www/third-party
         command: sh -c "/usr/local/bin/entrypoint.sh"
         networks:
             - internal-net
@@ -61,6 +62,7 @@ volumes:
     sitemaps:
     cache:
     logs:
+    third-party:
 
 networks:
     internal-net:
