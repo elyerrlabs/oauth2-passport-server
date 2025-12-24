@@ -20,8 +20,9 @@
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 import flatpickr from "flatpickr";
-import "@/config/notify.js";
+import { $notify } from "@/config/notify.js";
 import "@/config/editor.js";
+window.$notify = $notify;
 
 flatpickr(".date", {
   dateFormat: "Y-m-d",

@@ -22,7 +22,7 @@
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { setupI18n, __ } from "@/config/locale.js";
-import "@/config/notify.js";
+import { $notify } from "@/config/notify.js";
 
 //import { $echo } from "./config/echo.js";
 import { $server } from "@/config/axios.js";

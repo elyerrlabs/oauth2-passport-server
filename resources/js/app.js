@@ -22,7 +22,7 @@
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { setupI18n, __ } from "@/config/locale.js";
-import "@/config/notify.js";
+import { $notify } from "@/config/notify.js";
 import "@/config/editor.js";
 
 //import { $echo } from "./config/echo.js";
@@ -32,8 +32,8 @@ import { VueDatePicker } from '@vuepic/vue-datepicker';
 
 setupI18n();
 window.__ = __;
-window.$notify = $notify;
 window.$server = $server;
+window.$notify = $notify;
 
 createInertiaApp({
   resolve: (name) => require(`./pages/${name}.vue`).default,
@@ -42,6 +42,7 @@ createInertiaApp({
 
     // app.config.globalProperties.$echo = $echo;
     app.config.globalProperties.$server = $server;
+    app.config.globalProperties.$notify = $notify;
     app.config.globalProperties.__ = __;
 
     app.component("VueDatePicker", VueDatePicker);
