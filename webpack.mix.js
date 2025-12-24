@@ -89,22 +89,22 @@ mix.js('resources/js/app.js', 'public/js')
         require("autoprefixer"),
     ])
     .vue()
-    .version();
 
 /**
  *  
  */
 loadAssets().forEach(({ module, type, file }) => {
     if (type === 'js') {
-        mix.js(file, `public/js/core/${module.toLowerCase()}`).version();
+        mix.js(file, `public/js/core/${module.toLowerCase()}`);
     }
 
     if (type === 'scss') {
-        mix.sass(file, `public/css/core/${module.toLowerCase()}`).version();
+        mix.sass(file, `public/css/core/${module.toLowerCase()}`);
     }
 
     if (type === 'css') {
-        mix.postCss(file, `public/css/core/${module.toLowerCase()}`).version();
+        mix.postCss(file, `public/css/core/${module.toLowerCase()}`);
     }
 });
 
+mix.version();

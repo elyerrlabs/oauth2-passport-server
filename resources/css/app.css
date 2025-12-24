@@ -7,12 +7,11 @@
 @import "notyf/notyf.min.css";
 @import "jodit/es2021/jodit.min.css";
 
-@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
-@source "../../storage/framework/views/*.php";
+@custom-variant dark (&:where(.dark, .dark *));
+
 @source "../**/*.blade.php";
 @source "../**/*.js";
-@source "../../core/**/resources/view/*.blade.php";
-@source "../../core/**/resources/js/*.js";
-@source "../../core/**/resources/css/*.css";
-@source "../../core/**/resources/js/**/**/*.vue";
 @source "../**/*.vue";
+@source "../../core/**/*.blade.php";
+@source "../../core/**/*.js";
+@source "../../core/**/*.vue";
