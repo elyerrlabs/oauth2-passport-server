@@ -22,6 +22,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## 🛠️ v5.0.1
+
+### Fixed
+
+-   Fixed incorrect Notyf.js import causing build issues
+-   Fixed webpack.mix.js configuration for proper asset compilation
+
+----
 ## 🛠️ v5.0.0
 
 ### 🔄 Changed
