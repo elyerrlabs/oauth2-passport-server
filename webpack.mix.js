@@ -51,9 +51,6 @@ function loadAssets() {
 
     return assets;
 }
-
-
-
 mix.webpackConfig({
     resolve: {
         alias: {
@@ -81,30 +78,28 @@ mix.webpackConfig({
     ],
 })
 
-mix.js('resources/js/app.js', 'public/js')
-    .js('resources/js/pages.js', 'public/js/pages.js')
-    //  .sass('resources/scss/app.css', 'public/css')
-    .postCss('resources/css/app.css', 'public/css', [
+mix.js('resources/js/app.js', 'js').version()
+    .js('resources/js/pages.js', 'js/pages.js').version()
+    //  .sass('resources/scss/app.css', 'css')
+    .postCss('resources/css/app.css', 'css', [
         require('@tailwindcss/postcss'),
         require("autoprefixer"),
-    ])
-    .vue()
+    ]).version()
 
 /**
  *  
  */
 loadAssets().forEach(({ module, type, file }) => {
     if (type === 'js') {
-        mix.js(file, `public/js/core/${module.toLowerCase()}`);
+        mix.js(file, `js/core/${module.toLowerCase()}`).version();
     }
 
     if (type === 'scss') {
-        mix.sass(file, `public/css/core/${module.toLowerCase()}`);
+        mix.sass(file, `css/core/${module.toLowerCase()}`).version();
     }
 
     if (type === 'css') {
-        mix.postCss(file, `public/css/core/${module.toLowerCase()}`);
+        mix.postCss(file, `css/core/${module.toLowerCase()}`).version();
     }
 });
-
-mix.version();
+mix.vue({ version: 3 }) 

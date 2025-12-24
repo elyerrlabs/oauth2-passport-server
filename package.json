@@ -23,6 +23,7 @@
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.26",
     "vue-loader": "^17.4.2",
+    "sass": "^1.85.1",
     "worker-loader": "^3.0.8"
   },
   "dependencies": {
@@ -38,7 +39,6 @@
     "monaco-editor": "^0.53.0",
     "monaco-editor-webpack-plugin": "^7.1.1",
     "notyf": "^3.10.0",
-    "sass": "^1.85.1",
     "stream-browserify": "^3.0.0",
     "vue-i18n": "^11.1.11",
     "vue-sweetalert2": "^5.0.11",
