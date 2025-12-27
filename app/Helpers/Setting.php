@@ -208,6 +208,8 @@ if (!function_exists('setLanguage')) {
      */
     function setLanguage(string $locale = '')
     {
+        $route = request()->route();
+
         $lang = $locale ?? substr(request()->header('Accept-Language'), 0, 2);
 
         if (auth()->check()) { // Only auth user
@@ -215,6 +217,14 @@ if (!function_exists('setLanguage')) {
         }
 
         $path = base_path('lang') . '/' . $lang . '.json';
+
+        if ($route->action['module_type'] == 'third-party') {
+            $moduleLang = "{$route->action['module_path']}/lang/{$lang}.json";
+
+            if (file_exists($moduleLang)) {
+                $path = $moduleLang;
+            }
+        }
 
         if (!file_exists($path)) {
             $path = base_path('lang') . '/en.json';
