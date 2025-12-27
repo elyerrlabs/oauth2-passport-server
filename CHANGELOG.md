@@ -22,6 +22,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## Unreleased
+
+### Added
+
+* **Elymod module CLI support**
+
+  * `module:create` — Create a new Elymod module inside the `third-party` directory.
+  * `module:delete` — Delete an Elymod module and its published assets symlink.
+
+These commands are provided by the Elymod mini-framework to streamline modular development.
+
+
 ## 🛠️ v5.0.1
 
 ### Fixed
