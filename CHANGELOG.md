@@ -22,6 +22,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## v5.0.3
+
+### Fixed
+
+-   setLanguage fixed to support modules
+
+---
+
 ## v5.0.2
 
 ### Added
@@ -34,6 +42,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 These commands are provided by the Elymod mini-framework to streamline modular development.
 
 ---
+
 ## 🛠️ v5.0.1
 
 ### Fixed
