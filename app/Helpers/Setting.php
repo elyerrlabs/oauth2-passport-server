@@ -218,7 +218,7 @@ if (!function_exists('setLanguage')) {
 
         $path = base_path('lang') . '/' . $lang . '.json';
 
-        if ($route->action['module_type'] == 'third-party') {
+        if (isset($route->action['module_type']) && $route->action['module_type'] == 'third-party') {
             $moduleLang = "{$route->action['module_path']}/lang/{$lang}.json";
 
             if (file_exists($moduleLang)) {
