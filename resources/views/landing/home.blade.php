@@ -1,183 +1,50 @@
 @extends('layouts.pages')
 
 @section('title')
-    @include('layouts.parts.title', ['title' => config('app.name', 'OAuth2 Passport Server')])
+    @include('layouts.parts.title', [
+        'title' => config('app.name', 'OAuth2 Passport Server - Modern Authorization Solution'),
+    ])
 @endsection
 
 @push('css')
+    <link nonce="{{ $nonce }}"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style nonce="{{ $nonce }}">
-        .oauth-landing {
-            background: white;
-            color: #374151;
-            min-height: 100vh;
+        * {
+            font-family: 'Inter', sans-serif;
         }
 
-        .glass-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        .btn-primary {
-            background: rgb(79 70 229);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .btn-primary:hover {
-            background: rgb(67 56 202);
-            transform: translateY(-1px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-
-        .btn-success {
-            background: rgb(16 185 129);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-
-        .btn-success:hover {
-            background: rgb(5 150 105);
-            transform: translateY(-1px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: rgb(79 70 229);
-            border: 1px solid rgb(79 70 229);
-            border-radius: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .btn-outline:hover {
-            background: rgb(79 70 229);
-            color: white;
-        }
-
-        .feature-card {
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            border-color: rgb(79 70 229);
-        }
-
-        .status-pill {
-            background: rgba(16, 185, 129, 0.1);
-            color: rgb(16 185 129);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 9999px;
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        /* Server info cards */
-        .server-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .server-info-card {            
-            
-            padding: 1.5rem;
+        .card-hover {
             transition: all 0.3s ease;
         }
 
-        .server-info-card:hover {
-            border-color: rgb(79 70 229);
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: rgb(79 70 229);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #6b7280;
-            font-size: 0.875rem;
-        }
-
-        /* Integration platform section */
-        .platform-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .platform-card {
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .platform-card:hover {
+        .card-hover:hover {
             transform: translateY(-5px);
-            border-color: rgb(79 70 229);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .platform-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Custom scrollbar */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f3f4f6;
-            border-radius: 0.5rem;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 0.5rem;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .server-info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stat-value {
-                font-size: 1.5rem;
-            }
-
-            .platform-grid {
-                grid-template-columns: 1fr;
-            }
+        .feature-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            color: white;
+            font-size: 24px;
         }
     </style>
 @endpush
@@ -187,456 +54,334 @@
 @endsection
 
 @section('content')
-    <main class="oauth-landing">
-        <!-- Hero Section -->
-        <div class="relative overflow-hidden dark:bg-gray-900">
-            <div class=" max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div class="text-center">
-                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                        {{ __('Centralized Authentication & Authorization Server') }}
-                    </h1>
-                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-                        {{ __('Secure OAuth2 + OpenID Connect server that connects applications, microservices, and platforms with centralized session, users and services management') }}
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4 mb-12">
-                        @if (Route::has('documentation.index'))
-                            <a href="{{ route('documentation.index') }}" class="btn-primary inline-flex items-center">
-                                <i class="mdi mdi-book-open-page-variant mr-2"></i>
-                                {{ __('Documentation') }}
-                            </a>
-                        @endif
-                        @if (config('system.demo.domain.enabled', false))
-                            <a href="{{ config('system.demo.domain.url') }}" class="btn-success inline-flex items-center">
-                                <i class="mdi mdi-rocket-launch mr-2"></i>
-                                {{ __('Try Now') }}
-                            </a>
-                        @endif
-                        @if (Route::has('passport.personal.tokens.index'))
-                            <a href="{{ route('passport.personal.tokens.index') }}"
-                                class="btn-outline inline-flex items-center">
-                                <i class="mdi mdi-api mr-2"></i>
-                                {{ __('API Keys') }}
-                            </a>
-                        @endif
-
-                        <a href="https://www.youtube.com/@elyerr" target="_blank"
-                            class="btn-outline inline-flex items-center">
-                            <i class="mdi mdi-school-outline mr-2 2xl"></i>
-                            {{ __('Tutorials') }}
-                        </a>
-                    </div>
-                </div>
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-16 md:py-24 dark:bg-linear-to-br dark:from-gray-900 dark:to-gray-800">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">{{ __('Modern Authorization Server') }}</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90 dark:opacity-80">
+                {{ __('An OAuth2 & OpenID Connect server with microservice support, modular architecture, and enterprise-ready features.') }}
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#features"
+                    class="bg-white text-purple-700 dark:bg-gray-800 dark:text-purple-300 font-bold py-3 px-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
+                    {{ __('Explore Features') }}
+                </a>
+                <a href="#links"
+                    class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-purple-700 dark:hover:bg-gray-800 dark:hover:text-purple-300 transition duration-300">
+                    {{ __('Get Started') }}
+                </a>
             </div>
         </div>
+    </section>
 
-        <!-- Server Capabilities Section -->
-        <div class="relative py-12 bg-gray-50 dark:bg-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                        {{ __('One Authentication Server, Infinite Possibilities') }}
-                    </h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
-                        {{ __('Our OAuth2 and OpenID Connect server provides a centralized authentication solution that seamlessly connects web applications, mobile apps, microservices, and external platforms with robust security and scalability.') }}
+    <!-- Features Section -->
+    <section id="features" class="py-16 bg-white dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">{{ __('Powerful Features') }}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    {{ __('OAuth2 Passport Server is a comprehensive authorization solution with OpenID Connect support designed for modern applications.') }}
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 card-hover dark:hover:bg-gray-700 transition-colors">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">{{ __('OAuth2 & OpenID Connect') }}
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        {{ __('Complete authorization server with full support for OAuth2 and OpenID Connect protocols for secure authentication and authorization.') }}
                     </p>
                 </div>
 
-                <!-- Platform Integration Grid -->
-                <div class="platform-grid ">
-                    <div class="platform-card bg-white rounded dark:bg-gray-700">
-                        <div class="platform-icon text-indigo-600 dark:text-indigo-400">
-                            <i class="mdi mdi-web"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                            {{ __('Web Applications') }}</h3>
-                        <p class="text-gray-600 dark:text-gray-300">
-                            {{ __('Connect any web application built with React, Vue, Angular, or traditional server-side frameworks.') }}
-                        </p>
+                <!-- Feature 2 -->
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 card-hover dark:hover:bg-gray-700 transition-colors">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-microchip"></i>
                     </div>
-
-                    <div class="platform-card bg-white rounded dark:bg-gray-700">
-                        <div class="platform-icon text-green-600 dark:text-green-400">
-                            <i class="mdi mdi-cellphone"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">{{ __('Mobile Apps') }}</h3>
-                        <p class="text-gray-600 dark:text-gray-300">
-                            {{ __('iOS and Android applications with secure token-based authentication and seamless user experiences.') }}
-                        </p>
-                    </div>
-
-                    <div class="platform-card bg-white rounded dark:bg-gray-700">
-                        <div class="platform-icon text-blue-600 dark:text-blue-400">
-                            <i class="mdi mdi-api"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">{{ __('Microservices') }}</h3>
-                        <p class="text-gray-600 dark:text-gray-300">
-                            {{ __('Secure service-to-service communication with JWT tokens and centralized access control.') }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Server Stats -->
-                <div class="server-info-grid mt-12">
-                    <div class="server-info-card bg-white dark:bg-gray-700">
-                        <div class="flex items-center mb-4">
-                            <div
-                                class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-server-network text-indigo-600 dark:text-indigo-400 text-xl"></i>
-                            </div>
-                            <div>
-                                <div class="stat-value dark:text-white">50+</div>
-                                <div class="stat-label dark:text-gray-300">{{ __('Integrated Services') }}</div>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm">
-                            {{ __('From VPN and eCommerce to custom microservices and partner integrations.') }}
-                        </p>
-                    </div>
-
-                    <div class="server-info-card bg-white dark:bg-gray-700">
-                        <div class="flex items-center mb-4">
-                            <div
-                                class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-shield-check text-green-600 dark:text-green-400 text-xl"></i>
-                            </div>
-                            <div>
-                                <div class="stat-value dark:text-white">{{ __('256-bit') }}</div>
-                                <div class="stat-label dark:text-gray-300">{{ __('Encryption') }}</div>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm">
-                            {{ __('Military-grade encryption for all authentication tokens and communications.') }}
-                        </p>
-                    </div>
-
-                    <div class="server-info-card bg-white dark:bg-gray-700">
-                        <div class="flex items-center mb-4">
-                            <div
-                                class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-account-multiple text-purple-600 dark:text-purple-400 text-xl"></i>
-                            </div>
-                            <div>
-                                <div class="stat-value dark:text-white">10K+</div>
-                                <div class="stat-label dark:text-gray-300">{{ __('Active Sessions') }}</div>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm">
-                            {{ __('Centralized session management across all connected applications and services.') }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Payment Integration Section -->
-        <div class="py-16 bg-white dark:bg-gray-900">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                        {{ __('Integrated Payment Solutions') }}
-                    </h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                        {{ __('Secure payment processing integrated directly with your authentication system') }}
+                    <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">{{ __('Microservices Ready') }}</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        {{ __('Easy connectivity between microservices with granular control over each section using scopes for users.') }}
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
-                        <div class="flex items-center mb-6">
-                            <div
-                                class="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-credit-card-outline text-blue-600 dark:text-blue-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                {{ __('Stripe Integration') }}</h3>
+                <!-- Feature 3 -->
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 card-hover dark:hover:bg-gray-700 transition-colors">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">{{ __('Complete Management System') }}
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        {{ __('Manage groups, services, roles, users, OAuth2 applications, partners, transactions, subscriptions, and plans.') }}
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 card-hover dark:hover:bg-gray-700 transition-colors">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">{{ __('Payment Integration') }}</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        {{ __('Seamless integration with Stripe and offline payments for handling subscriptions and transactions.') }}
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 card-hover dark:hover:bg-gray-700 transition-colors">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">{{ __('Horizon Queue Integration') }}
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        {{ __('Integrated with Horizon for managing queues, configuration management system, and CSP support for enhanced security.') }}
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 card-hover dark:hover:bg-gray-700 transition-colors">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">{{ __('Extensible Framework') }}</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        {{ __('Comes with its own mini-framework for creating modules, allowing you to extend functionality through modules or OpenID Connect.') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Elymod Section -->
+    <section id="elymod" class="py-16 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-10 lg:mb-0">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-white">
+                        {{ __('Elymod: Modular Framework') }}</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        {{ __('Elymod is a mini-framework developed to extend OAuth2 Passport Server through independent modules. It maintains the same familiarity as a Laravel framework while solving dependency conflicts in modular systems.') }}
+                    </p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-purple-600 dark:text-purple-400 mt-1 mr-3"></i>
+                            <span
+                                class="text-gray-700 dark:text-gray-300">{{ __('Each module is completely independent with its own dependencies') }}</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-purple-600 dark:text-purple-400 mt-1 mr-3"></i>
+                            <span
+                                class="text-gray-700 dark:text-gray-300">{{ __('Avoids version collision between modules or with the parent system') }}</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-purple-600 dark:text-purple-400 mt-1 mr-3"></i>
+                            <span
+                                class="text-gray-700 dark:text-gray-300">{{ __('Functions as a connector that only adds features without conflicts') }}</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-purple-600 dark:text-purple-400 mt-1 mr-3"></i>
+                            <span
+                                class="text-gray-700 dark:text-gray-300">{{ __('Prevents monolithic systems where modules share dependencies') }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="lg:w-1/2 flex justify-center">
+                    <div class="bg-white dark:bg-gray-700 p-8 rounded-2xl shadow-lg max-w-md">
+                        <div class="feature-icon mb-6 mx-auto">
+                            <i class="fas fa-box-open"></i>
                         </div>
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            {{ __('Securely process payments through Stripe with seamless authentication flow. Customers enjoy a smooth checkout experience without leaving your application.') }}
+                        <h3 class="text-2xl font-bold mb-4 text-center text-gray-900 dark:text-white">
+                            {{ __('Independent Modules') }}</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center">
+                            {{ __('With Elymod, each module can install its own dependencies, avoiding collisions between different versions of a dependency across modules or with the parent system.') }}
                         </p>
-                        <ul class="space-y-2 text-gray-600 dark:text-gray-300">
-                            <li class="flex items-center">
-                                <i class="mdi mdi-check-circle text-green-600 mr-2"></i>
-                                {{ __('PCI Compliant payment processing') }}
-                            </li>
-                            <li class="flex items-center">
-                                <i class="mdi mdi-check-circle text-green-600 mr-2"></i>
-                                {{ __('Support for multiple payment methods') }}
-                            </li>
-                            <li class="flex items-center">
-                                <i class="mdi mdi-check-circle text-green-600 mr-2"></i>
-                                {{ __('Recurring billing and subscriptions') }}
-                            </li>
-                        </ul>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                    <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
-                        <div class="flex items-center mb-6">
-                            <div
-                                class="w-14 h-14 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-cash-multiple text-green-600 dark:text-green-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                {{ __('P2P & Direct Payments') }}</h3>
+    <!-- Laravel Runtime Section -->
+    <section id="runtime" class="py-16 bg-white dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 order-2 lg:order-1">
+                    <div
+                        class="bg-linear-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 p-8 rounded-2xl shadow-lg max-w-md">
+                        <div class="feature-icon mb-6">
+                            <i class="fab fa-laravel"></i>
                         </div>
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            {{ __('Enable direct peer-to-peer payments and offline transactions without third-party intervention. Perfect for direct sales and personal transactions.') }}
+                        <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{{ __('Laravel Runtime') }}</h3>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            {{ __('An abstraction layer between Laravel framework and Elymod that feels familiar like working with a Laravel project. This avoids breaking dependencies since Laravel framework is not modified, only used as a bridge for some functionalities.') }}
                         </p>
-                        <ul class="space-y-2 text-gray-600 dark:text-gray-300">
-                            <li class="flex items-center">
-                                <i class="mdi mdi-check-circle text-green-600 mr-2"></i>
-                                {{ __('Direct bank transfers and wallet payments') }}
-                            </li>
-                            <li class="flex items-center">
-                                <i class="mdi mdi-check-circle text-green-600 mr-2"></i>
-                                {{ __('Offline payment verification') }}
-                            </li>
-                            <li class="flex items-center">
-                                <i class="mdi mdi-check-circle text-green-600 mr-2"></i>
-                                {{ __('Secure transaction recording') }}
-                            </li>
-                        </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Features Grid -->
-        <div class="py-16 bg-white dark:bg-gray-900">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Applications Card -->
-                    <div class="feature-card dark:bg-gray-800">
-                        <div
-                            class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mb-4">
-                            <i class="mdi mdi-apps text-indigo-600 dark:text-indigo-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{{ __('Applications') }}
-                        </h3>
-                        <div class="space-y-2">
-                            <a href="{{ route('admin.clients.index') }}"
-                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                                <i class="mdi mdi-connection mr-2"></i>
-                                <span class="text-sm">{{ __('OAuth2 and OpenID Connect') }}</span>
-                            </a>
-                            <a href="{{ route('transaction.admin.dashboard') }}"
-                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                                <i class="mdi mdi-cash mr-2"></i>
-                                <span class="text-sm">{{ __('Transactions') }}</span>
-                            </a>
-                            @if (Route::has('partner.dashboard'))
-                                <a href="{{ route('partner.dashboard') }}"
-                                    class="flex items-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                                    <i class="mdi mdi-text-recognition mr-2"></i>
-                                    <span class="text-sm">{{ __('Partners') }}</span>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Access Control Card -->
-                    <div class="feature-card bg-white rounded dark:bg-gray-800">
-                        <div
-                            class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mb-4">
-                            <i class="mdi mdi-shield-account text-green-600 dark:text-green-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{{ __('Access Control') }}
-                        </h3>
-                        <div class="space-y-2">
-                            <a href="{{ route('user.admin.groups.index') }}"
-                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
-                                <i class="mdi mdi-account-group-outline mr-2"></i>
-                                <span class="text-sm">{{ __('Groups') }}</span>
-                            </a>
-                            <a href="{{ route('user.admin.services.index') }}"
-                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
-                                <i class="mdi mdi-account-group-outline mr-2"></i>
-                                <span class="text-sm">{{ __('Services') }}</span>
-                            </a>
-                            <a href="{{ route('user.admin.roles.index') }}"
-                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
-                                <i class="mdi mdi-shield-star-outline mr-2"></i>
-                                <span class="text-sm">{{ __('Roles') }}</span>
-                            </a>
-                            <a href="{{ route('user.admin.users.index') }}"
-                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
-                                <i class="mdi mdi-account-key mr-2"></i>
-                                <span class="text-sm">{{ __('Users') }}</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Integrations Card -->
-                    <div class="feature-card bg-white rounded dark:bg-gray-800">
-                        <div
-                            class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mb-4">
-                            <i class="mdi mdi-connection text-purple-600 dark:text-purple-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{{ __('Integrations') }}
-                        </h3>
-                        <div class="space-y-2">
-                            <a href="https://github.com/elyerr/elyerr-cloud"
-                                class="flex items-center justify-between text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors group">
-                                <div class="flex items-center">
-                                    <i class="mdi mdi-cloud-outline mr-2"></i>
-                                    <span class="text-sm">Cloud</span>
-                                </div>
-                                <i
-                                    class="mdi mdi-open-in-new opacity-0 group-hover:opacity-100 transition-opacity text-xs"></i>
-                            </a>
-                            <a href="https://vpn.elyerr.org"
-                                class="flex items-center justify-between text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors group">
-                                <div class="flex items-center">
-                                    <i class="mdi mdi-shield-lock mr-2"></i>
-                                    <span class="text-sm">{{ __('VPN') }}</span>
-                                </div>
-                                <i
-                                    class="mdi mdi-open-in-new opacity-0 group-hover:opacity-100 transition-opacity text-xs"></i>
-                            </a>
-                            @if (Route::has('ecommerce.dashboard'))
-                                <a href="{{ route('ecommerce.dashboard') }}"
-                                    class="flex items-center justify-between text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors group">
-                                    <div class="flex items-center">
-                                        <i class="mdi mdi-cart-outline mr-2"></i>
-                                        <span class="text-sm">{{ __('eCommerce') }}</span>
-                                    </div>
-                                    <i
-                                        class="mdi mdi-open-in-new opacity-0 group-hover:opacity-100 transition-opacity text-xs"></i>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Observability Card -->
-                    <div class="feature-card bg-white rounded dark:bg-gray-800">
-                        <div
-                            class="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mb-4">
-                            <i class="mdi mdi-text-box-search-outline text-orange-600 dark:text-orange-400 text-xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{{ __('Observability') }}
-                        </h3>
-                        <div class="space-y-2">
-                            <a href="{{ route('admin.logs') }}"
-                                class="flex items-center text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
-                                <i class="mdi mdi-clipboard-text-outline mr-2"></i>
-                                <span class="text-sm">{{ __('Audit Logs') }}</span>
-                            </a>
-                            @if (Route::has('passport.personal.tokens.index'))
-                                <a href="{{ route('passport.personal.tokens.index') }}"
-                                    class="flex items-center text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
-                                    <i class="mdi mdi-key-variant mr-2"></i>
-                                    <span class="text-sm">{{ __('Issued Tokens') }}</span>
-                                </a>
-                            @endif
-                            @if (Route::has('passport.clients.index'))
-                                <a href="{{ route('passport.clients.index') }}"
-                                    class="flex items-center text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
-                                    <i class="mdi mdi-connection mr-2"></i>
-                                    <span class="text-sm">{{ __('OAuth2 Clients') }}</span>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Benefits Section -->
-        <div class="py-16 bg-gray-50 dark:bg-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
-                        {{ __('Why Choose Our Authentication Server?') }}
-                    </h2>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-sm">
-                        <div class="flex items-start mb-4">
+                <div class="lg:w-1/2 mb-10 lg:mb-0 lg:pl-12 order-1 lg:order-2">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-white">
+                        {{ __('Familiar Laravel Experience') }}</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        {{ __('Laravel Runtime provides a seamless transition for developers already familiar with Laravel, while maintaining the integrity of dependencies and preventing conflicts.') }}
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
                             <div
-                                class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-shield-account text-indigo-600 dark:text-indigo-400"></i>
+                                class="bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 p-3 rounded-lg mr-4">
+                                <i class="fas fa-bridge"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    {{ __('Centralized Sessions') }}
-                                </h3>
-                                <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                                    {{ __('Manage all user sessions from a single dashboard across web, mobile, and microservices') }}
+                                <h4 class="font-bold text-lg text-gray-900 dark:text-white">{{ __('Abstraction Bridge') }}
+                                </h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    {{ __('Acts as a bridge between Laravel and Elymod without modifying the core framework') }}
                                 </p>
                             </div>
                         </div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-sm">
-                        <div class="flex items-start mb-4">
+                        <div class="flex items-center">
                             <div
-                                class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-connection text-green-600 dark:text-green-400"></i>
+                                class="bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 p-3 rounded-lg mr-4">
+                                <i class="fas fa-code-branch"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    {{ __('Unlimited Integrations') }}
-                                </h3>
-                                <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                                    {{ __('Connect VPN, eCommerce, payment systems, and custom microservices without limits') }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-sm">
-                        <div class="flex items-start mb-4">
-                            <div
-                                class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-puzzle text-purple-600 dark:text-purple-400"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    {{ __('Modular & Scalable') }}
-                                </h3>
-                                <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                                    {{ __('Extend functionality with modules and scale horizontally to handle millions of users') }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-sm">
-                        <div class="flex items-start mb-4">
-                            <div
-                                class="w-10 h-10 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="mdi mdi-currency-usd text-orange-600 dark:text-orange-400"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">{{ __('Payment Ready') }}</h3>
-                                <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                                    {{ __('Integrated Stripe and P2P payment processing with secure authentication flows') }}
-                                </p>
+                                <h4 class="font-bold text-lg text-gray-900 dark:text-white">{{ __('Dependency Safety') }}
+                                </h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    {{ __('Prevents breaking changes by avoiding direct modifications to Laravel') }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Status Section -->
-        <div class="py-12 bg-white dark:bg-gray-900">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <div class="flex flex-wrap justify-center gap-4">
-                    <span class="status-pill inline-flex items-center dark:bg-gray-700 dark:text-gray-300">
-                        <i class="mdi mdi-check-circle mr-2"></i> {{ __('Passport • Online') }}
-                    </span>
-                    <span class="status-pill inline-flex items-center dark:bg-gray-700 dark:text-gray-300">
-                        <i class="mdi mdi-check-circle mr-2"></i> {{ __('OpenID • Online') }}
-                    </span>
-                    <span class="status-pill inline-flex items-center dark:bg-gray-700 dark:text-gray-300">
-                        <i class="mdi mdi-check-circle mr-2"></i> {{ __('DB • Online') }}
-                    </span>
-                    <span class="status-pill inline-flex items-center dark:bg-gray-700 dark:text-gray-300">
-                        <i class="mdi mdi-check-circle mr-2"></i> {{ __('Payments • Online') }}
-                    </span>
-                </div>
+    <!-- Links Section -->
+    <section id="links" class="py-16 gradient-bg text-white dark:bg-linear-to-br dark:from-gray-900 dark:to-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">{{ __('Get Started Today') }}</h2>
+                <p class="text-xl opacity-90 dark:opacity-80 max-w-2xl mx-auto">
+                    {{ __('Explore OAuth2 Passport Server, Elymod, and Laravel Runtime across our platforms.') }}
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- GitLab -->
+                <a href="https://gitlab.com/elyerr" target="_blank"
+                    class="bg-white/10 backdrop-filter backdrop-blur-lg rounded-xl p-6 text-center card-hover hover:bg-opacity-20 transition-all">
+                    <div class="text-4xl mb-4">
+                        <i class="fab fa-gitlab"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">{{ __('GitLab') }}</h3>
+                    <p class="opacity-80 dark:opacity-90">
+                        {{ __('Explore the source code and contribute to the project') }}</p>
+                    <div class="mt-4 text-sm font-medium opacity-90">gitlab.com/elyerr</div>
+                </a>
+
+                <!-- GitHub -->
+                <a href="https://github.com/elyerr" target="_blank"
+                    class="bg-white/10 backdrop-filter backdrop-blur-lg rounded-xl p-6 text-center card-hover hover:bg-opacity-20 transition-all">
+                    <div class="text-4xl mb-4">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">{{ __('GitHub') }}</h3>
+                    <p class="opacity-80 dark:opacity-90">{{ __('Check repositories and open-source contributions') }}</p>
+                    <div class="mt-4 text-sm font-medium opacity-90">github.com/elyerr</div>
+                </a>
+
+                <!-- Packagist -->
+                <a href="https://packagist.org/packages/elyerr" target="_blank"
+                    class="bg-white/10 backdrop-filter backdrop-blur-lg rounded-xl p-6 text-center card-hover hover:bg-opacity-20 transition-all">
+                    <div class="text-4xl mb-4">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">{{ __('Packagist') }}</h3>
+                    <p class="opacity-80 dark:opacity-90">{{ __('Install packages via Composer for your PHP projects') }}
+                    </p>
+                    <div class="mt-4 text-sm font-medium opacity-90">packagist.org/packages/elyerr</div>
+                </a>
+
+                <!-- Docker -->
+                <a href="https://hub.docker.com/u/elyerr" target="_blank"
+                    class="bg-white/10 backdrop-filter backdrop-blur-lg rounded-xl p-6 text-center card-hover hover:bg-opacity-20 transition-all">
+                    <div class="text-4xl mb-4">
+                        <i class="fab fa-docker"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">{{ __('Docker Hub') }}</h3>
+                    <p class="opacity-80 dark:opacity-90">{{ __('Pull Docker images for easy deployment') }}</p>
+                    <div class="mt-4 text-sm font-medium opacity-90">hub.docker.com/u/elyerr</div>
+                </a>
+            </div>
+
+            <!-- YouTube -->
+            <div class="mt-12 max-w-2xl mx-auto">
+                <a href="https://www.youtube.com/@elyerr" target="_blank"
+                    class="flex flex-col md:flex-row items-center bg-white/10 backdrop-filter backdrop-blur-lg rounded-xl p-6 card-hover hover:bg-opacity-20 transition-all">
+                    <div class="text-4xl mb-4 md:mb-0 md:mr-6">
+                        <i class="fab fa-youtube text-red-500"></i>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h3 class="text-xl font-bold mb-2">{{ __('YouTube Channel') }}</h3>
+                        <p class="opacity-80 dark:opacity-90">
+                            {{ __('Watch tutorials, demos, and updates about OAuth2 Passport Server and related technologies') }}
+                        </p>
+                        <div class="mt-4 text-sm font-medium opacity-90">youtube.com/@elyerr</div>
+                    </div>
+                </a>
             </div>
         </div>
-    </main>
+    </section>
 @endsection
 
 @section('footer')
-    @include('layouts.parts.footer')
+    <footer class="bg-gray-900 text-white py-8 dark:bg-black">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-6 md:mb-0">
+                    <div class="feature-icon">
+                        <i class="fas fa-passport"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">{{ __('OAuth2 Passport Server') }}</h2>
+                        <p class="text-xs text-gray-400">{{ __('Modern Authorization Solution') }}</p>
+                    </div>
+                </div>
+
+                <div class="flex space-x-6">
+                    <a href="https://gitlab.com/elyerr" target="_blank"
+                        class="text-gray-400 hover:text-white transition-colors" aria-label="GitLab">
+                        <i class="fab fa-gitlab text-xl"></i>
+                    </a>
+                    <a href="https://github.com/elyerr" target="_blank"
+                        class="text-gray-400 hover:text-white transition-colors" aria-label="GitHub">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://packagist.org/packages/elyerr" target="_blank"
+                        class="text-gray-400 hover:text-white transition-colors" aria-label="Packagist">
+                        <i class="fas fa-box text-xl"></i>
+                    </a>
+                    <a href="https://hub.docker.com/u/elyerr" target="_blank"
+                        class="text-gray-400 hover:text-white transition-colors" aria-label="Docker">
+                        <i class="fab fa-docker text-xl"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@elyerr" target="_blank"
+                        class="text-gray-400 hover:text-white transition-colors" aria-label="YouTube">
+                        <i class="fab fa-youtube text-xl"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 dark:border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Elyerr.
+                    {{ __('All rights reserved. OAuth2 Passport Server, Elymod, and Laravel Runtime are open-source projects.') }}
+                </p>
+            </div>
+        </div>
+    </footer>
 @endsection

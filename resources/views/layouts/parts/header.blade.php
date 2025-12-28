@@ -1,118 +1,203 @@
-<header class="bg-blue-600 dark:bg-gray-800 text-white shadow-md">
-    <div class="container mx-auto flex justify-between items-center py-4 px-4">
-        <h1 class="text-2xl font-bold">{{ config('app.name') }}</h1>
+<header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+    <nav class="container mx-auto px-4 lg:px-0 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-passport text-purple-600 text-xl"></i>
+                <div>
+                    <h1 class="text-sm md:text-lg font-bold text-gray-900 dark:text-white">
+                        {{ __('OAuth2 Passport Server') }}
+                    </h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        {{ __('by Elyerr') }}
+                    </p>
+                </div>
+            </div>
 
-        <nav class="flex items-center">
-            <ul class="flex items-center space-x-6">
-                @if (!auth()->check())
-                    <li class="hidden lg:block">
-                        <a href="{{ route('login') }}"
-                            class="hover:underline flex items-center gap-1 transition-colors hover:text-indigo-200">
-                            <i class="mdi mdi-login text-2xl"></i> {{ __('Login') }}
-                        </a>
-                    </li>
+            {{-- Desktop menu --}}
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="#features"
+                    class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
+                    {{ __('Features') }}
+                </a>
+                <a href="#elymod"
+                    class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
+                    {{ __('Elymod') }}
+                </a>
+                <a href="#runtime"
+                    class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
+                    {{ __('Laravel Runtime') }}
+                </a>
+                <a href="#links"
+                    class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
+                    {{ __('Links') }}
+                </a>
+
+                @guest
+                    <a href="{{ route('login') }}"
+                        class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
+                        {{ __('Login') }}
+                    </a>
 
                     @if (Route::has('register'))
-                        <li class="hidden lg:block">
-                            <a href="{{ route('register') }}"
-                                class="hover:underline flex items-center gap-1 transition-colors hover:text-indigo-200">
-                                <i class="mdi mdi-account-edit-outline text-2xl"></i> {{ __('Register') }}
-                            </a>
-                        </li>
-                    @endif
-                    @if (Route::has('transaction.plans.index'))
-                        <li class="hidden lg:block">
-                            <a href="{{ route('transaction.plans.index') }}"
-                                class="hover:underline flex items-center gap-1 transition-colors hover:text-indigo-200">
-                                <i class="mdi mdi-cash-check text-2xl"></i> {{ __('Subscriptions') }}
-                            </a>
-                        </li>
-                    @endif
-                @endif
-
-                <!-- Tema siempre visible -->
-                <li class="flex items-center">
-                    <x-theme />
-                </li>
-
-                @if (auth()->check() && Route::has('user.dashboard'))
-                    <li class="hidden lg:block">
-                        <a href="{{ route('user.dashboard') }}"
-                            class="hover:underline flex items-center gap-1 transition-colors hover:text-indigo-200">
-                            <i class="mdi mdi-home-outline text-2xl"></i> {{ __('Dashboard') }}
+                        <a href="{{ route('register') }}"
+                            class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
+                            {{ __('Register') }}
                         </a>
-                    </li>
-                @endif
+                    @endif
 
-                <!-- Mobile menu -->
-                <li class="relative block lg:hidden">
-                    <button id="mobileMenuButton"
-                        class="p-2 rounded-md hover:bg-blue-500 dark:hover:bg-gray-700 transition-colors">
-                        <i class="mdi mdi-menu text-2xl"></i>
-                    </button>
+                    @if (Route::has('transaction.plans.index'))
+                        <a href="{{ route('transaction.plans.index') }}"
+                            class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
+                            {{ __('Subscriptions') }}
+                        </a>
+                    @endif
+                @endguest
 
-                    <!-- Dropdown menu -->
-                    <div id="mobileDropdown"
-                        class="absolute right-0 top-full mt-2 w-48 bg-blue-700 dark:bg-gray-700 rounded-md shadow-lg py-2 hidden z-50">
-                        @if (!auth()->check())
-                            <a href="{{ route('login') }}"
-                                class="flex items-center gap-2 px-4 py-2 hover:bg-blue-600 dark:hover:bg-gray-600 transition-colors">
-                                <i class="mdi mdi-login text-xl"></i>
-                                <span>{{ __('Login') }}</span>
-                            </a>
+                @auth
+                    @if (Route::has('user.dashboard'))
+                        <a href="{{ route('user.dashboard') }}"
+                            class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
+                            {{ __('Dashboard') }}
+                        </a>
+                    @endif
+                @endauth
 
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}"
-                                    class="flex items-center gap-2 px-4 py-2 hover:bg-blue-600 dark:hover:bg-gray-600 transition-colors">
-                                    <i class="mdi mdi-account-edit-outline text-xl"></i>
-                                    <span>{{ __('Register') }}</span>
-                                </a>
-                            @endif
-                            @if (Route::has('transaction.plans.index'))
-                                <a href="{{ route('transaction.plans.index') }}"
-                                    class="flex items-center gap-2 px-4 py-2 hover:bg-blue-600 dark:hover:bg-gray-600 transition-colors">
-                                    <i class="mdi mdi-cash-check text-xl"></i>
-                                    <span>{{ __('Subscriptions') }}</span>
-                                </a>
-                            @endif
-                        @endif
+                <x-theme />
+            </div>
 
-                        @if (auth()->check() && Route::has('user.dashboard'))
-                            <a href="{{ route('user.dashboard') }}"
-                                class="flex items-center gap-2 px-4 py-2 hover:bg-blue-600 dark:hover:bg-gray-600 transition-colors">
-                                <i class="mdi mdi-home-outline text-xl"></i>
-                                <span>{{ __('Dashboard') }}</span>
-                            </a>
-                        @endif
-                    </div>
-                </li>
-            </ul>
-        </nav>
-    </div>
+            {{-- Mobile button --}}
+            <button id="mobile-menu-button"
+                class="md:hidden text-gray-800 dark:text-gray-300 focus:outline-none transition-colors"
+                aria-label="{{ __('Toggle menu') }}" aria-expanded="false">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        {{-- Mobile menu --}}
+        <div id="mobile-menu"
+            class="hidden md:hidden mt-4 w-full rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-700">
+                <a href="#features"
+                    class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
+                    {{ __('Features') }}
+                </a>
+                <a href="#elymod"
+                    class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
+                    {{ __('Elymod') }}
+                </a>
+                <a href="#runtime"
+                    class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
+                    {{ __('Laravel Runtime') }}
+                </a>
+                <a href="#links"
+                    class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
+                    {{ __('Links') }}
+                </a>
+
+                @guest
+                    <a href="{{ route('login') }}"
+                        class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
+                        {{ __('Login') }}
+                    </a>
+
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}"
+                            class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
+                            {{ __('Register') }}
+                        </a>
+                    @endif
+
+                    @if (Route::has('transaction.plans.index'))
+                        <a href="{{ route('transaction.plans.index') }}"
+                            class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
+                            {{ __('Subscriptions') }}
+                        </a>
+                    @endif
+                @endguest
+
+                @auth
+                    @if (Route::has('user.dashboard'))
+                        <a href="{{ route('user.dashboard') }}"
+                            class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
+                            {{ __('Dashboard') }}
+                        </a>
+                    @endif
+                @endauth
+            </div>
+        </div>
+    </nav>
 </header>
 
-<script nonce="{{ $nonce }}">
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.getElementById('mobileMenuButton');
-        const mobileDropdown = document.getElementById('mobileDropdown');
+@push('js')
+    <script nonce="{{ $nonce }}">
+        document.addEventListener("DOMContentLoaded", function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
 
-        if (mobileMenuButton && mobileDropdown) {
-            mobileMenuButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                mobileDropdown.classList.toggle('hidden');
+            if (!mobileMenuButton || !mobileMenu) {
+                console.error('{{ __('Menu elements not found') }}');
+                return;
+            }
+
+            // Mobile menu toggle
+            mobileMenuButton.addEventListener('click', function() {
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', !isExpanded);
+
+                // Toggle icon
+                const icon = this.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                }
+
+                // Toggle menu visibility
+                mobileMenu.classList.toggle('hidden');
             });
 
-            document.addEventListener('click', function(e) {
-                if (!mobileDropdown.contains(e.target) && !mobileMenuButton.contains(e.target)) {
-                    mobileDropdown.classList.add('hidden');
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Close mobile menu
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuButton.setAttribute('aria-expanded', 'false');
+
+                        // Reset icon
+                        const icon = mobileMenuButton.querySelector('i');
+                        if (icon) {
+                            icon.classList.add('fa-bars');
+                            icon.classList.remove('fa-times');
+                        }
+
+                        // Smooth scroll
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+
+                    const icon = mobileMenuButton.querySelector('i');
+                    if (icon) {
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
                 }
             });
-
-            mobileDropdown.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A') {
-                    mobileDropdown.classList.add('hidden');
-                }
-            });
-        }
-    });
-</script>
+        });
+    </script>
+@endpush
