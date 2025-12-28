@@ -9,6 +9,9 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source "../**/*.blade.php";
 @source "../**/*.js";
 @source "../**/*.vue";
