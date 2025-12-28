@@ -22,18 +22,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
-## Unreleased
+## v5.0.2
 
 ### Added
 
-* **Elymod module CLI support**
+-   **Elymod module CLI support**
 
-  * `module:create` — Create a new Elymod module inside the `third-party` directory.
-  * `module:delete` — Delete an Elymod module and its published assets symlink.
+    -   `module:create` — Create a new Elymod module inside the `third-party` directory.
+    -   `module:delete` — Delete an Elymod module and its published assets symlink.
 
 These commands are provided by the Elymod mini-framework to streamline modular development.
 
-
+---
 ## 🛠️ v5.0.1
 
 ### Fixed
@@ -41,7 +41,8 @@ These commands are provided by the Elymod mini-framework to streamline modular d
 -   Fixed incorrect Notyf.js import causing build issues
 -   Fixed webpack.mix.js configuration for proper asset compilation
 
-----
+---
+
 ## 🛠️ v5.0.0
 
 ### 🔄 Changed
