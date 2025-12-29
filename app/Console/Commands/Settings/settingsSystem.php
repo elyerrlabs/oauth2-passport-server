@@ -64,53 +64,7 @@ class settingsSystem extends Command
         Artisan::call('passport:keys');
         Setting::setDefaultKeys();
         (new SiteMapService(false))->restorePublicFromBackup();
-        $this->loadConfig();
         $this->info("Server installed successfully");
         Log::info("Server installed successfully");
     }
-
-    public function loadConfig()
-    {
-        $corePath = base_path('core');
-
-        foreach (File::directories($corePath) as $modulePath) {
-            $moduleName = basename($modulePath);
-            $configPath = $modulePath . '/config/module.php';
-
-            if (file_exists($configPath)) {
-                $moduleConfig = include $configPath;
-
-                $keys = $this->transformRequest($moduleConfig);
-
-                foreach ($keys as $key => $value) {
-                    $key = "module." . strtolower($moduleName) . ".module." . $key;
-                    settingLoad($key, $value);
-                }
-            }
-        }
-    }
-
-    /**
-     * Transform request
-     * @param array $data
-     * @param string $prefix
-     * @return array
-     */
-    public function transformRequest(array $data, string $prefix = '')
-    {
-        $flattened = [];
-
-        foreach ($data as $key => $value) {
-            $newKey = $prefix ? "{$prefix}.{$key}" : $key;
-
-            if (is_array($value)) {
-                $flattened += $this->transformRequest($value, $newKey);
-            } else {
-                $flattened[$newKey] = $value;
-            }
-        }
-
-        return $flattened;
-    }
-
 }
