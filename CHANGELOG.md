@@ -22,6 +22,15 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## v5.0.5
+
+### Feat
+
+-   Added `php artisan module:db:seed` command
+-   Removed eCommerce orphan seeders
+
+---
+
 ## v5.0.4
 
 ### Fixed
