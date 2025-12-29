@@ -22,6 +22,16 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+# Changelog
+
+## v5.0.6
+
+### fix
+
+-   Fixed `php artisan settings:system-start` command
+
+---
+
 ## v5.0.5
 
 ### Feat
