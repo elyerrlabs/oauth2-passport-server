@@ -318,22 +318,6 @@ class Setting
         settingLoad('session.secure', false);
         settingLoad('session.http_only', true);
         settingLoad('session.partitioned', false);
-
-        // Settings routes
-        settingLoad('routes.users.developers', false);
-        settingLoad('routes.users.api', false);
-        settingLoad('routes.users.clients', false);
-        settingLoad('routes.guest.register', true);
-
-        // Setting por rate limit 
-        $rateLimits = config('rate_limit');
-
-        foreach ($rateLimits as $module => $items) {
-            foreach ($items as $key => $value) {
-                settingLoad("rate_limit.{$module}.{$key}.limit", 60);
-                settingLoad("rate_limit.{$module}.{$key}.block_time", 60);
-            }
-        }
     }
 
 
