@@ -22,6 +22,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## v5.0.4
+
+### Fixed
+
+-   Remove orphan settings keys
+
+---
+
 ## v5.0.3
 
 ### Fixed
