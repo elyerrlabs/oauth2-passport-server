@@ -203,8 +203,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\HorizonServiceProvider::class,
         App\Providers\CoreServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
         App\Providers\ThirdPartyServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
         App\Providers\MorphServiceProvider::class
 
     ],
