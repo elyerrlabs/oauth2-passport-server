@@ -38,7 +38,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"
             />
         </svg>
-        <span class="ml-3 font-semibold text-sm md:text-lg ">
+        <span class="ml-3 font-semibold text-sm md:text-lg">
             {{ __("Create Client") }}
         </span>
 
@@ -51,196 +51,256 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </button>
 
     <!-- Creation Dialog -->
-    <v-modal v-model="dialog" panel-class="w-full lg:w-5xl">
+    <v-modal
+        v-model="dialog"
+        :title="__('Create New OAuth Client')"
+        panel-class="w-full lg:w-5xl"
+    >
         <template #body>
-            <div class="mb-6">
-                <div class="flex items-center mb-2">
-                    <div class="shrink-0">
-                        <div
-                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center transition-colors duration-200"
-                        >
-                            <svg
-                                class="w-6 h-6 text-blue-600 dark:text-blue-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+            <div v-if="!client?.id">
+                <div class="mb-6">
+                    <div class="flex items-center mb-2">
+                        <div class="shrink-0">
+                            <div
+                                class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center transition-colors duration-200"
                             >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <h3
-                            class="text-2xl font-bold text-gray-900 dark:text-white"
-                        >
-                            {{ __("Create New OAuth Client") }}
-                        </h3>
-                    </div>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 text-sm">
-                    {{ __("Register a new OAuth 2.0 client application") }}
-                </p>
-            </div>
-
-            <!-- Form Content -->
-            <div class="space-y-6">
-                <!-- Client Name -->
-                <div class="form-section">
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                    >
-                        <div class="flex items-center">
-                            <svg
-                                class="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                                />
-                            </svg>
-                            {{ __("Client Name") }}
-                            <span class="text-red-500 ml-1">*</span>
-                        </div>
-                    </label>
-                    <input
-                        v-model="form.name"
-                        type="text"
-                        :placeholder="
-                            __(
-                                'Enter a descriptive name for your client application'
-                            )
-                        "
-                        :class="[
-                            'w-full px-3 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
-                            errors.name
-                                ? 'border-red-300 dark:border-red-500'
-                                : 'border-gray-300 dark:border-gray-600',
-                        ]"
-                    />
-                    <v-error :error="errors.name" />
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        {{ __("This will help you identify the client later") }}
-                    </p>
-                </div>
-
-                <!-- Redirect URI -->
-                <div class="form-section">
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                    >
-                        <div class="flex items-center">
-                            <svg
-                                class="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                                />
-                            </svg>
-                            {{ __("Redirect URI") }}
-                            <span class="text-red-500 ml-1">*</span>
-                        </div>
-                    </label>
-                    <input
-                        v-model="form.redirect"
-                        type="text"
-                        placeholder="https://yourapp.com/oauth/callback"
-                        :class="[
-                            'w-full px-3 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
-                            errors.redirect
-                                ? 'border-red-300 dark:border-red-500'
-                                : 'border-gray-300 dark:border-gray-600',
-                        ]"
-                    />
-                    <v-error :error="errors.redirect" />
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        {{
-                            __(
-                                "The URI where users will be redirected after authorization"
-                            )
-                        }}
-                    </p>
-                </div>
-
-                <!-- Confidential Client -->
-                <div class="form-section">
-                    <div class="flex items-center justify-between">
-                        <label
-                            class="flex items-center space-x-3 cursor-pointer group"
-                        >
-                            <div class="relative">
-                                <input
-                                    v-model="form.confidential"
-                                    type="checkbox"
-                                    :class="[
-                                        'w-4 h-4 text-blue-600 dark:text-blue-500 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 dark:focus:ring-blue-400 transition-all duration-200 bg-white dark:bg-gray-700',
-                                        errors.confidential
-                                            ? 'border-red-300 dark:border-red-500'
-                                            : '',
-                                    ]"
-                                />
-                                <div
-                                    class="absolute inset-0 rounded border-2 border-transparent group-hover:border-blue-200 dark:group-hover:border-blue-800 transition-colors duration-200 pointer-events-none"
-                                ></div>
+                                <svg
+                                    class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                    />
+                                </svg>
                             </div>
-                            <span
-                                class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                        </div>
+                        <div class="ml-4">
+                            <h3
+                                class="text-2xl font-bold text-gray-900 dark:text-white"
                             >
-                                {{ __("Confidential Client") }}
-                            </span>
-                        </label>
+                                {{ __("Create New OAuth Client") }}
+                            </h3>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">
+                        {{ __("Register a new OAuth 2.0 client application") }}
+                    </p>
+                </div>
 
-                        <!-- Toggle Badge -->
-                        <span
+                <!-- Form Content -->
+                <div class="space-y-6">
+                    <!-- Client Name -->
+                    <div class="form-section">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        >
+                            <div class="flex items-center">
+                                <svg
+                                    class="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                                    />
+                                </svg>
+                                {{ __("Client Name") }}
+                                <span class="text-red-500 ml-1">*</span>
+                            </div>
+                        </label>
+                        <input
+                            v-model="form.name"
+                            type="text"
+                            :placeholder="
+                                __(
+                                    'Enter a descriptive name for your client application'
+                                )
+                            "
                             :class="[
-                                'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium transition-colors duration-200',
+                                'w-full px-3 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
+                                errors.name
+                                    ? 'border-red-300 dark:border-red-500'
+                                    : 'border-gray-300 dark:border-gray-600',
+                            ]"
+                        />
+                        <v-error :error="errors.name" />
+                        <p
+                            class="mt-1 text-sm text-gray-500 dark:text-gray-400"
+                        >
+                            {{
+                                __(
+                                    "This will help you identify the client later"
+                                )
+                            }}
+                        </p>
+                    </div>
+
+                    <!-- Redirect URI -->
+                    <div class="form-section">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        >
+                            <div class="flex items-center">
+                                <svg
+                                    class="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                                    />
+                                </svg>
+                                {{ __("Redirect URI") }}
+                                <span class="text-red-500 ml-1">*</span>
+                            </div>
+                        </label>
+                        <input
+                            v-model="form.redirect"
+                            type="text"
+                            placeholder="https://yourapp.com/oauth/callback"
+                            :class="[
+                                'w-full px-3 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
+                                errors.redirect
+                                    ? 'border-red-300 dark:border-red-500'
+                                    : 'border-gray-300 dark:border-gray-600',
+                            ]"
+                        />
+                        <v-error :error="errors.redirect" />
+                        <p
+                            class="mt-1 text-sm text-gray-500 dark:text-gray-400"
+                        >
+                            {{
+                                __(
+                                    "The URI where users will be redirected after authorization"
+                                )
+                            }}
+                        </p>
+                    </div>
+
+                    <!-- Confidential Client -->
+                    <div class="form-section">
+                        <div class="flex items-center justify-between">
+                            <label
+                                class="flex items-center space-x-3 cursor-pointer group"
+                            >
+                                <div class="relative">
+                                    <input
+                                        v-model="form.confidential"
+                                        type="checkbox"
+                                        :class="[
+                                            'w-4 h-4 text-blue-600 dark:text-blue-500 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 dark:focus:ring-blue-400 transition-all duration-200 bg-white dark:bg-gray-700',
+                                            errors.confidential
+                                                ? 'border-red-300 dark:border-red-500'
+                                                : '',
+                                        ]"
+                                    />
+                                    <div
+                                        class="absolute inset-0 rounded border-2 border-transparent group-hover:border-blue-200 dark:group-hover:border-blue-800 transition-colors duration-200 pointer-events-none"
+                                    ></div>
+                                </div>
+                                <span
+                                    class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    {{ __("Confidential Client") }}
+                                </span>
+                            </label>
+
+                            <!-- Toggle Badge -->
+                            <span
+                                :class="[
+                                    'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium transition-colors duration-200',
+                                    form.confidential
+                                        ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
+                                ]"
+                            >
+                                <i
+                                    :class="[
+                                        'mdi mr-1 text-xs',
+                                        form.confidential
+                                            ? 'mdi-lock-outline'
+                                            : 'mdi-lock-open-outline',
+                                    ]"
+                                ></i>
+                                {{
+                                    form.confidential
+                                        ? __("Confidential")
+                                        : __("Public")
+                                }}
+                            </span>
+                        </div>
+
+                        <v-error :error="errors.confidential" />
+                        <div
+                            :class="[
+                                'mt-3 flex items-start space-x-3 text-sm rounded-lg p-3 border transition-colors duration-200',
                                 form.confidential
-                                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
-                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
+                                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+                                    : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700',
                             ]"
                         >
-                            <i
-                                :class="[
-                                    'mdi mr-1 text-xs',
+                            <svg
+                                class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                            <span>
+                                {{
                                     form.confidential
-                                        ? 'mdi-lock-outline'
-                                        : 'mdi-lock-open-outline',
-                                ]"
-                            ></i>
-                            {{
-                                form.confidential
-                                    ? __("Confidential")
-                                    : __("Public")
-                            }}
-                        </span>
+                                        ? __(
+                                              "Confidential clients can keep secrets secure (recommended for server-side applications)."
+                                          )
+                                        : __(
+                                              "Public clients cannot keep secrets secure (suitable for SPA and mobile apps)."
+                                          )
+                                }}
+                            </span>
+                        </div>
                     </div>
+                </div>
 
-                    <v-error :error="errors.confidential" />
-                    <div
+                <!-- Actions -->
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button
+                        @click="close"
+                        class="cancel-btn cursor-pointer px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
+                    >
+                        {{ __("Cancel") }}
+                    </button>
+                    <button
+                        @click="create"
+                        :disabled="loading || !isFormValid"
                         :class="[
-                            'mt-3 flex items-start space-x-3 text-sm rounded-lg p-3 border transition-colors duration-200',
-                            form.confidential
-                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
-                                : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700',
+                            'create-confirm-btn cursor-pointer px-4 py-2.5 text-sm font-medium text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2',
+                            loading || !isFormValid
+                                ? 'bg-blue-400 dark:bg-blue-500'
+                                : 'bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700',
                         ]"
                     >
                         <svg
-                            class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0"
+                            v-if="loading"
+                            class="w-4 h-4 animate-spin"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -249,79 +309,33 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
-                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                         </svg>
-                        <span>
-                            {{
-                                form.confidential
-                                    ? __(
-                                          "Confidential clients can keep secrets secure (recommended for server-side applications)."
-                                      )
-                                    : __(
-                                          "Public clients cannot keep secrets secure (suitable for SPA and mobile apps)."
-                                      )
-                            }}
-                        </span>
-                    </div>
+                        <svg
+                            v-else
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"
+                            />
+                        </svg>
+                        <span>{{
+                            loading ? __("Creating...") : __("Create Client")
+                        }}</span>
+                    </button>
                 </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="mt-8 flex justify-end space-x-3">
-                <button
-                    @click="close"
-                    class="cancel-btn cursor-pointer px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
-                >
-                    {{ __("Cancel") }}
-                </button>
-                <button
-                    @click="create"
-                    :disabled="loading || !isFormValid"
-                    :class="[
-                        'create-confirm-btn cursor-pointer px-4 py-2.5 text-sm font-medium text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2',
-                        loading || !isFormValid
-                            ? 'bg-blue-400 dark:bg-blue-500'
-                            : 'bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700',
-                    ]"
-                >
-                    <svg
-                        v-if="loading"
-                        class="w-4 h-4 animate-spin"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-                    <svg
-                        v-else
-                        class="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 13l4 4L19 7"
-                        />
-                    </svg>
-                    <span>{{
-                        loading ? __("Creating...") : __("Create Client")
-                    }}</span>
-                </button>
             </div>
 
             <!-- Credentials Display -->
             <div
-                v-if="client && Object.keys(client).length"
+                v-else
                 class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6"
             >
                 <div
@@ -549,7 +563,7 @@ export default {
             this.form = {
                 name: "",
                 redirect: "",
-                confidential: true,
+                confidential: false,
             };
             this.loading = false;
         },
@@ -607,8 +621,8 @@ export default {
                     this.form
                 );
 
-                if (res.status === 201) {
-                    this.client = res.data.data;
+                if (res.status == 201) {
+                    this.client = res.data;
                     this.$emit("created", true);
 
                     this.$notify.success(

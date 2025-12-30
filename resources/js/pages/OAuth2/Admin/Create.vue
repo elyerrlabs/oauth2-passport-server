@@ -47,146 +47,148 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     >
         <template #body>
             <!-- Header -->
-            <div class="mb-6">
-                <div class="text-gray-600 dark:text-gray-400 text-sm">
-                    {{ __("Register a new OAuth 2.0 client application") }}
+            <div v-if="!client?.id">
+                <div class="mb-6">
+                    <div class="text-gray-600 dark:text-gray-400 text-sm">
+                        {{ __("Register a new OAuth 2.0 client application") }}
+                    </div>
                 </div>
-            </div>
 
-            <!-- Form Content -->
-            <div class="grid grid-cols-1 gap-6 mb-4">
-                <!-- Client Name -->
-                <v-input
-                    v-model="form.name"
-                    :label="__('Name')"
-                    :required="true"
-                    :error="errors.name"
-                    :placeholder="
-                        __(
-                            'Enter a descriptive name for your client application'
-                        )
-                    "
-                    :disabled="loading"
-                />
-
-                <!-- Redirect URI -->
-                <v-input
-                    v-model="form.redirect"
-                    :label="__('Redirect URI')"
-                    :required="true"
-                    :error="errors.redirect"
-                    placeholder="https://yourapp.com/oauth/callback"
-                    :disabled="loading"
-                />
-
-                <!-- Confidential Switch -->
-                <div class="space-y-3">
-                    <v-switch
-                        v-model="form.confidential"
-                        :label="__('Confidential Client')"
-                        :error="errors.confidential"
+                <!-- Form Content -->
+                <div class="grid grid-cols-1 gap-6 mb-4">
+                    <!-- Client Name -->
+                    <v-input
+                        v-model="form.name"
+                        :label="__('Name')"
+                        :required="true"
+                        :error="errors.name"
+                        :placeholder="
+                            __(
+                                'Enter a descriptive name for your client application'
+                            )
+                        "
                         :disabled="loading"
                     />
 
-                    <!-- Switch Description -->
-                    <div
+                    <!-- Redirect URI -->
+                    <v-input
+                        v-model="form.redirect"
+                        :label="__('Redirect URI')"
+                        :required="true"
+                        :error="errors.redirect"
+                        placeholder="https://yourapp.com/oauth/callback"
+                        :disabled="loading"
+                    />
+
+                    <!-- Confidential Switch -->
+                    <div class="space-y-3">
+                        <v-switch
+                            v-model="form.confidential"
+                            :label="__('Confidential Client')"
+                            :error="errors.confidential"
+                            :disabled="loading"
+                        />
+
+                        <!-- Switch Description -->
+                        <div
+                            :class="[
+                                'flex items-start space-x-3 text-sm rounded-lg p-3 border transition-colors duration-200',
+                                form.confidential
+                                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+                                    : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700',
+                            ]"
+                        >
+                            <svg
+                                class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                            <span>
+                                {{
+                                    form.confidential
+                                        ? __(
+                                              "Confidential clients can keep secrets secure (recommended for server-side applications)."
+                                          )
+                                        : __(
+                                              "Public clients cannot keep secrets secure (suitable for SPA and mobile apps)."
+                                          )
+                                }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div
+                    class="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700"
+                >
+                    <button
+                        @click="close"
+                        :disabled="loading"
+                        class="cancel-btn px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {{ __("Cancel") }}
+                    </button>
+                    <button
+                        @click="create"
+                        :disabled="loading || !isFormValid"
                         :class="[
-                            'flex items-start space-x-3 text-sm rounded-lg p-3 border transition-colors duration-200',
-                            form.confidential
-                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
-                                : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700',
+                            'create-confirm-btn px-4 py-2.5 text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2',
+                            loading || !isFormValid
+                                ? 'bg-blue-400 dark:bg-blue-500'
+                                : 'bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700',
                         ]"
                     >
                         <svg
-                            class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                            v-if="loading"
+                            class="animate-spin h-4 w-4 text-white"
                             fill="none"
-                            stroke="currentColor"
                             viewBox="0 0 24 24"
                         >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                            ></circle>
                             <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                        <svg
+                            v-else
+                            class="w-4 h-4"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd"
                             />
                         </svg>
-                        <span>
-                            {{
-                                form.confidential
-                                    ? __(
-                                          "Confidential clients can keep secrets secure (recommended for server-side applications)."
-                                      )
-                                    : __(
-                                          "Public clients cannot keep secrets secure (suitable for SPA and mobile apps)."
-                                      )
-                            }}
-                        </span>
-                    </div>
+                        <span class="font-medium">{{
+                            loading ? __("Creating...") : __("Create Client")
+                        }}</span>
+                    </button>
                 </div>
-            </div>
-
-            <!-- Actions -->
-            <div
-                class="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700"
-            >
-                <button
-                    @click="close"
-                    :disabled="loading"
-                    class="cancel-btn px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {{ __("Cancel") }}
-                </button>
-                <button
-                    @click="create"
-                    :disabled="loading || !isFormValid"
-                    :class="[
-                        'create-confirm-btn px-4 py-2.5 text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2',
-                        loading || !isFormValid
-                            ? 'bg-blue-400 dark:bg-blue-500'
-                            : 'bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700',
-                    ]"
-                >
-                    <svg
-                        v-if="loading"
-                        class="animate-spin h-4 w-4 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <circle
-                            class="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="4"
-                        ></circle>
-                        <path
-                            class="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                    </svg>
-                    <svg
-                        v-else
-                        class="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                    <span class="font-medium">{{
-                        loading ? __("Creating...") : __("Create Client")
-                    }}</span>
-                </button>
             </div>
 
             <!-- Credentials Display -->
             <div
-                v-if="client && Object.keys(client).length"
+                v-else
                 class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 animate-fade-in"
             >
                 <!-- Security Alert -->
@@ -507,7 +509,6 @@ export default {
                 if (res.status === 201) {
                     this.client = res.data.data;
                     this.$emit("created", true);
-
                     this.$notify.success(
                         this.__("OAuth client created successfully")
                     );
