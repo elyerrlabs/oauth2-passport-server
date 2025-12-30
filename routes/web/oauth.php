@@ -112,7 +112,7 @@ Route::group([
             )->name('tokens.destroy');
 
 
-            if (config('routes.users.clients')) {
+            if (config('routes.system.clients.oauth.status', true)) {
                 Route::get(
                     '/clients',
                     [ClientController::class, 'index']
@@ -135,7 +135,7 @@ Route::group([
             }
 
 
-            if (config('routes.users.api')) {
+            if (config('routes.clients.api.status', true)) {
 
                 Route::get(
                     '/scopes',
