@@ -272,16 +272,16 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- GitLab -->
-                <a href="https://gitlab.com/elyerr" target="_blank"
+                <!-- GitHub -->
+                <a href="https://github.com/elyerrlabs" target="_blank"
                     class="bg-white/10 backdrop-filter backdrop-blur-lg rounded-xl p-6 text-center card-hover hover:bg-opacity-20 transition-all">
                     <div class="text-4xl mb-4">
-                        <i class="fab fa-gitlab"></i>
+                        <i class="fab fa-github"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">{{ __('GitLab') }}</h3>
+                    <h3 class="text-xl font-bold mb-2">{{ __('GitHub') }}</h3>
                     <p class="opacity-80 dark:opacity-90">
                         {{ __('Explore the source code and contribute to the project') }}</p>
-                    <div class="mt-4 text-sm font-medium opacity-90">gitlab.com/elyerr</div>
+                    <div class="mt-4 text-sm font-medium opacity-90">github.com/elyerrlabs</div>
                 </a>
 
                 <!-- GitHub -->
@@ -354,6 +354,10 @@
                 </div>
 
                 <div class="flex space-x-6">
+                    <a href="https://github.com/elyerrlabs" target="_blank"
+                        class="text-gray-400 hover:text-white transition-colors" aria-label="GitHub">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
                     <a href="https://gitlab.com/elyerr" target="_blank"
                         class="text-gray-400 hover:text-white transition-colors" aria-label="GitLab">
                         <i class="fab fa-gitlab text-xl"></i>
@@ -362,6 +366,7 @@
                         class="text-gray-400 hover:text-white transition-colors" aria-label="GitHub">
                         <i class="fab fa-github text-xl"></i>
                     </a>
+
                     <a href="https://packagist.org/packages/elyerr" target="_blank"
                         class="text-gray-400 hover:text-white transition-colors" aria-label="Packagist">
                         <i class="fas fa-box text-xl"></i>
