@@ -22,7 +22,13 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
-# Changelog
+## v5.0.7
+
+### fix
+
+-   Fixed RouteServiceProvider
+
+---
 
 ## v5.0.6
 
