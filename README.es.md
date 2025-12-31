@@ -50,7 +50,7 @@ Este enfoque permite:
 Para crear un nuevo módulo:
 
 ```bash
-php artisan module:create shop
+php artisan module:make shop
 ```
 
 Esto generará la estructura completa del módulo.

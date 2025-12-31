@@ -102,7 +102,7 @@ This model allows:
 ### 1. Create a Module
 
 ```bash
-php artisan module:create shop
+php artisan module:make shop
 ```
 
 This will generate a new module inside:
