@@ -22,6 +22,20 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+-   Renamed the command **`module:create`** to **`module:make`** to align with Laravel's standard conventions.
+-   Updated and improved the **`module:install`** command, allowing installation of modules from **Packagist** or **Git repositories**, with automatic source detection and version selection.
+
+### Fixed
+
+-   Fixed the **OAuth2 client creation workflow**, ensuring proper and consistent configuration.
+-   Fixed **module Service Providers** to correctly load and access system **configuration values** after installation.
+
+---
+
 ## v5.0.7
 
 ### fix
