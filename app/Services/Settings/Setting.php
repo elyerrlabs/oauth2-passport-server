@@ -41,6 +41,14 @@ use Illuminate\Database\QueryException;
 class Setting
 {
 
+    private $model;
+
+
+    public function __construct()
+    {
+        $this->model = app(\App\Models\Setting\Setting::class);
+    }
+
     /**
      * Set default values 
      * @return void
@@ -291,7 +299,7 @@ class Setting
         settingLoad('system.disable_create_user_by_command', false);
         settingLoad('system.destroy_user_after', 30);
         settingLoad('system.code_2fa_email_expires', 5);
-        settingLoad('system.csp_enabled', false); 
+        settingLoad('system.csp_enabled', false);
         settingLoad('system.privacy_url', null);
         settingLoad('system.terms_url', null);
         settingLoad('system.policy_cookies', null);
@@ -366,5 +374,24 @@ class Setting
         Passport::useRefreshTokenModel(RefreshToken::class);
         Passport::useAuthCodeModel(AuthCode::class);
         Passport::useClientModel(Client::class);
+    }
+
+    /**
+     * Delete the config key
+     * @param string $key
+     * @return void
+     */
+    public function deleteKey(string $key)
+    {
+        $setting = $this->model->where('key', $key)->first();
+
+        if (!empty($setting)) {
+            $setting->delete();
+        }
+    }
+
+    public function deleteKeysByModule(string $key)
+    {
+        $this->model->whereRaw("key LIKE ?", ["%$key%"])->delete();
     }
 }
