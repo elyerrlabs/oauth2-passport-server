@@ -24,6 +24,7 @@ namespace App\Console\Commands\Module;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
+use App\Services\Settings\Setting;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
@@ -49,6 +50,7 @@ class ModuleDelete extends Command
     public function handle()
     {
         $modulesPath = base_path('third-party');
+        $service = app(Setting::class);
 
         if (!File::exists($modulesPath)) {
             $this->error('No third-party directory found.');
@@ -100,6 +102,9 @@ class ModuleDelete extends Command
             File::delete($publicLink);
             $this->info("Assets symlink removed.");
         }
+
+        // Delete keys
+        $service->deleteKeysByModule("third-party.{$name}");
 
         File::deleteDirectory("{$modulesPath}/{$name}");
         $this->info("Module '{$name}' successfully removed.");

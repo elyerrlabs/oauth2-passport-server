@@ -25,124 +25,217 @@ namespace App\Console\Commands\Module;
  */
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Artisan;
 
 class ModuleInstall extends Command
 {
-    protected $signature = 'module:install {package} {version?}';
-    protected $description = 'Install a package in core as an isolated module';
 
-    public function handle()
+    protected $signature = 'module:install 
+    {package : Package name or git URL}
+    {version? : Version, tag or branch}';
+
+
+    protected $description = 'Install a third-party module';
+
+    public function handle(): int
     {
         $package = $this->argument('package');
         $version = $this->argument('version');
 
-        $corePath = base_path('modules');
-        $tmpPath = "{$corePath}/.tmp";
-        $finalPath = null;
+        $source = $this->detectSource($package);
 
-        if (!File::exists($tmpPath)) {
-            File::makeDirectory($tmpPath, 0755, true);
+        if (!$source) {
+            $this->error('Unable to detect package source.');
+            return self::FAILURE;
         }
 
-        $this->info("📁 Preparing temporary folder: {$tmpPath}");
-        Log::info("📁 Preparing temporary folder: {$tmpPath}");
+        //interactive mode
+        if (!$version) {
+            $versions = $source === 'git'
+                ? $this->getGitVersions($package)
+                : $this->getPackagistVersions($package);
 
-        if (str_ends_with($package, '.git')) {
-            // Git installation
-            $repoName = basename($package, '.git');
-            $clonePath = "{$tmpPath}/{$repoName}";
-
-            $this->info("🔁 Cloning Git repository...");
-            (new Process(['git', 'clone', $package, $clonePath]))
-                ->setTimeout(300)
-                ->run(fn ($type, $buffer) => print ($buffer));
-
-            $composerJson = "{$clonePath}/composer.json";
-            if (!File::exists($composerJson)) {
-                $this->error("❌ composer.json not found in Git repo");
-                return;
+            if (empty($versions)) {
+                $this->error('No versions found.');
+                return self::FAILURE;
             }
 
-            $data = json_decode(File::get($composerJson), true);
-            $finalPath = "{$corePath}/{$data['name']}";
-            $this->movePackage($clonePath, $finalPath);
-        } elseif (str_ends_with($package, '.zip')) {
-            // ZIP installation
-            $zipName = basename($package);
-            $zipPath = "{$tmpPath}/{$zipName}";
-            $this->info("📥 Downloading ZIP...");
-            (new Process(['wget', '-O', $zipPath, $package]))
-                ->setTimeout(300)
-                ->run(fn ($type, $buffer) => print ($buffer));
+            $version = $this->choice(
+                'Select version to install',
+                $versions,
+                0
+            );
+        }
 
-            $unzipPath = "{$tmpPath}/unzipped";
-            (new Process(['unzip', '-o', $zipPath, '-d', $unzipPath]))
-                ->run(fn ($type, $buffer) => print ($buffer));
+        $moduleName = $this->normalizeModuleName($package);
+        $targetPath = base_path("third-party/{$moduleName}");
 
-            $composerJson = collect(File::allFiles($unzipPath))
-                ->first(fn ($file) => $file->getFilename() === 'composer.json');
+        if (File::exists($targetPath)) {
+            $this->info("Module [{$moduleName}] already exists. Nothing to do.");
+            return self::SUCCESS;
+        }
 
-            if (!$composerJson) {
-                $this->error("❌ composer.json not found in ZIP");
-                return;
-            }
+        File::ensureDirectoryExists(base_path('third-party'));
 
-            $data = json_decode(File::get($composerJson->getPathname()), true);
-            $finalPath = "{$corePath}/{$data['name']}";
-            $this->movePackage(dirname($composerJson->getPathname()), $finalPath);
+        if ($source === 'git') {
+            $this->installFromGit($package, $version, $targetPath);
         } else {
-            // Default: Composer installation
-            [$vendor, $name] = explode('/', $package);
-            $finalPath = "{$corePath}/{$package}";
-            $this->info("📦 Installing via Composer...");
-            $packageWithVersion = $version ? "{$package}:{$version}" : $package;
 
-            (new Process(['composer', 'require', $packageWithVersion], $tmpPath))
-                ->setTimeout(300)
-                ->run(fn ($type, $buffer) => print ($buffer));
-
-            $packagePath = "{$tmpPath}/vendor/{$package}";
-            if (!File::exists($packagePath)) {
-                $this->error("❌ Package not found in vendor directory.");
-                return;
-            }
-
-            $this->movePackage($packagePath, $finalPath);
+            $this->installFromPackagist($package, $version, $targetPath);
         }
 
-        // Post install
-        $this->info("⚙️ Installing production dependencies...");
-        (new Process(['composer', 'install', '--no-dev', '--optimize-autoloader'], $finalPath))
-            ->setTimeout(300)
-            ->run(fn ($type, $buffer) => print ($buffer));
+        $this->info('Running migrations...');
 
-        // Clean
-        $this->info("🧹 Cleaning temporary folder...");
-        File::deleteDirectory($tmpPath);
+        Artisan::call('migrate', [
+            '--force' => true,
+        ]);
 
-        /* (new Process(['php','artisan','migrate','--force']))
-             ->setTimeout(300)
-             ->run(fn($type, $buffer) => print ($buffer));*/
+        $this->line(Artisan::output());
 
-        (new Process(['composer', 'dumpautoload']))
-            ->setTimeout(300)
-            ->run(fn ($type, $buffer) => print ($buffer));
-
-        $this->info("✅ Package installed at: {$finalPath}");
+        return self::SUCCESS;
     }
 
-    protected function movePackage(string $source, string $destination)
+
+    /* -------------------------------------------------
+     | Source detection
+     ------------------------------------------------- */
+
+    protected function detectSource(string $package): ?string
     {
-        if (File::exists($destination)) {
-            $this->warn("🗑️ Removing existing package at: {$destination}");
-            File::deleteDirectory($destination);
+        if (
+            str_starts_with($package, 'http://') ||
+            str_starts_with($package, 'https://') ||
+            str_contains($package, '.git') ||
+            str_starts_with($package, 'git@')
+        ) {
+            return 'git';
         }
 
-        File::makeDirectory(dirname($destination), 0755, true, true);
-        File::moveDirectory($source, $destination);
-        Log::info("📦 Moved package to: {$destination}");
+        if (str_contains($package, '/')) {
+            return 'packagist';
+        }
+
+        return null;
+    }
+
+    protected function normalizeModuleName(string $package): string
+    {
+        $name = basename($package);
+
+        $name = str_ends_with($name, '.git')
+            ? substr($name, 0, -4)
+            : $name;
+
+        return strtolower($name);
+    }
+
+
+    /* -------------------------------------------------
+     | Versions
+     ------------------------------------------------- */
+
+    protected function getGitVersions(string $repo): array
+    {
+        $process = new Process(['git', 'ls-remote', '--tags', $repo]);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return [];
+        }
+
+        $tags = collect(explode("\n", trim($process->getOutput())))
+            ->map(fn($line) => explode("\t", $line)[1] ?? null)
+            ->filter()
+            ->map(fn($tag) => str_replace('refs/tags/', '', $tag))
+            ->reject(fn($tag) => str_contains($tag, '^'))
+            ->unique()
+            ->values()
+            ->toArray();
+
+        // Sort semver desc and limit to 10
+        usort($tags, 'version_compare');
+        $tags = array_reverse($tags);
+
+        return array_slice($tags, 0, 10);
+    }
+
+    protected function getPackagistVersions(string $package): array
+    {
+        $response = Http::get(
+            "https://repo.packagist.org/p2/{$package}.json"
+        );
+
+        if (!$response->ok()) {
+            return [];
+        }
+
+        $versions = collect($response->json('packages')[$package] ?? [])
+            ->pluck('version')
+            ->reject(fn($v) => str_starts_with($v, 'dev'))
+            ->unique()
+            ->values()
+            ->toArray();
+
+        usort($versions, 'version_compare');
+        $versions = array_reverse($versions);
+
+        return array_slice($versions, 0, 10);
+    }
+
+    /* -------------------------------------------------
+     | Installation
+     ------------------------------------------------- */
+
+    protected function installFromGit(string $url, string $version, string $targetPath): int
+    {
+        $this->info("Installing from git ({$version})");
+
+        $process = new Process([
+            'git',
+            'clone',
+            '--branch',
+            $version,
+            '--depth',
+            '1',
+            $url,
+            $targetPath
+        ]);
+
+        $process->setTimeout(null);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            $this->error($process->getErrorOutput());
+            return self::FAILURE;
+        }
+
+        return self::SUCCESS;
+    }
+
+    protected function installFromPackagist(string $package, string $version, string $targetPath): int
+    {
+        $this->info("Installing from Packagist ({$version})");
+
+        $process = new Process([
+            'composer',
+            'create-project',
+            "{$package}:{$version}",
+            $targetPath,
+            '--no-dev',
+            '--no-scripts',
+        ]);
+
+        $process->setTimeout(null);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            $this->error($process->getErrorOutput());
+            return self::FAILURE;
+        }
+
+        return self::SUCCESS;
     }
 }

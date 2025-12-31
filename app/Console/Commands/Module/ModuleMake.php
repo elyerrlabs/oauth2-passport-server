@@ -34,7 +34,7 @@ class ModuleMake extends Command
      *
      * @var string
      */
-    protected $signature = 'module:create {name : Module name}';
+    protected $signature = 'module:make {name : Module name}';
 
     /**
      * The console command description.
