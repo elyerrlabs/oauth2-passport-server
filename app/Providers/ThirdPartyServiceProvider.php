@@ -36,6 +36,17 @@ class ThirdPartyServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
+    }
+
+    public function boot()
+    {
+        $this->loadModules();
+    }
+
+
+    public function loadModules()
+    {
         $modulesPath = base_path('third-party');
 
         // Read all directories
