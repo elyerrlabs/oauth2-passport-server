@@ -44,14 +44,14 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadModuleResources();
+        $this->loadModules();
     }
 
     /**
      * Register configuration files for core modules
      * @return void
      */
-    private function loadModuleResources(): void
+    private function loadModules(): void
     {
         $modulesPath = base_path('core');
 
@@ -63,6 +63,26 @@ class CoreServiceProvider extends ServiceProvider
             $pathView = $modulePath . '/resources/views';
             $module = $configPath . "/module.php";
 
+
+            $moduleFile = $configPath . "/module.php";
+
+            // Check if the module is active
+            if (file_exists($moduleFile)) {
+                // Load config
+                $moduleConfig = include $moduleFile;
+
+                // verify keys
+                if (is_array($moduleConfig) && array_key_exists('module_enabled', $moduleConfig)) {
+
+                    $newkey = 'module.core.' . strtolower($moduleName) . '.module_enabled';
+                    $value = isset($moduleConfig['module_enabled']) ? $moduleConfig['module_enabled'] : true;
+
+                    if (config($newkey, true) == false) {
+                        continue;
+                    }
+                }
+            }
+
             if (is_dir($migrationPath)) {
                 $this->loadMigrationsFrom($migrationPath);
             }
@@ -71,23 +91,6 @@ class CoreServiceProvider extends ServiceProvider
             foreach (glob($configPath . "/*.php") as $file) {
                 // Config file name
                 $key = basename($file, '.php');
-
-                // Check if the module is active
-                if ($key == 'module') {
-                    // Load config
-                    $moduleConfig = include $file;
-
-                    // verify keys
-                    if (is_array($moduleConfig) && array_key_exists('module_enabled', $moduleConfig)) {
-
-                        $newkey = 'module.core.' . strtolower($moduleName) . '.module.module_enabled';
-                        $value = isset($moduleConfig['module_enabled']) ? $moduleConfig['module_enabled'] : true;
-
-                        if (config($newkey, true) == false) {
-                            continue;
-                        }
-                    }
-                }
 
                 $currentConfig = config($key, []);
                 $loadFile = include $file;
