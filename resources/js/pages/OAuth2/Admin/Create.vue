@@ -507,7 +507,7 @@ export default {
                 );
 
                 if (res.status === 201) {
-                    this.client = res.data.data;
+                    this.client = res.data;
                     this.$emit("created", true);
                     this.$notify.success(
                         this.__("OAuth client created successfully")
