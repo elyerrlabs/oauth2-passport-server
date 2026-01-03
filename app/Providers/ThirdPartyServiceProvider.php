@@ -52,8 +52,10 @@ class ThirdPartyServiceProvider extends ServiceProvider
         // Read all directories
         foreach (File::directories($modulesPath) as $modulePath) {
 
+            $baseName = basename($modulePath);
+
             // Module name
-            $moduleName = strtolower(basename($modulePath));
+            $moduleName = strtolower($baseName);
 
             // File config relative path
             $module = "{$modulePath}/config/module.php";
@@ -78,28 +80,29 @@ class ThirdPartyServiceProvider extends ServiceProvider
                      */
                     $loader = require base_path('vendor/autoload.php');
 
-                    foreach (glob($modulesPath . '/*/composer.json') as $filePath) {
-                        // $composerPath = dirname($filePath) . "/composer.json";
-                        if (!file_exists($filePath)) {
-                            continue;
-                        }
+                    $composerPath = $modulesPath . "/{$baseName}/composer.json";
 
-                        $composer = json_decode(file_get_contents($filePath), true);
-                        $namespace = array_key_first($composer['autoload']['psr-4']);
-                        $path = realpath(dirname($filePath)) . "/app";
+                    if (!file_exists($composerPath)) {
+                        continue;
+                    }
 
-                        // Map the PSR-4 dynamically
-                        $loader->setPsr4($namespace, $path);
+                    $composer = json_decode(file_get_contents($composerPath), true);
 
-                        // register providers
-                        $providers = $composer['extra']['laravel']['providers'] ?? [];
+                    // Load dynamic namespaces
+                    $namespaces = $composer['autoload']['psr-4'];
+                    $realPath = realpath(dirname($composerPath));
+                    foreach ($namespaces as $namespace => $path) {
+                        $loader->setPsr4($namespace, "{$realPath}/$path");
+                    }
 
-                        foreach ($providers as $provider) {
-                            if (class_exists($provider)) {
-                                $this->app->register($provider);
-                            } else {
-                                Log::warning("Provider $provider cannot be found");
-                            }
+                    // register providers
+                    $providers = $composer['extra']['laravel']['providers'] ?? [];
+
+                    foreach ($providers as $provider) {
+                        if (class_exists($provider)) {
+                            $this->app->register($provider);
+                        } else {
+                            Log::warning("Provider $provider cannot be found");
                         }
                     }
                 }
