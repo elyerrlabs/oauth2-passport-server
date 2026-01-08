@@ -22,13 +22,26 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## [v5.1.0]
+
+### Features
+
+-   Added route metadata support for configuration keys
+-   Introduced shared configuration keys for settings management
+-   Added helper to centralize and manage module configuration
+-   Updated settings logic to resolve the main module config key automatically
+-   Switched routing logic to use route names instead of URLs
+
+--- 
+
 ## [v5.0.9]
 
 ### Fix
 
 -   Third party service provider
 
---- 
+---
+
 ## [v5.0.8]
 
 ### Changed
