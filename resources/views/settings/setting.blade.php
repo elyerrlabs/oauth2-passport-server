@@ -100,11 +100,12 @@
                     <!-- These hidden inputs act as decoys to prevent the browser from autofilling real username and password fields. -->
                     <input id="name" type="text" class="hidden" />
                     <input id="password" type="password" class="hidden" />
+                    <input type="hidden" name="current_route" value="{{ request()->route()->getName() }}">
                     <!-- Please do not remove-->
-
+                    
                     @method('put')
                     @csrf
-                    <input type="hidden" name="current_route" value="{{ url()->current() }}">
+
 
                     <div>
                         @yield('form')
