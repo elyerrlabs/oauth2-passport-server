@@ -158,9 +158,14 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                             </div>
                         </div>
 
-                        <v-apps :apps="admin_routes" />
+                        <v-apps
+                            :apps="admin_routes"
+                            :title="__('Admin Applications')"
+                        />
 
                         <v-apps :apps="user_settings" />
+
+                        <v-apps :apps="admin_settings" :title="__('Admin Settings')"/>
                     </div>
 
                     <!-- Quick Stats Footer -->
@@ -269,6 +274,7 @@ const user = ref([]);
 const user_routes = ref([]);
 const admin_routes = ref([]);
 const user_settings = ref([]);
+const admin_settings = ref([]);
 const userInitials = ref("");
 const filtered_apps = ref([]);
 
@@ -278,6 +284,7 @@ onMounted(() => {
     filtered_apps.value = page.props.user_routes;
     admin_routes.value = page.props.admin_routes;
     user_settings.value = page.props.user_settings;
+    admin_settings.value = page.props.admin_settings;
     userInitials.value = `${user.value.name?.[0] || ""}${
         user.value.last_name?.[0] || ""
     }`.toUpperCase();
