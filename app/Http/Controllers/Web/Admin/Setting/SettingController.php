@@ -26,10 +26,11 @@ namespace App\Http\Controllers\Web\Admin\Setting;
 
 
 use App\Support\CacheKeys;
-use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Models\Setting\Setting;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebController;
 
 class SettingController extends WebController
@@ -58,14 +59,21 @@ class SettingController extends WebController
     public function update(Request $request)
     {
         $data = $request->except('_method', '_token', 'current_route');
+        $route = Route::getRoutes()->getByName($request->current_route)->action;
+        $moduleConfigKey = null;
+
+        if (isset($route['config_key']) && $route['config_key']) {
+            $moduleConfigKey = $route['config_key'];
+        }
 
         $data = $this->transformRequest($data);
 
         foreach ($data as $key => $value) {
-            settingAdd($key, $value);
+            
+            settingAdd("{$moduleConfigKey}{$key}", $value);
         }
 
-        return redirect($request->current_route)->with('status', __('Setting updated successfully'));
+        return redirect()->route($request->current_route)->with('status', __('Setting updated successfully'));
     }
 
     /**
