@@ -235,3 +235,34 @@ if (!function_exists('setLanguage')) {
         return response()->json($translations);
     }
 }
+
+
+if (!function_exists('config_module')) {
+    /**
+     * Get / set the specified configuration value.
+     *
+     * If an array is passed as the key, we will assume you want to set an array of values.
+     *
+     * @param  array<string, mixed>|string|null  $key
+     * @param  mixed  $default
+     * @return ($key is null ? \Illuminate\Config\Repository : ($key is string ? mixed : null))
+     */
+    function config_module($key = null, $default = null)
+    {
+        $route = request()->route()->action;
+
+        if (isset($route['config_key'])) {
+            $key = "{$route['config_key']}{$key}";
+        }
+
+        if (is_null($key)) {
+            return app('config');
+        }
+
+        if (is_array($key)) {
+            return app('config')->set($key);
+        }
+
+        return app('config')->get($key, $default);
+    }
+}
