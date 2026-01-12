@@ -461,7 +461,6 @@ import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
 import VScopes from "./Scopes.vue";
 import VStatus from "./Status.vue";
-import VRevoke from "./Revoke.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { ref, reactive, onMounted, computed } from "vue";
 
