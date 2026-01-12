@@ -397,76 +397,68 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
     </v-modal>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, defineProps } from "vue";
 import VModal from "@/components/VModal.vue";
 import VDeleteScope from "./DeleteScope.vue";
 import VAddScope from "./AddScope.vue";
 
-export default {
-    props: ["service"],
-
-    components: {
-        VAddScope,
-        VDeleteScope,
-        VModal,
+const props = defineProps({
+    service: {
+        type: Object,
+        required: true,
     },
+});
 
-    data() {
-        return {
-            scopes: [],
-            dialog: false,
-            loading: false,
-        };
-    },
+const scopes = ref([]);
+const dialog = ref(false);
+const loading = ref(false);
 
-    computed: {
-        scopesCount() {
-            return this.scopes.length;
-        },
-        activeScopesCount() {
-            return this.scopes.filter((scope) => scope.active).length;
-        },
-        apiKeyScopesCount() {
-            return this.scopes.filter((scope) => scope.api_key).length;
-        },
-        publicScopesCount() {
-            return this.scopes.filter((scope) => scope.public).length;
-        },
-        webScopesCount() {
-            return this.scopes.filter((scope) => scope.web).length;
-        },
-    },
+const scopesCount = computed(() => scopes.value.length);
+const activeScopesCount = computed(
+    () => scopes.value.filter((scope) => scope.active).length
+);
+const apiKeyScopesCount = computed(
+    () => scopes.value.filter((scope) => scope.api_key).length
+);
+const publicScopesCount = computed(
+    () => scopes.value.filter((scope) => scope.public).length
+);
+const webScopesCount = computed(
+    () => scopes.value.filter((scope) => scope.web).length
+);
 
-    methods: {
-        open() {
-            this.getScopes();
-            this.dialog = true;
-        },
+const open = async () => {
+    dialog.value = true;
+    await getScopes();
+};
 
-        async getScopes() {
-            this.loading = true;
-            try {
-                const res = await this.$server.get(this.service.links.scopes);
-                if (res.status == 200) {
-                    this.scopes = res.data.data;
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
+const getScopes = async () => {
+    loading.value = true;
+    try {
+        const res = await $server.get(props.service.links.scopes, {
+            params: {
+                per_page: 50,
+            },
+        });
+        if (res.status == 200) {
+            scopes.value = res.data.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
+};
 
-        async copyToClipboard(text) {
-            try {
-                await navigator.clipboard.writeText(text);
-                this.$notify.success(__("GSR_ID copied to clipboard"));
-            } catch (err) {
-                this.$notify.error(__("Failed to copy to clipboard"));
-            }
-        },
-    },
+const copyToClipboard = async (text) => {
+    try {
+        await navigator.clipboard.writeText(text);
+        $notify.success(__("GSR_ID copied to clipboard"));
+    } catch (err) {
+        $notify.error(__("Failed to copy to clipboard"));
+    }
 };
 </script>

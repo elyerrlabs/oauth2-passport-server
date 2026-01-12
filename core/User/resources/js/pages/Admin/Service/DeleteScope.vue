@@ -130,7 +130,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
                     class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 rounded-lg transition-colors duration-200"
                 >
                     <div class="flex items-start gap-2">
-                        <i class="mdi mdi-alert mt-0.5 flex-shrink-0"></i>
+                        <i class="mdi mdi-alert mt-0.5 shrink-0"></i>
                         <span class="text-sm text-left">
                             {{
                                 __(
@@ -212,7 +212,7 @@ const props = defineProps({
 const loading = ref(false);
 const dialog = ref(false);
 const confirmationText = ref("");
-const form = useForm();
+const form = useForm({});
 
 const canDelete = computed(() => {
     return confirmationText.value === props.scope.gsr_id.toString();
