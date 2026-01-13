@@ -2,10 +2,16 @@
     <div>
         <button
             @click="open"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors flex items-center gap-2"
+            :disabled="disabled"
+            class="px-3 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            :class="
+                disabled
+                    ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+            "
         >
-            <i class="mdi mdi-plus"></i>
-            {{ __("Add") }}
+            <i class="mdi" :class="disabled ? 'mdi-check' : 'mdi-plus'"></i>
+            {{ disabled ? __("Added") : __("Add") }}
         </button>
 
         <v-modal
@@ -202,10 +208,21 @@
 
                         <button
                             @click="add"
-                            class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 transition-colors"
+                            :disabled="form.processing || disabled"
+                            class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <i class="mdi mdi-shield-plus"></i>
-                            {{ __("Assign Scope") }}
+                            <i
+                                v-if="form.processing"
+                                class="mdi mdi-loading animate-spin"
+                            ></i>
+                            <i v-else class="mdi mdi-shield-plus"></i>
+                            {{
+                                form.processing
+                                    ? __("Assigning...")
+                                    : disabled
+                                    ? __("Already Added")
+                                    : __("Assign Scope")
+                            }}
                         </button>
                     </div>
                 </div>
@@ -216,8 +233,8 @@
 
 <script setup>
 import VModal from "@/components/VModal.vue";
-import { ref } from "vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
+import { useForm } from "@inertiajs/vue3";
 
 const emits = defineEmits(["created"]);
 
@@ -226,20 +243,26 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const dialog = ref(false);
-
-const open = () => {
-    dialog.value = true;
-    form.scopes.push(props.item.scope.id);
-};
-
 const form = useForm({
     scopes: [],
 });
 
+const open = () => {
+    if (props.disabled) return;
+    dialog.value = true;
+    form.scopes = [props.item.scope.id];
+};
+
 const add = () => {
+    if (props.disabled || form.processing) return;
+
     form.post(props.item.scope.links.scopes, {
         preserveScroll: true,
         onSuccess: () => {
@@ -252,4 +275,10 @@ const add = () => {
         },
     });
 };
+
+watch(dialog, (newVal) => {
+    if (!newVal) {
+        form.reset();
+    }
+});
 </script>

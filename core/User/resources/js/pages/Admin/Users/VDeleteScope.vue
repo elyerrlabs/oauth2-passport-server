@@ -160,14 +160,14 @@
                     >
                         <button
                             @click="dialog = false"
-                            class="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
+                            class="px-4 py-2 cursor-pointer rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
                         >
                             {{ __("Cancel") }}
                         </button>
                         <button
                             @click="revokeScope"
                             :disabled="!isConfirmed || form.processing"
-                            class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="px-4 py-2 cursor-pointer rounded-lg bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <i class="mdi mdi-delete"></i>
                             {{
