@@ -22,6 +22,18 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+## [Unreleased]
+
+### Improved
+
+-   Enhanced the user permission assignment interface with a clearer and more intuitive design.
+-   Improved the overall UI/UX for managing user permissions and roles.
+
+### Fixed
+
+-   Fixed issues in role assignment to ensure permissions are applied correctly.
+-   Fixed the generation and assignment of new scopes within services to prevent inconsistencies.
+
 ## [v5.1.0]
 
 ### Features
@@ -32,7 +44,7 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -   Updated settings logic to resolve the main module config key automatically
 -   Switched routing logic to use route names instead of URLs
 
---- 
+---
 
 ## [v5.0.9]
 
