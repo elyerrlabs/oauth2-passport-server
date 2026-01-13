@@ -241,13 +241,13 @@ class ServiceService
         $scope = $this->scopeService->searchScopeByService($scope_id, $service_id);
 
         if (empty($scope)) {
-            throw new ReportError(__("This action is invalid"), 400);
+            throw new ReportError(__("This action is invalid"), 403);
         }
 
         try {
             $scope->delete();
         } catch (\Throwable $th) {
-            throw new ReportError(__("This resource cannot be deleted because it is being used by another resource."), 400);
+            throw new ReportError(__("This resource cannot be deleted because it is being used by another resource."), 403);
         }
 
         Cache::forget(CacheKeys::passportScopes());
