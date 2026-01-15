@@ -22,6 +22,38 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
+
+## [Unreleased]
+
+### Added
+
+* Fully Docker-based development workflow with zero host dependencies (PHP, Node, Composer, Nginx).
+* `deploy-dev.sh` script to automate local development setup, build, and startup.
+* Automatic detection and injection of host UID/GID into the container to avoid permission issues.
+* Local `ops` helper to execute commands inside the app container using the host user.
+* Optional global `ops` alias documentation for advanced users.
+* Supervisor-managed background services for development (queues, Horizon, recurring payments).
+
+### Changed
+
+* Improved development documentation with clear, step-by-step instructions for setup and usage.
+* Standardized container access patterns (root vs host user) to prevent file permission problems.
+* Simplified workflow for running Artisan, Composer, and NPM commands inside containers.
+
+### Documentation
+
+* Added detailed development guide covering Docker usage, container access, helpers, and common commands.
+* Added notes explaining GitHub token prompts during `composer install`.
+
+### Developer Experience
+
+* Hot-reload frontend workflow using `npm run watch` inside the container.
+* Safer and more predictable file ownership when editing from the host or IDE (VS Code, PhpStorm). 
+
+--- 
 ## [v5.1.1]
 
 ### Improved
