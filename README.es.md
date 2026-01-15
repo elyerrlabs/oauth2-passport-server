@@ -175,7 +175,7 @@ Este proyecto está pensado como la **base de un ecosistema**, no solo como una 
 ## 👨‍💻 Guías para Desarrolladores
 
 * [English Documentation](./docs/dev/developers_en.md)
-* [Spanish Documentation](./docs/deploy/deploy_es.md)
+* [Spanish Documentation](./docs/dev/developers_en.md)
 
 ---
 
