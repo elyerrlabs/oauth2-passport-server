@@ -88,5 +88,7 @@ docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 php artisan settings:syst
 
 docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 php artisan storage:link
 
+docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 chmod 600 secrets/oauth/*.key
+
 echo "[INFO] Deployment completed."
 docker logs -f --tail=1000 --timestamps ops-dev-app-1
