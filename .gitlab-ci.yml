@@ -5,41 +5,56 @@ stages:
 variables:
   DOCKER_IMAGE_NAME: "$CI_REGISTRY_IMAGE"
   DOCKER_TLS_CERTDIR: ""
-  TAG: ""
 
-# -----------------------------
+# =====================================================
 # BUILD IMAGE
-# -----------------------------
+# =====================================================
 docker-build:
   image: docker:latest
   stage: build
   services:
     - docker:dind
 
+  rules:
+    # Tags (v1.2.3)
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+      when: on_success
+
+    # Development
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      when: on_success
+
+    # Production
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+    - when: never
+
   before_script:
     - |
       if [[ -n "$CI_COMMIT_TAG" ]]; then
-        export DOCKER_IMAGE_TAG="$CI_COMMIT_TAG"
-        export DOCKERFILE_PATH="docker/production/Dockerfile"
-
-      elif [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
-        export DOCKER_IMAGE_TAG="latest"
-        export DOCKERFILE_PATH="docker/production/Dockerfile"
+        DOCKER_IMAGE_TAG="$CI_COMMIT_TAG"
+        DOCKERFILE_PATH="docker/production/Dockerfile"
 
       elif [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
-        export DOCKER_IMAGE_TAG="staging"
-        export DOCKERFILE_PATH="docker/staging/Dockerfile"
+        DOCKER_IMAGE_TAG="staging"
+        DOCKERFILE_PATH="docker/staging/Dockerfile"
+
+      elif [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+        DOCKER_IMAGE_TAG="latest"
+        DOCKERFILE_PATH="docker/production/Dockerfile"
 
       else
-        echo "Not a tag or configured branch. Skipping build."
-        exit 0
+        echo "Branch or tag not allowed"
+        exit 1
       fi
 
-      export TAG="$DOCKER_IMAGE_TAG"
+      export DOCKER_IMAGE_TAG
+      export DOCKERFILE_PATH
 
       echo "================================="
       echo "Building image: $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
-      echo "Using Dockerfile: $DOCKERFILE_PATH"
+      echo "Dockerfile: $DOCKERFILE_PATH"
       echo "================================="
 
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
@@ -48,14 +63,9 @@ docker-build:
     - docker build --pull -f "$DOCKERFILE_PATH" -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
     - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
 
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
-
-# -----------------------------
+# =====================================================
 # PUSH TO DOCKER HUB
-# -----------------------------
+# =====================================================
 docker-push-hub:
   image: docker:latest
   stage: deploy
@@ -64,20 +74,42 @@ docker-push-hub:
   needs:
     - docker-build
 
+  rules:
+    # Tags (v1.2.3)
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+      when: on_success
+
+    # Development
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      when: on_success
+
+    # Production
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+    - when: never
+
   before_script:
     - |
       if [[ -n "$CI_COMMIT_TAG" ]]; then
-        export TAG="$CI_COMMIT_TAG"
-      elif [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
-        export TAG="latest"
+        TAG="$CI_COMMIT_TAG"
+
       elif [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
-        export TAG="staging"
+        TAG="staging"
+
+      elif [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+        TAG="latest"
+
       else
-        echo "Not a tag or configured branch. Skipping Docker Hub push."
-        exit 0
+        echo "Invalid ref"
+        exit 1
       fi
 
-      echo "Pushing image to Docker Hub with tag: $TAG"
+      export TAG
+
+      echo "================================="
+      echo "Pushing image with tag: $TAG"
+      echo "================================="
 
     - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USER" --password-stdin
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
@@ -86,8 +118,3 @@ docker-push-hub:
     - docker pull "$DOCKER_IMAGE_NAME:$TAG"
     - docker tag "$DOCKER_IMAGE_NAME:$TAG" "$DOCKER_HUB_USER/oauth2-passport-server:$TAG"
     - docker push "$DOCKER_HUB_USER/oauth2-passport-server:$TAG"
-
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
