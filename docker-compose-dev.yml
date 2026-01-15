@@ -1,4 +1,4 @@
-name: oauth2-server-dev
+name: ops-dev
 
 services:
   db:

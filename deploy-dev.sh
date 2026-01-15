@@ -74,3 +74,19 @@ docker compose -f "$COMPOSE_FILE" down
 
 echo "[INFO] Starting containers..."
 docker compose -f "$COMPOSE_FILE" up -d --build
+
+## Add directory to git safe list to avoid permission issues
+docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 git config --global --add safe.directory /var/www
+
+## Install composer dependencies
+docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 composer install
+
+## install and build docker dependencies
+docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 npm install && npm run dev
+
+docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 php artisan settings:system-start
+
+docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 php artisan storage:link
+
+echo "[INFO] Deployment completed."
+docker logs -f --tail=1000 --timestamps ops-dev-app-1

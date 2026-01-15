@@ -1,0 +1,2 @@
+#!/bin/bash
+docker exec -it ops-dev-app-1 "$@"

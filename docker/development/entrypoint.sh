@@ -28,13 +28,9 @@ cd /var/www
 
 echo "⚙️ Running system configuration..."
 
-php artisan settings:system-start
-
 chown -R ${UID}:${GID} .
 
-chown -R ${UID}:${GID} /var/lib/nginx
-
-php artisan storage:link
+chown -R ${UID}:${GID} /var/lib/nginx 
 
 echo "🚀 Starting PHP-FPM..."
 php-fpm84 -D

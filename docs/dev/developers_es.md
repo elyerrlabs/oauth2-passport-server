@@ -19,214 +19,334 @@ Author Contact: yerel9212@yahoo.es
 
 SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 -->
-# Desarrolladores
 
-## Guía de Despliegue
-Esta guía proporciona instrucciones completas y detalladas para desplegar el servicio en su entorno de desarrollo local.
+# 🧑‍💻 Guía de Desarrollo (DEV)
 
-### Ramas
+Esta guía describe **exclusivamente el entorno de desarrollo**, pensado para trabajar de forma local, segura y reproducible.
 
-- **main**: Rama estable con la última versión.
-- **dev**: Rama de desarrollo con los últimos cambios.
+El proyecto funciona **100 % con Docker**, lo que significa que:
 
-### Requisitos Previos
+* No necesitas instalar PHP, Composer, Node.js, Nginx ni extensiones en tu sistema operativo.
+* Todo el stack (PHP, Nginx, Supervisor, Horizon, Node, etc.) vive dentro de contenedores.
+* El entorno es idéntico para todos los desarrolladores.
 
-Asegúrese de tener instaladas las siguientes dependencias:
+> 🎯 **Objetivo**: que cualquier desarrollador pueda clonar el repositorio y levantar el sistema en minutos, sin configuraciones manuales complejas.
 
-- **nginx**
-- **Composer**
-- **Node.js** >= 22.17.1
-- **Git**
-- **PHP** >= 8.3.0
+---
 
-Extensiones PHP requeridas:
+## 🌱 Ramas
+
+* **main** → Rama estable (producción)
+* **dev** → Rama de desarrollo activo (**usar esta para trabajar**)
+
+> ⚠️ Todo lo descrito en esta guía asume que estás trabajando sobre la rama `dev`.
+
+---
+
+## ✅ Requisitos Previos
+
+Solo necesitas tener instalado en tu máquina:
+
+* Docker ≥ 24
+* Docker Compose (plugin oficial)
+* Git
+
+Herramientas opcionales (recomendadas):
+
+* VS Code / PhpStorm
+* DBeaver / TablePlus (para la base de datos)
+
+---
+
+## 📦 Clonar el Proyecto
 
 ```sh
-    php83-fpm \
-    php83-opcache \
-    php83-cli \
-    php83-mbstring \
-    php83-xml \
-    php83-curl \
-    php83-pecl-redis \
-    php83-pecl-memcached \
-    php83-pcntl \
-    php83-posix \
-    php83-pdo \
-    php83-pdo_pgsql \
-    php83-zip \
-    php83-tokenizer \
-    php83-json \
-    php83-phar \
-    php83-fileinfo \
-    php83-dom \
-    php83-session \
-    php83-simplexml \
-    php83-xmlwriter \
-    php83-soap \
-    php83-openssl \
-    php83-bcmath \
-    php83-gd \
-    php83-intl \
-    php83-sodium
+git clone https://github.com/elyerrlabs/oauth2-passport-server.git
+cd oauth2-passport-server
+git checkout dev
 ```
 
-### Despliegue Local
+---
 
-1. Clone el repositorio:
-    ```sh
-    git clone git@github.com:elyerr/oauth2-passport-server.git
-    cd oauth2-passport-server
-    ```
+## ⚙️ Configuración del Entorno
 
-### Configuración del Entorno
+### 1. Archivo `.env`
 
-1. Copie el archivo de ejemplo del entorno:
-    ```sh
-    cp .env.example .env
-    ```
-2. Configure su archivo `.env`. Ejemplo (usando HTTPS con certificados autofirmados):
+Copia el archivo de ejemplo:
 
-    ```env
-    APP_ENV=dev
-    APP_KEY= # Generado en el primer arranque
-    APP_DEBUG=true
-    APP_URL=https://auth.elyerr.xyz  # o use su IP y dirección
-    FRONTEND_URL="${APP_URL}"
-    ASSET_URL="${APP_URL}"
-    SCHEMA_HTTPS=https # https o http
-
-    # LOGS
-    LOG_CHANNEL=daily
-    LOG_DEPRECATIONS_CHANNEL=null
-    LOG_LEVEL=debug
-
-    # BASE DE DATOS
-    DB_CONNECTION=pgsql
-    DB_HOST=127.0.0.1
-    DB_PORT=5432
-    DB_DATABASE=oauth2
-    DB_USERNAME=admin
-    DB_PASSWORD=admin
-    ```
-
-> **Consejo:** Genere certificados autofirmados usando [CA Generator](https://github.com/elyerr/ca-generator).
-
-
-2. Instale las dependencias:
-    ```sh
-    composer install
-    ```
-    > Si encuentra errores, elimine `composer.lock` y vuelva a intentarlo. Asegúrese de tener instaladas todas las extensiones de PHP.
-3. Inicialice la configuración del sistema:
-    ```sh
-    php artisan settings:system-start
-    ```
-4. Cree el primer usuario:
-    ```sh
-    php artisan settings:create-user
-    ```
-
-### Configuración
-
-Inicie sesión con el usuario administrador y navegue a **Admin → Settings** para configurar:
-
-- General
-- Sesión (configuración de cookies)
-- Pago
-- Correo electrónico (despacho de eventos)
-- Rutas (habilitar/deshabilitar rutas del sistema)
-- Redis
-- Caché
-- Cola
-- Sistema de Archivos
-- Seguridad (protección en producción)
-- Visor de Logs
-
-### Ejecución de Procesos en Segundo Plano
-
-**Comandos personalizados de Artisan:**
-
-- Configuraciones:
-    - `settings:channels-upload` — Subir canales predeterminados (Servidor de Broadcasting próximamente)
-    - `settings:countries-upload` — Subir lista de países
-    - `settings:create-user` — Crear un usuario con un rol seleccionado
-    - `settings:key-generator` — Generar `APP_KEY` para `.env`
-    - `settings:roles-upload` — Subir roles
-    - `settings:system-start` — Instalar datos esenciales
-
-- Pagos:
-    - `payment:charge-recurring` — Habilitar pagos recurrentes automáticos
-
-> Configure los ajustes de pago en **Admin → Settings → Payment**.
-
-**Inicie el trabajador de colas para eventos, correos electrónicos y notificaciones:**
 ```sh
-php artisan queue:work --tries=3
+cp .env.example .env
 ```
 
-**(Opcional) Habilitar Pagos Recurrentes:**
+Ejemplo mínimo recomendado para desarrollo:
 
-Antes de iniciar los pagos recurrentes, asegúrese de que el webhook de Stripe esté en funcionamiento en su servidor local. Para configurarlo:
+```env
+APP_ENV=dev
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8001
+SCHEMA_HTTPS=http
 
-1. Inicie el listener del webhook de Stripe (reemplace `<your-machine-ip>` y `<your-system-port>` por sus valores reales):
-    ```sh
-    stripe listen --forward-to <your-machine-ip>:<your-system-port>/webhook/stripe
-    ```
-    > En el primer arranque, Stripe proporcionará una clave secreta para la firma del webhook. Agregue esta clave en **Admin → Settings → Payment → Stripe**.
+# LOGS
+LOG_CHANNEL=daily
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
 
-2. En una nueva terminal, inicie el proceso de pago recurrente:
-    ```sh
-    php artisan payment:charge-recurring
-    ```
+# DATABASE
+DB_CONNECTION=pgsql
+DB_HOST=db
+DB_PORT=5432
+DB_DATABASE=oauth2
+DB_USERNAME=admin
+DB_PASSWORD=admin
+```
 
-**Desarrollo del Frontend:**
+> ℹ️ `DB_HOST=db` corresponde al nombre del servicio definido en `docker-compose-dev.yml`.
 
-Ejecute lo siguiente solo si trabaja con activos de JavaScript:
+> ℹ️ `APP_KEY` se genera automáticamente durante el primer arranque si está vacío.
+
+---
+
+## 🐳 Despliegue en Desarrollo
+
+El proyecto incluye un script que automatiza completamente el despliegue en DEV.
+
+### ¿Qué hace `deploy-dev.sh`?
+
+Este script:
+
+1. Detecta tu UID y GID del host para evitar problemas de permisos.
+2. Valida que las variables críticas del `.env` estén definidas.
+3. Detiene contenedores existentes.
+4. Construye las imágenes necesarias.
+5. Levanta todos los servicios con Docker Compose.
+6. Instala dependencias de Composer y NPM dentro del contenedor.
+7. Deja corriendo los servicios bajo Supervisor.
+
+### Levantar los servicios
+
 ```sh
-npm run watch
+./deploy-dev.sh
 ```
 
-### Configuración de Proxy en Nginx
+---
 
-Si utiliza un dominio personalizado localmente, agregue lo siguiente a su configuración de Nginx:
+## 🌐 Servicios Disponibles
 
-```nginx
-server {
-    listen 80;
-    server_name auth.elyerr.xyz;
+Una vez levantado el entorno:
 
-    # Para certificados autofirmados, descomente y configure las rutas correctas
-    # ssl_certificate /ssl/auth.elyerr.xyz.crt;
-    # ssl_certificate_key /ssl/auth.elyerr.xyz.key;
+* Aplicación web:
 
-    access_log /var/log/nginx/accounts_access.log main;
-    error_log /var/log/nginx/accounts_error.log warn;
+  * 👉 [http://localhost:8001](http://localhost:8001)
 
-    location / {
-        proxy_pass http://127.0.0.1:8001;
-        proxy_http_version 1.1;
+* PostgreSQL (acceso desde el host):
 
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+  * Host: `127.0.0.1`
+  * Puerto: `5435`
+  * Usuario: `admin`
+  * Password: `admin`
 
-        proxy_set_header X-Forwarded-Host $http_x_forwarded_host;
-        proxy_set_header X-Forwarded-Port $http_x_forwarded_port;
-        proxy_set_header X-Forwarded-AWS-ELB $http_x_forwarded_aws_elb;
+---
 
-        proxy_read_timeout 720s;
-        proxy_connect_timeout 720s;
-        proxy_send_timeout 720s;
+## 🔧 Acceso al Contenedor (cuando sea necesario)
 
-        proxy_buffering on;
-        proxy_buffer_size 128k;
-        proxy_buffers 4 256k;
-        proxy_busy_buffers_size 256k;
-        proxy_temp_file_write_size 256k;
+En el flujo normal de trabajo **no es necesario entrar manualmente al contenedor**, ya que la mayoría de las tareas se realizan usando el helper `ops`.
 
-        proxy_redirect off;
-    }
-}
+Aun así, existen **dos formas de acceso**, dependiendo de lo que necesites hacer:
+
+---
+
+### 🔴 Acceso como `root` (uso excepcional)
+
+Este modo **solo debe usarse en casos puntuales**, por ejemplo:
+
+* Instalar paquetes del sistema (apk / apt)
+* Probar configuraciones del contenedor
+* Depuración a bajo nivel
+
+⚠️ **Advertencia importante**:
+Si modificas archivos del proyecto como `root`, estos quedarán con permisos de root y **no podrán editarse desde el host**.
+
+👉 Usa este acceso **solo para tareas internas del contenedor**, nunca para editar código del proyecto.
+
+```sh
+./opsr sh
+```
+
+---
+
+### 🟢 Acceso correcto para desarrollo (recomendado)
+
+Para trabajar con el código, ejecutar Artisan, Composer o NPM, **debes usar el usuario del host (UID/GID)**.
+
+Durante el despliegue (`deploy-dev.sh`) se genera automáticamente un helper local llamado `ops`, que ya maneja esto correctamente.
+
+```sh
+./ops sh
+```
+
+También puedes ejecutar comandos directamente:
+
+```sh
+./ops <comando>
+```
+
+Ejemplos:
+
+```sh
+./ops php artisan
+./ops composer install
+./ops npm run watch
+```
+
+---
+
+### 🌍 (Opcional) Crear un alias global manualmente
+
+Si deseas usar `ops` **desde cualquier directorio del sistema**, puedes crear un alias global en tu shell.
+
+Ejemplo para **bash / zsh**:
+
+```sh
+alias ops='docker exec -it --user $(id -u):$(id -g) ops-dev-app-1'
+```
+
+Para hacerlo permanente, agrega esa línea en:
+
+* `~/.bashrc`
+* `~/.zshrc`
+
+Luego recarga tu shell:
+
+```sh
+source ~/.bashrc
+# o
+source ~/.zshrc
+```
+
+A partir de ese momento podrás ejecutar:
+
+```sh
+ops php artisan
+ops npm run watch
+ops sh
+```
+
+> ℹ️ Esta configuración es **opcional**. El helper `./ops` local ya cubre el flujo recomendado sin tocar tu sistema.
+
+---
+
+```sh
+./ops <comando>
+```
+
+---
+
+## 🛠️ Comandos Útiles en Desarrollo
+
+### Listar comandos disponibles de Artisan
+
+```sh
+./ops php artisan
+````
+
+### Crear usuarios del sistema
+
+```sh
+./ops php artisan settings:create-user
+```
+
+### Instalar dependencias PHP (Composer)
+
+```sh
+./ops composer install
+```
+
+> ⚠️ Normalmente esto ya lo ejecuta `deploy-dev.sh`.
+
+### Instalar dependencias JavaScript
+
+```sh
+./ops npm install
+```
+
+### Compilar assets y escuchar cambios
+
+```sh
+./ops npm run watch
+```
+
+> 💡 Ideal para desarrollo frontend con hot-reload.
+
+---
+
+## 💳 Pagos Recurrentes y Procesos en Background
+
+Los siguientes servicios ya están **gestionados por Supervisor** dentro del contenedor:
+
+* Laravel Horizon
+* Workers de colas
+* Pagos recurrentes
+
+El comando de pagos recurrentes:
+
+```sh
+php artisan payment:charge-recurring
+```
+
+👉 **Ya se ejecuta automáticamente**, no necesitas lanzarlo manualmente.
+
+### Ver estado de Supervisor
+
+```sh
+./opsr supervisorctl status
+```
+
+---
+
+## 🧠 Notas Importantes
+
+### 🔐 Solicitud de Token durante `composer install`
+
+En algunos casos, al ejecutar `composer install`, Composer puede solicitar un **GitHub Access Token** durante la descarga de dependencias.
+
+Esto suele ocurrir cuando:
+
+* Se alcanzan límites de descarga anónima de GitHub.
+* Composer intenta descargar dependencias desde repositorios GitHub (por ejemplo, dependencias indirectas como `symfony/mailgun-mailer`).
+
+👉 **Si se te solicita un token**:
+
+1. Genera un token de acceso en tu cuenta de GitHub (no necesita permisos especiales, solo lectura pública).
+2. Copia el token generado.
+3. Pégalo directamente en la terminal cuando Composer lo solicite.
+4. Presiona **Enter** para continuar.
+
+> ℹ️ Composer almacenará el token dentro del contenedor para evitar volver a solicitarlo.
+>
+> ❓ No es estrictamente claro por qué algunas dependencias como Mailgun lo requieren, pero es un comportamiento normal de Composer al interactuar con GitHub.
+
+---
+
+* ❌ No ejecutes `php artisan` ni `npm` en el host.
+* ✅ Todo debe ejecutarse dentro del contenedor.
+* 🔄 Los cambios en el código se reflejan automáticamente.
+* 🧪 El entorno DEV está pensado para pruebas y desarrollo, no para producción.
+
+---
+
+## 🚀 Flujo de Trabajo Recomendado
+
+1. Clonar el repo
+2. Configurar `.env`
+3. Ejecutar `./deploy-dev.sh`
+4. Abrir [http://localhost:8001](http://localhost:8001)
+5. Programar 🚀
+
+---
+
+Si algo falla, revisa los logs:
+
+```sh
+docker logs -f ops-dev-app-1
 ```
