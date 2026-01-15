@@ -21,9 +21,8 @@
 #
 # SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 # -----------------------------------------------------------------------------
-
-IMAGE="elyerr/oauth2-passport-server:latest"
-COMPOSE_FILE="docker-compose-latest.yml"
+IMAGE="elyerr/oauth2-passport-server:staging"
+COMPOSE_FILE="docker-compose-staging.yml"
 ENV_FILE=".env"
 
 # -----------------------------------------------------------------------------
@@ -43,7 +42,6 @@ set_env_var() {
 
 set_env_var "APP_ENV" "production"
 
-# Pull the latest image
 echo "Downloading image ..."
 docker pull $IMAGE
 
@@ -57,7 +55,7 @@ required_keys=(
     DB_PASSWORD
 )
 
-# Step 1: Ensure docker-compose-prod.yml exists
+# Step 1: Ensure docker-compose-staging.yml exists
 if [ ! -f "$COMPOSE_FILE" ]; then
     if [ -f "docker-compose.yml" ]; then
         cp docker-compose.yml "$COMPOSE_FILE"
@@ -88,8 +86,6 @@ for key in "${required_keys[@]}"; do
     fi
 done
 
-echo "[INFO] Environment variables validated successfully."
-
 # Replace image line under "app:"
 awk -v image="$IMAGE" '
 /^[[:space:]]*app:/ {
@@ -106,6 +102,15 @@ in_app && /^[[:space:]]*image:/ {
 }
 { print }
 ' "$COMPOSE_FILE" > "$COMPOSE_FILE.tmp" && mv "$COMPOSE_FILE.tmp" "$COMPOSE_FILE"
+
+# Ensure name: ops-staging is set at the top of the compose file
+if grep -q "^name:" "$COMPOSE_FILE"; then
+    sed -i 's/^name:.*/name: ops-staging/' "$COMPOSE_FILE"
+    echo "[INFO] Updated 'name:' to 'ops-staging'"
+else
+    sed -i '1s/^/name: ops-staging\n/' "$COMPOSE_FILE"
+    echo "[INFO] Inserted 'name: ops-staging' at the top"
+fi
 
 echo "[INFO] Updated app service image to: $IMAGE"
 

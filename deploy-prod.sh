@@ -26,6 +26,23 @@ IMAGE="elyerr/oauth2-passport-server:v5.1.1"
 COMPOSE_FILE="docker-compose-prod.yml"
 ENV_FILE=".env"
 
+# -----------------------------------------------------------------------------
+# Detect ENV and set it to production in .env
+# -----------------------------------------------------------------------------
+set_env_var() {
+    local key="$1"
+    local value="$2"
+
+    if grep -q "^${key}=" "$ENV_FILE"; then 
+        sed -i "s|^${key}=.*|${key}=${value}|" "$ENV_FILE"
+    else
+        tail -c1 "$ENV_FILE" | read -r _ || echo >> "$ENV_FILE"
+        echo "${key}=${value}" >> "$ENV_FILE"
+    fi
+} 
+
+set_env_var "APP_ENV" "production"
+
 echo "Downloading image ..."
 docker pull $IMAGE
 

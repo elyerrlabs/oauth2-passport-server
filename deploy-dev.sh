@@ -21,14 +21,30 @@
 #
 # SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 # -----------------------------------------------------------------------------
-
-
-IMAGE="elyerr/oauth2-passport-server:dev"
 COMPOSE_FILE="docker-compose-dev.yml"
 ENV_FILE=".env"
+ 
+# -----------------------------------------------------------------------------
+# Detect host UID and GID and persist them into .env
+# -----------------------------------------------------------------------------
+set_env_var() {
+    local key="$1"
+    local value="$2"
 
-echo "Downloading image ..."
-docker pull $IMAGE
+    if grep -q "^${key}=" "$ENV_FILE"; then 
+        sed -i "s|^${key}=.*|${key}=${value}|" "$ENV_FILE"
+    else
+        tail -c1 "$ENV_FILE" | read -r _ || echo >> "$ENV_FILE"
+        echo "${key}=${value}" >> "$ENV_FILE"
+    fi
+}
+
+HOST_UID=$(id -u)
+HOST_GID=$(id -g)
+
+set_env_var "UID" "$HOST_UID"
+set_env_var "GID" "$HOST_GID"
+set_env_var "APP_ENV" "dev"
 
 # Required environment variables
 required_keys=(
@@ -37,27 +53,9 @@ required_keys=(
     DB_PORT
     DB_DATABASE
     DB_USERNAME
-    DB_PASSWORD
+    DB_PASSWORD 
 )
-
-# Step 1: Ensure docker-compose-dev.yml exists
-if [ ! -f "$COMPOSE_FILE" ]; then
-    if [ -f "docker-compose.yml" ]; then
-        cp docker-compose.yml "$COMPOSE_FILE"
-        echo "[INFO] Created $COMPOSE_FILE from docker-compose.yml"
-    else
-        echo "[ERROR] Neither $COMPOSE_FILE nor docker-compose.yml found. Aborting."
-        exit 1
-    fi
-fi
-
-# Step 2: Ensure .env file exists
-if [ ! -f "$ENV_FILE" ]; then
-    echo "[ERROR] .env file not found. Please create it first."
-    exit 1
-fi
-
-# Step 3: Validate that required environment variables exist and have values
+ 
 for key in "${required_keys[@]}"; do
     if ! grep -q "^$key=" "$ENV_FILE"; then
         echo "[ERROR] Missing required environment variable: $key"
@@ -71,39 +69,8 @@ for key in "${required_keys[@]}"; do
     fi
 done
 
-# Replace image line under "app:"
-awk -v image="$IMAGE" '
-/^[[:space:]]*app:/ {
-    in_app = 1
-    print
-    next
-}
-in_app && /^[[:space:]]*image:/ {
-    print "        image: " image
-    next
-}
-/^[[:space:]]*[a-zA-Z0-9_-]+:/ && !/^[[:space:]]*app:/ {
-    in_app = 0
-}
-{ print }
-' "$COMPOSE_FILE" > "$COMPOSE_FILE.tmp" && mv "$COMPOSE_FILE.tmp" "$COMPOSE_FILE"
-
-# Ensure name: oauth2-server-dev is set at the top of the compose file
-if grep -q "^name:" "$COMPOSE_FILE"; then
-    sed -i 's/^name:.*/name: oauth2-server-dev/' "$COMPOSE_FILE"
-    echo "[INFO] Updated 'name:' to 'oauth2-server-dev'"
-else
-    sed -i '1s/^/name: oauth2-server-dev\n/' "$COMPOSE_FILE"
-    echo "[INFO] Inserted 'name: oauth2-server-dev' at the top"
-fi
-
-echo "[INFO] Updated app service image to: $IMAGE"
-
 echo "[INFO] Stopping containers..."
 docker compose -f "$COMPOSE_FILE" down
 
 echo "[INFO] Starting containers..."
 docker compose -f "$COMPOSE_FILE" up -d --build
-
-echo "[INFO] Cleaning up unused images..."
-docker image prune -f

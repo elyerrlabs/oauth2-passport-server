@@ -40,22 +40,21 @@ RUN getent passwd www-data || adduser -S -G www-data -s /usr/sbin/nologin www-da
 
 # Symlink php
 RUN ln -sf /usr/bin/php84 /usr/bin/php
-
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN mkdir -p /etc/supervisor.d 
 
 WORKDIR /var/www/
 
 COPY . /var/www/
-COPY docker/www.conf /etc/php84/php-fpm.d/www.conf
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/default.conf /etc/nginx/http.d/default.conf
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh 
-COPY docker/php.ini /etc/php84/conf.d/99-custom.ini
+COPY docker/staging/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker/staging/nginx/default.conf /etc/nginx/http.d/default.conf
+COPY docker/staging/php/www.conf /etc/php84/php-fpm.d/www.conf
+COPY docker/staging/php/php.ini /etc/php84/conf.d/99-custom.ini
+COPY docker/staging/supervisor/laravel.ini /etc/supervisor.d/laravel.ini
+COPY docker/staging/entrypoint.sh /usr/local/bin/entrypoint.sh 
 
 # supervisor config to manage services
-RUN mkdir -p /etc/supervisor.d \
-    && cp docker/laravel.ini /etc/supervisor.d/laravel.ini \
-    && chmod 440 /etc/nginx/http.d/default.conf \
+RUN chmod 440 /etc/nginx/http.d/default.conf \
     && chmod 550 /usr/local/bin/entrypoint.sh
 
 # Install js dependencies and remove after build
@@ -69,9 +68,3 @@ RUN apk add --no-cache --virtual .build-deps npm unzip \
     && apk del .build-deps \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/* \
     && rm -rf /var/www/docker
-
-RUN rm -rf resources/js \
-    && rm -rf core/Partner/resources/js \
-    && rm -rf core/Transaction/resources/js \
-    && rm -rf core/User/resources/js \
-    && rm -rf webpack.mix.js

@@ -21,6 +21,9 @@ laravel-echo*
 rutas.js
 sync
 points
-docker-compose-prod.yml
-docker-compose-dev.yml
+!docker-compose-dev.yml 
+docker-compose-staging.yml 
+docker-compose-latest.yml 
+docker-compose-prod.yml 
+supervisord.pid
 !.dockerignore

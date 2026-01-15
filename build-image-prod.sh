@@ -1,1 +1,1 @@
-docker build --no-cache -t elyerr/oauth2-passport-server:latest .
+docker build --no-cache -f docker/production/Dockerfile -t elyerr/oauth2-passport-server:latest .

@@ -1,0 +1,51 @@
+name: oauth2-server-dev
+
+services:
+  db:
+    image: postgres:17
+    restart: always
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "${DB_DATABASE}"
+    ports:
+      - "127.0.0.1:5435:5432"
+    networks:
+      - public-net
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USERNAME}"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  app:
+    build:
+      context: docker/development
+      dockerfile: Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    restart: always
+    ports:
+      - "8001:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/var/www
+    command: sh -c "/usr/local/bin/entrypoint.sh"
+    tty: true
+    stdin_open: true
+    networks:
+      - public-net
+
+volumes:
+  pg-data:
+
+networks:
+  public-net:
+    driver: bridge
