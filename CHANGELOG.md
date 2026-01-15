@@ -42,6 +42,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 * Improved development documentation with clear, step-by-step instructions for setup and usage.
 * Standardized container access patterns (root vs host user) to prevent file permission problems.
 * Simplified workflow for running Artisan, Composer, and NPM commands inside containers.
+* updated .gitlab-ci.yml
 
 ### Documentation
 
