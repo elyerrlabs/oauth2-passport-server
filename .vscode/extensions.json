@@ -1,0 +1,19 @@
+{
+    "recommendations": [
+        "mhutchie.git-graph",
+        "nhedger.inertia",
+        "shufo.vscode-blade-formatter",
+        "austenc.laravel-blade-spacer",
+        "amiralizadeh9480.laravel-extra-intellisense",
+        "codingyu.laravel-goto-view",
+        "naoray.laravel-goto-components",
+        "pgl.laravel-jump-controller",
+        "devsense.phptools-vscode",
+        "ctf0.php-namespace-resolver",
+        "mehedidracula.php-namespace-resolver",
+        "esbenp.prettier-vscode",
+        "vue.volar",
+        "hollowtree.vue-snippets",
+        "dariofuzinato.vue-peek",
+    ]
+}
