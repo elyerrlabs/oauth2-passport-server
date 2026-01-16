@@ -40,6 +40,8 @@ RUN apk add --no-cache \
     icu-data-full \
     git \ 
     vim \
+    neovim \
+    nano \
     npm \
     shadow \ 
     bash-completion \
