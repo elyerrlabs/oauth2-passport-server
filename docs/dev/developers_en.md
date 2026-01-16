@@ -170,7 +170,7 @@ If you modify project files as `root`, they will be owned by root and **will not
 👉 Use this access **only for internal container tasks**, never for editing project code.
 
 ```sh
-./opsr sh
+./opsr bash
 ```
 
 ---
@@ -182,7 +182,7 @@ To work with the code, run Artisan, Composer, or NPM, **you must use the host us
 During deployment (`deploy-dev.sh`), a local helper called `ops` is automatically generated and already handles this correctly.
 
 ```sh
-./ops sh
+./ops bash
 ```
 
 You can also run commands directly:

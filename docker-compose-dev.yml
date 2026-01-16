@@ -36,7 +36,9 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./:/var/www
+      - ./:/home/dev/code
+      - ${SSH_DIR}:/home/dev/.ssh
+      - ${GIT_CONFIG}:/home/dev/.gitconfig
     command: sh -c "/usr/local/bin/entrypoint.sh"
     tty: true
     stdin_open: true

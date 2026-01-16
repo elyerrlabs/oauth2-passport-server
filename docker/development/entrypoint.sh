@@ -24,7 +24,7 @@
  
 set -e   
 
-cd /var/www 
+cd /home/dev/code
 
 echo "⚙️ Running system configuration..."
 
@@ -34,6 +34,7 @@ chown -R ${UID}:${GID} /var/lib/nginx
 
 echo "🚀 Starting PHP-FPM..."
 php-fpm84 -D
+
 
 echo "🌐 Starting Nginx..."
 nginx -g "daemon off;" &   

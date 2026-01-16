@@ -170,7 +170,7 @@ Si modificas archivos del proyecto como `root`, estos quedarán con permisos de 
 👉 Usa este acceso **solo para tareas internas del contenedor**, nunca para editar código del proyecto.
 
 ```sh
-./opsr sh
+./opsr bash
 ```
 
 ---
@@ -182,7 +182,7 @@ Para trabajar con el código, ejecutar Artisan, Composer o NPM, **debes usar el 
 Durante el despliegue (`deploy-dev.sh`) se genera automáticamente un helper local llamado `ops`, que ya maneja esto correctamente.
 
 ```sh
-./ops sh
+./ops bash
 ```
 
 También puedes ejecutar comandos directamente:

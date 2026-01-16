@@ -41,7 +41,10 @@ RUN apk add --no-cache \
     git \ 
     vim \
     npm \
-    shadow
+    shadow \ 
+    bash-completion \
+    openssh-client \
+    bind-tools
 
 # Create dev user and group
 RUN \
@@ -57,7 +60,7 @@ RUN ln -sf /usr/bin/php84 /usr/bin/php
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN mkdir -p /etc/supervisor.d 
 
-WORKDIR /var/www/
+WORKDIR /home/dev/code
 
 COPY php/www.conf /etc/php84/php-fpm.d/www.conf
 COPY php/php.ini /etc/php84/conf.d/99-custom.ini
@@ -83,4 +86,4 @@ RUN \
     2>/dev/null
 
 
-CMD [ "sh" ]
+CMD [ "bash" ]
