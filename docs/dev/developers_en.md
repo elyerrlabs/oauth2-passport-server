@@ -22,22 +22,22 @@ SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
 
 # 🧑‍💻 Development Guide (DEV)
 
-This guide describes **exclusively the development environment**, designed to work locally in a safe, reproducible, and predictable way.
+This guide describes **exclusively the development environment**, designed to work locally in a secure, reproducible way.
 
 The project runs **100% on Docker**, which means:
 
--   You do **not** need to install PHP, Composer, Node.js, Nginx, or extensions on your operating system.
--   The entire stack (PHP, Nginx, Supervisor, Horizon, Node, etc.) lives inside containers.
--   The environment is identical for all developers.
+- You do not need to install PHP, Composer, Node.js, Nginx, or extensions on your operating system.
+- The entire stack (PHP, Nginx, Supervisor, Horizon, Node, etc.) runs inside containers.
+- The environment is identical for all developers.
 
-> 🎯 **Goal**: any developer should be able to clone the repository and have the system running in minutes, without complex manual configuration.
+> 🎯 **Goal**: allow any developer to clone the repository and get the system running in minutes, without complex manual configuration.
 
 ---
 
 ## 🌱 Branches
 
--   **main** → Stable branch (production)
--   **dev** → Active development branch (**use this one for development**)
+- **main** → Stable branch (production)
+- **dev** → Active development branch (**use this one for development**)
 
 > ⚠️ Everything described in this guide assumes you are working on the `dev` branch.
 
@@ -47,14 +47,14 @@ The project runs **100% on Docker**, which means:
 
 You only need the following installed on your machine:
 
--   Docker ≥ 24
--   Docker Compose (official plugin)
--   Git
+- Docker ≥ 24
+- Docker Compose (official plugin)
+- Git
 
 Optional (recommended) tools:
 
--   VS Code / PhpStorm
--   DBeaver / TablePlus (for database access)
+- VS Code / PhpStorm
+- DBeaver / TablePlus (for database access)
 
 ---
 
@@ -70,7 +70,7 @@ git checkout dev
 
 ## ⚙️ Environment Configuration
 
-### 1. `.env` file
+### 1. `.env` File
 
 Copy the example file:
 
@@ -78,7 +78,7 @@ Copy the example file:
 cp .env.example .env
 ```
 
-Recommended minimal example for development:
+Minimal recommended configuration for development:
 
 ```env
 APP_ENV=dev
@@ -103,7 +103,34 @@ DB_PASSWORD=admin
 
 > ℹ️ `DB_HOST=db` matches the service name defined in `docker-compose-dev.yml`.
 
-> ℹ️ `APP_KEY` is generated automatically on first startup if left empty.
+> ℹ️ `APP_KEY` is automatically generated during the first startup if left empty.
+
+---
+
+## 🧩 System Configuration (Redis, Captcha, etc.)
+
+The system is designed so that **all key configurations are fully parameterized** and managed from a **central configuration area** within the application.
+
+From this section you can easily configure components such as:
+
+- Redis
+- Captcha
+- External services
+- Internal system parameters
+
+All these options are decoupled from the codebase and controlled through configuration, allowing system behavior to be adjusted without modifying internal logic.
+
+### 🔴 Redis
+
+The system **uses Redis** to handle internal functionality such as caching, sessions, queues, or other mechanisms depending on the active modules.
+
+For the system to work correctly in development:
+
+- You must **run a Redis instance**.
+- For local testing, this can easily be done using Docker.
+- Once Redis is running, you must **register the Redis server in the system configuration section**, specifying host, port, and credentials if applicable.
+
+> 💡 In development environments, it is recommended to run Redis via Docker to avoid installing it on the host system.
 
 ---
 
@@ -117,8 +144,8 @@ This script:
 
 1. Detects your host UID and GID to avoid permission issues.
 2. Validates that critical `.env` variables are defined.
-3. Stops any running containers.
-4. Builds the required Docker images.
+3. Stops existing containers.
+4. Builds the required images.
 5. Starts all services using Docker Compose.
 6. Installs Composer and NPM dependencies inside the container.
 7. Keeps services running under Supervisor.
@@ -135,16 +162,14 @@ This script:
 
 Once the environment is running:
 
--   Web application:
+- Web application:
+    - 👉 [http://localhost:8001](http://localhost:8001)
 
-    -   👉 [http://localhost:8001](http://localhost:8001)
-
--   PostgreSQL (host access):
-
-    -   Host: `127.0.0.1`
-    -   Port: `5435`
-    -   User: `admin`
-    -   Password: `admin`
+- PostgreSQL (accessible from the host):
+    - Host: `127.0.0.1`
+    - Port: `5435`
+    - Username: `admin`
+    - Password: `admin`
 
 ---
 
@@ -152,22 +177,22 @@ Once the environment is running:
 
 In the normal workflow, **you do not need to manually enter the container**, as most tasks are performed using the `ops` helper.
 
-That said, there are **two access modes**, depending on what you need to do:
+However, there are **two access modes**, depending on what you need to do:
 
 ---
 
 ### 🔴 Root access (exceptional use)
 
-This mode **should only be used in rare cases**, for example:
+This mode **should only be used for specific cases**, such as:
 
--   Installing system packages (apk / apt)
--   Testing container-level configurations
--   Low-level debugging
+- Installing system packages (apk / apt)
+- Testing container-level configuration
+- Low-level debugging
 
 ⚠️ **Important warning**:
-If you modify project files as `root`, they will be owned by root and **will not be editable from the host**.
+If you modify project files as `root`, they will be owned by root and **cannot be edited from the host**.
 
-👉 Use this access **only for internal container tasks**, never for editing project code.
+👉 Use this access **only for internal container tasks**, never to edit project code.
 
 ```sh
 ./opsr bash
@@ -175,11 +200,11 @@ If you modify project files as `root`, they will be owned by root and **will not
 
 ---
 
-### 🟢 Proper access for development (recommended)
+### 🟢 Correct access for development (recommended)
 
-To work with the code, run Artisan, Composer, or NPM, **you must use the host user (UID/GID)**.
+To work with the code, run Artisan, Composer, or NPM, you **must use the host user (UID/GID)**.
 
-During deployment (`deploy-dev.sh`), a local helper called `ops` is automatically generated and already handles this correctly.
+During deployment (`deploy-dev.sh`), a local helper called `ops` is automatically generated and handles this correctly.
 
 ```sh
 ./ops bash
@@ -198,41 +223,6 @@ Examples:
 ./ops composer install
 ./ops npm run watch
 ```
-
----
-
-### 🌍 (Optional) Create a global alias manually
-
-If you want to use `ops` **from anywhere on your system**, you can create a global shell alias.
-
-Example for **bash / zsh**:
-
-```sh
-alias ops='docker exec -it --user $(id -u):$(id -g) ops-dev-app-1'
-```
-
-To make it persistent, add that line to:
-
--   `~/.bashrc`
--   `~/.zshrc`
-
-Then reload your shell:
-
-```sh
-source ~/.bashrc
-# or
-source ~/.zshrc
-```
-
-From then on, you can run:
-
-```sh
-ops php artisan
-ops npm run watch
-ops sh
-```
-
-> ℹ️ This setup is **optional**. The local `./ops` helper already covers the recommended workflow without modifying your system.
 
 ---
 
@@ -270,7 +260,7 @@ ops sh
 ./ops npm run watch
 ```
 
-> 💡 Ideal for frontend development with hot-reload.
+> 💡 Ideal for frontend development with hot reload.
 
 ---
 
@@ -278,17 +268,17 @@ ops sh
 
 The following services are already **managed by Supervisor** inside the container:
 
--   Laravel Horizon
--   Queue workers
--   Recurring payments
+- Laravel Horizon
+- Queue workers
+- Recurring payments
 
-Recurring payment command:
+Recurring payments command:
 
 ```sh
 php artisan payment:charge-recurring
 ```
 
-👉 **This runs automatically**, you do not need to trigger it manually.
+👉 **This runs automatically**, you do not need to execute it manually.
 
 ### Check Supervisor status
 
@@ -300,32 +290,10 @@ php artisan payment:charge-recurring
 
 ## 🧠 Important Notes
 
-### 🔐 Token request during `composer install`
-
-In some cases, when running `composer install`, Composer may request a **GitHub Access Token** while downloading dependencies.
-
-This usually happens when:
-
--   Anonymous GitHub download limits are reached.
--   Composer downloads dependencies hosted on GitHub (for example, indirect dependencies like `symfony/mailgun-mailer`).
-
-👉 **If you are prompted for a token**:
-
-1. Generate an access token in your GitHub account (no special permissions required, public read-only is enough).
-2. Copy the generated token.
-3. Paste it directly into the terminal when Composer asks for it.
-4. Press **Enter** to continue.
-
-> ℹ️ Composer will store the token inside the container to avoid asking again.
->
-> ❓ It is not entirely clear why some dependencies like Mailgun require this, but it is normal Composer behavior when interacting with GitHub.
-
----
-
--   ❌ Do not run `php artisan` or `npm` on the host.
--   ✅ Everything must run inside the container.
--   🔄 Code changes are reflected automatically.
--   🧪 The DEV environment is intended for testing and development, not production.
+- ❌ Do not run `php artisan` or `npm` on the host.
+- ✅ Everything must be executed inside the container.
+- 🔄 Code changes are reflected automatically.
+- 🧪 The DEV environment is intended for testing and development, not production.
 
 ---
 
@@ -339,12 +307,6 @@ This usually happens when:
 
 ---
 
-If something goes wrong, check the logs:
-
-```sh
-docker logs -f ops-dev-app-1
-```
-
-### Module creation
+### Module Creation
 
 - [Read documentation](./module/modules_es.md)
