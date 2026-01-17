@@ -59,7 +59,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             >
                                 {{
                                     __(
-                                        "Manage your API keys for secure application integration"
+                                        "Manage your API keys for secure application integration",
                                     )
                                 }}
                             </p>
@@ -133,10 +133,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         'text-positive'
                                             ? 'text-green-600 dark:text-green-400'
                                             : getExpirationClass(
-                                                  token.expires
-                                              ) === 'text-warning'
-                                            ? 'text-amber-600 dark:text-amber-400'
-                                            : 'text-red-600 dark:text-red-400',
+                                                    token.expires,
+                                                ) === 'text-warning'
+                                              ? 'text-amber-600 dark:text-amber-400'
+                                              : 'text-red-600 dark:text-red-400',
                                     ]"
                                 >
                                     {{
@@ -157,10 +157,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         'text-positive'
                                             ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
                                             : getExpirationClass(
-                                                  token.expires
-                                              ) === 'text-warning'
-                                            ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300'
-                                            : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+                                                    token.expires,
+                                                ) === 'text-warning'
+                                              ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300'
+                                              : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
                                     ]"
                                 >
                                     {{ getExpirationStatus(token.expires) }}
@@ -221,7 +221,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         >
                             {{
                                 __(
-                                    "Create your first API key to get started with secure application integration"
+                                    "Create your first API key to get started with secure application integration",
                                 )
                             }}
                         </p>
@@ -412,14 +412,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                             :class="[
                                                 'text-sm font-medium',
                                                 getExpirationClass(
-                                                    token.expires
+                                                    token.expires,
                                                 ) === 'text-positive'
                                                     ? 'text-green-600 dark:text-green-400'
                                                     : getExpirationClass(
-                                                          token.expires
-                                                      ) === 'text-warning'
-                                                    ? 'text-amber-600 dark:text-amber-400'
-                                                    : 'text-red-600 dark:text-red-400',
+                                                            token.expires,
+                                                        ) === 'text-warning'
+                                                      ? 'text-amber-600 dark:text-amber-400'
+                                                      : 'text-red-600 dark:text-red-400',
                                             ]"
                                         >
                                             {{
@@ -433,14 +433,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 :class="[
                                                     'flex-shrink-0 mr-1.5 h-4 w-4',
                                                     getExpirationClass(
-                                                        token.expires
+                                                        token.expires,
                                                     ) === 'text-positive'
                                                         ? 'text-green-500 dark:text-green-400'
                                                         : getExpirationClass(
-                                                              token.expires
-                                                          ) === 'text-warning'
-                                                        ? 'text-amber-500 dark:text-amber-400'
-                                                        : 'text-red-500 dark:text-red-400',
+                                                                token.expires,
+                                                            ) === 'text-warning'
+                                                          ? 'text-amber-500 dark:text-amber-400'
+                                                          : 'text-red-500 dark:text-red-400',
                                                 ]"
                                                 fill="none"
                                                 stroke="currentColor"
@@ -452,7 +452,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                     stroke-width="2"
                                                     :d="
                                                         getExpirationIcon(
-                                                            token.expires
+                                                            token.expires,
                                                         )
                                                     "
                                                 />
@@ -461,19 +461,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 :class="[
                                                     'text-xs font-medium',
                                                     getExpirationClass(
-                                                        token.expires
+                                                        token.expires,
                                                     ) === 'text-positive'
                                                         ? 'text-green-600 dark:text-green-400'
                                                         : getExpirationClass(
-                                                              token.expires
-                                                          ) === 'text-warning'
-                                                        ? 'text-amber-600 dark:text-amber-400'
-                                                        : 'text-red-600 dark:text-red-400',
+                                                                token.expires,
+                                                            ) === 'text-warning'
+                                                          ? 'text-amber-600 dark:text-amber-400'
+                                                          : 'text-red-600 dark:text-red-400',
                                                 ]"
                                             >
                                                 {{
                                                     getExpirationStatus(
-                                                        token.expires
+                                                        token.expires,
                                                     )
                                                 }}
                                             </span>
@@ -518,7 +518,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
                                                 :title="
                                                     __(
-                                                        'Copy API key to clipboard'
+                                                        'Copy API key to clipboard',
                                                     )
                                                 "
                                             >
@@ -536,35 +536,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                     />
                                                 </svg>
                                                 {{ __("Copy") }}
-                                            </button>
-                                            <button
-                                                v-else
-                                                @click="showTokenDetails(token)"
-                                                class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
-                                                :title="
-                                                    __('View token details')
-                                                "
-                                            >
-                                                <svg
-                                                    class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-500 dark:text-gray-400"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                    />
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                                    />
-                                                </svg>
-                                                {{ __("View") }}
                                             </button>
                                         </div>
                                     </td>
@@ -606,7 +577,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                             >
                                                 {{
                                                     __(
-                                                        "Create your first API key to get started with secure application integration"
+                                                        "Create your first API key to get started with secure application integration",
                                                     )
                                                 }}
                                             </p>
@@ -690,7 +661,7 @@ export default {
             const expDate = new Date(expirationDate);
             const now = new Date();
             const sevenDaysFromNow = new Date(
-                now.getTime() + 7 * 24 * 60 * 60 * 1000
+                now.getTime() + 7 * 24 * 60 * 60 * 1000,
             );
 
             if (expDate < now) return "text-negative";
@@ -719,7 +690,7 @@ export default {
             if (expDate < now) return __("Expired");
 
             const sevenDaysFromNow = new Date(
-                now.getTime() + 7 * 24 * 60 * 60 * 1000
+                now.getTime() + 7 * 24 * 60 * 60 * 1000,
             );
             if (expDate < sevenDaysFromNow) return __("Expires soon");
 
@@ -732,7 +703,7 @@ export default {
             const expDate = new Date(expirationDate);
             const now = new Date();
             const sevenDaysFromNow = new Date(
-                now.getTime() + 7 * 24 * 60 * 60 * 1000
+                now.getTime() + 7 * 24 * 60 * 60 * 1000,
             );
 
             return expDate > now && expDate < sevenDaysFromNow;
@@ -772,7 +743,7 @@ export default {
                 .writeText(text)
                 .then(() => {
                     this.$notify.success(
-                        this.__("API key copied to clipboard")
+                        this.__("API key copied to clipboard"),
                     );
                 })
                 .catch(() => {

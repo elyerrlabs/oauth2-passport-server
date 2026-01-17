@@ -78,7 +78,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         >
                             {{
                                 __(
-                                    "Create a new API key with specific permissions"
+                                    "Create a new API key with specific permissions",
                                 )
                             }}
                         </p>
@@ -116,7 +116,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <p class="text-gray-500 dark:text-gray-400 text-sm">
                         {{
                             __(
-                                "Choose a descriptive name to identify this API key"
+                                "Choose a descriptive name to identify this API key",
                             )
                         }}
                     </p>
@@ -129,7 +129,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 >
                     <div class="flex items-center gap-2">
                         <svg
-                            class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0"
+                            class="w-5 h-5 text-green-600 dark:text-green-400 shrink-0"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                         >
@@ -163,7 +163,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 >{{ token.accessToken }}</code
                             >
                             <svg
-                                class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 group-hover:scale-110 transition-transform"
+                                class="w-5 h-5 text-green-600 dark:text-green-400 shrink-0 group-hover:scale-110 transition-transform"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -194,7 +194,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             </svg>
                             {{
                                 __(
-                                    "Click to copy the API key. Save it securely - you won't be able to see it again!"
+                                    "Click to copy the API key. Save it securely - you won't be able to see it again!",
                                 )
                             }}
                         </p>
@@ -202,7 +202,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 </div>
 
                 <!-- Scopes Section -->
-                <div v-if="scopes.length > 0" class="space-y-4">
+                <div
+                    v-if="!loadingScopes && scopes.length > 0"
+                    class="space-y-4"
+                >
                     <div class="flex items-center justify-between">
                         <label
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -293,20 +296,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         class="grid grid-cols-1 md:grid-cols-2 gap-3"
                                     >
                                         <label
-                                            v-for="role in roles"
-                                            :key="role.id"
+                                            v-for="scope in roles"
+                                            :key="scope.id"
                                             class="flex items-start gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 cursor-pointer group"
                                             :class="{
                                                 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700':
                                                     form.scopes.includes(
-                                                        role.id
+                                                        scope.id,
                                                     ),
                                             }"
                                         >
                                             <input
                                                 type="checkbox"
                                                 v-model="form.scopes"
-                                                :value="role.id"
+                                                :value="scope.id"
                                                 :disabled="loading"
                                                 class="mt-0.5 text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 transition-colors duration-200"
                                             />
@@ -314,16 +317,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 <span
                                                     class="block text-sm font-medium text-gray-900 dark:text-white capitalize"
                                                 >
-                                                    {{
-                                                        formatRoleName(
-                                                            role.name
-                                                        )
-                                                    }}
+                                                    {{ getRoleName(scope) }}
                                                 </span>
                                                 <p
                                                     class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed"
                                                 >
-                                                    {{ role.description }}
+                                                    {{ scope.description }}
                                                 </p>
                                             </div>
                                         </label>
@@ -336,7 +335,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                 <!-- Loading State for Scopes -->
                 <div
-                    v-if="scopes.length === 0 && dialog"
+                    v-if="loadingScopes"
                     class="flex items-center justify-center py-8"
                 >
                     <div
@@ -368,13 +367,29 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </div>
                 </div>
 
+                <!-- Empty State -->
+                <div
+                    v-else-if="!loadingScopes && scopes.length === 0"
+                    class="flex items-center justify-center py-8"
+                >
+                    <div
+                        class="text-sm text-gray-500 dark:text-gray-400 text-center"
+                    >
+                        {{
+                            __(
+                                "No services are currently assigned. You can still generate basic tokens for core features or testing purposes.",
+                            )
+                        }}
+                    </div>
+                </div>
+
                 <!-- Security Notice -->
                 <div
                     class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
                 >
                     <div class="flex items-start gap-3">
                         <svg
-                            class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                            class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -393,7 +408,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <p>
                                 {{
                                     __(
-                                        "Only grant the minimum permissions required. Regularly review and rotate your API keys."
+                                        "Only grant the minimum permissions required. Regularly review and rotate your API keys.",
                                     )
                                 }}
                             </p>
@@ -424,7 +439,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </svg>
                     {{
                         __(
-                            "Make sure to copy your API key before closing this dialog"
+                            "Make sure to copy your API key before closing this dialog",
                         )
                     }}
                 </div>
@@ -507,6 +522,7 @@ export default {
 
     data() {
         return {
+            loading: false,
             form: {
                 name: "",
                 scopes: [],
@@ -516,7 +532,7 @@ export default {
             scopes: [],
             dialog: false,
             expandedGroups: [],
-            loading: false,
+            loadingScopes: true,
             token: null,
         };
     },
@@ -524,15 +540,35 @@ export default {
     computed: {
         groupedScopes() {
             const grouped = {};
+
             this.scopes.forEach((scope) => {
-                if (scope.id) {
-                    const [group, service, role] = scope.id.split(":");
-                    if (!grouped[group]) grouped[group] = {};
-                    if (!grouped[group][service]) grouped[group][service] = [];
-                    Object.assign(scope, { name: role });
-                    grouped[group][service].push(scope);
+                if (!scope.id || typeof scope.id !== "string") {
+                    console.warn("Scope without id or invalid id:", scope);
+                    return;
                 }
+
+                const parts = scope.id.split(":");
+                if (parts.length !== 3) {
+                    console.warn("Invalid scope id format:", scope.id);
+                    return;
+                }
+
+                const [group, service, role] = parts;
+
+                if (!grouped[group]) {
+                    grouped[group] = {};
+                }
+
+                if (!grouped[group][service]) {
+                    grouped[group][service] = [];
+                }
+
+                grouped[group][service].push({
+                    ...scope,
+                    roleName: role,
+                });
             });
+
             return grouped;
         },
 
@@ -549,6 +585,7 @@ export default {
             this.form.name = "";
             this.form.scopes = [];
             this.expandedGroups = [];
+            this.loadingScopes = true;
 
             await this.getScopes();
 
@@ -585,8 +622,19 @@ export default {
                 .replace(/\b\w/g, (l) => l.toUpperCase());
         },
 
-        formatRoleName(role) {
-            return role
+        getRoleName(scope) {
+            if (!scope.roleName) {
+                // Extraer el role del id si no está en scope.roleName
+                const parts = scope.id.split(":");
+                if (parts.length === 3) {
+                    return parts[2]
+                        .replace(/-/g, " ")
+                        .replace(/\b\w/g, (l) => l.toUpperCase());
+                }
+                return scope.id;
+            }
+
+            return scope.roleName
                 .replace(/-/g, " ")
                 .replace(/\b\w/g, (l) => l.toUpperCase());
         },
@@ -613,14 +661,14 @@ export default {
             try {
                 const res = await this.$server.post(
                     this.$page.props.route,
-                    this.form
+                    this.form,
                 );
 
                 if (res.status == 200) {
                     this.token = res.data;
                     this.$emit("created");
                     this.$notify.success(
-                        this.__("API key generated successfully")
+                        this.__("API key generated successfully"),
                     );
                 }
             } catch (e) {
@@ -639,16 +687,21 @@ export default {
         async getScopes() {
             try {
                 const res = await this.$server.get("/oauth/scopes");
-                this.scopes = res.data;
+
+                if (res.status == 200) {
+                    this.scopes = res.data;
+                    this.loadingScopes = false;
+                }
             } catch (error) {
                 this.$notify.error(this.__("Failed to load permissions"));
+                this.loadingScopes = false;
             }
         },
 
         getGroupScopeCount(services) {
             return Object.values(services).reduce(
                 (total, roles) => total + roles.length,
-                0
+                0,
             );
         },
     },
