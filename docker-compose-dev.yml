@@ -1,6 +1,14 @@
 name: ops-dev
 
 services:
+  redis:
+    image: redis:latest 
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - internal-net
+      
   db:
     image: postgres:17
     restart: always
@@ -13,7 +21,7 @@ services:
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
       POSTGRES_DB: "${DB_DATABASE}"
     ports:
-      - "127.0.0.1:5435:5432"
+      - "5435:5432"
     networks:
       - public-net
     healthcheck:
@@ -44,10 +52,13 @@ services:
     stdin_open: true
     networks:
       - public-net
+      - internal-net
 
 volumes:
   pg-data:
 
 networks:
+  internal-net:
+    internal: true
   public-net:
     driver: bridge

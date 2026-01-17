@@ -47,6 +47,10 @@ set_env_var "GID" "$HOST_GID"
 set_env_var "APP_ENV" "dev"
 set_env_var "SSH_DIR" "$HOME/.ssh"
 set_env_var "GIT_CONFIG" "$HOME/.gitconfig"
+## Add directory to git safe list to avoid permission issues 
+git config --global --get-all safe.directory | grep -qx "/home/dev/code" \
+  || git config --global --add safe.directory /home/dev/code
+
 
 # Required environment variables
 required_keys=(
@@ -77,9 +81,6 @@ docker compose -f "$COMPOSE_FILE" down
 echo "[INFO] Starting containers..."
 docker compose -f "$COMPOSE_FILE" up -d --build
 
-## Add directory to git safe list to avoid permission issues
-docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 git config --global --add safe.directory /home/dev/code
-
 ## Install composer dependencies
 docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 composer install
 
@@ -91,6 +92,9 @@ docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 chmod 600 secrets/oauth/*
 
 ## install and build docker dependencies
 docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 npm install && npm run dev
+
+## Clean up unused Docker images
+docker image prune -f
 
 echo "[INFO] Deployment completed."
 docker logs -f --tail=1000 --timestamps ops-dev-app-1
