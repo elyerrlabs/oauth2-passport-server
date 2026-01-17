@@ -42,20 +42,25 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 ### Changed
 
+* **Switched project license to AGPL-3.0**.
+* Updated license headers across source files to reflect AGPL licensing.
+* Removed non-commercial license restrictions in favor of AGPL compliance.
 * Improved development documentation with clear, step-by-step instructions for setup and usage.
 * Standardized container access patterns (root vs host user) to prevent file permission problems.
 * Simplified workflow for running Artisan, Composer, and NPM commands inside containers.
-* updated .gitlab-ci.yml
+* Updated `.gitlab-ci.yml` for the new Docker-based development flow.
 
 ### Documentation
 
+* Updated licensing documentation to reflect AGPL terms and obligations.
 * Added detailed development guide covering Docker usage, container access, helpers, and common commands.
 * Added notes explaining GitHub token prompts during `composer install`.
 
 ### Developer Experience
 
 * Hot-reload frontend workflow using `npm run watch` inside the container.
-* Safer and more predictable file ownership when editing from the host or IDE (VS Code, PhpStorm). 
+* Safer and more predictable file ownership when editing from the host or IDE (VS Code, PhpStorm).
+* Clear separation between development-only tooling and production concerns.
 
 --- 
 ## [v5.1.1]
