@@ -26,9 +26,9 @@ Esta guía describe **exclusivamente el entorno de desarrollo**, pensado para tr
 
 El proyecto funciona **100 % con Docker**, lo que significa que:
 
-* No necesitas instalar PHP, Composer, Node.js, Nginx ni extensiones en tu sistema operativo.
-* Todo el stack (PHP, Nginx, Supervisor, Horizon, Node, etc.) vive dentro de contenedores.
-* El entorno es idéntico para todos los desarrolladores.
+- No necesitas instalar PHP, Composer, Node.js, Nginx ni extensiones en tu sistema operativo.
+- Todo el stack (PHP, Nginx, Supervisor, Horizon, Node, etc.) vive dentro de contenedores.
+- El entorno es idéntico para todos los desarrolladores.
 
 > 🎯 **Objetivo**: que cualquier desarrollador pueda clonar el repositorio y levantar el sistema en minutos, sin configuraciones manuales complejas.
 
@@ -36,8 +36,8 @@ El proyecto funciona **100 % con Docker**, lo que significa que:
 
 ## 🌱 Ramas
 
-* **main** → Rama estable (producción)
-* **dev** → Rama de desarrollo activo (**usar esta para trabajar**)
+- **main** → Rama estable (producción)
+- **dev** → Rama de desarrollo activo (**usar esta para trabajar**)
 
 > ⚠️ Todo lo descrito en esta guía asume que estás trabajando sobre la rama `dev`.
 
@@ -47,14 +47,14 @@ El proyecto funciona **100 % con Docker**, lo que significa que:
 
 Solo necesitas tener instalado en tu máquina:
 
-* Docker ≥ 24
-* Docker Compose (plugin oficial)
-* Git
+- Docker ≥ 24
+- Docker Compose (plugin oficial)
+- Git
 
 Herramientas opcionales (recomendadas):
 
-* VS Code / PhpStorm
-* DBeaver / TablePlus (para la base de datos)
+- VS Code / PhpStorm
+- DBeaver / TablePlus (para la base de datos)
 
 ---
 
@@ -135,16 +135,14 @@ Este script:
 
 Una vez levantado el entorno:
 
-* Aplicación web:
+- Aplicación web:
+    - 👉 [http://localhost:8001](http://localhost:8001)
 
-  * 👉 [http://localhost:8001](http://localhost:8001)
-
-* PostgreSQL (acceso desde el host):
-
-  * Host: `127.0.0.1`
-  * Puerto: `5435`
-  * Usuario: `admin`
-  * Password: `admin`
+- PostgreSQL (acceso desde el host):
+    - Host: `127.0.0.1`
+    - Puerto: `5435`
+    - Usuario: `admin`
+    - Password: `admin`
 
 ---
 
@@ -160,9 +158,9 @@ Aun así, existen **dos formas de acceso**, dependiendo de lo que necesites hace
 
 Este modo **solo debe usarse en casos puntuales**, por ejemplo:
 
-* Instalar paquetes del sistema (apk / apt)
-* Probar configuraciones del contenedor
-* Depuración a bajo nivel
+- Instalar paquetes del sistema (apk / apt)
+- Probar configuraciones del contenedor
+- Depuración a bajo nivel
 
 ⚠️ **Advertencia importante**:
 Si modificas archivos del proyecto como `root`, estos quedarán con permisos de root y **no podrán editarse desde el host**.
@@ -213,8 +211,8 @@ alias ops='docker exec -it --user $(id -u):$(id -g) ops-dev-app-1'
 
 Para hacerlo permanente, agrega esa línea en:
 
-* `~/.bashrc`
-* `~/.zshrc`
+- `~/.bashrc`
+- `~/.zshrc`
 
 Luego recarga tu shell:
 
@@ -248,7 +246,7 @@ ops sh
 
 ```sh
 ./ops php artisan
-````
+```
 
 ### Crear usuarios del sistema
 
@@ -284,9 +282,9 @@ ops sh
 
 Los siguientes servicios ya están **gestionados por Supervisor** dentro del contenedor:
 
-* Laravel Horizon
-* Workers de colas
-* Pagos recurrentes
+- Laravel Horizon
+- Workers de colas
+- Pagos recurrentes
 
 El comando de pagos recurrentes:
 
@@ -312,8 +310,8 @@ En algunos casos, al ejecutar `composer install`, Composer puede solicitar un **
 
 Esto suele ocurrir cuando:
 
-* Se alcanzan límites de descarga anónima de GitHub.
-* Composer intenta descargar dependencias desde repositorios GitHub (por ejemplo, dependencias indirectas como `symfony/mailgun-mailer`).
+- Se alcanzan límites de descarga anónima de GitHub.
+- Composer intenta descargar dependencias desde repositorios GitHub (por ejemplo, dependencias indirectas como `symfony/mailgun-mailer`).
 
 👉 **Si se te solicita un token**:
 
@@ -328,10 +326,10 @@ Esto suele ocurrir cuando:
 
 ---
 
-* ❌ No ejecutes `php artisan` ni `npm` en el host.
-* ✅ Todo debe ejecutarse dentro del contenedor.
-* 🔄 Los cambios en el código se reflejan automáticamente.
-* 🧪 El entorno DEV está pensado para pruebas y desarrollo, no para producción.
+- ❌ No ejecutes `php artisan` ni `npm` en el host.
+- ✅ Todo debe ejecutarse dentro del contenedor.
+- 🔄 Los cambios en el código se reflejan automáticamente.
+- 🧪 El entorno DEV está pensado para pruebas y desarrollo, no para producción.
 
 ---
 
@@ -350,3 +348,9 @@ Si algo falla, revisa los logs:
 ```sh
 docker logs -f ops-dev-app-1
 ```
+
+---
+
+### Creación de modulos
+
+- [Leer documentacion](./module/modules_es.md)

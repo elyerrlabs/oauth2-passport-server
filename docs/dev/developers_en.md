@@ -344,3 +344,7 @@ If something goes wrong, check the logs:
 ```sh
 docker logs -f ops-dev-app-1
 ```
+
+### Module creation
+
+- [Read documentation](./module/modules_es.md)
