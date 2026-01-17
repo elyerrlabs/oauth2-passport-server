@@ -185,13 +185,16 @@ Future goal:
 
 ---
 
-## License
+## 📄 License
 
-This project is licensed under a **Non-Commercial Use License**.
+This project is licensed under the
+**GNU Affero General Public License v3.0 (AGPL-3.0)**.
 
-Commercial usage requires prior written authorization.
+You are free to use, study, modify, and redistribute this software under the terms of the AGPL-3.0.
+If you run or offer this software as a network service, you must provide access to the complete
+corresponding source code, including any modifications.
 
-See [LICENSE.md](LICENSE.md) for details.
+See the [LICENSE](LICENSE.md) file for full license details.
 
 ---
 

@@ -22,201 +22,305 @@ Contact: yerel9212@yahoo.es
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
-# Guía de Despliegue en Entorno de Producción
 
-Esta guía explica cómo desplegar el OAuth2 Passport Server en un entorno de producción utilizando Docker, Docker Compose y Nginx.
+# OAuth2 Passport Server
 
-## Requisitos Previos
+**Guía de Despliegue en Producción**
 
--   [Docker](https://docs.docker.com/get-docker/)
--   [Docker Compose](https://docs.docker.com/compose/install/)
--   [Nginx](https://nginx.org/) (utilizado como proxy inverso)
+---
 
-## Resumen de Ramas
+## 🧑‍💻 Descripción General
 
-- **main**: _[Estable]_ Rama que refleja la última versión estable de la aplicación.
-- **vx.x.x**: _[Versión]_ Etiquetas siguiendo el versionado semántico, representando lanzamientos estables.
-- **dev**: _[Desarrollo]_ Rama que contiene los cambios más recientes para pruebas; no está destinada para uso en producción.
+Este documento describe cómo desplegar el **OAuth2 Passport Server** en un **entorno de producción** utilizando **Docker**, **Docker Compose** y **Nginx** como proxy inverso.
 
-## Configuración del Despliegue
+El sistema está diseñado para ser **modular, configurable y preparado para producción**, con todos los servicios críticos gestionados desde una **configuración centralizada** dentro de la aplicación.
 
-1. Clona el repositorio:
+---
 
-    ```sh
-    git clone git@github.com:elyerr/oauth2-passport-server.git
-    cd oauth2-passport-server
-    ```
+## ✅ Requisitos Previos
 
-2. Prepara tu configuración de entorno:
+Antes de comenzar, asegúrate de contar con:
 
-    ```sh
-    cp .env.example .env
-    ```
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Nginx](https://nginx.org/) (utilizado como proxy inverso)
+- Una **instancia de Redis en ejecución** (requerida para colas y Horizon)
 
-    Actualiza el archivo `.env` para tu configuración de producción.
+---
 
-    ```env
-    APP_ENV=production
-    APP_KEY= # Déjalo vacío; el sistema lo generará automáticamente al iniciar.
-    APP_DEBUG=false
-    APP_URL=https://<tu-dominio.com>
-    FRONTEND_URL="${APP_URL}"
-    ASSET_URL="${APP_URL}"
-    SCHEMA_HTTPS=https
+## 🌿 Estrategia de Ramas
 
-    # Registros
-    LOG_CHANNEL=daily
-    LOG_DEPRECATIONS_CHANNEL=null
-    LOG_LEVEL=debug
+- **main** — _Estable_
+  Refleja la última versión estable lista para producción.
 
-    # Base de Datos
-    DB_CONNECTION=pgsql
-    DB_HOST=db
-    DB_PORT=5432
-    DB_DATABASE=oauth2
-    DB_USERNAME=<establece-el-usuario>
-    DB_PASSWORD=<contraseña-muy-segura>
-    ```
+- **vx.x.x** — _Versiones_
+  Etiquetas que siguen versionado semántico para lanzamientos estables.
 
-## Despliegue de la Aplicación
+- **dev** — _Desarrollo_
+  Contiene los cambios más recientes para pruebas.
+  **No debe usarse en producción.**
 
-### Entorno de Producción
+---
 
-Despliega tu aplicación en producción ejecutando:
+## ⚙️ Configuración del Sistema (Redis, Captcha, etc.)
+
+El sistema está diseñado para que **todas las configuraciones clave sean completamente parametrizables** y se gestionen desde una **zona central de configuración** dentro de la aplicación.
+
+Desde esta sección podrás configurar:
+
+- Redis
+- Proveedores de CAPTCHA
+- Servicios externos
+- Parámetros internos del sistema
+
+Todas las configuraciones están **desacopladas del código**, permitiendo adaptar el comportamiento del sistema sin modificar la lógica interna.
+
+---
+
+## 🚀 Configuración del Despliegue
+
+### 1️⃣ Clonar el Repositorio
+
+```bash
+git clone git@github.com:elyerr/oauth2-passport-server.git
+cd oauth2-passport-server
+```
+
+---
+
+### 2️⃣ Configuración del Entorno
+
+Crea el archivo de entorno para producción:
+
+```bash
+cp .env.example .env
+```
+
+Edita `.env` y ajusta los valores de producción:
+
+```env
+APP_ENV=production
+APP_KEY=
+APP_DEBUG=false
+APP_URL=https://<tu-dominio.com>
+FRONTEND_URL="${APP_URL}"
+ASSET_URL="${APP_URL}"
+SCHEMA_HTTPS=https
+
+# Logs
+LOG_CHANNEL=daily
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+# Base de datos
+DB_CONNECTION=pgsql
+DB_HOST=db
+DB_PORT=5432
+DB_DATABASE=oauth2
+DB_USERNAME=<usuario>
+DB_PASSWORD=<contraseña-muy-segura>
+```
+
+> ⚠️ Deja `APP_KEY` vacío. El sistema lo generará automáticamente en el primer arranque.
+
+---
+
+## 🐳 Despliegue de la Aplicación (Producción)
+
+Ejecuta el despliegue con:
 
 ```bash
 ./deploy-prod.sh
 ```
 
-### Entorno de Desarrollo
+Este script se encarga de:
 
-Para propósitos de desarrollo o pruebas (usando la rama dev):
+- Construir los contenedores
+- Levantar los servicios
+- Inicializar configuraciones del sistema
+- Preparar la aplicación para producción
 
-```bash
-./deploy-dev.sh
-```
+---
 
-## Configuración del Primer Usuario
+## 👤 Configuración del Primer Usuario
 
-Después del despliegue, crea el primer usuario con el siguiente comando:
-
-### Producción:
-
-```bash
-docker exec -it oauth2-server-app-1 php artisan settings:create-user
-```
-
-### Desarrollo:
+Tras el despliegue, crea el primer usuario administrador:
 
 ```bash
-docker exec -it oauth2-server-dev-app-1 php artisan settings:create-user
+docker exec -it ops-app-1 php artisan settings:create-user
 ```
 
-## Actualización a una Nueva Versión
+---
 
-### Entorno de Producción
+## 🔄 Actualización a una Nueva Versión
 
-Actualiza tu aplicación en producción ejecutando:
+Para actualizar el sistema en producción:
 
 ```bash
-git pull origin main && ./deploy-prod.sh
+git pull origin main
+./deploy-prod.sh
 ```
 
-### Entorno de Desarrollo
+---
 
-Para propósitos de desarrollo o pruebas (usando la rama dev):
+## 🔴 Redis y Procesamiento de Colas (Horizon)
 
-```bash
-git pull origin dev && ./deploy-dev.sh
+Redis es un **componente obligatorio en producción** para el uso de:
+
+- Colas (queues)
+- Jobs en segundo plano
+- Procesos asíncronos
+
+> ⚠️ En producción **NO se levanta Redis mediante Docker**.
+> Esto es intencional, ya que el usuario puede disponer de:
+>
+> - Un servidor Redis dedicado
+> - Una instancia Redis compartida
+> - Redis gestionado por un proveedor externo
+
+---
+
+### Requisitos de Redis
+
+Asegúrate de contar con:
+
+- Una instancia de Redis en ejecución
+- Acceso de red desde el contenedor de la aplicación
+- Host, puerto y credenciales (si aplica)
+
+Redis puede estar alojado en:
+
+- El mismo servidor
+- Una red interna
+- Un proveedor cloud gestionado
+
+---
+
+### Configuración de Redis
+
+1. Accede al **Panel de Administración**.
+2. Ve a **Configuración → Redis**.
+3. Configura los valores de conexión:
+
+```text
+Host: <host-del-servidor-redis>
+Puerto: 6379
+Contraseña: <opcional>
 ```
 
-## Configuración del Proxy Nginx (Ejemplo Básico)
+Guarda los cambios.
 
-A continuación se muestra una configuración de ejemplo para utilizar Nginx como proxy inverso. Puedes emplear Let's Encrypt para obtener certificados SSL válidos:
+---
+
+### Configuración de Colas (Queues)
+
+Para habilitar el procesamiento de colas:
+
+1. Dirígete a **Configuración → Queues**.
+2. Cambia el **driver de colas** de `database` a `redis`.
+3. Guarda la configuración.
+
+---
+
+### Funcionamiento de Horizon
+
+Una vez configurados Redis y las colas:
+
+- **Laravel Horizon entra en funcionamiento automáticamente**
+- Todas las colas serán despachadas y procesadas usando Redis
+- No se requiere configuración adicional en Docker ni en código
+
+Esto habilita:
+
+- Jobs en segundo plano
+- Procesos asíncronos
+- Ejecución eficiente de tareas
+
+> 💡 Sin Redis correctamente configurado, Horizon no podrá procesar las colas.
+
+---
+
+## 🌐 Configuración de Nginx (Ejemplo)
 
 ```nginx
 server {
-     listen 80;
-     server_name <tu-dominio.com>;
+    listen 80;
+    server_name <tu-dominio.com>;
 
-     location / {
-          proxy_pass http://127.0.0.1:8001;
-          proxy_http_version 1.1;
+    location / {
+        proxy_pass http://127.0.0.1:8001;
+        proxy_http_version 1.1;
 
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
-          proxy_set_header X-Forwarded-Host $http_x_forwarded_host;
-          proxy_set_header X-Forwarded-Port $http_x_forwarded_port;
-          proxy_set_header X-Forwarded-AWS-ELB $http_x_forwarded_aws_elb;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $http_x_forwarded_host;
+        proxy_set_header X-Forwarded-Port $http_x_forwarded_port;
 
-          proxy_read_timeout 720s;
-          proxy_connect_timeout 720s;
-          proxy_send_timeout 720s;
+        proxy_read_timeout 720s;
+        proxy_connect_timeout 720s;
+        proxy_send_timeout 720s;
 
-          proxy_buffering on;
-          proxy_buffer_size 128k;
-          proxy_buffers 4 256k;
-          proxy_busy_buffers_size 256k;
-          proxy_temp_file_write_size 256k;
-
-          proxy_redirect off;
-     }
+        proxy_redirect off;
+    }
 }
 ```
 
-## Notas
+---
 
-### Regenerar llaves OAuth2
-
-Para regenerar las llaves de OAuth2, sigue estos pasos:  
-1. Accede a la terminal del panel de administración.  
-2. Ejecuta el siguiente comando:  
+## 🔐 Regenerar Llaves OAuth2
 
 ```bash
 php artisan passport:keys --force
 ```
 
-## Métodos de Pago
+---
+
+## 💳 Métodos de Pago
 
 ### Stripe
 
 - **Webhook (POST):** `https://domain.com/webhook/stripe`
-- **Eventos gestionados:**
-  - `checkout.session.completed`
-  - `payment_intent.payment_failed`
-  - `checkout.session.expired`
-  - `charge.succeeded`
-  - `charge.refund.updated`
+- Eventos soportados:
+    - `checkout.session.completed`
+    - `payment_intent.payment_failed`
+    - `checkout.session.expired`
+    - `charge.succeeded`
+    - `charge.refund.updated`
 
-### Pago Offline
+---
 
-- **Offline:** Compatible con métodos de pago manuales.
+### Pagos Offline
 
-> **Nota:** La renovación automática está habilitada para todos los métodos de pago, excepto en pagos Offline.  
-> Configura las opciones de renovación desde el Panel de Administración en **Ajustes → Pago → Renovación**.
- 
-## Proveedores de CAPTCHA
+- Compatible con pagos manuales
+- La renovación automática está deshabilitada para pagos offline
 
-Protege tus formularios y evita el spam con las siguientes opciones de CAPTCHA:
+---
+
+## 🛡 Proveedores de CAPTCHA
 
 ### hCaptcha
 
-- Alternativa enfocada en la privacidad frente a reCAPTCHA.
-- Plan gratuito generoso.
-- [Obtén tu clave del sitio](https://dashboard.hcaptcha.com/signup)
+Alternativa enfocada en la privacidad
+[https://dashboard.hcaptcha.com/signup](https://dashboard.hcaptcha.com/signup)
 
 ### Cloudflare Turnstile
 
-- Verificación de usuarios sin CAPTCHAs tradicionales.
-- Experiencia fluida y fácil de usar.
-- [Obtén tu clave del sitio](https://dash.cloudflare.com/)
+Verificación sin CAPTCHA tradicional
+[https://dash.cloudflare.com/](https://dash.cloudflare.com/)
 
-### Configuración
+---
 
-Para activar el proveedor de CAPTCHA de tu preferencia:
-1. Ve a **Admin → Ajustes → Seguridad**.
-2. Selecciona tu proveedor deseado (hCaptcha o Turnstile).
+## 📄 Licencia
 
-El sistema renderizará automáticamente el CAPTCHA elegido en los formularios del frontend.
+Este proyecto está licenciado bajo la **GNU Affero General Public License (AGPL)**.
+
+Cualquier modificación, despliegue o uso en red de este software **debe cumplir con los términos de la AGPL**, incluyendo la obligación de poner a disposición el código fuente de las versiones modificadas a los usuarios que interactúen con el sistema a través de una red.
+
+Consulta el archivo `LICENSE` para más detalles.
+
+---
+
+© 2025 Elvis Yerel Roman Concha
+Publicado bajo la **GNU Affero General Public License (AGPL)**

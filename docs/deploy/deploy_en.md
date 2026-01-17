@@ -22,203 +22,301 @@ Contact: yerel9212@yahoo.es
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
-# Production Environment Deployment Guide
+# OAuth2 Passport Server
 
-This guide explains how to deploy the OAuth2 Passport Server in a production environment using Docker, Docker Compose, and Nginx.
+**Production Deployment Guide**
 
-## Prerequisites
+---
 
--   [Docker](https://docs.docker.com/get-docker/)
--   [Docker Compose](https://docs.docker.com/compose/install/)
--   [Nginx](https://nginx.org/) (used as a reverse proxy)
+## 🧑‍💻 Overview
 
-## Branches Overview
+This document describes how to deploy the **OAuth2 Passport Server** in a **production environment** using **Docker**, **Docker Compose**, and **Nginx** as a reverse proxy.
 
-- **main**: _[Stable]_ Branch that reflects the latest stable release of the application.
-- **vx.x.x**: _[Release]_ Version tags following semantic versioning, representing stable releases.
-- **dev**: _[Development]_ Branch containing the most recent changes for testing purposes; not intended for production use.
+The system is designed to be **modular, configurable, and production-ready**, with all critical services managed via centralized configuration inside the application.
 
-## Deployment Setup
+---
 
-1. Clone the repository:
+## ✅ Prerequisites
 
-    ```sh
-    git clone git@github.com:elyerr/oauth2-passport-server.git
-    cd oauth2-passport-server
-    ```
+Before starting, make sure you have the following installed:
 
-2. Prepare your environment configuration:
+* [Docker](https://docs.docker.com/get-docker/)
+* [Docker Compose](https://docs.docker.com/compose/install/)
+* [Nginx](https://nginx.org/) (used as a reverse proxy)
+* A running **Redis instance** (required for queues and Horizon)
 
-    ```sh
-    cp .env.example .env
-    ```
+---
 
-    Update the `.env` file for your production setup.
+## 🌿 Branching Strategy
 
-    ```env
-    APP_ENV=production
-    APP_KEY= # Leave empty; the system generates it automatically on startup.
-    APP_DEBUG=false
-    APP_URL=https://<your-domain.com>
-    FRONTEND_URL="${APP_URL}"
-    ASSET_URL="${APP_URL}"
-    SCHEMA_HTTPS=https
+* **main** — *Stable*
+  Reflects the latest stable production-ready version.
 
-    # Logs
-    LOG_CHANNEL=daily
-    LOG_DEPRECATIONS_CHANNEL=null
-    LOG_LEVEL=debug
+* **vx.x.x** — *Release Tags*
+  Semantic versioning tags for stable releases.
 
-    # Database
-    DB_CONNECTION=pgsql
-    DB_HOST=db
-    DB_PORT=5432
-    DB_DATABASE=oauth2
-    DB_USERNAME=<set-user-name>
-    DB_PASSWORD=<strongest-password>
-    ```
+* **dev** — *Development*
+  Contains the latest experimental changes.
+  **Not intended for production use.**
 
-## Deploying the Application
+---
 
-### Production Environment
+## ⚙️ System Configuration (Redis, Captcha, etc.)
 
-Deploy your application in production by running:
+The system is designed so that **all key configurations are fully parameterized** and managed from a **centralized configuration area** within the application.
+
+From this section, you can configure:
+
+* Redis
+* CAPTCHA providers
+* External services
+* Internal system parameters
+
+All configurations are **decoupled from the codebase**, allowing system behavior to be adjusted without modifying internal logic.
+
+---
+
+## 🚀 Deployment Configuration
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone git@github.com:elyerr/oauth2-passport-server.git
+cd oauth2-passport-server
+```
+
+---
+
+### 2️⃣ Environment Configuration
+
+Create your production environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and configure production values:
+
+```env
+APP_ENV=production
+APP_KEY=
+APP_DEBUG=false
+APP_URL=https://<your-domain.com>
+FRONTEND_URL="${APP_URL}"
+ASSET_URL="${APP_URL}"
+SCHEMA_HTTPS=https
+
+# Logging
+LOG_CHANNEL=daily
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+# Database
+DB_CONNECTION=pgsql
+DB_HOST=db
+DB_PORT=5432
+DB_DATABASE=oauth2
+DB_USERNAME=<set-username>
+DB_PASSWORD=<strong-password>
+```
+
+> ⚠️ Leave `APP_KEY` empty. It will be generated automatically on first startup.
+
+---
+
+## 🐳 Application Deployment (Production)
+
+Deploy the application using:
 
 ```bash
 ./deploy-prod.sh
 ```
 
-### Development Environment
+This script will:
 
-For development or testing purposes (using the dev branch):
+* Build containers
+* Start services
+* Initialize system settings
+* Prepare the application for production use
 
-```bash
-./deploy-dev.sh
-```
+---
 
-## Initial User Setup
+## 👤 Initial User Setup
 
-After deployment, create the first user with the following command:
-
-### Production:
-
-```bash
-docker exec -it oauth2-server-app-1 php artisan settings:create-user
-```
-
-### Development:
+After deployment, create the first administrative user:
 
 ```bash
-docker exec -it oauth2-server-dev-app-1 php artisan settings:create-user
+docker exec -it ops-app-1 php artisan settings:create-user
 ```
 
-## Update to new version
+---
 
-### Production Environment
+## 🔄 Updating to a New Version
 
-Update your application in production by running:
+To update the application in production:
 
 ```bash
-git pull origin main && ./deploy-prod.sh
+git pull origin main
+./deploy-prod.sh
 ```
 
-### Development Environment
+---
 
-For development or testing purposes (using the dev branch):
+## 🔴 Redis & Queue Processing (Horizon)
 
-```bash
-git pull origin dev && ./deploy-dev.sh
+Redis is a **mandatory component in production** when using background jobs, queues, or asynchronous processing.
+
+> ⚠️ **Redis is NOT provided via Docker in production**.
+> This is intentional, as users may already have:
+>
+> * A dedicated Redis server
+> * A shared Redis instance
+> * A managed Redis service
+
+---
+
+### Redis Requirements
+
+Ensure you have:
+
+* A running Redis instance
+* Network access from the application container
+* Host, port, and credentials (if applicable)
+
+Redis may be hosted on:
+
+* The same server
+* A private internal network
+* A managed cloud provider
+
+---
+
+### Redis Configuration
+
+1. Go to **Admin Panel → Configuration → Redis**
+2. Configure the Redis connection:
+
+```text
+Host: <redis-host>
+Port: 6379
+Password: <optional>
 ```
 
-## Nginx Proxy Configuration (Basic Example)
+Save the configuration.
 
-Below is a sample configuration for using Nginx as a reverse proxy. You can employ Let's Encrypt to obtain valid SSL certificates:
+---
+
+### Queue Configuration
+
+To enable background job processing:
+
+1. Navigate to **Configuration → Queues**
+2. Change the queue driver from `database` to `redis`
+3. Save the changes
+
+---
+
+### Horizon Behavior
+
+Once Redis and queues are configured:
+
+* **Laravel Horizon starts operating automatically**
+* All queues are dispatched and processed via Redis
+* No additional Docker or code configuration is required
+
+This enables:
+
+* Background jobs
+* Asynchronous processing
+* High-performance task execution
+
+> 💡 Redis is required for Horizon to operate correctly.
+> Without Redis, queues will not be processed.
+
+---
+
+## 🌐 Nginx Reverse Proxy (Example)
 
 ```nginx
 server {
-     listen 80;
-     server_name <your-domain.com>;
+    listen 80;
+    server_name <your-domain.com>;
 
-     location / {
-          proxy_pass http://127.0.0.1:8001;
-          proxy_http_version 1.1;
+    location / {
+        proxy_pass http://127.0.0.1:8001;
+        proxy_http_version 1.1;
 
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
-          proxy_set_header X-Forwarded-Host $http_x_forwarded_host;
-          proxy_set_header X-Forwarded-Port $http_x_forwarded_port;
-          proxy_set_header X-Forwarded-AWS-ELB $http_x_forwarded_aws_elb;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $http_x_forwarded_host;
+        proxy_set_header X-Forwarded-Port $http_x_forwarded_port;
 
-          proxy_read_timeout 720s;
-          proxy_connect_timeout 720s;
-          proxy_send_timeout 720s;
+        proxy_read_timeout 720s;
+        proxy_connect_timeout 720s;
+        proxy_send_timeout 720s;
 
-          proxy_buffering on;
-          proxy_buffer_size 128k;
-          proxy_buffers 4 256k;
-          proxy_busy_buffers_size 256k;
-          proxy_temp_file_write_size 256k;
-
-          proxy_redirect off;
-     }
+        proxy_redirect off;
+    }
 }
 ```
 
-## Notes
+---
 
-### Regenerating OAuth2 Keys
-
-To regenerate OAuth2 keys, follow these steps:
-1. Access the admin panel terminal.
-2. Run the following command:
+## 🔐 OAuth2 Key Regeneration
 
 ```bash
 php artisan passport:keys --force
 ```
 
-## Payment Methods
+---
+
+## 💳 Payment Methods
 
 ### Stripe
 
-- **Webhook (POST):** `https://domain.com/webhook/stripe`
-- **Events Handled:**
-    - `checkout.session.completed`
-    - `payment_intent.payment_failed`
-    - `checkout.session.expired`
-    - `charge.succeeded`
-    - `charge.refund.updated`
+* **Webhook (POST):** `https://domain.com/webhook/stripe`
+* Supported events:
 
-### Offline Payment
-
-- **Offline:** Supports manual payment methods.
-
-> **Note:** Automatic renewal is enabled for all payment methods except Offline.  
-> Configure renewal options through the Admin panel under **Settings → Payment → Renew**.
+  * `checkout.session.completed`
+  * `payment_intent.payment_failed`
+  * `checkout.session.expired`
+  * `charge.succeeded`
+  * `charge.refund.updated`
 
 ---
 
-## CAPTCHA Providers
+### Offline Payments
 
-Enhance form security and prevent spam with the following CAPTCHA options:
+* Manual/offline payment methods supported
+* Auto-renewal is disabled for offline payments
+
+---
+
+## 🛡 CAPTCHA Providers
 
 ### hCaptcha
 
-- Privacy-first alternative to reCAPTCHA.
-- Generous free usage.
-- [Get your site key](https://dashboard.hcaptcha.com/signup)
+Privacy-focused CAPTCHA alternative
+[https://dashboard.hcaptcha.com/signup](https://dashboard.hcaptcha.com/signup)
 
 ### Cloudflare Turnstile
 
-- User verification without traditional CAPTCHAs.
-- Seamless and user-friendly.
-- [Get your site key](https://dash.cloudflare.com/)
+CAPTCHA-free user verification
+[https://dash.cloudflare.com/](https://dash.cloudflare.com/)
 
-### Configuration
+---
 
-To activate your preferred CAPTCHA provider:
-1. Navigate to **Admin → Settings → Security**.
-2. Select your desired provider (hCaptcha or Turnstile).
+## 📄 License
 
-The system will automatically render the selected CAPTCHA on frontend forms.
+This project is licensed under the **GNU Affero General Public License (AGPL)**.
+
+Any modification, deployment, or network use of this software **must comply with the terms of the AGPL**, including making the source code of modified versions available to users who interact with the software over a network.
+
+See the `LICENSE` file for full details.
+
+---
+
+© 2025 Elvis Yerel Roman Concha
+Released under the **GNU Affero General Public License (AGPL)**

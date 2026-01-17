@@ -23,40 +23,15 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-<!--
-OAuth2 Passport Server — a centralized, modular authorization server
-implementing OAuth 2.0 and OpenID Connect specifications.
-
-Copyright (c) 2026 Elvis Yerel Roman Concha
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-
-Author: Elvis Yerel Roman Concha
-Contact: yerel9212@yahoo.es
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 # 🧑‍💻 Guía de Desarrollo (DEV)
 
 Esta guía describe **exclusivamente el entorno de desarrollo**, pensado para trabajar de forma local, segura y reproducible.
 
 El proyecto funciona **100 % con Docker**, lo que significa que:
 
-* No necesitas instalar PHP, Composer, Node.js, Nginx ni extensiones en tu sistema operativo.
-* Todo el stack (PHP, Nginx, Supervisor, Horizon, Node, etc.) vive dentro de contenedores.
-* El entorno es idéntico para todos los desarrolladores.
+- No necesitas instalar PHP, Composer, Node.js, Nginx ni extensiones en tu sistema operativo.
+- Todo el stack (PHP, Nginx, Supervisor, Horizon, Node, etc.) vive dentro de contenedores.
+- El entorno es idéntico para todos los desarrolladores.
 
 > 🎯 **Objetivo**: que cualquier desarrollador pueda clonar el repositorio y levantar el sistema en minutos, sin configuraciones manuales complejas.
 
@@ -64,8 +39,8 @@ El proyecto funciona **100 % con Docker**, lo que significa que:
 
 ## 🌱 Ramas
 
-* **main** → Rama estable (producción)
-* **dev** → Rama de desarrollo activo (**usar esta para trabajar**)
+- **main** → Rama estable (producción)
+- **dev** → Rama de desarrollo activo (**usar esta para trabajar**)
 
 > ⚠️ Todo lo descrito en esta guía asume que estás trabajando sobre la rama `dev`.
 
@@ -75,14 +50,14 @@ El proyecto funciona **100 % con Docker**, lo que significa que:
 
 Solo necesitas tener instalado en tu máquina:
 
-* Docker ≥ 24
-* Docker Compose (plugin oficial)
-* Git
+- Docker ≥ 24
+- Docker Compose (plugin oficial)
+- Git
 
 Herramientas opcionales (recomendadas):
 
-* VS Code / PhpStorm
-* DBeaver / TablePlus (para la base de datos)
+- VS Code / PhpStorm
+- DBeaver / TablePlus (para la base de datos)
 
 ---
 
@@ -137,29 +112,64 @@ DB_PASSWORD=admin
 
 ## 🧩 Configuración del Sistema (Redis, Captcha, etc.)
 
-El sistema está diseñado para que **todas las configuraciones clave sean parametrizables** y gestionables desde una **zona central de configuración** dentro de la aplicación.
+El sistema está diseñado para que **todas las configuraciones clave sean totalmente parametrizables** y se gestionen desde una **zona central de configuración** dentro de la aplicación.
 
-Desde esta sección podrás configurar fácilmente componentes como:
+Desde esta sección podrás configurar de forma sencilla:
 
-* Redis
-* Captcha
-* Servicios externos
-* Parámetros internos del sistema
+- Redis
+- Captcha
+- Servicios externos
+- Parámetros internos del sistema
 
-Todas estas opciones están desacopladas del código y controladas por configuración, lo que permite adaptar el comportamiento del sistema sin modificar lógica interna.
+Todas las opciones están **desacopladas del código**, lo que permite adaptar el comportamiento del sistema sin modificar la lógica interna ni el código fuente.
+
+---
 
 ### 🔴 Redis
 
-El sistema **utiliza Redis** para manejar funcionalidades internas (cache, sesiones, colas u otros mecanismos según el módulo activo).
+El sistema **utiliza Redis como componente central** para manejar funcionalidades internas como:
 
-Para que el sistema funcione correctamente en desarrollo:
+- Cache
+- Sesiones
+- Colas (Queues)
+- Otros mecanismos dependientes del módulo activo
 
-* Es necesario **levantar una instancia de Redis**.
-* Para pruebas locales, puedes hacerlo fácilmente usando Docker.
-* Una vez levantado Redis, debes **registrar el servidor Redis en la sección de configuración del sistema**, indicando host, puerto y credenciales si aplican.
+#### Redis en entorno de desarrollo
 
-> 💡 En entornos de desarrollo se recomienda usar Redis vía Docker para evitar instalaciones en el host.
+En el entorno de desarrollo, **ya existe una instancia de Redis ejecutándose dentro del Dev Container**, conectada mediante una **red interna de Docker**.
 
+Esto significa que **no es necesario instalar Redis en el host**.
+
+#### Configuración correcta de Redis
+
+Para que Redis funcione correctamente dentro del contenedor:
+
+1. Dirígete a **Configuración → Redis** dentro de la aplicación.
+2. Asegúrate de que **todas las referencias a `127.0.0.1` sean reemplazadas por `redis`**.
+
+> ⚠️ Dentro de Docker, `127.0.0.1` apunta al propio contenedor.
+> El nombre correcto del host es **`redis`**, que corresponde al nombre del servicio definido en Docker.
+
+Ejemplo:
+
+```text
+Host: redis
+Puerto: 6379
+```
+
+#### Configuración de colas (Queues) y Horizon
+
+Para habilitar correctamente el procesamiento de colas con Redis:
+
+1. Ve a **Configuración → Queues**.
+2. Cambia el **driver de base de datos (`database`) a `redis`**.
+3. Guarda los cambios.
+
+Con esta configuración, **Horizon podrá despachar y procesar todas las colas utilizando Redis**, quedando el sistema completamente operativo para el manejo de jobs en segundo plano.
+
+---
+
+> 💡 En desarrollo se recomienda mantener Redis dentro del contenedor para garantizar un entorno reproducible, aislado y consistente con producción.
 ---
 
 ## 🐳 Despliegue en Desarrollo
@@ -190,16 +200,14 @@ Este script:
 
 Una vez levantado el entorno:
 
-* Aplicación web:
+- Aplicación web:
+    - 👉 [http://localhost:8001](http://localhost:8001)
 
-  * 👉 [http://localhost:8001](http://localhost:8001)
-
-* PostgreSQL (acceso desde el host):
-
-  * Host: `127.0.0.1`
-  * Puerto: `5435`
-  * Usuario: `admin`
-  * Password: `admin`
+- PostgreSQL (acceso desde el host):
+    - Host: `127.0.0.1`
+    - Puerto: `5435`
+    - Usuario: `admin`
+    - Password: `admin`
 
 ---
 
@@ -215,9 +223,9 @@ Aun así, existen **dos formas de acceso**, dependiendo de lo que necesites hace
 
 Este modo **solo debe usarse en casos puntuales**, por ejemplo:
 
-* Instalar paquetes del sistema (apk / apt)
-* Probar configuraciones del contenedor
-* Depuración a bajo nivel
+- Instalar paquetes del sistema (apk / apt)
+- Probar configuraciones del contenedor
+- Depuración a bajo nivel
 
 ⚠️ **Advertencia importante**:
 Si modificas archivos del proyecto como `root`, estos quedarán con permisos de root y **no podrán editarse desde el host**.
@@ -298,9 +306,9 @@ Ejemplos:
 
 Los siguientes servicios ya están **gestionados por Supervisor** dentro del contenedor:
 
-* Laravel Horizon
-* Workers de colas
-* Pagos recurrentes
+- Laravel Horizon
+- Workers de colas
+- Pagos recurrentes
 
 El comando de pagos recurrentes:
 
@@ -320,10 +328,10 @@ php artisan payment:charge-recurring
 
 ## 🧠 Notas Importantes
 
-* ❌ No ejecutes `php artisan` ni `npm` en el host.
-* ✅ Todo debe ejecutarse dentro del contenedor.
-* 🔄 Los cambios en el código se reflejan automáticamente.
-* 🧪 El entorno DEV está pensado para pruebas y desarrollo, no para producción.
+- ❌ No ejecutes `php artisan` ni `npm` en el host.
+- ✅ Todo debe ejecutarse dentro del contenedor.
+- 🔄 Los cambios en el código se reflejan automáticamente.
+- 🧪 El entorno DEV está pensado para pruebas y desarrollo, no para producción.
 
 ---
 
@@ -339,4 +347,4 @@ php artisan payment:charge-recurring
 
 ### Creación de modulos
 
-* [Leer documentacion](./module/modules_es.md)
+- [Leer documentacion](./module/modules_es.md)

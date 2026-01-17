@@ -112,28 +112,64 @@ DB_PASSWORD=admin
 
 ## 🧩 System Configuration (Redis, Captcha, etc.)
 
-The system is designed so that **all key configurations are fully parameterized** and managed from a **central configuration area** within the application.
+The system is designed so that **all key configurations are fully parameterized** and managed from a **centralized configuration area** within the application.
 
-From this section you can easily configure components such as:
+From this section, you can easily configure:
 
 - Redis
 - Captcha
 - External services
 - Internal system parameters
 
-All these options are decoupled from the codebase and controlled through configuration, allowing system behavior to be adjusted without modifying internal logic.
+All settings are **decoupled from the codebase**, allowing the system behavior to be adjusted without modifying internal logic or source code.
+
+---
 
 ### 🔴 Redis
 
-The system **uses Redis** to handle internal functionality such as caching, sessions, queues, or other mechanisms depending on the active modules.
+The system **uses Redis as a core component** to handle internal functionalities such as:
 
-For the system to work correctly in development:
+- Cache
+- Sessions
+- Queues
+- Other mechanisms depending on the active module
 
-- You must **run a Redis instance**.
-- For local testing, this can easily be done using Docker.
-- Once Redis is running, you must **register the Redis server in the system configuration section**, specifying host, port, and credentials if applicable.
+#### Redis in the development environment
 
-> 💡 In development environments, it is recommended to run Redis via Docker to avoid installing it on the host system.
+In the development environment, **a Redis instance is already running inside the Dev Container**, connected through an **internal Docker network**.
+
+This means **there is no need to install Redis on the host machine**.
+
+#### Correct Redis configuration
+
+To ensure Redis works correctly inside the containerized environment:
+
+1. Navigate to **Configuration → Redis** within the application.
+2. Make sure that **all references to `127.0.0.1` are replaced with `redis`**.
+
+> ⚠️ Inside Docker, `127.0.0.1` refers to the current container.
+> The correct host value is **`redis`**, which corresponds to the Redis service name defined in Docker.
+
+Example:
+
+```text
+Host: redis
+Port: 6379
+```
+
+#### Queue configuration and Horizon
+
+To properly enable queue processing using Redis:
+
+1. Go to **Configuration → Queues**.
+2. Change the **queue driver from `database` to `redis`**.
+3. Save the configuration.
+
+With this setup, **Horizon will dispatch and process all queues using Redis**, making the system fully operational for background job handling.
+
+---
+
+> 💡 For development environments, keeping Redis inside the container ensures a reproducible, isolated, and production-like setup.
 
 ---
 

@@ -182,12 +182,16 @@ Este proyecto está pensado como la **base de un ecosistema**, no solo como una 
 
 ---
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está licenciado bajo una
-[Licencia de Uso No Comercial](LICENSE.md).
+This project is licensed under the
+**GNU Affero General Public License v3.0 (AGPL-3.0)**.
 
-Para consultas comerciales, contacta al autor.
+You are free to use, modify, and redistribute this software under the terms of the AGPL-3.0.
+If you deploy or provide this software as a service, you must make the complete source code
+(including your modifications) available to users.
+
+See the [LICENSE](LICENSE.md) file for full details.
 
 ---
 
