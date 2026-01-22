@@ -46,7 +46,8 @@ RUN apk add --no-cache \
     shadow \ 
     bash-completion \
     openssh-client \
-    bind-tools
+    bind-tools \ 
+    php84-iconv
 
 # Create dev user and group
 RUN \

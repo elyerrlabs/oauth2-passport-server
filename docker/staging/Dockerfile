@@ -33,7 +33,8 @@ RUN apk add --no-cache \
     nginx \
     curl \
     supervisor \
-    icu-data-full
+    icu-data-full \
+    php84-iconv
 
 # Add user and group www-data
 RUN getent passwd www-data || adduser -S -G www-data -s /usr/sbin/nologin www-data
