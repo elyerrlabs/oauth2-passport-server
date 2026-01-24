@@ -35,18 +35,36 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureEmailIsVerified
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Excepted route names from email verification.
      */
+    protected array $except = [
+        'verification.notice',
+        'verification.verify',
+        'verification.send',
+        'logout'
+    ];
+
     public function handle(Request $request, Closure $next, string $redirectToRoute = null): Response
     {
-        if (! $request->user() ||
-            ($request->user() instanceof MustVerifyEmail &&
-            ! $request->user()->hasVerifiedEmail())) {
-            return response()->json(['message' => __('Your email address is not verified.')], 409);
+        // No user authenticated  
+        if (!$request->user()) {
+            return $next($request);
+        }
+
+        // Route excepted from email verification
+        if ($request->route() && in_array($request->route()->getName(), $this->except, true)) {
+            return $next($request);
+        }
+
+        // User must verify email and hasn't done so yet
+        if (
+            $request->user() instanceof MustVerifyEmail &&
+            !$request->user()->hasVerifiedEmail()
+        ) {
+            return redirect()->route($redirectToRoute ?: 'verification.notice');
         }
 
         return $next($request);
     }
 }
+

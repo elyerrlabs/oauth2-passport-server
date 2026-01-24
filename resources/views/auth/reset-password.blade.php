@@ -131,7 +131,7 @@
                 </div>
 
                 <!-- Form -->
-                <form class="space-y-6" method="post" action="{{ route('password.store') }}">
+                <form class="space-y-6" method="post" action="{{ route('password.update') }}">
                     @csrf
                     <input type="hidden" name="token" id="token" value="{{ $token }}">
 

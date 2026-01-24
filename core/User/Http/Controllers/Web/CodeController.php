@@ -86,7 +86,7 @@ class CodeController extends WebController
      */
     public function formToRequestToken()
     {
-        return Inertia::render("Web/2fa");
+        return Inertia::render("Web/two-factor");
     }
 
     /**
@@ -109,7 +109,7 @@ class CodeController extends WebController
      */
     public function factor2faEnableOrDisable(Request $request)
     {
-        $this->validate($request, [ 
+        $this->validate($request, [
             'token' => ['required']
         ]);
 

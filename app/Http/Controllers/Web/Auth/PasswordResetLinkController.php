@@ -29,50 +29,46 @@ namespace App\Http\Controllers\Web\Auth;
 
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\WebController;
+use App\Http\Response\SuccessfulPasswordResetLinkRequestResponse;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
+use Laravel\Fortify\Http\Requests\SendPasswordResetLinkRequest;
+use Illuminate\Contracts\Support\Responsable;
+use Laravel\Fortify\Http\Responses\FailedPasswordResetLinkRequestResponse;
+use Laravel\Fortify\Fortify;
+use App\Http\Response\RequestPasswordResetLinkViewResponse;
 
-class PasswordResetLinkController extends WebController
+class PasswordResetLinkController extends \Laravel\Fortify\Http\Controllers\PasswordResetLinkController
 {
-
-    public function __construct()
+    /**
+     * Show the reset password link request view.
+     */
+    public function create(Request $request): RequestPasswordResetLinkViewResponse
     {
-        $this->middleware('guest');
+        return app(RequestPasswordResetLinkViewResponse::class);
     }
 
-    /**
-     * Show view to sent link to change password
-     */
-    public function create()
-    {
-        return view('auth.forgot-password');
-    }
 
     /**
-     * Handle an incoming password reset link request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Send a reset link to the given user.
      */
-    public function store(Request $request)
+    public function store(SendPasswordResetLinkRequest $request): Responsable
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-        ]);
+        if (config('fortify.lowercase_usernames') && $request->has(Fortify::email())) {
+            $request->merge([
+                Fortify::email() => Str::lower($request->{Fortify::email()}),
+            ]);
+        }
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
+        $status = $this->broker()->sendResetLink(
+            $request->only(Fortify::email())
         );
 
-        if ($status != Password::RESET_LINK_SENT) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)],
-            ]);
-        }
-
-        return redirect()->route('login')->with('status', __($status));
+        return $status == Password::RESET_LINK_SENT
+            ? app(SuccessfulPasswordResetLinkRequestResponse::class, ['status' => $status])
+            : app(FailedPasswordResetLinkRequestResponse::class, ['status' => $status]);
     }
 }

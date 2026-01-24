@@ -27,8 +27,9 @@ namespace App\Models;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use App\Notifications\Auth\VerifyEmail;
 use DateTime;
 use DateInterval;
 use LogicException;
@@ -47,9 +48,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Auth extends Authenticatable
+class Auth extends Authenticatable implements MustVerifyEmail
 {
-    use HasUuids, HasApiTokens, HasFactory, Notifiable, Scopes, Asset, Standard;
+    use HasUuids, HasApiTokens, HasFactory, TwoFactorAuthenticatable, Notifiable, Scopes, Asset, Standard;
 
     /**
      * The data type of the auto-incrementing ID.
@@ -189,6 +190,17 @@ class Auth extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token));
+    }
+
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 
     /**

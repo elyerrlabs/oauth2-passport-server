@@ -184,7 +184,7 @@ class Menu
             ],
             "auth_routes" => [
                 "login" => route('login'),
-                "forgot_password" => route('forgot-password'),
+                "forgot_password" => route('password.request'),
                 "register" => Route::has('register') ? route('register') : '',
                 "logout" => route('logout'),
                 "dashboard" => route('user.dashboard'),

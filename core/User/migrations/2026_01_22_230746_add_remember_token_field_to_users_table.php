@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Http\Middleware;
-
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -27,36 +25,28 @@ namespace App\Http\Middleware;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class VerifyAccount
-{
+return new class extends Migration {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * Run the migrations.
      */
-    public function handle(Request $request, Closure $next)
+    public function up(): void
     {
-        $except = [
-            'user.verification.email',
-            'user.check.account',
-            'user.verify.account'
-        ];
-
-        if (auth()->check() && !in_array(Route::currentRouteName(), $except) && !auth()->user()->verified_at) {
-
-            if ($request->wantsJson()) {
-                return response()->json(['message' => __("Your Account is unverified")]);
-            }
-
-            return redirect()->route('user.check.account');
-        }
-
-        return $next($request);
+        Schema::table('users', function (Blueprint $table) {
+            $table->rememberToken()->after('password');
+        });
     }
-}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('remember_token');
+        });
+    }
+};

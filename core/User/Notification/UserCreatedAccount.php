@@ -79,7 +79,7 @@ class UserCreatedAccount extends Notification implements ShouldQueue
             ->line(__("Password :key", ['key' => $this->password]))
             ->line(__("For your security, we recommend updating your password. You can do this by following these steps:"))
             ->line(__("1. Click the button below to reset your password."))
-            ->action(__('Reset Password'), route('forgot-password'))
+            ->action(__('Reset Password'), route('password.request'))
             ->line(__("2. You will receive an email with a link to update your password."))
             ->line(__("3. Follow the link to set and confirm your new password. Once done, you can log in with your updated credentials."))
             ->line(__("If you have any questions or need assistance, feel free to contact our support team."))

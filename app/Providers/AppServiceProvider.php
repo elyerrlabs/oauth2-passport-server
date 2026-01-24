@@ -28,6 +28,7 @@ namespace App\Providers;
  */
 
 use App\Guard\TokenGuard;
+use Laravel\Fortify\Fortify;
 use Laravel\Passport\Passport;
 use App\Services\Settings\Setting;
 use Illuminate\Support\Facades\Auth;
@@ -50,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         Passport::ignoreRoutes();
+        Fortify::ignoreRoutes();
 
         //Override AuthCodeRepository  and AccessTokenRepository
         $this->app->bind(LaravelAuthCodeRepository::class, AuthCodeRepository::class);

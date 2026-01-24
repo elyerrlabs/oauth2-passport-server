@@ -205,7 +205,8 @@ return [
         App\Providers\CoreServiceProvider::class,
         App\Providers\ThirdPartyServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\MorphServiceProvider::class
+        App\Providers\MorphServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class,
 
     ],
 

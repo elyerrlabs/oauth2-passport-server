@@ -33,7 +33,7 @@ use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
 Route::group([
     'prefix' => 'settings',
     'as' => 'settings.',
-    'middleware' => ['throttle:system:general:settings']
+    'middleware' => ['throttle:system:general:settings', 'password.confirm']
 ], function () {
     Route::get('/', [SettingController::class, 'general'])->name('general');
     Route::get('/email', [SettingController::class, 'email'])->name('email');
@@ -55,7 +55,7 @@ Route::group([
 Route::group([
     'prefix' => 'policies',
     'as' => 'policies.',
-    'middleware' => ['throttle:system:general:settings']
+    'middleware' => ['throttle:system:general:settings', 'password.confirm']
 ], function () {
     // Route::get("/", [PoliciesController::class, 'dashboard'])->name('dashboard');
     Route::get('terms-and-conditions', [PoliciesController::class, 'termsAndConditionForm'])->name('terms-and-conditions');
@@ -67,7 +67,7 @@ Route::group([
 Route::group([
     'prefix' => 'sitemaps',
     'as' => 'sitemaps.',
-    'middleware' => ['throttle:system:general:settings']
+    'middleware' => ['throttle:system:general:settings', 'password.confirm']
 ], function () {
 
     Route::get('/routes', [SitemapController::class, 'index'])->name('index');

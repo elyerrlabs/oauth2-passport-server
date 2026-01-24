@@ -29,10 +29,7 @@ return [
 
     //redirect after login
     "redirect_to" => "/account",
-
-    // Force the schema mode ( false to http and true for https)
-    "schema_mode" => env('SCHEMA_HTTPS', 'https'),
-
+ 
     // Default redirect after login or main page
     "home_page" => "/",
 

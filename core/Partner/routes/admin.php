@@ -27,8 +27,7 @@
 
 use Core\Partner\Http\Controllers\Admin\PartnerController;
 
-Route::middleware(['throttle:core:partner:admin'])->group(function () {
-
+Route::middleware(['throttle:core:partner:admin', 'password.confirm'])->group(function () {
 
     Route::get('users', [PartnerController::class, 'index'])->name('partner.index');
     Route::put('users/{user}', [PartnerController::class, 'update'])->name('partner.update');

@@ -33,7 +33,7 @@ use App\Http\Controllers\Web\Admin\Broadcasting\BroadcastController;
 
 
 
-Route::middleware(['throttle:system:general:settings'])
+Route::middleware(['throttle:system:general:settings', 'password.confirm'])
     ->group(function () {
 
         //Route::resource('broadcasts', BroadcastController::class)->only('index', 'store', 'destroy');
@@ -45,7 +45,7 @@ Route::middleware(['throttle:system:general:settings'])
 
 
 
-Route::middleware(['throttle:system:general:passport'])
+Route::middleware(['throttle:system:general:passport', 'password.confirm'])
     ->group(function () {
 
         Route::resource('/clients', ClientAdminController::class)->except('edit', 'create');

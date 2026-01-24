@@ -12,11 +12,7 @@ class TrustProxies extends Middleware
      *
      * @var array<int, string>|string|null
      */
-    protected $proxies = [
-        '172.18.0.0/16', // docker internal network
-        '127.0.0.1', // localhost IPv4
-        '::1', // localhost IPv6
-    ];
+    protected $proxies = '*';
 
 
     /**

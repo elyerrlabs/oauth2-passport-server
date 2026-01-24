@@ -29,42 +29,47 @@ namespace App\Http\Controllers\Web\Auth;
 
 
 use Core\User\Notification\UserUpdatedPassword;
+use App\Http\Response\PasswordResetResponse;
+use Laravel\Fortify\Http\Responses\FailedPasswordResetResponse;
+use Laravel\Fortify\Actions\CompletePasswordReset;
+use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\ResetsUserPasswords;
+use Illuminate\Contracts\Support\Responsable;
+use App\Http\Response\ResetPasswordViewResponse;
 use Core\User\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 
-class NewPasswordController extends WebController
+class NewPasswordController extends \Laravel\Fortify\Http\Controllers\NewPasswordController
 {
 
-    public function __construct()
-    {
-        $this->middleware('guest');
-    }
 
     /**
-     * Show view to change password
+     * Show the new password view.
      *
-     * @param Request $request
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Laravel\Fortify\Contracts\ResetPasswordViewResponse
      */
-    public function create(Request $request)
+    public function create(Request $request): ResetPasswordViewResponse
     {
-        return view('auth.reset-password')->with(['token' => $request->token, 'email' => $request->email]);
+        return app(ResetPasswordViewResponse::class);
     }
 
+
     /**
-     * Handle an incoming new password request.
+     * Reset the user's password.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Responsable
      */
-    public function store(Request $request)
+    public function store(Request $request): Responsable
     {
         $request->validate([
             'token' => ['required'],
-            'email' => ['required', 'email'],
+            Fortify::email() => ['required', 'email'],
             'password' => [
                 'required',
                 'min:8',
@@ -87,23 +92,20 @@ class NewPasswordController extends WebController
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
+        $status = $this->broker()->reset(
+            $request->only(Fortify::email(), 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
-                $user->forceFill([
-                    'password' => Hash::make($request->password),
-                ])->save();
+                app(ResetsUserPasswords::class)->reset($user, $request->all());
 
-                $user->notify(new UserUpdatedPassword());
+                app(CompletePasswordReset::class)($this->guard, $user);
             }
         );
 
-        if ($status != Password::PASSWORD_RESET) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)],
-            ]);
-        }
-
-        return redirect()->route('login')->with('status', __($status));
+        // If the password was successfully reset, we will redirect the user back to
+        // the application's home authenticated view. If there is an error we can
+        // redirect them back to where they came from with their error message.
+        return $status == Password::PASSWORD_RESET
+            ? app(PasswordResetResponse::class, ['status' => $status])
+            : app(FailedPasswordResetResponse::class, ['status' => $status]);
     }
 }

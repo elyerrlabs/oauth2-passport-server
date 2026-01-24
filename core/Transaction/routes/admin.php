@@ -33,7 +33,7 @@ use Core\Transaction\Http\Controllers\Admin\PlanScopeController;
 use Core\Transaction\Http\Controllers\Admin\RefundReviewController;
 use Core\Transaction\Http\Controllers\Admin\TransactionManagerController;
 
-Route::middleware(['throttle:core:transaction:admin'])->group(function () {
+Route::middleware(['throttle:core:transaction:admin', 'password.confirm'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 

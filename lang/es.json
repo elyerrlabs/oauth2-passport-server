@@ -4000,5 +4000,6 @@
   "Watch tutorials, demos, and updates about OAuth2 Passport Server and related technologies": "Mira tutoriales, demostraciones y actualizaciones sobre OAuth2 Passport Server y tecnologías relacionadas",
   "Modern Authorization Solution": "Solución de Autorización Moderna",
   "All rights reserved. OAuth2 Passport Server, Elymod, and Laravel Runtime are open-source projects.": "Todos los derechos reservados. OAuth2 Passport Server, Elymod y Laravel Runtime son proyectos de código abierto.",
-  "No services are currently assigned. You can still generate basic tokens for core features or testing purposes.": "No hay servicios asignados actualmente. Aún puedes generar tokens básicos para funciones principales o propósitos de prueba."
+  "No services are currently assigned. You can still generate basic tokens for core features or testing purposes.": "No hay servicios asignados actualmente. Aún puedes generar tokens básicos para funciones principales o propósitos de prueba.",
+  "We have sent a new verification link to your email address.": "Hemos enviado un nuevo enlace de verificación a su dirección de correo electrónico."
 }

@@ -35,7 +35,7 @@ use Core\User\Http\Controllers\Admin\UserGroupController;
 use Core\User\Http\Controllers\Admin\UserScopeController;
 use Core\User\Http\Controllers\Admin\ServiceScopeController;
 
-Route::middleware(['throttle:core:user:admin'])->group(function () {
+Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 

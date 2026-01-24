@@ -87,7 +87,8 @@
 
                 {{-- Demo Mode Card --}}
                 @if (config('system.demo.enabled'))
-                    <div class="mb-6 p-2 lg:p-4 rounded-xl bg-yellow-50 border border-yellow-300 shadow-sm text-sm text-yellow-800">
+                    <div
+                        class="mb-6 p-2 lg:p-4 rounded-xl bg-yellow-50 border border-yellow-300 shadow-sm text-sm text-yellow-800">
                         <div class="flex items-center mb-2">
                             <i class="mdi mdi-monitor-eye text-yellow-600 text-xl mr-2"></i>
                             <span class="font-semibold">{{ __('Demo Mode Active') }}</span>
@@ -136,7 +137,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('login') }}" method="POST" class="space-y-6">
+                <form action="{{ route('login.store') }}" method="POST" class="space-y-6">
                     <div class="floating-label">
                         <input type="email" id="email" name="email"
                             class="floating-input w-full px-4 py-3 rounded-lg bg-gray-50" placeholder=" " required>
@@ -165,7 +166,7 @@
                     <div class="flex flex-col items-start justify-between">
                         <x-captcha />
                         <div class="flex items-end">
-                            <a href="{{ route('forgot-password') }}" class="text-sm text-indigo-600 hover:underline">
+                            <a href="{{ route('password.request') }}" class="text-sm text-indigo-600 hover:underline">
                                 {{ __('Forgot your password') }}
                             </a>
                         </div>

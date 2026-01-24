@@ -40,15 +40,15 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
             \App\Http\Middleware\Lang::class,
+            \App\Http\Middleware\EnsureEmailIsVerified::class,
             \App\Http\Middleware\VerifyDemoUser::class,
-            \App\Http\Middleware\VerifyAccount::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
         ],
 
         'api' => [
             \App\Http\Middleware\Lang::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\VerifyAccount::class,
+            \App\Http\Middleware\EnsureEmailIsVerified::class,
             \App\Http\Middleware\VerifyDemoUser::class,
         ],
     ];
@@ -76,7 +76,6 @@ class Kernel extends HttpKernel
         'scope' => \App\Http\Middleware\CheckForAnyScope::class,
         'wants.json' => \App\Http\Middleware\ResponseIsJson::class,
         'authorize' => \App\Http\Middleware\DenyGrantType::class,
-        'verify.account' => \App\Http\Middleware\VerifyAccount::class,
         'verify.credentials' => \App\Http\Middleware\verifyCredentials::class,
         '2fa-mail' => \App\Http\Middleware\Auth2faMiddleware::class,
         'reactive.account' => \App\Http\Middleware\ReactiveAccount::class,

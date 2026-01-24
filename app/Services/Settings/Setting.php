@@ -28,15 +28,14 @@ namespace App\Services\Settings;
  */
 
 use Core\User\Model\Scope;
+use Illuminate\Support\Facades\URL;
 use App\Models\OAuth\Token;
 use Illuminate\Support\Str;
 use App\Models\OAuth\Client;
 use App\Models\OAuth\AuthCode;
-use Laravel\Passport\Passport;
-use PhpParser\Node\Stmt\TryCatch;
+use Laravel\Passport\Passport; 
 use App\Models\OAuth\RefreshToken;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Log; 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\QueryException;
@@ -88,10 +87,8 @@ class Setting
         }
 
         Setting::getPassportSetting();
-
-        if (config('system.schema_mode', 'https') === 'https') {
-            \URL::forceScheme('https');
-        }
+        
+        URL::forceScheme(env('APP_URL_SCHEME', 'http'));
     }
 
     /**
