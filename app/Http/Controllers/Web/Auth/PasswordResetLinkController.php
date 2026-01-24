@@ -2,6 +2,16 @@
 
 namespace App\Http\Controllers\Web\Auth;
 
+use Illuminate\Http\Request;
+use App\Http\Response\SuccessfulPasswordResetLinkRequestResponse;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Laravel\Fortify\Http\Requests\SendPasswordResetLinkRequest;
+use Illuminate\Contracts\Support\Responsable;
+use Laravel\Fortify\Http\Responses\FailedPasswordResetLinkRequestResponse;
+use Laravel\Fortify\Fortify;
+use App\Http\Response\RequestPasswordResetLinkViewResponse;
+
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -26,17 +36,6 @@ namespace App\Http\Controllers\Web\Auth;
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
-
-use Illuminate\Http\Request;
-use App\Http\Response\SuccessfulPasswordResetLinkRequestResponse;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
-use Laravel\Fortify\Http\Requests\SendPasswordResetLinkRequest;
-use Illuminate\Contracts\Support\Responsable;
-use Laravel\Fortify\Http\Responses\FailedPasswordResetLinkRequestResponse;
-use Laravel\Fortify\Fortify;
-use App\Http\Response\RequestPasswordResetLinkViewResponse;
 
 class PasswordResetLinkController extends \Laravel\Fortify\Http\Controllers\PasswordResetLinkController
 {
