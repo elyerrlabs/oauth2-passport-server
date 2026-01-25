@@ -44,7 +44,7 @@ class IdentityEntity extends \OpenIDConnect\Entities\IdentityEntity
             'name' => $user->name,
             'nickname' => $user->name, 
             'email' => $user->email,
-            'email_verified' => $user->verified_at ? true : false, 
+            'email_verified' => $user->email_verified_at ? true : false, 
             'phone_number' => $user->phone ? $user->dial_code . " " . $user->phone : null,
             'phone_number_verified' => true, 
             'address' => $user->address,

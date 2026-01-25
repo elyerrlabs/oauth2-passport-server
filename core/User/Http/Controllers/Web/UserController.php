@@ -29,10 +29,8 @@ namespace Core\User\Http\Controllers\Web;
 
 
 use Core\User\Services\UserService;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Http\Controllers\WebController;
-use Core\User\Repositories\UserRepository;
 use Core\User\Http\Requests\UserPersonalUpdateRequest;
 use Core\User\Http\Requests\UserPersonalPasswordRequest;
 

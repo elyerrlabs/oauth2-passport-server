@@ -54,13 +54,10 @@ class User extends Auth
         'dial_code',
         'phone',
         'birthday',
-        'verified_at',
-        'm2fa',
-        'totp',
+        'email_verified_at',
         'partner_id',
         'accept_cookies',
         'accept_terms',
-        'last_connected',
         'lang'
     ];
 
@@ -79,10 +76,9 @@ class User extends Auth
      * @var array<string, string>
      */
     protected $casts = [
-        'verified_at' => 'datetime',
+        'email_verified_at' => 'datetime',
         'accept_cookies' => 'boolean',
         'accept_terms' => 'boolean',
-        'last_connected' => 'datetime'
     ];
 
     /**

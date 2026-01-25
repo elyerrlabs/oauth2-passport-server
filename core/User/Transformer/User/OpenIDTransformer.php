@@ -65,7 +65,7 @@ class OpenIDTransformer extends TransformerAbstract
             'country' => $user->country,
             'city' => $user->city,
             'groups' => $user->myGroups(),
-            'verify_email' => $user->verified_at ? true : false,
+            'verify_email' => $user->email_verified_at ? true : false,
             'lang' => $user->lang,
             //"address" => $user->address
         ];

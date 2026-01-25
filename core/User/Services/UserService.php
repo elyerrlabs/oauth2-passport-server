@@ -128,7 +128,7 @@ class UserService
             'dial_code' => $data['dial_code'] ?? null,
             'phone' => $data['phone'] ?? null,
             'birthday' => $data['birthday'] ?? null,
-            'verified_at' => $data['verify_email'] ? now() : null,
+            'email_verified_at' => $data['email_verified_at'] ? now() : null,
             'accept_terms' => $data['accept_terms'] ?? true,
             'accept_cookies' => $data['accept_cookies'] ?? true,
         ]);
@@ -588,7 +588,7 @@ class UserService
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
                 'birthday' => $data['birthday'] ?? null,
-                'verified_at' => config('system.registration.email.verification', false) ? null : now(), // if it the email verification is true, so the field is null otherwise is now()
+                'email_verified_at' => config('system.registration.email.verification', false) ? null : now(), // if it the email verification is true, so the field is null otherwise is now()
                 'accept_terms' => $data['accept_terms'],
                 'accept_cookies' => $data['accept_cookies']
             ]);
@@ -635,7 +635,7 @@ class UserService
             }
 
             // Verify the user has activated account
-            if (auth()->check() && auth()->user()->verified_at) {
+            if (auth()->check() && auth()->user()->email_verified_at) {
                 return redirectToHome();
             }
 
@@ -665,7 +665,7 @@ class UserService
                     );
             }
 
-            $user->verified_at = now();
+            $user->email_verified_at = now();
             $user->save();
 
             // Authenticate the user

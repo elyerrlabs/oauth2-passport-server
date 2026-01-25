@@ -77,7 +77,6 @@ class Kernel extends HttpKernel
         'wants.json' => \App\Http\Middleware\ResponseIsJson::class,
         'authorize' => \App\Http\Middleware\DenyGrantType::class,
         'verify.credentials' => \App\Http\Middleware\verifyCredentials::class,
-        '2fa-mail' => \App\Http\Middleware\Auth2faMiddleware::class,
         'reactive.account' => \App\Http\Middleware\ReactiveAccount::class,
         'userCanAny' => \App\Http\Middleware\UserCanAny::class,
         'captcha' => \App\Http\Middleware\VerifyCaptcha::class,

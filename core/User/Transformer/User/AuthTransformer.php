@@ -74,11 +74,10 @@ class AuthTransformer extends TransformerAbstract
             'phone' => $user->phone,
             'dial_code' => $user->dial_code,
             'full_phone' => $user->dial_code . " " . $user->phone,
-            'm2fa' => $user->m2fa ? true : false,
             'lang' => $user->lang,
             'groups' => $user->myGroups(),
-            'verify_email' => $user->verified_at ? true : false,
-            'verified' => $this->format_date($user->verified_at),
+            'verify_email' => $user->email_verified_at ? true : false,
+            'verified' => $this->format_date($user->email_verified_at),
             'created' => $this->format_date($user->created_at),
             'updated' => $this->format_date($user->updated_at),
             'disabled' => $this->format_date($user->deleted_at),
@@ -87,10 +86,6 @@ class AuthTransformer extends TransformerAbstract
             'links' => [
                 'update' => route('user.update'),
                 'change_password' => route('user.change.password'),
-                'request_2fa_code' => route('user.2fa.authorize'),
-                'f2a_activate' => route('user.2fa.activate'),
-                'f2a_login' => route('user.2fa.login'),
-
             ],
         ];
     }

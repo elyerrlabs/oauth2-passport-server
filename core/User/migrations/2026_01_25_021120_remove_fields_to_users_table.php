@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Http\Middleware;
-
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -26,45 +24,33 @@ namespace App\Http\Middleware;
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
- 
-use Closure;
-use Core\User\Model\User; 
-use Illuminate\Http\Request; 
-use Core\User\Services\AuthService;
 
-class Auth2faMiddleware
-{
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+return new class extends Migration {
     /**
-     * Auth service
-     * @var AuthService
+     * Run the migrations.
      */
-    private $authService;
-
-
-    public function __construct()
+    public function up(): void
     {
-        $this->authService = app(AuthService::class);
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('m2fa');
+            $table->dropColumn('totp');
+            $table->dropColumn('last_connected');
+        });
     }
 
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * Reverse the migrations.
      */
-    public function handle(Request $request, Closure $next)
+    public function down(): void
     {
-        if (!$request->user() and User::validate($request)) {
-
-            $this->authService->tokenGenerator($request);
-
-            session(['email' => $request->email]);
-
-            return redirect()->route('user.2fa.send-code');
-        }
-
-        return $next($request);
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('m2fa')->default(false);
+            $table->boolean('totp')->default(false);
+            $table->dateTime('last_connected');
+        });
     }
-}
+};

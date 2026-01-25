@@ -44,10 +44,23 @@ class EnsureEmailIsVerified
         'logout'
     ];
 
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string|null  $redirectToRoute
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
     public function handle(Request $request, Closure $next, string $redirectToRoute = null): Response
     {
         // No user authenticated  
         if (!$request->user()) {
+            return $next($request);
+        }
+
+        if (config('system.registration.email.verification', false) === false) {
             return $next($request);
         }
 

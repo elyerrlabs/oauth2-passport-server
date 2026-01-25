@@ -235,26 +235,7 @@
                             <i class="mdi mdi-information-outline mr-1"></i>
                             {{ __('Time until account verification link expires') }}
                         </small>
-                    </div>
-
-                    {{-- 2FA Code --}}
-                    <div>
-                        <label
-                            class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">{{ __('2FA Email Code Expiration') }}</label>
-                        <div class="relative">
-                            <input type="number" name="system[code_2fa_email_expires]"
-                                value="{{ config('system.code_2fa_email_expires', 5) }}"
-                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/20 transition-colors duration-300"
-                                min="1">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-400 dark:text-gray-500">min</span>
-                            </div>
-                        </div>
-                        <small class="block mt-2 text-sm text-gray-500 dark:text-gray-400">
-                            <i class="mdi mdi-information-outline mr-1"></i>
-                            {{ __('Time until 2FA email code expires') }}
-                        </small>
-                    </div>
+                    </div> 
 
                     {{-- Password Reset Expiration --}}
                     <div>

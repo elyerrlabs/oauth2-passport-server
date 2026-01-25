@@ -47,17 +47,7 @@ Route::group([
         Route::get("/change-password", [UserController::class, 'formToChangePassword'])->name("password");
         Route::put("/change-password", [UserController::class, 'changePassword'])->name('change.password');
 
-        //Route::get('/verify/account', [RegisterClientController::class, 'verifyAccount'])->name('verify.account');
-        //Route::get('/verified-account', [RegisterClientController::class, 'verifiedAccount'])->name('verified.account');
-
-        // Route::get('/check-my-account', [RegisterClientController::class, 'formVerifyAccount'])->name('check.account');
-        // Route::post('/send-verification-email', [RegisterClientController::class, 'sendVerificationEmail'])->name('verification.email');
-
-        Route::get('/verify/2fa-factor', [CodeController::class, 'create'])->name('2fa.send-code');
-        Route::post('/verify/2fa-factor', [CodeController::class, 'loginBy2FA'])->name('2fa.login');
         Route::get('/two-factor-authentication', [CodeController::class, 'formToRequestToken'])->name('2fa.request');
-        Route::post('/m2fa/authorize', [CodeController::class, 'requestToken2FA'])->name('2fa.authorize');
-        Route::post('/m2fa/activate', [CodeController::class, 'factor2faEnableOrDisable'])->name('2fa.activate');
     });
 
 
