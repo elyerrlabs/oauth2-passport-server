@@ -84,7 +84,7 @@
                             class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors duration-300">
                             <div class="flex-1">
                                 <label class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">
-                                    {{ __('Disable User Creation by Command') }}
+                                    {{ __('User Creation by Command') }}
                                 </label>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">
                                     {{ __('Prevent user creation through artisan commands') }}
@@ -93,11 +93,11 @@
                             <div class="ml-4">
                                 <select name="system[disable_create_user_by_command]"
                                     class="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors duration-300">
-                                    <option value="1"
-                                        {{ config('system.disable_create_user_by_command') ? 'selected' : '' }}>
-                                        {{ __('Enabled') }}</option>
                                     <option value="0"
-                                        {{ !config('system.disable_create_user_by_command') ? 'selected' : '' }}>
+                                        {{ config('system.disable_create_user_by_command', false) == false ? 'selected' : '' }}>
+                                        {{ __('Enabled') }}</option>
+                                    <option value="1"
+                                        {{ config('system.disable_create_user_by_command', false) == true ? 'selected' : '' }}>
                                         {{ __('Disabled') }}</option>
                                 </select>
                             </div>

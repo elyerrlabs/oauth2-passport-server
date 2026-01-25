@@ -60,9 +60,9 @@ class settingsUsersCreate extends Command
      */
     public function handle()
     {
-        $disable = config('system.disable_create_user_by_command', false);
-        if ($disable) {
-            return 1;
+        if (config('system.disable_create_user_by_command', false)) {
+            $this->info('This command is disabled. User creation is only available through the web interface.');
+            return 0;
         }
 
         $user_type = $this->choice('Please select the role:', ['admin', 'client'], 0);
@@ -117,7 +117,7 @@ class settingsUsersCreate extends Command
             'email' => $email,
             'accept_terms' => true,
             'password' => Hash::make($password),
-            'verified_at' => now(),
+            'email_verified_at' => now(),
             'deleted_at' => now(),
         ]);
 
