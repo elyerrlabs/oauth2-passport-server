@@ -163,6 +163,17 @@
                         @endif
                     </div>
 
+                    <div class="flex items-center gap-2 mt-4">
+                        <input type="checkbox" id="remember" name="remember"
+                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            {{ old('remember') ? 'checked' : '' }}>
+
+                        <label for="remember" class="text-sm mx-2 text-gray-600 cursor-pointer">
+                            {{ __('Remember me') }}
+                        </label>
+                    </div>
+
+
                     <div class="flex flex-col items-start justify-between">
                         <x-captcha />
                         <div class="flex items-end">
