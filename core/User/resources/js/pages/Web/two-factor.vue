@@ -28,10 +28,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
-                Two-Factor Authentication
+                {{ __("Two-Factor Authentication") }}
             </h1>
             <p class="text-gray-600 dark:text-gray-400">
-                Add an extra layer of security to your account
+                {{ __("Add an extra layer of security to your account") }}
             </p>
         </div>
 
@@ -46,12 +46,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <h3
                         class="text-lg font-semibold mb-2 text-gray-900 dark:text-white"
                     >
-                        Enable Two-Factor Authentication
+                        {{ __("Enable Two-Factor Authentication") }}
                     </h3>
 
                     <p class="mb-4 text-gray-600 dark:text-gray-400">
-                        Protect your account by requiring a one-time code at
-                        login.
+                        {{
+                            __(
+                                "Protect your account by requiring a one-time code at login.",
+                            )
+                        }}
                     </p>
 
                     <button
@@ -59,7 +62,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         :disabled="loading"
                         class="w-full py-3 rounded-xl font-medium bg-blue-600 hover:bg-blue-700 text-white"
                     >
-                        Start 2FA Setup
+                        {{ __("Start 2FA Setup") }}
                     </button>
                 </div>
 
@@ -70,7 +73,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <h3
                         class="text-lg font-semibold mb-4 text-gray-900 dark:text-white"
                     >
-                        Scan QR Code
+                        {{ __("Scan QR Code") }}
                     </h3>
 
                     <div
@@ -83,7 +86,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <p
                             class="text-sm mb-1 text-gray-600 dark:text-gray-400"
                         >
-                            Manual setup key
+                            {{ __("Manual setup key") }}
                         </p>
                         <code
                             class="font-mono text-lg text-blue-600 dark:text-blue-400"
@@ -96,13 +99,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <label
                             class="block text-sm mb-2 text-gray-700 dark:text-gray-300"
                         >
-                            Verification code
+                            {{ __("Verification code") }}
                         </label>
                         <input
                             v-model="verificationCode"
                             @input="formatVerificationCode"
                             maxlength="6"
-                            placeholder="000000"
+                            :placeholder="__('000000')"
                             class="w-full text-center text-2xl tracking-widest py-3 rounded-xl border bg-white text-gray-900 border-gray-300 dark:bg-gray-900 dark:text-white dark:border-gray-700"
                         />
                     </div>
@@ -112,7 +115,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         :disabled="verificationCode.length !== 6 || loading"
                         class="w-full py-3 rounded-xl font-medium bg-green-600 hover:bg-green-700 text-white"
                     >
-                        Confirm & Enable
+                        {{ __("Confirm & Enable") }}
                     </button>
                 </div>
 
@@ -143,10 +146,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <h3
                                 class="text-lg font-semibold text-gray-900 dark:text-white"
                             >
-                                Two-Factor Authentication Enabled
+                                {{ __("Two-Factor Authentication Enabled") }}
                             </h3>
                             <p class="text-sm text-gray-600 dark:text-gray-400">
-                                Your account is protected.
+                                {{ __("Your account is protected.") }}
                             </p>
                         </div>
                     </div>
@@ -156,14 +159,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             @click="loadRecoveryCodes"
                             class="flex-1 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                         >
-                            View Recovery Codes
+                            {{ __("View Recovery Codes") }}
                         </button>
 
                         <button
                             @click="isDisableChallenge = true"
                             class="flex-1 py-3 rounded-xl border border-red-600 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20"
                         >
-                            Disable 2FA
+                            {{ __("Disable 2FA") }}
                         </button>
 
                         <button
@@ -171,7 +174,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             @click="regenerateRecoveryCodes"
                             class="flex-1 py-3 rounded-xl border border-yellow-500 text-yellow-600 hover:bg-yellow-50 dark:border-yellow-600 dark:text-yellow-400 dark:hover:bg-yellow-900/20"
                         >
-                            Regenerate Recovery Codes
+                            {{ __("Regenerate Recovery Codes") }}
                         </button>
                     </div>
 
@@ -182,19 +185,24 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <h4
                             class="font-semibold mb-2 text-red-700 dark:text-red-400"
                         >
-                            Confirm Disable Two-Factor Authentication
+                            {{
+                                __("Confirm Disable Two-Factor Authentication")
+                            }}
                         </h4>
 
                         <p class="text-sm mb-4 text-red-600 dark:text-red-300">
-                            Enter the 6-digit code from your authenticator app
-                            to continue.
+                            {{
+                                __(
+                                    "Enter the 6-digit code from your authenticator app to continue.",
+                                )
+                            }}
                         </p>
 
                         <input
                             v-model="disableCode"
                             @input="formatDisableCode"
                             maxlength="6"
-                            placeholder="000000"
+                            :placeholder="__('000000')"
                             class="w-full mb-4 text-center text-2xl tracking-widest py-3 rounded-xl border bg-white text-gray-900 border-red-300 dark:bg-gray-900 dark:text-white dark:border-red-700"
                         />
 
@@ -204,14 +212,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 :disabled="disableCode.length !== 6 || loading"
                                 class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium"
                             >
-                                Confirm Disable
+                                {{ __("Confirm Disable") }}
                             </button>
 
                             <button
                                 @click="isDisableChallenge = false"
                                 class="flex-1 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                             >
-                                Cancel
+                                {{ __("Cancel") }}
                             </button>
                         </div>
                     </div>
@@ -221,7 +229,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <h4
                             class="font-semibold mb-2 text-gray-900 dark:text-white"
                         >
-                            Recovery Codes
+                            {{ __("Recovery Codes") }}
                         </h4>
 
                         <div class="grid grid-cols-2 gap-2">
@@ -312,10 +320,10 @@ const startTwoFactorSetup = async () => {
         secretKey.value = secret.data.secretKey ?? secret.data;
 
         isSetupInProgress.value = true;
-        message.value = "Scan the QR code with your authenticator app";
-        messageType.value = "info";
+        message.value = __("Scan the QR code with your authenticator app");
+        messageType.value = __("info");
     } catch {
-        message.value = "Failed to start 2FA setup";
+        message.value = __("Failed to start 2FA setup");
         messageType.value = "error";
     } finally {
         loading.value = false;
@@ -336,10 +344,10 @@ const confirmTwoFactorSetup = async () => {
 
         await loadRecoveryCodes();
 
-        message.value = "Two-factor authentication enabled";
+        message.value = __("Two-factor authentication enabled");
         messageType.value = "success";
     } catch {
-        message.value = "Invalid verification code";
+        message.value = __("Invalid verification code");
         messageType.value = "error";
     } finally {
         loading.value = false;
@@ -362,10 +370,10 @@ const confirmDisableTwoFactor = async () => {
         disableCode.value = "";
         recoveryCodes.value = [];
 
-        message.value = "Two-factor authentication disabled";
+        message.value = __("Two-factor authentication disabled");
         messageType.value = "success";
     } catch {
-        message.value = "Invalid authentication code";
+        message.value = __("Invalid authentication code");
         messageType.value = "error";
     } finally {
         loading.value = false;
@@ -384,7 +392,9 @@ const loadRecoveryCodes = async () => {
 
 const regenerateRecoveryCodes = async () => {
     if (
-        !confirm("Regenerate recovery codes? Your old codes will stop working.")
+        !confirm(
+            __("Regenerate recovery codes? Your old codes will stop working."),
+        )
     ) {
         return;
     }
@@ -395,10 +405,10 @@ const regenerateRecoveryCodes = async () => {
 
         await loadRecoveryCodes();
 
-        message.value = "Recovery codes regenerated successfully";
+        message.value = __("Recovery codes regenerated successfully");
         messageType.value = "success";
     } catch {
-        message.value = "Failed to regenerate recovery codes";
+        message.value = __("Failed to regenerate recovery codes");
         messageType.value = "error";
     } finally {
         loading.value = false;
