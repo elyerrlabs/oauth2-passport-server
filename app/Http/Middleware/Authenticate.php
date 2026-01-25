@@ -35,7 +35,6 @@ use Illuminate\Auth\Middleware\Authenticate as Middleware;
 class Authenticate extends Middleware
 {
 
-
     /**
      * Handle an incoming request.
      *
@@ -85,12 +84,6 @@ class Authenticate extends Middleware
         if (!empty($referral_code = $request->referral_code)) {
             return route('login', ['referral_code' => $referral_code]);
         }
-
-        // For the rest of the params get the full url
-        $next_page = $request->fullUrl();
-
-        // Save url into the session
-        session()->put('redirect_to', $next_page);
 
         return route('login');
     }

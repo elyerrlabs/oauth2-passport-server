@@ -203,7 +203,7 @@ class AuthorizationController extends Controller
         $authorize_route = route('passport.authorizations.authorize');
         $redirect_to = $authorize_route . "?" . http_build_query(request()->all());
 
-        session()->put('redirect_to', $redirect_to);
+        session()->put('url.intended', $redirect_to);
     }
 
     /**

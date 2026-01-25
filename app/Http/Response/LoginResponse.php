@@ -35,8 +35,6 @@ final class LoginResponse implements \Laravel\Fortify\Contracts\LoginResponse
         // Redirect to
         $intended = session()->get('url.intended');
 
-        // Delete session key
-
         // Only json request
         if (request()->wantsJson()) {
             // data

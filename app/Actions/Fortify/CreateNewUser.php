@@ -66,7 +66,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     private function recoveryReferralCode(Request $request): void
     {
-        $redirect_to = session()->get('redirect_to');
+        $redirect_to = session()->get('url.intended');
         $referral_code = null;
 
         if ($redirect_to) {

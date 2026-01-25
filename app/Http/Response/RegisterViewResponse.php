@@ -33,12 +33,13 @@ final class RegisterViewResponse implements \Laravel\Fortify\Contracts\RegisterV
     {
         // If the request has a redirect_to parameter, store it in the session
         if (!empty($request->input('redirect_to'))) {
-            session()->put('redirect_to', $request->input('redirect_to'));
+            session()->put('url.intended', $request->input('redirect_to'));
         }
 
-        if (request()->user()) {
+        if ($request->user()) {
             return redirect()->route('users.dashboard');
         }
-        return view('auth.register');
+
+        return response()->view('auth.register');
     }
 }
