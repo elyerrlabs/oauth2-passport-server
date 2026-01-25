@@ -8,7 +8,7 @@
     <div
         class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 py-8 transition-colors duration-300">
         <div
-            class="w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+            class="w-full lg:w-5xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300">
 
             <!-- Provider Header -->
             <div class="px-8 pt-8 pb-4">
