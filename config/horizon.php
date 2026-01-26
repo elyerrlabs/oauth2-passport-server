@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'middleware' => ['web', 'auth'],
+    'middleware' => ['web', 'auth','password.confirm'],
 
     /*
     |--------------------------------------------------------------------------
