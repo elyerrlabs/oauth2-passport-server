@@ -29,12 +29,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
-## Unreleased
+## [v5.1.3]
 
-### feat
+### Fixed
 
 - Hide password confirmation for demo users
-
+- Fixed an issue where module rate limits were not loaded unless settings were saved first.
+- Module `rate_limit` configs are now preloaded before RouteServiceProvider initializes.
 
 ## [v5.1.2]
 
