@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Passport::ignoreRoutes();
         Fortify::ignoreRoutes();
-
+        $this->loadRateLimitModules();
         //Override AuthCodeRepository  and AccessTokenRepository
         $this->app->bind(LaravelAuthCodeRepository::class, AuthCodeRepository::class);
         $this->app->bind(LaravelAccessTokenRepository::class, AccessTokenRepository::class);
@@ -78,5 +78,25 @@ class AppServiceProvider extends ServiceProvider
                 $this->app->make('request')
             );
         });
+    }
+
+    /**
+     * Load rates limits
+     * @return void
+     */
+    protected function loadRateLimitModules(): void
+    {
+        $base = config('rate_limit') ?? [];
+
+        foreach (glob(base_path('third-party/*/config/rate_limit.php')) as $file) {
+
+            $module = basename(dirname(dirname($file)));
+
+            $config = require $file;
+
+            $base['third-party'][strtolower($module)] = $config;
+        }
+
+        config()->set('rate_limit', $base);
     }
 }
