@@ -29,6 +29,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+## [v5.1.4]
+
+### Fixed
+- Fixed robots.txt handling for SEO management
+
+----
 ## [v5.1.3]
 
 ### Fixed
@@ -36,7 +42,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Hide password confirmation for demo users
 - Fixed an issue where module rate limits were not loaded unless settings were saved first.
 - Module `rate_limit` configs are now preloaded before RouteServiceProvider initializes.
-
+----
 ## [v5.1.2]
 
 ### Added
