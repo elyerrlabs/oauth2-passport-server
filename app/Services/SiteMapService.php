@@ -137,7 +137,7 @@ class SiteMapService
                     'registered' => in_array($url, $registeredUrls),
                     'links' => [
                         'delete' =>
-                            in_array($url, $registeredUrls)
+                        in_array($url, $registeredUrls)
                             ? route('admin.sitemaps.delete', ['url' => base64_encode($url)])
                             : null,
                     ],
@@ -409,9 +409,11 @@ class SiteMapService
      */
     public function getRobotData()
     {
-        $data = file_get_contents($this->robot);
+        if (!file_exists($this->robot)) {
+            file_put_contents($this->robot, "User-agent: *\nDisallow: /");
+        }
 
-        return $data;
+        return file_get_contents($this->robot);
     }
 
     /**
@@ -426,7 +428,6 @@ class SiteMapService
             file_put_contents($this->robot, $request->meta);
 
             return true;
-
         } catch (\Exception $e) {
             throw new ReportError($e->getMessage(), $e->getCode());
         }
@@ -444,10 +445,8 @@ class SiteMapService
             file_put_contents($this->metafile, $request->meta);
 
             return true;
-
         } catch (\Exception $e) {
             throw new ReportError($e->getMessage(), $e->getCode());
         }
     }
-
 }

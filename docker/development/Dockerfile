@@ -47,7 +47,15 @@ RUN apk add --no-cache \
     bash-completion \
     openssh-client \
     bind-tools \ 
-    php84-iconv
+    php84-iconv \
+    python3 \ 
+    wireguard-tools \
+    php84-pecl-grpc \
+    grpc \
+    grpc-plugins \
+    grpc-dev \
+    protobuf \
+    protobuf-dev
 
 # Create dev user and group
 RUN \

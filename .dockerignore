@@ -7,7 +7,7 @@
 !docker/
 !public/.dockerignore
 !public/.htaccess
-!public/robots
+!public/robots.txt
 !public/index.php
 !public/favicon.png
 !public/third-party/.dockerignore
