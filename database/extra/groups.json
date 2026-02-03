@@ -784,6 +784,48 @@
             "active": 1,
             "api_key": 1,
             "web": 0
+          },
+          {
+            "name": "professional",
+            "public": 0,
+            "active": 1,
+            "api_key": 1,
+            "web": 0
+          }
+        ]
+      },
+      {
+        "name": "VPN Servers",
+        "description": "Service to manage, configure, and orchestrate VPN server nodes across multiple environments",
+        "visibility": "public",
+        "actions": [
+          {
+            "name": "basic",
+            "public": 0,
+            "active": 1,
+            "api_key": 1,
+            "web": 0
+          },
+          {
+            "name": "intermediate",
+            "public": 0,
+            "active": 1,
+            "api_key": 1,
+            "web": 0
+          },
+          {
+            "name": "advanced",
+            "public": 0,
+            "active": 1,
+            "api_key": 1,
+            "web": 0
+          },
+          {
+            "name": "professional",
+            "public": 0,
+            "active": 1,
+            "api_key": 1,
+            "web": 0
           }
         ]
       }
