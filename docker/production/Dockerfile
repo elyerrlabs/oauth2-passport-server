@@ -34,7 +34,11 @@ RUN apk add --no-cache \
     curl \
     supervisor \
     icu-data-full \
-    php84-iconv
+    php84-iconv \
+    wireguard-tools \
+    php84-pecl-grpc \
+    grpc \
+    protobuf 
 
 # Add user and group www-data
 RUN getent passwd www-data || adduser -S -G www-data -s /usr/sbin/nologin www-data
