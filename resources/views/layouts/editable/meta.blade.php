@@ -1,33 +1,94 @@
-<!-- Configuración básica -->
+<!-- ================= BASIC ================= -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- Inglés (por defecto) -->
-<meta name="title" content="Elyerr OAuth2 Server – Secure Authentication & Authorization">
-<meta name="description"
-    content="A modern OAuth2 and OpenID Connect server built with Laravel. Secure, scalable, and easy to integrate for authentication and authorization in your applications.">
-<meta name="keywords"
-    content="OAuth2, OpenID Connect, Laravel, API Security, Authentication, Elyerr, Authorization Server, Secure Access">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="author" content="Elyerr">
-<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://github.com/elyerrlabs">
 
-<meta property="og:title" content="Elyerr OAuth2 Server – Secure Authentication & Authorization">
+<!-- ================= ENGLISH ================= -->
+
+<title>Elyerr OAuth2 Passport Server – Laravel Authorization Server</title>
+
+<meta name="description"
+    content="Elyerr OAuth2 Passport Server is a production-ready Laravel Authorization Server implementing OAuth2 and OpenID Connect. Designed for secure API authentication, JWT tokens, microservices, SPA and mobile applications.">
+
+<meta name="keywords"
+    content="
+elyerr,
+elyerrlabs,
+oauth2 server,
+oauth2 passport server,
+laravel oauth2,
+laravel passport,
+authorization server,
+authentication server,
+openid connect server,
+jwt authentication,
+identity provider,
+oauth2 provider,
+api authentication,
+api authorization,
+secure api,
+access token,
+refresh token,
+sso login,
+single sign on,
+microservices auth,
+spa authentication,
+mobile api auth,
+token based authentication,
+developer auth server,
+oauth2 implementation,
+laravel identity server,
+api gateway auth,
+zero trust api,
+openid provider
+">
+
+<!-- ================= OPEN GRAPH ================= -->
+
+<meta property="og:title" content="Elyerr OAuth2 Passport Server – Laravel Authorization Server">
 <meta property="og:description"
-    content="Easily manage user access and authentication with our Laravel OAuth2 Server. Modern, secure, and developer-friendly.">
-<meta property="og:url" content="https://gitlab.com/elyerr/oauth2-passport-server">
+    content="Modern Laravel OAuth2 Passport Authorization Server by Elyerr. Secure JWT authentication, OpenID Connect, SSO and API access control for scalable applications.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://github.com/elyerrlabs">
+<meta property="og:site_name" content="Elyerr OAuth2 Passport Server">
 
+<!-- ================= TWITTER ================= -->
 
-<meta name="title" lang="es" content="Elyerr OAuth2 Server – Autenticación y Autorización Segura">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Elyerr OAuth2 Passport Server">
+<meta name="twitter:description"
+    content="Laravel OAuth2 Passport Authorization Server for APIs, microservices, SPA and mobile apps. Built by Elyerr.">
+
+<!-- ================= SPANISH ================= -->
+
 <meta name="description" lang="es"
-    content="Un servidor moderno de OAuth2 y OpenID Connect construido con Laravel. Seguro, escalable y fácil de integrar para autenticación y autorización en tus aplicaciones.">
+    content="Elyerr OAuth2 Passport Server es un servidor de autorización moderno construido con Laravel que implementa OAuth2 y OpenID Connect. Diseñado para APIs seguras, JWT, microservicios, SPAs y aplicaciones móviles.">
+
 <meta name="keywords" lang="es"
-    content="OAuth2, OpenID Connect, Laravel, Seguridad API, Autenticación, Elyerr, Servidor de Autorización, Acceso Seguro">
+    content="
+elyerr,
+elyerrlabs,
+servidor oauth2,
+oauth2 passport laravel,
+laravel passport,
+servidor de autorizacion,
+servidor de autenticacion,
+openid connect,
+jwt autenticacion,
+proveedor de identidad,
+oauth2 provider,
+api segura,
+control de acceso,
+tokens oauth2,
+refresh token,
+sso login,
+microservicios autenticacion,
+spa login,
+mobile api auth,
+identity server laravel
+">
 
-<meta property="og:title" lang="es" content="Elyerr OAuth2 Server – Autenticación y Autorización Segura">
-<meta property="og:description" lang="es"
-    content="Gestiona fácilmente el acceso y la autenticación de usuarios con nuestro servidor OAuth2 en Laravel. Moderno, seguro y amigable para desarrolladores.">
-
-
-<link rel="alternate" hreflang="en" href="https://gitlab.com/elyerr/oauth2-passport-server?lang=en" />
-<link rel="alternate" hreflang="es" href="https://gitlab.com/elyerr/oauth2-passport-server?lang=es" />
+<link rel="alternate" hreflang="en" href="https://github.com/elyerrlabs?lang=en">
+<link rel="alternate" hreflang="es" href="https://github.com/elyerrlabs?lang=es">
