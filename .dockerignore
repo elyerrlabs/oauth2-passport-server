@@ -28,6 +28,7 @@
 !storage/logs/.dockerignore
 !artisan
 !composer.json
+!composer.lock
 !AUTHORS.md
 !lang/
 !LICENSE.md
