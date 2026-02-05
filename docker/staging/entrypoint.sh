@@ -34,7 +34,9 @@ echo "⚙️ Running system configuration..."
 cp -vf /root/.env /var/www/.env 
 
 find . -type d -exec chmod 750 {} \;
-find . -type f -exec chmod 640 {} \;
+find . -path "./third-party" -prune -o -type f -exec chmod 640 {} +
+
+chmod 664 resources/views/layouts/editable/*.blade.php
 
 chmod 400 .env
 
