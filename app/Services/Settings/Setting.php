@@ -33,16 +33,15 @@ use App\Models\OAuth\Token;
 use Illuminate\Support\Str;
 use App\Models\OAuth\Client;
 use App\Models\OAuth\AuthCode;
-use Laravel\Passport\Passport; 
+use Laravel\Passport\Passport;
 use App\Models\OAuth\RefreshToken;
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\QueryException;
 
 class Setting
 {
-
     private $model;
 
 
@@ -52,7 +51,7 @@ class Setting
     }
 
     /**
-     * Set default values 
+     * Set default values
      * @return void
      */
     public static function getDefaultSetting()
@@ -87,8 +86,8 @@ class Setting
         }
 
         Setting::getPassportSetting();
-        
-        URL::forceScheme(env('APP_URL_SCHEME', 'http'));
+
+        URL::forceScheme(env('APP_URL_SCHEME', 'https'));
     }
 
     /**
@@ -103,7 +102,7 @@ class Setting
 
         //expires time for reset password
         settingLoad('auth.passwords.users.expire', 10);
-        //expires time to try another request 
+        //expires time to try another request
         settingLoad('auth.passwords.users.throttle', 10);
 
         //------------------------REDIS CONFIGURATION-------------------//
@@ -274,7 +273,7 @@ class Setting
         settingLoad('services.captcha.providers.hcaptcha.secret', null);
         settingLoad('services.captcha.providers.hcaptcha.sitekey', null);
 
-        //Payment settings 
+        //Payment settings
         settingLoad('billing.methods.stripe.name', 'Credit Card (Stripe)');
         settingLoad('billing.methods.stripe.icon', 'mdi-credit-card-outline');
         settingLoad('billing.methods.stripe.enable', true);
@@ -291,7 +290,7 @@ class Setting
         SettingLoad('billing.renew.bonus_enabled', false);
         SettingLoad('billing.renew.grace_period_days', 5);
 
-        //System settings 
+        //System settings
         settingLoad('system.home_page', "/");
         settingLoad('system.cookie_name', "oauth2_server");
         settingLoad('system.passport_token_services', null);
