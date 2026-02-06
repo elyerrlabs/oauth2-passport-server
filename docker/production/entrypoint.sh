@@ -37,7 +37,7 @@ find . -type d -exec chmod 750 {} \;
 find . -path "./third-party" -prune -o -type f -exec chmod 640 {} +
 
 chmod 664 resources/views/layouts/editable/*.blade.php
-
+chmod -R 664 public/*
 chmod 400 .env
 
 php artisan settings:system-start
