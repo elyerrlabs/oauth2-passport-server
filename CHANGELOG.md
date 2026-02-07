@@ -29,6 +29,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+# Changelog
+
+## [Unreleased]
+
+### Added
+- Added editable volume to the docker-compose file
+- Deleted orphan keys (`frontend_url` and `asset_url`)
+
+### Fixed
+- Adjusted file and directory permissions
+- Restored public file read access for other users
+- Updated schema to HTTPS from HTTP
+- Fixed environment scheme key (`APP_URL_SCHEME`)
+- Fixed environment file configuration
+
+### Changed
+- Updated Dockerfile to multi-stage build
+- Updated Docker-related files
+- Updated `.dockerignore`
+- Updated SEO metadata
+
+---
+
 ## [v5.1.4]
 
 ### Fixed
