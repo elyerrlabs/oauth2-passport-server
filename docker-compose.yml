@@ -37,6 +37,7 @@ services:
             - sitemaps:/var/www/public/sitemaps
             - logs:/var/www/storage/logs
             - third-party:/var/www/third-party
+            - editable:/resources/views/layouts
         command: sh -c "/usr/local/bin/entrypoint.sh"
         networks:
            - public-net
@@ -48,6 +49,7 @@ volumes:
     sitemaps:
     logs:
     third-party:
+    editable:
 
 networks:
     public-net:
