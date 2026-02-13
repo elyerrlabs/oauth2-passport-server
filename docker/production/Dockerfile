@@ -127,6 +127,7 @@ RUN apk add --no-cache \
     php84-pecl-redis \
     nginx \
     curl \
+    git \
     supervisor \
     icu-data-full \
     php84-iconv \
