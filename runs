@@ -1,0 +1,2 @@
+#!/bin/bash
+docker exec -it --user www-data:www-data ops-staging-app-1 "$@"
