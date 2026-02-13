@@ -2,6 +2,10 @@
 
 namespace App\Console\Commands\Module;
 
+use Illuminate\Console\Command;
+use App\Repositories\ModuleRepository;
+use Symfony\Component\Process\Process;
+
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -27,8 +31,6 @@ namespace App\Console\Commands\Module;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Illuminate\Console\Command;
-use Symfony\Component\Process\Process;
 
 class ModuleMake extends Command
 {
@@ -51,9 +53,21 @@ class ModuleMake extends Command
      */
     public function handle()
     {
-        $name = trim($this->argument('name'));
+        $name = normalizeModuleName($this->argument('name'));
+
         $root = base_path();
         $thirdPartyPath = $root . DIRECTORY_SEPARATOR . 'third-party';
+        $modulePath = $thirdPartyPath . DIRECTORY_SEPARATOR . $name;
+
+        if (is_dir($modulePath)) {
+            $this->error("The module '{$name}' already exists.");
+            return self::FAILURE;
+        }
+
+        if (app(ModuleRepository::class)->query()->where('name', $name)->first()) {
+            $this->error("The module '{$name}' already registered in the database.");
+            return self::FAILURE;
+        }
 
         if (!$this->composerExists()) {
             $this->error('Composer is not installed or not available in PATH.');
@@ -65,15 +79,21 @@ class ModuleMake extends Command
             mkdir($thirdPartyPath, 0755, true);
         }
 
-        if (is_dir($thirdPartyPath . DIRECTORY_SEPARATOR . $name)) {
-            $this->error("The module '{$name}' already exists.");
-            return self::FAILURE;
-        }
-
         $this->info("Creating Elymod module '{$name}'...");
 
+        app(ModuleRepository::class)->create([
+            'name' => $name,
+            'provider' => 'local',
+            'source' => 'local',
+            'path' => $modulePath,
+            'current_version' => 'dev',
+            'last_version' => null,
+            'new_version' => null,
+        ]);
+
         $process = new Process([
-            'composer',
+            PHP_BINARY,
+            '/usr/bin/composer',
             'create-project',
             'elyerr/elymod',
             $name

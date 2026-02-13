@@ -2,6 +2,11 @@
 
 namespace App\Console\Commands\Module;
 
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Artisan;
+
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -27,218 +32,325 @@ namespace App\Console\Commands\Module;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
-use Symfony\Component\Process\Process;
-use Illuminate\Support\Facades\Artisan;
 
 class ModuleInstall extends Command
 {
-
-    protected $signature = 'module:install 
-    {package : Package name or git URL}
-    {version? : Version, tag or branch}';
+    protected $signature = 'module:install
+    {--name= : Module name}
+    {--provider= : Provider type (git or packagist)}
+    {--source= : Git URL or Packagist package name}
+    {--path= : Installation target path}
+    {--protocol= : Connection protocol (ssh or https)}
+    {--private= : Indicates if the repository is private (true/false)}
+    {--username= : Username for HTTPS authentication (if required)}
+    {--token= : Access token for HTTPS authentication (if required)}
+    {--passphrase= : Passphrase used to encrypt the token}
+    {--current_version= : Currently installed version}
+    {--env= : Installation environment (dev or production)}';
 
 
     protected $description = 'Install a third-party module';
 
+
     public function handle(): int
     {
-        $package = $this->argument('package');
-        $version = $this->argument('version');
+        // attributes
+        $name = $this->option('name');
+        $provider = $this->option('provider');
+        $source = $this->option('source');
+        $protocol = $this->option('protocol');
+        $private = $this->option('private');
+        $username = $this->option('username');
+        $token = $this->option('token');
+        $passphrase = $this->option('passphrase');
+        $currentVersion = $this->option('current_version');
 
-        $source = $this->detectSource($package);
+        // ask for name
+        if (!$name) {
+            $name = $this->ask('Module name');
+        }
+        // Normalize name
+        $name = normalizeModuleName($name);
 
-        if (!$source) {
-            $this->error('Unable to detect package source.');
+        // Paths
+        $thirdPartyPath = base_path('third-party');
+        $modulePath = $thirdPartyPath . DIRECTORY_SEPARATOR . $name;
+
+        // Check directory paths
+        if (File::isDirectory($modulePath)) {
+            $this->error("Module '{$name}' already exists in filesystem.");
             return self::FAILURE;
         }
 
-        //interactive mode
-        if (!$version) {
-            $versions = $source === 'git'
-                ? $this->getGitVersions($package)
-                : $this->getPackagistVersions($package);
 
-            if (empty($versions)) {
-                $this->error('No versions found.');
-                return self::FAILURE;
-            }
+        $environment = $this->option('env');
 
-            $version = $this->choice(
-                'Select version to install',
-                $versions,
+        if (!$environment) {
+            $environment = $this->choice(
+                'Select installation environment',
+                ['dev', 'production'],
+                app()->environment('production') ? 1 : 0
+            );
+        }
+
+        if (!in_array($environment, ['dev', 'production'])) {
+            $this->error('Invalid environment. Allowed: dev or production.');
+            return self::FAILURE;
+        }
+
+
+        // Check if it the modules is already registered
+        if (app(\App\Repositories\ModuleRepository::class)
+            ->query()
+            ->where('name', $name)
+            ->exists()
+        ) {
+            $this->error("Module '{$name}' already registered in database.");
+            return self::FAILURE;
+        }
+
+        // Choose provider
+        if (!$provider) {
+            $provider = $this->choice(
+                'Select provider',
+                ['git', 'packagist'],
                 0
             );
         }
 
-        $moduleName = $this->normalizeModuleName($package);
-        $targetPath = base_path("third-party/{$moduleName}");
-
-        if (File::exists($targetPath)) {
-            $this->info("Module [{$moduleName}] already exists. Nothing to do.");
-            return self::SUCCESS;
+        if (!$source) {
+            $source = $this->ask('Source (Git URL or Packagist name)');
         }
 
-        File::ensureDirectoryExists(base_path('third-party'));
+        /**
+         * Privacy and protocol
+         */
 
-        if ($source === 'git') {
-            $this->installFromGit($package, $version, $targetPath);
-        } else {
+        $private = false;
 
-            $this->installFromPackagist($package, $version, $targetPath);
+        if ($provider === 'git') {
+
+            // Detect protocol
+            if (!$protocol) {
+
+                if (str_starts_with($source, 'git@')) {
+                    $protocol = 'ssh';
+                } elseif (str_starts_with($source, 'https://')) {
+                    $protocol = 'https';
+                } else {
+                    $protocol = $this->choice(
+                        'Select protocol',
+                        ['ssh', 'https'],
+                        0
+                    );
+                }
+            }
+
+            // SSH
+            if ($protocol === 'ssh') {
+                $private = false;
+            }
+
+            // For http ask for private repo
+            if ($protocol === 'https') {
+
+                if ($this->option('private') !== null) {
+                    $private = filter_var($this->option('private'), FILTER_VALIDATE_BOOLEAN);
+                } else {
+                    $private = $this->confirm('Is the repository private?', false);
+                }
+
+                //  ask for credentials for private repo
+                if ($private) {
+
+                    if (!$username) {
+                        $username = $this->ask('Username');
+                    }
+
+                    if (!$token) {
+                        $token = $this->secret('Access token');
+                    }
+
+                    if (!$passphrase) {
+                        $passphrase = $this->secret('Passphrase to encrypt the token');
+                    }
+
+                    if (!$passphrase) {
+                        $this->error('Passphrase is required to encrypt the token.');
+                        return self::FAILURE;
+                    }
+
+                    $token = encryptWithPassphrase($token, $passphrase);
+                }
+            }
         }
 
+
+        if (!$currentVersion) {
+            $currentVersion = $this->ask('Current version (optional)', '');
+        }
+
+        $data = [
+            'name' => $name,
+            'provider' => $provider,
+            'source' => $source,
+            'path' => $modulePath,
+            'protocol' => $protocol,
+            'private' => $private,
+            'username' => $username,
+            'token' => $token,
+            'current_version' => $currentVersion,
+        ];
+
+        $this->info('Module configuration validated successfully.');
+        $this->line('----------------------------------------');
+        $this->line("Name: {$data['name']}");
+        $this->line("Provider: {$data['provider']}");
+        $this->line("Source: {$data['source']}");
+        $this->line("Protocol: {$data['protocol']}");
+        $this->line("Private: " . ($data['private'] ? 'Yes' : 'No'));
+        $this->line("Path: {$data['path']}");
+        $this->line("Current Version: {$data['current_version']}");
+        if (!File::isDirectory($thirdPartyPath)) {
+            File::makeDirectory($thirdPartyPath, 0755, true);
+        }
+
+        // clone repository
+        if (!$this->cloneRepository($data)) {
+            return self::FAILURE;
+        }
+
+        // Register module on the database
+        app(\App\Repositories\ModuleRepository::class)->create($data);
+
+        // Install dependencies
+        if (!$this->runComposerInstall($modulePath, $environment)) {
+            File::deleteDirectory($modulePath);
+            return self::FAILURE;
+        }
+
+        // Run migrations
+        if (!$this->runMigrations()) {
+            File::deleteDirectory($modulePath);
+            return self::FAILURE;
+        }
+
+        // Clean cache
+        $this->clearCaches();
+
+        $this->info("Module '{$name}' installed successfully.");
+
+        return self::SUCCESS;
+    }
+
+    protected function runMigrations(): bool
+    {
         $this->info('Running migrations...');
 
-        Artisan::call('migrate', [
-            '--force' => true,
-        ]);
+        try {
+            Artisan::call('migrate', [
+                '--force' => true
+            ]);
 
-        $this->line(Artisan::output());
+            $this->line(Artisan::output());
 
-        return self::SUCCESS;
+            return true;
+        } catch (\Throwable $e) {
+
+            $this->error('Migration failed: ' . $e->getMessage());
+            return false;
+        }
     }
 
-
-    /* -------------------------------------------------
-     | Source detection
-     ------------------------------------------------- */
-
-    protected function detectSource(string $package): ?string
+    protected function cloneRepository(array $data): bool
     {
-        if (
-            str_starts_with($package, 'http://') ||
-            str_starts_with($package, 'https://') ||
-            str_contains($package, '.git') ||
-            str_starts_with($package, 'git@')
-        ) {
-            return 'git';
+        $this->info('Cloning repository...');
+
+        $source = $data['source'];
+
+        // Inject credentials for private HTTPS
+        if ($data['protocol'] === 'https' && $data['private']) {
+
+            $decryptedToken = decryptWithPassphrase(
+                $data['token'],
+                $data['passphrase']
+            );
+
+            $source = str_replace(
+                'https://',
+                "https://{$data['username']}:{$decryptedToken}@",
+                $source
+            );
         }
 
-        if (str_contains($package, '/')) {
-            return 'packagist';
-        }
-
-        return null;
-    }
-
-    protected function normalizeModuleName(string $package): string
-    {
-        $name = basename($package);
-
-        $name = str_ends_with($name, '.git')
-            ? substr($name, 0, -4)
-            : $name;
-
-        return strtolower($name);
-    }
-
-
-    /* -------------------------------------------------
-     | Versions
-     ------------------------------------------------- */
-
-    protected function getGitVersions(string $repo): array
-    {
-        $process = new Process(['git', 'ls-remote', '--tags', $repo]);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            return [];
-        }
-
-        $tags = collect(explode("\n", trim($process->getOutput())))
-            ->map(fn($line) => explode("\t", $line)[1] ?? null)
-            ->filter()
-            ->map(fn($tag) => str_replace('refs/tags/', '', $tag))
-            ->reject(fn($tag) => str_contains($tag, '^'))
-            ->unique()
-            ->values()
-            ->toArray();
-
-        // Sort semver desc and limit to 10
-        usort($tags, 'version_compare');
-        $tags = array_reverse($tags);
-
-        return array_slice($tags, 0, 10);
-    }
-
-    protected function getPackagistVersions(string $package): array
-    {
-        $response = Http::get(
-            "https://repo.packagist.org/p2/{$package}.json"
-        );
-
-        if (!$response->ok()) {
-            return [];
-        }
-
-        $versions = collect($response->json('packages')[$package] ?? [])
-            ->pluck('version')
-            ->reject(fn($v) => str_starts_with($v, 'dev'))
-            ->unique()
-            ->values()
-            ->toArray();
-
-        usort($versions, 'version_compare');
-        $versions = array_reverse($versions);
-
-        return array_slice($versions, 0, 10);
-    }
-
-    /* -------------------------------------------------
-     | Installation
-     ------------------------------------------------- */
-
-    protected function installFromGit(string $url, string $version, string $targetPath): int
-    {
-        $this->info("Installing from git ({$version})");
-
-        $process = new Process([
+        $command = [
             'git',
-            'clone',
-            '--branch',
-            $version,
-            '--depth',
-            '1',
-            $url,
-            $targetPath
-        ]);
+            'clone'
+        ];
 
-        $process->setTimeout(null);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            $this->error($process->getErrorOutput());
-            return self::FAILURE;
+        //
+        if (!empty($data['current_version'])) {
+            $command[] = '--branch';
+            $command[] = $data['current_version'];
+            $command[] = '--single-branch';
         }
 
-        return self::SUCCESS;
+        $command[] = $source;
+        $command[] = $data['path'];
+
+        $process = new Process($command);
+        $process->setTimeout(null);
+
+        $process->run(function ($type, $buffer) {
+            echo $buffer;
+        });
+
+        if (!$process->isSuccessful()) {
+            $this->error('Git clone failed.');
+            return false;
+        }
+
+        return true;
     }
 
-    protected function installFromPackagist(string $package, string $version, string $targetPath): int
+
+    protected function runComposerInstall(string $path, string $environment): bool
     {
-        $this->info("Installing from Packagist ({$version})");
+        $this->info('Running composer install...');
 
-        $process = new Process([
+        $command = [
             'composer',
-            'create-project',
-            "{$package}:{$version}",
-            $targetPath,
-            '--no-dev',
-            '--no-scripts',
-        ]);
+            'install',
+            '--no-interaction',
+            '--prefer-dist'
+        ];
 
-        $process->setTimeout(null);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            $this->error($process->getErrorOutput());
-            return self::FAILURE;
+        if ($environment === 'production') {
+            $command[] = '--no-dev';
+            $command[] = '--optimize-autoloader';
         }
 
-        return self::SUCCESS;
+        $process = new Process($command, $path);
+
+        $process->setTimeout(null);
+        $process->run(function ($type, $buffer) {
+            echo $buffer;
+        });
+
+        if (!$process->isSuccessful()) {
+            $this->error('Composer install failed.');
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function clearCaches(): void
+    {
+        $this->info('Clearing application cache...');
+
+        Artisan::call('config:clear');
+        Artisan::call('route:clear');
+        Artisan::call('cache:clear');
     }
 }

@@ -2,6 +2,12 @@
 
 namespace App\Console\Commands\Module;
 
+use Illuminate\Console\Command;
+use App\Services\SettingService;
+use Illuminate\Support\Facades\File;
+use App\Repositories\ModuleRepository;
+use Illuminate\Support\Facades\Artisan;
+
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -27,33 +33,22 @@ namespace App\Console\Commands\Module;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Services\Settings\Setting;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
-
 class ModuleDelete extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = "module:delete {name?} {--force}";
+    protected $signature = "module:delete 
+                            {name?}
+                            {--force}
+                            {--purge-config : Permanently delete module configuration keys from database}";
+
+    protected $description = "Disable and delete an Elymod module (files only, data preserved by default)";
 
     /**
-     * The console command description.
-     *
-     * @var string
+     * Handle
+     * @return int
      */
-    protected $description = "Delete an Elymod module and its published assets symlink";
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): int
     {
         $modulesPath = base_path('third-party');
-        $service = app(Setting::class);
 
         if (!File::exists($modulesPath)) {
             $this->error('No third-party directory found.');
@@ -61,7 +56,7 @@ class ModuleDelete extends Command
         }
 
         $modules = collect(File::directories($modulesPath))
-            ->map(fn($path) => basename($path))
+            ->map(fn ($path) => basename($path))
             ->values();
 
         if ($modules->isEmpty()) {
@@ -71,7 +66,7 @@ class ModuleDelete extends Command
 
         $this->info('Installed modules:');
         $this->table(['#', 'Module'], $modules->map(
-            fn($m, $i) => [$i, $m]
+            fn ($m, $i) => [$i, $m]
         ));
 
         $name = $this->argument('name')
@@ -82,34 +77,103 @@ class ModuleDelete extends Command
             return self::FAILURE;
         }
 
+        $purgeConfig = $this->option('purge-config');
+
+        /**
+         * Ask interactively if purge-config was not explicitly provided
+         */
+        if (!$purgeConfig && !$this->option('force')) {
+            $purgeConfig = $this->confirm(
+                'Do you also want to DELETE module configuration keys from database?',
+                false
+            );
+        }
+
         $this->warn('⚠ WARNING');
-        $this->line('This action will permanently delete:');
-        $this->line(" - Module files: third-party/{$name}");
-        $this->line(" - Public assets symlink: public/third-party/{$name}");
+        $this->line('This action will:');
+        $this->line(" - Delete module files: third-party/{$name}");
+        $this->line(" - Delete public symlink: public/third-party/{$name}");
+
+        if ($purgeConfig) {
+            $this->error(' - Permanently DELETE module configuration keys from database');
+        } else {
+            $this->line(" - Mark module as DISABLED (configs preserved)");
+        }
+
         $this->newLine();
-        $this->line('The database tables WILL NOT be removed.');
-        $this->line('This is a security measure to prevent data loss.');
+        $this->line('Database tables and stored data WILL NOT be removed.');
         $this->newLine();
 
         if (!$this->option('force')) {
+
             $confirm = $this->ask("To confirm, type the module name again");
 
             if ($confirm !== $name) {
                 $this->error('Confirmation mismatch. Operation cancelled.');
                 return self::FAILURE;
             }
+
+            if ($purgeConfig) {
+                if (!$this->confirm('Are you absolutely sure you want to DELETE configuration keys?')) {
+                    $this->error('Purge cancelled.');
+                    return self::FAILURE;
+                }
+            }
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Config handling
+        |--------------------------------------------------------------------------
+        */
+
+        if ($purgeConfig) {
+            app(SettingService::class)->deleteKeysByModule("third-party.{$name}");
+            $this->info("Module configuration keys deleted.");
+        } else {
+            settingAdd("module.third-party.{$name}.module_enabled", 0);
+            $this->info("Module '{$name}' marked as disabled.");
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Remove public symlink
+        |--------------------------------------------------------------------------
+        */
         $publicLink = public_path("third-party/{$name}");
+
         if (File::exists($publicLink) && is_link($publicLink)) {
             File::delete($publicLink);
             $this->info("Assets symlink removed.");
         }
 
-        // Delete keys
-        $service->deleteKeysByModule("third-party.{$name}");
-
+        /*
+        |--------------------------------------------------------------------------
+        | Remove module files
+        |--------------------------------------------------------------------------
+        */
         File::deleteDirectory("{$modulesPath}/{$name}");
+        $this->info("Module files removed.");
+
+        /*
+        |--------------------------------------------------------------------------
+        | Remove module registry entry
+        |--------------------------------------------------------------------------
+        */
+        app(ModuleRepository::class)->findByName($name)->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Clear cache (ALWAYS at the end)
+        |--------------------------------------------------------------------------
+        */
+        Artisan::call('config:clear');
+        Artisan::call('route:clear');
+        Artisan::call('cache:clear');
+
+        $this->info('Application cache cleared.');
+
+        $this->newLine();
         $this->info("Module '{$name}' successfully removed.");
 
         return self::SUCCESS;

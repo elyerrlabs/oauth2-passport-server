@@ -83,7 +83,6 @@ if (!function_exists('settingLoad')) {
                     'value' => $value
                 ]
             );
-
         } catch (\Exception $th) {
         }
     }
@@ -126,12 +125,10 @@ if (!function_exists('settingItem')) {
             $data = Setting::where('key', $key)->first();
 
             return $data ? $data->value : $default;
-
         } catch (\Exception $e) {
         }
         return $default;
     }
-
 }
 
 if (!function_exists('redirectToHome')) {
@@ -267,5 +264,78 @@ if (!function_exists('config_module')) {
         }
 
         return app('config')->get($key, $default);
+    }
+
+    if (!function_exists('encryptWithPassphrase')) {
+
+        function encryptWithPassphrase(string $plain, string $passphrase): array
+        {
+            $salt = random_bytes(16);
+            $nonce = random_bytes(12);
+
+            $key = sodium_crypto_pwhash(
+                32,
+                $passphrase,
+                $salt,
+                SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+                SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE,
+                SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
+            );
+
+            $cipher = openssl_encrypt(
+                $plain,
+                'aes-256-gcm',
+                $key,
+                OPENSSL_RAW_DATA,
+                $nonce,
+                $tag
+            );
+
+            return [
+                'cipher' => base64_encode($cipher),
+                'salt'   => base64_encode($salt),
+                'nonce'  => base64_encode($nonce),
+                'tag'    => base64_encode($tag),
+            ];
+        }
+    }
+
+
+    if (!function_exists('decryptWithPassphrase')) {
+        function decryptWithPassphrase(array $data, string $passphrase): string|false
+        {
+            $salt  = base64_decode($data['salt']);
+            $nonce = base64_decode($data['nonce']);
+            $tag   = base64_decode($data['tag']);
+            $cipher = base64_decode($data['cipher']);
+
+            $key = sodium_crypto_pwhash(
+                32,
+                $passphrase,
+                $salt,
+                SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+                SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE,
+                SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
+            );
+
+            return openssl_decrypt(
+                $cipher,
+                'aes-256-gcm',
+                $key,
+                OPENSSL_RAW_DATA,
+                $nonce,
+                $tag
+            );
+        }
+    }
+
+    if (!function_exists('normalizeModuleName')) {
+        function normalizeModuleName(string $name): string
+        {
+            $name = strtolower($name);
+            $name = preg_replace('/\s+/', '-', $name);
+            $name = str_replace('_', '-', $name);
+            return $name;
+        }
     }
 }

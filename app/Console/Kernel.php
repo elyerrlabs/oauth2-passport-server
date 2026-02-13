@@ -7,8 +7,11 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-
-    protected $commands = [];
+    protected $commands = [
+        \App\Console\Commands\Module\ModuleMake::class,
+        \App\Console\Commands\Module\ModuleDelete::class,
+        \App\Console\Commands\Module\ModuleInstall::class,
+    ];
 
     /**
      * Define the application's command schedule.
@@ -29,7 +32,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__ . DIRECTORY_SEPARATOR . 'Commands');
 
         require base_path('routes/console.php');
     }
