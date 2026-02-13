@@ -225,6 +225,8 @@ class ModuleInstall extends Command
 
             // Register module on the database
             app(\App\Repositories\ModuleRepository::class)->create($data);
+            
+            settingAdd("module.third-party.{$name}.module_enabled", 1);
 
             // Install dependencies
             if (!$this->runComposerInstall($modulePath, $environment)) {

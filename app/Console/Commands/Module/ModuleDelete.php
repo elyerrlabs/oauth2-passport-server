@@ -56,7 +56,7 @@ class ModuleDelete extends Command
         }
 
         $modules = collect(File::directories($modulesPath))
-            ->map(fn ($path) => basename($path))
+            ->map(fn($path) => basename($path))
             ->values();
 
         if ($modules->isEmpty()) {
@@ -66,7 +66,7 @@ class ModuleDelete extends Command
 
         $this->info('Installed modules:');
         $this->table(['#', 'Module'], $modules->map(
-            fn ($m, $i) => [$i, $m]
+            fn($m, $i) => [$i, $m]
         ));
 
         $name = $this->argument('name')
@@ -161,17 +161,6 @@ class ModuleDelete extends Command
         |--------------------------------------------------------------------------
         */
         app(ModuleRepository::class)->findByName($name)->delete();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Clear cache (ALWAYS at the end)
-        |--------------------------------------------------------------------------
-        */
-        Artisan::call('config:clear');
-        Artisan::call('route:clear');
-        Artisan::call('cache:clear');
-
-        $this->info('Application cache cleared.');
 
         $this->newLine();
         $this->info("Module '{$name}' successfully removed.");
