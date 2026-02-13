@@ -3,9 +3,10 @@
 namespace App\Console\Commands\Module;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Process;
-use Illuminate\Support\Facades\Artisan;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -215,32 +216,35 @@ class ModuleInstall extends Command
             File::makeDirectory($thirdPartyPath, 0755, true);
         }
 
-        // clone repository
-        if (!$this->cloneRepository($data)) {
-            return self::FAILURE;
-        }
+        return DB::transaction(function () use ($data, $modulePath, $environment, $name) {
 
-        // Register module on the database
-        app(\App\Repositories\ModuleRepository::class)->create($data);
+            // clone repository
+            if (!$this->cloneRepository($data)) {
+                return self::FAILURE;
+            }
 
-        // Install dependencies
-        if (!$this->runComposerInstall($modulePath, $environment)) {
-            File::deleteDirectory($modulePath);
-            return self::FAILURE;
-        }
+            // Register module on the database
+            app(\App\Repositories\ModuleRepository::class)->create($data);
 
-        // Run migrations
-        if (!$this->runMigrations()) {
-            File::deleteDirectory($modulePath);
-            return self::FAILURE;
-        }
+            // Install dependencies
+            if (!$this->runComposerInstall($modulePath, $environment)) {
+                File::deleteDirectory($modulePath);
+                return self::FAILURE;
+            }
 
-        // Clean cache
-        $this->clearCaches();
+            // Run migrations
+            if (!$this->runMigrations()) {
+                File::deleteDirectory($modulePath);
+                return self::FAILURE;
+            }
 
-        $this->info("Module '{$name}' installed successfully.");
+            // Clean cache
+            $this->clearCaches();
 
-        return self::SUCCESS;
+            $this->info("Module '{$name}' installed successfully.");
+
+            return self::SUCCESS;
+        });
     }
 
     protected function runMigrations(): bool
