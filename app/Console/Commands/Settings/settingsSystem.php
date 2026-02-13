@@ -27,12 +27,11 @@ namespace App\Console\Commands\Settings;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Services\SiteMapService;
-use Artisan;
-use Illuminate\Console\Command;
-use App\Services\Settings\Setting;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
+use App\Services\SettingService;
+use Illuminate\Console\Command; 
+use App\Services\SiteMapService; 
+use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Artisan;
 
 class settingsSystem extends Command
 {
@@ -65,7 +64,7 @@ class settingsSystem extends Command
         Artisan::call('settings:countries-upload');
         Artisan::call('settings:channels-upload');
         Artisan::call('passport:keys');
-        Setting::setDefaultKeys();
+        SettingService::setDefaultKeys();
         (new SiteMapService(false))->restorePublicFromBackup();
         $this->info("Server installed successfully");
         Log::info("Server installed successfully");

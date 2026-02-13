@@ -30,7 +30,6 @@ namespace App\Providers;
 use App\Guard\TokenGuard;
 use Laravel\Fortify\Fortify;
 use Laravel\Passport\Passport;
-use App\Services\Settings\Setting;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\ClientRepository;
 use Illuminate\Support\ServiceProvider;
@@ -38,6 +37,7 @@ use League\OAuth2\Server\ResourceServer;
 use Laravel\Passport\PassportUserProvider;
 use App\Models\OAuth\Bridge\AuthCodeRepository;
 use App\Models\OAuth\Bridge\AccessTokenRepository;
+use App\Services\SettingService;
 use Laravel\Passport\Bridge\AuthCodeRepository as LaravelAuthCodeRepository;
 use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository;
 
@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Setting::getDefaultSetting();
+        SettingService::getDefaultSetting();
 
         Auth::extend('oauth2-passport-server', function ($app, $name, array $config) {
             return new TokenGuard(

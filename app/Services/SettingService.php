@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Settings;
+namespace App\Services;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\QueryException;
 
-class Setting
+class SettingService
 {
     private $model;
 
@@ -80,12 +80,11 @@ class Setting
                 // Set the new config
                 Config::set($item->key, $value);
             }
-
         } catch (\Throwable $th) {
             Log::error('Something is wrong to load settings' . $th->getMessage());
         }
 
-        Setting::getPassportSetting();
+        static::getPassportSetting();
 
         URL::forceScheme(env('APP_URL_SCHEME', 'https'));
     }
@@ -362,7 +361,6 @@ class Setting
             $scopes += $dbScopes;
 
             Passport::tokensCan($scopes);
-
         } catch (QueryException $th) {
         }
 
