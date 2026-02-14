@@ -31,33 +31,50 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
-## [Unreleased]
+## [v5.1.5]
 
 ### Added
+
 - Added editable volume to the docker-compose file
 - Deleted orphan keys (`frontend_url` and `asset_url`)
+- Added module rollback support on installation failure
+- Added safe module deletion with confirmation prompt
+- Added automatic removal of module public symlink during uninstall
+- Added module registry cleanup on uninstall
+- Added compatibility metadata support via `module.json`
+- Added module version awareness for future update handling
+- Added improved Composer install output and error visibility
 
 ### Fixed
+
 - Adjusted file and directory permissions
 - Restored public file read access for other users
 - Updated schema to HTTPS from HTTP
 - Fixed environment scheme key (`APP_URL_SCHEME`)
-- Fixed environment file configuration
+- Fixed environment file configuration  
+- Fixed symlink removal logic to prevent orphaned links
+- Fixed module installation rollback to restore previous state on failure
 
 ### Changed
+
 - Updated Dockerfile to multi-stage build
 - Updated Docker-related files
 - Updated `.dockerignore`
 - Updated SEO metadata
+- Improved module install and uninstall reliability
+- Improved Composer execution handling inside modules
+- Improved module lifecycle handling (install, uninstall, rollback)
 
 ---
 
 ## [v5.1.4]
 
 ### Fixed
+
 - Fixed robots.txt handling for SEO management
 
-----
+---
+
 ## [v5.1.3]
 
 ### Fixed
@@ -65,7 +82,9 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Hide password confirmation for demo users
 - Fixed an issue where module rate limits were not loaded unless settings were saved first.
 - Module `rate_limit` configs are now preloaded before RouteServiceProvider initializes.
-----
+
+---
+
 ## [v5.1.2]
 
 ### Added
