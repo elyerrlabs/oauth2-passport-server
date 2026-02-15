@@ -103,9 +103,7 @@ APP_ENV=production
 APP_KEY=
 APP_DEBUG=false
 APP_URL=https://<tu-dominio.com>
-FRONTEND_URL="${APP_URL}"
-ASSET_URL="${APP_URL}"
-SCHEMA_HTTPS=https
+APP_URL_SCHEME=https
 
 # Logs
 LOG_CHANNEL=daily
@@ -142,12 +140,64 @@ Este script se encarga de:
 
 ---
 
-## 👤 Configuración del Primer Usuario
+## 🚀 Script de Ejecución en Contenedor (`./run`)
 
-Tras el despliegue, crea el primer usuario administrador:
+Se ha creado el script `./run` para facilitar la ejecución de comandos dentro del contenedor de la aplicación sin necesidad de escribir manualmente `docker exec`.
+
+El script ejecuta los comandos como el usuario `www-data`, asegurando permisos correctos en el entorno.
 
 ```bash
-docker exec -it ops-app-1 php artisan settings:create-user
+#!/bin/bash
+docker exec -it --user www-data:www-data ops-app-1 "$@"
+```
+
+### Uso
+
+Ejemplo para ejecutar comandos Artisan:
+
+```bash
+./run php artisan migrate
+```
+
+---
+
+## 👤 Configuración del Primer Usuario
+
+Después del despliegue en producción, debes crear el primer usuario administrador:
+
+```bash
+./run php artisan settings:create-user
+```
+
+---
+
+## 📦 Comandos de Módulos
+
+El sistema incluye varios comandos Artisan para la gestión de módulos:
+
+| Comando          | Descripción                                                  |
+| ---------------- | ------------------------------------------------------------ |
+| `module:install` | Instala un módulo de terceros                                |
+| `module:delete`  | Elimina un módulo Elymod y su enlace simbólico de assets     |
+| `module:db:seed` | Ejecuta los seeders de base de datos de un módulo específico |
+| `module:make`    | Crea un nuevo módulo dentro del directorio `third-party`     |
+
+⚠️ **Importante (Producción)**
+El comando `module:make` está diseñado **únicamente para desarrollo**.
+No se recomienda ejecutarlo en entornos de producción, ya que está pensado para la creación y desarrollo de nuevos módulos, no para su uso operativo.
+
+---
+
+## ✅ Recomendación para Producción
+
+En entornos productivos normalmente solo necesitarás ejecutar comandos usando la siguiente manera:
+
+```bash
+./run php artisan r:l
+./run php artisan list
+./run php artisan module:install
+./run php artisan module:delete
+./run php artisan module:db:seed
 ```
 
 ---
