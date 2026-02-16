@@ -25,7 +25,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # -----------------------------------------------------------------------------
 
-IMAGE="elyerr/oauth2-passport-server:v5.1.5"
+IMAGE="elyerr/oauth2-passport-server:v5.1.6"
 COMPOSE_FILE="docker-compose-prod.yml"
 ENV_FILE=".env"
 
