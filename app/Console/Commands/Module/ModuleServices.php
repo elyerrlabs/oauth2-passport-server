@@ -145,6 +145,7 @@ class ModuleServices extends Command
                         //check for this services has actions
                         if (isset($srv['actions'])) {
                             foreach ($srv['actions'] as $action) {
+                                
                                 //searching for action in roles Model
                                 $role = \Core\User\Model\Role::where('slug', $this->slug($action['name']))->first();
                                 //create default scopes for this service
@@ -156,9 +157,9 @@ class ModuleServices extends Command
                                     [
                                         'service_id' => $service->id,
                                         'role_id' => $role->id,
-                                        'api_key' => $action->api_key,
-                                        'public' => $action->public,
-                                        'active' => $action->active,
+                                        'api_key' => $action['api_key'],
+                                        'public' => $action['public'],
+                                        'active' => $action['active'],
                                     ]
                                 );
                             }
