@@ -154,7 +154,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 />
 
                 <v-switch
-                    v-model="form.verify_email"
+                    v-model="form.email_verified_at"
                     :label="__('Mark email as verified')"
                     :help-text="
                         __('User will not need to verify their email address')
@@ -256,7 +256,7 @@ const form = useForm({
     dial_code: null,
     phone: null,
     birthday: null,
-    verify_email: false,
+    email_verified_at: false,
 });
 
 const countries = ref([]);
@@ -288,7 +288,7 @@ const open = async () => {
         form.dial_code = props.item.dial_code;
         form.phone = props.item.phone;
         form.birthday = props.item.birthday;
-        form.verify_email = props.item.email_verified_at !== null;
+        form.email_verified_at = props.item.email_verified_at !== null;
     }
 
     dialog.value = true;
