@@ -225,7 +225,7 @@ class ModuleInstall extends Command
 
             // Register module on the database
             app(\App\Repositories\ModuleRepository::class)->create($data);
-            
+
             settingAdd("module.third-party.{$name}.module_enabled", 1);
 
             // Install dependencies
@@ -237,6 +237,11 @@ class ModuleInstall extends Command
             // Run migrations
             if (!$this->runMigrations()) {
                 File::deleteDirectory($modulePath);
+                return self::FAILURE;
+            }
+
+            $this->info('Loading module services...');
+            if (!$this->loadServiceByModule($name)) {
                 return self::FAILURE;
             }
 
@@ -264,6 +269,18 @@ class ModuleInstall extends Command
         } catch (\Throwable $e) {
 
             $this->error('Migration failed: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    protected function loadServiceByModule(string $url): bool
+    {
+        try {
+            Artisan::call('module:services-loads');
+            $this->line(Artisan::output());
+            return true;
+        } catch (\Throwable $th) {
+            $this->error('Service loading failed: ' . $th->getMessage());
             return false;
         }
     }
