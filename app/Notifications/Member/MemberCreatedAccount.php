@@ -65,15 +65,13 @@ class MemberCreatedAccount extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject(__('Welcome to Our Platform'))
-            ->greeting(__('Hello :name :last_name,', [
+            ->greeting(__('Welcome :name :last_name!', [
                 'name' => $notifiable->name,
                 'last_name' => $notifiable->last_name
             ]))
-            ->line(__('We’re excited to have you with us! To complete your registration and verify your identity, please follow the instructions provided.'))
-            ->line(__('You have a maximum of :time minutes to verify your account. If the verification is not completed within this time, your information will be permanently deleted, and you’ll need to register again.', [
-                'time' => config('system.verify_account_time', 5)
-            ]))
-            ->line(__('Thank you for choosing us. We’re here to support you every step of the way.'));
+            ->line(__('We’re excited to have you with us. Your account has been successfully created and you can now start using our platform.'))
+            ->line(__('If you need any assistance or have questions, our team is always here to help you.'))
+            ->line(__('Thank you for choosing us — we’re glad to have you on board!'));
     }
 
     /**

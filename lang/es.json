@@ -4056,5 +4056,9 @@
   "Enter Your Password": "Ingresa Tu Contraseña",
   "Confirm & Continue": "Confirmar y Continuar",
   "Not you?": "¿No eres tú?",
-  "This security check is valid for 2 hours. Your data is protected with end-to-end encryption.": "Esta verificación de seguridad es válida por 2 horas. Tus datos están protegidos con encriptación de extremo a extremo."
+  "This security check is valid for 2 hours. Your data is protected with end-to-end encryption.": "Esta verificación de seguridad es válida por 2 horas. Tus datos están protegidos con encriptación de extremo a extremo.",
+  "Welcome :name :last_name!": "¡Bienvenido :name :last_name!",
+  "We’re excited to have you with us. Your account has been successfully created and you can now start using our platform.": "Nos emociona tenerte con nosotros. Tu cuenta ha sido creada exitosamente y ahora puedes comenzar a usar nuestra plataforma.",
+  "If you need any assistance or have questions, our team is always here to help you.": "Si necesitas ayuda o tienes alguna pregunta, nuestro equipo siempre está aquí para ayudarte.",
+  "Thank you for choosing us — we’re glad to have you on board!": "Gracias por elegirnos — ¡estamos felices de tenerte con nosotros!"
 }
