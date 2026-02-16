@@ -305,7 +305,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <div class="text-gray-400 dark:text-gray-500">
                 {{
                     __(
-                        "Try adjusting your filters or create your first service to get started"
+                        "Try adjusting your filters or create your first service to get started",
                     )
                 }}
             </div>
@@ -375,12 +375,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             {{ __("Service") }}
                         </div>
                         <div class="flex space-x-1">
-                            <v-create :item="service" @updated="getServices" />
-                            <v-delete
+                            <!--
+                                <v-create :item="service" @updated="getServices" />
+                                <v-delete
                                 v-if="!service.system"
                                 :item="service"
                                 @deleted="getServices"
-                            />
+                                />
+                                -->
                         </div>
                     </div>
                 </div>
@@ -480,7 +482,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         @updated="getServices"
                                     />
                                     <v-delete
-                                        v-if="!service?.system"
+                                        v-if="!service.system"
                                         :item="service"
                                         @deleted="getServices"
                                     />
@@ -506,7 +508,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             >
                                 {{
                                     __(
-                                        "Try adjusting your filters or create a new service"
+                                        "Try adjusting your filters or create a new service",
                                     )
                                 }}
                             </div>
@@ -572,10 +574,10 @@ const viewOptions = [
  * Computed
  */
 const systemServicesCount = computed(
-    () => services.value.filter((s) => s.system).length
+    () => services.value.filter((s) => s.system).length,
 );
 const customServicesCount = computed(
-    () => services.value.filter((s) => !s.system).length
+    () => services.value.filter((s) => !s.system).length,
 );
 
 onMounted(() => {
@@ -605,7 +607,6 @@ const getServices = async () => {
 
     search.get(page.props.route, {
         preserveScroll: true,
-        preserveState: true,
         onSuccess: (page) => {
             const values = page.props.data;
             services.value = values.data;
