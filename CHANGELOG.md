@@ -31,6 +31,18 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
+## [v5.1.6]
+
+### Added
+
+- Introduced `module:services-loads` command to load groups, services, roles, and scopes from modules.
+
+### Fixed
+
+- Corrected welcome email notification.
+
+---
+
 ## [v5.1.5]
 
 ### Added
@@ -51,7 +63,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Restored public file read access for other users
 - Updated schema to HTTPS from HTTP
 - Fixed environment scheme key (`APP_URL_SCHEME`)
-- Fixed environment file configuration  
+- Fixed environment file configuration
 - Fixed symlink removal logic to prevent orphaned links
 - Fixed module installation rollback to restore previous state on failure
 
