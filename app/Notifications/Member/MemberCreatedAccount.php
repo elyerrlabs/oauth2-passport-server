@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Notifications\Member;
 
 /**
@@ -39,10 +40,7 @@ class MemberCreatedAccount extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     /**
      * Get the notification's delivery channels.
@@ -65,8 +63,6 @@ class MemberCreatedAccount extends Notification implements ShouldQueue
     {
         app()->setLocale($notifiable->lang);
 
-        $link = $this->generateLink($notifiable);
-
         return (new MailMessage)
             ->subject(__('Welcome to Our Platform'))
             ->greeting(__('Hello :name :last_name,', [
@@ -77,7 +73,6 @@ class MemberCreatedAccount extends Notification implements ShouldQueue
             ->line(__('You have a maximum of :time minutes to verify your account. If the verification is not completed within this time, your information will be permanently deleted, and you’ll need to register again.', [
                 'time' => config('system.verify_account_time', 5)
             ]))
-            ->action(__('Verify Your Account'), url($link))
             ->line(__('Thank you for choosing us. We’re here to support you every step of the way.'));
     }
 
@@ -92,36 +87,5 @@ class MemberCreatedAccount extends Notification implements ShouldQueue
         return [
             //
         ];
-    }
-
-    /**
-     * Generate a new url to verify account
-     * @param mixed $client
-     * @return string
-     */
-    public function generateLink($user)
-    {
-        $token = Str::random(40);
-        $email = $user->email;
-
-        $query = http_build_query([
-            'email' => $email,
-            'token' => $token,
-        ]);
-
-        DB::transaction(function () use ($token, $email) {
-            DB::table('password_resets')->updateOrInsert(
-                [
-                    'email' => $email,
-                ],
-                [
-                    'email' => $email,
-                    'token' => $token,
-                    'created_at' => now(),
-                ]
-            );
-        });
-
-        return route('user.verify.account') . "?$query";
     }
 }

@@ -27,10 +27,7 @@ namespace Core\User\Services;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Core\User\Repositories\UserRepository;
-use DateInterval;
-use DateTime;
-use App\Notifications\Member\MemberCreatedAccount;
+use Core\User\Repositories\UserRepository; 
 use Illuminate\Support\Facades\DB;
 use Core\User\Repositories\GroupRepository;
 use Core\User\Notification\UserReactivateAccount;
@@ -343,7 +340,6 @@ class UserService
             $user->notify(new UserReactivateAccount());
 
             return $user;
-
         } catch (Exception $e) {
             throw new ReportError(__("The server cannot find the requested resource"), 404);
         }
@@ -467,7 +463,6 @@ class UserService
 
         // Sync groups
         $user->groups()->syncWithoutDetaching($data['groups']);
-
     }
 
     /**
@@ -593,7 +588,7 @@ class UserService
                 'accept_cookies' => $data['accept_cookies']
             ]);
 
-            // Check for referral code 
+            // Check for referral code
             if (!empty($data['referral_code']) && class_exists(\Core\Partner\Model\Partner::class)) {
 
                 $partner = \Core\Partner\Model\Partner::where('code', $data['referral_code'])->first();
@@ -614,84 +609,5 @@ class UserService
 
             return $user;
         });
-    }
-
-    /**
-     * Verify user accounts
-     * @param array $data
-     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
-     * @return mixed|\Illuminate\Http\RedirectResponse
-     */
-    public function verifyUserAccount(array $data)
-    {
-        try {
-
-            // Verify the auth user and incoming use are the same
-            if (auth()->check() && auth()->user()->email !== $data['email']) {
-                // Destroy token
-                DB::table('password_resets')->where('email', '=', $data['email'])->delete();
-                // Logout user
-                auth()->logout();
-            }
-
-            // Verify the user has activated account
-            if (auth()->check() && auth()->user()->email_verified_at) {
-                return redirectToHome();
-            }
-
-            // Retrieve the token
-            $token = DB::table('password_resets')->where([
-                'token' => $data['token'],
-                'email' => $data['email'],
-            ])->first();
-
-            // Calculate time valid token
-            $now = new DateTime($token->created_at);
-            $now->add(new DateInterval("PT" . config("system.verify_account_time", 5) . "M"));
-            $date = $now->format("Y-m-d H:i:s");
-
-            // Destroy current token
-            //  DB::table('password_resets')->where('email', '=', $token->email)->delete();
-
-            // Retrieve the user object
-            $user = $this->userRepository->findByEmail($token->email);
-
-            // Validate expiration token
-            if (date('Y-m-d H:i:s', strtotime(now())) > $date) {
-                return redirect()->route('login')
-                    ->with(
-                        'error',
-                        __("Time's up to activate the account, please login and try again.")
-                    );
-            }
-
-            $user->email_verified_at = now();
-            $user->save();
-
-            // Authenticate the user
-            if (!auth()->check()) {
-                auth()->login($user);
-            }
-
-            return redirect()->route('user.verified.account')
-                ->with(
-                    [
-                        'status' =>
-                            __('Your account has been activated.'),
-                        'token' => uniqid()
-                    ]
-                );
-
-        } catch (Exception $e) {
-
-            if (auth()->check()) {
-                auth()->logout();
-            }
-
-            return redirect()->route('login')->with(
-                'error',
-                __("Something is wrong, please login and tray again")
-            );
-        }
     }
 }

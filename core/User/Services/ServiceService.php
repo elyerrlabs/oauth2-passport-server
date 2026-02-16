@@ -186,7 +186,7 @@ class ServiceService
 
         throw_if(
             count($model->scopes) > 0,
-            new ReportError(__("This action can't be done"), 400)
+            new ReportError(__("This action can't be done"), 403)
         );
 
         $model->delete();
