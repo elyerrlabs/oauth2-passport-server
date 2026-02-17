@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Models\Setting;
-
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -27,36 +25,45 @@ namespace App\Models\Setting;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Models\Master;
-use Core\User\Model\User;
-use App\Transformers\Setting\TerminalTransformer;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class Terminal extends Master
+return new class extends Migration
 {
-    use HasFactory;
-
-    public $transformer = TerminalTransformer::class;
-
-    protected $fillable = [
-        'command',
-        'output',
-        'status',
-        'user_id'
-    ];
-
-    public function whiteList()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        return ['ls', 'git', 'whoami', 'uptime', 'php artisan', 'composer', 'npm'];
-    }
+        $tables = [
+            'factor_2fa',
+            'terminals',
+            'categories',
+            'icons',
+            'units',
+            'attributes',
+            'tags',
+            'attributables',
+            'taggables',
+            'orders',
+            'variants',
+        ];
 
+        Schema::disableForeignKeyConstraints();
+
+        foreach ($tables as $table) {
+            Schema::dropIfExists($table);
+        }
+
+        Schema::enableForeignKeyConstraints();
+    }
 
     /**
-     * Users relations
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Reverse the migrations.
      */
-    public function user()
+    public function down(): void
     {
-        return $this->belongsTo(User::class);
+        //
     }
-}
+};

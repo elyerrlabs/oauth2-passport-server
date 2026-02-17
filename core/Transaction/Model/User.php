@@ -48,15 +48,6 @@ class User extends \Core\User\Model\User
     }
 
     /**
-     * Has many checkout
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Checkout, User>
-     */
-    public function checkouts()
-    {
-        return $this->hasMany(Checkout::class);
-    }
-
-    /**
      * Get all transactions activated or executed by the user
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<Transaction, User>
      */

@@ -48,17 +48,11 @@ class MorphServiceProvider extends ServiceProvider
         $morph = [
             (new \Core\User\Model\User())->tag => \Core\User\Model\User::class,
             (new \App\Models\Common\File())->tag => \App\Models\Common\File::class,
-            (new \App\Models\Common\Attribute)->tag => \App\Models\Common\Attribute::class,
-            (new \App\Models\Common\Icon())->tag => \App\Models\Common\Icon::class,
-            (new \App\Models\Common\Tag())->tag => \App\Models\Common\Tag::class,
-            (new \App\Models\Common\Order())->tag => \App\Models\Common\Order::class,
-            (new \App\Models\Common\Variant())->tag => \App\Models\Common\Variant::class,
         ];
 
         Relation::morphMap(array_merge(
             config('morph'),
             $morph
         ));
-
     }
 }
