@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands\Module;
 
-use Illuminate\Console\Command;
 use App\Repositories\ModuleRepository;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Process\Process;
 
 /**
@@ -81,37 +82,39 @@ class ModuleMake extends Command
 
         $this->info("Creating Elymod module '{$name}'...");
 
-        app(ModuleRepository::class)->create([
-            'name' => $name,
-            'provider' => 'local',
-            'source' => 'local',
-            'path' => $modulePath,
-            'current_version' => 'dev',
-            'last_version' => null,
-            'new_version' => null,
-        ]);
+        return DB::transaction(function () use ($name, $modulePath, $thirdPartyPath) {
 
-        $process = new Process([
-            PHP_BINARY,
-            '/usr/bin/composer',
-            'create-project',
-            'elyerr/elymod',
-            $name
-        ], $thirdPartyPath);
+            app(ModuleRepository::class)->create([
+                'name' => $name,
+                'provider' => 'local',
+                'source' => 'local',
+                'path' => $modulePath,
+                'current_version' => 'dev',
+                'last_version' => null,
+                'new_version' => null,
+            ]);
 
-        $process->setTimeout(null);
-        $process->run(function ($type, $buffer) {
-            echo $buffer;
+            $process = new Process([
+                'composer',
+                'create-project',
+                'elyerr/elymod',
+                $name
+            ], $thirdPartyPath);
+
+            $process->setTimeout(null);
+            $process->run(function ($type, $buffer) {
+                echo $buffer;
+            });
+
+            if (!$process->isSuccessful()) {
+                $this->error('Failed to create the module.');
+                return self::FAILURE;
+            }
+
+            $this->info("Module '{$name}' created successfully in third-party/");
+
+            return self::SUCCESS;
         });
-
-        if (!$process->isSuccessful()) {
-            $this->error('Failed to create the module.');
-            return self::FAILURE;
-        }
-
-        $this->info("Module '{$name}' created successfully in third-party/");
-
-        return self::SUCCESS;
     }
 
     protected function composerExists(): bool
