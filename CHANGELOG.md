@@ -29,7 +29,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
-# Changelog
+## [Unreleased]
+
+### Fixed
+- `module:make` command now performs a rollback if an error occurs, preventing partial changes.
+- Fixed detection of the Composer executable in module commands.
+
+---
 
 ## [v5.1.6]
 
