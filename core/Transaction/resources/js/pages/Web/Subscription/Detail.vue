@@ -808,10 +808,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                                 <!-- Action Buttons -->
                                 <div class="flex flex-wrap gap-3">
-                                    <v-cancel
-                                      
+                                    <!--
+                                        <v-cancel
+                                        
                                         :item="tx"
-                                    />
+                                        />
+                                        -->
 
                                     <v-transaction-activate
                                         @updated="getPackages"
