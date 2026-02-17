@@ -35,6 +35,9 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - `module:make` command now performs a rollback if an error occurs, preventing partial changes.
 - Fixed detection of the Composer executable in module commands.
 
+### Removed
+- Dropped legacy core tables that have been migrated to modules to avoid duplication and inconsistencies.
+
 ---
 
 ## [v5.1.6]
