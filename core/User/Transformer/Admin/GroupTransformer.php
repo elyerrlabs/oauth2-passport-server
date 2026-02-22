@@ -64,10 +64,10 @@ class GroupTransformer extends TransformerAbstract
             'description' => $group->description,
             'system' => $group->system ? true : false,
             'links' => [
-                'index' => route('user.admin.groups.index'),
-                'store' => route('user.admin.groups.store'),
-                'update' => route('user.admin.groups.update', ['group' => $group->id]),
-                'destroy' => route('user.admin.groups.destroy', ['group' => $group->id]),
+                'index' => route('api.user.admin.groups.index'),
+                'store' => route('api.user.admin.groups.index'),
+                'update' => route('api.user.admin.groups.update', ['group' => $group->id]),
+                'destroy' => route('api.user.admin.groups.destroy', ['group' => $group->id]),
             ],
 
         ];

@@ -34,5 +34,5 @@ Route::group([
     'middleware' => ['throttle:core:user:api_admin']
 ], function () {
 
-    Route::resource('groups', GroupController::class)->only('index', 'store', 'update' . 'destroy');
+    Route::resource('groups', GroupController::class)->except('edit', 'create', 'show');
 });

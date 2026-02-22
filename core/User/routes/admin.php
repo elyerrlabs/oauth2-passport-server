@@ -24,6 +24,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 use Illuminate\Support\Facades\Route;
 use Core\User\Http\Controllers\Admin\RoleController;
 use Core\User\Http\Controllers\Admin\UserController;
@@ -39,7 +40,8 @@ Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(funct
 
     Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::resource('groups', GroupController::class)->except('edit', 'create', 'show');
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
+
     Route::resource('roles', RoleController::class)->except('create', 'edit', 'show');
 
     Route::resource('services', ServiceController::class)->except('create', 'edit');
