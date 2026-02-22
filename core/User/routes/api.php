@@ -25,10 +25,14 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use Core\User\Http\Controllers\Api\Admin\GroupController;
 use Illuminate\Support\Facades\Route;
 
+Route::group([
+    'as' => 'admin.',
+    'prefix' => 'admin',
+    'middleware' => ['throttle:core:user:api_admin']
+], function () {
 
-
-/**
- * User routes
- */
+    Route::resource('groups', GroupController::class)->only('index', 'store', 'update' . 'destroy');
+});

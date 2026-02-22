@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\User\Http\Controllers\Admin;
 
 /**

@@ -113,6 +113,23 @@ class GroupService
     public function update(string $id, array $data)
     {
         $model = $this->groupRepository->find($id);
+
+        throw_if(
+            empty($model),
+            new ReportError(
+                __("This group can not be found"),
+                404
+            )
+        );
+
+        throw_if(
+            $model->system,
+            new ReportError(
+                __("This is a system group and cannot be modified. If you believe this is an error, please contact the administrator."),
+                403
+            )
+        );
+
         $model->description = $data["description"];
         $model->push();
 
