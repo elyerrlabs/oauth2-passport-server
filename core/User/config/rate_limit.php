@@ -36,6 +36,13 @@ return [
         'block_time' => 120,
         'name' => __('Rate Limit for Admin routes')
     ],
+
+    'api_admin' => [
+        'limit' => 300,
+        'block_time' => 120,
+        'name' => __('Rate Limit for Api Admin routes')
+    ],
+
     'web' => [
         'limit' => 300,
         'block_time' => 120,
