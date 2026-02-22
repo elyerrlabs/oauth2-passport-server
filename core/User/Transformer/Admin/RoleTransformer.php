@@ -63,30 +63,11 @@ class RoleTransformer extends TransformerAbstract
             'description' => $role->description,
             'system' => $role->system ? true : false,
             'links' => [
-                'index' => route('user.admin.roles.index'),
-                'store' => route('user.admin.roles.store'),
-                'show' => route('user.admin.roles.update', ['role' => $role->id]),
-                'update' => route('user.admin.roles.update', ['role' => $role->id]),
-                'destroy' => route('user.admin.roles.destroy', ['role' => $role->id]),
+                'index' => route('api.user.admin.roles.index'),
+                'store' => route('api.user.admin.roles.store'),
+                'update' => route('api.user.admin.roles.update', ['role' => $role->id]),
+                'destroy' => route('api.user.admin.roles.destroy', ['role' => $role->id]),
             ],
         ];
-    }
-
-    /**
-     * Return the original attribute
-     * @param mixed $index
-     * @return string|null
-     */
-    public static function getOriginalAttributes($index)
-    {
-        $attributes = [
-            'id' => 'id',
-            'name' => 'name',
-            'slug' => 'slug',
-            'description' => 'description',
-            'system' => 'system',
-        ];
-
-        return isset($attributes[$index]) ? $attributes[$index] : null;
     }
 }

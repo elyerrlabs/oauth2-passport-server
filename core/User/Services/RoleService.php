@@ -26,6 +26,7 @@ namespace Core\User\Services;
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 use Core\User\Model\Role;
 use Illuminate\Http\Request;
 use Core\User\Repositories\RoleRepository;
@@ -99,6 +100,25 @@ class RoleService
      */
     public function update(string $id, array $data)
     {
+
+        $model = $this->roleRepository->find($id);
+
+        throw_if(
+            empty($model),
+            new ReportError(
+                __("This resource can not be found"),
+                404
+            )
+        );
+
+        throw_if(
+            !$model->system,
+            new ReportError(
+                __("This is a system role and cannot be modified. If you believe this is an error, please contact the administrator."),
+                403
+            )
+        );
+
         return $this->roleRepository->update($id, [
             'name' => $data['name'],
             'description' => $data['description']

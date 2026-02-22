@@ -40,9 +40,8 @@ Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(funct
 
     Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
-
-    Route::resource('roles', RoleController::class)->except('create', 'edit', 'show');
+    Route::get('groups', [GroupController::class, 'index'])->name('groups.index');
+    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
 
     Route::resource('services', ServiceController::class)->except('create', 'edit');
     Route::get('services/{service}/scopes', [ServiceScopeController::class, 'index'])->name('service.scopes.index');

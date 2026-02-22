@@ -26,6 +26,7 @@
  */
 
 use Core\User\Http\Controllers\Api\Admin\GroupController;
+use Core\User\Http\Controllers\Api\Admin\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -35,4 +36,5 @@ Route::group([
 ], function () {
 
     Route::resource('groups', GroupController::class)->except('edit', 'create', 'show');
+    Route::resource('roles', RoleController::class)->except('edit', 'create', 'show');
 });
