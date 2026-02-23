@@ -72,10 +72,12 @@ class GroupService
         );
 
         $query->when(
-            $request->filled('order_by'),
-            fn($q) =>  $q->orderBy('id', $request->order_by)
-        );
+            $request->filled('order_type'),
+            function ($q) use ($request) {
 
+                $q->orderBy($request->filled('order_by') ? $request->order_by : 'id', $request->order_type);
+            }
+        );
 
         return $query;
     }
