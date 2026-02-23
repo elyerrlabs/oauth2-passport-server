@@ -50,7 +50,10 @@ class GroupController extends WebController
         return Inertia::render(
             "Admin/Groups/Index",
             [
-                'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
+                'menus' => resolveInertiaRoutes(config('menus.admin_routes')),
+                'api' => [
+                    'groups' => route('api.user.admin.groups.index')
+                ]
             ]
         );
     }

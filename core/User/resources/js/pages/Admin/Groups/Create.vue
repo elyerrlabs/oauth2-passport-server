@@ -57,7 +57,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         :label="__('Group Name')"
                         :placeholder="__('Enter group name')"
                         v-model="form.name"
-                        :error="form.errors.name"
+                        :error="errors.name"
                         :required="true"
                         :disabled="item?.system"
                     />
@@ -65,7 +65,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <v-textarea
                         :label="__('Description')"
                         v-model="form.description"
-                        :error="form.errors.description"
+                        :error="errors.description"
                         :placeholder="__('Write a short description...')"
                         :required="true"
                         :disabled="item?.system"
@@ -76,9 +76,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         :label="__('System Group')"
                         v-model="form.system"
                         :disabled="item?.system"
+                        :error="errors.system"
                         :placeholder="
                             __(
-                                'System groups have special permissions and cannot be deleted.'
+                                'System groups have special permissions and cannot be deleted.',
                             )
                         "
                     />
@@ -90,7 +91,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 >
                     <button
                         @click="close"
-                        :disabled="form.processing"
+                        :disabled="processing"
                         class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <i class="mdi mdi-close-circle"></i>
@@ -99,7 +100,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                     <button
                         @click="submit"
-                        :disabled="form.processing"
+                        :disabled="processing"
                         class="px-6 py-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <i
@@ -107,7 +108,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             :class="
                                 isEdit ? 'mdi-content-save' : 'mdi-check-circle'
                             "
-                            v-if="!form.processing"
+                            v-if="!processing"
                         ></i>
                         <div
                             v-else
@@ -115,13 +116,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         ></div>
                         <span>
                             {{
-                                form.processing
+                                processing
                                     ? isEdit
                                         ? __("Updating...")
                                         : __("Creating...")
                                     : isEdit
-                                    ? __("Update Group")
-                                    : __("Create Group")
+                                      ? __("Update Group")
+                                      : __("Create Group")
                             }}
                         </span>
                     </button>
@@ -133,7 +134,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import { ref, computed } from "vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 import VModal from "@/components/VModal.vue";
 import VInput from "@/components/VInput.vue";
 import VTextarea from "@/components/VTextarea.vue";
@@ -146,7 +147,7 @@ const emit = defineEmits(["created", "updated"]);
 const props = defineProps({
     item: {
         type: Object,
-        default: null,
+        default: () => {},
     },
 });
 
@@ -155,57 +156,77 @@ const dialog = ref(false);
 const page = usePage();
 const isEdit = computed(() => !!props.item);
 
-// useForm (shared for create & edit)
-const form = useForm({
+const processing = ref(false);
+
+const form = ref({
     name: null,
     description: null,
     system: false,
 });
 
+const errors = ref({});
+
 // Methods
 const open = () => {
-    form.resetAndClearErrors();
+    errors.value = {};
     if (props.item?.id) {
-        form.name = props.item.name;
-        form.description = props.item.description;
-        form.system = props.item.system;
+        form.value = { ...props.item };
     }
     dialog.value = true;
 };
 
 const close = () => {
-    form.errors = {};
+    errors.value = {};
     dialog.value = false;
 };
 
 const submit = () => {
+    processing.value = true;
     if (isEdit.value) updateGroup();
     else createGroup();
 };
 
-const createGroup = () => {
-    form.post(page.props.route, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
+const createGroup = async () => {
+    try {
+        const res = await $server.post(page.props.api.groups, form.value);
+
+        if (res.status == 201) {
             $notify.success(__("Group created successfully"));
             dialog.value = false;
             emit("created");
-        },
-        onError: () => {},
-    });
+        }
+    } catch (error) {
+        if (error?.response?.status == 422) {
+            errors.value = error.response.data.errors;
+        }
+
+        if (error?.response?.data?.message) {
+            $notify.error(__(error.response.data.message));
+        }
+    } finally {
+        processing.value = false;
+    }
 };
 
-const updateGroup = () => {
-    form.put(props.item.links.update, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
+const updateGroup = async () => {
+    try {
+        const res = await $server.put(props.item.links.update, form.value);
+
+        if (res.status == 200) {
             $notify.success(__("Group updated successfully"));
             dialog.value = false;
             emit("updated");
-        },
-        onError: () => {},
-    });
+        }
+    } catch (error) {
+        if (error?.response?.status == 422) {
+            errors.value = error.response.data.errors;
+        }
+
+        if (error?.response?.data?.message) {
+            $notify.error(__(error.response.data.message));
+        }
+    } finally {
+        processing.value = false;
+    }
 };
 </script>

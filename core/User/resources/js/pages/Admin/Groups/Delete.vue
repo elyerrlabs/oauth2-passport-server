@@ -60,7 +60,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <p class="text-gray-600 dark:text-gray-400 mb-4">
                         {{
                             __(
-                                "Please type the group name to confirm deletion."
+                                "Please type the group name to confirm deletion.",
                             )
                         }}
                     </p>
@@ -107,7 +107,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             }}</strong>
                             {{
                                 __(
-                                    "All data associated with this group will be permanently deleted and cannot be recovered."
+                                    "All data associated with this group will be permanently deleted and cannot be recovered.",
                                 )
                             }}
                         </div>
@@ -193,26 +193,24 @@ const handleConfirm = () => {
     }
 };
 
-const destroy = () => {
+const destroy = async () => {
     if (!canDelete.value) {
         return;
     }
 
-    form.delete(props.item.links.destroy, {
-        preserveScroll: true,
-        onSuccess: () => {
+    try {
+        const res = await $server.delete(props.item.links.destroy);
+
+        if (res.status == 200) {
             $notify.success(__("Group deleted successfully"));
             emit("deleted");
             dialog.value = false;
             confirmationText.value = "";
-        },
-        onError: (e) => {
-            if (e.message) {
-                $notify.error(e.message);
-            } else {
-                $notify.error(__("An error occurred while deleting the group"));
-            }
-        },
-    });
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(__(error.response.data.message));
+        }
+    }
 };
 </script>

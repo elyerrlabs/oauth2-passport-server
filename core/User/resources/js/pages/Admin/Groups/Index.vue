@@ -444,7 +444,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                             >
                                                 {{
                                                     __(
-                                                        "Try adjusting your search filters"
+                                                        "Try adjusting your search filters",
                                                     )
                                                 }}
                                             </div>
@@ -469,7 +469,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 import VAdminLayout from "@/components/VGeneralLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
@@ -481,46 +481,43 @@ const groups = ref([]);
 const viewMode = ref("list");
 const loading = ref(false);
 const pages = ref({ total_pages: 0 });
-const search = useForm({
+const search = ref({
     page: 1,
     per_page: 15,
     name: "",
     system: "", //true | false | null
+    order_by: "desc",
 });
 
 const columns = ref(["Group Name", "Slug", "Description", "Type", "Actions"]);
 
-onMounted(() => {
-    const values = page.props.data;
-    groups.value = values.data;
-    pages.value = values.meta.pagination;
+onMounted(async () => {
+    await getGroups();
 });
 
 const changePage = () => {
-    search.page = 1;
     getGroups();
 };
 
-const getGroups = () => {
+const getGroups = async () => {
     loading.value = true;
 
-    search.get(page.props.route, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: (page) => {
-            const values = page.props.data;
+    try {
+        const res = await $server.get(page.props.api.groups, {
+            params: search.value,
+        });
+        if (res.status == 200) {
+            const values = res.data;
             groups.value = values.data;
             pages.value = values.meta.pagination;
-        },
-        onError: (e) => {
-            if (e?.response?.data?.message) {
-                $notify.error(e.response.data.message);
-            }
-        },
-        onFinish: () => {
-            loading.value = false;
-        },
-    });
+        }
+    } catch (error) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 
 const resetFilters = () => {
