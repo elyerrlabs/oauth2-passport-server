@@ -35,23 +35,6 @@ return [
         'service' => true,
     ],
 
-    "notification" => [
-        "id" => "notification",
-        "name" => __("Notification"),
-        "route" => "user.notification.unread",
-        "icon" => "mdi-bell",
-        'service' => true,
-    ],
-
-    "notification_mark_as_read" => [
-        "id" => "notification_mark_as_read",
-        "name" => __("Unread Notification"),
-        "route" => "user.notification.mark-all-as-read",
-        "icon" => "mdi-bell",
-        'service' => true,
-    ],
-
-
     "merge" => [
 
         "admin_dashboard" => [
@@ -59,7 +42,7 @@ return [
             "administrator" => [
                 "id" => "admin",
                 "name" => __("Admin"),
-                "route" => "user.admin.dashboard",
+                "route" => "user.admin.users.index",
                 "icon" => "mdi-security",
                 'service' => "administrator:admin",
             ],
@@ -89,10 +72,11 @@ return [
                 'icon' => 'mdi-lock-reset',
                 'service' => true,
             ],
+
             '2fa' => [
                 'id' => '2fa',
                 'name' => __('Two Factor Authorization'),
-                'route' => 'user.2fa.request',
+                'route' => 'user.twoFactor',
                 'icon' => 'mdi-two-factor-authentication',
                 'service' => true,
             ],
@@ -101,14 +85,6 @@ return [
     ],
 
     "admin_routes" => [
-        [
-            "id" => "dashboard",
-            "name" => __("Dashboard"),
-            "route" => "user.admin.dashboard",
-            "icon" => "mdi-view-dashboard",
-            'service' => 'administrator:admin',
-            'position' => 1,
-        ],
         [
             "id" => "groups",
             "name" => __("Groups"),

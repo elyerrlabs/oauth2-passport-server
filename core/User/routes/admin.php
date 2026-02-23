@@ -30,11 +30,8 @@ use Core\User\Http\Controllers\Admin\RoleController;
 use Core\User\Http\Controllers\Admin\UserController;
 use Core\User\Http\Controllers\Admin\GroupController;
 use Core\User\Http\Controllers\Admin\ServiceController;
-use Core\User\Http\Controllers\Admin\DashboardController;
 
 Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(function () {
-
-    Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     Route::get('groups', [GroupController::class, 'index'])->name('groups.index');
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index');

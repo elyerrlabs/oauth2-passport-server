@@ -36,20 +36,14 @@ use Core\User\Http\Requests\UserPersonalPasswordRequest;
 
 class UserController extends WebController
 {
-    /**
-     * User repository
-     * @var UserService
-     */
-    public $userService;
 
     /**
      * Construct
      * @param \Core\User\Services\UserService $userService
      */
-    public function __construct(UserService $userService)
+    public function __construct(protected UserService $userService)
     {
         parent::__construct();
-        $this->userService = $userService;
     }
 
     /**
