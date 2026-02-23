@@ -72,7 +72,7 @@ final class RoleController extends ApiController
     {
         $data = $this->roleService->create($request->toArray());
 
-        return $this->showOne($data, RoleTransformer::class);
+        return $this->showOne($data, RoleTransformer::class, 201);
     }
 
     /**
