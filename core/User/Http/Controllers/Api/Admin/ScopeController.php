@@ -42,7 +42,7 @@ final class ScopeController extends ApiController
     public function __construct(protected ScopeService $scopeService)
     {
         parent::__construct();
-        $this->middleware('userCanAny:administrator:scope:full,administrator:scope:view')->only('index');
+        $this->middleware('scope:administrator:scope:full,administrator:scope:view')->only('index');
     }
 
     /**

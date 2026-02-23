@@ -83,14 +83,14 @@ class UserTransformer extends TransformerAbstract
             'updated' => $this->format_date($user->updated_at),
             'disabled' => $this->format_date($user->deleted_at),
             'links' => [
-                'index' => route('user.admin.users.index'),
-                'store' => route('user.admin.users.store'),
-                'show' => route('user.admin.users.show', ['user' => $user->id]),
-                'update' => route('user.admin.users.update', ['user' => $user->id]),
-                'disable' => route('user.admin.users.disable', ['user' => $user->id]),
-                'enable' => route('user.admin.users.enable', ['id' => $user->id]),
+                'index' => route('api.user.admin.users.index'),
+                'store' => route('api.user.admin.users.store'),
+                'show' => route('api.user.admin.users.show', ['user' => $user->id]),
+                'update' => route('api.user.admin.users.update', ['user' => $user->id]),
+               // 'destroy' => route('api.user.admin.users.update', ['user' => $user->id]),
+                'disable' => route('api.user.admin.users.disable', ['user' => $user->id]),
+                'enable' => route('api.user.admin.users.enable', ['id' => $user->id]),
                 'scopes' => route('user.admin.users.scopes.index', ['user' => $user->id]),
-                'groups' => route('user.admin.users.groups.index', ['user' => $user->id]),
             ],
         ];
     }

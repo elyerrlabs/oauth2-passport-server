@@ -30,6 +30,8 @@ use Core\User\Http\Controllers\Api\Admin\GroupController;
 use Core\User\Http\Controllers\Api\Admin\RoleController;
 use Core\User\Http\Controllers\Api\Admin\ScopeController;
 use Core\User\Http\Controllers\Api\Admin\ServiceScopeController;
+use Core\User\Http\Controllers\Api\Admin\UserController;
+use Core\User\Http\Controllers\Api\Admin\UserScopeController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -47,4 +49,12 @@ Route::group([
     Route::delete('services/{service}/scopes/{scope}', [ServiceScopeController::class, 'revoke'])->name('services.scopes.revoke');
 
     Route::resource('scopes', ScopeController::class)->only('index');
+
+    Route::get('/users/{user}/scopes', [UserScopeController::class, 'index'])->name('users.scopes.index');
+    Route::post('/users/{user}/scopes', [UserScopeController::class, 'assign'])->name('users.scopes.assign');
+    Route::delete('/users/{user}/scopes/{scope}', [UserScopeController::class, 'revoke'])->name('users.scopes.revoke');
+
+    Route::delete('users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
+    Route::get('users/{id}/enable', [UserController::class, 'enable'])->name('users.enable');
+    Route::resource('users', UserController::class)->except('edit', 'create', 'destroy');
 });

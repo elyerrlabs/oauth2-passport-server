@@ -31,8 +31,6 @@ use Core\User\Http\Controllers\Admin\UserController;
 use Core\User\Http\Controllers\Admin\GroupController;
 use Core\User\Http\Controllers\Admin\ServiceController;
 use Core\User\Http\Controllers\Admin\DashboardController;
-use Core\User\Http\Controllers\Admin\UserGroupController;
-use Core\User\Http\Controllers\Admin\UserScopeController;
 
 Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(function () {
 
@@ -40,19 +38,6 @@ Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(funct
 
     Route::get('groups', [GroupController::class, 'index'])->name('groups.index');
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
-
     Route::get('services', [ServiceController::class, 'index'])->name('services.index');
- 
-    Route::get('/users/{user}/scopes/history', [UserScopeController::class, 'history'])->name('users.scopes.history');
-    Route::get('/users/{user}/scopes', [UserScopeController::class, 'index'])->name('users.scopes.index');
-    Route::post('/users/{user}/scopes', [UserScopeController::class, 'assign'])->name('users.scopes.assign');
-    Route::put('/users/{user}/scopes/{scope}', [UserScopeController::class, 'revoke'])->name('users.scopes.revoke');
-
-    Route::get('/users/{user}/groups', [UserGroupController::class, 'index'])->name('users.groups.index');
-    Route::post('/users/{user}/groups', [UserGroupController::class, 'assign'])->name('users.groups.assign');
-    Route::delete('/users/{user}/groups/{group}', [UserGroupController::class, 'revoke'])->name('users.groups.revoke');
-
-    Route::delete('users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
-    Route::get('users/{id}/enable', [UserController::class, 'enable'])->name('users.enable');
-    Route::resource('users', UserController::class)->except('edit', 'create');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
 });
