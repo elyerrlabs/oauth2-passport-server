@@ -1,5 +1,11 @@
 <?php
-namespace Core\User\Http\Controllers\Admin;
+
+namespace Core\User\Http\Controllers\Api\Admin;
+
+use App\Http\Controllers\ApiController;
+use Core\User\Services\ScopeService;
+use Core\User\Transformer\Admin\ScopeTransformer;
+use Illuminate\Http\Request;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -26,31 +32,17 @@ namespace Core\User\Http\Controllers\Admin;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
-use Core\User\Services\ScopeService;
-use Core\User\Transformer\Admin\ScopeTransformer;
-use Illuminate\Http\Request;
-use Core\User\Repositories\ScopeRepository;
-use App\Http\Controllers\WebController;
-
-class ScopeController extends WebController
+final class ScopeController extends ApiController
 {
-    /**
-     * Repository
-     * @var  ScopeService
-     */
-    public $scopeService;
 
     /**
-     * Scope service
-     * @param \Core\User\Services\ScopeService $scopeService
+     * construct
+     * @param ScopeService $scopeService
      */
-    public function __construct(ScopeService $scopeService)
+    public function __construct(protected ScopeService $scopeService)
     {
         parent::__construct();
-        $this->scopeService = $scopeService;
         $this->middleware('userCanAny:administrator:scope:full,administrator:scope:view')->only('index');
-        $this->middleware('wants.json');
     }
 
     /**

@@ -29,12 +29,10 @@ use Illuminate\Support\Facades\Route;
 use Core\User\Http\Controllers\Admin\RoleController;
 use Core\User\Http\Controllers\Admin\UserController;
 use Core\User\Http\Controllers\Admin\GroupController;
-use Core\User\Http\Controllers\Admin\ScopeController;
 use Core\User\Http\Controllers\Admin\ServiceController;
 use Core\User\Http\Controllers\Admin\DashboardController;
 use Core\User\Http\Controllers\Admin\UserGroupController;
 use Core\User\Http\Controllers\Admin\UserScopeController;
-use Core\User\Http\Controllers\Admin\ServiceScopeController;
 
 Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(function () {
 
@@ -43,14 +41,8 @@ Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(funct
     Route::get('groups', [GroupController::class, 'index'])->name('groups.index');
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
 
-    Route::resource('services', ServiceController::class)->except('create', 'edit');
-    Route::get('services/{service}/scopes', [ServiceScopeController::class, 'index'])->name('service.scopes.index');
-    Route::post('services/{service}/scopes', [ServiceScopeController::class, 'assign'])->name('service.scopes.assign');
-    Route::delete('services/{service}/scopes/{scope}', [ServiceScopeController::class, 'revoke'])->name('services.scopes.revoke');
-
-    Route::resource('scopes', ScopeController::class)->only('index');
-
-
+    Route::get('services', [ServiceController::class, 'index'])->name('services.index');
+ 
     Route::get('/users/{user}/scopes/history', [UserScopeController::class, 'history'])->name('users.scopes.history');
     Route::get('/users/{user}/scopes', [UserScopeController::class, 'index'])->name('users.scopes.index');
     Route::post('/users/{user}/scopes', [UserScopeController::class, 'assign'])->name('users.scopes.assign');

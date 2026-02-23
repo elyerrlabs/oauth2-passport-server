@@ -76,9 +76,9 @@ class ServiceScopeTransformer extends TransformerAbstract
             'created' => $this->format_date($data->created_at),
             'updated' => $this->format_date($data->updated_at),
             'links' => [
-                'index' => route('user.admin.service.scopes.index', ['service' => $data->service->id]),
-                'assign' => route('user.admin.service.scopes.assign', ['service' => $data->service->id]),
-                'revoke' => route('user.admin.services.scopes.revoke', [
+                'index' => route('api.user.admin.services.scopes.index', ['service' => $data->service->id]),
+                'assign' => route('api.user.admin.services.scopes.assign', ['service' => $data->service->id]),
+                'revoke' => route('api.user.admin.services.scopes.revoke', [
                     'service' => $data->service->id,
                     'scope' => $data->id,
                 ])

@@ -1,6 +1,12 @@
 <?php
 
-namespace Core\User\Http\Controllers\Admin;
+namespace Core\User\Http\Controllers\Api\Admin;
+
+use App\Http\Controllers\ApiController;
+use Core\User\Http\Requests\ServiceScopeStoreRequest;
+use Core\User\Model\Service;
+use Core\User\Services\ServiceService;
+use Core\User\Transformer\Admin\ServiceScopeTransformer;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -27,39 +33,22 @@ namespace Core\User\Http\Controllers\Admin;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
-use Core\User\Model\Scope;
-use Core\User\Services\ServiceService;
-use Core\User\Model\Service;
-use App\Http\Controllers\WebController;
-use Core\User\Repositories\ServiceRepository;
-use Core\User\Http\Requests\ServiceScopeStoreRequest;
-use Core\User\Transformer\Admin\ServiceScopeTransformer;
-
-class ServiceScopeController extends WebController
+final class ServiceScopeController extends ApiController
 {
-    /**
-     * Service repository
-     * @var ServiceService
-     */
-    public $serviceService;
-
     /**
      * Construct 
      */
-    public function __construct(ServiceService $serviceService)
+    public function __construct(protected ServiceService $serviceService)
     {
         parent::__construct();
-        $this->serviceService = $serviceService;
-        $this->middleware('userCanAny:administrator:service:full,administrator:service:view')->only('index');
-        $this->middleware('userCanAny:administrator:service:full,administrator:service:assign')->only('assign');
-        $this->middleware('userCanAny:administrator:service:full,administrator:service:revoke')->only('revoke');
-        $this->middleware('wants.json')->only('index');
+        $this->middleware('scope:administrator:service:full,administrator:service:view')->only('index');
+        $this->middleware('scope:administrator:service:full,administrator:service:assign')->only('assign');
+        $this->middleware('scope:administrator:service:full,administrator:service:revoke')->only('revoke');
     }
 
     /**
-     * Show scopes
-     * @param \Core\User\Model\Service $service
+     * Index
+     * @param Service $service
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function index(Service $service)
@@ -70,28 +59,28 @@ class ServiceScopeController extends WebController
     }
 
     /**
-     * Assign scopes
-     * @param \Core\User\Http\Requests\ServiceScopeStoreRequest $request
-     * @param \Core\User\Model\Service $service
+     * Assign
+     * @param ServiceScopeStoreRequest $request
+     * @param Service $service
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function assign(ServiceScopeStoreRequest $request, Service $service)
     {
         $this->serviceService->assignOrUpdateScopes($service->id, $request->toArray());
 
-        return back()->with('status', __("Service scope has been updated successfully"));
+        return $this->message(__("Service scope has been updated successfully"), 200);
     }
 
     /**
-     * Revoke scope
-     * @param \Core\User\Model\Service $service
-     * @param \Core\User\Model\Scope $scope
+     * Revoke
+     * @param Service $service
+     * @param string $id
      * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function revoke(Service $service, Scope $scope)
+    public function revoke(Service $service, string $id)
     {
-        $this->serviceService->revokeScope($service->id, $scope->id);
+        $this->serviceService->revokeScope($service->id, $id);
 
-        return back()->with('status', __("Service scope has been deleted successfully"));
+        return $this->message(__("Service scope has been deleted successfully"), 200);
     }
 }

@@ -149,7 +149,6 @@ class ServiceService
                 'system' => $data['system'] ?? false,
                 'visibility' => $data['visibility']
             ]);
-
         } catch (UniqueConstraintViolationException $th) {
             throw new ReportError(__("This service cannot be registered, as it is already associated with this group."), 400);
         }
@@ -163,6 +162,23 @@ class ServiceService
      */
     public function update(string $id, array $data)
     {
+        $model = $this->serviceRepository->find($id);
+        throw_if(
+            empty($model),
+            new ReportError(
+                __("This resource can not be found"),
+                404
+            )
+        );
+
+        throw_if(
+            $model->system,
+            new ReportError(
+                __("This is a system service and cannot be modified. If you believe this is an error, please contact the administrator."),
+                403
+            )
+        );
+
         return $this->serviceRepository->update($id, [
             'description' => $data['description'],
             'name' => $data['name'],

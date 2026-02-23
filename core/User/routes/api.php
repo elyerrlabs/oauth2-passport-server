@@ -25,8 +25,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use Core\User\Http\Controllers\Admin\ServiceController;
 use Core\User\Http\Controllers\Api\Admin\GroupController;
 use Core\User\Http\Controllers\Api\Admin\RoleController;
+use Core\User\Http\Controllers\Api\Admin\ScopeController;
+use Core\User\Http\Controllers\Api\Admin\ServiceScopeController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -37,4 +40,11 @@ Route::group([
 
     Route::resource('groups', GroupController::class)->except('edit', 'create', 'show');
     Route::resource('roles', RoleController::class)->except('edit', 'create', 'show');
+
+    Route::resource('services', ServiceController::class)->except('edit', 'create');
+    Route::get('services/{service}/scopes', [ServiceScopeController::class, 'index'])->name('services.scopes.index');
+    Route::post('services/{service}/scopes', [ServiceScopeController::class, 'assign'])->name('services.scopes.assign');
+    Route::delete('services/{service}/scopes/{scope}', [ServiceScopeController::class, 'revoke'])->name('services.scopes.revoke');
+
+    Route::resource('scopes', ScopeController::class)->only('index');
 });
