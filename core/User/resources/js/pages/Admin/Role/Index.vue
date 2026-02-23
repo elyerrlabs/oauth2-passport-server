@@ -377,7 +377,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                         <!-- Empty State for List View -->
                         <div
-                            v-if="roles.length === 0"
+                            v-if="!roles.length"
                             class="text-center py-16"
                         >
                             <i
@@ -393,7 +393,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             >
                                 {{
                                     __(
-                                        "Try adjusting your filters or create a new role"
+                                        "Try adjusting your filters or create a new role",
                                     )
                                 }}
                             </div>
@@ -417,7 +417,7 @@ import VAdminLayout from "@/components/VGeneralLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 import { ref, reactive, onMounted } from "vue";
 
 const page = usePage();
@@ -429,11 +429,12 @@ const pages = ref({
     total_pages: 0,
 });
 
-const search = useForm({
+const search = ref({
     page: 1,
     per_page: 15,
     name: "",
     system: "",
+    order_type: "desc",
 });
 const viewOptions = reactive([
     {
@@ -449,10 +450,8 @@ const viewOptions = reactive([
 ]);
 
 // mounted
-onMounted(() => {
-    const values = page.props.data;
-    roles.value = values.data;
-    pages.value = values.meta.pagination;
+onMounted(async () => {
+    await getRoles();
 });
 
 // methods
@@ -466,20 +465,24 @@ const changePage = () => {
     getRoles();
 };
 
-const getRoles = () => {
+const getRoles = async () => {
     loading.value = true;
 
-    search.get(page.props.route, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: (page) => {
-            const values = page.props.data;
+    try {
+        const res = await $server.get(page.props.api.roles, {
+            params: search.value,
+        });
+        if (res.status == 200) {
+            const values = res.data;
             roles.value = values.data;
             pages.value = values.meta.pagination;
-        },
-        onFinish: () => {
-            loading.value = false;
-        },
-    });
+        }
+    } catch (error) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>

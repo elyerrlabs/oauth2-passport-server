@@ -52,7 +52,10 @@ class RoleController extends WebController
     public function index(Request $request)
     {
         return Inertia::render("Admin/Role/Index", [
-            'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
+            'menus' => resolveInertiaRoutes(config('menus.admin_routes')),
+            'api' => [
+                'roles' => route('api.user.admin.roles.index'),
+            ]
         ]);
     }
 }
