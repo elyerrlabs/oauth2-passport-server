@@ -486,7 +486,7 @@ const search = ref({
     per_page: 15,
     name: "",
     system: "", //true | false | null
-    order_by: "desc",
+    order_type: "desc",
 });
 
 const columns = ref(["Group Name", "Slug", "Description", "Type", "Actions"]);
