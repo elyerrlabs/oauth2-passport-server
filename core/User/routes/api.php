@@ -25,6 +25,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use App\Http\Controllers\Web\Admin\File\FileController;
 use Core\User\Http\Controllers\Admin\ServiceController;
 use Core\User\Http\Controllers\Api\Admin\GroupController;
 use Core\User\Http\Controllers\Api\Admin\RoleController;
@@ -32,6 +33,7 @@ use Core\User\Http\Controllers\Api\Admin\ScopeController;
 use Core\User\Http\Controllers\Api\Admin\ServiceScopeController;
 use Core\User\Http\Controllers\Api\Admin\UserController;
 use Core\User\Http\Controllers\Api\Admin\UserScopeController;
+use Core\User\Http\Controllers\Api\User\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -57,4 +59,25 @@ Route::group([
     Route::delete('users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
     Route::get('users/{id}/enable', [UserController::class, 'enable'])->name('users.enable');
     Route::resource('users', UserController::class)->except('edit', 'create', 'destroy');
+});
+
+Route::group([
+    'as' => 'user.',
+    'prefix' => 'user',
+    'middleware' => ['throttle:core:user:api_users']
+], function () {
+ 
+    Route::get('/files/{id}/owner/{owner_id}', [FileController::class, 'show'])->name('files.show');
+    Route::delete('/files/{id}/owner/{owner_id}', [FileController::class, 'destroy'])->name('files.delete');
+
+    Route::prefix('notifications')
+        ->as('notification.')
+        ->group(function () {
+            Route::get('/', [NotificationController::class, 'listAllNotifications'])->name('index');
+            Route::get('/unread', [NotificationController::class, 'listUnreadNotifications'])->name('unread');
+            Route::get('/{notification_id}', [NotificationController::class, 'show'])->name('show');
+            Route::post('/mark-as-read/{notification_id}', [NotificationController::class, 'markAsReadNotification'])->name('mark-as-read');
+            Route::post('/mark-all-as-read', [NotificationController::class, 'markAsReadAllNotifications'])->name('mark-all-as-read');
+            Route::delete('/destroy-all', [NotificationController::class, 'destroyNotifications'])->name('destroy-all');
+        });
 });

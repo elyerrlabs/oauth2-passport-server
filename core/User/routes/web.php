@@ -26,12 +26,8 @@
  */
 
 use Illuminate\Support\Facades\Route;
-use Core\User\Http\Controllers\Web\CodeController;
 use Core\User\Http\Controllers\Web\UserController;
 use Core\User\Http\Controllers\Web\HomePageController;
-use App\Http\Controllers\Web\Admin\File\FileController;
-use Core\User\Http\Controllers\Web\NotificationController;
-use Core\User\Http\Controllers\Web\RegisterClientController;
 
 Route::group([
     'prefix' => 'account',
@@ -46,46 +42,6 @@ Route::group([
         Route::put("/update", [UserController::class, 'personalInformation'])->name('update');
         Route::get("/change-password", [UserController::class, 'formToChangePassword'])->name("password");
         Route::put("/change-password", [UserController::class, 'changePassword'])->name('change.password');
-
-        Route::get('/two-factor-authentication', [CodeController::class, 'formToRequestToken'])->name('2fa.request');
+        Route::get('/two-factor-authentication', [UserController::class, 'twoFactor'])->name('twoFactor');
     });
-
-
-    Route::get('/files/{id}/owner/{owner_id}', [FileController::class, 'show'])->name('files.show');
-    Route::delete('/files/{id}/owner/{owner_id}', [FileController::class, 'destroy'])->name('files.delete');
-
-    Route::prefix('notifications')
-        ->as('notification.')
-        ->group(function () {
-
-            Route::get(
-                '/',
-                [NotificationController::class, 'listAllNotifications']
-            )->name('index');
-
-            Route::get(
-                '/unread',
-                [NotificationController::class, 'listUnreadNotifications']
-            )->name('unread');
-
-            Route::get(
-                '/{notification_id}',
-                [NotificationController::class, 'show']
-            )->name('show');
-
-            Route::post(
-                '/mark-as-read/{notification_id}',
-                [NotificationController::class, 'markAsReadNotification']
-            )->name('mark-as-read');
-
-            Route::post(
-                '/mark-all-as-read',
-                [NotificationController::class, 'markAsReadAllNotifications']
-            )->name('mark-all-as-read');
-
-            Route::delete(
-                '/destroy-all',
-                [NotificationController::class, 'destroyNotifications']
-            )->name('destroy-all');
-        });
 });

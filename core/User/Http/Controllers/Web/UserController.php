@@ -70,7 +70,7 @@ class UserController extends WebController
      */
     public function personalInformation(UserPersonalUpdateRequest $request)
     {
-        $this->userService->update(auth()->user()->id, $request->toArray());
+        $this->userService->update($request->user()->id, $request->toArray());
 
         return redirect()->route('user.profile');
     }
@@ -91,8 +91,18 @@ class UserController extends WebController
      */
     public function changePassword(UserPersonalPasswordRequest $request)
     {
-        $this->userService->updatePassword(auth()->user()->id, $request->toArray());
+        $this->userService->updatePassword($request->user()->idd, $request->toArray());
 
         return redirect()->route('user.password');
+    }
+
+
+    /**
+     * Show the form to type code 2fa
+     * @return \Inertia\Response
+     */
+    public function twoFactor()
+    {
+        return Inertia::render("Web/two-factor");
     }
 }

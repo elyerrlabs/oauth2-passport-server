@@ -1,6 +1,10 @@
 <?php
 
-namespace Core\User\Http\Controllers\Web;
+namespace Core\User\Http\Controllers\Api\User;
+
+use App\Http\Controllers\ApiController;
+use Core\User\Services\NotificationService;
+use Core\User\Transformer\User\NotificationTransformer;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -27,43 +31,27 @@ namespace Core\User\Http\Controllers\Web;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
-use Inertia\Inertia;
-use App\Http\Controllers\WebController;
-use Core\User\Repositories\NotificationRepository;
-
-class NotificationController extends WebController
+final class NotificationController extends ApiController
 {
-    /**
-     *
-     * @var NotificationRepository
-     */
-    public $repository;
 
     /**
      * Construct
-     * @param  NotificationRepository $notificationRepository
+     * @param NotificationService $notificationService
      */
-    public function __construct(NotificationRepository $notificationRepository)
+    public function __construct(protected NotificationService $notificationService)
     {
         parent::__construct();
-        $this->repository = $notificationRepository;
-        $this->middleware('wants.json')->except('listAllNotifications');
     }
 
-
+    /**
+     * List notification
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function listAllNotifications()
     {
-        if (request()->wantsJson()) {
-            return $this->repository->listAllNotifications();
-        }
+        $data = $this->notificationService->listAllNotifications();
 
-        return Inertia::render("Web/Notification/Index", [
-            'route' => [
-                'all' => route('user.notification.index'),
-                'unread' => route('user.notification.unread')
-            ],
-        ]);
+        return $this->showAllByBuilder($data, NotificationTransformer::class);
     }
 
     /**
@@ -72,7 +60,9 @@ class NotificationController extends WebController
      */
     public function listUnreadNotifications()
     {
-        return $this->repository->listUnreadNotifications();
+        $data =  $this->notificationService->listUnreadNotifications();
+
+        return $this->showAllByBuilder($data, NotificationTransformer::class);
     }
 
     /**
@@ -82,7 +72,9 @@ class NotificationController extends WebController
      */
     public function show(string $notification_id)
     {
-        return $this->repository->showNotification($notification_id);
+        $notification = $this->notificationService->showNotification($notification_id);
+
+        return $this->showOne($notification, NotificationTransformer::class);
     }
 
     /**
@@ -92,7 +84,9 @@ class NotificationController extends WebController
      */
     public function markAsReadNotification(string $notification_id)
     {
-        return $this->repository->markAsReadNotification($notification_id);
+        $this->notificationService->markAsReadNotification($notification_id);
+
+        return $this->message(__('Notification mark as read'), 200);
     }
 
     /**
@@ -101,7 +95,9 @@ class NotificationController extends WebController
      */
     public function markAsReadAllNotifications()
     {
-        return $this->repository->markAsReadAllNotifications();
+        $this->notificationService->markAsReadAllNotifications();
+
+        return $this->message(__('All Notification mark as read'), 200);
     }
 
     /**
@@ -110,6 +106,8 @@ class NotificationController extends WebController
      */
     public function destroyNotifications()
     {
-        return $this->repository->destroyNotifications();
+        $this->notificationService->destroyNotifications();
+
+        return $this->message(__('All notification has been removed'), 200);
     }
 }
