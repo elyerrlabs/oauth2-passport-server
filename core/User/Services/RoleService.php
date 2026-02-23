@@ -59,19 +59,24 @@ class RoleService
         // Prepare query
         $query = $this->roleRepository->query();
 
-        if ($request->disabled_request) {
-            return $query;
-        }
+        $query->when(
+            $request->filled('name'),
+            fn($q) => $q->whereRaw(
+                "LOWER(name) like ?",
+                ["%" . strtolower($request->name) . "%"]
+            )
+        );
 
-        if ($request->filled('name')) {
-            $query->whereRaw("LOWER(name) like ?", ["%" . strtolower($request->name) . "%"]);
-        }
+        $query->when($request->filled('system'), fn($q)  => $q->where('system', $request->system));
 
-        if ($request->filled('system')) {
-            $query->where('system', $request->system);
-        }
+        $query->when(
+            $request->filled('order_type'),
+            function ($q) use ($request) {
 
-        $query->orderByDesc('updated_at');
+                $q->orderBy($request->filled('order_by') ? $request->order_by : 'created_at', $request->order_type);
+            }
+        );
+
 
         return $query;
     }
@@ -112,7 +117,7 @@ class RoleService
         );
 
         throw_if(
-            !$model->system,
+            $model->system,
             new ReportError(
                 __("This is a system role and cannot be modified. If you believe this is an error, please contact the administrator."),
                 403
