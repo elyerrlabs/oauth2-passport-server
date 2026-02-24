@@ -25,11 +25,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Http\Controllers\Web\Admin\File\FileController;
-use Core\User\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Web\Admin\File\FileController; 
 use Core\User\Http\Controllers\Api\Admin\GroupController;
 use Core\User\Http\Controllers\Api\Admin\RoleController;
 use Core\User\Http\Controllers\Api\Admin\ScopeController;
+use Core\User\Http\Controllers\Api\Admin\ServiceController;
 use Core\User\Http\Controllers\Api\Admin\ServiceScopeController;
 use Core\User\Http\Controllers\Api\Admin\UserController;
 use Core\User\Http\Controllers\Api\Admin\UserScopeController;

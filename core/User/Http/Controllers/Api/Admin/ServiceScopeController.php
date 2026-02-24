@@ -68,7 +68,7 @@ final class ServiceScopeController extends ApiController
     {
         $this->serviceService->assignOrUpdateScopes($service->id, $request->toArray());
 
-        return $this->message(__("Service scope has been updated successfully"), 200);
+        return $this->message(__("Service scope has been updated successfully"), 201);
     }
 
     /**
