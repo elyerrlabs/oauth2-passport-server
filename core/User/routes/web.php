@@ -31,7 +31,7 @@ use Core\User\Http\Controllers\Web\HomePageController;
 
 Route::group([
     'prefix' => 'account',
-    'middleware' => ['throttle:core:user:admin']
+    'middleware' => ['throttle:core:user:web']
 ], function () {
 
     Route::get("/", [HomePageController::class, 'dashboard'])->name('dashboard');
