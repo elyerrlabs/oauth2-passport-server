@@ -90,7 +90,7 @@ class UserTransformer extends TransformerAbstract
                // 'destroy' => route('api.user.admin.users.update', ['user' => $user->id]),
                 'disable' => route('api.user.admin.users.disable', ['user' => $user->id]),
                 'enable' => route('api.user.admin.users.enable', ['id' => $user->id]),
-                'scopes' => route('user.admin.users.scopes.index', ['user' => $user->id]),
+                'scopes' => route('api.user.admin.users.scopes.index', ['user' => $user->id]),
             ],
         ];
     }

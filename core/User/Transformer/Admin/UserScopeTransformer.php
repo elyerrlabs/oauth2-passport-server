@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\User\Transformer\Admin;
 
 /**
@@ -25,7 +26,7 @@ namespace Core\User\Transformer\Admin;
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
- 
+
 use Core\User\Model\UserScope;
 use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
@@ -92,10 +93,9 @@ class UserScopeTransformer extends TransformerAbstract
             'created_at' => $this->format_date($data->created_at),
             'updated_at' => $this->format_date($data->updated_at),
             'links' => [
-                'index' => route('user.admin.users.scopes.index', ['user' => $data->user_id]),
-                'history' => route('user.admin.users.scopes.history', ['user' => $data->user_id]),
-                'assign' => route('user.admin.users.scopes.assign', ['user' => $data->user_id]),
-                'revoke' => route('user.admin.users.scopes.revoke', ['user' => $data->user_id, 'scope' => $data->id]),
+                'index' => route('api.user.admin.users.scopes.index', ['user' => $data->user_id]),
+                'assign' => route('api.user.admin.users.scopes.assign', ['user' => $data->user_id]),
+                'revoke' => route('api.user.admin.users.scopes.revoke', ['user' => $data->user_id, 'scope' => $data->id]),
             ]
         ];
     }

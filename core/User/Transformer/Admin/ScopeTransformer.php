@@ -88,7 +88,7 @@ class ScopeTransformer extends TransformerAbstract
             'created' => $this->format_date($data->created_at),
             'updated' => $this->format_date($data->updated_at),
             'links' => [
-                'index' => route('api.user.admin.services.scopes.index'),
+                'index' => route('api.user.admin.services.scopes.index', ['service' => $data->service->id]),
             ]
         ];
     }
