@@ -31,7 +31,7 @@ use Core\User\Http\Controllers\Admin\UserController;
 use Core\User\Http\Controllers\Admin\GroupController;
 use Core\User\Http\Controllers\Admin\ServiceController;
 
-Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(function () {
+Route::middleware(['throttle:core:user:admin'])->group(function () {
 
     Route::get('groups', [GroupController::class, 'index'])->name('groups.index');
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
