@@ -46,7 +46,12 @@ class ServiceController extends WebController
     public function index()
     {
         return Inertia::render("Admin/Service/Index", [
-            'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
+            'menus' => resolveInertiaRoutes(config('menus.admin_routes')),
+            'api' => [
+                'services' => route('api.user.admin.services.index'),
+                'groups' => route('api.user.admin.groups.index'),
+                'roles' => route('api.user.admin.roles.store')
+            ]
         ]);
     }
 }

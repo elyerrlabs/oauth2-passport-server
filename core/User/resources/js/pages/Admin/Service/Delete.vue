@@ -23,8 +23,8 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <!-- Delete Button -->
     <div>
+        <!-- Delete Button -->
         <button
             @click="open"
             class="relative group w-12 h-12 gap-2 border border-red-600 dark:border-red-400 px-4 py-2 text-red-600 dark:text-red-400 rounded-full hover:bg-red-600 dark:hover:bg-red-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
@@ -227,16 +227,17 @@ const canDelete = computed(() => {
     return confirmationText.value === form.slug;
 });
 
-const handleConfirm = () => {
+const handleConfirm = async () => {
     if (canDelete.value && !loading.value) {
-        destroy();
+        await destroy();
     }
 };
 
 const open = () => {
     confirmationText.value = "";
 
-    // ✅ NO sobrescribir form
+    if (props.item?.id) {
+    }
     form.id = props.item.id;
     form.name = props.item.name;
     form.slug = props.item.slug;
@@ -247,31 +248,21 @@ const open = () => {
     dialog.value = true;
 };
 
-const destroy = () => {
-    if (!canDelete.value || loading.value) return;
-
-    loading.value = true;
-
-    form.delete(props.item.links.destroy, {
-        preserveScroll: true,
-        onSuccess: () => {
+const destroy = async () => {
+    try {
+        const res = await $server.delete(props.item.links.destroy);
+        if (res.status == 200) {
             $notify.success(__("Service deleted successfully"));
             emits("deleted");
             dialog.value = false;
             confirmationText.value = "";
-        },
-        onFinish: () => {
-            loading.value = false;
-        },
-        onError: (e) => {
-            if (e?.message) {
-                $notify.error(e.message);
-            } else {
-                $notify.error(
-                    __("An error occurred while deleting the service"),
-                );
-            }
-        },
-    });
+        }
+    } catch (error) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>

@@ -520,7 +520,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
         <!-- Pagination -->
         <v-paginate
-            v-if="pages.total_pages > 1"
             v-model="search.page"
             :total-pages="pages.total_pages"
             @change="getServices"
@@ -535,7 +534,7 @@ import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
 import VDetail from "./Scope.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 /**
@@ -547,7 +546,8 @@ const loading = ref(false);
 const pages = ref({
     total_pages: 0,
 });
-const search = useForm({
+
+const search = ref({
     page: 1,
     per_page: 15,
     name: "",
@@ -555,6 +555,7 @@ const search = useForm({
     visibility: "",
     system: "",
 });
+
 const groups = ref([]);
 
 const viewOptions = [
@@ -580,12 +581,9 @@ const customServicesCount = computed(
     () => services.value.filter((s) => !s.system).length,
 );
 
-onMounted(() => {
-    const values = page.props.data;
-    services.value = values.data;
-    pages.value = values.meta.pagination;
-
-    groups.value = page.props.groups.data;
+onMounted(async () => {
+    await getGroups();
+    await getServices();
 });
 
 /**
@@ -593,26 +591,51 @@ onMounted(() => {
  */
 
 const changePage = () => {
-    search.page = 1;
     getServices();
 };
 
 const clearFilters = () => {
-    search.reset();
     getServices();
 };
 
 const getServices = async () => {
     loading.value = true;
 
-    search.get(page.props.route, {
-        preserveScroll: true,
-        onSuccess: (page) => {
-            const values = page.props.data;
+    try {
+        const res = await $server.get(page.props.api.services, {
+            params: search.value,
+        });
+        if (res.status == 200) {
+            const values = res.data;
             services.value = values.data;
             pages.value = values.meta.pagination;
-            loading.value = false;
-        },
-    });
+        }
+    } catch (error) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
+};
+
+const getGroups = async () => {
+    try {
+        const res = await $server.get(page.props.api.groups, {
+            params: {
+                per_page: 100,
+            },
+        });
+        if (res.status == 200) {
+            const values = res.data;
+            groups.value = values.data;
+        }
+    } catch (error) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
