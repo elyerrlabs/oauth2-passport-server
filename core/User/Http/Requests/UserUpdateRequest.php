@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\User\Http\Requests;
 
 /**
@@ -53,7 +54,7 @@ class UserUpdateRequest extends FormRequest
         return [
             'name' => ['nullable', 'string', 'max:100'],
             'last_name' => ['nullable', 'string', 'max:100'],
-            'email' => ['nullable', 'email', 'max:100', 'unique:users,email,' . Request('user')->id],
+            'email' => ['nullable', 'email', 'max:100', 'unique:users,email,' . Request('user')],
             'country' => ['nullable', 'max:100', 'exists:countries,name_en'],
             'dial_code' => [
                 'nullable',
@@ -65,7 +66,7 @@ class UserUpdateRequest extends FormRequest
                 'nullable',
                 'required_with:dial_code',
                 'max:25',
-                'unique:users,phone,' . Request('user')->id
+                'unique:users,phone,' . Request('user')
             ],
             'address' => ['nullable', 'max:150'],
             'birthday' => ['nullable', 'date_format:Y-m-d', 'before: ' . User::setBirthday()],
