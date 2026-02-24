@@ -25,7 +25,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Http\Controllers\Web\Admin\File\FileController; 
+use App\Http\Controllers\Web\Admin\File\FileController;
 use Core\User\Http\Controllers\Api\Admin\GroupController;
 use Core\User\Http\Controllers\Api\Admin\RoleController;
 use Core\User\Http\Controllers\Api\Admin\ScopeController;
@@ -57,7 +57,7 @@ Route::group([
     Route::delete('/users/{user}/scopes/{scope}', [UserScopeController::class, 'revoke'])->name('users.scopes.revoke');
 
     Route::delete('users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
-    Route::get('users/{id}/enable', [UserController::class, 'enable'])->name('users.enable');
+    Route::put('users/{id}/enable', [UserController::class, 'enable'])->name('users.enable');
     Route::resource('users', UserController::class)->except('edit', 'create', 'destroy');
 });
 
@@ -66,7 +66,7 @@ Route::group([
     'prefix' => 'user',
     'middleware' => ['throttle:core:user:api_users']
 ], function () {
- 
+
     Route::get('/files/{id}/owner/{owner_id}', [FileController::class, 'show'])->name('files.show');
     Route::delete('/files/{id}/owner/{owner_id}', [FileController::class, 'destroy'])->name('files.delete');
 
