@@ -428,7 +428,7 @@ const userRoles = async () => {
 
 const getScopes = async () => {
     try {
-        const res = await $server.get(page.props.scopes, {
+        const res = await $server.get(page.props.api.scopes, {
             params: { per_page: 200 },
         });
 

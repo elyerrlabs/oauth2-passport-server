@@ -52,7 +52,11 @@ class UserController extends WebController
     public function index(Request $request)
     {
         return Inertia::render("Admin/Users/Index", [
-            'menus' => resolveInertiaRoutes(config('menus.admin_routes'))
+            'menus' => resolveInertiaRoutes(config('menus.admin_routes')),
+            'api' => [
+                'users' => route('api.user.admin.users.index'),
+                'scopes' => route('api.user.admin.scopes.index')
+            ]
         ]);
     }
 }

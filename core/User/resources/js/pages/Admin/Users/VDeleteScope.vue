@@ -36,7 +36,7 @@
                         <p class="text-gray-600 dark:text-gray-300">
                             {{
                                 __(
-                                    "You are about to revoke the following scope from this user:"
+                                    "You are about to revoke the following scope from this user:",
                                 )
                             }}
                         </p>
@@ -120,7 +120,7 @@
                         >
                             {{
                                 __(
-                                    "This action will immediately revoke this permission. The user will lose access to this functionality."
+                                    "This action will immediately revoke this permission. The user will lose access to this functionality.",
                                 )
                             }}
                         </p>
@@ -166,12 +166,12 @@
                         </button>
                         <button
                             @click="revokeScope"
-                            :disabled="!isConfirmed || form.processing"
+                            :disabled="!isConfirmed || processing"
                             class="px-4 py-2 cursor-pointer rounded-lg bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <i class="mdi mdi-delete"></i>
                             {{
-                                form.processing
+                                processing
                                     ? __("Revoking...")
                                     : __("Revoke Permission")
                             }}
@@ -186,7 +186,6 @@
 <script setup>
 import VModal from "@/components/VModal.vue";
 import { ref, computed } from "vue";
-import { useForm } from "@inertiajs/vue3";
 
 const emits = defineEmits(["deleted"]);
 
@@ -197,29 +196,32 @@ const props = defineProps({
     },
 });
 
+const processing = ref(false);
 const dialog = ref(false);
 const confirmationText = ref("");
-const form = useForm({});
-
 const isConfirmed = computed(() => {
     return confirmationText.value === props.item.scope?.gsr_id;
 });
 
-const revokeScope = () => {
+const revokeScope = async () => {
     if (!isConfirmed.value) return;
+    processing.value = false;
 
-    form.put(props.item.links.revoke, {
-        preserveScroll: true,
-        onSuccess: () => {
+    try {
+        const res = await $server.delete(props.item.links.revoke);
+        if (res.status == 200) {
             $notify.success(__("Permission revoked successfully"));
             emits("deleted");
             dialog.value = false;
             confirmationText.value = "";
-            form.reset();
-        },
-        onError: () => {
-            $notify.error(__("Failed to revoke permission"));
-        },
-    });
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
+        }
+    } finally {
+        processing.value = false;
+        dialog.value = false;
+    }
 };
 </script>

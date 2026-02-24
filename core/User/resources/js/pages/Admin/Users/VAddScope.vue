@@ -40,7 +40,7 @@
                                 >
                                     {{
                                         __(
-                                            "The following scope will be assigned to the user"
+                                            "The following scope will be assigned to the user",
                                         )
                                     }}
                                 </p>
@@ -208,20 +208,20 @@
 
                         <button
                             @click="add"
-                            :disabled="form.processing || disabled"
+                            :disabled="loading || disabled"
                             class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <i
-                                v-if="form.processing"
+                                v-if="loading"
                                 class="mdi mdi-loading animate-spin"
                             ></i>
                             <i v-else class="mdi mdi-shield-plus"></i>
                             {{
-                                form.processing
+                                loading
                                     ? __("Assigning...")
                                     : disabled
-                                    ? __("Already Added")
-                                    : __("Assign Scope")
+                                      ? __("Already Added")
+                                      : __("Assign Scope")
                             }}
                         </button>
                     </div>
@@ -234,7 +234,6 @@
 <script setup>
 import VModal from "@/components/VModal.vue";
 import { ref, watch } from "vue";
-import { useForm } from "@inertiajs/vue3";
 
 const emits = defineEmits(["created"]);
 
@@ -250,30 +249,38 @@ const props = defineProps({
 });
 
 const dialog = ref(false);
-const form = useForm({
+const form = ref({
     scopes: [],
 });
+const loading = ref(false);
 
 const open = () => {
     if (props.disabled) return;
     dialog.value = true;
-    form.scopes = [props.item.scope.id];
+    form.value.scopes = [props.item.scope.id];
 };
 
-const add = () => {
-    if (props.disabled || form.processing) return;
+const add = async () => {
+    if (props.disabled || loading.value) return;
 
-    form.post(props.item.scope.links.scopes, {
-        preserveScroll: true,
-        onSuccess: () => {
+    try {
+        const res = await $server.post(
+            props.item.scope.links.scopes,
+            form.value,
+        );
+        if (res.status == 201) {
             $notify.success(__("Scope assigned successfully"));
             emits("created");
             dialog.value = false;
-        },
-        onFinish: () => {
-            form.reset();
-        },
-    });
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+        dialog.value = false;
+    }
 };
 
 watch(dialog, (newVal) => {

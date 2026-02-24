@@ -244,7 +244,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             :item="user"
                         />
                         <v-scopes v-if="!user.disabled" :item="user" />
-                        <v-revoke v-if="!user.disabled" :item="user" />
                         <v-status :item="user" @updated="getUsers" />
                     </div>
                 </div>
@@ -265,7 +264,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <div class="text-gray-400 dark:text-gray-500 mt-2">
                 {{
                     __(
-                        "Try adjusting your filters or create your first user to get started"
+                        "Try adjusting your filters or create your first user to get started",
                     )
                 }}
             </div>
@@ -324,7 +323,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 :item="user"
                             />
                             <v-scopes v-if="!user.disabled" :item="user" />
-                            <v-revoke v-if="!user.disabled" :item="user" />
                             <v-status :item="user" @updated="getUsers" />
                         </div>
                     </div>
@@ -411,10 +409,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 v-if="!user.disabled"
                                                 :item="user"
                                             />
-                                            <v-revoke
-                                                v-if="!user.disabled"
-                                                :item="user"
-                                            />
+
                                             <v-status
                                                 :item="user"
                                                 @updated="getUsers"
@@ -439,7 +434,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         >
                             {{
                                 __(
-                                    "Try adjusting your filters or create a new user"
+                                    "Try adjusting your filters or create a new user",
                                 )
                             }}
                         </div>
@@ -450,7 +445,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
         <!-- Pagination -->
         <v-paginate
-            v-if="pages.total_pages > 1"
             v-model="search.page"
             :total-pages="pages.total_pages"
             @change="getUsers"
@@ -464,7 +458,7 @@ import VPaginate from "@/components/VPaginate.vue";
 import VCreate from "./Create.vue";
 import VScopes from "./Scopes.vue";
 import VStatus from "./Status.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 import { ref, reactive, onMounted, computed } from "vue";
 
 const page = usePage();
@@ -482,7 +476,7 @@ const pages = ref({
     total_pages: 0,
 });
 
-const search = useForm({
+const search = ref({
     page: 1,
     per_page: 15,
     name: "",
@@ -520,44 +514,44 @@ const searchTimeout = ref(null);
 // Methods
 
 const changePage = () => {
-    search.page = 1;
     getUsers();
 };
 
 const debouncedSearch = () => {
     clearTimeout(searchTimeout.value);
-    searchTimeout.value = setTimeout(() => {
+    searchTimeout.value = setTimeout(async () => {
         search.page = 1;
-        getUsers();
+        await getUsers();
     }, 500);
 };
 
-const clearFilters = () => {
-    search.reset();
-    getUsers();
+const clearFilters = async () => {
+    search.value = {};
+    await getUsers();
 };
 
-const getUsers = () => {
+const getUsers = async () => {
     loading.value = true;
 
-    search.get(page.props.route, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: (page) => {
-            const values = page.props.data;
+    try {
+        const res = await $server.get(page.props.api.users, {
+            params: search.value,
+        });
+        if (res.status == 200) {
+            const values = res.data;
             users.value = values.data;
             pages.value = values.meta.pagination;
-            loading.value = false;
-        },
-        onError: () => {
-            loading.value = false;
-        },
-    });
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 
-onMounted(() => {
-    const values = page.props.data;
-    users.value = values.data;
-    pages.value = values.meta.pagination;
+onMounted(async () => {
+    await getUsers();
 });
 </script>

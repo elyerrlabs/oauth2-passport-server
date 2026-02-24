@@ -139,10 +139,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 {{
                                     item.disabled
                                         ? __(
-                                              "This user account will be activated and granted access to the system."
+                                              "This user account will be activated and granted access to the system.",
                                           )
                                         : __(
-                                              "This user account will be disabled and access will be temporarily restricted."
+                                              "This user account will be disabled and access will be temporarily restricted.",
                                           )
                                 }}
                             </span>
@@ -169,7 +169,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <span class="text-sm">
                                 {{
                                     __(
-                                        "The user will not be able to log in until the account is re-enabled."
+                                        "The user will not be able to log in until the account is re-enabled.",
                                     )
                                 }}
                             </span>
@@ -261,7 +261,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import { ref } from "vue";
-import { useForm } from "@inertiajs/vue3";
 import VModal from "@/components/VModal.vue";
 
 const props = defineProps({
@@ -275,7 +274,6 @@ const emit = defineEmits(["updated"]);
 
 const dialog = ref(false);
 const loading = ref(false);
-const form = useForm({});
 
 function open() {
     dialog.value = true;
@@ -289,37 +287,41 @@ const action = (item) => {
     }
 };
 
-const disable = () => {
+const disable = async () => {
     loading.value = true;
 
-    form.delete(props.item.links.disable, {
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: () => {
+    try {
+        const res = await $server.delete(props.item.links.disable);
+        if (res.status == 200) {
             $notify.success(__("User disabled successfully"));
             emit("updated", true);
-        },
-        onFinish: () => {
-            loading.value = false;
-            dialog.value = false;
-        },
-    });
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+        dialog.value = false;
+    }
 };
 
-const enable = () => {
+const enable = async () => {
     loading.value = true;
 
-    form.get(props.item.links.enable, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
+    try {
+        const res = await $server.put(props.item.links.enable);
+        if (res.status == 200) {
             $notify.success(__("User enabled successfully"));
             emit("updated", true);
-        },
-        onFinish() {
-            loading.value = false;
-            dialog.value = false;
-        },
-    });
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+        dialog.value = false;
+    }
 };
 </script>
