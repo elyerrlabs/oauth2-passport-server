@@ -49,9 +49,9 @@ final class NotificationController extends ApiController
      */
     public function listAllNotifications()
     {
-        $data = $this->notificationService->listAllNotifications();
+        $data = $this->notificationService->listAllNotifications()->latest()->take(500)->get();
 
-        return $this->showAllByBuilder($data, NotificationTransformer::class);
+        return $this->showAll($data, NotificationTransformer::class);
     }
 
     /**
@@ -60,9 +60,9 @@ final class NotificationController extends ApiController
      */
     public function listUnreadNotifications()
     {
-        $data =  $this->notificationService->listUnreadNotifications();
+        $data =  $this->notificationService->listUnreadNotifications()->latest()->take(500)->get();
 
-        return $this->showAllByBuilder($data, NotificationTransformer::class);
+        return $this->showAll($data, NotificationTransformer::class);
     }
 
     /**

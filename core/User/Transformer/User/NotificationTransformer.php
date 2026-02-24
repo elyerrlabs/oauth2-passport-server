@@ -70,12 +70,12 @@ class NotificationTransformer extends TransformerAbstract
             "created" => $this->format_date($notification->created_at),
             "read_at" => $this->format_date($notification->read_at),
             'links' => [
-                'index' => route('user.notification.index'),
-                'destroy_all' => route('user.notification.destroy-all'),
-                'mark_all_as_read' => route('user.notification.mark-all-as-read'),
-                'unread' => route('user.notification.unread'),
-                'show' => route('user.notification.show', ['notification_id' => $notification->id]),
-                'mark_as_read' => route('user.notification.mark-as-read', ['notification_id' => $notification->id]),
+                'index' => route('api.user.user.notification.index'),
+                'destroy_all' => route('api.user.user.notification.destroy-all'),
+                'mark_all_as_read' => route('api.user.user.notification.mark-all-as-read'),
+                'unread' => route('api.user.user.notification.unread'),
+                'show' => route('api.user.user.notification.show', ['notification_id' => $notification->id]),
+                'mark_as_read' => route('api.user.user.notification.mark-as-read', ['notification_id' => $notification->id]),
             ],
         ];
 

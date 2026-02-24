@@ -187,7 +187,7 @@ export default {
         async getUnreadNotifications() {
             try {
                 const res = await this.$server.get(
-                    this.$page.props.notification.route
+                    "/system/api/user/user/notifications/unread",
                 );
                 if (res.status === 200) {
                     this.unreadNotifications = res.data.data;
@@ -201,7 +201,7 @@ export default {
         async markAsRead(notification) {
             try {
                 const res = await this.$server.post(
-                    notification.links.mark_as_read
+                    notification.links.mark_as_read,
                 );
                 if (res.status === 201) {
                     this.getUnreadNotifications();
@@ -221,7 +221,7 @@ export default {
             try {
                 for (const n of this.unreadNotifications) {
                     await this.$server.post(
-                        this.$page.props.notification_mark_as_read.route
+                        notification.links.mark_all_as_read,
                     );
                 }
                 this.getUnreadNotifications();
