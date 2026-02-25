@@ -203,12 +203,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                     class="text-sm font-semibold text-gray-900 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors group-hover:underline"
                                                     @click="
                                                         copyToClipboard(
-                                                            item.code
+                                                            item.code,
                                                         )
                                                     "
                                                     :title="
                                                         __(
-                                                            'Click to copy transaction code'
+                                                            'Click to copy transaction code',
                                                         )
                                                     "
                                                 >
@@ -261,7 +261,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 :class="[
                                                     'px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide inline-flex items-center justify-center w-fit',
                                                     getStatusClasses(
-                                                        item.status
+                                                        item.status,
                                                     ),
                                                 ]"
                                             >
@@ -358,7 +358,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                         ></i>
                                                         {{
                                                             __(
-                                                                "Transaction Information"
+                                                                "Transaction Information",
                                                             )
                                                         }}
                                                     </h4>
@@ -373,7 +373,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Transaction Code"
+                                                                            "Transaction Code",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -381,12 +381,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-sm font-mono text-gray-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white dark:bg-gray-700 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600"
                                                                     @click="
                                                                         copyToClipboard(
-                                                                            item.code
+                                                                            item.code,
                                                                         )
                                                                     "
                                                                     :title="
                                                                         __(
-                                                                            'Click to copy'
+                                                                            'Click to copy',
                                                                         )
                                                                     "
                                                                 >
@@ -402,7 +402,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Payment Method"
+                                                                            "Payment Method",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -421,7 +421,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Billing Period"
+                                                                            "Billing Period",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -433,7 +433,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     }}
                                                                     {{
                                                                         __(
-                                                                            "plan"
+                                                                            "plan",
                                                                         )
                                                                     }}
                                                                 </span>
@@ -447,7 +447,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Session ID"
+                                                                            "Session ID",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -457,7 +457,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     {{
                                                                         item.session_id ||
                                                                         __(
-                                                                            "N/A"
+                                                                            "N/A",
                                                                         )
                                                                     }}
                                                                 </span>
@@ -469,7 +469,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Payment Intent"
+                                                                            "Payment Intent",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -479,7 +479,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     {{
                                                                         item.payment_intent_id ||
                                                                         __(
-                                                                            "N/A"
+                                                                            "N/A",
                                                                         )
                                                                     }}
                                                                 </span>
@@ -491,7 +491,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Renewal"
+                                                                            "Renewal",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -501,10 +501,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     {{
                                                                         item.renew
                                                                             ? __(
-                                                                                  "Yes"
+                                                                                  "Yes",
                                                                               )
                                                                             : __(
-                                                                                  "No"
+                                                                                  "No",
                                                                               )
                                                                     }}
                                                                 </span>
@@ -523,7 +523,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                         ></i>
                                                         {{
                                                             __(
-                                                                "Financial Details"
+                                                                "Financial Details",
                                                             )
                                                         }}
                                                     </h4>
@@ -538,7 +538,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Total Amount"
+                                                                            "Total Amount",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -562,7 +562,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Commission Rate"
+                                                                            "Commission Rate",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -589,7 +589,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                         ></i>
                                                         {{
                                                             __(
-                                                                "Refund Information"
+                                                                "Refund Information",
                                                             )
                                                         }}
                                                     </h4>
@@ -604,7 +604,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Refund Amount"
+                                                                            "Refund Amount",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -630,7 +630,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Refund Type"
+                                                                            "Refund Type",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -653,7 +653,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Refund Status"
+                                                                            "Refund Status",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -663,7 +663,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                         getRefundStatusClasses(
                                                                             item
                                                                                 .refund
-                                                                                .status
+                                                                                .status,
                                                                         ),
                                                                     ]"
                                                                 >
@@ -681,7 +681,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Reason"
+                                                                            "Reason",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -693,7 +693,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                             .refund
                                                                             .reason ||
                                                                         __(
-                                                                            "No reason provided"
+                                                                            "No reason provided",
                                                                         )
                                                                     }}
                                                                 </span>
@@ -714,7 +714,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                 class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
-                                                                        "Description"
+                                                                        "Description",
                                                                     )
                                                                 }}</span
                                                             >
@@ -743,7 +743,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                         ></i>
                                                         {{
                                                             __(
-                                                                "User Information"
+                                                                "User Information",
                                                             )
                                                         }}
                                                     </h4>
@@ -758,7 +758,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Owner Name"
+                                                                            "Owner Name",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -770,7 +770,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                             .owner
                                                                             ?.name ||
                                                                         __(
-                                                                            "N/A"
+                                                                            "N/A",
                                                                         )
                                                                     }}
                                                                 </span>
@@ -782,7 +782,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                     class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                     >{{
                                                                         __(
-                                                                            "Owner Last Name"
+                                                                            "Owner Last Name",
                                                                         )
                                                                     }}</span
                                                                 >
@@ -794,7 +794,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                             .owner
                                                                             ?.last_name ||
                                                                         __(
-                                                                            "N/A"
+                                                                            "N/A",
                                                                         )
                                                                     }}
                                                                 </span>
@@ -807,7 +807,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                 class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
-                                                                        "Owner Email"
+                                                                        "Owner Email",
                                                                     )
                                                                 }}</span
                                                             >
@@ -828,7 +828,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                 class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
-                                                                        "Activated By"
+                                                                        "Activated By",
                                                                     )
                                                                 }}</span
                                                             >
@@ -861,7 +861,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                 class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
-                                                                        "Created"
+                                                                        "Created",
                                                                     )
                                                                 }}</span
                                                             >
@@ -880,7 +880,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                 class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
-                                                                        "Last Updated"
+                                                                        "Last Updated",
                                                                     )
                                                                 }}</span
                                                             >
@@ -902,7 +902,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                 class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
                                                                 >{{
                                                                     __(
-                                                                        "Cancellation Date"
+                                                                        "Cancellation Date",
                                                                     )
                                                                 }}</span
                                                             >
@@ -944,7 +944,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                         <button
                                                             @click="
                                                                 toggleRowExpansion(
-                                                                    index
+                                                                    index,
                                                                 )
                                                             "
                                                             class="col-span-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium"
@@ -954,7 +954,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                             ></i>
                                                             {{
                                                                 __(
-                                                                    "Close Details"
+                                                                    "Close Details",
                                                                 )
                                                             }}
                                                         </button>
@@ -997,7 +997,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                             @click="copyToClipboard(item.code)"
                                             :title="
                                                 __(
-                                                    'Click to copy transaction code'
+                                                    'Click to copy transaction code',
                                                 )
                                             "
                                         >
@@ -1256,7 +1256,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 :class="[
                                                     'font-medium',
                                                     getRefundStatusTextClasses(
-                                                        item.refund.status
+                                                        item.refund.status,
                                                     ),
                                                 ]"
                                             >
@@ -1370,17 +1370,9 @@ import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import { onMounted, ref } from "vue";
-import { useForm } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 
-const props = defineProps({
-    data: {
-        type: Object,
-        default: [],
-    },
-    route: String,
-    transaction_routes: Object,
-});
-
+const page = usePage();
 const viewMode = ref("list");
 const loading = ref(false);
 const expandedRow = ref(null);
@@ -1389,7 +1381,7 @@ const pages = ref({
     total_pages: 0,
 });
 
-const search = useForm({
+const search = ref({
     page: 1,
     per_page: 15,
     name: "",
@@ -1403,12 +1395,10 @@ const searchTimeout = ref(null);
 const statuses = ref([]);
 const types = ref([]);
 
-onMounted(() => {
-    const values = props.data;
-    transactions.value = { ...values.data };
-    pages.value = { ...values.meta.pagination };
-    getStatuses();
-    getType();
+onMounted(async () => {
+    await getTransactions();
+    await getStatuses();
+    await getType();
 });
 
 // functions
@@ -1471,7 +1461,7 @@ const toggleRowExpansion = (index) => {
 
 const getStatuses = async () => {
     try {
-        const res = await $server.get("/api/transaction/payments/statuses");
+        const res = await $server.get(page.props.api.payment_status);
         if (res.status == 200) {
             statuses.value = res.data.data;
         }
@@ -1482,7 +1472,7 @@ const getStatuses = async () => {
 
 const getType = async () => {
     try {
-        const res = await $server.get("/api/transaction/payments/types");
+        const res = await $server.get(page.props.api.payment_types);
         if (res.status == 200) {
             types.value = res.data.data;
         }
@@ -1506,27 +1496,27 @@ const debouncedSearch = () => {
     }, 500);
 };
 
-const getTransactions = () => {
+const getTransactions = async () => {
     loading.value = true;
     expandedRow.value = null;
 
-    search.get(props.route, {
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: (page) => {
-            const values = page.props.data;
+    try {
+        const res = await $server.get(
+            page.props.api.transactions,
+            search.value,
+        );
+        if (res.status == 200) {
+            const values = res.data;
             transactions.value = values.data;
             pages.value = values.meta.pagination;
-        },
-        onError: (e) => {
-            if (e?.response?.data?.message) {
-                $notify.error(e.response.data.message);
-            }
-        },
-        onFinish: () => {
-            loading.value = false;
-        },
-    });
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 
 const check = (item) => {

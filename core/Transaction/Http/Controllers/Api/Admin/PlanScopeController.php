@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Transaction\Http\Controllers\Admin;
+namespace Core\Transaction\Http\Controllers\Api\Admin;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -27,43 +27,33 @@ namespace Core\Transaction\Http\Controllers\Admin;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
-use Core\Transaction\Repositories\PlanRepository;
+use App\Http\Controllers\ApiController;
 use Core\Transaction\Model\Plan;
 use Core\Transaction\Services\PlanService;
 use Core\User\Model\Scope;
-use App\Http\Controllers\WebController;
 
-class PlanScopeController extends WebController
+class PlanScopeController extends ApiController
 {
-
-    /**
-     * Repository
-     * @var PlanService
-     */
-    public $planService;
-
     /**
      * Construct
      * @param  PlanService $planService
      */
-    public function __construct(PlanService $planService)
+    public function __construct(protected PlanService $planService)
     {
         parent::__construct();
-        $this->planService = $planService;
-        $this->middleware('userCanAny:administrator:plan:full,administrator:plan:revoke')->only('revoke');
+        $this->middleware('scope:administrator:plan:full,administrator:plan:revoke')->only('revoke');
     }
 
     /**
-     * Delete scopes
-     * @param \Core\Transaction\Model\Plan $plan
-     * @param \Core\User\Model\Scope $scope
-     * @return \Illuminate\Http\RedirectResponse
+     * Revoke scopes
+     * @param Plan $plan
+     * @param Scope $scope
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function revoke(Plan $plan, Scope $scope)
     {
         $this->planService->deleteScope($plan->id, $scope->id);
 
-        return redirect()->back()->with('message', __('Scopes revoked successfully'));
+        return $this->message(__('Scopes revoked successfully'), 200);
     }
 }

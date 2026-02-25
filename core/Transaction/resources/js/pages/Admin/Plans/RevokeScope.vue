@@ -59,7 +59,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             >
                                 {{
                                     __(
-                                        "You are about to revoke the following access scope. This will remove permissions from the associated plan and may affect users immediately."
+                                        "You are about to revoke the following access scope. This will remove permissions from the associated plan and may affect users immediately.",
                                     )
                                 }}
                             </p>
@@ -288,7 +288,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             >
                                 {{
                                     __(
-                                        "This revocation is permanent and will take effect immediately. Users subscribed to this plan will lose access to the associated permissions."
+                                        "This revocation is permanent and will take effect immediately. Users subscribed to this plan will lose access to the associated permissions.",
                                     )
                                 }}
                             </p>
@@ -361,7 +361,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import VModal from "@/components/VModal.vue";
-import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 const emits = defineEmits(["revoked"]);
@@ -389,20 +388,21 @@ async function revoke() {
     if (loading.value) return;
 
     loading.value = true;
-    const form = useForm();
+    try {
+        const res = $server.delete(props.item.links.revoke);
 
-    form.delete(props.item.links.revoke, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: (page) => {
+        if (res.status == 200) {
             dialog.value = false;
             emits("revoked", props.item.id);
             $notify.success(__("Scope revoked successfully"));
-        },
-        onFinish: () => {
-            loading.value = false;
-        },
-    });
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 }
 </script>
 

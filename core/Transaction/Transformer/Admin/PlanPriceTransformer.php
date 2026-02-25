@@ -71,7 +71,7 @@ class PlanPriceTransformer extends TransformerAbstract
             'created' => $this->format_date($price->created_at),
             'updated' => $this->format_date($price->updated_at),
             'links' => [
-                'destroy' => route('transaction.admin.plans.prices.destroy', [
+                'destroy' => route('api.transaction.admin.plans.prices.destroy', [
                     'plan' => $price->priceable->id,
                     'price' => $price->id
                 ])

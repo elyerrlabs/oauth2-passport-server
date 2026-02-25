@@ -100,7 +100,7 @@ class PlanScopeTransformer extends TransformerAbstract
             'created' => $this->format_date($scope->created_at),
             'updated' => $this->format_date($scope->updated_at),
             'links' => [
-                'revoke' => route('transaction.admin.plans.scopes.revoke', ['plan' => $this->plan->id, 'scope' => $scope->id]),
+                'revoke' => route('api.transaction.admin.plans.scopes.revoke', ['plan' => $this->plan->id, 'scope' => $scope->id]),
             ]
         ];
     }

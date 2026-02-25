@@ -39,7 +39,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     >
                         {{
                             __(
-                                "Create, edit, and manage subscription offerings"
+                                "Create, edit, and manage subscription offerings",
                             )
                         }}
                     </p>
@@ -274,7 +274,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                         @click="
                                                             togglePlanExpansion(
                                                                 plan.id,
-                                                                'scopes'
+                                                                'scopes',
                                                             )
                                                         "
                                                         class="text-blue-500 hover:text-blue-700 dark:text-blue-400 text-xs flex items-center"
@@ -282,7 +282,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                         {{
                                                             isPlanExpanded(
                                                                 plan.id,
-                                                                "scopes"
+                                                                "scopes",
                                                             )
                                                                 ? __("Hide")
                                                                 : __("View")
@@ -292,7 +292,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                 'mdi ml-0.5 transition-transform text-xs',
                                                                 isPlanExpanded(
                                                                     plan.id,
-                                                                    'scopes'
+                                                                    'scopes',
                                                                 )
                                                                     ? 'mdi-chevron-up'
                                                                     : 'mdi-chevron-down',
@@ -306,7 +306,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                     v-if="
                                                         isPlanExpanded(
                                                             plan.id,
-                                                            'scopes'
+                                                            'scopes',
                                                         )
                                                     "
                                                     class="mt-2 border border-gray-200 dark:border-gray-600 rounded overflow-hidden"
@@ -396,7 +396,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                     <button
                                                         @click="
                                                             togglePricingRow(
-                                                                plan.id
+                                                                plan.id,
                                                             )
                                                         "
                                                         class="text-blue-500 hover:text-blue-700 dark:text-blue-400 text-xs flex items-center"
@@ -474,7 +474,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 <button
                                                     @click="
                                                         togglePricingRow(
-                                                            plan.id
+                                                            plan.id,
                                                         )
                                                     "
                                                     class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center text-xs"
@@ -504,7 +504,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                         >
                                                             {{
                                                                 formatBillingPeriod(
-                                                                    price.billing_period
+                                                                    price.billing_period,
                                                                 )
                                                             }}
                                                         </span>
@@ -522,7 +522,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                                 class="text-gray-600 dark:text-gray-400 text-xs"
                                                                 >{{
                                                                     __(
-                                                                        "Amount"
+                                                                        "Amount",
                                                                     )
                                                                 }}:</span
                                                             >
@@ -741,7 +741,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 >
                                                     {{
                                                         formatBillingPeriod(
-                                                            price.billing_period
+                                                            price.billing_period,
                                                         )
                                                     }}
                                                 </span>
@@ -820,19 +820,15 @@ import VDelete from "./Delete.vue";
 import VRevokeScope from "./RevokeScope.vue";
 import VDeletePrice from "./DeletePrice.vue";
 import VPaginate from "@/components/VPaginate.vue";
-import { useForm } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 
-const props = defineProps({
-    data: Object,
-    routes: Object,
-    transaction_routes: Object,
-});
+const page = usePage();
 
 const plans = ref([]);
 const expandedPlans = reactive({});
 const expandedPricing = ref(null);
 const expandedPricingMobile = ref(null);
-const search = useForm({
+const search = ref({
     page: 1,
     per_page: 15,
     name: "",
@@ -840,28 +836,25 @@ const search = useForm({
     bonus_activated: "",
     bonus_duration: "",
 });
-const pages = reactive({ total_pages: 0 });
+const pages = ref({ total_pages: 0 });
 
-onMounted(() => {
-    const values = props.data;
-    plans.value = values.data;
-    pages.value = values.meta.pagination;
+onMounted(async () => {
+    await getPlans();
 });
 
-/** Functions */
-const getPlans = () => {
-    search.get(props.routes.plans, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: (page) => {
-            const values = page.props.data;
+const getPlans = async () => {
+    try {
+        const res = await $server.get(page.props.api.plans, search.value);
+
+        if (res.status == 200) {
+            const values = res.data;
             plans.value = values.data;
             pages.value = values.meta.pagination;
             for (const key in expandedPlans) delete expandedPlans[key];
             expandedPricing.value = null;
             expandedPricingMobile.value = null;
-        },
-    });
+        }
+    } catch (error) {}
 };
 
 const togglePlanExpansion = (planId, section) => {

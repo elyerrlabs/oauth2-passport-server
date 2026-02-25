@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Transaction\Http\Controllers\Admin;
+namespace Core\Transaction\Http\Controllers\Api\Admin;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -27,41 +27,32 @@ namespace Core\Transaction\Http\Controllers\Admin;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
-use Inertia\Inertia;
+use App\Http\Controllers\ApiController;
+use Core\Transaction\Services\TransactionService;
+use Core\Transaction\Transformer\Admin\TransactionTransformer;
 use Illuminate\Http\Request;
-use App\Http\Controllers\WebController;
 
-class TransactionManagerController extends WebController
+class TransactionManagerController extends ApiController
 {
-
     /**
      * Construct
-     * 
+     *
      */
-    public function __construct()
+    public function __construct(protected TransactionService $transactionService)
     {
         parent::__construct();
-        $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:view')->only('index');
+        $this->middleware('scope:administrator:transactions:full,administrator:transactions:view')->only('index');
     }
 
     /**
-     * Show the resources
-     * @param \Illuminate\Http\Request $request
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser|\Inertia\Response
+     * Index
+     * @param Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
-        return Inertia::render(
-            "Admin/Transaction/Index",
-            [
-                "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
-                "api" => [
-                    'transactions' => route('api.transaction.admin.transactions.index'),
-                    'payment_status' => route('api.transaction.payments.status'),
-                    'payment_types' => route('api.transaction.payments.status')
-                ]
-            ]
-        );
+        $data = $this->transactionService->search($request);
+
+        return $this->showAllByBuilder($data, TransactionTransformer::class);
     }
 }

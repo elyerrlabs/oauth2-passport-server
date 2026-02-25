@@ -1,6 +1,9 @@
 <?php
 
-namespace Core\Transaction\Http\Controllers\Admin;
+namespace Core\Transaction\Http\Controllers\Api\Admin;
+
+use App\Http\Controllers\ApiController;
+use Core\Transaction\Services\PlanService;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -26,38 +29,24 @@ namespace Core\Transaction\Http\Controllers\Admin;
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
-
-use App\Models\Common\Price;
-use Core\Transaction\Model\Plan;
-use App\Http\Controllers\WebController;
-use Core\Transaction\Services\PlanService;
-
-class PlanPriceController extends WebController
+final class PlanPriceController extends ApiController
 {
-    /**
-     * Repository
-     * @var PlanService
-     */
-    public $plansService;
-
-    public function __construct(PlanService $planService)
+    public function __construct(protected PlanService $planService)
     {
         parent::__construct();
-        $this->plansService = $planService;
-        $this->middleware('userCanAny:administrator:plan:full,administrator:plan:destroy')->only('destroy');
+        $this->middleware('scope:administrator:plan:full,administrator:plan:destroy')->only('destroy');
     }
 
     /**
-     * Delete price of the plan
-     * @param \Core\Transaction\Model\Plan $plan
-     * @param \App\Models\Common\Price $price
-     * @return \Illuminate\Http\RedirectResponse
+     * remove prices
+     * @param string $plan_id
+     * @param string $price_id
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function destroy(Plan $plan, Price $price)
+    public function destroy(string $plan_id, string $price_id)
     {
-        $this->plansService->deletePrice($plan->id, $price->id);
+        $this->planService->deletePrice($plan_id, $price_id);
 
-        return redirect()->back();
+        return $this->message(__('Plan removed successfully'), 200);
     }
 }

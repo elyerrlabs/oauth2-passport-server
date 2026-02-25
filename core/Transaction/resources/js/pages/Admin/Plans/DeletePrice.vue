@@ -43,7 +43,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <!-- Warning Header -->
                 <div class="flex items-start gap-4">
                     <div
-                        class="flex-shrink-0 w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center"
+                        class="shrink-0 w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center"
                     >
                         <i
                             class="mdi mdi-currency-usd-off text-2xl text-red-600 dark:text-red-400"
@@ -60,7 +60,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         >
                             {{
                                 __(
-                                    "You are about to permanently delete this price configuration. This action will remove the pricing option from the subscription plan."
+                                    "You are about to permanently delete this price configuration. This action will remove the pricing option from the subscription plan.",
                                 )
                             }}
                         </p>
@@ -69,7 +69,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                 <!-- Price Details Card -->
                 <div
-                    class="bg-white dark:bg-gray-800 border-l-4 border-red-500 dark:border-red-400 border border-gray-200 dark:border-gray-600 rounded-xl p-6 shadow-sm"
+                    class="bg-white dark:bg-gray-800 border-l-4 dark:border-red-400 border border-gray-200 dark:border-gray-600 rounded-xl p-6 shadow-sm"
                 >
                     <div
                         class="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100 dark:border-gray-700"
@@ -189,7 +189,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         >
                             {{
                                 __(
-                                    "This price configuration will be permanently deleted from the system. Any active subscriptions using this price may be affected."
+                                    "This price configuration will be permanently deleted from the system. Any active subscriptions using this price may be affected.",
                                 )
                             }}
                         </p>
@@ -245,7 +245,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import VModal from "@/components/VModal.vue";
-import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 const emits = defineEmits(["deleted"]);
@@ -262,20 +261,22 @@ const destroy = async () => {
     if (loading.value) return;
 
     loading.value = true;
-    const form = useForm();
 
-    form.delete(props.item.links.destroy, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
+    try {
+        const res = $server.delete(props.item.links.destroy);
+
+        if (res.status == 200) {
             dialog.value = false;
             emits("deleted", props.item.id);
             $notify.success(__("Price configuration deleted successfully"));
-        },
-        onFinish: () => {
-            loading.value = false;
-        },
-    });
+        }
+    } catch (error) {
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
 

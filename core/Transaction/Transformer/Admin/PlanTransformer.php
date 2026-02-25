@@ -75,11 +75,11 @@ class PlanTransformer extends TransformerAbstract
             'scopes' => $plan->assignedScopes($plan->scopes),
             'prices' => $plan->transform($plan->prices, PlanPriceTransformer::class),
             'links' => [
-                'parent' => route('transaction.admin.plans.index'),
-                'store' => route('transaction.admin.plans.store'),
-                'show' => route('transaction.admin.plans.show', ['plan' => $plan]),
-                'update' => route('transaction.admin.plans.show', ['plan' => $plan]),
-                'destroy' => route('transaction.admin.plans.show', ['plan' => $plan]),
+                'parent' => route('api.transaction.admin.plans.index'),
+                'store' => route('api.transaction.admin.plans.store'),
+                'show' => route('api.transaction.admin.plans.show', ['plan' => $plan]),
+                'update' => route('api.transaction.admin.plans.update', ['plan' => $plan]),
+                'destroy' => route('api.transaction.admin.plans.destroy', ['plan' => $plan]),
             ],
         ];
     }

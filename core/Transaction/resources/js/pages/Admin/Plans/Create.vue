@@ -78,7 +78,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-input
                             :label="__('Plan Name')"
                             v-model="form.name"
-                            :error="form.errors.name"
+                            :error="errors.name"
                             :placeholder="__('e.g., VPN Pro')"
                             :required="true"
                         />
@@ -88,11 +88,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-editor
                             v-model="form.description"
                             :label="__('Description')"
-                            :error="form.errors.description"
+                            :error="errors.description"
                             :required="true"
                             :placeholder="
                                 __(
-                                    'Describe the features and benefits of this plan...'
+                                    'Describe the features and benefits of this plan...',
                                 )
                             "
                         />
@@ -104,7 +104,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-switch
                             :label="__('Active Plan')"
                             v-model="form.active"
-                            :error="form.errors.active"
+                            :error="errors.active"
                             :description="
                                 __('Make this plan available for purchase')
                             "
@@ -113,7 +113,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-switch
                             :label="__('Enable Bonus')"
                             v-model="form.bonus_enabled"
-                            :error="form.errors.bonus_enabled"
+                            :error="errors.bonus_enabled"
                             :description="__('Add bonus days to this plan')"
                         />
 
@@ -121,7 +121,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             v-if="form.bonus_enabled"
                             :label="__('Bonus Duration (Days)')"
                             v-model="form.bonus_duration"
-                            :error="form.errors.bonus_duration"
+                            :error="errors.bonus_duration"
                             type="number"
                             :placeholder="__('8')"
                             :description="__('Number of extra bonus days')"
@@ -150,14 +150,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <p class="text-sm text-gray-500 dark:text-gray-400">
                                 {{
                                     __(
-                                        "Set up pricing options for different billing periods"
+                                        "Set up pricing options for different billing periods",
                                     )
                                 }}
                             </p>
                         </div>
                     </div>
 
-                    <div v-if="form.prices.length" class="space-y-4">
+                    <div v-if="form.prices?.length" class="space-y-4">
                         <div
                             v-for="(price, index) in form.prices"
                             :key="price.id || `new-${index}`"
@@ -170,9 +170,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 label-key="name"
                                 value-key="id"
                                 v-model="price.billing_period"
-                                :error="
-                                    form.errors?.prices?.[index]?.billing_period
-                                "
+                                :error="errors?.prices?.[index]?.billing_period"
                                 :required="true"
                             />
 
@@ -183,7 +181,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 label-key="name"
                                 value-key="code"
                                 v-model="price.currency"
-                                :error="form.errors?.prices?.[index]?.currency"
+                                :error="errors?.prices?.[index]?.currency"
                                 :required="true"
                             />
 
@@ -191,7 +189,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <v-input
                                 v-model="price.amount"
                                 :label="__('Amount')"
-                                :error="form.errors?.prices?.[index]?.amount"
+                                :error="errors?.prices?.[index]?.amount"
                                 :required="true"
                                 type="money"
                                 :placeholder="__('0.00')"
@@ -219,8 +217,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </div>
 
                     <v-error
-                        v-if="!form.prices.length"
-                        :error="form.errors?.prices"
+                        v-if="!form.prices?.length"
+                        :error="errors?.prices"
                         class="mb-4"
                     />
 
@@ -255,7 +253,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <p class="text-sm text-gray-500 dark:text-gray-400">
                                 {{
                                     __(
-                                        "Configure service access and permissions"
+                                        "Configure service access and permissions",
                                     )
                                 }}
                             </p>
@@ -270,7 +268,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             label-key="name"
                             value-key="id"
                             v-model="selectedServiceId"
-                            :error="form.errors?.scopes"
+                            :error="errors?.scopes"
                             :clearable="true"
                             @change="onServiceChange"
                             :description="
@@ -423,7 +421,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         >
                             {{
                                 __(
-                                    "Please contact administrator to configure roles"
+                                    "Please contact administrator to configure roles",
                                 )
                             }}
                         </p>
@@ -465,7 +463,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 </button>
                 <button
                     class="px-8 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-xl flex items-center justify-center space-x-2 transition-all duration-200 transform hover:scale-105 cursor-pointer font-semibold shadow-lg hover:shadow-xl"
-                    @click="create"
+                    @click="handled"
                 >
                     <i class="mdi mdi-check-circle text-lg"></i>
                     <span>{{
@@ -485,14 +483,14 @@ import VInput from "@/components/VInput.vue";
 import VSwitch from "@/components/VSwitch.vue";
 import VSelect from "@/components/VSelect.vue";
 import VModal from "@/components/VModal.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 
 const props = defineProps({
     item: {
         type: Object,
-        default: () => [],
+        default: () => {},
     },
 });
 
@@ -510,7 +508,8 @@ const scopes = ref([]);
 const deletingScopeId = ref(null);
 const deletingPriceId = ref(null);
 
-const form = useForm({
+const errors = ref({});
+const form = ref({
     name: "",
     description: "",
     active: false,
@@ -527,7 +526,7 @@ const selectedService = computed(() => {
     if (!selectedServiceId.value) return null;
     return (
         services.value.find(
-            (service) => service.id === selectedServiceId.value
+            (service) => service.id === selectedServiceId.value,
         ) || null
     );
 });
@@ -537,7 +536,18 @@ const selectedService = computed(() => {
  * Clean form and reset all states
  */
 const clean = () => {
-    form.resetAndClearErrors();
+    form.value = {
+        name: "",
+        description: "",
+        active: false,
+        bonus_enabled: false,
+        bonus_duration: 0,
+        trial_enabled: false,
+        trial_duration: 0,
+        scopes: [],
+        prices: [],
+    };
+    errors.value = {};
     selectedServiceId.value = null;
     scopes.value = [];
     loadingScopes.value = false;
@@ -557,19 +567,17 @@ const close = () => {
  * Open the dialog and initialize form data
  */
 const open = async () => {
-    clean();
-
     if (props.item?.id) {
         // Initialize form with existing item data
-        form.name = props.item.name || "";
-        form.description = props.item.description || "";
-        form.active = props.item.active || false;
-        form.bonus_enabled = props.item.bonus_enabled || false;
-        form.bonus_duration = props.item.bonus_duration || 0;
-        form.trial_enabled = props.item.trial_enabled || false;
-        form.trial_duration = props.item.trial_duration || 0;
-        form.scopes = props.item.scopes?.map((scope) => scope.id) || [];
-        form.prices = props.item.prices;
+        form.value.name = props.item.name || "";
+        form.value.description = props.item.description || "";
+        form.value.active = props.item.active || false;
+        form.value.bonus_enabled = props.item.bonus_enabled || false;
+        form.value.bonus_duration = props.item.bonus_duration || 0;
+        form.value.trial_enabled = props.item.trial_enabled || false;
+        form.value.trial_duration = props.item.trial_duration || 0;
+        form.value.scopes = props.item.scopes?.map((scope) => scope.id) || [];
+        form.value.prices = props.item.prices;
 
         // Auto-select the service if scopes exist
         if (props.item.scopes?.length > 0) {
@@ -582,17 +590,17 @@ const open = async () => {
         }
     }
 
-    services.value = page.props.services;
+    dialog.value = true;
     await getBillingPeriod();
     await getCurrencies();
-    dialog.value = true;
+    await getServices();
 };
 
 /**
  * Add a new price row to the form
  */
 const addPrice = () => {
-    form.prices.push({
+    form.value.prices.push({
         billing_period: billing_periods.value.length
             ? billing_periods.value[0].id
             : "",
@@ -609,7 +617,7 @@ const addPrice = () => {
 const removePrice = async (price, index) => {
     // If it's a new price (no ID), just remove it from the array
     if (!price.id) {
-        form.prices.splice(index, 1);
+        form.value.prices.splice(index, 1);
         return;
     }
 
@@ -622,44 +630,63 @@ const removePrice = async (price, index) => {
     try {
         const response = await $server.delete(price.links.destroy);
         if (response.status === 200) {
-            form.prices.splice(index, 1);
+            form.value.prices.splice(index, 1);
             $notify.success(__("Price deleted successfully"));
         }
     } catch (error) {
         $notify.error(
-            error?.response?.data?.message || __("Failed to delete price")
+            error?.response?.data?.message || __("Failed to delete price"),
         );
     } finally {
         deletingPriceId.value = null;
     }
 };
 
-/**
- * Create or update plan
- */
-const create = () => {
+const createPlan = async () => {
+    try {
+        const res = await $server.post(page.props.api.plans, form.value);
+
+        if (res.status == 201) {
+            emits("created");
+            dialog.value = false;
+            $notify.success(__("New plan has been created successfully"));
+            clean();
+        }
+    } catch (error) {
+        if (error?.response?.status == 422) {
+            errors.value = error.response.data.errors;
+        }
+        if (error?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
+};
+
+const updatePlan = async () => {
+    try {
+        const res = await $server.put(props.item.links.update, form.value);
+
+        if (res.status == 200) {
+            emits("updated");
+            dialog.value = false;
+            $notify.success(__("Plan has been updated successfully"));
+            clean();
+        }
+    } catch (error) {
+        if (error?.response?.status == 422) {
+            errors.value = error.response.data.errors;
+        }
+        if (error?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
+};
+
+const handled = async () => {
     if (props.item?.id) {
-        form.put(props.item.links.update, {
-            preserveScroll: true,
-            preserveState: true,
-            onSuccess: () => {
-                emits("updated");
-                dialog.value = false;
-                $notify.success(__("Plan has been updated successfully"));
-                clean();
-            },
-        });
+        await updatePlan();
     } else {
-        form.post(page.props.routes.plans, {
-            preserveScroll: true,
-            preserveState: true,
-            onSuccess: () => {
-                emits("created");
-                dialog.value = false;
-                $notify.success(__("New plan has been created successfully"));
-                clean();
-            },
-        });
+        await createPlan();
     }
 };
 
@@ -668,11 +695,27 @@ const create = () => {
  */
 const getBillingPeriod = async () => {
     try {
-        const res = await $server.get(
-            page.props.api.transactions.billing_period
-        );
+        const res = await $server.get(page.props.api.billing_period);
         if (res.status === 200) {
             billing_periods.value = res.data.data;
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    }
+};
+
+const getServices = async () => {
+    try {
+        const res = await $server.get(page.props.api.services, {
+            params: {
+                per_page: 100,
+                visibility: "public",
+            },
+        });
+        if (res.status === 200) {
+            services.value = res.data.data;
         }
     } catch (e) {
         if (e?.response?.data?.message) {
@@ -686,7 +729,7 @@ const getBillingPeriod = async () => {
  */
 const getCurrencies = async () => {
     try {
-        const res = await $server.get(page.props.api.transactions.currencies);
+        const res = await $server.get(page.props.api.currencies);
         if (res.status === 200) {
             currencies.value = res.data.data;
         }
@@ -737,7 +780,7 @@ const loadScopesForService = async (serviceId) => {
  * @returns {boolean} - True if scope is selected
  */
 const hasScope = (id) => {
-    return form.scopes.includes(id);
+    return form.value.scopes.includes(id);
 };
 
 /**
@@ -745,11 +788,11 @@ const hasScope = (id) => {
  * @param {string} id - The scope ID to toggle
  */
 const toggleScope = (id) => {
-    const index = form.scopes.indexOf(id);
+    const index = form.value.scopes.indexOf(id);
     if (index === -1) {
-        form.scopes.push(id);
+        form.value.scopes.push(id);
     } else {
-        form.scopes.splice(index, 1);
+        form.value.scopes.splice(index, 1);
     }
 };
 
@@ -776,14 +819,14 @@ const deleteScope = async (scope) => {
 
         if (response.status === 200) {
             // Remove the scope from the form
-            const formIndex = form.scopes.indexOf(scope.id);
+            const formIndex = form.value.scopes.indexOf(scope.id);
             if (formIndex !== -1) {
-                form.scopes.splice(formIndex, 1);
+                form.value.scopes.splice(formIndex, 1);
             }
 
             // Remove the scope from props.item scopes array
             const itemScopeIndex = props.item.scopes.findIndex(
-                (s) => s.id === scope.id
+                (s) => s.id === scope.id,
             );
             if (itemScopeIndex !== -1) {
                 props.item.scopes.splice(itemScopeIndex, 1);
@@ -796,7 +839,7 @@ const deleteScope = async (scope) => {
         }
     } catch (error) {
         $notify.error(
-            error?.response?.data?.message || __("Failed to revoke scope")
+            error?.response?.data?.message || __("Failed to revoke scope"),
         );
     } finally {
         deletingScopeId.value = null;

@@ -28,8 +28,8 @@
 
 use Core\Transaction\Http\Controllers\Web\CheckoutController;
 use Core\Transaction\Http\Controllers\Web\TransactionManagerController;
-use Core\Transaction\Http\Controllers\Web\DeliveryAddressController;
 use Core\Transaction\Http\Controllers\Web\UserSubscriptionController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:core:transaction:web'])->group(function () {
 
@@ -52,14 +52,14 @@ Route::middleware(['throttle:core:transaction:web'])->group(function () {
 
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
-    Route::group([
+    /*Route::group([
         'prefix' => 'delivery',
         'as' => 'delivery.'
     ], function () {
         Route::get('addresses', [DeliveryAddressController::class, 'index'])->name('addresses.index');
         Route::post('addresses', [DeliveryAddressController::class, 'store'])->name('addresses.store');
         Route::delete('addresses/{id}', [DeliveryAddressController::class, 'destroy'])->name('addresses.delete');
-    });
+    });*/
 
 
     Route::get('/transactions', [
