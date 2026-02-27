@@ -48,19 +48,17 @@ class DeliveryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'full_name' => ['nullable', 'max:150'],
+            'full_name' => ['required', 'max:150'],
             'country' => ['required', 'max:150'],
-            'state' => ['nullable', 'max:150'],
+            'state' => ['required', 'max:150'],
             'city' => ['required', 'max:150'],
-            'district' => ['nullable', 'max:150'],
+            'district' => ['required', 'max:150'],
             'address' => ['required', 'max:150'],
             'address_line_2' => ['nullable', 'max:150'],
-            'postal_code' => ['nullable', 'max:150'],
+            'postal_code' => ['required', 'max:150'],
             'phone' => ['required', 'max:150'],
             'secondary_phone' => ['nullable', 'max:150'],
             'references' => ['nullable', 'max:150'],
         ];
     }
-
-
 }

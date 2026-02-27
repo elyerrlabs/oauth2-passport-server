@@ -74,9 +74,10 @@ class DeliveryAddressTransformer extends TransformerAbstract
             'secondary_phone' => $deliveryAddress->secondary_phone,
             'references' => $deliveryAddress->references,
             'links' => [
-                'index' => route('transaction.delivery.addresses.index'),
-                'store' => route('transaction.delivery.addresses.store'),
-                'delete' => route('transaction.delivery.addresses.delete', ['id' => $deliveryAddress->id]),
+                'index' => route('api.transaction.users.delivery-addresses.index'),
+                'store' => route('api.transaction.users.delivery-addresses.store'),
+                'update' => route('api.transaction.users.delivery-addresses.update', ['delivery_address' => $deliveryAddress->id]),
+                'delete' => route('api.transaction.users.delivery-addresses.destroy', ['delivery_address' => $deliveryAddress->id]),
             ]
         ];
     }

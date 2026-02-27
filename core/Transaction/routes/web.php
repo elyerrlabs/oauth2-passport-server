@@ -27,6 +27,7 @@
 
 
 use Core\Transaction\Http\Controllers\Web\CheckoutController;
+use Core\Transaction\Http\Controllers\Web\DeliveryAddressController;
 use Core\Transaction\Http\Controllers\Web\TransactionManagerController;
 use Core\Transaction\Http\Controllers\Web\UserSubscriptionController;
 use Illuminate\Support\Facades\Route;
@@ -41,29 +42,10 @@ Route::middleware(['throttle:core:transaction:web'])->group(function () {
     }
 
     Route::get('/subscriptions/{transaction_code}', [UserSubscriptionController::class, 'show'])->name('subscriptions.show');
-
     Route::put('/subscriptions/cancel/{transaction_id}', [UserSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+    Route::put('/subscriptions/{transaction}/activate', [UserSubscriptionController::class, 'activate'])->name('transactions.activate');
 
-
-    Route::put('/subscriptions/{transaction}/activate', [
-        UserSubscriptionController::class,
-        'activate'
-    ])->name('transactions.activate');
-
-    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-
-    /*Route::group([
-        'prefix' => 'delivery',
-        'as' => 'delivery.'
-    ], function () {
-        Route::get('addresses', [DeliveryAddressController::class, 'index'])->name('addresses.index');
-        Route::post('addresses', [DeliveryAddressController::class, 'store'])->name('addresses.store');
-        Route::delete('addresses/{id}', [DeliveryAddressController::class, 'destroy'])->name('addresses.delete');
-    });*/
-
-
-    Route::get('/transactions', [
-        TransactionManagerController::class,
-        'index'
-    ])->name('transactions.index');
+    Route::get('checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('delivery-addresses', [DeliveryAddressController::class, 'index'])->name('delivery-addresses.index');
+    Route::get('transactions', [TransactionManagerController::class, 'index'])->name('transactions.index');
 });

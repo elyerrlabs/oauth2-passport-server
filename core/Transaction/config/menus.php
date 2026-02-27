@@ -27,14 +27,6 @@
 
 return [
 
-    'delivery_address' => [
-        'id' => 'index',
-        'name' => __('Add address'),
-        'route' => 'transaction.delivery.addresses.index',
-        'icon' => 'mdi-map-marker-outline',
-        'service' => true,
-    ],
-
     /**
      * Merge route in another menu
      */
@@ -97,6 +89,13 @@ return [
                 'name' => __('Buy subscription'),
                 'route' => 'transaction.plans.index',
                 'icon' => 'mdi-currency-usd',
+                'service' => true,
+            ],
+            'delivery_address' => [
+                'id' => 'index',
+                'name' => __('My Delivery address'),
+                'route' => 'transaction.delivery-addresses.index',
+                'icon' => 'mdi-map-marker-outline',
                 'service' => true,
             ],
         ],

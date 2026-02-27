@@ -28,10 +28,8 @@ namespace Core\Transaction\Repositories;
  */
 
 use Core\Transaction\Model\DeliveryAddress;
-use Illuminate\Http\Request;
-use App\Repositories\Contracts\Contracts;
 
-class DeliveryAddressRepository implements Contracts
+class DeliveryAddressRepository
 {
     /**
      * Model
@@ -45,18 +43,13 @@ class DeliveryAddressRepository implements Contracts
         $this->model = $deliveryAddress;
     }
 
-
     /**
-     * Search resources
-     * @param \Illuminate\Http\Request $request
+     * Query
      * @return \Illuminate\Database\Eloquent\Builder<DeliveryAddress>
      */
-    public function search(Request $request)
+    public function query()
     {
-        $query = $this->model->query();
-        $query->where('user_id', auth()->user()->id);
-
-        return $query;
+        return $this->model->query()->where('user_id', request()->user()->id);
     }
 
     /**
@@ -70,13 +63,15 @@ class DeliveryAddressRepository implements Contracts
     }
 
     /**
-     * Search specific resource
+     * find resource
      * @param string $id
-     * @return void
+     * @return DeliveryAddress|object|TValue|\stdClass|null
      */
     public function find(string $id)
     {
-        return $this->model->find($id);
+        return $this->model->query()
+            ->where('id', $id)
+            ->first();
     }
 
     /**
@@ -87,16 +82,12 @@ class DeliveryAddressRepository implements Contracts
      */
     public function update(string $id, array $data)
     {
-        return $this->model->updateOrCreate(['id' => $id], $data);
-    }
+        $model = $this->find($id);
 
-    /**
-     * Delete specific resource
-     * @param string $id
-     * @return bool|null
-     */
-    public function delete(string $id)
-    {
-        return $this->model->where('id', $id)->where('user_id', auth()->user()->id)->delete();
+        $model->fill($data);
+
+        $model->push();
+
+        return $model;
     }
 }

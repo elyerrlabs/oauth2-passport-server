@@ -28,10 +28,8 @@
 use Core\Transaction\Http\Controllers\Api\Admin\PlanController;
 use Core\Transaction\Http\Controllers\Api\Admin\PlanPriceController;
 use Core\Transaction\Http\Controllers\Api\Admin\PlanScopeController;
-//use Core\Transaction\Http\Controllers\Api\Admin\RefundController;
-//use Core\Transaction\Http\Controllers\Api\Admin\RefundReviewController;
-//use Core\Transaction\Http\Controllers\Api\Web\RefundController as UserRefundController;
 use Core\Transaction\Http\Controllers\Api\Admin\TransactionManagerController;
+use Core\Transaction\Http\Controllers\Api\Web\DeliveryAddressController;
 use Core\Transaction\Http\Controllers\Api\Web\PaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -76,13 +74,15 @@ Route::group([
     Route::get('/services/list', [PaymentController::class, 'services'])->name('services.list');
     //  Route::get('/refunds/statuses', [PaymentController::class, 'listRefundStatus'])->name('refund.status');
 
-    /*   Route::group([
-            'prefix' => 'users',
-            'as' => 'users.'
-        ], function () {
+    Route::group([
+        'prefix' => 'users',
+        'as' => 'users.'
+    ], function () {
 
-            Route::get("/refunds", [UserRefundController::class, 'index'])->name('refunds.index');
-            Route::post("/refunds", [UserRefundController::class, 'store'])->name('refunds.store');
-            Route::put("/refunds/cancel/{id}", [UserRefundController::class, 'cancel'])->name('refunds.cancel');
-        });*/
+        Route::resource('delivery-addresses', DeliveryAddressController::class)->except('create', 'edit', 'show');
+
+        // Route::get("/refunds", [UserRefundController::class, 'index'])->name('refunds.index');
+        // Route::post("/refunds", [UserRefundController::class, 'store'])->name('refunds.store');
+        // Route::put("/refunds/cancel/{id}", [UserRefundController::class, 'cancel'])->name('refunds.cancel');
+    });
 });
