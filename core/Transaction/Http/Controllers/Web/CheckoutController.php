@@ -30,26 +30,17 @@ namespace Core\Transaction\Http\Controllers\Web;
 use Core\Transaction\Services\TransactionService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\Transaction\Repositories\TransactionRepository;
 
 
 class CheckoutController extends WebController
 {
 
     /**
-     * Repository
-     * @var TransactionService
-     */
-    private $transactionService;
-
-
-    /**
      * Construct
      */
-    public function __construct()
+    public function __construct(protected TransactionService $transactionService)
     {
         parent::__construct();
-        $this->transactionService = app(TransactionService::class);
     }
 
     /**
@@ -63,5 +54,4 @@ class CheckoutController extends WebController
 
         return view('payment.success', ['transaction' => $data]);
     }
-
 }
