@@ -153,17 +153,17 @@ class SettingService
         settingLoad('queue.default', 'database');
 
         //Sync setting
-        settingLoad('queue.connections.sync.driver', 'sync');
+        //settingLoad('queue.connections.sync.driver', 'sync');
 
         //Database settings
-        settingLoad('queue.connections.database.driver', 'database');
+        //settingLoad('queue.connections.database.driver', 'database');
         settingLoad('queue.connections.database.table', 'jobs');
         settingLoad('queue.connections.database.queue', 'default');
         settingLoad('queue.connections.database.retry_after', 90);
         settingLoad('queue.connections.database.after_commit', false);
 
         //beanstalkd Settings
-        settingLoad('queue.connections.beanstalkd.driver', 'beanstalkd');
+        //settingLoad('queue.connections.beanstalkd.driver', 'beanstalkd');
         settingLoad('queue.connections.beanstalkd.host', 'localhost');
         settingLoad('queue.connections.beanstalkd.queue', 'default');
         settingLoad('queue.connections.beanstalkd.retry_after', 90);
@@ -171,7 +171,7 @@ class SettingService
         settingLoad('queue.connections.beanstalkd.after_commit', false);
 
         //AWS settings
-        settingLoad('queue.connections.sqs.driver', 'sqs');
+        //settingLoad('queue.connections.sqs.driver', 'sqs');
         settingLoad('queue.connections.sqs.key', null);
         settingLoad('queue.connections.sqs.secret', null);
         settingLoad('queue.connections.sqs.prefix', 'https://sqs.us-east-1.amazonaws.com/your-account-id');
@@ -181,7 +181,7 @@ class SettingService
         settingLoad('queue.connections.sqs.after_commit', false);
 
         //Redis Settings
-        settingLoad('queue.connections.redis.driver', 'redis');
+        //settingLoad('queue.connections.redis.driver', 'redis');
         settingLoad('queue.connections.redis.connection', 'default');
         settingLoad('queue.connections.redis.queue', 'default');
         settingLoad('queue.connections.redis.retry_after', 90);
@@ -189,9 +189,9 @@ class SettingService
         settingLoad('queue.connections.redis.after_commit', false);
 
         //Fail queue settings
-        settingLoad('queue.failed.driver', 'database-uuids');
-        settingLoad('queue.failed.database', 'mysql');
-        settingLoad('queue.failed.table', 'failed_jobs');
+        //settingLoad('queue.failed.driver', 'database-uuids');
+        //settingLoad('queue.failed.database', 'pgsql');
+        //settingLoad('queue.failed.table', 'failed_jobs');
         //---------------------END QUEUES CONFIG--------------------///
 
         //----------FILESYSTEM SETTINGS------------------------------------------
@@ -200,13 +200,13 @@ class SettingService
         settingLoad('filesystems.disks.local.root', storage_path('app'));
         settingLoad('filesystems.disks.local.throw', false);
 
-        settingLoad('filesystems.disks.public.driver', 'local');
+        //settingLoad('filesystems.disks.public.driver', 'local');
         settingLoad('filesystems.disks.public.root', storage_path('app/public'));
         settingLoad('filesystems.disks.public.url', config('app.url', null) . '/storage');
         settingLoad('filesystems.disks.public.visibility', 'public');
         settingLoad('filesystems.disks.public.throw', false);
 
-        settingLoad('filesystems.disks.s3.driver', 's3');
+        //settingLoad('filesystems.disks.s3.driver', 's3');
         settingLoad('filesystems.disks.s3.key', null);
         settingLoad('filesystems.disks.s3.secret', null);
         settingLoad('filesystems.disks.s3.region', null);
@@ -223,7 +223,7 @@ class SettingService
         //-------EMAIL SETTINGS -------------------------
         settingLoad('mail.default', 'smtp');
 
-        settingLoad('mail.mailers.smtp.transport', 'smtp');
+        //settingLoad('mail.mailers.smtp.transport', 'smtp');
         settingLoad('mail.mailers.smtp.host', 'smtp.mailgun.org');
         settingLoad('mail.mailers.smtp.port', 587);
         settingLoad('mail.mailers.smtp.encryption', 'tls');
@@ -232,18 +232,18 @@ class SettingService
         settingLoad('mail.mailers.smtp.timeout', null);
         settingLoad('mail.mailers.smtp.local_domain', null);
 
-        settingLoad('mail.mailers.ses.transport', 'ses');
-        settingLoad('mail.mailers.mailgun.transport', 'mailgun');
-        settingLoad('mail.mailers.postmark.transport', 'postmark');
+        //settingLoad('mail.mailers.ses.transport', 'ses');
+        //settingLoad('mail.mailers.mailgun.transport', 'mailgun');
+        //settingLoad('mail.mailers.postmark.transport', 'postmark');
 
-        settingLoad('mail.mailers.sendmail.transport', 'sendmail');
+        //settingLoad('mail.mailers.sendmail.transport', 'sendmail');
 
-        settingLoad('mail.mailers.log.transport', 'log');
-        settingLoad('mail.mailers.log.channel', 'MAIL_LOG_CHANNEL');
+        //settingLoad('mail.mailers.log.transport', 'log');
+        //settingLoad('mail.mailers.log.channel', 'MAIL_LOG_CHANNEL');
 
-        settingLoad('mail.mailers.array.transport', 'array');
+        //settingLoad('mail.mailers.array.transport', 'array');
 
-        settingLoad('mail.mailers.failover.transport', 'failover');
+        //settingLoad('mail.mailers.failover.transport', 'failover');
         //settingLoad('mail.mailers.failover.mailers', ['smtp', 'log']);
 
         settingLoad('mail.from.address', 'hello@example.com');
