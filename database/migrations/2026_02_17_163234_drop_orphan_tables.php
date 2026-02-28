@@ -37,17 +37,17 @@ return new class extends Migration
     public function up(): void
     {
         $tables = [
-            'factor_2fa',
-            'terminals',
-            'categories',
-            'icons',
-            'units',
-            'attributes',
-            'tags',
             'attributables',
             'taggables',
-            'orders',
             'variants',
+            'orders',
+            'attributes',
+            'tags',
+            'categories',
+            'units',
+            'icons',
+            'terminals',
+            'factor_2fa',
         ];
 
         Schema::disableForeignKeyConstraints();
