@@ -30,6 +30,7 @@
                 'admin.settings.redis' => ['icon' => 'mdi-database', 'label' => __('Redis')],
                 'admin.settings.cache' => ['icon' => 'mdi-cached', 'label' => __('Cache')],
                 'admin.settings.queues' => ['icon' => 'mdi-playlist-play', 'label' => __('Queues')],
+                'admin.settings.scout' => ['icon' => 'mdi-search-web', 'label' => __('Scout')],
                 'admin.settings.filesystem' => ['icon' => 'mdi-folder-outline', 'label' => __('Filesystem')],
                 'admin.settings.rate_limit' => ['icon' => 'mdi-traffic-light', 'label' => __('Rate Limit')],
                 'admin.settings.security' => ['icon' => 'mdi-shield-outline', 'label' => __('Security')],

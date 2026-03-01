@@ -72,7 +72,7 @@ class SettingController extends WebController
         $data = $this->transformRequest($data);
 
         foreach ($data as $key => $value) {
-            
+
             settingAdd("{$moduleConfigKey}{$key}", $value);
         }
 
@@ -236,5 +236,14 @@ class SettingController extends WebController
     public function modules()
     {
         return view('settings.section.modules');
+    }
+
+    /**
+     * Summary of security
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function scout()
+    {
+        return view('settings.section.scout');
     }
 }
