@@ -3,7 +3,6 @@
 
 @section('form')
     <div class="flex flex-col lg:flex-row gap-8 items-start p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-sm">
-
         {{-- Sidebar --}}
         <div class="w-full lg:w-1/4 sticky top-4">
             <div class="bg-indigo-600 text-white p-6 rounded-2xl shadow-md">
@@ -39,14 +38,13 @@
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                     {{-- Driver --}}
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium mb-2">
+                        <label class="block text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
                             {{ __('Default Driver') }}
                         </label>
                         <select name="scout[driver]" id="scout_driver"
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-700">
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-700 text-gray-800 dark:text-gray-200">
                             @foreach (['collection', 'database', 'meilisearch', 'typesense', 'algolia', 'null'] as $driver)
                                 <option value="{{ $driver }}"
                                     {{ config('scout.driver') === $driver ? 'selected' : '' }}>
@@ -58,20 +56,20 @@
 
                     {{-- Prefix --}}
                     <div>
-                        <label class="block text-sm font-medium mb-2">
+                        <label class="block text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
                             {{ __('Index Prefix') }}
                         </label>
                         <input type="text" name="scout[prefix]" value="{{ config('scout.prefix') }}"
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
+                            class="w-full px-4 py-3 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
                     </div>
 
                     {{-- Queue --}}
                     <div>
-                        <label class="block text-sm font-medium mb-2">
+                        <label class="block text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
                             {{ __('Enable Queue for Indexing') }}
                         </label>
                         <select name="scout[queue]"
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-700">
+                            class="w-full px-4 py-3 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-700">
                             <option value="1" {{ config('scout.queue') ? 'selected' : '' }}>
                                 {{ __('Yes') }}
                             </option>
@@ -83,11 +81,11 @@
 
                     {{-- After Commit --}}
                     <div>
-                        <label class="block text-sm font-medium mb-2">
+                        <label class="block text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
                             {{ __('Sync After Database Commit') }}
                         </label>
                         <select name="scout[after_commit]"
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-700">
+                            class="w-full px-4 py-3 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-700">
                             <option value="1" {{ config('scout.after_commit') ? 'selected' : '' }}>
                                 {{ __('Yes') }}
                             </option>
@@ -109,20 +107,20 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-medium mb-2">
+                        <label class="block text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
                             Host
                         </label>
                         <input type="text" name="scout[meilisearch][host]"
                             value="{{ config('scout.meilisearch.host') }}"
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
+                            class="w-full px-4 py-3 rounded-lg text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">
+                        <label class="block text-sm font-medium mb-2  text-gray-800 dark:text-gray-200">
                             {{ __('API Key') }}
                         </label>
                         <input type="password" name="scout[meilisearch][key]" value="{{ config('scout.meilisearch.key') }}"
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
+                            class="w-full text-gray-800 dark:text-gray-200 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
                     </div>
                 </div>
             </div>
@@ -136,30 +134,30 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">
+                        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">
                             {{ __('Searchable Chunk Size') }}
                         </label>
                         <input type="number" name="scout[chunk][searchable]"
                             value="{{ config('scout.chunk.searchable') }}"
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
+                            class="w-full px-4 py-3 rounded-lg text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">
+                        <label class="block text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
                             {{ __('Unsearchable Chunk Size') }}
                         </label>
                         <input type="number" name="scout[chunk][unsearchable]"
                             value="{{ config('scout.chunk.unsearchable') }}"
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
+                            class="w-full px-4 py-3 rounded-lg text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700 dark:bg-gray-700">
                     </div>
 
                     {{-- Soft Delete --}}
                     <div>
-                        <label class="block text-sm font-medium mb-2">
+                        <label class="block text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
                             {{ __('Keep Soft Deleted Records in Index') }}
                         </label>
                         <select name="scout[soft_delete]"
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-700">
+                            class="w-full px-4 py-3 rounded-lg text-gray-800 dark:text-gray-200 border border-gray-300 dark:bg-gray-700 dark:border-gray-700">
                             <option value="1" {{ config('scout.soft_delete') ? 'selected' : '' }}>
                                 {{ __('Yes') }}
                             </option>
