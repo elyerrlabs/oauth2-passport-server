@@ -31,12 +31,34 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 ## [Unreleased]
 
+### Added
+
+- Added **API support** and separated responsibilities between **backend** and **frontend** layers.
+- Introduced **Laravel Scout integration** to support search indexing.
+- Added a **Settings section** to simplify external service integrations and system configuration.
+- Added a **Horizon configuration panel** to allow management of queues and related queue settings.
+- **Feat:** Added a **Shipping Addresses management area** that allows users to store and manage delivery addresses.  
+  This feature is designed to be reusable by modules related to **product sales, orders, or any other module that requires shipping or delivery information**, and includes built-in integration for associating shipping addresses with users.
+
+### Updated
+
+- Improved the **user interface** for better usability and consistency.
+
+### Refactored
+
+- Refactored modules to support API-based architecture.  
+  Affected modules: `users`, `roles`, `services`, `groups`, `transactions`, and `plans`.
+
 ### Fixed
-- `module:make` command now performs a rollback if an error occurs, preventing partial changes.
-- Fixed detection of the Composer executable in module commands.
+
+- `module:make` command now performs a **rollback if an error occurs**, preventing partial changes.
+- Fixed **Composer executable detection** in module commands.
 
 ### Removed
-- Dropped legacy core tables that have been migrated to modules to avoid duplication and inconsistencies.
+
+- Removed **orphan tables and models** that were not contributing to the system.
+- Cleaned up and optimized **database migrations**.
+- Dropped **legacy core tables** that were migrated to modules to avoid duplication and inconsistencies.
 
 ---
 
