@@ -48,6 +48,7 @@ Route::group([
     Route::get('/rate_limit', [SettingController::class, 'rateLimit'])->name('rate_limit');
     Route::get('/modules', [SettingController::class, 'modules'])->name('modules');
     Route::get('/scout', [SettingController::class, 'scout'])->name('scout');
+    Route::get('/horizon', [SettingController::class, 'horizon'])->name('horizon');
 
     Route::put('/', [SettingController::class, 'update'])->name('update');
     Route::put('/cache/reload', [SettingController::class, 'reloadCache'])->name('reload');

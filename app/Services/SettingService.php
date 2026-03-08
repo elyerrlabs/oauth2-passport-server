@@ -84,6 +84,15 @@ class SettingService
             Log::error('Something is wrong to load settings' . $th->getMessage());
         }
 
+        //Horizon cache settings
+        Config::set('database.redis.horizon.url', config('database.redis.cache.url', null));
+        Config::set('database.redis.horizon.host', config('database.redis.cache.host', '127.0.0.1'));
+        Config::set('database.redis.horizon.username', config('database.redis.cache.username', null));
+        Config::set('database.redis.horizon.password', config('database.redis.cache.password', null));
+        Config::set('database.redis.horizon.port', intval(config('database.redis.cache.port', 6379)));
+        Config::set('database.redis.horizon.database', intval(config('database.redis.cache.database', 0)));
+
+        // dd(config('database.redis'));
         static::getPassportSetting();
 
         URL::forceScheme(env('APP_URL_SCHEME', 'https'));

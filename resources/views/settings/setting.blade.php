@@ -29,6 +29,7 @@
                 'admin.settings.routes' => ['icon' => 'mdi-routes', 'label' => __('Routes')],
                 'admin.settings.redis' => ['icon' => 'mdi-database', 'label' => __('Redis')],
                 'admin.settings.cache' => ['icon' => 'mdi-cached', 'label' => __('Cache')],
+                'admin.settings.horizon' => ['icon' => 'mdi-cached', 'label' => __('Horizon')],
                 'admin.settings.queues' => ['icon' => 'mdi-playlist-play', 'label' => __('Queues')],
                 'admin.settings.scout' => ['icon' => 'mdi-search-web', 'label' => __('Scout')],
                 'admin.settings.filesystem' => ['icon' => 'mdi-folder-outline', 'label' => __('Filesystem')],

@@ -246,4 +246,12 @@ class SettingController extends WebController
     {
         return view('settings.section.scout');
     }
+
+    /**
+     *
+     */
+    public function horizon()
+    {
+        return view('settings.section.horizon');
+    }
 }
