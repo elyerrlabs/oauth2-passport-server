@@ -27,6 +27,7 @@ namespace App\Providers;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use App\Console\Commands\CleanTmpFileCommand;
 use App\Guard\TokenGuard;
 use Laravel\Fortify\Fortify;
 use Laravel\Passport\Passport;
@@ -38,6 +39,7 @@ use Laravel\Passport\PassportUserProvider;
 use App\Models\OAuth\Bridge\AuthCodeRepository;
 use App\Models\OAuth\Bridge\AccessTokenRepository;
 use App\Services\SettingService;
+use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Passport\Bridge\AuthCodeRepository as LaravelAuthCodeRepository;
 use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository;
 
@@ -78,6 +80,9 @@ class AppServiceProvider extends ServiceProvider
                 $this->app->make('request')
             );
         });
+
+        // Schedule
+        app(Schedule::class)->job(new CleanTmpFileCommand())->daily();
     }
 
     /**
