@@ -25,9 +25,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Support\CacheKeys;
 use App\Models\Setting\Setting;
+use App\Services\SettingService;
+use App\Support\CacheKeys;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 
 if (!function_exists('settingAdd')) {
     /**
@@ -41,13 +43,6 @@ if (!function_exists('settingAdd')) {
     {
         try {
 
-            $cacheKey = CacheKeys::settings($key);
-
-            if (CacheKeys::exceptKeys($key)) {
-                Cache::forget($cacheKey);
-                Cache::put($cacheKey, $value, now()->addDays(intval(config('cache.expires', 90))));
-            }
-
             // Save database
             Setting::updateOrCreate(
                 [
@@ -58,6 +53,10 @@ if (!function_exists('settingAdd')) {
                     'value' => $value,
                 ]
             );
+
+            // Reload configuration keys
+            SettingService::resetConfigKeys();
+
         } catch (\Exception $th) {
         }
     }

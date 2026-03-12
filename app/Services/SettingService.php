@@ -51,13 +51,34 @@ class SettingService
     }
 
     /**
-     * Set default values
+     * Cache key
+     * @return string
+     */
+    public static function cacheKey()
+    {
+        return "settings";
+    }
+
+    /**
+     * Restore the all config keys
      * @return void
      */
-    public static function getDefaultSetting()
+    public static function resetConfigKeys()
+    {
+        Cache::forget(SettingService::cacheKey());
+        SettingService::loadConfigKeys();
+    }
+
+    /**
+     * Load configs
+     */
+    public static function loadConfigKeys()
     {
         try {
-            $settings = \App\Models\Setting\Setting::all(['key', 'value']);
+
+            $settings = Cache::rememberForever(static::cacheKey(), function () {
+                return  \App\Models\Setting\Setting::all(['key', 'value']);
+            });
 
             foreach ($settings as $item) {
 
@@ -83,6 +104,16 @@ class SettingService
         } catch (\Throwable $th) {
             Log::error('Something is wrong to load settings' . $th->getMessage());
         }
+    }
+
+    /**
+     * Set default values
+     * @return void
+     */
+    public static function getDefaultSetting()
+    {
+
+        static::loadConfigKeys();
 
         //Horizon cache settings
         Config::set('database.redis.horizon.url', config('database.redis.cache.url', null));

@@ -28,6 +28,7 @@ namespace App\Http\Controllers\Web\Admin\Setting;
  */
 
 
+use App\Services\SettingService;
 use App\Support\CacheKeys;
 use Illuminate\Http\Request;
 use App\Models\Setting\Setting;
@@ -38,7 +39,7 @@ use App\Http\Controllers\WebController;
 
 class SettingController extends WebController
 {
-    public function __construct()
+    public function __construct(protected SettingService $settingService)
     {
         parent::__construct();
         $this->middleware('userCanAny:administrator:settings:full, administrator:settings:view')->except('update');
@@ -79,28 +80,7 @@ class SettingController extends WebController
         return redirect()->route($request->current_route)->with('status', __('Setting updated successfully'));
     }
 
-    /**
-     * Transform request
-     * @param array $data
-     * @param string $prefix
-     * @return array
-     */
-    public function transformRequest(array $data, string $prefix = '')
-    {
-        $flattened = [];
 
-        foreach ($data as $key => $value) {
-            $newKey = $prefix ? "{$prefix}.{$key}" : $key;
-
-            if (is_array($value)) {
-                $flattened += $this->transformRequest($value, $newKey);
-            } else {
-                $flattened[$newKey] = $value;
-            }
-        }
-
-        return $flattened;
-    }
 
     /**
      * Reload cache for settings
@@ -108,22 +88,9 @@ class SettingController extends WebController
      * @param \App\Models\Setting\Setting $setting
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function reloadCache(Request $request, Setting $setting)
+    public function reloadCache(Request $request)
     {
-        $settings = $setting::all();
-
-        foreach ($settings as $setting) {
-
-            $cache_key = CacheKeys::settings($setting->key);
-
-            Cache::forget($cache_key);
-
-            Cache::put(
-                $cache_key,
-                $setting->value,
-                now()->addDays(intval(config('cache.expires', 90)))
-            );
-        }
+        $this->settingService::resetConfigKeys();
 
         return redirect($request->current_route)->with('status', __('Cache updated successfully'));
     }
