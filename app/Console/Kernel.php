@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('passport:purge')->withoutOverlapping();
         $schedule->command("payment:charge-recurring")->everyFourHours()->withoutOverlapping();
+        $schedule->command("clean:tmp-files")->daily()->withoutOverlapping();
     }
 
     /**

@@ -80,9 +80,6 @@ class AppServiceProvider extends ServiceProvider
                 $this->app->make('request')
             );
         });
-
-        // Schedule
-        app(Schedule::class)->job(new CleanTmpFileCommand())->daily();
     }
 
     /**
