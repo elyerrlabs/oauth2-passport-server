@@ -12,6 +12,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\Module\ModuleDelete::class,
         \App\Console\Commands\Module\ModuleInstall::class,
         \App\Console\Commands\Module\ModuleServices::class,
+        \App\Console\Commands\CleanTmpFileCommand::class
     ];
 
     /**
