@@ -29,6 +29,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+## Unrelease
+
+### Improvements
+
+- Added a scheduled task to automatically clean temporary files.
+- Improved configuration settings across the system.
+- Added cache support to enhance performance.
+- Removed the separate Horizon configuration. The queue system now relies on the default Redis configuration.
+
+---
+
 ## [v6.0.0]
 
 ### Added
