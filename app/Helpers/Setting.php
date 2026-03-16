@@ -54,9 +54,6 @@ if (!function_exists('settingAdd')) {
                 ]
             );
 
-            // Reload configuration keys
-            SettingService::resetConfigKeys();
-
         } catch (\Exception $th) {
         }
     }
@@ -292,9 +289,9 @@ if (!function_exists('config_module')) {
 
             return [
                 'cipher' => base64_encode($cipher),
-                'salt'   => base64_encode($salt),
-                'nonce'  => base64_encode($nonce),
-                'tag'    => base64_encode($tag),
+                'salt' => base64_encode($salt),
+                'nonce' => base64_encode($nonce),
+                'tag' => base64_encode($tag),
             ];
         }
     }
@@ -303,9 +300,9 @@ if (!function_exists('config_module')) {
     if (!function_exists('decryptWithPassphrase')) {
         function decryptWithPassphrase(array $data, string $passphrase): string|false
         {
-            $salt  = base64_decode($data['salt']);
+            $salt = base64_decode($data['salt']);
             $nonce = base64_decode($data['nonce']);
-            $tag   = base64_decode($data['tag']);
+            $tag = base64_decode($data['tag']);
             $cipher = base64_decode($data['cipher']);
 
             $key = sodium_crypto_pwhash(
