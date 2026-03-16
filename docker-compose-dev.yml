@@ -1,13 +1,27 @@
 name: ops-dev
 
 services:
+
   redis:
-    image: redis:latest 
-    restart: always
-    ports:
-      - "6379:6379"
+    image: redis:7.2-alpine
+    container_name: redis
+    restart: unless-stopped
+    command: >
+       redis-server
+       --appendonly yes
+       --appendfsync everysec
+       --maxmemory 512mb
+       --maxmemory-policy allkeys-lru
+       --requirepass ${REDIS_PASSWORD}
+    volumes:
+       - redis-data:/data
     networks:
-      - internal-net
+       - internal-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
       
   db:
     image: postgres:17
@@ -45,7 +59,7 @@ services:
         condition: service_healthy
     volumes:
       - ./:/home/dev/code
-      - ${SSH_DIR}:/home/dev/.ssh
+      - ${SSH_DIR}:/www/dev/.ssh
       - ${GIT_CONFIG}:/home/dev/.gitconfig
     command: sh -c "/usr/local/bin/entrypoint.sh"
     tty: true
@@ -56,6 +70,7 @@ services:
 
 volumes:
   pg-data:
+  redis-data:
 
 networks:
   internal-net:
