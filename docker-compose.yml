@@ -4,7 +4,6 @@ services:
 
     redis:
         image: redis:7.2-alpine
-        container_name: redis
         restart: unless-stopped
         command: >
             redis-server
@@ -76,7 +75,11 @@ volumes:
     third-party:
     third-party-public:
     editable:
+    redis-data:
 
 networks:
-    public-net:
-        driver: bridge
+  internal-net:
+    internal: true
+  public-net:
+    driver: bridge
+    
