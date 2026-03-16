@@ -65,8 +65,8 @@ class SettingService
      */
     public static function resetConfigKeys()
     {
-        Cache::forget(SettingService::cacheKey());
-        SettingService::loadConfigKeys();
+        Cache::delete(static::cacheKey());
+        static::loadConfigKeys();
     }
 
     /**
@@ -74,20 +74,16 @@ class SettingService
      */
     public static function loadConfigKeys()
     {
+
         try {
+            $settings = \App\Models\Setting\Setting::pluck('value', 'key');
 
-            $settings = Cache::rememberForever(static::cacheKey(), function () {
-                return  \App\Models\Setting\Setting::all(['key', 'value']);
-            });
-
-            foreach ($settings as $item) {
+            foreach ($settings as $key => $value) {
 
                 // Ignore empty values
-                if ($item->value === null || $item->value === '') {
+                if ($value === null || $value === '') {
                     continue;
                 }
-
-                $value = $item->value;
 
                 // Convert string numbers to string
                 if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
@@ -99,7 +95,7 @@ class SettingService
                 }
 
                 // Set the new config
-                Config::set($item->key, $value);
+                Config::set($key, $value);
             }
         } catch (\Throwable $th) {
             Log::error('Something is wrong to load settings' . $th->getMessage());
