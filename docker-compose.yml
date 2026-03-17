@@ -2,26 +2,6 @@ name: ops
 
 services:
 
-    redis:
-        image: redis:7.2-alpine
-        restart: unless-stopped
-        command: >
-            redis-server
-            --appendonly yes
-            --appendfsync everysec
-            --maxmemory 512mb
-            --maxmemory-policy allkeys-lru
-            --requirepass ${REDIS_PASSWORD}
-        volumes:
-            - redis-data:/data
-        networks:
-            - internal-net
-        healthcheck:
-            test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
-
     db:
         image: postgres:17
         restart: always
@@ -60,8 +40,6 @@ services:
             - third-party:/var/www/third-party
             - third-party-public:/var/www/public/third-party
             - editable:/resources/views/layouts
-        #    - ${SSH_DIR}:/var/www/.ssh:ro
-        #    - ${GIT_CONFIG}:/var/www/.gitconfig:ro
         command: sh -c "/usr/local/bin/entrypoint.sh"
         networks:
            - public-net
@@ -75,11 +53,8 @@ volumes:
     third-party:
     third-party-public:
     editable:
-    redis-data:
 
 networks:
-  internal-net:
-    internal: true
   public-net:
     driver: bridge
     
