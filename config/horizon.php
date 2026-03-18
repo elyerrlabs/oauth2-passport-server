@@ -199,7 +199,7 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default', 'payments', 'renewals', 'subscriptions-renew'],
+            'queue' => 'default,payments,renewals,subscriptions-renew',
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
             'maxProcesses' => 4,
