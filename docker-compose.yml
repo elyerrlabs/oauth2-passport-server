@@ -1,7 +1,6 @@
 name: ops
 
 services:
-
     db:
         image: postgres:17
         restart: always
@@ -40,9 +39,10 @@ services:
             - third-party:/var/www/third-party
             - third-party-public:/var/www/public/third-party
             - editable:/resources/views/layouts
+            - ssh:/home/www-data/.ssh
         command: sh -c "/usr/local/bin/entrypoint.sh"
         networks:
-           - public-net
+            - public-net
 
 volumes:
     pg-data:
@@ -53,8 +53,8 @@ volumes:
     third-party:
     third-party-public:
     editable:
+    ssh:
 
 networks:
-  public-net:
-    driver: bridge
-    
+    public-net:
+        driver: bridge

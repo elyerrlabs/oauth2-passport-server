@@ -139,7 +139,8 @@ RUN apk add --no-cache \
     wireguard-tools \
     php84-pecl-grpc \
     grpc \
-    protobuf 
+    protobuf \
+    openssh
 
 # Add user and group www-data
 RUN getent passwd www-data || adduser -S -G www-data -s /usr/sbin/nologin www-data
