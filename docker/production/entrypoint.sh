@@ -49,6 +49,9 @@ chown -R www-data:www-data .
 
 chown -R www-data:www-data /var/lib/nginx
 
+mkdir -p /home/www-data/.ssh 
+chown -R www-data:www-data /home/www-data/.ssh
+
 php artisan storage:link
 
 echo "🚀 Starting PHP-FPM..."
