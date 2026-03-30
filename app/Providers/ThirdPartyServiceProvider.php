@@ -76,7 +76,6 @@ class ThirdPartyServiceProvider extends ServiceProvider
                     if (!config($Key, $moduleConfig['module_enabled'])) {
                         continue;
                     }
-
                     // Start to load module
                     /**
                      * @var ClassLoader $loader
@@ -108,8 +107,57 @@ class ThirdPartyServiceProvider extends ServiceProvider
                             Log::warning("Provider $provider cannot be found");
                         }
                     }
+                    // path to import morph class
+                    $morphPath = "{$modulePath}/config/morph.php";
+                    if (file_exists($morphPath)) {
+                        $morph = include $morphPath;
+                        $currentMorph = config('morph', []);
+                        $data = $this->mergeConfigSmart($currentMorph, $morph);
+                        config()->set('morph', $data);
+                    }
                 }
             }
         }
     }
+
+
+    /**
+     * Merge configs
+     * @param array $base
+     * @param array $merge
+     * @return array
+     */
+    private function mergeConfigSmart(array $base, array $merge): array
+    {
+        foreach ($merge as $key => $value) {
+
+            if (isset($base[$key]) && is_array($base[$key]) && is_array($value)) {
+
+                if ($this->isNumericArray($base[$key]) && $this->isNumericArray($value)) {
+                    $base[$key] = array_values(array_merge($base[$key], $value));
+                    ksort($base);
+                } else { // Associative
+                    $base[$key] = $this->mergeConfigSmart($base[$key], $value);
+                    ksort($base);
+                }
+            } else {
+                $base[$key] = $value;
+                ksort($base);
+            }
+        }
+        ksort($base);
+        return $base;
+    }
+
+    /**
+     * Verify arrays
+     * @param array $array
+     * @return bool
+     */
+    private function isNumericArray(array $array): bool
+    {
+        return array_keys($array) === range(0, count($array) - 1);
+    }
+
+
 }
