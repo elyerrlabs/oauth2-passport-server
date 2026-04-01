@@ -10,6 +10,7 @@
             {{ __($description) }}
         </p>
 
-        <x-editor content="{{ $content }}" name="{{ $name }}" />
+        <x-editor name="{{ $name }}" content="{{ $content }}" label="Contenido" required="{{ true }}"
+            monaco="{{ true }}" jodit="{{ true }}" preview="{{ true }}" lang="html" />
     </div>
 @endsection
