@@ -38,7 +38,7 @@
     </div>
 
     <!-- Editor Tab -->
-    <div id="editor-tab" class="tab-content" @if (!$jodit) style="display: none;" @endif>
+    <div id="editor-tab" class="tab-content">
         <textarea id="editor" class="min-h-[500px]" name="{{ $name }}">{!! $content !!}</textarea>
     </div>
 
@@ -249,6 +249,8 @@
                     const value = monacoEditor.getValue();
                     if (joditEditor && joditEditor.value !== value) {
                         joditEditor.value = value;
+                    } else {
+                        document.getElementById('editor').innerHTML = value;
                     }
                     document.getElementById('preview').innerHTML = value;
                 });
