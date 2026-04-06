@@ -31,19 +31,84 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class editor extends Component
+class Editor extends Component
 {
+    /**
+     *   content
+     *
+     * @var string
+     */
     public $content;
 
+    /**
+     *   name
+     *
+     * @var string
+     */
     public $name;
+
+    /**
+     *   uid
+     *
+     * @var string
+     */
+    public $uid;
+
+    /**
+     *   label
+     *
+     * @var string
+     */
+    public $label;
+
+    /**
+     *   required
+     *
+     * @var bool
+     */
+    public $required;
+
+    /**
+     *   jodit
+     *
+     * @var bool
+     */
+    public $jodit;
+
+    /**
+     *   monaco
+     *
+     * @var bool
+     */
+    public $monaco;
+
+    /**
+     *  preview
+     *
+     * @var bool
+     */
+    public $preview;
 
     /**
      * Create a new component instance.
      */
-    public function __construct($content, $name)
-    {
+    public function __construct(
+        string $content,
+        string $name,
+        string $label,
+        bool $required = false,
+        bool $monaco = true,
+        bool $jodit = true,
+        bool $preview = true
+    ) {
         $this->content = $content;
-        $this->name = $content;
+        $this->name = $name;
+        $this->label = $label;
+        $this->required = $required;
+        $this->jodit = $jodit;
+        $this->monaco = $monaco;
+        $this->preview = $preview;
+        $this->uid = 'editor_' . uniqid();
     }
 
     /**
