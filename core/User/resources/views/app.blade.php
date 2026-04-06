@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @push('css')
-    <link nonce={{ $nonce }} href="{{ asset('css/app.css') }}" rel="stylesheet" />
+    <link nonce={{ $nonce }} href="{{ mix('css/app.css') }}" rel="stylesheet" />
 @endpush
 
 @section('content')
@@ -9,5 +9,5 @@
 @endsection
 
 @push('js')
-    <script nonce={{ $nonce }} src="{{ asset('js/core/user/app.js') }}"></script>
+    <script nonce={{ $nonce }} src="{{ mix('js/core/user/app.js') }}"></script>
 @endpush
