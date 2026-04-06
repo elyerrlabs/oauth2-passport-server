@@ -26,7 +26,6 @@
  */
 
 use App\Models\Setting\Setting;
-use App\Services\SettingService;
 use App\Support\CacheKeys;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -229,6 +228,72 @@ if (!function_exists('setLanguage')) {
         $translations = json_decode(file_get_contents($path));
 
         return response()->json($translations);
+    }
+}
+
+if (!function_exists('module_mix')) {
+    function module_mix($path, $manifestDirectory = ''): \Illuminate\Support\HtmlString|string
+    {
+        $route = request()->route();
+
+        $module = $route->action['module_type'] . "/" . Str::kebab($route->action['module']);
+
+        static $manifests = [];
+
+        if (!str_starts_with($path, '/')) {
+            $path = "/{$path}";
+        }
+
+        if ($manifestDirectory && !str_starts_with($manifestDirectory, '/')) {
+            $manifestDirectory = "/{$manifestDirectory}";
+        }
+
+        if (is_file(public_path($manifestDirectory . '/hot'))) {
+            $url = rtrim(file_get_contents(public_path($manifestDirectory . '/hot')));
+
+            $customUrl = app('config')->get('app.mix_hot_proxy_url');
+
+            if (!empty($customUrl)) {
+                return new \Illuminate\Support\HtmlString("{$customUrl}{$path}");
+            }
+
+            if (Str::startsWith($url, ['http://', 'https://'])) {
+                return new \Illuminate\Support\HtmlString(Str::after($url, ':') . $path);
+            }
+
+            return new \Illuminate\Support\HtmlString("//localhost:8080{$path}");
+        }
+
+        $basePath = $module . ($manifestDirectory ? '/' . trim($manifestDirectory, '/') : '');
+        $manifestPath = public_path($basePath . '/mix-manifest.json');
+
+        if (!isset($manifests[$manifestPath])) {
+
+            if (!is_file($manifestPath)) {
+                throw new \Illuminate\Foundation\MixManifestNotFoundException("Mix manifest not found at: {$manifestPath}");
+            }
+
+            $manifests[$manifestPath] = json_decode(file_get_contents($manifestPath), true);
+        }
+
+        $manifest = $manifests[$manifestPath];
+
+        if (!isset($manifest[$path])) {
+            $exception = new \Illuminate\Foundation\MixFileNotFoundException("Unable to locate Mix file: {$path}.");
+
+            if (!app('config')->get('app.debug')) {
+                report($exception);
+
+                return $path;
+            } else {
+                throw $exception;
+            }
+        }
+        $url = rtrim(app('config')->get('app.mix_url'), '/');
+
+        return new \Illuminate\Support\HtmlString(
+            $url . '/' . trim($basePath, '/') . $manifest[$path]
+        );
     }
 }
 
