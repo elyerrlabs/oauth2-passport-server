@@ -82,7 +82,7 @@
         </nav>
 
         <!-- SETTINGS CONTENT -->
-        <main class="flex-1 p-3 sm:p-4 md:p-6 space-y-6 overflow-y-auto overscroll-contain">
+        <main class="flex-1 p-3 sm:p-4 md:p-6 space-y-6  ">
 
             <!-- FORM SETTINGS -->
             <div
@@ -104,7 +104,7 @@
                     <input id="password" type="password" class="hidden" />
                     <input type="hidden" name="current_route" value="{{ request()->route()->getName() }}">
                     <!-- Please do not remove-->
-                    
+
                     @method('put')
                     @csrf
 
