@@ -321,7 +321,7 @@
 
             <!-- YouTube -->
             <div class="mt-12 max-w-2xl mx-auto">
-                <a href="https://www.youtube.com/@elyerr" target="_blank"
+                <a href="https://www.youtube.com/@elyerrlabs" target="_blank"
                     class="flex flex-col md:flex-row items-center bg-white/10 backdrop-filter backdrop-blur-lg rounded-xl p-6 card-hover hover:bg-opacity-20 transition-all">
                     <div class="text-4xl mb-4 md:mb-0 md:mr-6">
                         <i class="fab fa-youtube text-red-500"></i>
@@ -331,7 +331,7 @@
                         <p class="opacity-80 dark:opacity-90">
                             {{ __('Watch tutorials, demos, and updates about OAuth2 Passport Server and related technologies') }}
                         </p>
-                        <div class="mt-4 text-sm font-medium opacity-90">youtube.com/@elyerr</div>
+                        <div class="mt-4 text-sm font-medium opacity-90">youtube.com/@elyerrlabs</div>
                     </div>
                 </a>
             </div>
