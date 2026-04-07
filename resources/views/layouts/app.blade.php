@@ -2,11 +2,9 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="dark">
 
 <head>
-    @include('layouts.editable.meta')
+    @yield('title', config('app.name', 'OAuth2 Server'))
 
-    <link rel="icon" href="{{ config('app.url') }}/favicon.png" type="image/png">
-
-    <title>{{ config('app.name', 'Oauth2 Server') }}</title>
+    @include('layouts.parts.favicon')
 
     <link nonce={{ $nonce }} rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
     <script nonce={{ $nonce }} src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>

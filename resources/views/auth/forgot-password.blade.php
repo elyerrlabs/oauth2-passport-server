@@ -1,227 +1,108 @@
 @extends('layouts.pages')
 
 @section('title')
-    @include('layouts.parts.title', ['title' => __('Recovery my password')])
+    @include('layouts.parts.title', ['title' => __('Reset Password')])
 @endsection
 
-@push('css')
-    <style>
-        .card-shadow {
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        }
-
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .floating-label {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .floating-input {
-            border: 0;
-            padding-left: 40px;
-            border-bottom: 2px solid #cbd5e1;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .floating-input:focus {
-            border-bottom: 2px solid #667eea;
-        }
-
-        .floating-label label {
-            position: absolute;
-            top: 12px;
-            left: 40px;
-            color: #64748b;
-            transition: all 0.3s;
-            pointer-events: none;
-        }
-
-        .floating-input:focus~label,
-        .floating-input:not(:placeholder-shown)~label {
-            top: -20px;
-            left: 40px;
-            font-size: 12px;
-            color: #667eea;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 12px;
-            top: 12px;
-            color: #94a3b8;
-        }
-
-        .illustration {
-            animation: float 4s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-
-            100% {
-                transform: translateY(0px);
-            }
-        }
-
-        .back-button {
-            transition: all 0.3s;
-        }
-
-        .back-button:hover {
-            transform: translateX(-5px);
-        }
-    </style>
-@endpush
+@section('head')
+    {!! config('seo.forgot-password', '') !!}
+@endsection
 
 @section('content')
-    <div class="min-h-screen flex items-center justify-center p-2 lg:p-4">
-        <div class="w-full max-w-4xl flex flex-col md:flex-row rounded-2xl overflow-hidden card-shadow">
-            <!-- Recovery Form -->
-            <div class="w-full md:w-1/2 bg-white p-2 lg:p-8">
-                <!-- Back Button -->
-                @if (Route::has('welcome'))
-                    <a href="{{ route('welcome') }}"
-                        class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 mb-6 back-button">
-                        <span class="mdi mdi-arrow-left mr-1"></span> {{ __('Back to Login') }}
-                    </a>
-                @endif
+    <div
+        class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 transition-colors duration-300">
+        <div class="w-full max-w-md">
+            <!-- Back Button -->
+            <div class="mb-4">
+                <a href="{{ route('login') }}"
+                    class="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition group">
+                    <i class="mdi mdi-arrow-left mr-1 group-hover:-translate-x-1 transition-transform"></i>
+                    {{ __('Back to Login') }}
+                </a>
+            </div>
 
-                <!-- Header -->
-                <div class="text-center mb-6">
-                    <div class="flex justify-center mb-4">
-                        <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center">
-                            <span class="mdi mdi-lock-reset text-indigo-600 text-3xl"></span>
-                        </div>
-                    </div>
-                    <h2 class="text-lg lg:text-2xl font-bold text-gray-800">
-                        {{ __('Reset Your Password') }}
-                    </h2>
-                    <p class="text-sm text-gray-600 mt-2 max-w-md mx-auto">
-                        {{ __("Forgot your password? No problem. Just enter your email address below and we'll send you a secure link to reset your password.") }}
-                    </p>
+            <!-- Logo/Brand -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl shadow-lg mb-4">
+                    <i class="mdi mdi-lock-reset text-white text-3xl"></i>
                 </div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    {{ __('Reset Password') }}
+                </h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    {{ __('Enter your email to receive a reset link') }}
+                </p>
+            </div>
 
-                <!-- Form -->
+            <!-- Reset Form -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
                 <form action="{{ route('password.email') }}" method="POST" class="space-y-6">
-                    <!-- Email Input -->
-                    <div class="floating-label">
-                        <span class="mdi mdi-email-outline input-icon"></span>
-                        <input type="email" id="email" name="email"
-                            class="floating-input w-full px-4 py-3 rounded-lg bg-gray-50" placeholder=" " required>
-                        <label for="email">{{ __('Email Address') }}</label>
-                        @if ($errors->has('email'))
-                            @foreach ($errors->get('email') as $item)
-                                <span class="text-red-500 text-xs mt-1 block">{{ $item }}</span>
-                            @endforeach
+                    @csrf
+
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {{ __('Email Address') }}
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="mdi mdi-email text-gray-400 text-lg"></i>
+                            </div>
+                            <input type="email" id="email" name="email" value="{{ old('email') }}"
+                                class="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 
+                                          rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                          dark:bg-gray-700 dark:text-white transition duration-200"
+                                placeholder="name@example.com" required autofocus>
+                        </div>
+                        @error('email')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+
+                        @if (session('status'))
+                            <p class="mt-1 text-sm text-green-600 dark:text-green-400">{{ session('status') }}</p>
                         @endif
                     </div>
 
-                    <!-- CAPTCHA Placeholder -->
-                    <div class="flex flex-col">
-                        <x-captcha />
-                    </div>
+                    <!-- Captcha -->
+                    @if (isset($captcha) && $captcha)
+                        <div>
+                            <x-captcha />
+                        </div>
+                    @endif
 
                     <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full gradient-bg hover:opacity-90 text-sm lg:text-md text-white py-3 rounded-xl font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        <span class="mdi mdi-email-send-outline mr-2"></span> {{ __('Send Reset Link') }}
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg
+                                   transition duration-200 transform hover:scale-[1.02] active:scale-[0.98]
+                                   shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                        <i class="mdi mdi-email-send text-lg"></i>
+                        {{ __('Send Reset Link') }}
                     </button>
                 </form>
 
-                <!-- Additional Help -->
-                <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                    <div class="flex">
-                        <span class="mdi mdi-information-outline text-blue-500 text-xl mr-2"></span>
+                <!-- Help Card (simplified) -->
+                <div class="mt-6 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                    <div class="flex items-start gap-2">
+                        <i class="mdi mdi-information text-blue-500 dark:text-blue-400 text-lg mt-0.5"></i>
                         <div>
-                            <h3 class="text-sm font-semibold text-blue-800">{{ __("Can't access your email?") }}</h3>
-                            <p class="text-xs text-blue-600 mt-1">
-                                {{ __("If you're having trouble receiving the reset email, please contact our support team for assistance.") }}
+                            <h3 class="text-sm font-semibold text-blue-800 dark:text-blue-300">
+                                {{ __("Can't access your email?") }}
+                            </h3>
+                            <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                                {{ __('Contact our support team for assistance.') }}
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Information Panel -->
-            <div class="gradient-bg w-full md:w-1/2 text-white p-8 hidden lg:flex lg:flex-col lg:justify-center">
-                <div class="text-center mb-6 illustration">
-                    <span class="mdi mdi-shield-account text-6xl opacity-90"></span>
-                </div>
-
-                <h2 class="text-2xl font-bold mb-6 text-center">{{ __('Secure Password Recovery') }}</h2>
-
-                <div class="space-y-6">
-                    <div class="flex items-start">
-                        <span class="mdi mdi-check-circle-outline text-xl mr-3 mt-0.5"></span>
-                        <div>
-                            <h3 class="font-semibold">{{ __('Encrypted Reset Links') }}</h3>
-                            <p class="text-sm mt-1 text-indigo-100">
-                                {{ __('Our password reset links are encrypted and time-sensitive for maximum security.') }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start">
-                        <span class="mdi mdi-check-circle-outline text-xl mr-3 mt-0.5"></span>
-                        <div>
-                            <h3 class="font-semibold">{{ __('Instant Delivery') }}</h3>
-                            <p class="text-sm mt-1 text-indigo-100">
-                                {{ __('Reset instructions are sent immediately to your email inbox.') }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start">
-                        <span class="mdi mdi-check-circle-outline text-xl mr-3 mt-0.5"></span>
-                        <div>
-                            <h3 class="font-semibold">{{ __('One-Click Process') }}</h3>
-                            <p class="text-sm mt-1 text-indigo-100">
-                                {{ __('Simply click the link in the email to create a new password.') }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                @if (Route::has('welcome'))
-                    <div class="mt-8 pt-6 border-t border-indigo-400">
-                        <div class="text-center">
-                            <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
-                                {{ config('app.org_name') }}
-                            </a>
-                        </div>
-                        <p class="text-sm text-indigo-100 text-center">
-                            <span class="mdi mdi-shield-lock-outline mr-1"></span>
-                            {{ __('Your security is our priority. All reset requests are logged and monitored.') }}
-                        </p>
-                    </div>
-                @endif
+            <!-- Footer -->
+            <div class="text-center mt-6">
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                    © {{ date('Y') }} {{ config('app.org_name', config('app.name')) }}.
+                    {{ __('All rights reserved.') }}
+                </p>
             </div>
         </div>
     </div>
 @endsection
-
-@push('js')
-    <script nonce="{{ $nonce }}">
-        document.addEventListener('DOMContentLoaded', function() {
-            const formElements = document.querySelectorAll('.floating-input, button');
-            formElements.forEach((element, index) => {
-                element.style.opacity = "0";
-                element.style.transform = "translateY(10px)";
-                setTimeout(() => {
-                    element.style.transition = "opacity 0.5s, transform 0.5s";
-                    element.style.opacity = "1";
-                    element.style.transform = "translateY(0)";
-                }, 100 * index);
-            });
-        });
-    </script>
-@endpush

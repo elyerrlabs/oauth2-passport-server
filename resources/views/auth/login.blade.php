@@ -4,320 +4,203 @@
     @include('layouts.parts.title', ['title' => __('Login')])
 @endsection
 
-@push('css')
-    <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-
-        .card-shadow {
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-        }
-
-        .info-card {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        }
-
-        .floating-label {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .floating-input {
-            border: 0;
-            border-bottom: 2px solid #cbd5e1;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .floating-input:focus {
-            border-bottom: 2px solid #4f46e5;
-        }
-
-        .floating-label label {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            color: #64748b;
-            transition: all 0.3s;
-            pointer-events: none;
-        }
-
-        .floating-input:focus~label,
-        .floating-input:not(:placeholder-shown)~label {
-            top: -20px;
-            left: 0;
-            font-size: 12px;
-            color: #4f46e5;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 12px;
-            top: 12px;
-            cursor: pointer;
-            color: #64748b;
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-    </style>
-@endpush
+@section('head')
+    {!! config('seo.login', '') !!}
+@endsection
 
 @section('content')
-    <div class="gradient-bg min-h-screen flex items-center justify-center p-1 lg:p-4">
-
-        <div class="w-full max-w-4xl bg-white rounded-2xl overflow-hidden card-shadow flex flex-col md:flex-row">
-            <!-- Panel de Login -->
-            <div class="w-full md:w-1/2 p-2 lg:p-8">
-                <div class="text-center p-2 lg:mb-8">
-                    <h1 class="text-3xl font-bold text-gray-800">
-                        <i class="mdi mdi-lock text-indigo-600 mr-2"></i>
-                        {{ __(config('app.name', 'Oauth2 Server')) }}
-                    </h1>
-                    <p class="text-sm text-gray-500 mt-2">{{ __('Sign in to your account') }}</p>
+    <div
+        class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 transition-colors duration-300">
+        <div class="w-full max-w-md">
+            <!-- Logo/Brand -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl shadow-lg mb-4">
+                    <i class="mdi mdi-lock text-white text-3xl"></i>
                 </div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    {{ config('app.name', 'OAuth2 Server') }}
+                </h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    {{ __('Sign in to your account') }}
+                </p>
+            </div>
 
-                {{-- Demo Mode Card --}}
-                @if (config('system.demo.enabled'))
-                    <div
-                        class="mb-6 p-2 lg:p-4 rounded-xl bg-yellow-50 border border-yellow-300 shadow-sm text-sm text-yellow-800">
-                        <div class="flex items-center mb-2">
-                            <i class="mdi mdi-monitor-eye text-yellow-600 text-xl mr-2"></i>
-                            <span class="font-semibold">{{ __('Demo Mode Active') }}</span>
-                        </div>
-                        <p class="mb-1">{{ __('You can log in using the demo credentials:') }}</p>
-                        <div class="bg-white border border-yellow-200 rounded-lg p-3 text-gray-700 text-xs space-y-2">
-                            <div class="flex items-center justify-between">
-                                <p>
-                                    <strong>{{ __('Email') }}:</strong>
-                                    <span id="demo-email">{{ config('system.demo.email') }}</span>
-                                </p>
-                                <button type="button" id="copy-email"
-                                    class="ml-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center">
-                                    <i class="mdi mdi-content-copy mr-1"></i>{{ __('Copy') }}
-                                </button>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <p>
-                                    <strong>{{ __('Password') }}:</strong>
-                                    <span id="demo-password">{{ config('system.demo.password') }}</span>
-                                </p>
-                                <button type="button" id="copy-password"
-                                    class="ml-2 text-indigo-600 hover:text-indigo-800 text-xs flex items-center">
-                                    <i class="mdi mdi-content-copy mr-1"></i>{{ __('Copy') }}
-                                </button>
-                            </div>
-                        </div>
+            <!-- Demo Mode Alert (simplified) -->
+            @if (config('system.demo.enabled'))
+                <div class="mb-6 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                    <div class="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-300">
+                        <i class="mdi mdi-information text-lg"></i>
+                        <span class="font-medium">{{ __('Demo Mode') }}</span>
                     </div>
-                @endif
-
-                @if (config('system.demo.domain.enabled', false))
-                    <div class="mb-6 p-3 text-center border border-yellow-300 rounded-xl">
-                        <div
-                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl pb-3  bg-yellow-50/60 text-yellow-800/90 shadow-sm backdrop-blur-sm">
-                            <i class="mdi mdi-eye-outline text-yellow-600 text-lg"></i>
-                            <span class="text-sm font-medium text-gray-800">
-                                {{ __('Demo environment active for preview purposes') }}
-                            </span>
+                    <div class="mt-2 text-xs text-blue-700 dark:text-blue-400 space-y-1">
+                        <div class="flex justify-between items-center">
+                            <span><strong>{{ __('Email') }}:</strong> {{ config('system.demo.email') }}</span>
+                            <button type="button" onclick="copyToClipboard('{{ config('system.demo.email') }}', 'email')"
+                                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs">
+                                <i class="mdi mdi-content-copy"></i> {{ __('Copy') }}
+                            </button>
                         </div>
-                        <div class="mt-2 text-xs text-gray-500 p-4">
-                            <a href="{{ config('system.demo.domain.url') }}" target="_blank"
-                                class="hover:text-yellow-700 hover:bg-blue-700 cursor-pointer font-medium transition rounded-2xl bg-blue-600 text-white p-3">
-                                {{ config('system.demo.domain.url') }}
-                            </a>
+                        <div class="flex justify-between items-center">
+                            <span><strong>{{ __('Password') }}:</strong> {{ config('system.demo.password') }}</span>
+                            <button type="button"
+                                onclick="copyToClipboard('{{ config('system.demo.password') }}', 'password')"
+                                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs">
+                                <i class="mdi mdi-content-copy"></i> {{ __('Copy') }}
+                            </button>
                         </div>
                     </div>
-                @endif
+                </div>
+            @endif
 
-                <form action="{{ route('login.store') }}" method="POST" class="space-y-6">
-                    <div class="floating-label">
-                        <input type="email" id="email" name="email"
-                            class="floating-input w-full px-4 py-3 rounded-lg bg-gray-50" placeholder=" " required>
-                        <label for="email">{{ __('Email') }}</label>
-                        @if ($errors->has('email'))
-                            @foreach ($errors->get('email') as $item)
-                                <span class="text-red-500 text-xs mt-1 block">{{ $item }}</span>
-                            @endforeach
-                        @endif
-                    </div>
+            <!-- Login Form -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
+                <form action="{{ route('login.store') }}" method="POST" class="space-y-5">
+                    @csrf
 
-                    <div class="floating-label relative">
-                        <input type="password" id="password" name="password"
-                            class="floating-input w-full px-4 py-3 rounded-lg bg-gray-50" placeholder=" " required>
-                        <label for="password">{{ __('Password') }}</label>
-                        <span class="toggle-password" id="toggle-password">
-                            <i class="mdi mdi-eye"></i>
-                        </span>
-                        @if ($errors->has('password'))
-                            @foreach ($errors->get('password') as $item)
-                                <span class="text-red-500 text-xs mt-1 block">{{ $item }}</span>
-                            @endforeach
-                        @endif
-                    </div>
-
-                    <div class="flex items-center gap-2 mt-4">
-                        <input type="checkbox" id="remember" name="remember"
-                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                            {{ old('remember') ? 'checked' : '' }}>
-
-                        <label for="remember" class="text-sm mx-2 text-gray-600 cursor-pointer">
-                            {{ __('Remember me') }}
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {{ __('Email address') }}
                         </label>
-                    </div>
-
-
-                    <div class="flex flex-col items-start justify-between">
-                        <x-captcha />
-                        <div class="flex items-end">
-                            <a href="{{ route('password.request') }}" class="text-sm text-indigo-600 hover:underline">
-                                {{ __('Forgot your password') }}
-                            </a>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="mdi mdi-email text-gray-400 text-lg"></i>
+                            </div>
+                            <input type="email" id="email" name="email" value="{{ old('email') }}"
+                                class="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 
+                                          rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                          dark:bg-gray-700 dark:text-white transition duration-200"
+                                placeholder="name@example.com" required autofocus>
                         </div>
+                        @error('email')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
                     </div>
 
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {{ __('Password') }}
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="mdi mdi-lock text-gray-400 text-lg"></i>
+                            </div>
+                            <input type="password" id="password" name="password"
+                                class="w-full pl-10 pr-10 py-2.5 border border-gray-300 dark:border-gray-600 
+                                          rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                          dark:bg-gray-700 dark:text-white transition duration-200"
+                                placeholder="••••••••" required>
+                            <button type="button" id="toggle-password"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                <i class="mdi mdi-eye text-lg"></i>
+                            </button>
+                        </div>
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="remember"
+                                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                {{ old('remember') ? 'checked' : '' }}>
+                            <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                                {{ __('Remember me') }}
+                            </span>
+                        </label>
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}"
+                                class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline">
+                                {{ __('Forgot password?') }}
+                            </a>
+                        @endif
+                    </div>
+
+                    <!-- Captcha -->
+                    @if (isset($captcha) && $captcha)
+                        <div>
+                            <x-captcha />
+                        </div>
+                    @endif
+
+                    <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg transition duration-200 font-semibold shadow-sm flex items-center justify-center">
-                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg
+                                   transition duration-200 transform hover:scale-[1.02] active:scale-[0.98]
+                                   shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                        <i class="mdi mdi-login text-lg"></i>
                         {{ __('Sign In') }}
                     </button>
 
+                    <!-- Register Link -->
                     @if (Route::has('register'))
-                        <div class="text-center text-sm text-gray-600">
-                            {{ __("Don't have an account?") }}
-                            <a href="{{ route('register') }}" class="text-indigo-600 hover:underline">
-                                {{ __('Sign up') }}
-                            </a>
+                        <div class="text-center pt-2">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                {{ __("Don't have an account?") }}
+                                <a href="{{ route('register') }}"
+                                    class="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium hover:underline">
+                                    {{ __('Create one') }}
+                                </a>
+                            </p>
                         </div>
                     @endif
                 </form>
             </div>
 
-            <div class="info-card   w-full md:w-1/2 text-white p-2 lg:p-8 hidden lg:flex flex-col justify-center">
-                <h2 class="text-2xl font-bold mb-6">{{ __('Authorization Server') }}</h2>
-
-                <div class="space-y-6">
-                    <div class="flex items-start">
-                        <div class="feature-icon mr-4">
-                            <i class="mdi mdi-shield"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold">{{ __('Secure Authentication') }}</h3>
-                            <p class="text-sm mt-1 text-indigo-100">
-                                {{ __('Protect your applications with our advanced authentication system.') }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start">
-                        <div class="feature-icon mr-4">
-                            <i class="mdi mdi-connection"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold">{{ __('Universal Connectivity') }}</h3>
-                            <p class="text-sm mt-1 text-indigo-100">
-                                {{ __('Supports secure connectivity with any external application.') }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start">
-                        <div class="feature-icon mr-4">
-                            <i class="mdi mdi-code-braces"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold">{{ __('OpenID Connect & OAuth2') }}</h3>
-                            <p class="text-sm mt-1 text-indigo-100">
-                                {{ __('Implement the most widely used authorization protocols in the industry.') }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start">
-                        <div class="feature-icon mr-4">
-                            <i class="mdi mdi-server"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold">{{ __('Service-based Control') }}</h3>
-                            <p class="text-sm mt-1 text-indigo-100">
-                                {{ __('Advanced service-driven system for maximum scalability.') }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                @if (Route::has('welcome'))
-                    <div class="mt-8 pt-6 border-t border-indigo-400">
-                        <p class="text-sm text-indigo-100">
-                        <div class="text-center">
-                            <a href="{{ route('welcome') }}" class="text-sm font-bold text-white hover:underline">
-                                {{ config('app.org_name') }}
-                            </a>
-                        </div>
-
-                        {{-- 
-                        {{ __('Need help?') }} <a href="#"
-                        class="font-semibold hover:underline">{{ __('Contact our team') }}</a>
-                        --}}
-                        </p>
-                    </div>
-                @endif
+            <!-- Footer Links -->
+            <div class="text-center mt-6">
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                    © {{ date('Y') }} {{ config('app.org_name', config('app.name')) }}.
+                    {{ __('All rights reserved.') }}
+                </p>
             </div>
         </div>
     </div>
-@endsection
 
-@push('js')
-    <script nonce="{{ $nonce }}">
-        document.addEventListener("DOMContentLoaded", (event) => {
+    <script nonce="{{ $nonce ?? '' }}">
+        // Toggle password visibility
+        document.getElementById('toggle-password')?.addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
 
-            const demoPassword = document.getElementById("copy-password");
-            const demoEmail = document.getElementById("copy-email");
-            const showPassword = document.getElementById('toggle-password')
-
-            showPassword.addEventListener("click", function() {
-
-                const passwordInput = document.getElementById('password');
-                const eyeIcon = document.querySelector('.toggle-password i');
-
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    eyeIcon.classList.remove('mdi-eye');
-                    eyeIcon.classList.add('mdi-eye-off');
-                } else {
-                    passwordInput.type = 'password';
-                    eyeIcon.classList.remove('mdi-eye-off');
-                    eyeIcon.classList.add('mdi-eye');
-                }
-            })
-
-
-            demoPassword.addEventListener("click", function() {
-                const password = document.getElementById('demo-password').innerText
-                navigator.clipboard.writeText(password).then((res) => {
-                    $notify.success("{{ __('Demo password copied') }}");
-                }).catch(e => {
-                    console.log(e);
-
-                })
-            });
-
-            demoEmail.addEventListener("click", function() {
-                const email = document.getElementById('demo-email').innerText
-                navigator.clipboard.writeText(email).then((res) => {
-                    $notify.success("{{ __('Demo email copied') }}");
-                }).catch(e => {
-                    console.log(e);
-
-                })
-            });
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('mdi-eye');
+                icon.classList.add('mdi-eye-off');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('mdi-eye-off');
+                icon.classList.add('mdi-eye');
+            }
         });
+
+        // Copy to clipboard function
+        function copyToClipboard(text, type) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Simple notification (you can replace with your toast system)
+                const message = type === 'email' ? '{{ __('Demo email copied') }}' :
+                    '{{ __('Demo password copied') }}';
+
+                // Fallback alert if no toast system
+                if (typeof $notify !== 'undefined') {
+                    $notify.success(message);
+                } else {
+                    alert(message);
+                }
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Auto-fill demo credentials if clicked (optional)
+        @if (config('system.demo.enabled'))
+            function fillDemoCredentials() {
+                document.getElementById('email').value = '{{ config('system.demo.email') }}';
+                document.getElementById('password').value = '{{ config('system.demo.password') }}';
+            }
+        @endif
     </script>
-@endpush
+@endsection
