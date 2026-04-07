@@ -27,7 +27,7 @@ namespace Core\User\Services;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Core\User\Repositories\UserRepository; 
+use Core\User\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 use Core\User\Repositories\GroupRepository;
 use Core\User\Notification\UserReactivateAccount;
@@ -125,7 +125,7 @@ class UserService
             'dial_code' => $data['dial_code'] ?? null,
             'phone' => $data['phone'] ?? null,
             'birthday' => $data['birthday'] ?? null,
-            'email_verified_at' => $data['email_verified_at'] ? now() : null,
+            'email_verified_at' => isset($data['email_verified_at']) && $data['email_verified_at'] ? now() : null,
             'accept_terms' => $data['accept_terms'] ?? true,
             'accept_cookies' => $data['accept_cookies'] ?? true,
         ]);
@@ -206,6 +206,7 @@ class UserService
             "city" => $data['city'] ?? null,
             "address" => $data['address'] ?? null,
             "birthday" => $data['birthday'] ?? null,
+            "email_verified_at" => isset($data['email_verified_at']) && $data['email_verified_at'] ? now() : null,
             "lang" => $data['lang'] ?? 'en',
         ]);
 
