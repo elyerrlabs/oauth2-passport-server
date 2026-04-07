@@ -29,14 +29,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
-## Unrelease
+## [v6.0.1]
 
 ### Improvements
 
-- Added a scheduled task to automatically clean temporary files.
-- Improved configuration settings across the system.
-- Added cache support to enhance performance.
-- Removed the separate Horizon configuration. The queue system now relies on the default Redis configuration.
+* Added a scheduled task to automatically clean temporary files.
+* Improved and standardized system-wide configuration settings.
+* Introduced cache support to enhance overall performance.
+* Simplified queue configuration by removing dedicated Horizon setup; now using default Redis settings.
+* Added asset loading support for modules via `module_mix`.
+* Updated the `x-editor` component for better flexibility and stability.
+* Fixed support for polymorphic (`morph`) class handling.
+* Implemented automatic cleanup of outdated storage files.
 
 ---
 
