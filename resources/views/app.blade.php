@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('title')
+    @include('layouts.parts.title', [
+        'title' => config('app.name', 'OAuth2 Passport Server'),
+    ])
+@endsection
+
 @push('css')
     <link nonce={{ $nonce }} href="{{ mix('css/app.css') }}" rel="stylesheet" />
 @endpush
