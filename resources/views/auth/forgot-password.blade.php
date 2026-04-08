@@ -4,9 +4,9 @@
     @include('layouts.parts.title', ['title' => __('Reset Password')])
 @endsection
 
-@section('head')
+@push('head')
     {!! config('seo.forgot-password', '') !!}
-@endsection
+@endpush
 
 @section('content')
     <div

@@ -5,9 +5,9 @@
 @endsection
 
 
-@section('head')
+@push('head')
     {!! config('seo.register', '') !!}
-@endsection
+@endpush
 
 @section('content')
     <div

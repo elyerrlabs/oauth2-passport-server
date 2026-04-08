@@ -5,11 +5,11 @@
     @yield('title')
 
     @include('layouts.parts.favicon')
+    @stack('head')
 
     <link nonce={{ $nonce }} rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
     <script nonce={{ $nonce }} src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
     @include('layouts.parts.translation')
-    @stack('head')
     @inertiaHead
     @stack('css')
 </head>

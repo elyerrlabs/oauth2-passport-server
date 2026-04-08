@@ -5,10 +5,10 @@
     @yield('title')
 
     @include('layouts.parts.favicon')
+    @stack('head')
 
     <link nonce={{ $nonce }} href="{{ mix('css/app.css') }}" rel="stylesheet" />
 
-    @stack('head')
     @stack('css')
 </head>
 

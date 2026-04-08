@@ -6,9 +6,9 @@
     ])
 @endsection
 
-@section('head')
+@push('head') 
     {!! config('seo.landing-page', '') !!}
-@endsection
+@endpush
 
 @section('header')
     @include('layouts.parts.header')

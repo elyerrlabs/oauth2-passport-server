@@ -4,9 +4,9 @@
     @include('layouts.parts.title', ['title' => __('Login')])
 @endsection
 
-@section('head')
+@push('head')
     {!! config('seo.login', '') !!}
-@endsection
+@endpush
 
 @section('content')
     <div
