@@ -29,18 +29,38 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+## Unreleased
+
+### Fixes
+
+- Fixed issues in user create and update functions.
+- Removed sitemap route from meta configuration.
+
+### Improvements
+
+- Updated user policy interface for better usability.
+- Improved layouts and form structures across the system.
+- Added SEO section for default pages.
+- Added SEO configuration section in settings.
+
+### Changes
+
+- Removed editable volume and file handling.
+
+---
+
 ## [v6.0.1]
 
 ### Improvements
 
-* Added a scheduled task to automatically clean temporary files.
-* Improved and standardized system-wide configuration settings.
-* Introduced cache support to enhance overall performance.
-* Simplified queue configuration by removing dedicated Horizon setup; now using default Redis settings.
-* Added asset loading support for modules via `module_mix`.
-* Updated the `x-editor` component for better flexibility and stability.
-* Fixed support for polymorphic (`morph`) class handling.
-* Implemented automatic cleanup of outdated storage files.
+- Added a scheduled task to automatically clean temporary files.
+- Improved and standardized system-wide configuration settings.
+- Introduced cache support to enhance overall performance.
+- Simplified queue configuration by removing dedicated Horizon setup; now using default Redis settings.
+- Added asset loading support for modules via `module_mix`.
+- Updated the `x-editor` component for better flexibility and stability.
+- Fixed support for polymorphic (`morph`) class handling.
+- Implemented automatic cleanup of outdated storage files.
 
 ---
 
