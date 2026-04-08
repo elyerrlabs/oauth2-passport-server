@@ -221,4 +221,10 @@ class SettingController extends WebController
     {
         return view('settings.section.horizon');
     }
+
+
+    public function seo()
+    {
+        return view('settings.section.seo');
+    }
 }

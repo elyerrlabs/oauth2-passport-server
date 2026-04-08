@@ -23,6 +23,7 @@
         @php
             $routes = [
                 'admin.settings.general' => ['icon' => 'mdi-cog-outline', 'label' => __('General')],
+                'admin.settings.seo' => ['icon' => 'mdi-clock-outline', 'label' => __('Seo')],
                 'admin.settings.session' => ['icon' => 'mdi-clock-outline', 'label' => __('Session')],
                 'admin.settings.payment' => ['icon' => 'mdi-credit-card-outline', 'label' => __('Payment')],
                 'admin.settings.email' => ['icon' => 'mdi-email-outline', 'label' => __('Email')],

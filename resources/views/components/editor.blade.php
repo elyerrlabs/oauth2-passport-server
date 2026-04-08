@@ -259,7 +259,7 @@
             monacoContainer.style.flexDirection = 'column';
 
             // Make toolbar fixed and visible in fullscreen
-            if (toolbar) {
+            /*if (toolbar) {
                 toolbar.style.position = 'fixed';
                 toolbar.style.top = '10px';
                 toolbar.style.left = '10px';
@@ -272,7 +272,7 @@
                 toolbar.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
                 toolbar.style.border = '1px solid ' + (document.documentElement.classList.contains("dark") ?
                     '#374151' : '#e5e7eb');
-            }
+            }*/
 
             // Adjust monaco editor to take remaining space
             if (monacoEl) {

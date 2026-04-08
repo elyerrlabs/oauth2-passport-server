@@ -49,6 +49,7 @@ Route::group([
     Route::get('/modules', [SettingController::class, 'modules'])->name('modules');
     Route::get('/scout', [SettingController::class, 'scout'])->name('scout');
     Route::get('/horizon', [SettingController::class, 'horizon'])->name('horizon');
+    Route::get('/seo', [SettingController::class, 'seo'])->name('seo');
 
     Route::put('/', [SettingController::class, 'update'])->name('update');
     Route::put('/cache/reload', [SettingController::class, 'reloadCache'])->name('reload');
