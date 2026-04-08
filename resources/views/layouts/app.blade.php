@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="dark">
 
 <head>
-    @yield('title', config('app.name', 'OAuth2 Server'))
+    @yield('title')
 
     @include('layouts.parts.favicon')
 
