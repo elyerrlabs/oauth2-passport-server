@@ -32,6 +32,13 @@
                     <i class="mdi mdi-lock-reset mr-2"></i>
                     {{ __('Forgot Password') }}
                 </button>
+                <button type="button" data-tab="plans"
+                    class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg transition-all duration-200
+                           bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300
+                           hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <i class="mdi mdi-view-dashboard mr-2"></i>
+                    {{ __('Plans') }}
+                </button>
             </nav>
         </div>
 
@@ -98,6 +105,40 @@
                     content="{{ config('seo.forgot-password') }}" preview="{{ false }}"
                     jodit="{{ false }}" />
             </div>
+
+            <!-- Plans Tab -->
+            <div data-tab-content="plans" class="tab-content hidden">
+                <div class="mb-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="mdi mdi-information-outline text-blue-500"></i>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('Plans Page SEO') }}</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        {{ __('This content will be displayed on the pricing plans page. Use it to add structured data for pricing, meta tags, or tracking scripts.') }}
+                    </p>
+                </div>
+
+                <!-- Additional info for Plans page -->
+                <div
+                    class="mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                    <div class="flex items-start gap-2">
+                        <i class="mdi mdi-tag-multiple text-green-600 dark:text-green-400 text-lg mt-0.5"></i>
+                        <div>
+                            <h4 class="text-sm font-semibold text-green-800 dark:text-green-300">
+                                {{ __('Pricing Page Tips') }}</h4>
+                            <ul class="mt-1 text-xs text-green-700 dark:text-green-400 space-y-1">
+                                <li>• {{ __('Add Product schema for each pricing tier') }}</li>
+                                <li>• {{ __('Include Offer schema with price and currency') }}</li>
+                                <li>• {{ __('Add AggregateOffer for multiple plans') }}</li>
+                                <li>• {{ __('Use comparison tables in structured data') }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <x-editor label="{{ __('Plans page content') }}" name="seo[plans]" content="{{ config('seo.plans') }}"
+                    preview="{{ false }}" jodit="{{ false }}" />
+            </div>
         </div>
 
         <!-- Info Box -->
@@ -126,7 +167,7 @@
             const tabs = document.querySelectorAll('.tab-btn');
             const contents = document.querySelectorAll('[data-tab-content]');
 
-            function switchTab(tabId) {
+            function switchTab(tabId, updateUrl = true) {
                 // Hide all contents
                 contents.forEach(content => {
                     content.classList.add('hidden');
@@ -153,6 +194,15 @@
                     selectedTab.classList.add('bg-blue-600', 'text-white', 'shadow-md');
                 }
 
+                // Update URL hash without scrolling
+                if (updateUrl) {
+                    const newUrl = new URL(window.location.href);
+                    newUrl.hash = tabId;
+                    window.history.pushState({
+                        tab: tabId
+                    }, '', newUrl);
+                }
+
                 // Save to localStorage
                 localStorage.setItem('seo_active_tab', tabId);
             }
@@ -161,14 +211,49 @@
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabId = this.getAttribute('data-tab');
-                    switchTab(tabId);
+                    switchTab(tabId, true);
                 });
             });
 
-            // Restore last active tab from localStorage
-            const savedTab = localStorage.getItem('seo_active_tab');
-            if (savedTab && document.querySelector(`[data-tab="${savedTab}"]`)) {
-                switchTab(savedTab);
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function(event) {
+                const hash = window.location.hash.replace('#', '');
+                if (hash && document.querySelector(`[data-tab="${hash}"]`)) {
+                    switchTab(hash, false);
+                } else {
+                    // Default to landing tab
+                    switchTab('landing', false);
+                }
+            });
+
+            // Restore tab from URL hash first, then from localStorage
+            let initialTab = null;
+            const urlHash = window.location.hash.replace('#', '');
+
+            if (urlHash && document.querySelector(`[data-tab="${urlHash}"]`)) {
+                initialTab = urlHash;
+            } else {
+                const savedTab = localStorage.getItem('seo_active_tab');
+                if (savedTab && document.querySelector(`[data-tab="${savedTab}"]`)) {
+                    initialTab = savedTab;
+                }
+            }
+
+            // Default to landing if no tab found
+            if (!initialTab) {
+                initialTab = 'landing';
+            }
+
+            // Switch to the initial tab without updating URL (to avoid duplicate history)
+            switchTab(initialTab, false);
+
+            // Update URL hash to match initial tab if it doesn't match
+            if (window.location.hash !== `#${initialTab}`) {
+                const newUrl = new URL(window.location.href);
+                newUrl.hash = initialTab;
+                window.history.replaceState({
+                    tab: initialTab
+                }, '', newUrl);
             }
         });
     </script>
