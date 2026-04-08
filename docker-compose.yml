@@ -37,8 +37,7 @@ services:
             - sitemaps:/var/www/public/sitemaps
             - logs:/var/www/storage/logs
             - third-party:/var/www/third-party
-            - third-party-public:/var/www/public/third-party
-            - editable:/resources/views/layouts
+            - third-party-public:/var/www/public/third-party 
             - ssh:/home/www-data/.ssh
         command: sh -c "/usr/local/bin/entrypoint.sh"
         networks:
@@ -52,7 +51,6 @@ volumes:
     logs:
     third-party:
     third-party-public:
-    editable:
     ssh:
 
 networks:
