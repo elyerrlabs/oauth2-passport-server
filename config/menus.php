@@ -37,8 +37,8 @@ return [
                 "icon" => "mdi mdi-poll",
                 "service" => "administrator:admin"
             ],
-            "seo" => [
-                "name" => "Seo",
+            "sitemap" => [
+                "name" => "Sitemap",
                 "route" => "admin.sitemaps.index",
                 "icon" => "mdi mdi-sitemap-outline",
                 "service" => "administrator:seo"
@@ -65,7 +65,7 @@ return [
 
     ],
 
-    "seo_menus" => [
+    "sitemap_menus" => [
         [
             "id" => "list_of_pages",
             "name" => "List of pages",
@@ -73,13 +73,6 @@ return [
             "icon" => "mdi-sitemap-outline",
             'service' => "administrator:seo"
 
-        ],
-        [
-            "id" => "meta_tags",
-            "name" => "Meta tags",
-            "route" => "admin.sitemaps.meta.form",
-            "icon" => "mdi-code-block-tags",
-            'service' => "administrator:seo"
         ],
         [
             "id" => "robot",

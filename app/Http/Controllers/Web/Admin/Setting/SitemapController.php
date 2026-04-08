@@ -72,37 +72,8 @@ final class SitemapController extends WebController
                 'store' => route('admin.sitemaps.store'),
                 'reset' => route('admin.sitemaps.reset'),
             ],
-            'menus' => resolveInertiaRoutes(config('menus.seo_menus')),
+            'menus' => resolveInertiaRoutes(config('menus.sitemap_menus')),
         ]);
-    }
-
-
-    public function metaForm()
-    {
-        return Inertia::render('Sitemap/Meta', [
-            'data' => $this->sitemapService->getMetaData(),
-            'routes' => [
-                'index' => route('admin.sitemaps.meta.form'),
-                'store' => route('admin.sitemaps.meta.update'),
-            ],
-            'menus' => resolveInertiaRoutes(config('menus.seo_menus')),
-        ]);
-    }
-
-    /**
-     * Update meta data
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function updateMetaForm(Request $request)
-    {
-        $this->validate($request, [
-            'meta' => 'required',
-        ]);
-
-        $this->sitemapService->updateMetaData($request);
-
-        return redirect()->back();
     }
 
     /**
@@ -191,7 +162,7 @@ final class SitemapController extends WebController
                 'index' => route('admin.sitemaps.robot.form'),
                 'store' => route('admin.sitemaps.robot.update'),
             ],
-            'menus' => resolveInertiaRoutes(config('menus.seo_menus')),
+            'menus' => resolveInertiaRoutes(config('menus.sitemap_menus')),
         ]);
     }
 

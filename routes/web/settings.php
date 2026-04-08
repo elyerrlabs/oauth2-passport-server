@@ -75,10 +75,7 @@ Route::group([
     Route::get('/routes', [SitemapController::class, 'index'])->name('index');
     Route::post('/routes', [SitemapController::class, 'updateMeta'])->name('store');
     Route::delete('/routes/reset', [SitemapController::class, 'reset'])->name('reset');
-    Route::delete('/routes/{url}', [SitemapController::class, 'delete'])->name('delete');
-
-    Route::get('/meta', [SitemapController::class, 'metaForm'])->name('meta.form');
-    Route::post('/meta', [SitemapController::class, 'updateMetaForm'])->name('meta.update');
+    Route::delete('/routes/{url}', [SitemapController::class, 'delete'])->name('delete'); 
 
     Route::get('/robot', [SitemapController::class, 'robotForm'])->name('robot.form');
     Route::post('/robot', [SitemapController::class, 'updateRobot'])->name('robot.update');
