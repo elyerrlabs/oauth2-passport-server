@@ -1,10 +1,8 @@
 @extends('layouts.pages')
 
-@section('title')
-    @include('layouts.parts.title', ['title' => __('Login')])
-@endsection
-
 @push('head')
+    @include('layouts.parts.title', ['title' => __('Login')])
+
     {!! config('seo.login', '') !!}
 @endpush
 

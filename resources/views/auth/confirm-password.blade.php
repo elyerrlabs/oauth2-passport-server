@@ -1,8 +1,8 @@
 @extends('layouts.pages')
 
-@section('title')
+@push('head')
     @include('layouts.parts.title', ['title' => __('Confirm Password')])
-@endsection
+@endpush
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">

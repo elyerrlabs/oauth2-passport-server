@@ -1,8 +1,8 @@
 @extends('layouts.pages')
 
-@section('title')
+@push('head')
     @include('layouts.parts.title', ['title' => $title])
-@endsection
+@endpush
 
 @section('header')
     @include('layouts.parts.header')

@@ -1,8 +1,8 @@
 @extends('layouts.pages')
 
-@section('title')
+@push('head')
     @include('layouts.parts.title', ['title' => __('Settings')])
-@endsection
+@endpush
 
 @section('content')
     <!-- SIDEBAR  -->
@@ -199,7 +199,7 @@
     </script>
 @endpush
 
-@push('styles')
+@push('css')
     <style>
         /* XS Breakpoint optimizations using Tailwind classes via @media */
         @media (max-width: 475px) {

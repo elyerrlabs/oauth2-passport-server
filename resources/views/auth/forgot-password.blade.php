@@ -1,10 +1,8 @@
 @extends('layouts.pages')
 
-@section('title')
-    @include('layouts.parts.title', ['title' => __('Reset Password')])
-@endsection
-
 @push('head')
+    @include('layouts.parts.title', ['title' => __('Reset Password')])
+
     {!! config('seo.forgot-password', '') !!}
 @endpush
 

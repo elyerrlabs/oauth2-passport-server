@@ -2,8 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
 <head>
-    @yield('title')
-
+    
     @include('layouts.parts.favicon')
     @stack('head')
 

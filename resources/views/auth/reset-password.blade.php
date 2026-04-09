@@ -1,8 +1,8 @@
 @extends('layouts.pages')
 
-@section('title')
+@push('head')
     @include('layouts.parts.title', ['title' => __('Reset my password')])
-@endsection
+@endpush
 
 @push('css')
     <style>
