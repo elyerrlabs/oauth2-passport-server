@@ -1,9 +1,7 @@
-<!DOCTYPE html class="dark">
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="dark">
+<!DOCTYPE html class="light">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 
 <head>
-    @yield('title')
-
     @include('layouts.parts.favicon')
     @stack('head')
 
