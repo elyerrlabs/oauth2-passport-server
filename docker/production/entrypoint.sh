@@ -38,7 +38,6 @@ find . -type f -exec chmod 640 {} +
 find public -type d -exec chmod 755 {} +
 find public -type f -exec chmod 644 {} +
 
-chmod 664 resources/views/layouts/editable/*.blade.php 
 chmod 400 .env
 
 php artisan settings:system-start
