@@ -31,7 +31,9 @@ cd /var/www
 
 echo "⚙️ Running system configuration..."
 
-cp -vf /root/.env /var/www/.env 
+if [ ! -f /var/www/.env ]; then
+  cp -v /root/.env /var/www/.env
+fi 
 
 find . -type d -exec chmod 750 {} +
 find . -type f -exec chmod 640 {} +
