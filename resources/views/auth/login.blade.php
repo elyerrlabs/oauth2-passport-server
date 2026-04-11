@@ -118,11 +118,10 @@
                     </div>
 
                     <!-- Captcha -->
-                    @if (isset($captcha) && $captcha)
-                        <div>
-                            <x-captcha />
-                        </div>
-                    @endif
+                    <div>
+                        <x-captcha />
+                    </div>
+
 
                     <!-- Submit Button -->
                     <button type="submit"
