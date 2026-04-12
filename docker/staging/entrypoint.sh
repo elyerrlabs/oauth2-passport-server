@@ -31,16 +31,10 @@ cd /var/www
 
 echo "⚙️ Running system configuration..."
 
-if [ ! -f /var/www/.env ]; then
-  cp -v /root/.env /var/www/.env
-fi 
-
 find . -type d -exec chmod 750 {} +
 find . -type f -exec chmod 640 {} +
 find public -type d -exec chmod 755 {} +
-find public -type f -exec chmod 644 {} +
-
-chmod 400 .env
+find public -type f -exec chmod 644 {} + 
 
 php artisan settings:system-start
 
