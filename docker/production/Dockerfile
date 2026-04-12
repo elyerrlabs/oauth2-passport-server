@@ -135,7 +135,8 @@ RUN apk add --no-cache \
     php84-pecl-grpc \
     grpc \
     protobuf \
-    openssh
+    openssh \
+    vim
 
 # Add user and group www-data
 RUN getent passwd www-data || adduser -S -G www-data -s /usr/sbin/nologin www-data

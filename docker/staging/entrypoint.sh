@@ -45,7 +45,7 @@ find . -type f -exec chmod 640 {} +
 find public -type d -exec chmod 755 {} +
 find public -type f -exec chmod 644 {} +
 
-chmod 640 .env
+chmod 600 .env
 
 php artisan settings:system-start
 
