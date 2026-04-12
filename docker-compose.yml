@@ -31,7 +31,8 @@ services:
             db:
                 condition: service_healthy
         volumes:
-            - .env:/var/www/.env
+            - .env:/root/.env
+            - env:/var/www/env
             - app-secrets:/var/www/secrets
             - files:/var/www/storage/app
             - sitemaps:/var/www/public/sitemaps
@@ -52,6 +53,7 @@ volumes:
     third-party:
     third-party-public:
     ssh:
+    env:
 
 networks:
     public-net:

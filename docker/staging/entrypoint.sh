@@ -31,10 +31,21 @@ cd /var/www
 
 echo "⚙️ Running system configuration..."
 
+ENV_PATH="/var/www/env/.env"
+
+if [ ! -f "$ENV_PATH" ]; then
+  echo "Creating .env..."
+  cp /root/.env "$ENV_PATH"
+fi
+
+ln -sf "$ENV_PATH" /var/www/.env
+
 find . -type d -exec chmod 750 {} +
 find . -type f -exec chmod 640 {} +
 find public -type d -exec chmod 755 {} +
-find public -type f -exec chmod 644 {} + 
+find public -type f -exec chmod 644 {} +
+
+chmod 640 .env
 
 php artisan settings:system-start
 
