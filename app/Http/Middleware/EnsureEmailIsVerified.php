@@ -60,7 +60,7 @@ class EnsureEmailIsVerified
             return $next($request);
         }
 
-        if (config('system.registration.email.verification', false) === false) {
+        if (config('system.registration.email.verification', false) == false) {
             return $next($request);
         }
 

@@ -42,7 +42,7 @@ final class EmailVerificationPromptController extends \Laravel\Fortify\Http\Cont
      */
     public function __invoke(Request $request)
     {
-        return $request->user()->hasVerifiedEmail()
+        return config('system.registration.email.verification', false) == false || $request->user()->hasVerifiedEmail()
             ? app(RedirectAsIntended::class, ['name' => 'email-verification'])
             : app(VerifyEmailViewResponse::class);
     }
