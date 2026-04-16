@@ -53,10 +53,6 @@ return [
                 "status" => true,
                 "description" => "Disabled documentation section to the system"
             ],
-            'landing' => [
-                "status" => true,
-                "description" => "Disabled landing page to the system"
-            ]
         ]
     ],
 

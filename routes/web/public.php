@@ -29,13 +29,8 @@ use App\Http\Controllers\Docs\DocumentationController;
 use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
 use App\Http\Controllers\Web\Home\PageController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\Home\HomeController;
 
 Route::middleware(['throttle:system:general:public'])->group(function () {
-
-    if (config('routes.system.guest.landing.status', true)) {
-        Route::get("/{slug}", [HomeController::class, 'homePage'])->name('welcome');
-    }
 
     // Load dinamic pages
     Route::get('/{slug?}', [PageController::class, 'page']);
