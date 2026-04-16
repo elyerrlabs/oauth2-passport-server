@@ -61,7 +61,7 @@
                         </label>
                         <select id="queue_selector" name="queue[default]"
                             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 transition-colors duration-300">
-                            @foreach (['sync', 'database', 'beanstalkd', 'sqs', 'redis'] as $driver)
+                            @foreach (['beanstalkd', 'sqs', 'redis'] as $driver)
                                 <option value="{{ $driver }}"
                                     {{ config('queue.default') == $driver ? 'selected' : '' }}>
                                     {{ ucfirst($driver) }}
