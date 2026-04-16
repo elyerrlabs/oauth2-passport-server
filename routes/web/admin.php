@@ -25,6 +25,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use App\Http\Controllers\Web\Admin\Page\PageController;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 use App\Http\Controllers\Web\Admin\OAuth\ClientAdminController;
@@ -51,5 +52,10 @@ Route::middleware(['throttle:system:general:passport', 'password.confirm'])
         Route::resource('/clients', ClientAdminController::class)->except('edit', 'create');
         Route::post('/clients/personal', [ClientAdminController::class, 'createPersonalClient'])->name('clients.personal.store');
 
+    });
+
+Route::middleware(['throttle:system:general:pages', 'password.confirm'])
+    ->group(function () {
+        Route::resource('pages', PageController::class);
     });
 

@@ -142,8 +142,8 @@
     </div>
 @endsection
 
-@push('styles')
-    <style>
+@push('css')
+    <style nonce="{{ $nonce }}">
         /* Custom scrollbar for sidebar */
         nav.overflow-y-auto::-webkit-scrollbar {
             width: 4px;

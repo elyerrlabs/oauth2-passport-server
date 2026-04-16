@@ -72,6 +72,11 @@ return [
                 'block_time' => 120,
                 'name' => "Rate Limit for Public routes"
             ],
+             'pages' => [
+                'limit' => 300,
+                'block_time' => 120,
+                'name' => "Rate Limit for page creator routes"
+            ],
         ],
     ],
 ];

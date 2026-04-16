@@ -43,6 +43,12 @@ return [
                 "icon" => "mdi mdi-sitemap-outline",
                 "service" => "administrator:seo"
             ],
+            "page_creator" => [
+                "name" => "Page Creator",
+                "route" => "admin.pages.index",
+                "icon" => "mdi mdi-hammer-wrench",
+                "service" => "administrator:page"
+            ]
         ],
 
         //"user_routes" => [
