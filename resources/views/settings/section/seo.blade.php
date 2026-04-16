@@ -5,12 +5,6 @@
         <!-- Tabs Navigation -->
         <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
             <nav class="flex flex-wrap gap-2" aria-label="SEO Tabs">
-                <button type="button" data-tab="landing"
-                    class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg transition-all duration-200
-                           bg-blue-600 text-white shadow-md">
-                    <i class="mdi mdi-home-outline mr-2"></i>
-                    {{ __('Landing Page') }}
-                </button>
                 <button type="button" data-tab="login"
                     class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg transition-all duration-200
                            bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300
@@ -44,21 +38,6 @@
 
         <!-- Tabs Content -->
         <div class="space-y-6">
-            <!-- Landing Page Tab -->
-            <div data-tab-content="landing" class="tab-content">
-                <div class="mb-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <i class="mdi mdi-information-outline text-blue-500"></i>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('Landing Page SEO') }}</h3>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                        {{ __('This content will be displayed on the main landing page. Use it to add structured data, meta tags, or tracking scripts.') }}
-                    </p>
-                </div>
-                <x-editor label="{{ __('Landing page content') }}" name="seo[landing-page]"
-                    content="{{ config('seo.landing-page') }}" preview="{{ false }}" jodit="{{ false }}" />
-            </div>
-
             <!-- Login Tab -->
             <div data-tab-content="login" class="tab-content hidden">
                 <div class="mb-4">
@@ -222,7 +201,7 @@
                     switchTab(hash, false);
                 } else {
                     // Default to landing tab
-                    switchTab('landing', false);
+                    switchTab('login', false);
                 }
             });
 
@@ -241,7 +220,7 @@
 
             // Default to landing if no tab found
             if (!initialTab) {
-                initialTab = 'landing';
+                initialTab = 'login';
             }
 
             // Switch to the initial tab without updating URL (to avoid duplicate history)
