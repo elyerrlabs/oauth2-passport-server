@@ -71,8 +71,6 @@ final class PageService extends \App\Services\Page\Service
             ->where('slug', $slug)
             ->firstOrFail();
 
-        $page->view = $this->viewPathToDot($page->path);
-
         return $page;
     }
 
@@ -99,13 +97,14 @@ final class PageService extends \App\Services\Page\Service
             }
 
             $page->content = file_get_contents($drafPath);
+
+            $page->path = $drafPath;
+
         } else {
             $publishedPath = $this->publishedPathGenerate($page->slug);
 
             $page->content = file_get_contents($publishedPath);
         }
-
-        $page->view = $this->viewPathToDot($page->path);
 
         return $page;
     }
@@ -236,22 +235,5 @@ final class PageService extends \App\Services\Page\Service
         $model->delete();
 
         return true;
-    }
-
-
-    function viewPathToDot(string $fullPath): string
-    {
-
-        $relative = strstr($fullPath, 'views/');
-
-        if ($relative === false) {
-            throw new \Exception('La ruta no contiene "views/"');
-        }
-
-        $relative = substr($relative, strlen('views/'));
-
-        $relative = str_replace('.blade.php', '', $relative);
-
-        return str_replace('/', '.', $relative);
     }
 }
