@@ -1,4 +1,4 @@
-@extends('policies.policies')
+@extends('admin.policies.policies')
 
 @section('form')
     <div class="space-y-6">

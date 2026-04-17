@@ -1,4 +1,4 @@
-@extends('settings.setting')
+@extends('admin.settings.setting')
 
 @section('form')
     <!-- Horizon Configuration -->

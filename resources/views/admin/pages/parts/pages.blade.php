@@ -1,4 +1,4 @@
-@extends('pages.manager.pages')
+@extends('admin.pages.pages')
 
 @push('head')
     @include('layouts.parts.title', ['title' => __('Page manager')])
@@ -40,24 +40,6 @@
                         </option>
                         <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                         <option value="unpublished" {{ request('status') == 'unpublished' ? 'selected' : '' }}>Unpublished
-                        </option>
-                    </select>
-                </div>
-
-                <div class="md:w-48">
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Sort by') }}</label>
-                    <select name="sort"
-                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
-                        <option value="updated_at" {{ request('sort') == 'updated_at' ? 'selected' : '' }}>
-                            {{ __('Last Updated') }}
-                        </option>
-                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>{{ __('Name') }}
-                        </option>
-                        <option value="position" {{ request('sort') == 'position' ? 'selected' : '' }}>
-                            {{ __('Position') }}</option>
-                        <option value="created_at" {{ request('sort') == 'created_at' ? 'selected' : '' }}>
-                            {{ __('Created Date') }}
                         </option>
                     </select>
                 </div>
@@ -175,7 +157,7 @@
                                             <i class="mdi mdi-pencil text-lg"></i>
                                         </a>
 
-                                        @include('pages.manager.parts.delete', ['page' => $page])
+                                        @include('admin.pages.parts.delete', ['page' => $page])
 
                                         @if ($page->is_published)
                                             <a href="{{ url($page->slug) }}" target="_blank"
@@ -389,5 +371,5 @@
 
 
 @push('modals')
-    @include('pages.manager.parts.form')
+    @include('admin.pages.parts.form')
 @endpush

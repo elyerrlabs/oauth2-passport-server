@@ -1,4 +1,4 @@
-@extends('pages.manager.pages')
+@extends('admin.pages.pages')
 
 @push('head')
     @include('layouts.parts.title', ['title' => __('Edit page')])

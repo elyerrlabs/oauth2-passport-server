@@ -52,7 +52,7 @@ class SettingController extends WebController
      */
     public function menu()
     {
-        return view('settings.setting');
+        return view('admin.settings.setting');
     }
 
     /**
@@ -101,7 +101,7 @@ class SettingController extends WebController
      */
     public function general()
     {
-        return view('settings.section.general');
+        return view('admin.settings.section.general');
     }
 
     /**
@@ -110,7 +110,7 @@ class SettingController extends WebController
      */
     public function email()
     {
-        return view('settings.section.email');
+        return view('admin.settings.section.email');
     }
 
     /**
@@ -119,7 +119,7 @@ class SettingController extends WebController
      */
     public function routes()
     {
-        return view('settings.section.routes');
+        return view('admin.settings.section.routes');
     }
 
     /**
@@ -128,7 +128,7 @@ class SettingController extends WebController
      */
     public function redis()
     {
-        return view('settings.section.redis');
+        return view('admin.settings.section.redis');
     }
 
     /**
@@ -137,7 +137,7 @@ class SettingController extends WebController
      */
     public function queues()
     {
-        return view('settings.section.queues');
+        return view('admin.settings.section.queues');
     }
 
     /**
@@ -146,7 +146,7 @@ class SettingController extends WebController
      */
     public function cache()
     {
-        return view('settings.section.cache');
+        return view('admin.settings.section.cache');
     }
 
 
@@ -156,7 +156,7 @@ class SettingController extends WebController
      */
     public function filesystem()
     {
-        return view('settings.section.filesystem');
+        return view('admin.settings.section.filesystem');
     }
 
 
@@ -166,7 +166,7 @@ class SettingController extends WebController
      */
     public function payment()
     {
-        return view('settings.section.payment');
+        return view('admin.settings.section.payment');
     }
 
     /**
@@ -175,7 +175,7 @@ class SettingController extends WebController
      */
     public function session()
     {
-        return view('settings.section.session');
+        return view('admin.settings.section.session');
     }
 
     /**
@@ -184,7 +184,7 @@ class SettingController extends WebController
      */
     public function security()
     {
-        return view('settings.section.security');
+        return view('admin.settings.section.security');
     }
 
     /**
@@ -193,7 +193,7 @@ class SettingController extends WebController
      */
     public function rateLimit()
     {
-        return view('settings.section.rate_limit');
+        return view('admin.settings.section.rate_limit');
     }
 
     /**
@@ -202,7 +202,7 @@ class SettingController extends WebController
      */
     public function modules()
     {
-        return view('settings.section.modules');
+        return view('admin.settings.section.modules');
     }
 
     /**
@@ -211,7 +211,7 @@ class SettingController extends WebController
      */
     public function scout()
     {
-        return view('settings.section.scout');
+        return view('admin.settings.section.scout');
     }
 
     /**
@@ -219,12 +219,12 @@ class SettingController extends WebController
      */
     public function horizon()
     {
-        return view('settings.section.horizon');
+        return view('admin.settings.section.horizon');
     }
 
 
     public function seo()
     {
-        return view('settings.section.seo');
+        return view('admin.settings.section.seo');
     }
 }

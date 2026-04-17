@@ -40,7 +40,7 @@ class PoliciesController extends WebController
 
     public function termsAndConditionForm()
     {
-        return view('policies/edit', [
+        return view('admin.policies.edit', [
             'title' => 'Terms and Conditions',
             'description' => 'In this section, you can edit the Terms and Conditions for your website. This document outlines the rules, obligations, and responsibilities of your users and your company, ensuring clarity and legal compliance.',
             'content' => config('system.legal.terms_and_condition'),
@@ -51,7 +51,7 @@ class PoliciesController extends WebController
 
     public function policiesOfPrivacyForm()
     {
-        return view('policies/edit', [
+        return view('admin.policies.edit', [
             'title' => 'Privacy Policy',
             'description' => 'In this section, you can edit the Privacy Policy for your website. This policy informs your users about how their personal data is collected, used, stored, and protected, ensuring compliance with privacy regulations and building trust with your users.',
             'content' => config('system.legal.policies_of_privacy'),
@@ -62,7 +62,7 @@ class PoliciesController extends WebController
 
     public function policiesOfCookiesForm()
     {
-        return view('policies/edit', [
+        return view('admin.policies.edit', [
             'title' => 'Cookies Policy',
             'description' => 'In this section, you can edit the Cookies Policy for your website. This policy informs your users about the cookies used, how they are utilized to maintain session functionality, and assures that no tracking or profiling is performed.',
             'content' => config('system.legal.policies_of_cookies'),
@@ -73,7 +73,7 @@ class PoliciesController extends WebController
     public function termsAndCondition()
     {
         return view(
-            'policies/detail',
+            'admin.policies.detail',
             [
                 'title' => __('Terms and Conditions'),
                 'content' => config('system.legal.terms_and_condition')
@@ -84,7 +84,7 @@ class PoliciesController extends WebController
     public function policiesOfPrivacy()
     {
         return view(
-            'policies/detail',
+            'admin.policies.detail',
             [
                 'title' => __('Privacy policy'),
                 'content' => config('system.legal.policies_of_privacy')
@@ -95,7 +95,7 @@ class PoliciesController extends WebController
     public function policiesOfCookies()
     {
         return view(
-            'policies/detail',
+            'admin.policies.detail',
             [
                 'title' => __('Cookies Policy'),
                 'content' => config('system.legal.policies_of_cookies')
