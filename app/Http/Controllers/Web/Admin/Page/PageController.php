@@ -60,9 +60,38 @@ final class PageController extends WebController
      */
     public function store(Request $request)
     {
+        $pageId = $page->id ?? null;
+
         $this->validate($request, [
             'name' => ['required'],
-            'slug' => ['nullable', 'unique:pages,slug']
+            'slug' => [
+                function ($attribute, $value, $fail) use ($pageId) {
+                    $query = \DB::table('pages');
+
+                    if ($pageId) {
+                        $query->where('id', '!=', $pageId);
+                    }
+
+                    if (empty($value)) {
+                        $exists = $query
+                            ->where(function ($q) {
+                                $q->whereNull('slug')
+                                    ->orWhere('slug', '');
+                            })
+                            ->exists();
+
+                        if ($exists) {
+                            $fail('Only one page without a slug (landing page) is allowed.');
+                        }
+
+                        return;
+                    }
+
+                    if ($query->where('slug', $value)->exists()) {
+                        $fail('The slug has already been taken.');
+                    }
+                }
+            ]
         ]);
 
         $page = $this->pageService->create($request->toArray());
