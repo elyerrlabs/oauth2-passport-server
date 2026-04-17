@@ -187,7 +187,7 @@ final class PageService extends \App\Services\Page\Service
         }
 
         if ($content !== null) {
-            File::put($newDraftPath, $content);
+            $this->updateFile($newDraftPath, $content);
         }
 
         if (!$isDraft) {
@@ -235,5 +235,33 @@ final class PageService extends \App\Services\Page\Service
         $model->delete();
 
         return true;
+    }
+
+    /**
+     * Update file
+     * @param string $path
+     * @param   $content
+     * @return void
+     */
+    public function updateFile(string $path, $content)
+    {
+        if (file_exists($path)) {
+            File::put($path, $content);
+        }
+    }
+
+    /**
+     * Load layouts
+     * @param string $name
+     * @return bool|string
+     */
+    public function loadLayout(string $name)
+    {
+        return file_get_contents($this->loadLayoutPath($name));
+    }
+
+    public function loadLayoutPath(string $name)
+    {
+        return rtrim($this->realPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . "layouts" . DIRECTORY_SEPARATOR . $name . '.blade.php';
     }
 }

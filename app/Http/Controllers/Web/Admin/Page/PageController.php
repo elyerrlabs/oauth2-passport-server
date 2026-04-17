@@ -38,6 +38,7 @@ final class PageController extends WebController
     public function __construct(protected PageService $pageService)
     {
         parent::__construct();
+        $this->middleware('userCanAny:administrator:pages:full')->except('update');
     }
 
     /**

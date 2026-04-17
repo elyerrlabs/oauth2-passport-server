@@ -42,6 +42,11 @@
                 'route' => route('admin.pages.index'),
                 'icon' => 'mdi mdi-file-document-outline',
             ],
+            [
+                'name' => 'Layouts',
+                'route' => route('admin.layouts.schema'),
+                'icon' => 'mdi mdi-file-document-outline',
+            ],
         ];
     @endphp
 

@@ -25,6 +25,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use App\Http\Controllers\Web\Admin\Page\LayoutController;
 use App\Http\Controllers\Web\Admin\Page\PageController;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
@@ -57,5 +58,8 @@ Route::middleware(['throttle:system:general:passport', 'password.confirm'])
 Route::middleware(['throttle:system:general:pages', 'password.confirm'])
     ->group(function () {
         Route::resource('pages', PageController::class);
+
+        Route::get('layouts', [LayoutController::class, 'form'])->name('layouts.schema');
+        Route::put('layouts', [LayoutController::class, 'update'])->name('layouts.update');
     });
 
