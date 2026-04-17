@@ -52,9 +52,9 @@ final class PageService extends \App\Services\Page\Service
     {
         $query = $this->pageRepository->query();
 
-        $query->when($request->filled('slug'), fn() => $query->whereRaw('LOWER(slug) LIKE ?', ["%" . $request->slug . "%"]));
+        $query->when($request->filled('name'), fn() => $query->whereRaw('LOWER(slug) LIKE ?', ["%" . $request->name . "%"]));
 
-        $query->orderBy('updated_at');
+        $query->orderBy($request->filled('order_by') ? $request->order_by : 'name', $request->filled('order_type') ? $request->order_type : 'asc');
 
         return $query;
     }

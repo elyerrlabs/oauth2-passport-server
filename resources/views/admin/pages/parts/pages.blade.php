@@ -31,27 +31,33 @@
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                 </div>
 
-                <div class="md:w-48">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-                    <select name="status"
+                <div class="md:w-40">
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ 'Order by' }}</label>
+                    <select name="order_by"
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
-                        <option value="">{{ __('All') }}</option>
-                        <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published
+                        <option value="name" {{ request('order_by') == 'name' ? 'selected' : '' }}>
+                            {{ __('Name') }}
                         </option>
-                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                        <option value="unpublished" {{ request('status') == 'unpublished' ? 'selected' : '' }}>Unpublished
+                        <option value="is_published" {{ request('order_by') == 'is_published' ? 'selected' : '' }}>
+                            {{ __('Published') }}
+                        </option>
+                        <option value="is_draft" {{ request('order_by') == 'is_draft' ? 'selected' : '' }}>
+                            {{ __('Draft') }}
                         </option>
                     </select>
                 </div>
 
                 <div class="md:w-40">
                     <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ 'Order' }}</label>
-                    <select name="order"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ 'Order Type' }}</label>
+                    <select name="order_type"
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
-                        <option value="asc" {{ request('order') == 'asc' ? 'selected' : '' }}>{{ __('Ascending') }}
+                        <option value="asc" {{ request('order_type') == 'asc' ? 'selected' : '' }}>
+                            {{ __('Ascending') }}
                         </option>
-                        <option value="desc" {{ request('order') == 'desc' ? 'selected' : '' }}>{{ __('Descending') }}
+                        <option value="desc" {{ request('order_type') == 'desc' ? 'selected' : '' }}>
+                            {{ __('Descending') }}
                         </option>
                     </select>
                 </div>
