@@ -2,30 +2,10 @@ import { Jodit } from "jodit";
 import "jodit/esm/plugins/all.js";
 window.Jodit = Jodit;
 
-import "monaco-editor/esm/vs/editor/editor.all.js";
-
-//import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
+import "monaco-editor/esm/vs/editor/editor.main.js";
 
 import * as monaco from "monaco-editor";
 window.monaco = monaco;
-
-// Import individual workers
-/*import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
-import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
-import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
-import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
-import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
-self.MonacoEnvironment = {
-  getWorker(_, label) {
-    if (label === "json") return new jsonWorker();
-    if (label === "css" || label === "scss" || label === "less")
-      return new cssWorker();
-    if (label === "html" || label === "handlebars" || label === "razor")
-      return new htmlWorker();
-    if (label === "typescript" || label === "javascript") return new tsWorker();
-    return new editorWorker();
-  },
-};*/
 
 // --------------------- MONACO ---------------------
 
@@ -63,27 +43,4 @@ window.createJoditEditor = (element, options = {}) => {
     ...options, // override with instance-specific options
   };
   return new Jodit(element, config);
-};
-
-// --------------------- EXAMPLE USAGE ---------------------
-// You can use it in any Blade or component
-document.addEventListener("DOMContentLoaded", () => {
-  // Create Monaco editor
-  /*const monacoEditor = window.createMonacoEditor(
-    document.getElementById("editor-monaco"),
-    { value: "<h1>Hello World</h1>", language: "html" }
-  );
-
-  monacoEditor.onDidChangeModelContent(() => {
-    console.log("Monaco changed:", monacoEditor.getValue());
-  });*/
-  // Create Jodit editor
-  /*const joditEditor = window.createJoditEditor(
-    document.getElementById("editor-jodit"),
-    { buttons: ["bold", "italic", "underline"] } // override buttons
-  );
-
-  joditEditor.events.on("blur", () => {
-    console.log("Jodit lost focus:", joditEditor.value);
-  });*/
-});
+}; 
