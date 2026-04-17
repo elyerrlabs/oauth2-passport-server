@@ -204,7 +204,6 @@ final class PageService extends \App\Services\Page\Service
             'slug' => $newSlug,
             'path' => $publishedPath,
             'is_published' => $data['is_published'] ?? false,
-            'published_at' => !empty($data['published_at']) ? $data['published_at'] : null,
             'is_draft' => $isDraft,
         ]);
 
