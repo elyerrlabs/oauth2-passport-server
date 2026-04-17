@@ -35,6 +35,19 @@
         ]
       },
       {
+        "name": "pages",
+        "description": "Page generator",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0,
+            "web": 1
+          }
+        ]
+      },
+      {
         "name": "refunds",
         "description": "Manage and track refund requests and their status.",
         "actions": [
@@ -526,7 +539,7 @@
           }
         ]
       },
-    
+
       {
         "name": "transactions",
         "description": "Service to manage transaction into the admin manager",
