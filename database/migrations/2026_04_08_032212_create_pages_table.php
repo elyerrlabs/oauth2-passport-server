@@ -37,8 +37,8 @@ return new class extends Migration {
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('name')->index();
+            $table->string('slug')->unique()->index();
             $table->string('path');
             $table->boolean('is_published')->default(false);
             $table->boolean('is_draft')->default(true);
