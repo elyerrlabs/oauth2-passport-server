@@ -19,4 +19,9 @@
 @source "../../core/**/*.blade.php";
 @source "../../core/**/*.js";
 @source "../../core/**/*.vue";
+
+
+[v-cloak] {
+    display: none;
+}
  
