@@ -29,6 +29,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+## Unreleased
+
+- Updated Spanish translations (es)
+- Fixed email verification functionality
+- Updated `x-privacy` component
+- Added page generator
+- Removed default landing page
+- Updated queue settings
+- Updated general application keys in settings
+- Added new Docker volume for persistent page storage
+- Refactored views
+- Added filters to page generator
+
+---
+
 ## [v6.0.3]
 
 ### Fixes
