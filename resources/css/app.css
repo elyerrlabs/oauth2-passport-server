@@ -6,6 +6,7 @@
 @import '@vuepic/vue-datepicker/dist/main.css';
 @import "notyf/notyf.min.css";
 @import "jodit/es2021/jodit.min.css";
+@import "monaco-editor/min/vs/style.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -18,3 +19,4 @@
 @source "../../core/**/*.blade.php";
 @source "../../core/**/*.js";
 @source "../../core/**/*.vue";
+ 
