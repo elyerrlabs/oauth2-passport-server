@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
-## Unreleased
+## [v6.0.4]
 
 - Updated Spanish translations (es)
 - Fixed email verification functionality
@@ -41,6 +41,8 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Added new Docker volume for persistent page storage
 - Refactored views
 - Added filters to page generator
+- Add support to manage layout for page creator
+- Fix monaco editor
 
 ---
 
