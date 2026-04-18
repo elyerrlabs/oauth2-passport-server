@@ -5,7 +5,7 @@
 @endpush
 
 @section('header')
-    @include('layouts.parts.header')
+    @include('pages.layouts.header')
 @endsection
 
 @section('content')
