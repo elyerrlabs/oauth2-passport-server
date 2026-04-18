@@ -51,6 +51,6 @@ class PageController extends WebController
     {
         $page = $this->pageService->findPage($slug);
 
-        return view($page->view);
+        return view()->file($page->path);
     }
 }
