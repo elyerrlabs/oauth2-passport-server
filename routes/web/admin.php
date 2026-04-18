@@ -55,7 +55,7 @@ Route::middleware(['throttle:system:general:passport', 'password.confirm'])
 
     });
 
-Route::middleware(['throttle:system:general:pages', 'password.confirm'])
+Route::middleware(['throttle:system:general:pages'])
     ->group(function () {
         Route::resource('pages', PageController::class);
 
