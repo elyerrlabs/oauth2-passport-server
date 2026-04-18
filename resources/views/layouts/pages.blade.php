@@ -20,7 +20,8 @@
 
     @yield('footer')
     <x-privacy />
-    <script nonce={{ $nonce }} src="{{ mix('js/pages.js') }}"></script>
+    <script nonce={{ $nonce }} src="{{ mix('js/pages.js') }}" defer></script>
+    
     @stack('js')
     @stack('modals')
 
