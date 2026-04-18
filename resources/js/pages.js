@@ -24,13 +24,13 @@
  */
 import flatpickr from "flatpickr";
 import { $notify } from "@/config/notify.js";
-import * as Vue from "vue"; 
+import * as Vue from "vue";
 import { setupI18n, __ } from "@/config/locale.js";
 import { $server } from "@/config/axios.js";
 import "@/config/editor.js";
 window.$notify = $notify;
 window.Vue = Vue;
-window.$createApp = createApp; 
+window.$server = $server;
 window.__ = __;
 
 flatpickr(".date", {
