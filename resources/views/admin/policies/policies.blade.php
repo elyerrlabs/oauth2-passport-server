@@ -110,8 +110,7 @@
             <form action="{{ route('admin.settings.update') }}" method="post" autocomplete="off">
                 @method('put')
                 @csrf
-                <input type="hidden" name="current_route" value="{{ url()->current() }}">
-
+                <input type="hidden" name="current_route" value="{{ request()->route()->getName() }}">
                 <!-- Card Container -->
                 <div
                     class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-300">
