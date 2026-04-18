@@ -14,24 +14,7 @@
             </div>
 
             {{-- Desktop menu --}}
-            <div class="hidden md:flex space-x-8 items-center">
-                <a href="#features"
-                    class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
-                    {{ __('Features') }}
-                </a>
-                <a href="#elymod"
-                    class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
-                    {{ __('Elymod') }}
-                </a>
-                <a href="#runtime"
-                    class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
-                    {{ __('Laravel Runtime') }}
-                </a>
-                <a href="#links"
-                    class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
-                    {{ __('Links') }}
-                </a>
-
+            <div class="hidden md:flex space-x-8 items-center">                
                 @guest
                     <a href="{{ route('login') }}"
                         class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
@@ -76,24 +59,7 @@
         {{-- Mobile menu --}}
         <div id="mobile-menu"
             class="hidden md:hidden mt-4 w-full rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-            <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-700">
-                <a href="#features"
-                    class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
-                    {{ __('Features') }}
-                </a>
-                <a href="#elymod"
-                    class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
-                    {{ __('Elymod') }}
-                </a>
-                <a href="#runtime"
-                    class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
-                    {{ __('Laravel Runtime') }}
-                </a>
-                <a href="#links"
-                    class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
-                    {{ __('Links') }}
-                </a>
-
+            <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-700"> 
                 @guest
                     <a href="{{ route('login') }}"
                         class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
