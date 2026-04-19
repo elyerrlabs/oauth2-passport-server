@@ -34,15 +34,12 @@ Route::middleware(['throttle:system:general:public'])->group(function () {
     Route::group([
         'prefix' => 'legal',
         'as' => 'legal.',
-    ], function () {
-        // Route::get("/", [PoliciesController::class, 'dashboard'])->name('dashboard');
+    ], function () { 
         Route::get('terms-and-conditions', [PoliciesController::class, 'termsAndCondition'])->name('terms-and-conditions');
         Route::get('policies-of-privacy', [PoliciesController::class, 'policiesOfPrivacy'])->name('policies-of-privacy');
         Route::get('policies-of-cookies', [PoliciesController::class, 'policiesOfCookies'])->name('policies-of-cookies');
     });
 
-
     // Load dinamic pages
-    Route::get('/{slug}', [PageController::class, 'page'])
-        ->where('slug', '^[a-z0-9\-\/]+$');
+    Route::get('/{slug?}', [PageController::class, 'page']);
 });
