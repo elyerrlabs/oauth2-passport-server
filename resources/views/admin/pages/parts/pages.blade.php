@@ -13,11 +13,7 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('Manage all your website pages') }}</p>
             </div>
             <div class="flex gap-3">
-                <button type="button" onclick="openCreatePageModal()"
-                    class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-sm">
-                    <i class="mdi mdi-plus-circle-outline mr-2"></i>
-                    {{ __('Create New Page') }}
-                </button>
+                @include('admin.pages.parts.form')
             </div>
         </div>
 
@@ -373,9 +369,4 @@
             });
         });
     </script>
-@endpush
-
-
-@push('modals')
-    @include('admin.pages.parts.form')
 @endpush
