@@ -24,22 +24,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
-use App\Http\Controllers\Docs\DocumentationController;
+ 
 use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
 use App\Http\Controllers\Web\Home\PageController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:system:general:public'])->group(function () {
-
-    // Load dinamic pages
-    Route::get('/{slug?}', [PageController::class, 'page']);
-
-    if (config('routes.system.guest.documentation.status', true)) {
-        Route::get("/documentation", [DocumentationController::class, 'index'])->name('documentation.index');
-    }
-
-
+ 
     Route::group([
         'prefix' => 'legal',
         'as' => 'legal.',
@@ -49,4 +40,9 @@ Route::middleware(['throttle:system:general:public'])->group(function () {
         Route::get('policies-of-privacy', [PoliciesController::class, 'policiesOfPrivacy'])->name('policies-of-privacy');
         Route::get('policies-of-cookies', [PoliciesController::class, 'policiesOfCookies'])->name('policies-of-cookies');
     });
+
+
+    // Load dinamic pages
+    Route::get('/{slug}', [PageController::class, 'page'])
+        ->where('slug', '^[a-z0-9\-\/]+$');
 });

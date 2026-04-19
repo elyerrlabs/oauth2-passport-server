@@ -48,11 +48,7 @@ return [
             'register' => [
                 "status" => true,
                 "description" => "Disabled users registration to the system"
-            ],
-            'documentation' => [
-                "status" => true,
-                "description" => "Disabled documentation section to the system"
-            ],
+            ]
         ]
     ],
 
