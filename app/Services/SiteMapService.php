@@ -137,7 +137,7 @@ class SiteMapService
                     'registered' => in_array($url, $registeredUrls),
                     'links' => [
                         'delete' =>
-                        in_array($url, $registeredUrls)
+                            in_array($url, $registeredUrls)
                             ? route('admin.sitemaps.delete', ['url' => base64_encode($url)])
                             : null,
                     ],
@@ -425,7 +425,7 @@ class SiteMapService
     public function updateRobotData(Request $request): bool
     {
         try {
-            file_put_contents($this->robot, $request->meta);
+            file_put_contents($this->robot, $request->input('content'));
 
             return true;
         } catch (\Exception $e) {

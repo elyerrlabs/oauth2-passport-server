@@ -35,45 +35,29 @@ use App\Services\SiteMapService;
 use Illuminate\Http\Request;
 
 final class SitemapController extends WebController
-{
-
-    /**
-     * Sitemap Service
-     * @var SiteMapService
-     */
-    private $sitemapService;
+{   
 
     /**
      * Construct
      */
-    public function __construct()
+    public function __construct(protected SitemapService $sitemapService)
     {
         parent::__construct();
         $this->middleware("userCanAny:administrator:seo:full,administrator:seo:view")->only('index', 'metaForm', 'robotForm');
         $this->middleware("userCanAny:administrator:seo:full,administrator:seo:create")->only('store', 'updateMetaForm', 'updateMeta', 'updateRobot');
         $this->middleware("userCanAny:administrator:seo:full,administrator:seo:destroy")->only('delete');
         $this->middleware("userCanAny:administrator:seo:full,administrator:seo:reset")->only('reset');
-        $this->sitemapService = app(SiteMapService::class);
-
     }
 
     /**
-     * Site map 
-     * @return \Inertia\Response
+     * List sitemap
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
         $data = $this->sitemapService->listRoutes()->toArray();
 
-        return Inertia::render('Sitemap/Index', [
-            'data' => $data,
-            'routes' => [
-                'index' => route('admin.sitemaps.index'),
-                'store' => route('admin.sitemaps.store'),
-                'reset' => route('admin.sitemaps.reset'),
-            ],
-            'menus' => resolveInertiaRoutes(config('menus.sitemap_menus')),
-        ]);
+        return view('admin.sitemap.index', compact('data'));
     }
 
     /**
@@ -125,7 +109,7 @@ final class SitemapController extends WebController
             $request->priority ?? 0.5
         );
 
-        return redirect()->back();
+        return redirect()->back()->with("status", __('Sitemap updated succesfully'));
     }
 
     /**
@@ -137,7 +121,7 @@ final class SitemapController extends WebController
     {
         $this->sitemapService->remove($url);
 
-        return redirect()->back();
+        return redirect()->back()->with("status", __('Page deleted succesfully'));
     }
 
     /**
@@ -147,23 +131,18 @@ final class SitemapController extends WebController
     public function reset()
     {
         $this->sitemapService->reset();
-        return redirect()->back();
+        return redirect()->back()->with("status", __('Sitemap reset successfully'));
+        ;
     }
 
     /**
-     * Show robot form editor
-     * @return \Inertia\Response
+     * Robot form
+     * @return \Illuminate\Contracts\View\View
      */
     public function robotForm()
     {
-        return Inertia::render('Sitemap/Robot', [
-            'data' => $this->sitemapService->getRobotData(),
-            'routes' => [
-                'index' => route('admin.sitemaps.robot.form'),
-                'store' => route('admin.sitemaps.robot.update'),
-            ],
-            'menus' => resolveInertiaRoutes(config('menus.sitemap_menus')),
-        ]);
+        $content = $this->sitemapService->getRobotData();
+        return view('admin.sitemap.robot', compact('content'));
     }
 
     /**
@@ -174,11 +153,11 @@ final class SitemapController extends WebController
     public function updateRobot(Request $request)
     {
         $this->validate($request, [
-            'meta' => 'required',
+            'content' => 'required',
         ]);
 
         $this->sitemapService->updateRobotData($request);
 
-        return redirect()->back();
+        return redirect()->back()->with('status', __('Content updated successfully'));
     }
 }
