@@ -79,6 +79,7 @@
             </div>
             <div class="min-h-[44px] flex items-center">
                 <x-theme />
+                <x-profile />
             </div>
         </nav>
 
