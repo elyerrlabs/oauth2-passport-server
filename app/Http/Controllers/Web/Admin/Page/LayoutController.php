@@ -60,7 +60,7 @@ class LayoutController extends WebController
 
         $content = $this->pageService->loadLayout($layout);
 
-        return view('admin.pages.parts.layout', compact('content', 'layout'));
+        return view('admin.pages.layout', compact('content', 'layout'));
     }
 
 

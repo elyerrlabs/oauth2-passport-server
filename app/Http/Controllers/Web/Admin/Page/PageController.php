@@ -51,7 +51,7 @@ final class PageController extends WebController
         $pages = $this->pageService->search($request);
         $pages = $pages->orderBy('updated_at', 'desc')->paginate(15);
 
-        return view('admin.pages.parts.pages', compact('pages'));
+        return view('admin.pages.pages', compact('pages'));
     }
 
     /**
@@ -121,7 +121,7 @@ final class PageController extends WebController
     {
         $page = $this->pageService->edit($id);
 
-        return view('admin.pages.parts.edit', compact('page'));
+        return view('admin.pages.edit', compact('page'));
     }
 
 

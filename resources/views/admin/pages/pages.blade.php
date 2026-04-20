@@ -1,359 +1,396 @@
-@extends('layouts.pages')
+@php
+    $routes = [
+        [
+            'name' => 'List of pages',
+            'route' => route('admin.pages.index'),
+            'icon' => 'mdi mdi-file-document-outline',
+        ],
+        [
+            'name' => 'Layouts',
+            'route' => route('admin.layouts.schema'),
+            'icon' => 'mdi mdi-file-document-outline',
+        ],
+    ];
+@endphp
 
-@section('header')
-    <nav id="pageManagerHeader"
-        class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 shadow-sm transition-colors duration-300">
-        <div class="container mx-auto flex justify-between items-center px-6">
-            <!-- Back Button -->
-            <a href="{{ route('user.dashboard') }}"
-                class="flex items-center space-x-2 text-gray-700 dark:text-gray-200 font-semibold hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 group">
-                <i class="mdi mdi-arrow-left text-2xl group-hover:-translate-x-1 transition-transform duration-300"></i>
-                <span class="relative">
-                    {{ __('Back to Dashboard') }}
-                    <span
-                        class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-400 group-hover:w-full transition-all duration-300"></span>
-                </span>
-            </a>
+<x-admin-layout :routes="$routes">
 
-            <!-- Theme Toggle and Mobile Menu Button -->
-            <div class="flex items-center space-x-4">
-                <!-- Mobile Menu Toggle Button -->
-                <button id="mobileMenuToggle"
-                    class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <i class="mdi mdi-menu text-2xl text-gray-700 dark:text-gray-200"></i>
-                </button>
+    @push('head')
+        @include('layouts.parts.title', ['title' => __('Page manager')])
+    @endpush
 
-                <div class="hidden md:flex items-center space-x-2 text-gray-600 dark:text-gray-400">
-                    <i class="mdi mdi-cog-outline text-xl"></i>
-                    <span class="font-medium">{{ __('Settings') }}</span>
+
+    <v-slot:main>
+        <div class="container mx-auto px-4 py-6">
+            <!-- Header Section -->
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('Pages Management') }}</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('Manage all your website pages') }}
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    @include('admin.pages.form')
+                </div>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-6 p-4">
+                <form method="GET" action="{{ route('admin.pages.index') }}" class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            placeholder="Search by name, description or slug..."
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                    </div>
+
+                    <div class="md:w-40">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ 'Order by' }}</label>
+                        <select name="order_by"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <option value="name" {{ request('order_by') == 'name' ? 'selected' : '' }}>
+                                {{ __('Name') }}
+                            </option>
+                            <option value="is_published" {{ request('order_by') == 'is_published' ? 'selected' : '' }}>
+                                {{ __('Published') }}
+                            </option>
+                            <option value="is_draft" {{ request('order_by') == 'is_draft' ? 'selected' : '' }}>
+                                {{ __('Draft') }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="md:w-40">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ 'Order Type' }}</label>
+                        <select name="order_type"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <option value="asc" {{ request('order_type') == 'asc' ? 'selected' : '' }}>
+                                {{ __('Ascending') }}
+                            </option>
+                            <option value="desc" {{ request('order_type') == 'desc' ? 'selected' : '' }}>
+                                {{ __('Descending') }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-end gap-2">
+                        <button type="submit"
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
+                            <i class="mdi mdi-magnify mr-1"></i> {{ __('Filter') }}
+                        </button>
+                        <a href="{{ route('admin.pages.index') }}"
+                            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200">
+                            <i class="mdi mdi-refresh mr-1"></i> {{ __('Reset') }}
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Pages Table -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    {{ __('Name') }}</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    {{ __('Slug') }}</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    {{ __('Status') }}</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    {{ __('Last Updated') }}</th>
+                                <th
+                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    {{ __('Actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($pages as $page)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
+
+                                    <!-- Name & Description -->
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                            {{ $page->name }}
+                                        </div>
+                                    </td>
+
+                                    <!-- Slug/Path -->
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                                            <code class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                                                {{ !empty($page->slug) ? $page->slug : '/' }}
+                                            </code>
+                                        </div>
+                                        @if ($page->path)
+                                            <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                                                Path: {{ $page->path }}
+                                            </div>
+                                        @endif
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col gap-1">
+                                            @if ($page->is_published && $page->published_at)
+                                                <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                                    <i class="mdi mdi-check-circle mr-1 text-xs"></i> Published
+                                                </span>
+                                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                                    {{ $page->published_at->format('M d, Y') }}
+                                                </span>
+                                            @elseif($page->is_draft)
+                                                <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                                    <i class="mdi mdi-pencil-outline mr-1 text-xs"></i> Draft
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                                    <i class="mdi mdi-eye-off mr-1 text-xs"></i> Unpublished
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </td>
+
+                                    <!-- Last Updated -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        {{ $page->updated_at->diffForHumans() }}
+                                        <div class="text-xs">{{ $page->updated_at->format('Y-m-d H:i') }}</div>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="{{ route('admin.pages.edit', $page->id) }}"
+                                                class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                                                title="Edit">
+                                                <i class="mdi mdi-pencil text-lg"></i>
+                                            </a>
+
+                                            @include('admin.pages.delete', ['page' => $page])
+
+                                            @if ($page->is_published)
+                                                <a href="{{ url($page->slug) }}" target="_blank"
+                                                    class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+                                                    title="View">
+                                                    <i class="mdi mdi-eye text-lg"></i>
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-12 text-center">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <i
+                                                class="mdi mdi-file-document-outline text-6xl text-gray-400 dark:text-gray-600 mb-3"></i>
+                                            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">No pages
+                                                found
+                                            </h3>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Try adjusting your
+                                                search
+                                                or filter criteria</p>
+                                            <button type="button" onclick="openCreatePageModal()"
+                                                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                                                <i class="mdi mdi-plus-circle-outline mr-2"></i>
+                                                Create your first page
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
 
-                <x-theme />
+                <!-- Pagination -->
+                @if ($pages->hasPages())
+                    <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">
+                                Showing {{ $pages->firstItem() ?? 0 }} to {{ $pages->lastItem() ?? 0 }} of
+                                {{ $pages->total() }} results
+                            </div>
+                            <div class="flex justify-center">
+                                {{ $pages->appends(request()->query())->links() }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
-    </nav>
-@endsection
 
-@section('content')
-    @php
-        $routes = [
-            [
-                'name' => 'List of pages',
-                'route' => route('admin.pages.index'),
-                'icon' => 'mdi mdi-file-document-outline',
-            ],
-            [
-                'name' => 'Layouts',
-                'route' => route('admin.layouts.schema'),
-                'icon' => 'mdi mdi-file-document-outline',
-            ],
-        ];
-    @endphp
 
-    <div id="pageManagerLayout"
-        class="bg-gray-50 dark:bg-gray-900 md:flex md:items-start overflow-hidden transition-colors duration-300">
-        <!-- Sidebar Navigation -->
-        <aside id="sidebar"
-            class="fixed left-0 bottom-0 md:relative md:inset-auto z-40 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0"
-            style="width: 280px;">
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title"
+            role="dialog" aria-modal="true">
+            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
 
-            <!-- Logo & Toggle Button -->
-            <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                <div class="flex items-center space-x-3 overflow-hidden">
-                    <div
-                        class="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-md flex-shrink-0">
-                        <span class="text-white font-bold text-sm">P</span>
+                <div
+                    class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div
+                                class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900 sm:mx-0 sm:h-10 sm:w-10">
+                                <i class="mdi mdi-alert text-red-600 dark:text-red-200 text-xl"></i>
+                            </div>
+                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
+                                    id="modal-title">
+                                    Delete Page
+                                </h3>
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        Are you sure you want to delete <strong id="deletePageName"></strong>? This
+                                        action
+                                        cannot be undone.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h1 id="logoText"
-                        class="text-xl font-bold text-gray-800 dark:text-white whitespace-nowrap transition-all duration-300">
-                        Page Manager
-                    </h1>
-                </div>
-
-                <!-- Toggle Button -->
-                <button id="toggleSidebar"
-                    class="p-1.5 cursor-pointer rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <i id="toggleIcon" class="mdi mdi-chevron-left text-xl text-gray-600 dark:text-gray-400"></i>
-                </button>
-            </div>
-
-            <!-- Navigation Menu -->
-            <nav class="p-4 space-y-2 flex-1 overflow-y-auto">
-                @foreach ($routes as $item)
-                    <a href="{{ $item['route'] }}"
-                        class="flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white group {{ request()->url() === $item['route'] ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border-l-4 border-blue-600 dark:border-blue-500' : '' }}">
-                        <span
-                            class="{{ $item['icon'] }} text-xl flex-shrink-0 {{ request()->url() === $item['route'] ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300' }}"></span>
-                        <span class="nav-text font-medium whitespace-nowrap transition-all duration-300">
-                            {{ $item['name'] }}
-                        </span>
-                    </a>
-                @endforeach
-            </nav>
-
-            <!-- User Profile Section -->
-            <div
-                class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 mt-auto transition-colors duration-300">
-                <div class="flex items-center space-x-3">
-                    <div class="relative flex-shrink-0">
-                        <img class="w-10 h-10 rounded-full ring-2 ring-gray-200 dark:ring-gray-700 object-cover"
-                            src="https://ui-avatars.com/api/?background=3B82F6&color=fff&name={{ urlencode(auth()->user()->name . '+' . auth()->user()->last_name) }}&bold=true"
-                            alt="User profile" />
-                        <span
-                            class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></span>
-                    </div>
-                    <div class="flex-1 min-w-0 transition-all duration-300">
-                        <p class="nav-text text-sm font-semibold text-gray-900 dark:text-white truncate">
-                            {{ auth()->user()->name }} {{ auth()->user()->last_name }}
-                        </p>
-                        <p class="nav-text text-xs text-gray-500 dark:text-gray-400 truncate">
-                            {{ auth()->user()->email }}
-                        </p>
+                    <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
+                        <form id="deleteForm" method="POST" action="">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                Delete
+                            </button>
+                        </form>
+                        <button type="button" onclick="closeDeleteModal()"
+                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </div>
-        </aside>
-
-        <!-- Overlay for mobile -->
-        <div id="overlay"
-            class="fixed left-0 right-0 bottom-0 bg-black bg-opacity-50 z-30 hidden transition-opacity duration-300 md:hidden">
         </div>
+    </v-slot:main>
 
-        <!-- Main Content Area -->
-        <main id="mainContent" class="flex-1 min-w-0 overflow-y-auto transition-all duration-300 ease-in-out">
-            <div class="p-4 sm:p-6">
-                @yield('main')
-            </div>
-        </main>
-    </div>
-@endsection
+</x-admin-layout>
+
 
 @push('css')
     <style nonce="{{ $nonce }}">
-        body {
-            overflow: hidden;
+        /* Custom pagination styling */
+        .pagination {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
         }
 
-        #pageManagerHeader {
-            position: sticky;
-            top: 0;
-            z-index: 50;
+        .pagination a,
+        .pagination span {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            color: #4B5563;
+            transition: all 0.2s;
         }
 
-        #pageManagerLayout {
-            height: calc(100vh - var(--page-manager-header-height, 73px));
+        .dark .pagination a,
+        .dark .pagination span {
+            color: #9CA3AF;
         }
 
-        /* Sidebar transitions */
-        #sidebar {
-            top: var(--page-manager-header-height, 73px);
-            height: calc(100vh - var(--page-manager-header-height, 73px));
-            transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+        .pagination a:hover {
+            background-color: #E5E7EB;
+            color: #1F2937;
         }
 
-        @media (min-width: 769px) {
-            #sidebar {
-                position: sticky;
-                top: var(--page-manager-header-height, 73px);
-                left: auto;
-                inset: auto;
-                z-index: 20;
-            }
+        .dark .pagination a:hover {
+            background-color: #374151;
+            color: #F3F4F6;
         }
 
-        /* Hide text when sidebar is collapsed */
-        #sidebar.collapsed {
-            width: 80px !important;
+        .pagination .active span {
+            background-color: #3B82F6;
+            color: white;
         }
 
-        #sidebar.collapsed .nav-text {
-            opacity: 0;
-            width: 0;
-            overflow: hidden;
-        }
-
-        #sidebar.collapsed #logoText {
-            opacity: 0;
-            width: 0;
-            overflow: hidden;
-        }
-
-        #mainContent {
-            flex: 1 1 auto;
-            width: 100%;
-            min-width: 0;
-            height: 100%;
-            transition: padding 0.3s ease-in-out;
-        }
-
-        /* Mobile styles */
-        @media (max-width: 768px) {
-            #pageManagerLayout {
-                display: block;
-            }
-
-            #overlay {
-                top: var(--page-manager-header-height, 73px);
-            }
-
-            #sidebar {
-                transform: translateX(-100%);
-                z-index: 40;
-                width: 280px !important;
-            }
-
-            #sidebar.mobile-open {
-                transform: translateX(0);
-            }
-
-            #sidebar.collapsed.mobile-open {
-                width: 280px !important;
-            }
-
-            #sidebar.collapsed.mobile-open .nav-text {
-                opacity: 1;
-                width: auto;
-                overflow: visible;
-            }
-
-            #sidebar.collapsed.mobile-open #logoText {
-                opacity: 1;
-                width: auto;
-                overflow: visible;
-            }
-
-            #mainContent {
-                width: 100%;
-            }
-        }
-
-        /* Scrollbar styling */
-        #sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        #sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        #sidebar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 2px;
-        }
-
-        #sidebar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        .pagination .disabled span {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     </style>
 @endpush
 
 @push('js')
     <script nonce="{{ $nonce }}">
-        (function() {
-            // Get sidebar state from localStorage
-            const root = document.documentElement;
-            const header = document.getElementById('pageManagerHeader');
-            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-            const sidebar = document.getElementById('sidebar');
-            const toggleIcon = document.getElementById('toggleIcon');
-            const toggleBtn = document.getElementById('toggleSidebar');
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            const overlay = document.getElementById('overlay');
+        function openCreatePageModal() {
+            const modal = document.getElementById('createPageModal');
+            if (!modal) return;
 
-            function syncHeaderHeight() {
-                if (!header) return;
-                root.style.setProperty('--page-manager-header-height', `${header.offsetHeight}px`);
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            const input = document.getElementById('page_name');
+            if (input) {
+                setTimeout(() => input.focus(), 50);
             }
+        }
 
-            // Function to update sidebar state
-            function setSidebarState(collapsed) {
-                if (collapsed) {
-                    sidebar.classList.add('collapsed');
-                    if (toggleIcon) {
-                        toggleIcon.classList.remove('mdi-chevron-left');
-                        toggleIcon.classList.add('mdi-chevron-right');
-                    }
-                } else {
-                    sidebar.classList.remove('collapsed');
-                    if (toggleIcon) {
-                        toggleIcon.classList.remove('mdi-chevron-right');
-                        toggleIcon.classList.add('mdi-chevron-left');
-                    }
+        function closeCreatePageModal() {
+            const modal = document.getElementById('createPageModal');
+            if (!modal) return;
+
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function confirmDelete(pageId, pageName) {
+            const modal = document.getElementById('deleteModal');
+            const nameElement = document.getElementById('deletePageName');
+            const form = document.getElementById('deleteForm');
+
+            if (!modal || !nameElement || !form) return;
+
+            nameElement.textContent = pageName;
+            form.action = `/admin/pages/${pageId}`;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            if (!modal) return;
+
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (($openCreateModal ?? false) || $errors->any())
+                openCreatePageModal();
+            @endif
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key !== 'Escape') {
+                    return;
                 }
-                localStorage.setItem('sidebarCollapsed', collapsed);
-            }
 
-            // Apply initial state
-            syncHeaderHeight();
+                const createModal = document.getElementById('createPageModal');
+                const deleteModal = document.getElementById('deleteModal');
 
-            if (isCollapsed && window.innerWidth > 768) {
-                setSidebarState(true);
-            }
+                if (createModal && !createModal.classList.contains('hidden')) {
+                    closeCreatePageModal();
+                }
 
-            // Toggle sidebar on desktop
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const isCurrentlyCollapsed = sidebar.classList.contains('collapsed');
-                    setSidebarState(!isCurrentlyCollapsed);
-                });
-            }
-
-            // Mobile menu toggle
-            function closeMobileMenu() {
-                sidebar.classList.remove('mobile-open');
-                if (overlay) overlay.classList.add('hidden');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function openMobileMenu() {
-                sidebar.classList.add('mobile-open');
-                if (overlay) overlay.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            }
-
-            if (mobileToggle) {
-                mobileToggle.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (sidebar.classList.contains('mobile-open')) {
-                        closeMobileMenu();
-                    } else {
-                        openMobileMenu();
-                    }
-                });
-            }
-
-            // Close mobile menu when clicking overlay
-            if (overlay) {
-                overlay.addEventListener('click', function() {
-                    closeMobileMenu();
-                });
-            }
-
-            // Handle window resize
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
-                    syncHeaderHeight();
-                    if (window.innerWidth > 768) {
-                        closeMobileMenu();
-                        const collapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-                        if (collapsed) {
-                            setSidebarState(true);
-                        } else {
-                            setSidebarState(false);
-                        }
-                    }
-                }, 250);
-            });
-
-            // Close mobile menu on escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && sidebar.classList.contains('mobile-open')) {
-                    closeMobileMenu();
+                if (deleteModal && !deleteModal.classList.contains('hidden')) {
+                    closeDeleteModal();
                 }
             });
-        })();
+        });
     </script>
 @endpush
