@@ -34,6 +34,12 @@
 @endphp
 
 <x-admin-layout :routes="$routes">
+
+
+    @push('head')
+        <title>{{ __('Robot Manager') }}</title>
+    @endpush
+
     <v-slot:main>
         {{-- Header Section --}}
         <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

@@ -14,8 +14,12 @@
 @endphp
 
 <x-admin-layout :routes="$routes">
+
+    @push('head')
+        <title>{{ __('Sitemap generator') }}</title>
+    @endpush
+
     <v-slot:main>
-        {{-- Header Section --}}
         <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('Sitemap Management') }}</h2>
@@ -23,10 +27,15 @@
                     {{ __('Manage and optimize your website sitemap for SEO') }}</p>
             </div>
             <div class="flex gap-3">
-                <button type="button" id="resetSitemapBtn"
-                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                    {{ __('Reset Sitemap') }}
-                </button>
+                <form method="POST" action="{{ route('admin.sitemaps.reset') }}"
+                    onsubmit="return confirm('{{ __('Are you sure you want to reset the sitemap? This action cannot be undone and all URLs will be permanently deleted.') }}')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                        {{ __('Reset Sitemap') }}
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -242,88 +251,5 @@
             </div>
         </div>
 
-        {{-- Reset Modal with Headless UI --}}
-        <div x-data="{ open: false }" x-on:open-modal.window="open = true" x-on:close-modal.window="open = false"
-            x-on:keydown.escape.window="open = false">
-            {{-- Modal Trigger --}}
-            <button id="resetSitemapTrigger" @click="open = true" class="hidden"></button>
-
-            {{-- Modal Dialog --}}
-            <div x-show="open" x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
-
-                {{-- Overlay --}}
-                <div class="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm"></div>
-
-                {{-- Modal Panel --}}
-                <div class="relative min-h-screen flex items-center justify-center p-4">
-                    <div x-show="open" x-transition:enter="transition ease-out duration-300"
-                        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                        x-transition:leave="transition ease-in duration-200"
-                        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                        @click.away="open = false"
-                        class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-md w-full mx-auto">
-
-                        <div class="p-6">
-                            {{-- Icon --}}
-                            <div
-                                class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 mb-4">
-                                <svg class="h-6 w-6 text-red-600 dark:text-red-400" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                </svg>
-                            </div>
-
-                            {{-- Title --}}
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white text-center mb-2">
-                                {{ __('Reset Sitemap') }}
-                            </h3>
-
-                            {{-- Description --}}
-                            <p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">
-                                {{ __('Are you sure you want to reset the sitemap? This action cannot be undone and all URLs will be permanently deleted.') }}
-                            </p>
-
-                            {{-- Actions --}}
-                            <div class="flex flex-col sm:flex-row sm:justify-center gap-3">
-                                <button type="button" @click="open = false"
-                                    class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                                    {{ __('Cancel') }}
-                                </button>
-
-                                <form method="POST" action="{{ route('admin.sitemaps.reset') }}" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                                        {{ __('Reset Sitemap') }}
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </v-slot:main>
-
-    @push('js')
-        <script nonce="{{ $nonce }}">
-            (function() {
-                const resetBtn = document.getElementById('resetSitemapBtn');
-                const modalTrigger = document.getElementById('resetSitemapTrigger');
-
-                if (resetBtn && modalTrigger) {
-                    resetBtn.addEventListener('click', function() {
-                        modalTrigger.click();
-                    });
-                }
-            })();
-        </script>
-    @endpush
 </x-admin-layout>
