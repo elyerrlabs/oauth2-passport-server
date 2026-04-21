@@ -101,15 +101,26 @@ final class PageController extends WebController
     }
 
     /**
-     * Preview page
+     * Page preview on dev mode
      * @param string $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return \Illuminate\Http\Response
      */
     public function show(string $id)
     {
         $page = $this->pageService->edit($id);
 
-        return view()->file($page->path);
+        try {
+
+            return response(view()->file($page->path)->render());
+
+        } catch (\Throwable $e) {
+
+            if ($page->is_draft) {
+                return $this->pageService->renderDraftError($e, $page);
+            }
+
+            abort(500);
+        }
     }
 
     /**

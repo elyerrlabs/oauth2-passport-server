@@ -228,134 +228,140 @@
 
 @push('js')
     <script nonce="{{ $nonce }}">
-        (function($) {
-            'use strict';
+        document.addEventListener("DOMContentLoaded", function() {
 
-            // Componente Profile Menu
-            function ProfileMenu(element) {
-                this.$el = $(element);
-                this.$trigger = this.$el.find('.profile-menu-trigger');
-                this.$dropdown = this.$el.find('.profile-menu-dropdown');
-                this.$chevron = this.$el.find('.profile-menu-chevron');
-                this.isOpen = false;
 
-                this.init();
-            }
+            (function($) {
+                'use strict';
 
-            ProfileMenu.prototype.init = function() {
-                var self = this;
+                // Componente Profile Menu
+                function ProfileMenu(element) {
+                    this.$el = $(element);
+                    this.$trigger = this.$el.find('.profile-menu-trigger');
+                    this.$dropdown = this.$el.find('.profile-menu-dropdown');
+                    this.$chevron = this.$el.find('.profile-menu-chevron');
+                    this.isOpen = false;
 
-                // Toggle menú al hacer clic en el trigger
-                this.$trigger.on('click.profileMenu', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    self.toggle();
-                });
-
-                // Manejar enlaces de login/register con redirect
-                this.$el.find('[data-login-link], [data-register-link]').on('click.profileMenu', function(e) {
-                    e.preventDefault();
-                    var url = $(this).attr('href');
-                    self.handleAuthRedirect(url);
-                });
-
-                // Cerrar menú al hacer clic fuera
-                $(document).on('click.profileMenu', function(e) {
-                    if (self.isOpen && !self.$el.is(e.target) && !self.$el.has(e.target).length) {
-                        self.close();
-                    }
-                });
-
-                // Cerrar menú con tecla Escape
-                $(document).on('keydown.profileMenu', function(e) {
-                    if (e.key === 'Escape' && self.isOpen) {
-                        self.close();
-                        self.$trigger.focus();
-                    }
-                });
-
-                // Navegación con teclado dentro del menú
-                this.$dropdown.on('keydown.profileMenu', function(e) {
-                    if (e.key === 'Escape') {
-                        self.close();
-                        self.$trigger.focus();
-                    }
-                });
-
-                // Cerrar menú al hacer clic en un item
-                this.$el.find('.profile-menu-item').on('click.profileMenu', function() {
-                    self.close();
-                });
-            };
-
-            ProfileMenu.prototype.toggle = function() {
-                this.isOpen ? this.close() : this.open();
-            };
-
-            ProfileMenu.prototype.open = function() {
-                this.$dropdown.removeClass('hidden').addClass('block');
-                this.$chevron.removeClass('mdi-chevron-down').addClass('mdi-chevron-up');
-                this.$trigger.attr('aria-expanded', 'true');
-                this.isOpen = true;
-
-                // Enfocar primer elemento del menú
-                var $firstItem = this.$dropdown.find('.profile-menu-item').first();
-                if ($firstItem.length) {
-                    setTimeout(function() {
-                        $firstItem.focus();
-                    }, 50);
+                    this.init();
                 }
-            };
 
-            ProfileMenu.prototype.close = function() {
-                this.$dropdown.removeClass('block').addClass('hidden');
-                this.$chevron.removeClass('mdi-chevron-up').addClass('mdi-chevron-down');
-                this.$trigger.attr('aria-expanded', 'false');
-                this.isOpen = false;
-            };
+                ProfileMenu.prototype.init = function() {
+                    var self = this;
 
-            ProfileMenu.prototype.handleAuthRedirect = function(url) {
-                var currentUrl = window.location.href;
-                var path = url.startsWith('/') ? url : new URL(url, window.location.origin).pathname;
+                    // Toggle menú al hacer clic en el trigger
+                    this.$trigger.on('click.profileMenu', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        self.toggle();
+                    });
 
-                if (path.startsWith('/auth/login') || path.startsWith('/auth/register')) {
-                    var redirectUrl = new URL(url, window.location.origin);
-                    redirectUrl.searchParams.set('redirect_to', currentUrl);
-                    window.location.href = redirectUrl.toString();
-                } else {
-                    window.location.href = url;
-                }
-            };
+                    // Manejar enlaces de login/register con redirect
+                    this.$el.find('[data-login-link], [data-register-link]').on('click.profileMenu',
+                        function(e) {
+                            e.preventDefault();
+                            var url = $(this).attr('href');
+                            self.handleAuthRedirect(url);
+                        });
 
-            ProfileMenu.prototype.destroy = function() {
-                this.$trigger.off('.profileMenu');
-                this.$el.find('[data-login-link], [data-register-link]').off('.profileMenu');
-                this.$el.find('.profile-menu-item').off('.profileMenu');
-                this.$dropdown.off('.profileMenu');
-                $(document).off('.profileMenu');
-            };
+                    // Cerrar menú al hacer clic fuera
+                    $(document).on('click.profileMenu', function(e) {
+                        if (self.isOpen && !self.$el.is(e.target) && !self.$el.has(e.target)
+                            .length) {
+                            self.close();
+                        }
+                    });
 
-            // Plugin jQuery
-            $.fn.profileMenu = function() {
-                return this.each(function() {
-                    var $this = $(this);
-                    var instance = $this.data('profileMenu');
+                    // Cerrar menú con tecla Escape
+                    $(document).on('keydown.profileMenu', function(e) {
+                        if (e.key === 'Escape' && self.isOpen) {
+                            self.close();
+                            self.$trigger.focus();
+                        }
+                    });
 
-                    if (!instance) {
-                        instance = new ProfileMenu(this);
-                        $this.data('profileMenu', instance);
+                    // Navegación con teclado dentro del menú
+                    this.$dropdown.on('keydown.profileMenu', function(e) {
+                        if (e.key === 'Escape') {
+                            self.close();
+                            self.$trigger.focus();
+                        }
+                    });
+
+                    // Cerrar menú al hacer clic en un item
+                    this.$el.find('.profile-menu-item').on('click.profileMenu', function() {
+                        self.close();
+                    });
+                };
+
+                ProfileMenu.prototype.toggle = function() {
+                    this.isOpen ? this.close() : this.open();
+                };
+
+                ProfileMenu.prototype.open = function() {
+                    this.$dropdown.removeClass('hidden').addClass('block');
+                    this.$chevron.removeClass('mdi-chevron-down').addClass('mdi-chevron-up');
+                    this.$trigger.attr('aria-expanded', 'true');
+                    this.isOpen = true;
+
+                    // Enfocar primer elemento del menú
+                    var $firstItem = this.$dropdown.find('.profile-menu-item').first();
+                    if ($firstItem.length) {
+                        setTimeout(function() {
+                            $firstItem.focus();
+                        }, 50);
                     }
+                };
+
+                ProfileMenu.prototype.close = function() {
+                    this.$dropdown.removeClass('block').addClass('hidden');
+                    this.$chevron.removeClass('mdi-chevron-up').addClass('mdi-chevron-down');
+                    this.$trigger.attr('aria-expanded', 'false');
+                    this.isOpen = false;
+                };
+
+                ProfileMenu.prototype.handleAuthRedirect = function(url) {
+                    var currentUrl = window.location.href;
+                    var path = url.startsWith('/') ? url : new URL(url, window.location.origin).pathname;
+
+                    if (path.startsWith('/auth/login') || path.startsWith('/auth/register')) {
+                        var redirectUrl = new URL(url, window.location.origin);
+                        redirectUrl.searchParams.set('redirect_to', currentUrl);
+                        window.location.href = redirectUrl.toString();
+                    } else {
+                        window.location.href = url;
+                    }
+                };
+
+                ProfileMenu.prototype.destroy = function() {
+                    this.$trigger.off('.profileMenu');
+                    this.$el.find('[data-login-link], [data-register-link]').off('.profileMenu');
+                    this.$el.find('.profile-menu-item').off('.profileMenu');
+                    this.$dropdown.off('.profileMenu');
+                    $(document).off('.profileMenu');
+                };
+
+                // Plugin jQuery
+                $.fn.profileMenu = function() {
+                    return this.each(function() {
+                        var $this = $(this);
+                        var instance = $this.data('profileMenu');
+
+                        if (!instance) {
+                            instance = new ProfileMenu(this);
+                            $this.data('profileMenu', instance);
+                        }
+                    });
+                };
+
+                // Inicializar todos los menús de perfil
+                $(document).ready(function() {
+                    $('[data-profile-menu]').profileMenu();
                 });
-            };
 
-            // Inicializar todos los menús de perfil
-            $(document).ready(function() {
-                $('[data-profile-menu]').profileMenu();
-            });
+                // Exponer para uso global
+                window.ProfileMenu = ProfileMenu;
 
-            // Exponer para uso global
-            window.ProfileMenu = ProfileMenu;
-
-        })(jQuery);
+            })(jQuery);
+        });
     </script>
 @endpush

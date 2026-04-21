@@ -297,4 +297,17 @@ final class PageService extends \App\Services\Page\Service
             }
         });
     }
+
+    public function renderDraftError($e, $page)
+    {
+        return response()->view('errors.builder', [
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => collect($e->getTrace())
+                ->take(10)
+                ->toArray(),
+            'page' => $page
+        ], 500);
+    }
 }
