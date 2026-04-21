@@ -38,7 +38,7 @@ class SitemapIndexJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected PageService $pageService)
+    public function __construct()
     {
         //
     }
@@ -48,6 +48,6 @@ class SitemapIndexJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->pageService->indexPages();
+        app(PageService::class)->indexPages();
     }
 }
