@@ -86,7 +86,7 @@
 
         {{-- Main Content --}}
         <main id="mainWrapper"
-            class="main-wrapper flex-1 flex flex-col min-w-0 overflow-hidden bg-gray-50 dark:bg-gray-950 transition-all duration-300 ease-in-out ml-[260px]">
+            class="main-wrapper flex-1 flex flex-col min-w-0 overflow-hidden bg-gray-50 dark:bg-gray-950 transition-all duration-300 ease-in-out">
 
             {{-- Header --}}
             <header
@@ -141,7 +141,7 @@
 
             {{-- Content Area - Único con scroll --}}
             <div id="mainContent" class="flex-1 overflow-y-auto">
-                <div class="p-4 md:p-6">
+                <div class="p-4 md:p-6 h-full">
                     {{ $slot }}
                 </div>
             </div>
@@ -173,11 +173,6 @@
 
             .sidebar.collapsed nav a i {
                 margin: 0;
-            }
-
-            /* Main wrapper cuando sidebar está colapsado */
-            .sidebar.collapsed~.main-wrapper {
-                margin-left: 72px !important;
             }
 
             /* Mobile styles */
