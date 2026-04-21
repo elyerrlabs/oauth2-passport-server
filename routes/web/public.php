@@ -24,22 +24,22 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
- 
+
 use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
 use App\Http\Controllers\Web\Home\PageController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:system:general:public'])->group(function () {
- 
+
     Route::group([
         'prefix' => 'legal',
         'as' => 'legal.',
-    ], function () { 
+    ], function () {
         Route::get('terms-and-conditions', [PoliciesController::class, 'termsAndCondition'])->name('terms-and-conditions');
         Route::get('policies-of-privacy', [PoliciesController::class, 'policiesOfPrivacy'])->name('policies-of-privacy');
         Route::get('policies-of-cookies', [PoliciesController::class, 'policiesOfCookies'])->name('policies-of-cookies');
     });
 
     // Load dinamic pages
-    Route::get('/{slug?}', [PageController::class, 'page']);
+    Route::get('/{slug?}', [PageController::class, 'page'])->name('pages');
 });
