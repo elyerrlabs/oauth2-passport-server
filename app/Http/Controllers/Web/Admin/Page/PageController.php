@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Admin\Page;
 
 use App\Http\Controllers\WebController;
+use App\Jobs\SitemapIndexJob;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Http\Request;
 use App\Services\Page\PageService;
@@ -167,7 +168,7 @@ final class PageController extends WebController
      */
     public function generateSitemapFile()
     {
-        $this->pageService->indexPages();
+        SitemapIndexJob::dispatch();
 
         return back()->with('status', __('Sitemap index has been generating'));
     }

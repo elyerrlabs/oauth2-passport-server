@@ -26,7 +26,8 @@ namespace App\Jobs;
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
- 
+
+use App\Services\Page\PageService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -37,7 +38,7 @@ class SitemapIndexJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(protected PageService $pageService)
     {
         //
     }
@@ -47,6 +48,6 @@ class SitemapIndexJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        $this->pageService->indexPages();
     }
 }
