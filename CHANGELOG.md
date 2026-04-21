@@ -46,6 +46,10 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Migrate to blade from vuejs sitemamp manager
 - Sitemap generator for public pages added
 - add support for showing errors on draft pages
+- Add job support to generate sitemap for pages
+- fix profile blade component
+- fix admin layout blade component
+- fix jquery support for robot blade component
 
 ---
 
