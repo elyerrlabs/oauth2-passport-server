@@ -22,14 +22,14 @@
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
-                            Page manager
+                            {{ __('Page manager') }}
                         </p>
                         <h3 id="delete-page-modal-title"
                             class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">
-                            Delete page
+                            {{ __('Delete page') }}
                         </h3>
                         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                            This action cannot be undone.
+                            {{ __('This action cannot be undone.') }}
                         </p>
                     </div>
 
@@ -49,16 +49,16 @@
                 <div
                     class="rounded-xl border border-red-200 bg-red-50 px-4 py-4 dark:border-red-900/60 dark:bg-red-950/40">
                     <p class="text-sm font-semibold text-red-800 dark:text-red-300">
-                        Warning!
+                        {{ __('Warning!') }}
                     </p>
                     <p class="text-sm text-red-700 dark:text-red-400">
-                        This page will be permanently deleted.
+                        {{ __('This page will be permanently deleted.') }}
                     </p>
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Page
+                        {{ __('Page') }}
                     </label>
                     <div
                         class="rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 dark:border-gray-600 dark:bg-gray-900">
@@ -69,12 +69,12 @@
 
                 <div class="flex justify-end gap-3 border-t border-gray-200 pt-5 dark:border-gray-700">
                     <button type="button" class="px-4 py-2.5 text-sm border rounded-xl" data-close-modal>
-                        Cancel
+                        {{ __('Cancel') }}
                     </button>
 
                     <button type="submit"
                         class="px-4 py-2.5 text-sm bg-red-600 text-white rounded-xl hover:bg-red-700">
-                        Delete
+                        {{ __('Delete') }}
                     </button>
                 </div>
             </form>

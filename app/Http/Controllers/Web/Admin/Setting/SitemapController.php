@@ -78,7 +78,7 @@ final class SitemapController extends WebController
                     $scheme = parse_url($value, PHP_URL_SCHEME);
 
                     if (!in_array($scheme, ['http', 'https', 'ftp'])) {
-                        return $fail("Only http, https or ftp protocols are allowed.");
+                        return $fail(__("Only http, https or ftp protocols are allowed."));
                     }
                 }
             ],
