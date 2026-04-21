@@ -29,6 +29,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+## Unreleased
+
+### Changed
+
+- Relaxed Content Security Policy (CSP) for assets:
+    - Allowed `data:` and `blob:` sources in `img-src`
+    - Enabled external font loading from `fonts.bunny.net`
+- Fixed Content Security Policy (CSP) restrictions interfering with the page creation form
+- Remove all documentation resources
+- Fix dynamic pages loader
+- Add new components blade (x-layout and x-admin-layout)
+- Apply new layouts for pages resources
+- Create new blade component x-profile
+- Add JQuery support for new page creation
+- Migrate to blade from vuejs sitemamp manager
+- Sitemap generator for public pages added
+- add support for showing errors on draft pages
+
+---
+
 ## [v6.0.4]
 
 - Updated Spanish translations (es)
