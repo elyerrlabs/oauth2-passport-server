@@ -13,7 +13,7 @@
     ];
 
     $currentDomain = request()->getSchemeAndHttpHost();
-    $sitemapUrl = $currentDomain . '/sitemap.xml';
+    $sitemapUrl = $currentDomain . '/sitemaps/index.xml';
 
     $templates = [
         'allowAll' => "# Allow all search engines\n# Domain: {$currentDomain}\n\nUser-agent: *\nAllow: /\n\n# Sitemap location\nSitemap: {$sitemapUrl}",
