@@ -30,6 +30,14 @@
                     </p>
                 </div>
                 <div class="flex gap-3">
+                    <form action="{{ route('admin.pages.generate-sitemap') }}" method="post">
+                        @csrf
+                        <button
+                            class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 shadow-sm">
+                            <span class="mdi mdi-hammer-wrench text-lg"></span>
+                            {{ __('Generate sitemap') }}
+                        </button>
+                    </form>
                     @include('admin.pages.form')
                 </div>
             </div>

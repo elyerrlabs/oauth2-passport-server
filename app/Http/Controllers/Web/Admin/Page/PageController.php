@@ -149,4 +149,15 @@ final class PageController extends WebController
 
         return redirect()->route('admin.pages.index')->with('status', __('Page deleted successfully'));
     }
+
+    /**
+     * generate sitemap index
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function generateSitemapFile()
+    {
+        $this->pageService->indexPages();
+
+        return back()->with('status', __('Sitemap index has been generating'));
+    }
 }

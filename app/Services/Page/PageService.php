@@ -2,6 +2,7 @@
 
 namespace App\Services\Page;
 
+use App\Services\SiteMapService;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ final class PageService extends \App\Services\Page\Service
      * Construct
      * @param PageRepository $pageRepository
      */
-    public function __construct(protected PageRepository $pageRepository)
+    public function __construct(protected PageRepository $pageRepository, protected SiteMapService $sitemapService)
     {
         parent::__construct();
         $this->schema = base_path('resources/views/pages/layouts/schema.blade.php');
@@ -263,5 +264,37 @@ final class PageService extends \App\Services\Page\Service
     public function loadLayoutPath(string $name)
     {
         return rtrim($this->realPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . "layouts" . DIRECTORY_SEPARATOR . $name . '.blade.php';
+    }
+
+    /**
+     * Index pages
+     * @return void
+     */
+    public function indexPages()
+    {
+        $this->pageRepository->query()->chunk(1000, function ($chunk, $index) {
+
+            $filename = "posts_{$index}.xml";
+            // public path
+            $path = public_path("sitemaps/{$filename}");
+            // sitemap url
+            $url = ltrim(config('app.url'), '/') . "/sitemaps/$filename";
+
+            // Remove file and url
+            if (\File::exists($path)) {
+                $this->sitemapService->remove($url);
+                \File::delete($path);
+            }
+
+            foreach ($chunk as $page) {
+                $this->sitemapService->register(
+                    "posts_{$index}",
+                    route('pages', $page->slug),
+                    null,
+                    'weekly',
+                    0.5
+                );
+            }
+        });
     }
 }

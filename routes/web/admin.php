@@ -30,10 +30,6 @@ use App\Http\Controllers\Web\Admin\Page\PageController;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 use App\Http\Controllers\Web\Admin\OAuth\ClientAdminController;
-use App\Http\Controllers\Web\Admin\Broadcasting\BroadcastController;
-
-
-
 
 Route::middleware(['throttle:system:general:settings', 'password.confirm'])
     ->group(function () {
@@ -57,6 +53,8 @@ Route::middleware(['throttle:system:general:passport', 'password.confirm'])
 
 Route::middleware(['throttle:system:general:pages'])
     ->group(function () {
+
+        Route::post('pages/generate-sitemap', [PageController::class, 'generateSitemapFile'])->name('pages.generate-sitemap');
         Route::resource('pages', PageController::class);
 
         Route::get('layouts', [LayoutController::class, 'form'])->name('layouts.schema');
