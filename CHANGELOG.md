@@ -50,6 +50,8 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - fix profile blade component
 - fix admin layout blade component
 - fix jquery support for robot blade component
+- Updated composer dependencies
+- Updated horizon configuration file
 
 ---
 
