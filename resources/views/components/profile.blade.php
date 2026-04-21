@@ -1,12 +1,7 @@
 {{-- resources/views/components/profile-menu.blade.php --}}
 @props([
-    'user' => null,
-    'loginRoute' => null,
-    'logoutRoute' => null,
-    'registerRoute' => null,
-    'dashboardRoute' => null,
-    'homeRoute' => '/',
-    'allowRegister' => true,
+    'user' => null, 
+    'homeRoute' => '/', 
     'showVerifiedBadge' => true,
     'avatarBackground' => 'bg-blue-500 dark:bg-blue-600',
     'menuPosition' => 'right', // right, left
@@ -15,10 +10,6 @@
 @php
     // Valores por defecto
     $user = $user ?? auth()->user();
-    $loginRoute = $loginRoute ?? route('login');
-    $logoutRoute = $logoutRoute ?? route('logout');
-    $registerRoute = $registerRoute ?? route('register');
-    $dashboardRoute = $dashboardRoute ?? route('user.dashboard');
 
     // Iniciales del usuario
     $userInitials = '?';
@@ -91,7 +82,7 @@
                         <div class="text-sm text-gray-600 dark:text-gray-400 truncate">
                             {{ $user->email }}
                         </div>
-                        @if ($showVerifiedBadge && $user->email_verified_at)
+                        @if (auth()->check() && $user->email_verified_at)
                             <div class="flex items-center mt-1 text-xs text-blue-600 dark:text-blue-400">
                                 <i class="mdi mdi-check-circle mr-1"></i>
                                 {{ __('Verified account') }}
@@ -126,7 +117,7 @@
         <ul class="divide-y divide-gray-100 dark:divide-gray-700">
             {{-- Inicio --}}
             <li role="menuitem">
-                <a href="{{ $homeRoute }}"
+                <a href="{{ route('user.dashboard') }}"
                     class="profile-menu-item w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center transition-colors duration-150 group">
                     <div
                         class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3">
@@ -142,7 +133,7 @@
             @if ($user)
                 {{-- Mi Cuenta --}}
                 <li role="menuitem">
-                    <a href="{{ $dashboardRoute }}"
+                    <a href="{{ route('user.dashboard') }}"
                         class="profile-menu-item w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center transition-colors duration-150 group">
                         <div
                             class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3">
@@ -157,7 +148,7 @@
             @else
                 {{-- Iniciar Sesión (Mobile) --}}
                 <li class="block lg:hidden" role="menuitem">
-                    <a href="{{ $loginRoute }}" data-login-link
+                    <a href="{{ route('login') }}" data-login-link
                         class="profile-menu-item w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center transition-colors duration-150 group">
                         <div
                             class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3">
@@ -171,9 +162,9 @@
                 </li>
 
                 {{-- Registrarse (Mobile) --}}
-                @if ($allowRegister)
+                @if (Route::has('register'))
                     <li class="block lg:hidden" role="menuitem">
-                        <a href="{{ $registerRoute }}" data-register-link
+                        <a href="{{ route('register') }}" data-register-link
                             class="profile-menu-item w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center transition-colors duration-150 group">
                             <div
                                 class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-3">
@@ -197,7 +188,7 @@
             @if ($user)
                 {{-- Cerrar Sesión --}}
                 <li role="menuitem">
-                    <form method="POST" action="{{ $logoutRoute }}" class="logout-form">
+                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
                         @csrf
                         <button type="submit"
                             class="w-full text-left px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/10 flex items-center transition-colors duration-150 group">
