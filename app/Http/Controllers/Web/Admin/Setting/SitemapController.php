@@ -40,7 +40,7 @@ final class SitemapController extends WebController
     /**
      * Construct
      */
-    public function __construct(protected SitemapService $sitemapService)
+    public function __construct(protected SiteMapService $sitemapService)
     {
         parent::__construct();
         $this->middleware("userCanAny:administrator:seo:full,administrator:seo:view")->only('index', 'metaForm', 'robotForm');
