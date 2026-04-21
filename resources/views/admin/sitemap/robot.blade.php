@@ -241,48 +241,51 @@
 
     @push('js')
         <script nonce="{{ $nonce }}">
-            (function($) {
-                'use strict';
+            document.addEventListener("DOMContentLoaded", function() {
 
-                const templates = @json($templates);
-                const defaultTemplate = @json($editorContent);
+                (function($) {
+                    'use strict';
 
-                // Función para establecer el contenido del editor
-                function setEditorContent(content) {
-                    $('#editor').val(content);
-                }
+                    const templates = @json($templates);
+                    const defaultTemplate = @json($editorContent);
 
-                // Función para aplicar plantilla
-                function applyTemplate(templateKey) {
-                    if (templates[templateKey]) {
-                        setEditorContent(templates[templateKey]);
+                    // Función para establecer el contenido del editor
+                    function setEditorContent(content) {
+                        $('#editor').val(content);
                     }
-                }
 
-                // Esperar a que el DOM esté listo
-                $(document).ready(function() {
-                    // Template buttons
-                    $('.template-btn').on('click', function(e) {
-                        e.preventDefault();
-                        var template = $(this).data('template');
-                        applyTemplate(template);
+                    // Función para aplicar plantilla
+                    function applyTemplate(templateKey) {
+                        if (templates[templateKey]) {
+                            setEditorContent(templates[templateKey]);
+                        }
+                    }
+
+                    // Esperar a que el DOM esté listo
+                    $(document).ready(function() {
+                        // Template buttons
+                        $('.template-btn').on('click', function(e) {
+                            e.preventDefault();
+                            var template = $(this).data('template');
+                            applyTemplate(template);
+                        });
+
+                        // Comprehensive button
+                        $('#applyComprehensiveBtn').on('click', function(e) {
+                            e.preventDefault();
+                            var template = $(this).data('template');
+                            applyTemplate(template);
+                        });
+
+                        // Reset button
+                        $('#resetDefaultBtn').on('click', function(e) {
+                            e.preventDefault();
+                            setEditorContent(defaultTemplate);
+                        });
                     });
 
-                    // Comprehensive button
-                    $('#applyComprehensiveBtn').on('click', function(e) {
-                        e.preventDefault();
-                        var template = $(this).data('template');
-                        applyTemplate(template);
-                    });
-
-                    // Reset button
-                    $('#resetDefaultBtn').on('click', function(e) {
-                        e.preventDefault();
-                        setEditorContent(defaultTemplate);
-                    });
-                });
-
-            })(jQuery);
+                })(jQuery);
+            });
         </script>
     @endpush
 </x-admin-layout>
