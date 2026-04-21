@@ -134,7 +134,7 @@
             jodit: {{ $jodit ? 'true' : 'false' }},
             monaco: {{ $monaco ? 'true' : 'false' }},
             preview: {{ $preview ? 'true' : 'false' }},
-            lang: '{{ $lang ?? 'html' }}'
+            lang: '{{ $lang }}'
         };
 
         // Tabs
@@ -394,6 +394,19 @@
                 },
                 wordWrap: 'on'
             });
+
+            setTimeout(() => {
+                if (monacoEditor && config.lang) {
+                    monaco.editor.setModelLanguage(
+                        monacoEditor.getModel(),
+                        config.lang
+                    );
+                }
+            }, 5);
+
+            if (languageSelector && config.lang) {
+                languageSelector.value = config.lang;
+            }
 
             monacoEditor.onDidChangeModelContent(() => {
                 const value = monacoEditor.getValue();

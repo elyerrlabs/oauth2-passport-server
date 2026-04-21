@@ -89,6 +89,9 @@ class Editor extends Component
      */
     public $preview;
 
+
+    public $lang;
+
     /**
      * Create a new component instance.
      */
@@ -99,7 +102,8 @@ class Editor extends Component
         bool $required = false,
         bool $monaco = true,
         bool $jodit = true,
-        bool $preview = true
+        bool $preview = true,
+        string $lang = "html"
     ) {
         $this->content = $content;
         $this->name = $name;
@@ -108,6 +112,7 @@ class Editor extends Component
         $this->jodit = $jodit;
         $this->monaco = $monaco;
         $this->preview = $preview;
+        $this->lang = $lang;
         $this->uid = 'editor_' . uniqid();
     }
 
