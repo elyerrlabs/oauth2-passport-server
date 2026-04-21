@@ -17,9 +17,8 @@
 
         {{-- Sidebar --}}
         <aside id="sidebar"
-            class="fixed md:sticky top-0 left-0 z-40 flex flex-col h-screen transition-all duration-300 ease-in-out flex-shrink-0
-                   bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800"
-            style="width: 260px;">
+            class="sidebar fixed md:sticky top-0 left-0 z-40 flex flex-col h-screen transition-all duration-300 ease-in-out flex-shrink-0
+                   bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 w-[260px]">
 
             {{-- Logo --}}
             <div class="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-800">
@@ -27,7 +26,8 @@
                     <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 dark:bg-blue-500">
                         <i class="mdi {{ $logoIcon }} text-white text-lg"></i>
                     </div>
-                    <a href="{{ route('user.dashboard') }}" id="logoText" class="text-base font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+                    <a href="{{ route('user.dashboard') }}" id="logoText"
+                        class="text-base font-semibold text-gray-900 dark:text-white whitespace-nowrap">
                         {{ $appName }}
                     </a>
                 </div>
@@ -84,10 +84,9 @@
         <div id="sidebarOverlay"
             class="fixed inset-0 bg-black/50 dark:bg-black/70 z-30 hidden md:hidden backdrop-blur-sm"></div>
 
-        {{-- Main Content - Con padding-left dinámico para desktop --}}
+        {{-- Main Content --}}
         <main id="mainWrapper"
-            class="flex-1 flex flex-col min-w-0 overflow-hidden transition-all duration-300 ease-in-out"
-            style="margin-left: 260px;">
+            class="main-wrapper flex-1 flex flex-col min-w-0 overflow-hidden bg-gray-50 dark:bg-gray-950 transition-all duration-300 ease-in-out ml-[260px]">
 
             {{-- Header --}}
             <header
@@ -101,8 +100,18 @@
                             <i class="mdi mdi-menu text-xl text-gray-700 dark:text-gray-300"></i>
                         </button>
 
-                        <div class="hidden md:block"> 
-                        </div>
+                        @if ($subtitle)
+                            <div class="hidden md:block">
+                                <h1 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $appName }}
+                                </h1>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $subtitle }}</p>
+                            </div>
+                        @else
+                            <div class="hidden md:block">
+                                <h1 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $appName }}
+                                </h1>
+                            </div>
+                        @endif
                     </div>
 
                     {{-- Right --}}
@@ -131,7 +140,7 @@
             @endif
 
             {{-- Content Area - Único con scroll --}}
-            <div id="mainContent" class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            <div id="mainContent" class="flex-1 overflow-y-auto">
                 <div class="p-4 md:p-6">
                     {{ $slot }}
                 </div>
@@ -148,62 +157,65 @@
             }
 
             /* Sidebar colapsado */
-            #sidebar.collapsed {
+            .sidebar.collapsed {
                 width: 72px !important;
             }
 
-            #sidebar.collapsed .nav-text,
-            #sidebar.collapsed #logoText {
+            .sidebar.collapsed .nav-text,
+            .sidebar.collapsed #logoText {
                 display: none;
             }
 
-            #sidebar.collapsed nav a {
+            .sidebar.collapsed nav a {
                 justify-content: center;
                 padding: 0.75rem;
             }
 
-            #sidebar.collapsed nav a i {
+            .sidebar.collapsed nav a i {
                 margin: 0;
             }
 
-            /* Ajustar margen del main cuando sidebar está colapsado */
-            #sidebar.collapsed+#sidebarOverlay+#mainWrapper,
-            #sidebar.collapsed~#mainWrapper {
+            /* Main wrapper cuando sidebar está colapsado */
+            .sidebar.collapsed~.main-wrapper {
                 margin-left: 72px !important;
             }
 
             /* Mobile styles */
             @media (max-width: 768px) {
-                #sidebar {
+                .sidebar {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
                     transform: translateX(-100%);
                     width: 260px !important;
                     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
                 }
 
-                #sidebar.mobile-open {
+                .sidebar.mobile-open {
                     transform: translateX(0);
                 }
 
-                #mainWrapper {
+                .main-wrapper {
                     margin-left: 0 !important;
                     width: 100% !important;
                 }
 
-                #sidebar.collapsed.mobile-open {
+                .sidebar.collapsed.mobile-open {
                     width: 260px !important;
                 }
 
-                #sidebar.collapsed.mobile-open .nav-text,
-                #sidebar.collapsed.mobile-open #logoText {
+                .sidebar.collapsed.mobile-open .nav-text,
+                .sidebar.collapsed.mobile-open #logoText {
                     display: block;
                 }
 
-                #sidebar.collapsed.mobile-open nav a {
+                .sidebar.collapsed.mobile-open nav a {
                     justify-content: flex-start;
                     padding: 0.625rem 0.75rem;
                 }
 
-                #sidebar.collapsed.mobile-open nav a i {
+                .sidebar.collapsed.mobile-open nav a i {
                     margin-right: 0.75rem;
                 }
             }
@@ -239,121 +251,113 @@
             .dark nav::-webkit-scrollbar-thumb:hover {
                 background: #4b5563;
             }
+
+            /* Flex para ocupar todo el espacio */
+            .flex-1 {
+                flex: 1 1 0%;
+                min-height: 0;
+            }
         </style>
     @endpush
 
     @push('js')
         <script nonce="{{ $nonce }}">
-            (function() {
-                const STORAGE_KEY = 'sidebarCollapsed';
-                const MOBILE_BREAKPOINT = 768;
+            (function($) {
+                'use strict';
 
-                const sidebar = document.getElementById('sidebar');
-                const toggleIcon = document.getElementById('toggleIcon');
-                const toggleBtn = document.getElementById('toggleSidebar');
-                const overlay = document.getElementById('sidebarOverlay');
-                const mobileToggle = document.getElementById('mobileMenuToggle');
-                const mainWrapper = document.getElementById('mainWrapper');
+                var STORAGE_KEY = 'sidebarCollapsed';
+                var MOBILE_BREAKPOINT = 768;
+
+                var $sidebar = $('.sidebar');
+                var $toggleIcon = $('#toggleIcon');
+                var $toggleBtn = $('#toggleSidebar');
+                var $overlay = $('#sidebarOverlay');
+                var $mobileToggle = $('#mobileMenuToggle');
+                var $mainWrapper = $('.main-wrapper');
 
                 function setSidebarState(collapsed) {
-                    if (!sidebar) return;
+                    if (!$sidebar.length) return;
 
-                    sidebar.classList.toggle('collapsed', collapsed);
+                    $sidebar.toggleClass('collapsed', collapsed);
 
-                    if (toggleIcon) {
-                        toggleIcon.classList.toggle('mdi-chevron-left', !collapsed);
-                        toggleIcon.classList.toggle('mdi-chevron-right', collapsed);
-                    }
-
-                    // Ajustar margen del main wrapper
-                    if (mainWrapper && window.innerWidth >= MOBILE_BREAKPOINT) {
-                        mainWrapper.style.marginLeft = collapsed ? '72px' : '260px';
+                    if ($toggleIcon.length) {
+                        $toggleIcon.toggleClass('mdi-chevron-left', !collapsed);
+                        $toggleIcon.toggleClass('mdi-chevron-right', collapsed);
                     }
 
                     localStorage.setItem(STORAGE_KEY, collapsed);
                 }
 
                 function closeMobileMenu() {
-                    sidebar?.classList.remove('mobile-open');
-                    overlay?.classList.add('hidden');
-                    document.body.style.overflow = '';
+                    $sidebar.removeClass('mobile-open');
+                    $overlay.addClass('hidden');
+                    $('body').css('overflow', '');
                 }
 
                 function openMobileMenu() {
-                    sidebar?.classList.add('mobile-open');
-                    overlay?.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
+                    $sidebar.addClass('mobile-open');
+                    $overlay.removeClass('hidden');
+                    $('body').css('overflow', 'hidden');
+                }
+
+                function adjustLayout() {
+                    var isMobile = $(window).width() < MOBILE_BREAKPOINT;
+                    var isCollapsed = localStorage.getItem(STORAGE_KEY) === 'true';
+
+                    if (!isMobile) {
+                        closeMobileMenu();
+                        setSidebarState(isCollapsed);
+                    } else {
+                        $sidebar.removeClass('collapsed');
+                        if ($toggleIcon.length) {
+                            $toggleIcon.removeClass('mdi-chevron-right').addClass('mdi-chevron-left');
+                        }
+                    }
                 }
 
                 function init() {
-                    const isCollapsed = localStorage.getItem(STORAGE_KEY) === 'true';
-                    const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+                    adjustLayout();
 
-                    if (!isMobile && isCollapsed) {
-                        setSidebarState(true);
-                    } else if (!isMobile && mainWrapper) {
-                        mainWrapper.style.marginLeft = '260px';
-                    }
-
-                    toggleBtn?.addEventListener('click', (e) => {
+                    $toggleBtn.on('click', function(e) {
                         e.preventDefault();
-                        if (window.innerWidth >= MOBILE_BREAKPOINT) {
-                            setSidebarState(!sidebar.classList.contains('collapsed'));
+                        if ($(window).width() >= MOBILE_BREAKPOINT) {
+                            setSidebarState(!$sidebar.hasClass('collapsed'));
                         }
                     });
 
-                    mobileToggle?.addEventListener('click', (e) => {
+                    $mobileToggle.on('click', function(e) {
                         e.preventDefault();
-                        sidebar?.classList.contains('mobile-open') ? closeMobileMenu() : openMobileMenu();
+                        if ($sidebar.hasClass('mobile-open')) {
+                            closeMobileMenu();
+                        } else {
+                            openMobileMenu();
+                        }
                     });
 
-                    overlay?.addEventListener('click', closeMobileMenu);
+                    $overlay.on('click', closeMobileMenu);
 
-                    document.addEventListener('keydown', (e) => {
-                        if (e.key === 'Escape' && sidebar?.classList.contains('mobile-open')) {
+                    $(document).on('keydown', function(e) {
+                        if (e.key === 'Escape' && $sidebar.hasClass('mobile-open')) {
                             closeMobileMenu();
                         }
                     });
 
-                    // Cerrar menú móvil al hacer clic en un enlace
-                    sidebar?.querySelectorAll('a').forEach(link => {
-                        link.addEventListener('click', () => {
-                            if (window.innerWidth < MOBILE_BREAKPOINT) {
-                                closeMobileMenu();
-                            }
-                        });
+                    $sidebar.find('a').on('click', function() {
+                        if ($(window).width() < MOBILE_BREAKPOINT) {
+                            closeMobileMenu();
+                        }
                     });
 
-                    // Manejar resize
-                    let resizeTimer;
-                    window.addEventListener('resize', () => {
+                    var resizeTimer;
+                    $(window).on('resize', function() {
                         clearTimeout(resizeTimer);
-                        resizeTimer = setTimeout(() => {
-                            const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
-
-                            if (!isMobile) {
-                                closeMobileMenu();
-                                const collapsed = localStorage.getItem(STORAGE_KEY) === 'true';
-                                setSidebarState(collapsed);
-                                if (mainWrapper) {
-                                    mainWrapper.style.marginLeft = collapsed ? '72px' : '260px';
-                                }
-                            } else {
-                                // En móvil, resetear margen
-                                if (mainWrapper) {
-                                    mainWrapper.style.marginLeft = '0';
-                                }
-                                // Resetear estado colapsado en móvil
-                                sidebar?.classList.remove('collapsed');
-                            }
-                        }, 100);
+                        resizeTimer = setTimeout(adjustLayout, 100);
                     });
                 }
 
-                document.readyState === 'loading' ?
-                    document.addEventListener('DOMContentLoaded', init) :
-                    init();
-            })();
+                $(document).ready(init);
+
+            })(jQuery);
         </script>
     @endpush
 </x-layout>
