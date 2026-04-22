@@ -48,6 +48,12 @@ return [
                 "route" => "admin.pages.index",
                 "icon" => "mdi mdi-hammer-wrench",
                 "service" => "administrator:page"
+            ],
+            "langs" => [
+                "name" => "Lang",
+                "route" => "admin.langs.index",
+                "icon" => "mdi mdi-translate",
+                "service" => "administrator:lang"
             ]
         ],
 

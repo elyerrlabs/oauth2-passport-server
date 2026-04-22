@@ -25,10 +25,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Http\Controllers\Web\Admin\Page\LayoutController;
-use App\Http\Controllers\Web\Admin\Page\PageController;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
+use App\Http\Controllers\Web\Admin\File\LangController;
+use App\Http\Controllers\Web\Admin\Page\PageController;
+use App\Http\Controllers\Web\Admin\Page\LayoutController;
 use App\Http\Controllers\Web\Admin\OAuth\ClientAdminController;
 
 Route::middleware(['throttle:system:general:settings', 'password.confirm'])
@@ -59,5 +60,10 @@ Route::middleware(['throttle:system:general:pages'])
 
         Route::get('layouts', [LayoutController::class, 'form'])->name('layouts.schema');
         Route::put('layouts', [LayoutController::class, 'update'])->name('layouts.update');
+
+        Route::get('langs', [LangController::class, 'index'])->name('langs.index');
+        Route::post('langs', [LangController::class, 'store'])->name('langs.store');
+        Route::put('langs', [LangController::class, 'update'])->name('langs.update');
+        Route::delete('langs/{file}', [LangController::class, 'destroy'])->name('langs.delete');
     });
 
