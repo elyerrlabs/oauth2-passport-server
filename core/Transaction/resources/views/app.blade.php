@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @push('head')
+
+    @include('layouts.parts.title', [
+        'title' => config('app.name', 'OAuth2 Passport Server'),
+    ])
+
     @if (Route::has('transaction.plans.index') && Route::currentRouteName() == 'transaction.plans.index')
         {!! config('seo.plans') !!}
     @endif

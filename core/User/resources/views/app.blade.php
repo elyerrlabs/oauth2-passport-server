@@ -4,6 +4,12 @@
     <link nonce={{ $nonce }} href="{{ mix('css/app.css') }}" rel="stylesheet" />
 @endpush
 
+@push('head')
+    @include('layouts.parts.title', [
+        'title' => config('app.name', 'OAuth2 Passport Server'),
+    ])
+@endpush
+
 @section('content')
     @inertia
 @endsection
