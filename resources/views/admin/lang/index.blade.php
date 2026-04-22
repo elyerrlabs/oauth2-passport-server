@@ -352,78 +352,81 @@
         const STORE_URL = @json(route('admin.langs.store'));
         const DELETE_URL = @json(route('admin.langs.delete', ['file' => '__FILE__']));
 
-        $(function() {
-            let currentFile = INITIAL_FILE;
-            let originalContent = $('textarea[name="content"]').val() || '';
-            let isDirty = false;
-            let fileCount = 0;
+        document.addEventListener("DOMContentLoaded", function() {
 
-            const $createModal = $('#createLangModal');
-            const $deleteModal = $('#deleteModal');
-            const $langNameInput = $('#langNameInput');
-            const $unsavedIndicator = $('#unsavedIndicator');
-            const $filePreview = $('#filePreview');
-            const $deleteFileName = $('#deleteFileName');
-            const $deleteFileInput = $('#deleteFileInput');
-            const $deleteForm = $('#deleteForm');
+            $(function() {
+                let currentFile = INITIAL_FILE;
+                let originalContent = $('textarea[name="content"]').val() || '';
+                let isDirty = false;
+                let fileCount = 0;
 
-            function escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
+                const $createModal = $('#createLangModal');
+                const $deleteModal = $('#deleteModal');
+                const $langNameInput = $('#langNameInput');
+                const $unsavedIndicator = $('#unsavedIndicator');
+                const $filePreview = $('#filePreview');
+                const $deleteFileName = $('#deleteFileName');
+                const $deleteFileInput = $('#deleteFileInput');
+                const $deleteForm = $('#deleteForm');
 
-            function countFiles(items) {
-                let count = 0;
-                items.forEach(item => {
-                    if (item.type === 'folder' && item.children) {
-                        count += countFiles(item.children);
-                    } else if (item.type !== 'folder') {
-                        count++;
+                function escapeHtml(text) {
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+                }
+
+                function countFiles(items) {
+                    let count = 0;
+                    items.forEach(item => {
+                        if (item.type === 'folder' && item.children) {
+                            count += countFiles(item.children);
+                        } else if (item.type !== 'folder') {
+                            count++;
+                        }
+                    });
+                    return count;
+                }
+
+                function loadTree() {
+                    let html = '';
+                    TREE.forEach(item => {
+                        html += renderItem(item);
+                    });
+                    $('#langTree').html(html);
+
+                    fileCount = countFiles(TREE);
+                    $('#fileCount').text(fileCount);
+
+                    if (INITIAL_FILE) {
+                        setTimeout(() => {
+                            const escapedFile = INITIAL_FILE.replace(/\./g, '\\.').replace(/\//g,
+                                '\\/');
+                            const $file = $(`.file-node[data-file="${escapedFile}"]`);
+                            if ($file.length) {
+                                $file.addClass('file-active');
+                                $file[0].scrollIntoView({
+                                    block: 'nearest',
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }, 100);
                     }
-                });
-                return count;
-            }
+                }
 
-            function loadTree() {
-                let html = '';
-                TREE.forEach(item => {
-                    html += renderItem(item);
-                });
-                $('#langTree').html(html);
+                function renderItem(item, level = 0, parentPath = '') {
+                    let padding = level * 20;
+                    let escapedLabel = escapeHtml(item.label);
+                    let currentPath = parentPath ? parentPath + '/' + item.label : item.label;
 
-                fileCount = countFiles(TREE);
-                $('#fileCount').text(fileCount);
-
-                if (INITIAL_FILE) {
-                    setTimeout(() => {
-                        const escapedFile = INITIAL_FILE.replace(/\./g, '\\.').replace(/\//g, '\\/');
-                        const $file = $(`.file-node[data-file="${escapedFile}"]`);
-                        if ($file.length) {
-                            $file.addClass('file-active');
-                            $file[0].scrollIntoView({
-                                block: 'nearest',
-                                behavior: 'smooth'
+                    if (item.type === 'folder') {
+                        let children = '';
+                        if (item.children) {
+                            item.children.forEach(child => {
+                                children += renderItem(child, level + 1, currentPath);
                             });
                         }
-                    }, 100);
-                }
-            }
 
-            function renderItem(item, level = 0, parentPath = '') {
-                let padding = level * 20;
-                let escapedLabel = escapeHtml(item.label);
-                let currentPath = parentPath ? parentPath + '/' + item.label : item.label;
-
-                if (item.type === 'folder') {
-                    let children = '';
-                    if (item.children) {
-                        item.children.forEach(child => {
-                            children += renderItem(child, level + 1, currentPath);
-                        });
-                    }
-
-                    return `
+                        return `
                         <div class="folder-container mb-0.5">
                             <div class="folder-item flex justify-around cursor-pointer" style="padding-left:${padding}px" data-expanded="true" data-path="${currentPath}">
                                 <svg class="w-4 h-4 mr-2 text-yellow-500 dark:text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -437,29 +440,29 @@
                             </div>
                         </div>
                     `;
-                }
+                    }
 
-                let icon = '';
-                let iconColor = '';
-                // Determinar si es un archivo .json
-                const isJsonFile = escapedLabel.endsWith('.json');
+                    let icon = '';
+                    let iconColor = '';
+                    // Determinar si es un archivo .json
+                    const isJsonFile = escapedLabel.endsWith('.json');
 
-                if (escapedLabel.endsWith('.php')) {
-                    icon =
-                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />';
-                    iconColor = 'text-purple-500 dark:text-purple-400';
-                } else if (isJsonFile) {
-                    icon =
-                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />';
-                    iconColor = 'text-green-500 dark:text-green-400';
-                } else {
-                    icon =
-                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
-                    iconColor = 'text-blue-500 dark:text-blue-400';
-                }
+                    if (escapedLabel.endsWith('.php')) {
+                        icon =
+                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />';
+                        iconColor = 'text-purple-500 dark:text-purple-400';
+                    } else if (isJsonFile) {
+                        icon =
+                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />';
+                        iconColor = 'text-green-500 dark:text-green-400';
+                    } else {
+                        icon =
+                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+                        iconColor = 'text-blue-500 dark:text-blue-400';
+                    }
 
-                // Solo agregar botón de eliminar si es un archivo .json
-                const deleteButton = isJsonFile ? `
+                    // Solo agregar botón de eliminar si es un archivo .json
+                    const deleteButton = isJsonFile ? `
                     <button class="delete-file-btn delete-btn-json p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 flex-shrink-0" data-file="${currentPath}" title="Delete JSON file">
                         <svg class="w-3.5 h-3.5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -467,7 +470,7 @@
                     </button>
                 ` : '';
 
-                return `
+                    return `
                     <div class="file-item flex justify-between group file-node cursor-pointer mb-0.5" data-file="${currentPath}" style="padding-left:${padding}px">
                         <svg class="w-4 h-4 mr-2 ${iconColor} flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             ${icon}
@@ -476,171 +479,174 @@
                         ${deleteButton}
                     </div>
                 `;
-            }
-
-            function checkDirty() {
-                const currentContent = $('textarea[name="content"]').val() || '';
-                isDirty = currentContent !== originalContent;
-
-                if (isDirty) {
-                    $unsavedIndicator.removeClass('hidden');
-                } else {
-                    $unsavedIndicator.addClass('hidden');
-                }
-            }
-
-            $(document).on('input', 'textarea[name="content"]', checkDirty);
-
-            $(document).on('click', '.file-node', function(e) {
-                if ($(e.target).closest('.delete-file-btn').length) {
-                    return;
                 }
 
-                if (isDirty) {
-                    if (!confirm('You have unsaved changes. Are you sure you want to leave?')) {
+                function checkDirty() {
+                    const currentContent = $('textarea[name="content"]').val() || '';
+                    isDirty = currentContent !== originalContent;
+
+                    if (isDirty) {
+                        $unsavedIndicator.removeClass('hidden');
+                    } else {
+                        $unsavedIndicator.addClass('hidden');
+                    }
+                }
+
+                $(document).on('input', 'textarea[name="content"]', checkDirty);
+
+                $(document).on('click', '.file-node', function(e) {
+                    if ($(e.target).closest('.delete-file-btn').length) {
                         return;
                     }
-                }
 
-                $('.file-node').removeClass('file-active');
-                $(this).addClass('file-active');
-
-                const fileName = $(this).data('file');
-                window.location.href = INDEX_URL + '?file=' + encodeURIComponent(fileName);
-            });
-
-            // Eliminar archivo .json - Abrir modal
-            $(document).on('click', '.delete-file-btn', function(e) {
-                e.stopPropagation();
-                const fileName = $(this).data('file');
-                openDeleteModal(fileName);
-            });
-
-            $(document).on('click', '.folder-item', function() {
-                const $container = $(this).closest('.folder-container');
-                const $children = $container.find('.folder-children');
-                const $icon = $(this).find('svg');
-
-                $children.slideToggle(150);
-                $icon.css('transform', $children.is(':visible') ? 'rotate(0deg)' : 'rotate(-90deg)');
-                $(this).attr('data-expanded', $children.is(':visible'));
-            });
-
-            $('#saveFile').on('click', function() {
-                $('#editorForm').submit();
-            });
-
-            // Delete from toolbar - solo si existe el botón
-            $('#deleteFileBtn').on('click', function() {
-                if (currentFile) {
-                    openDeleteModal(currentFile);
-                }
-            });
-
-            function openDeleteModal(fileName) {
-                // Extraer solo el nombre del archivo sin la extensión .json para el controlador
-                const langName = fileName.replace(/\.json$/, '');
-                $deleteFileName.text(fileName);
-                $deleteFileInput.val(langName);
-                $deleteForm.attr('action', DELETE_URL.replace('__FILE__', encodeURIComponent(langName)));
-                $deleteModal.removeClass('hidden');
-            }
-
-            // Cerrar modal de eliminar
-            $('#cancelDeleteBtn, #deleteModalOverlay').on('click', function() {
-                $deleteModal.addClass('hidden');
-            });
-
-            // Actualizar preview del nombre del archivo
-            $langNameInput.on('input', function() {
-                const name = $(this).val().trim();
-                if (name) {
-                    $filePreview.text(name + '.json');
-                } else {
-                    $filePreview.text('—.json');
-                }
-            });
-
-            // Modal de crear - Abrir
-            $('#createLangBtn').on('click', function() {
-                $createModal.removeClass('hidden');
-                $langNameInput.val('').focus();
-                $filePreview.text('—.json');
-            });
-
-            // Modal de crear - Cerrar
-            $('#cancelCreateLang, #modalOverlay').on('click', function() {
-                $createModal.addClass('hidden');
-            });
-
-            // Modal de crear - ESC key
-            $(document).on('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    if (!$createModal.hasClass('hidden')) {
-                        $createModal.addClass('hidden');
-                    }
-                    if (!$deleteModal.hasClass('hidden')) {
-                        $deleteModal.addClass('hidden');
-                    }
-                }
-            });
-
-            // Modal de crear - Confirmar
-            $('#confirmCreateLang').on('click', function() {
-                let name = $langNameInput.val().trim().toLowerCase();
-
-                if (!name) {
-                    alert('Please enter a language name');
-                    return;
-                }
-
-                if (!/^[a-z]{2}(-[a-z]{2})?$/.test(name)) {
-                    alert('Invalid format. Use "en" or "pt-BR"');
-                    return;
-                }
-
-                const $btn = $(this);
-                const originalHtml = $btn.html();
-                $btn.html(
-                    '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Creating...'
-                );
-                $btn.prop('disabled', true);
-
-                $.ajax({
-                    url: STORE_URL,
-                    method: 'POST',
-                    data: {
-                        name: name,
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        $createModal.addClass('hidden');
-                        window.location.reload();
-                    },
-                    error: function(xhr) {
-                        let error = 'Failed to create language';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            error = xhr.responseJSON.message;
-                        } else if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            const errors = xhr.responseJSON.errors;
-                            error = Object.values(errors).flat().join('\n');
+                    if (isDirty) {
+                        if (!confirm('You have unsaved changes. Are you sure you want to leave?')) {
+                            return;
                         }
-                        alert(error);
-                        $btn.html(originalHtml);
-                        $btn.prop('disabled', false);
+                    }
+
+                    $('.file-node').removeClass('file-active');
+                    $(this).addClass('file-active');
+
+                    const fileName = $(this).data('file');
+                    window.location.href = INDEX_URL + '?file=' + encodeURIComponent(fileName);
+                });
+
+                // Eliminar archivo .json - Abrir modal
+                $(document).on('click', '.delete-file-btn', function(e) {
+                    e.stopPropagation();
+                    const fileName = $(this).data('file');
+                    openDeleteModal(fileName);
+                });
+
+                $(document).on('click', '.folder-item', function() {
+                    const $container = $(this).closest('.folder-container');
+                    const $children = $container.find('.folder-children');
+                    const $icon = $(this).find('svg');
+
+                    $children.slideToggle(150);
+                    $icon.css('transform', $children.is(':visible') ? 'rotate(0deg)' :
+                        'rotate(-90deg)');
+                    $(this).attr('data-expanded', $children.is(':visible'));
+                });
+
+                $('#saveFile').on('click', function() {
+                    $('#editorForm').submit();
+                });
+
+                // Delete from toolbar - solo si existe el botón
+                $('#deleteFileBtn').on('click', function() {
+                    if (currentFile) {
+                        openDeleteModal(currentFile);
                     }
                 });
-            });
 
-            $('#editorForm').on('submit', function() {
-                setTimeout(() => {
-                    originalContent = $('textarea[name="content"]').val() || '';
-                    isDirty = false;
-                    $unsavedIndicator.addClass('hidden');
-                }, 100);
-            });
+                function openDeleteModal(fileName) {
+                    // Extraer solo el nombre del archivo sin la extensión .json para el controlador
+                    const langName = fileName.replace(/\.json$/, '');
+                    $deleteFileName.text(fileName);
+                    $deleteFileInput.val(langName);
+                    $deleteForm.attr('action', DELETE_URL.replace('__FILE__', encodeURIComponent(
+                        langName)));
+                    $deleteModal.removeClass('hidden');
+                }
 
-            loadTree();
+                // Cerrar modal de eliminar
+                $('#cancelDeleteBtn, #deleteModalOverlay').on('click', function() {
+                    $deleteModal.addClass('hidden');
+                });
+
+                // Actualizar preview del nombre del archivo
+                $langNameInput.on('input', function() {
+                    const name = $(this).val().trim();
+                    if (name) {
+                        $filePreview.text(name + '.json');
+                    } else {
+                        $filePreview.text('—.json');
+                    }
+                });
+
+                // Modal de crear - Abrir
+                $('#createLangBtn').on('click', function() {
+                    $createModal.removeClass('hidden');
+                    $langNameInput.val('').focus();
+                    $filePreview.text('—.json');
+                });
+
+                // Modal de crear - Cerrar
+                $('#cancelCreateLang, #modalOverlay').on('click', function() {
+                    $createModal.addClass('hidden');
+                });
+
+                // Modal de crear - ESC key
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        if (!$createModal.hasClass('hidden')) {
+                            $createModal.addClass('hidden');
+                        }
+                        if (!$deleteModal.hasClass('hidden')) {
+                            $deleteModal.addClass('hidden');
+                        }
+                    }
+                });
+
+                // Modal de crear - Confirmar
+                $('#confirmCreateLang').on('click', function() {
+                    let name = $langNameInput.val().trim().toLowerCase();
+
+                    if (!name) {
+                        alert('Please enter a language name');
+                        return;
+                    }
+
+                    if (!/^[a-z]{2}(-[a-z]{2})?$/.test(name)) {
+                        alert('Invalid format. Use "en" or "pt-BR"');
+                        return;
+                    }
+
+                    const $btn = $(this);
+                    const originalHtml = $btn.html();
+                    $btn.html(
+                        '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Creating...'
+                    );
+                    $btn.prop('disabled', true);
+
+                    $.ajax({
+                        url: STORE_URL,
+                        method: 'POST',
+                        data: {
+                            name: name,
+                            _token: $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            $createModal.addClass('hidden');
+                            window.location.reload();
+                        },
+                        error: function(xhr) {
+                            let error = 'Failed to create language';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                error = xhr.responseJSON.message;
+                            } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                const errors = xhr.responseJSON.errors;
+                                error = Object.values(errors).flat().join('\n');
+                            }
+                            alert(error);
+                            $btn.html(originalHtml);
+                            $btn.prop('disabled', false);
+                        }
+                    });
+                });
+
+                $('#editorForm').on('submit', function() {
+                    setTimeout(() => {
+                        originalContent = $('textarea[name="content"]').val() || '';
+                        isDirty = false;
+                        $unsavedIndicator.addClass('hidden');
+                    }, 100);
+                });
+
+                loadTree();
+            });
         });
     </script>
 @endpush
