@@ -52,6 +52,9 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - fix jquery support for robot blade component
 - Updated composer dependencies
 - Updated horizon configuration file
+- Lang on editor blade component fixed
+- File manager support for lang directory added
+- Add new volume for lang support on docker compose
 
 ---
 
