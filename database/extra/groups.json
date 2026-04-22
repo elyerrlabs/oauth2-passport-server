@@ -22,6 +22,30 @@
         ]
       },
       {
+        "name": "pages",
+        "description": "Manage page creation",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "lang",
+        "description": "Manages lang creation",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
         "name": "horizon",
         "description": "Horizon allows you to easily monitor key metrics of your queue system such as job throughput, runtime, and job failures.",
         "actions": [
