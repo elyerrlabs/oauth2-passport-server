@@ -37,6 +37,7 @@ final class LangController extends WebController
     public function __construct(protected LangService $langService)
     {
         parent::__construct();
+        $this->middleware('userCanAny:administrator:lang:full');
     }
 
     /**
@@ -104,7 +105,7 @@ final class LangController extends WebController
     public function destroy(string $lang)
     {
         $this->langService->delete($lang);
-        
+
         $file = "en.json";
         return redirect()->route('admin.langs.index', compact('file'))->with("status", "Lang deleted successfully");
     }
