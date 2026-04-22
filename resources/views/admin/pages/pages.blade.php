@@ -147,13 +147,10 @@
                                     <!-- Status -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex flex-col gap-1">
-                                            @if ($page->is_published && $page->published_at)
+                                            @if ($page->is_published)
                                                 <span
                                                     class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                                     <i class="mdi mdi-check-circle mr-1 text-xs"></i> Published
-                                                </span>
-                                                <span class="text-xs text-gray-500 dark:text-gray-400">
-                                                    {{ $page->published_at->format('M d, Y') }}
                                                 </span>
                                             @elseif($page->is_draft)
                                                 <span
