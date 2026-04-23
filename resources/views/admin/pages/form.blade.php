@@ -93,159 +93,162 @@
 
 @push('js')
     <script nonce="{{ $nonce }}">
-        (function() {
-            'use strict';
+        document.addEventListener('DOMContentLoaded', () => {
+            (function() {
+                'use strict';
 
-            // Elementos del DOM
-            const modal = document.getElementById('createPageModal');
-            const backdrop = document.getElementById('modalBackdrop');
-            const closeBtn = document.getElementById('closeModalBtn');
-            const cancelBtn = document.getElementById('cancelModalBtn');
-            const openBtn = document.getElementById('openCreateModalBtn');
-            const form = document.getElementById('createPageForm');
+                // Elementos del DOM
+                const modal = document.getElementById('createPageModal');
+                const backdrop = document.getElementById('modalBackdrop');
+                const closeBtn = document.getElementById('closeModalBtn');
+                const cancelBtn = document.getElementById('cancelModalBtn');
+                const openBtn = document.getElementById('openCreateModalBtn');
+                const form = document.getElementById('createPageForm');
 
-            // Función para cerrar el modal
-            window.closeCreatePageModal = function() {
-                if (modal) {
-                    modal.classList.add('hidden');
+                // Función para cerrar el modal
+                window.closeCreatePageModal = function() {
+                    if (modal) {
+                        modal.classList.add('hidden');
+                    }
+                };
+
+                // Función para abrir el modal
+                window.openCreatePageModal = function() {
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                    }
+                };
+
+                // Abrir modal con el botón principal
+                if (openBtn) {
+                    openBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        window.openCreatePageModal();
+                    });
                 }
-            };
 
-            // Función para abrir el modal
-            window.openCreatePageModal = function() {
-                if (modal) {
-                    modal.classList.remove('hidden');
+                // Cerrar con el botón X
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', closeCreatePageModal);
                 }
-            };
 
-            // Abrir modal con el botón principal
-            if (openBtn) {
-                openBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    window.openCreatePageModal();
-                });
-            }
-
-            // Cerrar con el botón X
-            if (closeBtn) {
-                closeBtn.addEventListener('click', closeCreatePageModal);
-            }
-
-            // Cerrar con el botón Cancelar
-            if (cancelBtn) {
-                cancelBtn.addEventListener('click', closeCreatePageModal);
-            }
-
-            // Cerrar con el backdrop
-            if (backdrop) {
-                backdrop.addEventListener('click', closeCreatePageModal);
-            }
-
-            // Cerrar con la tecla ESC
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
-                    closeCreatePageModal();
+                // Cerrar con el botón Cancelar
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', closeCreatePageModal);
                 }
-            });
 
-            // Validación del formulario antes de enviar
-            if (form) {
-                form.addEventListener('submit', function(event) {
-                    const pageName = document.getElementById('page_name');
-                    const pageSlug = document.getElementById('page_slug');
-                    let hasError = false;
+                // Cerrar con el backdrop
+                if (backdrop) {
+                    backdrop.addEventListener('click', closeCreatePageModal);
+                }
 
-                    // Remover mensajes de error existentes
-                    const existingErrors = form.querySelectorAll('.dynamic-error');
-                    existingErrors.forEach(error => error.remove());
-
-                    // Validar nombre
-                    if (pageName && !pageName.value.trim()) {
-                        showError(pageName, '{{ __('The page name is required.') }}');
-                        hasError = true;
-                    }
-
-                    // Validar slug (opcional pero recomendado)
-                    if (pageSlug && pageSlug.value.trim() && !isValidSlug(pageSlug.value.trim())) {
-                        showError(pageSlug,
-                            '{{ __('The slug must contain only letters, numbers, and hyphens.') }}');
-                        hasError = true;
-                    }
-
-                    if (hasError) {
-                        event.preventDefault();
+                // Cerrar con la tecla ESC
+                document.addEventListener('keydown', function(event) {
+                    if (event.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+                        closeCreatePageModal();
                     }
                 });
-            }
 
-            // Función para mostrar errores dinámicamente
-            function showError(inputElement, message) {
-                if (!inputElement) return;
+                // Validación del formulario antes de enviar
+                if (form) {
+                    form.addEventListener('submit', function(event) {
+                        const pageName = document.getElementById('page_name');
+                        const pageSlug = document.getElementById('page_slug');
+                        let hasError = false;
 
-                // Crear elemento de error
-                const errorDiv = document.createElement('p');
-                errorDiv.className = 'mt-2 text-sm text-red-600 dark:text-red-400 dynamic-error';
-                errorDiv.textContent = message;
+                        // Remover mensajes de error existentes
+                        const existingErrors = form.querySelectorAll('.dynamic-error');
+                        existingErrors.forEach(error => error.remove());
 
-                // Insertar después del input
-                inputElement.parentNode.appendChild(errorDiv);
+                        // Validar nombre
+                        if (pageName && !pageName.value.trim()) {
+                            showError(pageName, '{{ __('The page name is required.') }}');
+                            hasError = true;
+                        }
 
-                // Agregar clase de error al input
-                inputElement.classList.add('border-red-500', 'dark:border-red-500');
+                        // Validar slug (opcional pero recomendado)
+                        if (pageSlug && pageSlug.value.trim() && !isValidSlug(pageSlug.value.trim())) {
+                            showError(pageSlug,
+                                '{{ __('The slug must contain only letters, numbers, and hyphens.') }}'
+                                );
+                            hasError = true;
+                        }
 
-                // Remover error al empezar a escribir
-                inputElement.addEventListener('input', function() {
-                    errorDiv.remove();
-                    inputElement.classList.remove('border-red-500', 'dark:border-red-500');
-                }, {
-                    once: true
-                });
-            }
+                        if (hasError) {
+                            event.preventDefault();
+                        }
+                    });
+                }
 
-            // Función para validar slug
-            function isValidSlug(slug) {
-                const slugRegex = /^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/;
-                return slugRegex.test(slug);
-            }
+                // Función para mostrar errores dinámicamente
+                function showError(inputElement, message) {
+                    if (!inputElement) return;
 
-            // Prevenir propagación de clics en el modal content
-            const modalContent = modal ? modal.querySelector('.relative') : null;
-            if (modalContent) {
-                modalContent.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                });
-            }
+                    // Crear elemento de error
+                    const errorDiv = document.createElement('p');
+                    errorDiv.className = 'mt-2 text-sm text-red-600 dark:text-red-400 dynamic-error';
+                    errorDiv.textContent = message;
 
-            // Auto-generar slug desde el nombre (opcional)
-            const pageNameInput = document.getElementById('page_name');
-            const pageSlugInput = document.getElementById('page_slug');
+                    // Insertar después del input
+                    inputElement.parentNode.appendChild(errorDiv);
 
-            if (pageNameInput && pageSlugInput) {
-                // Generar slug automáticamente cuando el usuario escribe el nombre
-                // y el slug está vacío o fue generado automáticamente
-                let autoGenerated = true;
+                    // Agregar clase de error al input
+                    inputElement.classList.add('border-red-500', 'dark:border-red-500');
 
-                pageSlugInput.addEventListener('input', function() {
-                    autoGenerated = false;
-                });
+                    // Remover error al empezar a escribir
+                    inputElement.addEventListener('input', function() {
+                        errorDiv.remove();
+                        inputElement.classList.remove('border-red-500', 'dark:border-red-500');
+                    }, {
+                        once: true
+                    });
+                }
 
-                pageNameInput.addEventListener('input', function() {
-                    if (autoGenerated && pageNameInput.value.trim()) {
-                        const generatedSlug = generateSlug(pageNameInput.value.trim());
-                        pageSlugInput.value = generatedSlug;
-                    }
-                });
-            }
+                // Función para validar slug
+                function isValidSlug(slug) {
+                    const slugRegex = /^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/;
+                    return slugRegex.test(slug);
+                }
 
-            // Función para generar slug a partir de texto
-            function generateSlug(text) {
-                return text
-                    .toLowerCase()
-                    .replace(/[^\w\s-]/g, '') // Eliminar caracteres especiales
-                    .replace(/\s+/g, '-') // Reemplazar espacios con guiones
-                    .replace(/--+/g, '-') // Reemplazar múltiples guiones
-                    .trim();
-            }
-        })();
+                // Prevenir propagación de clics en el modal content
+                const modalContent = modal ? modal.querySelector('.relative') : null;
+                if (modalContent) {
+                    modalContent.addEventListener('click', function(event) {
+                        event.stopPropagation();
+                    });
+                }
+
+                // Auto-generar slug desde el nombre (opcional)
+                const pageNameInput = document.getElementById('page_name');
+                const pageSlugInput = document.getElementById('page_slug');
+
+                if (pageNameInput && pageSlugInput) {
+                    // Generar slug automáticamente cuando el usuario escribe el nombre
+                    // y el slug está vacío o fue generado automáticamente
+                    let autoGenerated = true;
+
+                    pageSlugInput.addEventListener('input', function() {
+                        autoGenerated = false;
+                    });
+
+                    pageNameInput.addEventListener('input', function() {
+                        if (autoGenerated && pageNameInput.value.trim()) {
+                            const generatedSlug = generateSlug(pageNameInput.value.trim());
+                            pageSlugInput.value = generatedSlug;
+                        }
+                    });
+                }
+
+                // Función para generar slug a partir de texto
+                function generateSlug(text) {
+                    return text
+                        .toLowerCase()
+                        .replace(/[^\w\s-]/g, '') // Eliminar caracteres especiales
+                        .replace(/\s+/g, '-') // Reemplazar espacios con guiones
+                        .replace(/--+/g, '-') // Reemplazar múltiples guiones
+                        .trim();
+                }
+            })();
+        });
     </script>
 @endpush

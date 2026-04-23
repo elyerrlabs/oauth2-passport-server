@@ -19,7 +19,7 @@
         @include('layouts.parts.title', ['title' => __('Layout manager')])
     @endpush
 
-    <v-slot:main> 
+    <v-slot:main>
 
         <section
             class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -32,29 +32,40 @@
             </div>
 
             <!-- Layout selector -->
-            <form method="GET" action="{{ route('admin.layouts.schema') }}" id="layoutForm">
-                <div class="px-6 pt-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {{ __('Layout') }}
-                    </label>
+            <div class="px-6 pt-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    {{ __('Layout') }}
+                </label>
 
-                    <select name="layout" id="layoutSelect"
-                        class="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-blue-900/50">
+                <div class="flex flex-wrap gap-2">
+                    <a href="{{ route('admin.layouts.schema', ['layout' => 'footer']) }}"
+                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
+                        {{ request('layout', 'footer') === 'footer'
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
+                        <i class="mdi mdi-page-layout-footer text-lg"></i>
+                        {{ __('Footer') }}
+                    </a>
 
-                        <option value="footer" {{ request('layout', 'footer') === 'footer' ? 'selected' : '' }}>
-                            {{ __('Footer') }}
-                        </option>
+                    <a href="{{ route('admin.layouts.schema', ['layout' => 'header']) }}"
+                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
+                        {{ request('layout') === 'header'
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
+                        <i class="mdi mdi-page-layout-header text-lg"></i>
+                        {{ __('Header') }}
+                    </a>
 
-                        <option value="header" {{ request('layout') === 'header' ? 'selected' : '' }}>
-                            {{ __('Header') }}
-                        </option>
-
-                        <option value="schema" {{ request('layout') === 'schema' ? 'selected' : '' }}>
-                            {{ __('Schema') }}
-                        </option>
-                    </select>
+                    <a href="{{ route('admin.layouts.schema', ['layout' => 'schema']) }}"
+                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
+                        {{ request('layout') === 'schema'
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
+                        <i class="mdi mdi-code-braces text-lg"></i>
+                        {{ __('Schema') }}
+                    </a>
                 </div>
-            </form>
+            </div>
 
             <!-- Editor form -->
             <form method="POST" action="{{ route('admin.layouts.update') }}" class="space-y-6">
@@ -80,18 +91,4 @@
         </section>
     </v-slot:main>
 
-    @push('js')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const select = document.getElementById('layoutSelect');
-                const form = document.getElementById('layoutForm');
-
-                if (select && form) {
-                    select.addEventListener('change', function() {
-                        form.submit();
-                    });
-                }
-            });
-        </script>
-    @endpush
 </x-admin-layout>
