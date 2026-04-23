@@ -187,246 +187,314 @@
                 <form id="editorForm" method="POST" action="{{ route('admin.langs.update') }}">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="file" id="currentFileInput" value="{{ $file_name ?? '' }}">
-                    <x-editor label="{{ __('Keys') }}" name="content" :content="$file_content" :jodit="false"
+                    <input type="hidden" name="file" id="currentFileInput" value="{{ $file_name ?? old('file') }}">
+
+                    {{-- Error Alert --}}
+                    @if ($errors->any())
+                        <div
+                            class="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/30">
+                            <div class="flex items-start gap-3">
+                                <svg class="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-semibold text-red-800 dark:text-red-300">
+                                        {{ __('Validation Error') }}
+                                    </h4>
+                                    <ul class="mt-1 text-sm text-red-700 dark:text-red-400 list-disc list-inside">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                <button type="button" onclick="this.parentElement.parentElement.remove()"
+                                    class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 flex-shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Success Message --}}
+                    @if (session('status'))
+                        <div
+                            class="mb-4 rounded-xl border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/30">
+                            <div class="flex items-start gap-3">
+                                <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-green-800 dark:text-green-300">
+                                        {{ session('status') }}</p>
+                                </div>
+                                <button type="button" onclick="this.parentElement.parentElement.remove()"
+                                    class="text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 flex-shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+
+                    <x-editor label="{{ __('Keys') }}" name="content" :content="old('content', $file_content ?? '')" :jodit="false"
                         :preview="false" :lang="$lang ?? 'json'" />
                 </form>
             </div>
         </div>
-    </div>
 
-    {{-- Create Language Modal --}}
-    <div id="createLangModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-modal="true" role="dialog">
-        <div class="flex min-h-screen items-center justify-center px-4 py-6">
-            <div class="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-opacity" id="modalOverlay">
-            </div>
 
-            <div
-                class="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
-                {{-- Modal Header --}}
-                <div class="p-5 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        Create New Language
-                    </h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Add a new language locale to your application
-                    </p>
+        {{-- Create Language Modal --}}
+        <div id="createLangModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-modal="true" role="dialog">
+            <div class="flex min-h-screen items-center justify-center px-4 py-6">
+                <div class="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-opacity"
+                    id="modalOverlay">
                 </div>
 
-                {{-- Modal Body --}}
-                <div class="p-5 space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Language Name <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="langNameInput" placeholder="e.g., es, fr, de, pt-BR"
-                            class="w-full px-3 py-2.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
-                            Use two-letter ISO code (e.g., <code
-                                class="bg-gray-100 dark:bg-gray-900 px-1.5 py-0.5 rounded">en</code>, <code
-                                class="bg-gray-100 dark:bg-gray-900 px-1.5 py-0.5 rounded">es</code>) or with region (<code
-                                class="bg-gray-100 dark:bg-gray-900 px-1.5 py-0.5 rounded">pt-BR</code>, <code
-                                class="bg-gray-100 dark:bg-gray-900 px-1.5 py-0.5 rounded">en-US</code>)
+                <div
+                    class="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
+                    {{-- Modal Header --}}
+                    <div class="p-5 border-b border-gray-200 dark:border-gray-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
+                            </svg>
+                            Create New Language
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Add a new language locale to your
+                            application
                         </p>
                     </div>
 
-                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-                        <p class="text-xs text-blue-800 dark:text-blue-300">
-                            <span class="font-medium">Examples:</span>
-                            <span class="inline-flex flex-wrap gap-1 mt-1">
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">en</span>
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">es</span>
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">fr</span>
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">de</span>
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">it</span>
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">pt</span>
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">pt-BR</span>
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">zh</span>
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">ja</span>
-                                <span
-                                    class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">ru</span>
-                            </span>
-                        </p>
+                    {{-- Modal Body --}}
+                    <div class="p-5 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Language Name <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="langNameInput" placeholder="e.g., es, fr, de, pt-BR"
+                                class="w-full px-3 py-2.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
+                                Use two-letter ISO code (e.g., <code
+                                    class="bg-gray-100 dark:bg-gray-900 px-1.5 py-0.5 rounded">en</code>, <code
+                                    class="bg-gray-100 dark:bg-gray-900 px-1.5 py-0.5 rounded">es</code>) or with region
+                                (<code class="bg-gray-100 dark:bg-gray-900 px-1.5 py-0.5 rounded">pt-BR</code>, <code
+                                    class="bg-gray-100 dark:bg-gray-900 px-1.5 py-0.5 rounded">en-US</code>)
+                            </p>
+                        </div>
+
+                        <div
+                            class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                            <p class="text-xs text-blue-800 dark:text-blue-300">
+                                <span class="font-medium">Examples:</span>
+                                <span class="inline-flex flex-wrap gap-1 mt-1">
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">en</span>
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">es</span>
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">fr</span>
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">de</span>
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">it</span>
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">pt</span>
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">pt-BR</span>
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">zh</span>
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">ja</span>
+                                    <span
+                                        class="bg-white dark:bg-gray-800 px-2 py-0.5 rounded text-blue-700 dark:text-blue-300">ru</span>
+                                </span>
+                            </p>
+                        </div>
+
+                        {{-- Preview --}}
+                        <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-3">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">File will be created as:</p>
+                            <code class="text-sm text-gray-900 dark:text-gray-200" id="filePreview">—.json</code>
+                        </div>
                     </div>
 
-                    {{-- Preview --}}
-                    <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-3">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">File will be created as:</p>
-                        <code class="text-sm text-gray-900 dark:text-gray-200" id="filePreview">—.json</code>
+                    {{-- Modal Footer --}}
+                    <div class="flex justify-end gap-2 p-5 border-t border-gray-200 dark:border-gray-700">
+                        <button type="button" id="cancelCreateLang"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                            Cancel
+                        </button>
+                        <button type="button" id="confirmCreateLang"
+                            class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-lg transition-all duration-200 shadow-sm hover:shadow cursor-pointer flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
+                            </svg>
+                            Create Language
+                        </button>
                     </div>
-                </div>
-
-                {{-- Modal Footer --}}
-                <div class="flex justify-end gap-2 p-5 border-t border-gray-200 dark:border-gray-700">
-                    <button type="button" id="cancelCreateLang"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
-                        Cancel
-                    </button>
-                    <button type="button" id="confirmCreateLang"
-                        class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-lg transition-all duration-200 shadow-sm hover:shadow cursor-pointer flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        Create Language
-                    </button>
                 </div>
             </div>
         </div>
-    </div>
 
-    {{-- Delete Confirmation Modal --}}
-    <div id="deleteModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-modal="true" role="dialog">
-        <div class="flex min-h-screen items-center justify-center px-4 py-6">
-            <div class="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-opacity"
-                id="deleteModalOverlay"></div>
+        {{-- Delete Confirmation Modal --}}
+        <div id="deleteModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-modal="true" role="dialog">
+            <div class="flex min-h-screen items-center justify-center px-4 py-6">
+                <div class="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-opacity"
+                    id="deleteModalOverlay"></div>
 
-            <div
-                class="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
-                {{-- Modal Header --}}
-                <div class="p-5 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        Delete Language File
-                    </h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">This action cannot be undone</p>
-                </div>
-
-                {{-- Modal Body --}}
-                <div class="p-5">
-                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                        <p class="text-sm text-red-800 dark:text-red-300">
-                            Are you sure you want to delete <strong id="deleteFileName"></strong>?
-                        </p>
-                        <p class="text-xs text-red-600 dark:text-red-400 mt-2">
-                            This will permanently delete the language file and all its translations.
-                        </p>
-                    </div>
-                </div>
-
-                {{-- Modal Footer --}}
-                <div class="flex justify-end gap-2 p-5 border-t border-gray-200 dark:border-gray-700">
-                    <button type="button" id="cancelDeleteBtn"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
-                        Cancel
-                    </button>
-                    <form id="deleteForm" method="POST" style="display: inline;">
-                        @csrf
-                        @method('DELETE')
-                        <input type="hidden" name="file" id="deleteFileInput" value="">
-                        <button type="submit" id="confirmDeleteBtn"
-                            class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 rounded-lg transition-all duration-200 shadow-sm hover:shadow cursor-pointer flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div
+                    class="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
+                    {{-- Modal Header --}}
+                    <div class="p-5 border-b border-gray-200 dark:border-gray-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                            <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
-                            Delete Permanently
+                            Delete Language File
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">This action cannot be undone</p>
+                    </div>
+
+                    {{-- Modal Body --}}
+                    <div class="p-5">
+                        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                            <p class="text-sm text-red-800 dark:text-red-300">
+                                Are you sure you want to delete <strong id="deleteFileName"></strong>?
+                            </p>
+                            <p class="text-xs text-red-600 dark:text-red-400 mt-2">
+                                This will permanently delete the language file and all its translations.
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Modal Footer --}}
+                    <div class="flex justify-end gap-2 p-5 border-t border-gray-200 dark:border-gray-700">
+                        <button type="button" id="cancelDeleteBtn"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                            Cancel
                         </button>
-                    </form>
+                        <form id="deleteForm" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="file" id="deleteFileInput" value="">
+                            <button type="submit" id="confirmDeleteBtn"
+                                class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 rounded-lg transition-all duration-200 shadow-sm hover:shadow cursor-pointer flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Delete Permanently
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection
 
-@push('js')
-    <script nonce="{{ $nonce }}">
-        const TREE = @json($tree);
-        const INITIAL_FILE = @json($file_name ?? null);
-        const INDEX_URL = @json(route('admin.langs.index'));
-        const STORE_URL = @json(route('admin.langs.store'));
-        const DELETE_URL = @json(route('admin.langs.delete', ['file' => '__FILE__']));
+    @push('js')
+        <script nonce="{{ $nonce }}">
+            const TREE = @json($tree);
+            const INITIAL_FILE = @json($file_name ?? null);
+            const INDEX_URL = @json(route('admin.langs.index'));
+            const STORE_URL = @json(route('admin.langs.store'));
+            const DELETE_URL = @json(route('admin.langs.delete', ['file' => '__FILE__']));
 
-        document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function() {
 
-            $(function() {
-                let currentFile = INITIAL_FILE;
-                let originalContent = $('textarea[name="content"]').val() || '';
-                let isDirty = false;
-                let fileCount = 0;
+                $(function() {
+                    let currentFile = INITIAL_FILE;
+                    let originalContent = $('textarea[name="content"]').val() || '';
+                    let isDirty = false;
+                    let fileCount = 0;
 
-                const $createModal = $('#createLangModal');
-                const $deleteModal = $('#deleteModal');
-                const $langNameInput = $('#langNameInput');
-                const $unsavedIndicator = $('#unsavedIndicator');
-                const $filePreview = $('#filePreview');
-                const $deleteFileName = $('#deleteFileName');
-                const $deleteFileInput = $('#deleteFileInput');
-                const $deleteForm = $('#deleteForm');
+                    // Si hay errores de validación, mostrar indicador de cambios no guardados
+                    @if ($errors->any())
+                        isDirty = true;
+                        $('#unsavedIndicator').removeClass('hidden');
+                    @endif
 
-                function escapeHtml(text) {
-                    const div = document.createElement('div');
-                    div.textContent = text;
-                    return div.innerHTML;
-                }
+                    const $createModal = $('#createLangModal');
+                    const $deleteModal = $('#deleteModal');
+                    const $langNameInput = $('#langNameInput');
+                    const $unsavedIndicator = $('#unsavedIndicator');
+                    const $filePreview = $('#filePreview');
+                    const $deleteFileName = $('#deleteFileName');
+                    const $deleteFileInput = $('#deleteFileInput');
+                    const $deleteForm = $('#deleteForm');
 
-                function countFiles(items) {
-                    let count = 0;
-                    items.forEach(item => {
-                        if (item.type === 'folder' && item.children) {
-                            count += countFiles(item.children);
-                        } else if (item.type !== 'folder') {
-                            count++;
+                    function escapeHtml(text) {
+                        const div = document.createElement('div');
+                        div.textContent = text;
+                        return div.innerHTML;
+                    }
+
+                    function countFiles(items) {
+                        let count = 0;
+                        items.forEach(item => {
+                            if (item.type === 'folder' && item.children) {
+                                count += countFiles(item.children);
+                            } else if (item.type !== 'folder') {
+                                count++;
+                            }
+                        });
+                        return count;
+                    }
+
+                    function loadTree() {
+                        let html = '';
+                        TREE.forEach(item => {
+                            html += renderItem(item);
+                        });
+                        $('#langTree').html(html);
+
+                        fileCount = countFiles(TREE);
+                        $('#fileCount').text(fileCount);
+
+                        if (INITIAL_FILE) {
+                            setTimeout(() => {
+                                const escapedFile = INITIAL_FILE.replace(/\./g, '\\.').replace(/\//g,
+                                    '\\/');
+                                const $file = $(`.file-node[data-file="${escapedFile}"]`);
+                                if ($file.length) {
+                                    $file.addClass('file-active');
+                                    $file[0].scrollIntoView({
+                                        block: 'nearest',
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            }, 100);
                         }
-                    });
-                    return count;
-                }
+                    }
 
-                function loadTree() {
-                    let html = '';
-                    TREE.forEach(item => {
-                        html += renderItem(item);
-                    });
-                    $('#langTree').html(html);
+                    function renderItem(item, level = 0, parentPath = '') {
+                        let padding = level * 20;
+                        let escapedLabel = escapeHtml(item.label);
+                        let currentPath = parentPath ? parentPath + '/' + item.label : item.label;
 
-                    fileCount = countFiles(TREE);
-                    $('#fileCount').text(fileCount);
-
-                    if (INITIAL_FILE) {
-                        setTimeout(() => {
-                            const escapedFile = INITIAL_FILE.replace(/\./g, '\\.').replace(/\//g,
-                                '\\/');
-                            const $file = $(`.file-node[data-file="${escapedFile}"]`);
-                            if ($file.length) {
-                                $file.addClass('file-active');
-                                $file[0].scrollIntoView({
-                                    block: 'nearest',
-                                    behavior: 'smooth'
+                        if (item.type === 'folder') {
+                            let children = '';
+                            if (item.children) {
+                                item.children.forEach(child => {
+                                    children += renderItem(child, level + 1, currentPath);
                                 });
                             }
-                        }, 100);
-                    }
-                }
 
-                function renderItem(item, level = 0, parentPath = '') {
-                    let padding = level * 20;
-                    let escapedLabel = escapeHtml(item.label);
-                    let currentPath = parentPath ? parentPath + '/' + item.label : item.label;
-
-                    if (item.type === 'folder') {
-                        let children = '';
-                        if (item.children) {
-                            item.children.forEach(child => {
-                                children += renderItem(child, level + 1, currentPath);
-                            });
-                        }
-
-                        return `
+                            return `
                         <div class="folder-container mb-0.5">
                             <div class="folder-item flex justify-around cursor-pointer" style="padding-left:${padding}px" data-expanded="true" data-path="${currentPath}">
                                 <svg class="w-4 h-4 mr-2 text-yellow-500 dark:text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -440,29 +508,29 @@
                             </div>
                         </div>
                     `;
-                    }
+                        }
 
-                    let icon = '';
-                    let iconColor = '';
-                    // Determinar si es un archivo .json
-                    const isJsonFile = escapedLabel.endsWith('.json');
+                        let icon = '';
+                        let iconColor = '';
+                        // Determinar si es un archivo .json
+                        const isJsonFile = escapedLabel.endsWith('.json');
 
-                    if (escapedLabel.endsWith('.php')) {
-                        icon =
-                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />';
-                        iconColor = 'text-purple-500 dark:text-purple-400';
-                    } else if (isJsonFile) {
-                        icon =
-                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />';
-                        iconColor = 'text-green-500 dark:text-green-400';
-                    } else {
-                        icon =
-                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
-                        iconColor = 'text-blue-500 dark:text-blue-400';
-                    }
+                        if (escapedLabel.endsWith('.php')) {
+                            icon =
+                                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />';
+                            iconColor = 'text-purple-500 dark:text-purple-400';
+                        } else if (isJsonFile) {
+                            icon =
+                                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />';
+                            iconColor = 'text-green-500 dark:text-green-400';
+                        } else {
+                            icon =
+                                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+                            iconColor = 'text-blue-500 dark:text-blue-400';
+                        }
 
-                    // Solo agregar botón de eliminar si es un archivo .json
-                    const deleteButton = isJsonFile ? `
+                        // Solo agregar botón de eliminar si es un archivo .json
+                        const deleteButton = isJsonFile ? `
                     <button class="delete-file-btn delete-btn-json p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-all duration-200 flex-shrink-0" data-file="${currentPath}" title="Delete JSON file">
                         <svg class="w-3.5 h-3.5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -470,7 +538,7 @@
                     </button>
                 ` : '';
 
-                    return `
+                        return `
                     <div class="file-item flex justify-between group file-node cursor-pointer mb-0.5" data-file="${currentPath}" style="padding-left:${padding}px">
                         <svg class="w-4 h-4 mr-2 ${iconColor} flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             ${icon}
@@ -479,174 +547,174 @@
                         ${deleteButton}
                     </div>
                 `;
-                }
-
-                function checkDirty() {
-                    const currentContent = $('textarea[name="content"]').val() || '';
-                    isDirty = currentContent !== originalContent;
-
-                    if (isDirty) {
-                        $unsavedIndicator.removeClass('hidden');
-                    } else {
-                        $unsavedIndicator.addClass('hidden');
-                    }
-                }
-
-                $(document).on('input', 'textarea[name="content"]', checkDirty);
-
-                $(document).on('click', '.file-node', function(e) {
-                    if ($(e.target).closest('.delete-file-btn').length) {
-                        return;
                     }
 
-                    if (isDirty) {
-                        if (!confirm('You have unsaved changes. Are you sure you want to leave?')) {
+                    function checkDirty() {
+                        const currentContent = $('textarea[name="content"]').val() || '';
+                        isDirty = currentContent !== originalContent;
+
+                        if (isDirty) {
+                            $unsavedIndicator.removeClass('hidden');
+                        } else {
+                            $unsavedIndicator.addClass('hidden');
+                        }
+                    }
+
+                    $(document).on('input', 'textarea[name="content"]', checkDirty);
+
+                    $(document).on('click', '.file-node', function(e) {
+                        if ($(e.target).closest('.delete-file-btn').length) {
                             return;
                         }
-                    }
 
-                    $('.file-node').removeClass('file-active');
-                    $(this).addClass('file-active');
-
-                    const fileName = $(this).data('file');
-                    window.location.href = INDEX_URL + '?file=' + encodeURIComponent(fileName);
-                });
-
-                // Eliminar archivo .json - Abrir modal
-                $(document).on('click', '.delete-file-btn', function(e) {
-                    e.stopPropagation();
-                    const fileName = $(this).data('file');
-                    openDeleteModal(fileName);
-                });
-
-                $(document).on('click', '.folder-item', function() {
-                    const $container = $(this).closest('.folder-container');
-                    const $children = $container.find('.folder-children');
-                    const $icon = $(this).find('svg');
-
-                    $children.slideToggle(150);
-                    $icon.css('transform', $children.is(':visible') ? 'rotate(0deg)' :
-                        'rotate(-90deg)');
-                    $(this).attr('data-expanded', $children.is(':visible'));
-                });
-
-                $('#saveFile').on('click', function() {
-                    $('#editorForm').submit();
-                });
-
-                // Delete from toolbar - solo si existe el botón
-                $('#deleteFileBtn').on('click', function() {
-                    if (currentFile) {
-                        openDeleteModal(currentFile);
-                    }
-                });
-
-                function openDeleteModal(fileName) {
-                    // Extraer solo el nombre del archivo sin la extensión .json para el controlador
-                    const langName = fileName.replace(/\.json$/, '');
-                    $deleteFileName.text(fileName);
-                    $deleteFileInput.val(langName);
-                    $deleteForm.attr('action', DELETE_URL.replace('__FILE__', encodeURIComponent(
-                        langName)));
-                    $deleteModal.removeClass('hidden');
-                }
-
-                // Cerrar modal de eliminar
-                $('#cancelDeleteBtn, #deleteModalOverlay').on('click', function() {
-                    $deleteModal.addClass('hidden');
-                });
-
-                // Actualizar preview del nombre del archivo
-                $langNameInput.on('input', function() {
-                    const name = $(this).val().trim();
-                    if (name) {
-                        $filePreview.text(name + '.json');
-                    } else {
-                        $filePreview.text('—.json');
-                    }
-                });
-
-                // Modal de crear - Abrir
-                $('#createLangBtn').on('click', function() {
-                    $createModal.removeClass('hidden');
-                    $langNameInput.val('').focus();
-                    $filePreview.text('—.json');
-                });
-
-                // Modal de crear - Cerrar
-                $('#cancelCreateLang, #modalOverlay').on('click', function() {
-                    $createModal.addClass('hidden');
-                });
-
-                // Modal de crear - ESC key
-                $(document).on('keydown', function(e) {
-                    if (e.key === 'Escape') {
-                        if (!$createModal.hasClass('hidden')) {
-                            $createModal.addClass('hidden');
-                        }
-                        if (!$deleteModal.hasClass('hidden')) {
-                            $deleteModal.addClass('hidden');
-                        }
-                    }
-                });
-
-                // Modal de crear - Confirmar
-                $('#confirmCreateLang').on('click', function() {
-                    let name = $langNameInput.val().trim().toLowerCase();
-
-                    if (!name) {
-                        alert('Please enter a language name');
-                        return;
-                    }
-
-                    if (!/^[a-z]{2}(-[a-z]{2})?$/.test(name)) {
-                        alert('Invalid format. Use "en" or "pt-BR"');
-                        return;
-                    }
-
-                    const $btn = $(this);
-                    const originalHtml = $btn.html();
-                    $btn.html(
-                        '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Creating...'
-                    );
-                    $btn.prop('disabled', true);
-
-                    $.ajax({
-                        url: STORE_URL,
-                        method: 'POST',
-                        data: {
-                            name: name,
-                            _token: $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(response) {
-                            $createModal.addClass('hidden');
-                            window.location.reload();
-                        },
-                        error: function(xhr) {
-                            let error = 'Failed to create language';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                error = xhr.responseJSON.message;
-                            } else if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                const errors = xhr.responseJSON.errors;
-                                error = Object.values(errors).flat().join('\n');
+                        if (isDirty) {
+                            if (!confirm('You have unsaved changes. Are you sure you want to leave?')) {
+                                return;
                             }
-                            alert(error);
-                            $btn.html(originalHtml);
-                            $btn.prop('disabled', false);
+                        }
+
+                        $('.file-node').removeClass('file-active');
+                        $(this).addClass('file-active');
+
+                        const fileName = $(this).data('file');
+                        window.location.href = INDEX_URL + '?file=' + encodeURIComponent(fileName);
+                    });
+
+                    // Eliminar archivo .json - Abrir modal
+                    $(document).on('click', '.delete-file-btn', function(e) {
+                        e.stopPropagation();
+                        const fileName = $(this).data('file');
+                        openDeleteModal(fileName);
+                    });
+
+                    $(document).on('click', '.folder-item', function() {
+                        const $container = $(this).closest('.folder-container');
+                        const $children = $container.find('.folder-children');
+                        const $icon = $(this).find('svg');
+
+                        $children.slideToggle(150);
+                        $icon.css('transform', $children.is(':visible') ? 'rotate(0deg)' :
+                            'rotate(-90deg)');
+                        $(this).attr('data-expanded', $children.is(':visible'));
+                    });
+
+                    $('#saveFile').on('click', function() {
+                        $('#editorForm').submit();
+                    });
+
+                    // Delete from toolbar - solo si existe el botón
+                    $('#deleteFileBtn').on('click', function() {
+                        if (currentFile) {
+                            openDeleteModal(currentFile);
                         }
                     });
-                });
 
-                $('#editorForm').on('submit', function() {
-                    setTimeout(() => {
-                        originalContent = $('textarea[name="content"]').val() || '';
-                        isDirty = false;
-                        $unsavedIndicator.addClass('hidden');
-                    }, 100);
-                });
+                    function openDeleteModal(fileName) {
+                        // Extraer solo el nombre del archivo sin la extensión .json para el controlador
+                        const langName = fileName.replace(/\.json$/, '');
+                        $deleteFileName.text(fileName);
+                        $deleteFileInput.val(langName);
+                        $deleteForm.attr('action', DELETE_URL.replace('__FILE__', encodeURIComponent(
+                            langName)));
+                        $deleteModal.removeClass('hidden');
+                    }
 
-                loadTree();
+                    // Cerrar modal de eliminar
+                    $('#cancelDeleteBtn, #deleteModalOverlay').on('click', function() {
+                        $deleteModal.addClass('hidden');
+                    });
+
+                    // Actualizar preview del nombre del archivo
+                    $langNameInput.on('input', function() {
+                        const name = $(this).val().trim();
+                        if (name) {
+                            $filePreview.text(name + '.json');
+                        } else {
+                            $filePreview.text('—.json');
+                        }
+                    });
+
+                    // Modal de crear - Abrir
+                    $('#createLangBtn').on('click', function() {
+                        $createModal.removeClass('hidden');
+                        $langNameInput.val('').focus();
+                        $filePreview.text('—.json');
+                    });
+
+                    // Modal de crear - Cerrar
+                    $('#cancelCreateLang, #modalOverlay').on('click', function() {
+                        $createModal.addClass('hidden');
+                    });
+
+                    // Modal de crear - ESC key
+                    $(document).on('keydown', function(e) {
+                        if (e.key === 'Escape') {
+                            if (!$createModal.hasClass('hidden')) {
+                                $createModal.addClass('hidden');
+                            }
+                            if (!$deleteModal.hasClass('hidden')) {
+                                $deleteModal.addClass('hidden');
+                            }
+                        }
+                    });
+
+                    // Modal de crear - Confirmar
+                    $('#confirmCreateLang').on('click', function() {
+                        let name = $langNameInput.val().trim().toLowerCase();
+
+                        if (!name) {
+                            alert('Please enter a language name');
+                            return;
+                        }
+
+                        if (!/^[a-z]{2}(-[a-z]{2})?$/.test(name)) {
+                            alert('Invalid format. Use "en" or "pt-BR"');
+                            return;
+                        }
+
+                        const $btn = $(this);
+                        const originalHtml = $btn.html();
+                        $btn.html(
+                            '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Creating...'
+                        );
+                        $btn.prop('disabled', true);
+
+                        $.ajax({
+                            url: STORE_URL,
+                            method: 'POST',
+                            data: {
+                                name: name,
+                                _token: $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                $createModal.addClass('hidden');
+                                window.location.reload();
+                            },
+                            error: function(xhr) {
+                                let error = 'Failed to create language';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    error = xhr.responseJSON.message;
+                                } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                    const errors = xhr.responseJSON.errors;
+                                    error = Object.values(errors).flat().join('\n');
+                                }
+                                alert(error);
+                                $btn.html(originalHtml);
+                                $btn.prop('disabled', false);
+                            }
+                        });
+                    });
+
+                    $('#editorForm').on('submit', function() {
+                        setTimeout(() => {
+                            originalContent = $('textarea[name="content"]').val() || '';
+                            isDirty = false;
+                            $unsavedIndicator.addClass('hidden');
+                        }, 100);
+                    });
+
+                    loadTree();
+                });
             });
-        });
-    </script>
-@endpush
+        </script>
+    @endpush

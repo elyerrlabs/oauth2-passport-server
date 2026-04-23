@@ -90,11 +90,30 @@ final class LangController extends WebController
         ]);
 
         $file = $request->input('file');
+        $content = $request->input('content');
 
-        $this->langService->put($file, $request->input('content'));
+        try {
+            if (str_ends_with($file, '.json')) {
+                $this->validateJson($content);
+            }
 
-        return redirect()->route('admin.langs.index', compact('file'))->with("status", "Lang updated successfully");
+            if (str_ends_with($file, '.php')) {
+                $this->validatePhp($content);
+            }
 
+            $this->langService->put($file, $content);
+
+            return redirect()
+                ->route('admin.langs.index', compact('file'))
+                ->with("status", "Lang updated successfully");
+
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'content' => $e->getMessage()
+                ]);
+        }
     }
 
     /**
@@ -108,5 +127,29 @@ final class LangController extends WebController
 
         $file = "en.json";
         return redirect()->route('admin.langs.index', compact('file'))->with("status", "Lang deleted successfully");
+    }
+
+    protected function validateJson(string $content): void
+    {
+        json_decode($content);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Invalid JSON: ' . json_last_error_msg());
+        }
+    }
+
+    protected function validatePhp(string $content): void
+    {
+        $tmpFile = tempnam(sys_get_temp_dir(), 'lang_') . '.php';
+
+        file_put_contents($tmpFile, $content);
+
+        exec("php -l " . escapeshellarg($tmpFile), $output, $result);
+
+        unlink($tmpFile);
+
+        if ($result !== 0) {
+            throw new \RuntimeException('Invalid PHP syntax: ' . implode("\n", $output));
+        }
     }
 }
