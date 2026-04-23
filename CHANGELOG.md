@@ -29,6 +29,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+## [v6.0.6]
+
+- fix: replace layout select dropdown with button group navigation
+- fix: files validation after save
+
 ## [v6.0.5]
 
 ### Changed
