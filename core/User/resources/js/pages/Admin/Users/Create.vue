@@ -188,6 +188,33 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </div>
                 </div>
 
+                <div v-if="item?.id" class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                    <span
+                        v-if="form?.verified"
+                        class="inline-flex items-center gap-1 px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full"
+                    >
+                        <i class="mdi mdi-check-circle text-xs"></i>
+                        {{ __("Verified") }}: {{ form.verified }}
+                    </span>
+                    <span class="text-gray-300 dark:text-gray-600">•</span>
+
+                    <span
+                        v-if="form?.created"
+                        class="inline-flex items-center gap-1"
+                    >
+                        <i class="mdi mdi-calendar text-xs"></i>
+                        {{ __("Created") }}: {{ form?.created }}
+                    </span>
+                    <span class="text-gray-300 dark:text-gray-600">•</span>
+                    <span
+                        v-if="form?.updated"
+                        class="inline-flex items-center gap-1"
+                    >
+                        <i class="mdi mdi-update text-xs"></i>
+                        {{ __("Updated") }}: {{ form?.updated }}
+                    </span>
+                </div>
+
                 <!-- Actions -->
                 <div
                     class="flex justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700"

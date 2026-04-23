@@ -1,379 +1,334 @@
-<!--
-OAuth2 Passport Server — a centralized, modular authorization server
-implementing OAuth 2.0 and OpenID Connect specifications.
-
-Copyright (c) 2026 Elvis Yerel Roman Concha
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-
-Author: Elvis Yerel Roman Concha
-Contact: yerel9212@yahoo.es
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
 <template>
     <!-- Manage Scopes Button -->
     <button
         @click="openDialog"
-        class="relative group w-12 h-12 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 focus:ring-offset-2"
+        class="relative group w-10 h-10 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 focus:ring-offset-2"
         :title="__('Manage Access Scopes')"
     >
-        <i class="mdi mdi-shield-account-outline text-lg"></i>
+        <i class="mdi mdi-shield-account-outline"></i>
         <div
-            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
+            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
         >
             {{ __("Manage Scopes") }}
-            <div
-                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-700"
-            ></div>
         </div>
     </button>
 
     <v-modal
         v-model="dialog"
         :title="__('Manage Access Scopes')"
-        panel-class="w-full lg:w-7xl"
+        panel-class="w-full lg:w-7xl  h-screen"
     >
         <template #body>
-            <!-- Header -->
+            <!-- Header Compacto -->
             <div
-                class="bg-blue-600 p-4 dark:bg-blue-700 text-white rounded-t-lg transition-colors duration-200"
+                class="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-gray-700"
             >
-                <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i
+                        class="mdi mdi-shield-account text-blue-600 dark:text-blue-400"
+                    ></i>
                     <div>
-                        <div class="text-md">
-                            {{ __("Manage permissions for:") }}
-                            <span class="font-bold"
-                                >{{ item.name }} {{ item.last_name }}</span
-                            >
-                        </div>
+                        <span class="text-sm text-gray-500 dark:text-gray-400"
+                            >{{ __("User") }}:</span
+                        >
+                        <span
+                            class="text-sm font-medium text-gray-900 dark:text-white ml-1"
+                        >
+                            {{ item.name }} {{ item.last_name }}
+                        </span>
                     </div>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                    <span class="text-gray-500 dark:text-gray-400">
+                        <i class="mdi mdi-folder-multiple-outline mr-1"></i
+                        >{{ totalGroups }}
+                    </span>
+                    <span class="text-gray-500 dark:text-gray-400">
+                        <i class="mdi mdi-check-circle-outline mr-1"></i
+                        >{{ assignedScopesCount }}/{{ totalRoles }}
+                    </span>
                 </div>
             </div>
 
-            <!-- User Summary -->
-            <div class="mt-6">
-                <!-- Loading State -->
+            <!-- Content -->
+            <div class="p-4">
+                <!-- Loading -->
                 <div
                     v-if="loading"
-                    class="flex justify-center items-center py-16"
+                    class="flex justify-center items-center py-12"
                 >
-                    <div class="text-center space-y-4">
-                        <div class="relative">
-                            <svg
-                                class="animate-spin h-12 w-12 text-blue-600 dark:text-blue-400 mx-auto"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                            >
-                                <circle
-                                    class="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    stroke-width="4"
-                                ></circle>
-                                <path
-                                    class="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
-                            </svg>
-                            <div
-                                class="absolute inset-0 flex items-center justify-center"
-                            >
-                                <i
-                                    class="mdi mdi-shield-account text-blue-500"
-                                ></i>
-                            </div>
-                        </div>
-                        <div class="space-y-2">
-                            <div
-                                class="text-blue-600 dark:text-blue-400 font-semibold"
-                            >
-                                {{ __("Loading Permissions") }}
-                            </div>
-                            <div
-                                class="text-gray-500 dark:text-gray-400 text-sm"
-                            >
-                                {{ __("Setting up your access controls...") }}
-                            </div>
-                        </div>
+                    <div class="flex items-center gap-2 text-gray-500">
+                        <svg
+                            class="animate-spin h-5 w-5 text-blue-600"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                            ></circle>
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                        <span class="text-sm">{{ __("Loading...") }}</span>
                     </div>
                 </div>
 
-                <!-- Scopes Content -->
-                <!-- Scopes Content -->
-                <div v-else class="space-y-6">
-                    <!-- Skeleton Loading -->
+                <!-- Empty -->
+                <div
+                    v-else-if="!showSkeleton && scopes.length === 0"
+                    class="text-center py-12"
+                >
+                    <i
+                        class="mdi mdi-shield-off-outline text-gray-400 text-3xl mb-3"
+                    ></i>
+                    <p class="text-sm text-gray-500">
+                        {{ __("No permissions available") }}
+                    </p>
+                </div>
+
+                <!-- Groups -->
+                <div v-else class="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
                     <div
-                        v-if="showSkeleton && scopes.length === 0"
-                        class="space-y-4"
+                        v-for="(group, groupIndex) in groupedScopes"
+                        :key="groupIndex"
+                        class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800"
                     >
+                        <!-- Group Header -->
                         <div
-                            v-for="n in 3"
-                            :key="n"
-                            class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-4 bg-white dark:bg-gray-800"
+                            @click="toggleGroup(groupIndex)"
+                            class="flex items-center justify-between px-3 py-2.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                         >
-                            <div class="space-y-3">
-                                <div class="flex items-center space-x-3">
-                                    <div
-                                        class="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 animate-pulse"
-                                    ></div>
-                                    <div
-                                        class="h-6 bg-gray-200 dark:bg-gray-700 rounded-full w-20 animate-pulse"
-                                    ></div>
-                                </div>
-                                <div
-                                    class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 animate-pulse"
-                                ></div>
-                            </div>
-                            <div class="space-y-4 ml-2">
-                                <div
-                                    v-for="m in 2"
-                                    :key="m"
-                                    class="border border-gray-200 dark:border-gray-700 rounded p-3"
-                                >
-                                    <div
-                                        class="flex items-center justify-between mb-3"
-                                    >
-                                        <div
-                                            class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-1/4 animate-pulse"
-                                        ></div>
-                                        <div
-                                            class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/6 animate-pulse"
-                                        ></div>
-                                    </div>
-                                    <div
-                                        class="grid grid-cols-1 md:grid-cols-2 gap-2"
-                                    >
-                                        <div
-                                            v-for="k in 3"
-                                            :key="k"
-                                            class="flex items-center space-x-2 p-2"
-                                        >
-                                            <div
-                                                class="w-5 h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"
-                                            ></div>
-                                            <div class="flex-1 space-y-1">
-                                                <div
-                                                    class="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"
-                                                ></div>
-                                                <div
-                                                    class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 animate-pulse"
-                                                ></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Actual Scopes Content -->
-                    <div v-else class="space-y-6 overflow-y-auto pr-2">
-                        <!-- Empty State -->
-                        <div
-                            v-if="scopes.length === 0"
-                            class="text-center py-16"
-                        >
-                            <div
-                                class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6"
-                            >
+                            <div class="flex items-center gap-2 min-w-0">
                                 <i
-                                    class="mdi mdi-shield-off text-gray-400 text-3xl"
+                                    class="mdi mdi-folder-outline text-gray-500 dark:text-gray-400 text-sm flex-shrink-0"
                                 ></i>
-                            </div>
-                            <div class="space-y-3">
-                                <div
-                                    class="text-gray-600 dark:text-gray-300 text-xl font-semibold"
+                                <span
+                                    class="text-sm font-medium text-gray-700 dark:text-gray-300 truncate"
                                 >
-                                    {{ __("No Permissions Available") }}
-                                </div>
-                                <div
-                                    class="text-gray-500 dark:text-gray-400 text-sm max-w-md mx-auto"
+                                    {{ __(group.name) }}
+                                </span>
+                                <span
+                                    class="text-xs text-gray-400 flex-shrink-0"
                                 >
-                                    {{
-                                        __(
-                                            "Permissions haven't been configured yet. Contact your system administrator to set up access controls."
-                                        )
+                                    {{ getAssignedCountForGroup(group) }}/{{
+                                        getTotalRolesCountForGroup(group)
                                     }}
-                                </div>
+                                </span>
                             </div>
+                            <i
+                                class="mdi text-gray-400 text-sm transition-transform duration-200 flex-shrink-0"
+                                :class="
+                                    expandedGroups[groupIndex]
+                                        ? 'mdi-chevron-up'
+                                        : 'mdi-chevron-down'
+                                "
+                            ></i>
                         </div>
 
-                        <!-- Grouped Scopes -->
-                        <div
-                            v-else
-                            v-for="(group, index) in groupedScopes"
-                            :key="index"
-                            class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-4 bg-white dark:bg-gray-800"
-                        >
-                            <!-- Group Header -->
-                            <div class="flex items-start justify-between">
-                                <div class="flex-1">
-                                    <div
-                                        class="flex items-center space-x-3 mb-2"
-                                    >
-                                        <div
-                                            class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center"
-                                        >
-                                            <i
-                                                class="mdi mdi-folder-account text-white"
-                                            ></i>
-                                        </div>
-                                        <div>
-                                            <div
-                                                class="font-semibold text-gray-900 dark:text-white"
-                                            >
-                                                {{ __(group.name) }}
-                                            </div>
-                                            <div
-                                                class="text-sm text-gray-600 dark:text-gray-400 mt-1"
-                                            >
-                                                {{ __(group.description) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full"
-                                >
-                                    {{ group.services.length }}
-                                    {{ __("services") }}
-                                </div>
-                            </div>
+                        <!-- Progress thin bar -->
+                        <div class="h-0.5 bg-gray-100 dark:bg-gray-700">
+                            <div
+                                class="h-full bg-green-500 transition-all duration-300"
+                                :style="{
+                                    width: `${getGroupProgress(group)}%`,
+                                }"
+                            ></div>
+                        </div>
 
-                            <!-- Services -->
-                            <div class="space-y-4">
+                        <!-- Services -->
+                        <transition name="slide">
+                            <div
+                                v-show="expandedGroups[groupIndex]"
+                                class="border-t border-gray-100 dark:border-gray-700"
+                            >
                                 <div
-                                    v-for="(service, index) in group.services"
-                                    :key="index"
-                                    class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900/30"
+                                    class="p-2 space-y-1.5 bg-gray-50/50 dark:bg-gray-900/20"
                                 >
-                                    <!-- Service Header -->
                                     <div
-                                        class="flex items-center justify-between mb-4"
+                                        v-for="(
+                                            service, serviceIndex
+                                        ) in group.services"
+                                        :key="serviceIndex"
+                                        class="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden bg-white dark:bg-gray-800"
                                     >
+                                        <!-- Service Header -->
                                         <div
-                                            class="flex items-center space-x-3"
+                                            @click="
+                                                toggleService(
+                                                    groupIndex,
+                                                    serviceIndex,
+                                                )
+                                            "
+                                            class="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                                         >
                                             <div
-                                                class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center"
+                                                class="flex items-center gap-2 min-w-0"
                                             >
                                                 <i
-                                                    class="mdi mdi-cog text-blue-600 dark:text-blue-400"
+                                                    class="mdi mdi-cog-outline text-gray-400 text-sm flex-shrink-0"
                                                 ></i>
-                                            </div>
-                                            <div>
                                                 <span
-                                                    class="font-medium text-gray-800 dark:text-white"
+                                                    class="text-sm text-gray-700 dark:text-gray-300 truncate"
                                                 >
                                                     {{ __(service.name) }}
                                                 </span>
-                                                <div
-                                                    v-if="service.description"
-                                                    class="text-gray-600 dark:text-gray-400 text-sm mt-1"
+                                                <span
+                                                    class="text-xs text-gray-400 flex-shrink-0"
                                                 >
                                                     {{
-                                                        __(service.description)
+                                                        getAssignedCountForService(
+                                                            service,
+                                                        )
+                                                    }}/{{
+                                                        service.roles.length
                                                     }}
-                                                </div>
+                                                </span>
                                             </div>
+                                            <i
+                                                class="mdi text-gray-400 text-sm transition-transform duration-200 flex-shrink-0"
+                                                :class="
+                                                    expandedServices[
+                                                        `${groupIndex}-${serviceIndex}`
+                                                    ]
+                                                        ? 'mdi-chevron-up'
+                                                        : 'mdi-chevron-down'
+                                                "
+                                            ></i>
                                         </div>
-                                        <span
-                                            class="text-gray-500 dark:text-gray-400 text-sm bg-white dark:bg-gray-800 px-2 py-1 rounded-full border"
-                                        >
-                                            {{ service.roles.length }}
-                                            {{ __("roles") }}
-                                        </span>
-                                    </div>
 
-                                    <!-- Roles -->
-                                    <div
-                                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"
-                                    >
-                                        <label
-                                            v-for="role in service.roles"
-                                            :key="role.id"
-                                            class="flex items-start space-x-2 p-3 rounded-lg border transition-all duration-150 cursor-pointer"
-                                            :class="{
-                                                'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800':
-                                                    findScope(role?.scope?.id),
-                                                'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800':
-                                                    !findScope(role?.scope?.id),
-                                            }"
-                                        >
+                                        <!-- Roles -->
+                                        <transition name="slide">
                                             <div
-                                                class="flex-1 min-w-0 space-y-1"
+                                                v-show="
+                                                    expandedServices[
+                                                        `${groupIndex}-${serviceIndex}`
+                                                    ]
+                                                "
+                                                class="border-t border-gray-100 dark:border-gray-700 p-2 bg-gray-50/30 dark:bg-gray-900/20"
                                             >
                                                 <div
-                                                    class="flex items-center justify-between"
+                                                    class="grid grid-cols-1 md:grid-cols-2 gap-1.5"
                                                 >
                                                     <div
-                                                        class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                                                        v-for="role in service.roles"
+                                                        :key="role.id"
+                                                        class="flex items-center justify-between px-2.5 py-1.5 rounded-md transition-colors"
+                                                        :class="{
+                                                            'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800':
+                                                                findScope(
+                                                                    role?.scope
+                                                                        ?.id,
+                                                                ),
+                                                            'hover:bg-gray-50 dark:hover:bg-gray-700/30':
+                                                                !findScope(
+                                                                    role?.scope
+                                                                        ?.id,
+                                                                ),
+                                                        }"
                                                     >
-                                                        {{ __(role.name) }}
+                                                        <div
+                                                            class="min-w-0 flex-1 mr-2"
+                                                        >
+                                                            <div
+                                                                class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate"
+                                                            >
+                                                                {{
+                                                                    __(
+                                                                        role.name,
+                                                                    )
+                                                                }}
+                                                            </div>
+                                                            <div
+                                                                class="text-xs text-gray-400 truncate"
+                                                            >
+                                                                {{
+                                                                    __(
+                                                                        role.description,
+                                                                    )
+                                                                }}
+                                                            </div>
+                                                        </div>
+
+                                                        <div
+                                                            class="flex-shrink-0"
+                                                        >
+                                                            <v-add-scope
+                                                                :item="role"
+                                                                @created="
+                                                                    userRoles
+                                                                "
+                                                                v-if="
+                                                                    !findScope(
+                                                                        role
+                                                                            ?.scope
+                                                                            ?.id,
+                                                                    )
+                                                                "
+                                                            />
+                                                            <v-delete-scope
+                                                                @deleted="
+                                                                    userRoles
+                                                                "
+                                                                :item="
+                                                                    findScope(
+                                                                        role
+                                                                            ?.scope
+                                                                            ?.id,
+                                                                    )
+                                                                "
+                                                                v-else
+                                                            />
+                                                        </div>
                                                     </div>
-                                                    <i
-                                                        v-if="
-                                                            findScope(
-                                                                role?.scope?.id
-                                                            )
-                                                        "
-                                                        class="mdi mdi-check-circle text-blue-600 dark:text-blue-400"
-                                                    ></i>
-                                                </div>
-                                                <div
-                                                    class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2"
-                                                >
-                                                    {{ __(role.description) }}
-                                                </div>
-                                                <div
-                                                    class="flex items-center justify-end"
-                                                >
-                                                    <v-add-scope
-                                                        :item="role"
-                                                        @created="userRoles"
-                                                        v-if="
-                                                            !findScope(
-                                                                role?.scope?.id
-                                                            )
-                                                        "
-                                                    />
-                                                    <v-delete-scope
-                                                        @deleted="userRoles"
-                                                        :item="
-                                                            findScope(
-                                                                role?.scope?.id
-                                                            )
-                                                        "
-                                                        v-else
-                                                    />
                                                 </div>
                                             </div>
-                                        </label>
+                                        </transition>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </transition>
                     </div>
                 </div>
             </div>
         </template>
+
+        <template #footer>
+            <div
+                class="flex items-center justify-between px-5 py-3 border-t border-gray-200 dark:border-gray-700"
+            >
+                <button
+                    @click="toggleAll"
+                    class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition"
+                >
+                    <i
+                        :class="
+                            allExpanded
+                                ? 'mdi mdi-arrow-collapse-all'
+                                : 'mdi mdi-arrow-expand-all'
+                        "
+                        class="mr-1"
+                    ></i>
+                    {{ allExpanded ? __("Collapse All") : __("Expand All") }}
+                </button>
+                <button
+                    @click="dialog = false"
+                    class="px-4 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition"
+                >
+                    {{ __("Done") }}
+                </button>
+            </div>
+        </template>
     </v-modal>
 </template>
+
 <script setup>
 import { ref, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
@@ -381,48 +336,85 @@ import VModal from "@/components/VModal.vue";
 import VDeleteScope from "./VDeleteScope.vue";
 import VAddScope from "./VAddScope.vue";
 
-/* ================= PROPS / EMITS ================= */
-
 const props = defineProps({
-    item: {
-        type: Object,
-        required: true,
-    },
+    item: { type: Object, required: true },
 });
 
 const page = usePage();
 
-/* ================= STATE ================= */
-
 const dialog = ref(false);
 const loading = ref(false);
 const showSkeleton = ref(true);
-
 const scopes = ref([]);
 const user_scopes = ref([]);
+const expandedGroups = ref({});
+const expandedServices = ref({});
 
-/* ================= ACTIONS ================= */
+const totalGroups = computed(() => groupedScopes.value.length);
+
+const totalRoles = computed(() => {
+    return groupedScopes.value.reduce(
+        (acc, group) =>
+            acc +
+            group.services.reduce(
+                (sAcc, service) => sAcc + service.roles.length,
+                0,
+            ),
+        0,
+    );
+});
+
+const assignedScopesCount = computed(() => user_scopes.value.length);
+
+const allExpanded = computed(() => {
+    const groupsExpanded = Object.values(expandedGroups.value).every((v) => v);
+    const servicesExpanded = Object.values(expandedServices.value).every(
+        (v) => v,
+    );
+    return groupsExpanded && servicesExpanded && groupedScopes.value.length > 0;
+});
 
 const openDialog = async () => {
     dialog.value = true;
     loading.value = true;
+    expandedGroups.value = {};
+    expandedServices.value = {};
+
     await userRoles();
     await getScopes();
+
+    if (groupedScopes.value.length > 0) {
+        expandedGroups.value[0] = true;
+    }
+
     loading.value = false;
 };
 
-/* ================= DATA ================= */
+const toggleGroup = (groupIndex) => {
+    expandedGroups.value[groupIndex] = !expandedGroups.value[groupIndex];
+};
+
+const toggleService = (groupIndex, serviceIndex) => {
+    const key = `${groupIndex}-${serviceIndex}`;
+    expandedServices.value[key] = !expandedServices.value[key];
+};
+
+const toggleAll = () => {
+    const newState = !allExpanded.value;
+    groupedScopes.value.forEach((group, index) => {
+        expandedGroups.value[index] = newState;
+        group.services.forEach((_, serviceIndex) => {
+            expandedServices.value[`${index}-${serviceIndex}`] = newState;
+        });
+    });
+};
 
 const userRoles = async () => {
     try {
         const res = await $server.get(props.item.links.scopes);
-        if (res.status === 200) {
-            user_scopes.value = res.data.data;
-        }
+        if (res.status === 200) user_scopes.value = res.data.data;
     } catch (e) {
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
+        if (e?.response?.data?.message) $notify.error(e.response.data.message);
     }
 };
 
@@ -431,10 +423,8 @@ const getScopes = async () => {
         const res = await $server.get(page.props.api.scopes, {
             params: { per_page: 200 },
         });
-
         if (res.status === 200) {
             scopes.value = res.data.data;
-
             setTimeout(() => {
                 showSkeleton.value = false;
                 loading.value = false;
@@ -447,14 +437,36 @@ const getScopes = async () => {
 };
 
 const findScope = (scopeId) => {
-    if (!user_scopes.value.length) {
-        return;
-    }
-
+    if (!user_scopes.value.length) return null;
     return user_scopes.value.find((item) => item.scope.id == scopeId);
 };
 
-/* ================= HELPERS ================= */
+const getAssignedCountForGroup = (group) => {
+    let count = 0;
+    group.services.forEach((service) => {
+        service.roles.forEach((role) => {
+            if (findScope(role?.scope?.id)) count++;
+        });
+    });
+    return count;
+};
+
+const getAssignedCountForService = (service) => {
+    return service.roles.filter((role) => findScope(role?.scope?.id)).length;
+};
+
+const getTotalRolesCountForGroup = (group) => {
+    return group.services.reduce(
+        (acc, service) => acc + service.roles.length,
+        0,
+    );
+};
+
+const getGroupProgress = (group) => {
+    const assigned = getAssignedCountForGroup(group);
+    const total = getTotalRolesCountForGroup(group);
+    return total > 0 ? (assigned / total) * 100 : 0;
+};
 
 const groupedScopes = computed(() => {
     const grouped = {};
@@ -462,11 +474,8 @@ const groupedScopes = computed(() => {
     scopes.value.forEach((item) => {
         const { service, role } = item;
         const group = service.group;
-
         const groupName = group.name;
         const serviceName = service.name;
-
-        /* ================= SCOPE NORMALIZED ================= */
 
         const scopeData = {
             id: item.id,
@@ -475,12 +484,8 @@ const groupedScopes = computed(() => {
             active: item.active,
             web: item.web,
             api_key: item.api_key,
-            links: {
-                scopes: props.item.links.scopes, // user route to add scopes
-            },
+            links: { scopes: props.item.links.scopes },
         };
-
-        /* ================= ROLE NORMALIZED ================= */
 
         const roleData = {
             id: role.id,
@@ -490,8 +495,6 @@ const groupedScopes = computed(() => {
             scope: scopeData,
         };
 
-        /* ================= GROUP ================= */
-
         if (!grouped[groupName]) {
             grouped[groupName] = {
                 name: groupName,
@@ -499,8 +502,6 @@ const groupedScopes = computed(() => {
                 services: {},
             };
         }
-
-        /* ================= SERVICE ================= */
 
         if (!grouped[groupName].services[serviceName]) {
             grouped[groupName].services[serviceName] = {
@@ -510,11 +511,25 @@ const groupedScopes = computed(() => {
             };
         }
 
-        /* ================= PUSH ROLE ================= */
-
         grouped[groupName].services[serviceName].roles.push(roleData);
     });
 
-    return Object.values(grouped);
+    return Object.values(grouped).map((group) => ({
+        ...group,
+        services: Object.values(group.services),
+    }));
 });
 </script>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+    transition: all 0.15s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+    opacity: 0;
+    transform: translateY(-3px);
+}
+</style>
