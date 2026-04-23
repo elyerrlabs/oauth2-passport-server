@@ -55,6 +55,9 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Lang on editor blade component fixed
 - File manager support for lang directory added
 - Add new volume for lang support on docker compose
+- Updated user interface
+- Add new services (pages and lang)
+- Protect PageController and Lang controller using admin scopes
 
 ---
 
