@@ -217,8 +217,7 @@
                                     </form>
                                 @else
                                     <form method="POST"
-                                        action="{{ route('admin.sitemaps.delete', $item['id'] ?? 0) }}"
-                                        onsubmit="return confirm('{{ __('Are you sure you want to delete this route?') }}')"
+                                        action="{{ route('admin.sitemaps.delete', ['url' => base64_encode($item['url'])]) }}"
                                         class="inline">
                                         @csrf
                                         @method('DELETE')
