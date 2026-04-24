@@ -29,31 +29,8 @@ use App\Http\Controllers\Api\Public\LocaleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Public\CountriesController;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
-use App\Http\Controllers\Api\OAuth\PassportConnectController;
 
 Route:: as('api.')->group(function () {
-
-    /**
-     * Gateways to grant access
-     */
-    Route::group(
-        [
-            'prefix' => 'gateway',
-            'as' => 'gateway.',
-            'middleware' => ['throttle:system:general:gateway']
-        ],
-        function () {
-
-            Route::get('/check-authentication', [PassportConnectController::class, 'check_authentication'])->name('basic_auth');
-            Route::get('/check-scope', [PassportConnectController::class, 'check_scope_any'])->name('auth.scope.any');
-            Route::get('/check-scopes', [PassportConnectController::class, 'check_scope_all'])->name('auth.scope.all');
-            Route::get('/check-client-credentials', [PassportConnectController::class, 'check_client_credentials'])->name('client.credentials');
-            Route::get('/token-can', [PassportConnectController::class, 'user_can'])->name('user.can');
-            Route::get('/user', [PassportConnectController::class, 'authenticated'])->name('user.info');
-            Route::get('/access', [PassportConnectController::class, 'access'])->name('user.scopes');
-            Route::post('/logout', [PassportConnectController::class, 'revokeAuthorization'])->name('logout');
-        }
-    );
 
     /**
      * Oauth Routes to get credentials
