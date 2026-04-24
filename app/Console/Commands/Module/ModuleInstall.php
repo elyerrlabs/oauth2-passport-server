@@ -102,9 +102,9 @@ class ModuleInstall extends Command
 
         // Check if it the modules is already registered
         if (app(\App\Repositories\ModuleRepository::class)
-            ->query()
-            ->where('name', $name)
-            ->exists()
+                ->query()
+                ->where('name', $name)
+                ->exists()
         ) {
             $this->error("Module '{$name}' already registered in database.");
             return self::FAILURE;
@@ -245,9 +245,6 @@ class ModuleInstall extends Command
                 return self::FAILURE;
             }
 
-            // Clean cache
-            $this->clearCaches();
-
             $this->info("Module '{$name}' installed successfully.");
 
             return self::SUCCESS;
@@ -366,14 +363,5 @@ class ModuleInstall extends Command
         }
 
         return true;
-    }
-
-    protected function clearCaches(): void
-    {
-        $this->info('Clearing application cache...');
-
-        Artisan::call('config:clear');
-        Artisan::call('route:clear');
-        Artisan::call('cache:clear');
     }
 }
