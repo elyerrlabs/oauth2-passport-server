@@ -29,11 +29,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+# [v6.0.7]
+
+- fix: encode URL in base64 for sitemap deletion endpoint
+- Delete passport connect controller
+- Module update command added
+- Module install command updated
+- align OpenID identity claims with user schema
+- Disable laravel passport routes for device authorization
+- Updated lang
+
+---
 ## [v6.0.6]
 
 - fix: replace layout select dropdown with button group navigation
 - fix: files validation after save
 
+---
 ## [v6.0.5]
 
 ### Changed
