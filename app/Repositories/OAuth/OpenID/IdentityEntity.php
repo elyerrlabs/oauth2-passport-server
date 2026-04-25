@@ -27,30 +27,72 @@ namespace App\Repositories\OAuth\OpenID;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Core\User\Model\User; 
+use Core\User\Model\User;
+use OpenIDConnect\ClaimExtractor;
+
 class IdentityEntity extends \OpenIDConnect\Entities\IdentityEntity
 {
     public function getClaims(array $scopes = []): array
     {
-
         $user = User::find($this->getIdentifier());
-        
+
+        if (!$user) {
+            return [];
+        }
+
         /**
          * For a complete list of default claim sets
          * @see \OpenIDConnect\ClaimExtractor
          */
-        return [
+        $fullName = trim(implode(' ', array_filter([
+            $user->name,
+            $user->last_name,
+        ])));
+
+        $phoneNumber = trim(implode(' ', array_filter([
+            $user->dial_code,
+            $user->phone,
+        ])));
+
+        $formattedAddress = trim(implode(', ', array_filter([
+            $user->address,
+            $user->city,
+            $user->country,
+        ])));
+
+        $claims = [
             // profile
-            'name' => $user->name,
-            'nickname' => $user->name, 
+            'name' => $fullName ?: $user->name,
+            'given_name' => $user->name,
+            'family_name' => $user->last_name,
+            'nickname' => $user->name,
+            'birthdate' => $user->birthday ?: null,
+            'locale' => $user->lang ?: app()->getLocale(),
+            'updated_at' => $user->updated_at?->timestamp,
+
+            // email
             'email' => $user->email,
-            'email_verified' => $user->email_verified_at ? true : false, 
-            'phone_number' => $user->phone ? $user->dial_code . " " . $user->phone : null,
-            'phone_number_verified' => true, 
-            'address' => $user->address,
+            'email_verified' => (bool) $user->email_verified_at,
+
+            // phone
+            'phone_number' => $phoneNumber ?: null,
+
+            // address
+            'address' => array_filter([
+                'street_address' => $user->address,
+                'formatted' => $formattedAddress,
+                'locality' => $user->city,
+                'country' => $user->country,
+            ]) ?: null,
 
             // custom
             //'what_he_knows' => 'Nothing!',
         ];
+
+        if (empty($scopes)) {
+            return $claims;
+        }
+
+        return (new ClaimExtractor())->extract($scopes, $claims);
     }
 }
