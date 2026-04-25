@@ -53,7 +53,7 @@ Route::group([
         [AuthorizationController::class, 'authorize']
     )->name('authorizations.authorize')->middleware('web');
 
-    Route::get(
+    /*Route::get(
         '/device',
         [DeviceUserCodeController::class]
     )->name('device')->middleware('web');
@@ -61,7 +61,7 @@ Route::group([
     Route::post(
         '/device/code',
         [DeviceCodeController::class]
-    )->name('device.code')->middleware('throttle');
+    )->name('device.code')->middleware('throttle');*/
 
 
     $guard = config('passport.guard', null);
@@ -84,7 +84,7 @@ Route::group([
                 [DenyAuthorizationController::class, 'deny']
             )->name('authorizations.deny');
 
-            Route::get(
+           /* Route::get(
                 '/device/authorize',
                 [DeviceAuthorizationController::class]
             )->name('device.authorizations.authorize');
@@ -97,7 +97,7 @@ Route::group([
             Route::delete(
                 '/device/authorize',
                 [DenyDeviceAuthorizationController::class]
-            )->name('device.authorizations.deny');
+            )->name('device.authorizations.deny');*/
 
             Route::get(
                 '/scopes',
@@ -107,7 +107,7 @@ Route::group([
             Route::get(
                 '/tokens',
                 [AuthorizedAccessTokenController::class, 'forUser']
-            )->name('tokens.index')->middleware('wants.json');
+            )->name('tokens.index');
 
             Route::delete(
                 '/tokens/{token_id}',
