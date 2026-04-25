@@ -79,7 +79,7 @@
 
                     {{-- Toggle --}}
                     <div class="text-center mt-6">
-                        <button type="button" onclick="toggleRecovery()" class="text-sm text-blue-600 hover:underline">
+                        <button type="button" id="toggleRecoveryButton" class="text-sm text-blue-600 hover:underline">
                             {{ __('Use a recovery code') }}
                         </button>
                     </div>
@@ -97,10 +97,20 @@
         </div>
     </div>
 
-    <script>
-        function toggleRecovery() {
-            document.getElementById('totp-section').classList.toggle('hidden');
-            document.getElementById('recovery-section').classList.toggle('hidden');
-        }
+    <script nonce="{{ $nonce }}">
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButton = document.getElementById('toggleRecoveryButton');
+            const totpSection = document.getElementById('totp-section');
+            const recoverySection = document.getElementById('recovery-section');
+
+            if (!toggleButton || !totpSection || !recoverySection) {
+                return;
+            }
+
+            toggleButton.addEventListener('click', () => {
+                totpSection.classList.toggle('hidden');
+                recoverySection.classList.toggle('hidden');
+            });
+        });
     </script>
 @endsection

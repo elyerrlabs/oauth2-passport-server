@@ -257,7 +257,8 @@
 
     @push('js')
         <script nonce="{{ $nonce }}">
-            (function($) {
+            document.addEventListener('DOMContentLoaded', function() {
+                (function($) {
                 'use strict';
 
                 var STORAGE_KEY = 'sidebarCollapsed';
@@ -350,9 +351,10 @@
                     });
                 }
 
-                $(document).ready(init);
+                init();
 
-            })(jQuery);
+                })(jQuery);
+            });
         </script>
     @endpush
 </x-layout>

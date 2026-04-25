@@ -125,24 +125,24 @@
                 <footer class="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 px-8 py-4">
                     <div class="flex flex-wrap justify-between items-center gap-4">
                         <p class="text-xs text-gray-500 dark:text-gray-400">
-                            Official legal document
+                            {{ __('Official legal document') }}
                         </p>
                         <div class="flex gap-3">
-                            <button onclick="window.print()"
+                            <button type="button" id="printPolicyButton"
                                 class="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 
                                            bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 
                                            rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                                 aria-label="Print policy">
                                 <i class="mdi mdi-printer text-base"></i>
-                                Print
+                                {{ __('Print') }}
                             </button>
-                            <button onclick="copyCurrentUrl()"
+                            <button type="button" id="copyPolicyLinkButton"
                                 class="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 
                                            bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 
                                            rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                                 aria-label="Copy link">
                                 <i class="mdi mdi-link-variant text-base"></i>
-                                Copy link
+                                {{ __('Copy link') }}
                             </button>
                         </div>
                     </div>
@@ -151,16 +151,28 @@
         </main>
     </div>
 
-    <script>
-        function copyCurrentUrl() {
+    <script nonce="{{ $nonce }}">
+        function copyCurrentUrl(button) {
             navigator.clipboard.writeText(window.location.href).then(() => {
-                const btn = event.currentTarget;
-                const originalHtml = btn.innerHTML;
-                btn.innerHTML = '<i class="mdi mdi-check text-base"></i> Copied!';
+                const originalHtml = button.innerHTML;
+                button.innerHTML = '<i class="mdi mdi-check text-base"></i> Copied!';
                 setTimeout(() => {
-                    btn.innerHTML = originalHtml;
+                    button.innerHTML = originalHtml;
                 }, 2000);
             });
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const printButton = document.getElementById('printPolicyButton');
+            const copyButton = document.getElementById('copyPolicyLinkButton');
+
+            if (printButton) {
+                printButton.addEventListener('click', () => window.print());
+            }
+
+            if (copyButton) {
+                copyButton.addEventListener('click', () => copyCurrentUrl(copyButton));
+            }
+        });
     </script>
 @endsection
