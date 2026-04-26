@@ -35,6 +35,8 @@ use Symfony\Component\Process\Process;
 
 class ModuleUpdate extends Command
 {
+    use HandlesModulePublicAssets;
+
     protected $signature = 'module:update
     {--name= : Module name}
     {--target-version= : Target version (branch or tag)}
@@ -230,6 +232,11 @@ class ModuleUpdate extends Command
         // Step 4: Install/Update dependencies
         if (!$this->runComposerUpdate($modulePath, $environment)) {
             $this->error('Update failed: Composer update failed');
+            return self::FAILURE;
+        }
+
+        if (!$this->ensureModulePublicSymlink($modulePath)) {
+            $this->error('Update failed: Public assets link failed');
             return self::FAILURE;
         }
 

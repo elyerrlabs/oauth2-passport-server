@@ -36,6 +36,8 @@ use Symfony\Component\Process\Process;
 
 class ModuleInstall extends Command
 {
+    use HandlesModulePublicAssets;
+
     protected $signature = 'module:install
     {--name= : Module name}
     {--provider= : Provider type (git or packagist)}
@@ -230,6 +232,11 @@ class ModuleInstall extends Command
 
             // Install dependencies
             if (!$this->runComposerInstall($modulePath, $environment)) {
+                File::deleteDirectory($modulePath);
+                return self::FAILURE;
+            }
+
+            if (!$this->ensureModulePublicSymlink($modulePath)) {
                 File::deleteDirectory($modulePath);
                 return self::FAILURE;
             }
