@@ -29,6 +29,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+# [Unreleased]
+
+- Merge host and module translation files with fallback-safe loading for local and module langs
+- Centralize module public asset publishing in the host for `module:make`, `module:install`, and `module:update`
+- Mirror module `assets:publish` behavior by creating `public/third-party/<module>` symlinks after scaffold, install, and update
+- Add `--dev` support to `module:make` with local `../elymod` resolution first and Packagist dev fallback
+- Improve `module:make` rollback to clean database records, generated module directories, and published public symlinks on failure
+- Show Composer errors directly in terminal during module scaffolding failures
+
+---
+
 # [v6.0.8]
 
 - Allow external API requests and form submissions via CSP (connect-src, form-action)
