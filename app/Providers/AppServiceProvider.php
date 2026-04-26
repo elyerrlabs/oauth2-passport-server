@@ -29,6 +29,8 @@ namespace App\Providers;
 
 use App\Console\Commands\CleanTmpFileCommand;
 use App\Guard\TokenGuard;
+use App\Support\Translation\ModuleTranslation;
+use Illuminate\Translation\FileLoader;
 use Laravel\Fortify\Fortify;
 use Laravel\Passport\Passport;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +57,9 @@ class AppServiceProvider extends ServiceProvider
         Passport::ignoreRoutes();
         Fortify::ignoreRoutes();
         $this->loadRateLimitModules();
+        $this->app->singleton('translation.loader', function ($app) {
+            return new FileLoader($app['files'], ModuleTranslation::loaderPaths());
+        });
         //Override AuthCodeRepository  and AccessTokenRepository
         $this->app->bind(LaravelAuthCodeRepository::class, AuthCodeRepository::class);
         $this->app->bind(LaravelAccessTokenRepository::class, AccessTokenRepository::class);

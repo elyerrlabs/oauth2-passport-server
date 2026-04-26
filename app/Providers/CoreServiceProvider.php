@@ -136,6 +136,10 @@ class CoreServiceProvider extends ServiceProvider
             // Load views
             $this->loadViewsFrom($pathView, ucfirst($moduleName));
 
+            if (is_dir($modulePath . '/lang')) {
+                $this->loadTranslationsFrom($modulePath . '/lang', ucfirst($moduleName));
+            }
+
             //Module root
             $moduleRootPath = Str::after($modulePath, base_path() . '/');
 

@@ -26,6 +26,7 @@
  */
 
 use App\Models\Setting\Setting;
+use App\Support\Translation\ModuleTranslation;
 use App\Support\CacheKeys;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -203,29 +204,18 @@ if (!function_exists('setLanguage')) {
      */
     function setLanguage(string $locale = '')
     {
-        $route = request()->route();
-
-        $lang = $locale ?? substr(request()->header('Accept-Language'), 0, 2);
+        $lang = $locale ?: substr((string) request()->header('Accept-Language'), 0, 2);
+        $lang = $lang ?: config('app.locale');
 
         if (auth()->check()) { // Only auth user
             $lang = auth()->user()->lang;
         }
 
-        $path = base_path('lang') . '/' . $lang . '.json';
+        $translations = ModuleTranslation::jsonTranslations($lang);
 
-        if (isset($route->action['module_type']) && $route->action['module_type'] == 'third-party') {
-            $moduleLang = "{$route->action['module_path']}/lang/{$lang}.json";
-
-            if (file_exists($moduleLang)) {
-                $path = $moduleLang;
-            }
+        if (empty($translations) && $lang !== config('app.fallback_locale')) {
+            $translations = ModuleTranslation::jsonTranslations(config('app.fallback_locale'));
         }
-
-        if (!file_exists($path)) {
-            $path = base_path('lang') . '/en.json';
-        }
-
-        $translations = json_decode(file_get_contents($path));
 
         return response()->json($translations);
     }

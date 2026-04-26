@@ -107,6 +107,11 @@ class ThirdPartyServiceProvider extends ServiceProvider
                             Log::warning("Provider $provider cannot be found");
                         }
                     }
+
+                    if (is_dir($modulePath . '/lang')) {
+                        $this->loadTranslationsFrom($modulePath . '/lang', ucfirst($baseName));
+                    }
+
                     // path to import morph class
                     $morphPath = "{$modulePath}/config/morph.php";
                     if (file_exists($morphPath)) {

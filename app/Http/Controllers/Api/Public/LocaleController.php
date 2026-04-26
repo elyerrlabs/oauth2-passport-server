@@ -27,6 +27,7 @@ namespace App\Http\Controllers\Api\Public;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use App\Support\Translation\ModuleTranslation;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -40,15 +41,14 @@ class LocaleController extends Controller
      */
     public function locale(Request $request, string $locale = null)
     {
-        $lang = $locale ?? substr($request->header('Accept-Language'), 0, 2);
+        $lang = $locale ?: substr((string) $request->header('Accept-Language'), 0, 2);
+        $lang = $lang ?: config('app.locale');
 
-        $path = base_path('lang') . '/' . $lang . '.json';
+        $translations = ModuleTranslation::jsonTranslations($lang);
 
-        if (!file_exists($path)) {
-            $path = base_path('lang') . '/en.json';
+        if (empty($translations) && $lang !== config('app.fallback_locale')) {
+            $translations = ModuleTranslation::jsonTranslations(config('app.fallback_locale'));
         }
-
-        $translations = json_decode(file_get_contents($path));
 
         return response()->json($translations);
     }
