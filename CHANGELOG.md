@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
-# [Unreleased]
+# [v6.0.9]
 
 - Merge host and module translation files with fallback-safe loading for local and module langs
 - Centralize module public asset publishing in the host for `module:make`, `module:install`, and `module:update`
