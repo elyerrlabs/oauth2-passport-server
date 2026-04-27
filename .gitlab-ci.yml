@@ -20,8 +20,8 @@ docker-build:
     - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
       when: on_success
 
-    # Development
-    - if: '$CI_COMMIT_BRANCH == "dev"'
+    # Staging
+    - if: '$CI_COMMIT_BRANCH == "staging"'
       when: on_success
 
     # Production
@@ -36,7 +36,7 @@ docker-build:
         DOCKER_IMAGE_TAG="$CI_COMMIT_TAG"
         DOCKERFILE_PATH="docker/production/Dockerfile"
 
-      elif [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
+      elif [[ "$CI_COMMIT_BRANCH" == "staging" ]]; then
         DOCKER_IMAGE_TAG="staging"
         DOCKERFILE_PATH="docker/staging/Dockerfile"
 
@@ -79,8 +79,8 @@ docker-push-hub:
     - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
       when: on_success
 
-    # Development
-    - if: '$CI_COMMIT_BRANCH == "dev"'
+    # Staging
+    - if: '$CI_COMMIT_BRANCH == "staging"'
       when: on_success
 
     # Production
@@ -94,7 +94,7 @@ docker-push-hub:
       if [[ -n "$CI_COMMIT_TAG" ]]; then
         TAG="$CI_COMMIT_TAG"
 
-      elif [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
+      elif [[ "$CI_COMMIT_BRANCH" == "staging" ]]; then
         TAG="staging"
 
       elif [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
