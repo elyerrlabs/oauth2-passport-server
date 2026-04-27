@@ -25,4 +25,5 @@ docker-compose-staging.yml
 docker-compose-latest.yml 
 docker-compose-prod.yml 
 supervisord.pid
+.codex
 !.dockerignore
