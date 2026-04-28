@@ -29,6 +29,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+# [v6.0.10]
+
+- Remove child-src directive to relax Content Security Policy (CSP) restrictions
+- Updated gitlab-ci.yml
+
+--- 
 # [v6.0.9]
 
 - Merge host and module translation files with fallback-safe loading for local and module langs
