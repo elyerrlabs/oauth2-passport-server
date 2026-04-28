@@ -35,13 +35,6 @@ chown -R ${UID}:${GID} .
 
 chown -R ${UID}:${GID} /var/lib/nginx 
 
-echo "🚀 Starting PHP-FPM..."
-php-fpm84 -D
-
-
-echo "🌐 Starting Nginx..."
-nginx -g "daemon off;" &   
-
 echo "🛠️ Starting Supervisor..."
 supervisord -c /etc/supervisord.conf &  
 

@@ -165,12 +165,13 @@ COPY third-party third-party
 COPY artisan artisan
 COPY LICENSE.md LICENSE.md
 
-COPY docker/staging/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY docker/staging/nginx/default.conf /etc/nginx/http.d/default.conf
-COPY docker/staging/php/www.conf /etc/php84/php-fpm.d/www.conf
-COPY docker/staging/php/php.ini /etc/php84/conf.d/99-custom.ini
-COPY docker/staging/supervisor/laravel.ini /etc/supervisor.d/laravel.ini
-COPY docker/staging/entrypoint.sh /usr/local/bin/entrypoint.sh 
+COPY docker/production/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker/production/nginx/default.conf /etc/nginx/http.d/default.conf
+COPY docker/production/php/www.conf /etc/php84/php-fpm.d/www.conf
+COPY docker/production/php/php.ini /etc/php84/conf.d/99-custom.ini
+COPY docker/production/supervisor/laravel.ini /etc/supervisor.d/laravel.ini
+COPY docker/production/supervisor/servers.ini /etc/supervisor.d/servers.ini
+COPY docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh 
 
 # supervisor config to manage services
 RUN chmod 440 /etc/nginx/http.d/default.conf \

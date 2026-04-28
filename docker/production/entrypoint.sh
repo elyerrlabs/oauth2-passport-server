@@ -60,12 +60,6 @@ chown -R www-data:www-data /home/www-data/.ssh
 
 php artisan storage:link
 
-echo "🚀 Starting PHP-FPM..."
-php-fpm84 -D
-
-echo "🌐 Starting Nginx..."
-nginx -g "daemon off;" &   
-
 echo "🛠️ Starting Supervisor..."
 supervisord -c /etc/supervisord.conf &  
 

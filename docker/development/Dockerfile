@@ -78,6 +78,7 @@ COPY php/php.ini /etc/php84/conf.d/99-custom.ini
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/default.conf /etc/nginx/http.d/default.conf
 COPY supervisor/laravel.ini /etc/supervisor.d/laravel.ini
+COPY supervisor/servers.ini /etc/supervisor.d/servers.ini
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh 
 
 RUN chmod 440 /etc/nginx/http.d/default.conf 
