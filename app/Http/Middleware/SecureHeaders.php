@@ -84,7 +84,7 @@ class SecureHeaders
             //"style-src-attr 'self' 'nonce-{$nonce}'",
             //"media-src 'self'",
             "object-src 'self'",
-            "child-src 'self'",
+           // "child-src 'self'",
             //"frame-src 'self' https://newassets.hcaptcha.com/ https://challenges.cloudflare.com",
             "frame-ancestors 'self'",
             //"img-src 'self' data: blob:",
