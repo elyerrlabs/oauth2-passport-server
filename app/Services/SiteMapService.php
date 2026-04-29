@@ -348,7 +348,7 @@ class SiteMapService
 
         Storage::disk('backups')->makeDirectory($this->storage);
 
-        $files = ['robots.txt'];
+        $files = ['robots.txt', 'favicon.ico']; 
 
         foreach ($files as $file) {
             $from = "{$public}/{$file}";
@@ -431,6 +431,28 @@ class SiteMapService
         } catch (\Exception $e) {
             throw new ReportError($e->getMessage(), $e->getCode());
         }
+    }
+
+    public function getFaviconData()
+    {
+        $faviconPath = public_path('favicon.ico');
+
+        if (file_exists($faviconPath)) {
+            return url('favicon.ico');
+        }
+
+        return null;
+    }
+
+    /**
+     * Change favicon data
+     * @param Request $request
+     * @return void
+     */
+    public function updateFavicon(Request $request)
+    {
+        $favicon = $request->file('favicon');
+        $favicon->move(public_path(), 'favicon.ico');
     }
 
     /**

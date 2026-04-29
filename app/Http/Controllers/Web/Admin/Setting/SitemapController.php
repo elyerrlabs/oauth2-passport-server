@@ -35,7 +35,7 @@ use App\Services\SiteMapService;
 use Illuminate\Http\Request;
 
 final class SitemapController extends WebController
-{   
+{
 
     /**
      * Construct
@@ -159,5 +159,32 @@ final class SitemapController extends WebController
         $this->sitemapService->updateRobotData($request);
 
         return redirect()->back()->with('status', __('Content updated successfully'));
+    }
+
+    /**
+     * show form favicon
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function faviconForm()
+    {
+        $favicon = $this->sitemapService->getFaviconData();
+
+        return view('admin.sitemap.favicon', compact('favicon'));
+    }
+
+    /**
+     * Update favicon
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateFavicon(Request $request)
+    {
+        $request->validate([
+            'favicon' => 'required|file|mimes:ico,png',
+        ]);
+
+        $this->sitemapService->updateFavicon($request);
+
+        return redirect()->back()->with('status', __('Favicon updated successfully'));
     }
 }

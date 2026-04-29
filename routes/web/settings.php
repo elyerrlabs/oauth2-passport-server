@@ -76,8 +76,11 @@ Route::group([
     Route::get('/routes', [SitemapController::class, 'index'])->name('index');
     Route::post('/routes', [SitemapController::class, 'updateMeta'])->name('store');
     Route::delete('/routes/reset', [SitemapController::class, 'reset'])->name('reset');
-    Route::delete('/routes/{url}', [SitemapController::class, 'delete'])->name('delete'); 
+    Route::delete('/routes/{url}', [SitemapController::class, 'delete'])->name('delete');
 
     Route::get('/robot', [SitemapController::class, 'robotForm'])->name('robot.form');
     Route::post('/robot', [SitemapController::class, 'updateRobot'])->name('robot.update');
+
+    Route::get('/favicon', [SitemapController::class, 'faviconForm'])->name('favicon.form');
+    Route::post('/favicon', [SitemapController::class, 'updateFavicon'])->name('favicon.update');
 });

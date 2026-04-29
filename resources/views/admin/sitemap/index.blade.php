@@ -10,6 +10,11 @@
             'route' => route('admin.sitemaps.robot.form'),
             'icon' => 'mdi mdi-robot',
         ],
+        [
+            'name' => 'Favicon',
+            'route' => route('admin.sitemaps.favicon.form'),
+            'icon' => 'mdi mdi-upload-circle-outline',
+        ],
     ];
 @endphp
 
