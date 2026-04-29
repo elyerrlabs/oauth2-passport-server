@@ -1,6 +1,7 @@
 *
 !.gitignore
 !.dockerignore
+!favicon.ico
 !favicon.png
 !index.php
 !robots.txt

@@ -1,1 +1,1 @@
-<link rel="icon" href="{{ config('app.url') }}/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
