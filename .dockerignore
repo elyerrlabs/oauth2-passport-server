@@ -10,7 +10,7 @@
 !public/.htaccess
 !public/robots.txt
 !public/index.php
-!public/favicon.png
+!public/favicon.ico
 !public/third-party/.dockerignore
 !resources/
 !routes/
