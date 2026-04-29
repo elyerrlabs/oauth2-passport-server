@@ -55,6 +55,7 @@ if (!function_exists('settingAdd')) {
             );
 
         } catch (\Exception $th) {
+            Log::error("Error creating settings : " . $th->getMessage(), $th->getTrace());
         }
     }
 }

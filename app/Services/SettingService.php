@@ -27,27 +27,31 @@ namespace App\Services;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use App\Models\Setting\Setting;
+use App\Support\CacheKeys;
 use Core\User\Model\Scope;
-use Illuminate\Support\Facades\URL;
 use App\Models\OAuth\Token;
+use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Support\Str;
 use App\Models\OAuth\Client;
+use Illuminate\Http\Request;
 use App\Models\OAuth\AuthCode;
 use Laravel\Passport\Passport;
 use App\Models\OAuth\RefreshToken;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\QueryException;
 
 class SettingService
 {
-    private $model;
+    use Asset;
 
-
-    public function __construct()
+    public function __construct(protected Setting $model)
     {
-        $this->model = app(\App\Models\Setting\Setting::class);
+
     }
 
     /**
@@ -65,8 +69,16 @@ class SettingService
      */
     public static function resetConfigKeys()
     {
-        Cache::delete(static::cacheKey());
-        static::loadConfigKeys();
+        file_put_contents(static::pid(), time());
+    }
+
+    /**
+     * Set a pid to reset cache
+     * @return string
+     */
+    public static function pid()
+    {
+        return base_path('.cache.pid');
     }
 
     /**
@@ -74,9 +86,20 @@ class SettingService
      */
     public static function loadConfigKeys()
     {
-
         try {
-            $settings = \App\Models\Setting\Setting::pluck('value', 'key');
+
+            if (file_exists(static::pid())) {
+                Cache::forget(CacheKeys::config());
+                unlink(static::pid());
+            }
+
+            $settings = Cache::remember(
+                CacheKeys::config(),
+                now()->addDays(intval(config('cache.expires', 90))),
+                function () {
+                    return \App\Models\Setting\Setting::pluck('value', 'key')->toArray();
+                }
+            );
 
             foreach ($settings as $key => $value) {
 
@@ -98,7 +121,7 @@ class SettingService
                 Config::set($key, $value);
             }
         } catch (\Throwable $th) {
-            Log::error('Something is wrong to load settings' . $th->getMessage());
+            Log::error('Error loading config : ' . $th->getMessage(), $th->getTrace());
         }
     }
 
@@ -119,7 +142,6 @@ class SettingService
         Config::set('database.redis.horizon.port', intval(config('database.redis.cache.port', 6379)));
         Config::set('database.redis.horizon.database', intval(config('database.redis.cache.database', 0)));
 
-        // dd(config('database.redis'));
         static::getPassportSetting();
 
         URL::forceScheme(env('APP_URL_SCHEME', 'https'));
@@ -398,6 +420,7 @@ class SettingService
 
             Passport::tokensCan($scopes);
         } catch (QueryException $th) {
+            Log::error($th->getMessage(), $th->getTrace());
         }
 
         /**
@@ -407,6 +430,32 @@ class SettingService
         Passport::useRefreshTokenModel(RefreshToken::class);
         Passport::useAuthCodeModel(AuthCode::class);
         Passport::useClientModel(Client::class);
+    }
+
+    /**
+     * Update
+     * @param Request $request
+     * @return void
+     */
+    public function update(Request $request)
+    {
+        $data = $request->except('_method', '_token', 'current_route');
+        $route = Route::getRoutes()->getByName($request->current_route)->action;
+        $moduleConfigKey = null;
+
+        if (isset($route['config_key']) && $route['config_key']) {
+            $moduleConfigKey = $route['config_key'];
+        }
+
+        $data = $this->transformRequest($data);
+
+        foreach ($data as $key => $value) {
+            settingAdd("{$moduleConfigKey}{$key}", $value);
+        }
+        Cache::forget(CacheKeys::config());
+
+        //Set a pid to reset cache
+        file_put_contents(static::pid(), time());
     }
 
     /**

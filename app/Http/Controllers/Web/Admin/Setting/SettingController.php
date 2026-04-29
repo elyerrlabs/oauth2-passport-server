@@ -62,20 +62,7 @@ class SettingController extends WebController
      */
     public function update(Request $request)
     {
-        $data = $request->except('_method', '_token', 'current_route');
-        $route = Route::getRoutes()->getByName($request->current_route)->action;
-        $moduleConfigKey = null;
-
-        if (isset($route['config_key']) && $route['config_key']) {
-            $moduleConfigKey = $route['config_key'];
-        }
-
-        $data = $this->transformRequest($data);
-
-        foreach ($data as $key => $value) {
-
-            settingAdd("{$moduleConfigKey}{$key}", $value);
-        }
+        $this->settingService->update($request);
 
         return redirect()->route($request->current_route)->with('status', __('Setting updated successfully'));
     }
