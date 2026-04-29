@@ -82,4 +82,9 @@ class CacheKeys
     {
         return "broadcast:channels";
     }
+
+    public static function config()
+    {
+        return "config:keys";
+    }
 }
