@@ -44,6 +44,10 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Avoided reliance on cache invalidation methods like `Cache::forget` due to environment inconsistencies
 - Added Redis connection validation for default and cache configurations
 
+### Sitemap management
+
+- Added support for generating and managing sitemaps for public pages
+
 ---
 
 # [v6.0.10]
