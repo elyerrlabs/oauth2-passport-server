@@ -42,6 +42,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Added caching layer for settings to reduce repeated database queries
 - Implemented PID-based invalidation mechanism to refresh cache on updates
 - Avoided reliance on cache invalidation methods like `Cache::forget` due to environment inconsistencies
+- Added Redis connection validation for default and cache configurations
 
 ---
 
