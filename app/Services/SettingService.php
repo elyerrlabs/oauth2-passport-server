@@ -27,19 +27,22 @@ namespace App\Services;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Models\Setting\Setting;
+use Elyerr\ApiResponse\Exceptions\ReportError;
+use Redis;
+use RedisException;
 use App\Support\CacheKeys;
 use Core\User\Model\Scope;
 use App\Models\OAuth\Token;
-use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Support\Str;
 use App\Models\OAuth\Client;
 use Illuminate\Http\Request;
 use App\Models\OAuth\AuthCode;
 use Laravel\Passport\Passport;
+use App\Models\Setting\Setting;
 use App\Models\OAuth\RefreshToken;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
+use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
@@ -79,6 +82,15 @@ class SettingService
     public static function pid()
     {
         return base_path('.cache.pid');
+    }
+
+    public static function ping()
+    {
+
+
+        Cache::store('redis')->get('ping');
+
+
     }
 
     /**
@@ -452,10 +464,111 @@ class SettingService
         foreach ($data as $key => $value) {
             settingAdd("{$moduleConfigKey}{$key}", $value);
         }
-        Cache::forget(CacheKeys::config());
 
         //Set a pid to reset cache
         file_put_contents(static::pid(), time());
+    }
+
+    /**
+     * Validate cache system from request
+     * @param Request $request
+     * @return void
+     */
+    public function validateCacheSystemFromRequest(Request $request): void
+    {
+        if ($request->has('database.redis')) {
+            foreach (['default', 'cache'] as $type) {
+                $this->checkRedisConnection(
+                    $request->input("database.redis.$type.host"),
+                    $request->input("database.redis.$type.port", 6379),
+                    $request->input("database.redis.$type.password"),
+                    $request->input("database.redis.$type.database", 0),
+                    $type
+                );
+            }
+        }
+    }
+
+    /**
+     * Check redis connection
+     * @param mixed $host
+     * @param mixed $port
+     * @param mixed $password
+     * @param mixed $database
+     * @param mixed $type
+     * @throws ReportError
+     * @return void
+     */
+    protected function checkRedisConnection($host, $port, $password, $database, $type): void
+    {
+        $client = new \Redis();
+
+        $context = [
+            'type' => $type,
+            'host' => $host,
+            'port' => (int) $port,
+            'database' => (int) $database,
+        ];
+
+        try {
+            // 1. Conexión
+            if (!$client->connect($host, (int) $port, 2)) {
+                Log::error("Redis connection failed", $context);
+
+                throw new ReportError(
+                    "Redis connection failed [$type] → {$host}:{$port}",
+                    403
+                );
+            }
+
+            // 2. Auth
+            if (!empty($password)) {
+                if (!$client->auth($password)) {
+                    Log::error("Redis authentication failed", $context);
+
+                    throw new ReportError(
+                        "Redis authentication failed [$type] → {$host}:{$port}",
+                        403
+                    );
+                }
+            }
+
+            // 3. Selection DB
+            if (!$client->select((int) $database)) {
+                Log::error("Redis database selection failed", $context);
+
+                throw new ReportError(
+                    "Redis database selection failed [$type] → DB: {$database}",
+                    403
+                );
+            }
+
+            if (!$client->ping()) {
+                Log::error("Redis ping failed", $context);
+
+                throw new ReportError(
+                    "Redis ping failed [$type] → {$host}:{$port}",
+                    403
+                );
+            }
+
+        } catch (\Throwable $e) {
+            Log::error("Redis exception", array_merge($context, [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]));
+
+            throw new ReportError(
+                "Redis error [$type] → " . $e->getMessage(),
+                403
+            );
+        } finally {
+            try {
+                $client->close();
+            } catch (\Throwable $e) {
+                Log::warning("Redis close failed", $context);
+            }
+        }
     }
 
     /**

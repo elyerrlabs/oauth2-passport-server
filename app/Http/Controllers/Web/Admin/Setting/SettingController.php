@@ -36,6 +36,10 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebController;
+use Illuminate\Cache\Repository;
+use Illuminate\Cache\ArrayStore;
+use Illuminate\Cache\FileStore;
+use Illuminate\Filesystem\Filesystem;
 
 class SettingController extends WebController
 {
@@ -62,12 +66,12 @@ class SettingController extends WebController
      */
     public function update(Request $request)
     {
+        $this->settingService->validateCacheSystemFromRequest($request);
+
         $this->settingService->update($request);
 
         return redirect()->route($request->current_route)->with('status', __('Setting updated successfully'));
     }
-
-
 
     /**
      * Reload cache for settings
