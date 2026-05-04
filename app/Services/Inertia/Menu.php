@@ -165,19 +165,19 @@ class Menu
             "developers" => [
                 'id' => 'dev',
                 'name' => __('Developers'),
-                'icon' => 'mdi-tools',
+                'icon' => 'mdi mdi-tools',
                 'show' => intval(config('routes.system.clients.oauth_developers.status', true)) ? true : false,
                 'menu' => [
                     [
                         'name' => __('Applications'),
                         'route' => Route::has('passport.clients.index') ? route('passport.clients.index') : '',
-                        'icon' => 'mdi-connection',
+                        'icon' => 'mdi mdi-connection',
                         'show' => intval(config('routes.system.clients.oauth.status')) ? true : false
                     ],
                     [
                         'name' => __('API Key'),
                         'route' => Route::has('passport.personal.tokens.index') ? route('passport.personal.tokens.index') : '',
-                        'icon' => 'mdi-xml',
+                        'icon' => 'mdi mdi-xml',
                         'show' => intval(config('routes.system.clients.api.status')) ? true : false,
                     ],
                 ]

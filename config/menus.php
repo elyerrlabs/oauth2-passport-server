@@ -82,7 +82,7 @@ return [
             "id" => "list_of_pages",
             "name" => "List of pages",
             "route" => "admin.sitemaps.index",
-            "icon" => "mdi-sitemap-outline",
+            "icon" => "mdi mdi-sitemap-outline",
             'service' => "administrator:seo"
 
         ],
@@ -90,7 +90,7 @@ return [
             "id" => "robot",
             "name" => "Robot",
             "route" => "admin.sitemaps.robot.form",
-            "icon" => "mdi-robot-angry-outline",
+            "icon" => "mdi mdi-robot-angry-outline",
             'service' => "administrator:seo"
         ]
     ],
