@@ -23,325 +23,347 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-admin-transaction-layout>
-        <!-- Header Section -->
-        <div class="mb-8">
-            <div class="flex items-center space-x-3 mb-2">
-                <div class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                    <i
-                        class="mdi mdi-chart-areaspline text-blue-600 dark:text-blue-400 text-lg"
-                    ></i>
-                </div>
-                <div>
-                    <h1
-                        class="text-2xl font-semibold text-gray-900 dark:text-white"
-                    >
-                        {{ __("Dashboard Analytics") }}
-                    </h1>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                        {{
-                            __(
-                                "Monitor your transaction metrics and performance"
-                            )
-                        }}
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Statistics Cards -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
-            <div
-                v-for="card in cards"
-                :key="card.label"
-                class="group bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-100 dark:hover:border-blue-800"
-            >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <div
-                            class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1"
-                        >
-                            {{ card.label }}
-                        </div>
-                        <div
-                            class="text-2xl font-bold text-gray-900 dark:text-white"
-                        >
-                            {{ card.value }}
-                        </div>
-                    </div>
-                    <div
-                        class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-100 dark:group-hover:bg-blue-800/40 transition-colors duration-300"
-                    >
-                        <i
-                            :class="[
-                                card.icon,
-                                'text-blue-600 dark:text-blue-400 text-base',
-                            ]"
-                        ></i>
-                    </div>
-                </div>
-                <div
-                    class="mt-3 w-8 h-0.5 bg-blue-200 dark:bg-blue-700 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                ></div>
-            </div>
-        </div>
-
-        <!-- Filters Section -->
-        <div
-            class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6 mb-8 shadow-sm"
-        >
-            <div class="flex items-center space-x-2 mb-4">
-                <i
-                    class="mdi mdi-tune text-gray-400 dark:text-gray-500 text-base"
-                ></i>
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {{ __("Filter Analytics") }}
-                </h2>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                <!-- Start Date -->
-                <div>
-                    <label
-                        class="block text-xs font-medium text-gray-600 dark:text-gray-400"
-                    >
-                        {{ __("Start date") }}
-                    </label>
-                    <div class="relative">
-                        <input
-                            v-model="params.start"
-                            type="date"
-                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                        />
-                        <div
-                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                        >
-                            <i
-                                class="mdi mdi-calendar-start text-gray-400 dark:text-gray-500 text-sm"
-                            ></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- End Date -->
-                <div>
-                    <label
-                        class="block text-xs font-medium text-gray-600 dark:text-gray-400"
-                    >
-                        {{ __("End date") }}
-                    </label>
-                    <div class="relative">
-                        <input
-                            v-model="params.end"
-                            type="date"
-                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                        />
-                        <div
-                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                        >
-                            <i
-                                class="mdi mdi-calendar-end text-gray-400 dark:text-gray-500 text-sm"
-                            ></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Status -->
-                <div>
-                    <label
-                        class="block text-xs font-medium text-gray-600 dark:text-gray-400"
-                    >
-                        {{ __("Status") }}
-                    </label>
-                    <div class="relative">
-                        <select
-                            v-model="params.status"
-                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
-                        >
-                            <option
-                                v-for="option in status"
-                                :key="option.value"
-                                :value="option.value"
-                            >
-                                {{ option.label }}
-                            </option>
-                        </select>
-                        <div
-                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                        >
-                            <i
-                                class="mdi mdi-status text-gray-400 dark:text-gray-500 text-sm"
-                            ></i>
-                        </div>
-                        <div
-                            class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
-                        >
-                            <i
-                                class="mdi mdi-chevron-down text-gray-400 dark:text-gray-500 text-sm"
-                            ></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chart Type -->
-                <div>
-                    <label
-                        class="block text-xs font-medium text-gray-600 dark:text-gray-400"
-                    >
-                        {{ __("Chart type") }}
-                    </label>
-                    <div class="relative">
-                        <select
-                            v-model="chartType"
-                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
-                        >
-                            <option
-                                v-for="type in chartTypes"
-                                :key="type"
-                                :value="type"
-                            >
-                                {{
-                                    __(
-                                        type.charAt(0).toUpperCase() +
-                                            type.slice(1)
-                                    )
-                                }}
-                            </option>
-                        </select>
-                        <div
-                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                        >
-                            <i
-                                class="mdi mdi-chart-bar text-gray-400 dark:text-gray-500 text-sm"
-                            ></i>
-                        </div>
-                        <div
-                            class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
-                        >
-                            <i
-                                class="mdi mdi-chevron-down text-gray-400 dark:text-gray-500 text-sm"
-                            ></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Date Grouping -->
-                <div class="space-y-1">
-                    <label
-                        class="block text-xs font-medium text-gray-600 dark:text-gray-400"
-                    >
-                        {{ __("Date grouping") }}
-                    </label>
-                    <div class="relative">
-                        <select
-                            v-model="params.type"
-                            class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
-                        >
-                            <option
-                                v-for="type in types"
-                                :key="type"
-                                :value="type"
-                            >
-                                {{
-                                    __(
-                                        type.charAt(0).toUpperCase() +
-                                            type.slice(1)
-                                    )
-                                }}
-                            </option>
-                        </select>
-                        <div
-                            class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                        >
-                            <i
-                                class="mdi mdi-calendar-group text-gray-400 dark:text-gray-500 text-sm"
-                            ></i>
-                        </div>
-                        <div
-                            class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
-                        >
-                            <i
-                                class="mdi mdi-chevron-down text-gray-400 dark:text-gray-500 text-sm"
-                            ></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Apply Filters Button -->
-                <div class="flex items-end">
-                    <button
-                        @click="getData"
-                        class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transform hover:scale-105"
-                    >
-                        <i class="mdi mdi-filter text-xs"></i>
-                        <span>{{ __("Apply") }}</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chart Section -->
-        <div
-            class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm"
-        >
-            <div
-                class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6"
-            >
-                <div class="flex items-center space-x-3 mb-3 lg:mb-0">
+    <v-layout>
+        <template #aside>
+            <v-item-menu
+                :items="page.props.menus"
+                :title="__('My apps')"
+                icon="mdi mdi-apps text-2xl me-2"
+                :collapse="true"
+            />
+        </template>
+        <template #main>
+            <!-- Header Section -->
+            <div class="mb-8">
+                <div class="flex items-center space-x-3 mb-2">
                     <div class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
                         <i
-                            class="mdi mdi-chart-line text-blue-600 dark:text-blue-400 text-base"
+                            class="mdi mdi-chart-areaspline text-blue-600 dark:text-blue-400 text-lg"
                         ></i>
                     </div>
                     <div>
-                        <h2
-                            class="text-lg font-semibold text-gray-900 dark:text-white"
+                        <h1
+                            class="text-2xl font-semibold text-gray-900 dark:text-white"
                         >
-                            {{ __("Transaction Analytics") }}
-                        </h2>
+                            {{ __("Dashboard Analytics") }}
+                        </h1>
                         <p
-                            class="text-gray-500 dark:text-gray-400 text-xs mt-1"
+                            class="text-gray-500 dark:text-gray-400 text-sm mt-1"
                         >
                             {{
-                                __("Real-time insights and performance metrics")
+                                __(
+                                    "Monitor your transaction metrics and performance",
+                                )
                             }}
                         </p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
                 <div
-                    class="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1.5"
+                    v-for="card in cards"
+                    :key="card.label"
+                    class="group bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-100 dark:hover:border-blue-800"
                 >
-                    <i
-                        class="mdi mdi-sync animate-spin text-blue-600 dark:text-blue-400 text-xs"
-                    ></i>
-                    <span>{{ __("Auto-refresh: 10s") }}</span>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div
+                                class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1"
+                            >
+                                {{ card.label }}
+                            </div>
+                            <div
+                                class="text-2xl font-bold text-gray-900 dark:text-white"
+                            >
+                                {{ card.value }}
+                            </div>
+                        </div>
+                        <div
+                            class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-100 dark:group-hover:bg-blue-800/40 transition-colors duration-300"
+                        >
+                            <i
+                                :class="[
+                                    card.icon,
+                                    'text-blue-600 dark:text-blue-400 text-base',
+                                ]"
+                            ></i>
+                        </div>
+                    </div>
+                    <div
+                        class="mt-3 w-8 h-0.5 bg-blue-200 dark:bg-blue-700 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    ></div>
                 </div>
             </div>
 
+            <!-- Filters Section -->
             <div
-                class="bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-100 dark:border-gray-700"
+                class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6 mb-8 shadow-sm"
             >
-                <apex-charts
-                    width="100%"
-                    height="350"
-                    :type="chartType"
-                    :options="chartOptions"
-                    :series="chartSeries"
-                    class="chart-container"
-                />
+                <div class="flex items-center space-x-2 mb-4">
+                    <i
+                        class="mdi mdi-tune text-gray-400 dark:text-gray-500 text-base"
+                    ></i>
+                    <h2
+                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                    >
+                        {{ __("Filter Analytics") }}
+                    </h2>
+                </div>
+
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4"
+                >
+                    <!-- Start Date -->
+                    <div>
+                        <label
+                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
+                        >
+                            {{ __("Start date") }}
+                        </label>
+                        <div class="relative">
+                            <input
+                                v-model="params.start"
+                                type="date"
+                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                            />
+                            <div
+                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
+                            >
+                                <i
+                                    class="mdi mdi-calendar-start text-gray-400 dark:text-gray-500 text-sm"
+                                ></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End Date -->
+                    <div>
+                        <label
+                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
+                        >
+                            {{ __("End date") }}
+                        </label>
+                        <div class="relative">
+                            <input
+                                v-model="params.end"
+                                type="date"
+                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                            />
+                            <div
+                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
+                            >
+                                <i
+                                    class="mdi mdi-calendar-end text-gray-400 dark:text-gray-500 text-sm"
+                                ></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div>
+                        <label
+                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
+                        >
+                            {{ __("Status") }}
+                        </label>
+                        <div class="relative">
+                            <select
+                                v-model="params.status"
+                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
+                            >
+                                <option
+                                    v-for="option in status"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </option>
+                            </select>
+                            <div
+                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
+                            >
+                                <i
+                                    class="mdi mdi-status text-gray-400 dark:text-gray-500 text-sm"
+                                ></i>
+                            </div>
+                            <div
+                                class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
+                            >
+                                <i
+                                    class="mdi mdi-chevron-down text-gray-400 dark:text-gray-500 text-sm"
+                                ></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Type -->
+                    <div>
+                        <label
+                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
+                        >
+                            {{ __("Chart type") }}
+                        </label>
+                        <div class="relative">
+                            <select
+                                v-model="chartType"
+                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
+                            >
+                                <option
+                                    v-for="type in chartTypes"
+                                    :key="type"
+                                    :value="type"
+                                >
+                                    {{
+                                        __(
+                                            type.charAt(0).toUpperCase() +
+                                                type.slice(1),
+                                        )
+                                    }}
+                                </option>
+                            </select>
+                            <div
+                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
+                            >
+                                <i
+                                    class="mdi mdi-chart-bar text-gray-400 dark:text-gray-500 text-sm"
+                                ></i>
+                            </div>
+                            <div
+                                class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
+                            >
+                                <i
+                                    class="mdi mdi-chevron-down text-gray-400 dark:text-gray-500 text-sm"
+                                ></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date Grouping -->
+                    <div class="space-y-1">
+                        <label
+                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
+                        >
+                            {{ __("Date grouping") }}
+                        </label>
+                        <div class="relative">
+                            <select
+                                v-model="params.type"
+                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
+                            >
+                                <option
+                                    v-for="type in types"
+                                    :key="type"
+                                    :value="type"
+                                >
+                                    {{
+                                        __(
+                                            type.charAt(0).toUpperCase() +
+                                                type.slice(1),
+                                        )
+                                    }}
+                                </option>
+                            </select>
+                            <div
+                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
+                            >
+                                <i
+                                    class="mdi mdi-calendar-group text-gray-400 dark:text-gray-500 text-sm"
+                                ></i>
+                            </div>
+                            <div
+                                class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
+                            >
+                                <i
+                                    class="mdi mdi-chevron-down text-gray-400 dark:text-gray-500 text-sm"
+                                ></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Apply Filters Button -->
+                    <div class="flex items-end">
+                        <button
+                            @click="getData"
+                            class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transform hover:scale-105"
+                        >
+                            <i class="mdi mdi-filter text-xs"></i>
+                            <span>{{ __("Apply") }}</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </v-admin-transaction-layout>
+
+            <!-- Chart Section -->
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm"
+            >
+                <div
+                    class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6"
+                >
+                    <div class="flex items-center space-x-3 mb-3 lg:mb-0">
+                        <div
+                            class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg"
+                        >
+                            <i
+                                class="mdi mdi-chart-line text-blue-600 dark:text-blue-400 text-base"
+                            ></i>
+                        </div>
+                        <div>
+                            <h2
+                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Transaction Analytics") }}
+                            </h2>
+                            <p
+                                class="text-gray-500 dark:text-gray-400 text-xs mt-1"
+                            >
+                                {{
+                                    __(
+                                        "Real-time insights and performance metrics",
+                                    )
+                                }}
+                            </p>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1.5"
+                    >
+                        <i
+                            class="mdi mdi-sync animate-spin text-blue-600 dark:text-blue-400 text-xs"
+                        ></i>
+                        <span>{{ __("Auto-refresh: 10s") }}</span>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-100 dark:border-gray-700"
+                >
+                    <apex-charts
+                        width="100%"
+                        height="350"
+                        :type="chartType"
+                        :options="chartOptions"
+                        :series="chartSeries"
+                        class="chart-container"
+                    />
+                </div>
+            </div>
+        </template>
+    </v-layout>
 </template>
 
 <script>
 import ApexCharts from "vue3-apexcharts";
-import VAdminTransactionLayout from "@/components/VGeneralLayout.vue";
+import VLayout from "@/components/VLayout.vue";
+import VItemMenu from "@/components/VItemMenu.vue";
 
 export default {
     components: {
         ApexCharts,
-        VAdminTransactionLayout,
+        VLayout,
+        VItemMenu,
     },
 
     data() {
@@ -515,7 +537,7 @@ export default {
                 },
                 xaxis: {
                     categories: this.transactions_by_month.map(
-                        (item) => item.month
+                        (item) => item.month,
                     ),
                     labels: {
                         style: {

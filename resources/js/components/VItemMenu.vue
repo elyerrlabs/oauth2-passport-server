@@ -33,7 +33,7 @@
                         :class="item.icon"
                     ></i>
                 </div>
-                <span class="text-xs">{{ __(item.name) }}</span>
+                <span class="text-md">{{ __(item.name) }}</span>
             </button>
         </div>
     </div>

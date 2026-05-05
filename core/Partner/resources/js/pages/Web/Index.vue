@@ -23,815 +23,833 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-partner-layout>
-        <div
-            class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-blue-900/20 p-4 lg:p-6 transition-colors duration-300"
-        >
-            <!-- Header Section -->
+    <v-layout>
+        <template #aside>
+            <v-item-menu
+                :items="page.props.menus"
+                :title="__('My apps')"
+                icon="mdi mdi-apps text-2xl me-2"
+                :collapse="true"
+            />
+        </template>
+        <template #main>
             <div
-                class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 lg:mb-8"
+                class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-blue-900/20 p-4 lg:p-6 transition-colors duration-300"
             >
-                <div class="mb-4 lg:mb-0">
-                    <div class="flex items-center space-x-3 mb-2">
-                        <div
-                            class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 rounded-2xl flex items-center justify-center shadow-lg"
-                        >
-                            <svg
-                                class="w-6 h-6 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                                />
-                            </svg>
-                        </div>
-                        <div>
-                            <h1
-                                class="text-2xl lg:text-3xl font-bold liner-gradient from-gray-900 to-blue-800 dark:from-gray-100 dark:to-blue-200 bg-clip-text text-transparent"
-                            >
-                                {{ __("Sales Dashboard") }}
-                            </h1>
-                            <p
-                                class="text-gray-600 dark:text-gray-300 mt-1 text-sm lg:text-base"
-                            >
-                                {{
-                                    __(
-                                        "Monitor your sales performance and commissions"
-                                    )
-                                }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <button
-                    @click="getSales"
-                    class="group inline-flex items-center space-x-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-200 dark:hover:border-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-                >
-                    <svg
-                        class="w-5 h-5 transition-transform group-hover:rotate-180"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
-                        />
-                    </svg>
-                    <span class="font-medium">{{ __("Refresh Data") }}</span>
-                </button>
-            </div>
-
-            <!-- Filters Section -->
-            <div
-                class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm mb-6 p-4 lg:p-6 transition-colors duration-300"
-            >
-                <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
-                    <!-- Start Date -->
-                    <div class="space-y-2">
-                        <label
-                            class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center space-x-1"
-                        >
-                            <svg
-                                class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                            </svg>
-                            <span>{{ __("Start Date") }}</span>
-                        </label>
-                        <input
-                            v-model="params.start"
-                            type="date"
-                            class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        />
-                    </div>
-
-                    <!-- End Date -->
-                    <div class="space-y-2">
-                        <label
-                            class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center space-x-1"
-                        >
-                            <svg
-                                class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                            </svg>
-                            <span>{{ __("End Date") }}</span>
-                        </label>
-                        <input
-                            v-model="params.end"
-                            type="date"
-                            class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        />
-                    </div>
-
-                    <!-- Chart Type -->
-                    <div class="space-y-2">
-                        <label
-                            class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center space-x-1"
-                        >
-                            <svg
-                                class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                                />
-                            </svg>
-                            <span>{{ __("Chart Type") }}</span>
-                        </label>
-                        <select
-                            v-model="chartType"
-                            class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        >
-                            <option
-                                v-for="option in chartTypes"
-                                :key="option.value"
-                                :value="option.value"
-                            >
-                                {{ option.label }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Date Range -->
-                    <div class="space-y-2">
-                        <label
-                            class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center space-x-1"
-                        >
-                            <svg
-                                class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                            </svg>
-                            <span>{{ __("Date Range") }}</span>
-                        </label>
-                        <select
-                            v-model="params.type"
-                            class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        >
-                            <option
-                                v-for="type in types"
-                                :key="type.value"
-                                :value="type.value"
-                            >
-                                {{ type.label }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Apply Button -->
-                    <div class="flex items-end">
-                        <button
-                            @click="getSales"
-                            class="w-full liner-gradient from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 shadow-lg shadow-blue-500/25 flex items-center justify-center space-x-2"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-                                />
-                            </svg>
-                            <span>{{ __("Apply Filters") }}</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KPI Cards Grid -->
-            <div
-                class="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8"
-            >
-                <!-- Total Sales -->
+                <!-- Header Section -->
                 <div
-                    class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                    class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 lg:mb-8"
                 >
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-2xl"
-                        >
-                            <svg
-                                class="w-6 h-6 text-blue-600 dark:text-blue-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                                />
-                            </svg>
-                        </div>
-                        <div class="text-right">
+                    <div class="mb-4 lg:mb-0">
+                        <div class="flex items-center space-x-3 mb-2">
                             <div
-                                class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 rounded-2xl flex items-center justify-center shadow-lg"
                             >
-                                {{ total_sales }}
-                            </div>
-                            <div
-                                class="text-sm text-gray-500 dark:text-gray-400"
-                            >
-                                {{ __("Total Sales") }}
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
-                    >
-                        <div
-                            class="bg-blue-500 h-2 rounded-full transition-all duration-500"
-                            style="width: 75%"
-                        ></div>
-                    </div>
-                </div>
-
-                <!-- Total Commission -->
-                <div
-                    class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
-                >
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="p-3 bg-green-100 dark:bg-green-900/30 rounded-2xl"
-                        >
-                            <svg
-                                class="w-6 h-6 text-green-600 dark:text-green-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <div
-                                class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
-                            >
-                                {{ formatTotalCommission }}
-                            </div>
-                            <div
-                                class="text-sm text-gray-500 dark:text-gray-400"
-                            >
-                                {{ __("Total Commission") }}
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
-                    >
-                        <div
-                            class="bg-green-500 h-2 rounded-full transition-all duration-500"
-                            style="width: 85%"
-                        ></div>
-                    </div>
-                </div>
-
-                <!-- Currency Distribution -->
-                <div
-                    class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
-                >
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl"
-                        >
-                            <svg
-                                class="w-6 h-6 text-purple-600 dark:text-purple-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                                />
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <div
-                                class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
-                            >
-                                {{ currencyCount }}
-                            </div>
-                            <div
-                                class="text-sm text-gray-500 dark:text-gray-400"
-                            >
-                                {{ __("Currencies") }}
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
-                    >
-                        <div
-                            class="bg-purple-500 h-2 rounded-full transition-all duration-500"
-                            :style="`width: ${Math.min(
-                                currencyCount * 25,
-                                100
-                            )}%`"
-                        ></div>
-                    </div>
-                </div>
-
-                <!-- Average Commission -->
-                <div
-                    class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
-                >
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-2xl"
-                        >
-                            <svg
-                                class="w-6 h-6 text-orange-600 dark:text-orange-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                                />
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <div
-                                class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
-                            >
-                                {{ averageCommission }}
-                            </div>
-                            <div
-                                class="text-sm text-gray-500 dark:text-gray-400"
-                            >
-                                {{ __("Avg Commission") }}
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
-                    >
-                        <div
-                            class="bg-orange-500 h-2 rounded-full transition-all duration-500"
-                            style="width: 65%"
-                        ></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Grid -->
-            <div
-                class="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8 mb-6 lg:mb-8"
-            >
-                <!-- Sales by Currency Chart -->
-                <div
-                    class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm p-4 lg:p-6 transition-colors duration-300"
-                >
-                    <div class="flex items-center justify-between mb-6">
-                        <h3
-                            class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
-                        >
-                            {{ __("Commissions by Currency") }}
-                        </h3>
-                        <div class="flex space-x-2">
-                            <button
-                                @click="currencyChartType = 'donut'"
-                                :class="[
-                                    'px-3 py-1 text-sm rounded-lg transition-all duration-200',
-                                    currencyChartType === 'donut'
-                                        ? 'bg-blue-500 text-white shadow-lg'
-                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700',
-                                ]"
-                            >
-                                Donut
-                            </button>
-                            <button
-                                @click="currencyChartType = 'pie'"
-                                :class="[
-                                    'px-3 py-1 text-sm rounded-lg transition-all duration-200',
-                                    currencyChartType === 'pie'
-                                        ? 'bg-blue-500 text-white shadow-lg'
-                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700',
-                                ]"
-                            >
-                                Pie
-                            </button>
-                        </div>
-                    </div>
-                    <div
-                        v-if="currencyChartData.length > 0"
-                        class="chart-container"
-                    >
-                        <apex-charts
-                            width="100%"
-                            height="350"
-                            :type="currencyChartType"
-                            :options="currencyChartOptions"
-                            :series="currencyChartSeries"
-                        />
-                    </div>
-                    <div
-                        v-else
-                        class="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400"
-                    >
-                        <div class="text-center">
-                            <svg
-                                class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                                />
-                            </svg>
-                            <p
-                                class="text-lg font-medium text-gray-500 dark:text-gray-400"
-                            >
-                                {{ __("No data available") }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Daily Performance Chart -->
-                <div
-                    class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm p-4 lg:p-6 transition-colors duration-300"
-                >
-                    <div class="flex items-center justify-between mb-6">
-                        <h3
-                            class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
-                        >
-                            {{ __("Daily Performance") }}
-                        </h3>
-                        <div
-                            class="flex bg-gray-100 dark:bg-gray-700 rounded-xl p-1 border border-gray-200 dark:border-gray-600"
-                        >
-                            <button
-                                v-for="option in chartTypes"
-                                :key="option.value"
-                                @click="chartType = option.value"
-                                :class="[
-                                    'px-3 py-1 text-sm font-semibold rounded-lg transition-all duration-200',
-                                    chartType === option.value
-                                        ? 'bg-blue-500 text-white shadow-lg'
-                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-white dark:hover:bg-gray-600',
-                                ]"
-                            >
-                                {{ option.label }}
-                            </button>
-                        </div>
-                    </div>
-                    <div
-                        v-if="chartSeries[0].data.length > 0"
-                        class="chart-container"
-                    >
-                        <apex-charts
-                            width="100%"
-                            height="350"
-                            :type="chartType"
-                            :options="chartOptions"
-                            :series="chartSeries"
-                        />
-                    </div>
-                    <div
-                        v-else
-                        class="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400"
-                    >
-                        <div class="text-center">
-                            <svg
-                                class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                                />
-                            </svg>
-                            <p
-                                class="text-lg font-medium text-gray-500 dark:text-gray-400"
-                            >
-                                {{ __("No data available") }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Detailed Commission Table -->
-            <div
-                class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm p-4 lg:p-6 transition-colors duration-300 mb-6 lg:mb-8"
-            >
-                <div class="flex items-center justify-between mb-6">
-                    <h3
-                        class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
-                    >
-                        {{ __("Detailed Commission Breakdown") }}
-                    </h3>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ __("Last Updated") }}: {{ lastUpdated }}
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr
-                                class="border-b border-gray-200 dark:border-gray-600"
-                            >
-                                <th
-                                    class="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
+                                <svg
+                                    class="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                 >
-                                    {{ __("Date") }}
-                                </th>
-                                <th
-                                    class="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
-                                >
-                                    {{ __("Currency") }}
-                                </th>
-                                <th
-                                    class="text-right py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
-                                >
-                                    {{ __("Commission") }}
-                                </th>
-                                <th
-                                    class="text-right py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
-                                >
-                                    {{ __("Total Sales") }}
-                                </th>
-                                <th
-                                    class="text-right py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
-                                >
-                                    {{ __("Actions") }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody
-                            class="divide-y divide-gray-200 dark:divide-gray-600"
-                        >
-                            <tr
-                                v-for="(sale, index) in sales"
-                                :key="index"
-                                class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
-                            >
-                                <td
-                                    class="py-3 px-4 text-sm text-gray-900 dark:text-white"
-                                >
-                                    {{ formatDate(sale.date) }}
-                                </td>
-                                <td class="py-3 px-4">
-                                    <div class="flex items-center space-x-2">
-                                        <div
-                                            class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                                            :class="
-                                                getCurrencyColor(sale.currency)
-                                            "
-                                        >
-                                            {{ sale.currency }}
-                                        </div>
-                                        <span
-                                            class="text-sm font-medium text-gray-900 dark:text-white"
-                                        >
-                                            {{ sale.currency }}
-                                        </span>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-4 text-right">
-                                    <div
-                                        class="text-sm font-semibold text-gray-900 dark:text-white"
-                                    >
-                                        {{
-                                            formatCurrency(
-                                                sale.commission,
-                                                sale.currency
-                                            )
-                                        }}
-                                    </div>
-                                </td>
-                                <td class="py-3 px-4 text-right">
-                                    <div
-                                        class="text-sm text-gray-600 dark:text-gray-300"
-                                    >
-                                        {{ sale.total }} {{ __("sales") }}
-                                    </div>
-                                </td>
-                                <td class="py-3 px-4 text-right">
-                                    <button
-                                        @click="viewSaleDetails(sale)"
-                                        class="inline-flex items-center space-x-1 px-3 py-1 text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors duration-200"
-                                    >
-                                        <svg
-                                            class="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                            />
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                            />
-                                        </svg>
-                                        <span>{{ __("View") }}</span>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div v-if="sales.length === 0" class="text-center py-12">
-                    <svg
-                        class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                    </svg>
-                    <p
-                        class="text-lg font-medium text-gray-500 dark:text-gray-400 mb-2"
-                    >
-                        {{ __("No sales data available") }}
-                    </p>
-                    <p class="text-sm text-gray-400 dark:text-gray-500">
-                        {{
-                            __(
-                                "Sales will appear here once you start generating commissions"
-                            )
-                        }}
-                    </p>
-                </div>
-            </div>
-
-            <!-- Currency Summary Cards -->
-            <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6"
-            >
-                <div
-                    v-for="(currency, index) in currencySummary"
-                    :key="currency.currency"
-                    class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
-                >
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="p-3 rounded-2xl text-white"
-                            :class="getCurrencyColor(currency.currency)"
-                        >
-                            <span class="text-sm font-bold">{{
-                                currency.currency
-                            }}</span>
-                        </div>
-                        <div class="text-right">
-                            <div
-                                class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white"
-                            >
-                                {{
-                                    formatCurrency(
-                                        currency.total,
-                                        currency.currency
-                                    )
-                                }}
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                    />
+                                </svg>
                             </div>
-                            <div
-                                class="text-xs text-gray-500 dark:text-gray-400"
-                            >
-                                {{ currency.salesCount }} {{ __("sales") }}
+                            <div>
+                                <h1
+                                    class="text-2xl lg:text-3xl font-bold liner-gradient from-gray-900 to-blue-800 dark:from-gray-100 dark:to-blue-200 bg-clip-text text-transparent"
+                                >
+                                    {{ __("Sales Dashboard") }}
+                                </h1>
+                                <p
+                                    class="text-gray-600 dark:text-gray-300 mt-1 text-sm lg:text-base"
+                                >
+                                    {{
+                                        __(
+                                            "Monitor your sales performance and commissions",
+                                        )
+                                    }}
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
-                    >
-                        <div
-                            class="h-2 rounded-full transition-all duration-500"
-                            :class="getCurrencyColor(currency.currency)"
-                            :style="`width: ${currency.percentage}%`"
-                        ></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Auto-refresh Indicator -->
-            <div
-                class="flex items-center justify-between bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/60 dark:border-gray-700/60 p-4 mt-6 transition-colors duration-300"
-            >
-                <div class="flex items-center space-x-3">
-                    <div
-                        class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+                    <button
+                        @click="getSales"
+                        class="group inline-flex items-center space-x-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-200 dark:hover:border-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
                     >
                         <svg
-                            class="w-4 h-4 text-blue-600 dark:text-blue-400"
+                            class="w-5 h-5 transition-transform group-hover:rotate-180"
                             fill="currentColor"
                             viewBox="0 0 24 24"
                         >
                             <path
-                                d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"
+                                d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
                             />
                         </svg>
-                    </div>
-                    <div class="text-sm text-gray-600 dark:text-gray-400">
-                        {{ __("Data auto-refreshes every") }}
-                        <span
-                            class="font-semibold text-blue-600 dark:text-blue-400"
-                            >{{ refreshCountdown }}s</span
-                        >
+                        <span class="font-medium">{{
+                            __("Refresh Data")
+                        }}</span>
+                    </button>
+                </div>
+
+                <!-- Filters Section -->
+                <div
+                    class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm mb-6 p-4 lg:p-6 transition-colors duration-300"
+                >
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                        <!-- Start Date -->
+                        <div class="space-y-2">
+                            <label
+                                class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center space-x-1"
+                            >
+                                <svg
+                                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                </svg>
+                                <span>{{ __("Start Date") }}</span>
+                            </label>
+                            <input
+                                v-model="params.start"
+                                type="date"
+                                class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            />
+                        </div>
+
+                        <!-- End Date -->
+                        <div class="space-y-2">
+                            <label
+                                class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center space-x-1"
+                            >
+                                <svg
+                                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                </svg>
+                                <span>{{ __("End Date") }}</span>
+                            </label>
+                            <input
+                                v-model="params.end"
+                                type="date"
+                                class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            />
+                        </div>
+
+                        <!-- Chart Type -->
+                        <div class="space-y-2">
+                            <label
+                                class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center space-x-1"
+                            >
+                                <svg
+                                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                    />
+                                </svg>
+                                <span>{{ __("Chart Type") }}</span>
+                            </label>
+                            <select
+                                v-model="chartType"
+                                class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            >
+                                <option
+                                    v-for="option in chartTypes"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="space-y-2">
+                            <label
+                                class="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center space-x-1"
+                            >
+                                <svg
+                                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                </svg>
+                                <span>{{ __("Date Range") }}</span>
+                            </label>
+                            <select
+                                v-model="params.type"
+                                class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            >
+                                <option
+                                    v-for="type in types"
+                                    :key="type.value"
+                                    :value="type.value"
+                                >
+                                    {{ type.label }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Apply Button -->
+                        <div class="flex items-end">
+                            <button
+                                @click="getSales"
+                                class="w-full liner-gradient from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 shadow-lg shadow-blue-500/25 flex items-center justify-center space-x-2"
+                            >
+                                <svg
+                                    class="w-5 h-5"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                                    />
+                                </svg>
+                                <span>{{ __("Apply Filters") }}</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <button
-                    @click="disableAutoRefresh"
-                    class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium transition-colors duration-200 flex items-center space-x-1"
+
+                <!-- KPI Cards Grid -->
+                <div
+                    class="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8"
                 >
-                    <svg
-                        class="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                    <!-- Total Sales -->
+                    <div
+                        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
                     >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
-                    <span>{{ __("Disable") }}</span>
-                </button>
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-2xl"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="text-right">
+                                <div
+                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ total_sales }}
+                                </div>
+                                <div
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Total Sales") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
+                        >
+                            <div
+                                class="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                                style="width: 75%"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <!-- Total Commission -->
+                    <div
+                        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                    >
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="p-3 bg-green-100 dark:bg-green-900/30 rounded-2xl"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-green-600 dark:text-green-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="text-right">
+                                <div
+                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ formatTotalCommission }}
+                                </div>
+                                <div
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Total Commission") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
+                        >
+                            <div
+                                class="bg-green-500 h-2 rounded-full transition-all duration-500"
+                                style="width: 85%"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <!-- Currency Distribution -->
+                    <div
+                        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                    >
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-purple-600 dark:text-purple-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="text-right">
+                                <div
+                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ currencyCount }}
+                                </div>
+                                <div
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Currencies") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
+                        >
+                            <div
+                                class="bg-purple-500 h-2 rounded-full transition-all duration-500"
+                                :style="`width: ${Math.min(
+                                    currencyCount * 25,
+                                    100,
+                                )}%`"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <!-- Average Commission -->
+                    <div
+                        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                    >
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-2xl"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-orange-600 dark:text-orange-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="text-right">
+                                <div
+                                    class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ averageCommission }}
+                                </div>
+                                <div
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Avg Commission") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
+                        >
+                            <div
+                                class="bg-orange-500 h-2 rounded-full transition-all duration-500"
+                                style="width: 65%"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div
+                    class="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8 mb-6 lg:mb-8"
+                >
+                    <!-- Sales by Currency Chart -->
+                    <div
+                        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm p-4 lg:p-6 transition-colors duration-300"
+                    >
+                        <div class="flex items-center justify-between mb-6">
+                            <h3
+                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Commissions by Currency") }}
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button
+                                    @click="currencyChartType = 'donut'"
+                                    :class="[
+                                        'px-3 py-1 text-sm rounded-lg transition-all duration-200',
+                                        currencyChartType === 'donut'
+                                            ? 'bg-blue-500 text-white shadow-lg'
+                                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700',
+                                    ]"
+                                >
+                                    Donut
+                                </button>
+                                <button
+                                    @click="currencyChartType = 'pie'"
+                                    :class="[
+                                        'px-3 py-1 text-sm rounded-lg transition-all duration-200',
+                                        currencyChartType === 'pie'
+                                            ? 'bg-blue-500 text-white shadow-lg'
+                                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700',
+                                    ]"
+                                >
+                                    Pie
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            v-if="currencyChartData.length > 0"
+                            class="chart-container"
+                        >
+                            <apex-charts
+                                width="100%"
+                                height="350"
+                                :type="currencyChartType"
+                                :options="currencyChartOptions"
+                                :series="currencyChartSeries"
+                            />
+                        </div>
+                        <div
+                            v-else
+                            class="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400"
+                        >
+                            <div class="text-center">
+                                <svg
+                                    class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                    />
+                                </svg>
+                                <p
+                                    class="text-lg font-medium text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("No data available") }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Performance Chart -->
+                    <div
+                        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm p-4 lg:p-6 transition-colors duration-300"
+                    >
+                        <div class="flex items-center justify-between mb-6">
+                            <h3
+                                class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Daily Performance") }}
+                            </h3>
+                            <div
+                                class="flex bg-gray-100 dark:bg-gray-700 rounded-xl p-1 border border-gray-200 dark:border-gray-600"
+                            >
+                                <button
+                                    v-for="option in chartTypes"
+                                    :key="option.value"
+                                    @click="chartType = option.value"
+                                    :class="[
+                                        'px-3 py-1 text-sm font-semibold rounded-lg transition-all duration-200',
+                                        chartType === option.value
+                                            ? 'bg-blue-500 text-white shadow-lg'
+                                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-white dark:hover:bg-gray-600',
+                                    ]"
+                                >
+                                    {{ option.label }}
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            v-if="chartSeries[0].data.length > 0"
+                            class="chart-container"
+                        >
+                            <apex-charts
+                                width="100%"
+                                height="350"
+                                :type="chartType"
+                                :options="chartOptions"
+                                :series="chartSeries"
+                            />
+                        </div>
+                        <div
+                            v-else
+                            class="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400"
+                        >
+                            <div class="text-center">
+                                <svg
+                                    class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                    />
+                                </svg>
+                                <p
+                                    class="text-lg font-medium text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("No data available") }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Commission Table -->
+                <div
+                    class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm p-4 lg:p-6 transition-colors duration-300 mb-6 lg:mb-8"
+                >
+                    <div class="flex items-center justify-between mb-6">
+                        <h3
+                            class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white"
+                        >
+                            {{ __("Detailed Commission Breakdown") }}
+                        </h3>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ __("Last Updated") }}: {{ lastUpdated }}
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr
+                                    class="border-b border-gray-200 dark:border-gray-600"
+                                >
+                                    <th
+                                        class="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
+                                    >
+                                        {{ __("Date") }}
+                                    </th>
+                                    <th
+                                        class="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
+                                    >
+                                        {{ __("Currency") }}
+                                    </th>
+                                    <th
+                                        class="text-right py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
+                                    >
+                                        {{ __("Commission") }}
+                                    </th>
+                                    <th
+                                        class="text-right py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
+                                    >
+                                        {{ __("Total Sales") }}
+                                    </th>
+                                    <th
+                                        class="text-right py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300"
+                                    >
+                                        {{ __("Actions") }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody
+                                class="divide-y divide-gray-200 dark:divide-gray-600"
+                            >
+                                <tr
+                                    v-for="(sale, index) in sales"
+                                    :key="index"
+                                    class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                                >
+                                    <td
+                                        class="py-3 px-4 text-sm text-gray-900 dark:text-white"
+                                    >
+                                        {{ formatDate(sale.date) }}
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div
+                                            class="flex items-center space-x-2"
+                                        >
+                                            <div
+                                                class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                                                :class="
+                                                    getCurrencyColor(
+                                                        sale.currency,
+                                                    )
+                                                "
+                                            >
+                                                {{ sale.currency }}
+                                            </div>
+                                            <span
+                                                class="text-sm font-medium text-gray-900 dark:text-white"
+                                            >
+                                                {{ sale.currency }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <div
+                                            class="text-sm font-semibold text-gray-900 dark:text-white"
+                                        >
+                                            {{
+                                                formatCurrency(
+                                                    sale.commission,
+                                                    sale.currency,
+                                                )
+                                            }}
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <div
+                                            class="text-sm text-gray-600 dark:text-gray-300"
+                                        >
+                                            {{ sale.total }} {{ __("sales") }}
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <button
+                                            @click="viewSaleDetails(sale)"
+                                            class="inline-flex items-center space-x-1 px-3 py-1 text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors duration-200"
+                                        >
+                                            <svg
+                                                class="w-4 h-4"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                />
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                />
+                                            </svg>
+                                            <span>{{ __("View") }}</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div v-if="sales.length === 0" class="text-center py-12">
+                        <svg
+                            class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                        </svg>
+                        <p
+                            class="text-lg font-medium text-gray-500 dark:text-gray-400 mb-2"
+                        >
+                            {{ __("No sales data available") }}
+                        </p>
+                        <p class="text-sm text-gray-400 dark:text-gray-500">
+                            {{
+                                __(
+                                    "Sales will appear here once you start generating commissions",
+                                )
+                            }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Currency Summary Cards -->
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6"
+                >
+                    <div
+                        v-for="(currency, index) in currencySummary"
+                        :key="currency.currency"
+                        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-4 lg:p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+                    >
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="p-3 rounded-2xl text-white"
+                                :class="getCurrencyColor(currency.currency)"
+                            >
+                                <span class="text-sm font-bold">{{
+                                    currency.currency
+                                }}</span>
+                            </div>
+                            <div class="text-right">
+                                <div
+                                    class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{
+                                        formatCurrency(
+                                            currency.total,
+                                            currency.currency,
+                                        )
+                                    }}
+                                </div>
+                                <div
+                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ currency.salesCount }} {{ __("sales") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2"
+                        >
+                            <div
+                                class="h-2 rounded-full transition-all duration-500"
+                                :class="getCurrencyColor(currency.currency)"
+                                :style="`width: ${currency.percentage}%`"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto-refresh Indicator -->
+                <div
+                    class="flex items-center justify-between bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/60 dark:border-gray-700/60 p-4 mt-6 transition-colors duration-300"
+                >
+                    <div class="flex items-center space-x-3">
+                        <div
+                            class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-4 h-4 text-blue-600 dark:text-blue-400"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"
+                                />
+                            </svg>
+                        </div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            {{ __("Data auto-refreshes every") }}
+                            <span
+                                class="font-semibold text-blue-600 dark:text-blue-400"
+                                >{{ refreshCountdown }}s</span
+                            >
+                        </div>
+                    </div>
+                    <button
+                        @click="disableAutoRefresh"
+                        class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium transition-colors duration-200 flex items-center space-x-1"
+                    >
+                        <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                        <span>{{ __("Disable") }}</span>
+                    </button>
+                </div>
             </div>
-        </div>
-    </v-partner-layout>
+        </template>
+    </v-layout>
 </template>
 
 <script>
 import ApexCharts from "vue3-apexcharts";
-import VPartnerLayout from "@/components/VGeneralLayout.vue";
+import VLayout from "@/components/VLayout.vue";
+import VItemMenu from "@/components/VItemMenu.vue";
 import { useForm } from "@inertiajs/vue3";
 
 export default {
     components: {
         ApexCharts,
-        VPartnerLayout,
+        VLayout,
+        VItem,
     },
     data() {
         return {
@@ -1013,7 +1031,7 @@ export default {
                                         const total =
                                             w.globals.seriesTotals.reduce(
                                                 (a, b) => a + b,
-                                                0
+                                                0,
                                             );
                                         return total.toLocaleString("en-US", {
                                             minimumFractionDigits: 2,
@@ -1082,7 +1100,7 @@ export default {
                     };
                 }
                 summary[sale.currency].total += this.parseAmount(
-                    sale.commission
+                    sale.commission,
                 );
                 summary[sale.currency].salesCount += sale.total;
             });
@@ -1090,7 +1108,7 @@ export default {
             // Calculate percentages for progress bars
             const totalCommission = Object.values(summary).reduce(
                 (sum, curr) => sum + curr.total,
-                0
+                0,
             );
             Object.values(summary).forEach((currency) => {
                 currency.percentage =
@@ -1256,7 +1274,7 @@ export default {
                     }
                     dateGroups[item.date].totalSales += item.total;
                     dateGroups[item.date].totalCommission += this.parseAmount(
-                        item.commission
+                        item.commission,
                     );
                 });
 
@@ -1266,13 +1284,13 @@ export default {
                     {
                         name: __("Total Sales"),
                         data: sortedDates.map(
-                            (date) => dateGroups[date].totalSales
+                            (date) => dateGroups[date].totalSales,
                         ),
                     },
                     {
                         name: __("Commission"),
                         data: sortedDates.map(
-                            (date) => dateGroups[date].totalCommission
+                            (date) => dateGroups[date].totalCommission,
                         ),
                     },
                 ];
@@ -1282,7 +1300,7 @@ export default {
                     xaxis: {
                         ...this.chartOptions.xaxis,
                         categories: sortedDates.map((date) =>
-                            this.formatDate(date)
+                            this.formatDate(date),
                         ),
                     },
                 };
@@ -1304,7 +1322,7 @@ export default {
                         currencyTotals[item.currency] = 0;
                     }
                     currencyTotals[item.currency] += this.parseAmount(
-                        item.commission
+                        item.commission,
                     );
                 });
 
@@ -1312,11 +1330,11 @@ export default {
                     (currency) => ({
                         currency,
                         total: currencyTotals[currency],
-                    })
+                    }),
                 );
 
                 this.currencyChartSeries = this.currencyChartData.map(
-                    (item) => item.total
+                    (item) => item.total,
                 );
                 this.currencyChartOptions = {
                     ...this.currencyChartOptions,
@@ -1399,7 +1417,9 @@ export default {
 <style scoped>
 /* Transiciones suaves para todos los elementos */
 * {
-    transition: background-color 0.3s ease, border-color 0.3s ease,
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
         color 0.3s ease;
 }
 
