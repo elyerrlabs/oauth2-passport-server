@@ -50,11 +50,9 @@ final class TwoFactorAuthenticationController extends \Laravel\Fortify\Http\Cont
         $user = $request->user();
 
         $enable($user, $request->boolean('force', false));
-
-        // Retrieve cache key
-        $cacheKey = CacheKeys::user($user->id);
+ 
         // Clean cache for this user
-        Cache::forget($cacheKey);
+        Cache::forget(CacheKeys::user($user->id));
         Cache::forget(CacheKeys::userAuth($user->id));
 
         return app(TwoFactorEnabledResponse::class);
