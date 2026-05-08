@@ -133,6 +133,16 @@ class ServiceService
     }
 
     /**
+     * Find by slug
+     * @param string $slug
+     * @return \Core\User\Model\Service
+     */
+    public function findBySlug(string $slug)
+    {
+        return $this->serviceRepository->query()->where('slug', $slug)->first();
+    }
+
+    /**
      * Create new resource
      * @param array $data
      * @throws \Elyerr\ApiResponse\Exceptions\ReportError
