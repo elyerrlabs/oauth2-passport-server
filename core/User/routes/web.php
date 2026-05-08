@@ -38,6 +38,7 @@ Route::group([
 
     Route::middleware(['password.confirm'])->group(function () {
 
+        Route::get("/notifications", [UserController::class, 'notifications'])->name('notifications');
         Route::get("/update", [UserController::class, 'profile'])->name('profile');
         Route::put("/update", [UserController::class, 'personalInformation'])->name('update');
         Route::get("/change-password", [UserController::class, 'formToChangePassword'])->name("password");
