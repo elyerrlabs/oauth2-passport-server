@@ -78,16 +78,19 @@ class Menu
                             if ($canShow) {
                                 $menus[$groupKey][] = [
                                     'id' => $item['id'] ?? null,
-                                    'name' => __($item['name']) ?? null,
+                                    'name' => $item['name'] ?? null,
                                     'icon' => $item['icon'] ?? null,
                                     'route' => isset($item['route']) ? route($item['route']) : null,
                                     'show' => $canShow,
+                                    'position' => $item['position'] ?? 99999
                                 ];
+
+                                // Order by position key
+                                $menus[$groupKey] = collect($menus[$groupKey])->sortBy('position')->values()->all();
                             }
                         }
                     }
                 }
-
                 continue;
             }
 
@@ -162,26 +165,6 @@ class Menu
             "guest_routes" => [
                 "home_page" => "/",
             ],
-            "developers" => [
-                'id' => 'dev',
-                'name' => __('Developers'),
-                'icon' => 'mdi mdi-tools',
-                'show' => intval(config('routes.system.clients.oauth_developers.status', true)) ? true : false,
-                'menu' => [
-                    [
-                        'name' => __('Applications'),
-                        'route' => Route::has('passport.clients.index') ? route('passport.clients.index') : '',
-                        'icon' => 'mdi mdi-connection',
-                        'show' => intval(config('routes.system.clients.oauth.status')) ? true : false
-                    ],
-                    [
-                        'name' => __('API Key'),
-                        'route' => Route::has('passport.personal.tokens.index') ? route('passport.personal.tokens.index') : '',
-                        'icon' => 'mdi mdi-xml',
-                        'show' => intval(config('routes.system.clients.api.status')) ? true : false,
-                    ],
-                ]
-            ],
             "auth_routes" => [
                 "login" => route('login'),
                 "forgot_password" => route('password.request'),
@@ -193,7 +176,7 @@ class Menu
             "allow_register" => Route::has('register'),
             "api" => []
         ];
-        return array_merge($keys, static::appendChildMenu($user), static::filterActiveRoutes($user));
+        return array_merge($keys, static::appendChildMenu($user));
     }
 
     /**
@@ -210,64 +193,4 @@ class Menu
             "providers" => array_keys(config('services.captcha.providers')),
         ];
     }
-
-    /**
-     * filter routes
-     * @param mixed $user
-     * @return array<array>
-     */
-    public static function filterActiveRoutes($user)
-    {
-        $user = auth()->user();
-
-        $routes = [
-            "policies" => [
-                "docs" => [
-                    'name' => __('Documentation'),
-                    'route' => 'documentation.index',
-                    'icon' => 'mdi-book-cog',
-                    'show' => true
-                ],
-                "legal" => [
-                    'name' => __('Policies'),
-                    'route' => 'admin.policies.terms-and-conditions',
-                    'icon' => "mdi-file-sign",
-                    'show' => !empty($user) ? $user->canAccessMenu("administrator:settings") : false,
-                ]
-            ],
-        ];
-
-        $filtered = [];
-
-        foreach ($routes as $key => $group) {
-            $groupData = [];
-
-            foreach ($group as $subKey => $item) {
-                if ($subKey === 'menu' && is_array($item)) {
-                    $subMenu = array_filter($item, function ($subItem) {
-                        return $subItem['show'] && Route::has($subItem['route']);
-                    });
-
-                    if (!empty($subMenu)) {
-                        $groupData[$subKey] = array_map(function ($subItem) {
-                            $subItem['route'] = route($subItem['route']);
-                            return $subItem;
-                        }, $subMenu);
-                    }
-                } elseif (is_array($item)) {
-                    if ($item['show'] && Route::has($item['route'])) {
-                        $item['route'] = route($item['route']);
-                        $groupData[$subKey] = $item;
-                    }
-                }
-            }
-
-            if (!empty($groupData)) {
-                $filtered[$key] = $groupData;
-            }
-        }
-
-        return $filtered;
-    }
-
 }

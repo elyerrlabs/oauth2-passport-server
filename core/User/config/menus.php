@@ -29,7 +29,7 @@ return [
 
     "user_dashboard" => [
         "id" => "dashboard",
-        "name" => __("Dashboard"),
+        "name" => "Dashboard",
         "route" => "user.dashboard",
         "icon" => "mdi mdi-home",
         'service' => true,
@@ -38,36 +38,76 @@ return [
     "merge" => [
 
         "admin_dashboard" => [
-
-            "administrator" => [
-                "id" => "admin",
-                "name" => __("Admin"),
-                "route" => "user.admin.users.index",
-                "icon" => "mdi mdi-security",
-                'service' => "administrator:admin",
+            'groups' => [
+                "id" => "groups",
+                "name" => "Groups",
+                "route" => "user.admin.groups.index",
+                "icon" => "mdi mdi-account-group",
+                'service' => 'administrator:group',
+                'position' => 1
             ],
-
+            'roles' => [
+                "id" => "roles",
+                "name" => "Roles",
+                "route" => "user.admin.roles.index",
+                "icon" => "mdi mdi-format-list-group",
+                'service' => 'administrator:role',
+                'position' => 2
+            ],
+            'services' => [
+                "id" => "services",
+                "name" => "Services",
+                "route" => "user.admin.services.index",
+                "icon" => "mdi mdi-text-box-check",
+                'service' => 'administrator:service',
+                'position' => 3
+            ],
+            'users' => [
+                "id" => "users",
+                "name" => "Users",
+                "route" => "user.admin.users.index",
+                "icon" => "mdi mdi-account-multiple",
+                'service' => 'administrator:user',
+                'position' => 4
+            ],
+            'oauth2_and_openid_connect' => [
+                "id" => "Oauth2 and OpenId Connect",
+                "name" => "Clients OAuth",
+                "route" => "admin.clients.index",
+                "icon" => "mdi mdi-apps",
+                'service' => 'administrator:application',
+                'position' => 5
+            ],
             "settings" => [
-                "name" => __("Settings"),
+                "name" => "Settings",
                 "route" => "admin.settings.general",
                 "icon" => "mdi mdi-cogs",
                 'service' => 'administrator:settings',
             ],
+        ],
 
+        "user_routes" => [
+            'notifications' => [
+                'id' => 'notifications',
+                'name' => 'My Notifications',
+                'route' => 'user.notifications',
+                'icon' => 'mdi mdi-bell-circle-outline',
+                'service' => true,
+            ],
         ],
 
         "user_settings" => [
 
             "profile" => [
                 'id' => 'profile',
-                'name' => __('Update Information'),
+                'name' => 'Update Information',
                 'route' => 'user.profile',
                 'icon' => 'mdi mdi-account-details-outline',
                 'service' => true,
             ],
             "password" => [
                 'id' => 'password',
-                'name' => __('Change password'),
+                'name' => 'Change password',
                 'route' => 'user.password',
                 'icon' => 'mdi mdi-lock-reset',
                 'service' => true,
@@ -75,7 +115,7 @@ return [
 
             '2fa' => [
                 'id' => '2fa',
-                'name' => __('Two Factor Authorization'),
+                'name' => 'Two Factor Authorization',
                 'route' => 'user.twoFactor',
                 'icon' => 'mdi mdi-two-factor-authentication',
                 'service' => true,
@@ -87,7 +127,7 @@ return [
     "admin_routes" => [
         [
             "id" => "groups",
-            "name" => __("Groups"),
+            "name" => "Groups",
             "route" => "user.admin.groups.index",
             "icon" => "mdi mdi-account-group",
             'service' => 'administrator:group',
@@ -95,7 +135,7 @@ return [
         ],
         [
             "id" => "roles",
-            "name" => __("Roles"),
+            "name" => "Roles",
             "route" => "user.admin.roles.index",
             "icon" => "mdi mdi-format-list-group",
             'service' => 'administrator:role',
@@ -103,7 +143,7 @@ return [
         ],
         [
             "id" => "services",
-            "name" => __("Services"),
+            "name" => "Services",
             "route" => "user.admin.services.index",
             "icon" => "mdi mdi-text-box-check",
             'service' => 'administrator:service',
@@ -111,7 +151,7 @@ return [
         ],
         [
             "id" => "users",
-            "name" => __("Users"),
+            "name" => "Users",
             "route" => "user.admin.users.index",
             "icon" => "mdi mdi-account-multiple",
             'service' => 'administrator:user',
@@ -119,7 +159,7 @@ return [
         ],
         [
             "id" => "clients",
-            "name" => __("Clients OAuth"),
+            "name" => "Clients OAuth",
             "route" => "admin.clients.index",
             "icon" => "mdi mdi-apps",
             'service' => 'administrator:application',

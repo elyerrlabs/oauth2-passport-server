@@ -42,13 +42,15 @@ return [
 
         "admin_dashboard" => [
 
-            /*  "partner" => [
-                  "id" => "list",
-                  "name" => __("Partners"),
-                  "route" => "partner.admin.partner.index",
-                  "icon" => "mdi mdi-handshake-outline",
-                  'service' => 'administrator:partner',
-              ]*/
+            "partner" => [
+                "id" => "list",
+                "name" => __("Partners"),
+                "route" => "partner.admin.partner.index",
+                "icon" => "mdi mdi-handshake-outline",
+                'service' => 'administrator:partner',
+                'position' => 6
+
+            ]
         ],
     ],
 

@@ -31,29 +31,58 @@ return [
     "merge" => [
 
         "admin_dashboard" => [
+
+            "legal" => [
+                'name' => 'Policies',
+                'route' => 'admin.policies.terms-and-conditions',
+                'icon' => "mdi mdi-file-sign",
+                'show' => "administrator:settings",
+            ]
+        ],
+
+        'developers' => [
+            'aouth2' => [
+                "name" => "OAuth2 Clients",
+                "route" => "passport.clients.index",
+                "icon" => "mdi mdi-connection",
+                "service" => "developer:oauth2",
+                "position" => 1
+            ],
+            'api' => [
+                "name" => "Api Keys",
+                "route" => "passport.personal.tokens.index",
+                "icon" => "mdi mdi-xml",
+                "service" => "developer:api",
+            ],
             "horizon" => [
                 "name" => "Horizon",
                 "route" => "horizon.index",
                 "icon" => "mdi mdi-poll",
-                "service" => "administrator:admin"
+                "service" => "developer:horizon"
             ],
             "sitemap" => [
                 "name" => "Sitemap",
                 "route" => "admin.sitemaps.index",
                 "icon" => "mdi mdi-sitemap-outline",
-                "service" => "administrator:seo"
+                "service" => "developer:seo"
             ],
             "page_creator" => [
                 "name" => "Page Creator",
                 "route" => "admin.pages.index",
                 "icon" => "mdi mdi-hammer-wrench",
-                "service" => "administrator:page"
+                "service" => "developer:page"
             ],
             "langs" => [
                 "name" => "Lang",
                 "route" => "admin.langs.index",
                 "icon" => "mdi mdi-translate",
-                "service" => "administrator:lang"
+                "service" => "developer:lang"
+            ],
+            "logs" => [
+                "name" => "Logs",
+                "route" => "admin.logs",
+                "icon" => "mdi mdi-text-box-outline",
+                "service" => "developer:log"
             ]
         ],
 
