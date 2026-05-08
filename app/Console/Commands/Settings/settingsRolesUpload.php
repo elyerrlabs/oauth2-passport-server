@@ -28,13 +28,17 @@ namespace App\Console\Commands\Settings;
  */
 
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Core\User\Model\Role;
 use Core\User\Model\Group;
+use Core\User\Model\Role;
 use Core\User\Model\Scope;
-use Elyerr\ApiResponse\Assets\Asset;
 use Core\User\Model\Service;
+use Core\User\Model\UserScope;
+use Core\User\Services\GroupService;
+use Core\User\Services\ServiceService;
+use Elyerr\ApiResponse\Assets\Asset;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class settingsRolesUpload extends Command
 {
@@ -63,6 +67,7 @@ class settingsRolesUpload extends Command
         $this->info("Upload roles");
         $this->upload_roles();
         $this->upload_groups();
+        $this->deleteGroups();
         $this->info("Uploaded successfully");
     }
 
@@ -95,67 +100,114 @@ class settingsRolesUpload extends Command
     {
         $groups = Group::groupByDefault();
 
-        foreach ($groups as $grp) {
+        DB::transaction(function () use ($groups) {
+            foreach ($groups as $grp) {
 
-            //upload system groups
-            $group = Group::updateOrCreate(
-                [
-                    'slug' => $this->slug($grp->name)
-                ],
-                [
-                    'name' => $grp->name,
-                    'slug' => $this->slug($grp->name),
-                    'description' => $grp->description,
-                    'system' => 1
-                ]
-            );
-            //checking if it has services
-            if (isset($grp->services)) {
-                foreach ($grp->services as $srv) {
-                    try {
-                        //Uploading Services Available for this groups
-                        $service = Service::updateOrCreate(
-                            [
-                                'slug' => $this->slug($srv->name),
-                                'group_id' => $group->id
-                            ],
-                            [
-                                'name' => $srv->name,
-                                'slug' => $this->slug($srv->name),
-                                'description' => $srv->description,
-                                'visibility' => $srv->visibility ?? 'private',
-                                'system' => 1,
-                                'group_id' => $group->id
-                            ]
-                        );
+                //upload system groups
+                $group = Group::updateOrCreate(
+                    [
+                        'slug' => $this->slug($grp->name)
+                    ],
+                    [
+                        'name' => $grp->name,
+                        'slug' => $this->slug($grp->name),
+                        'description' => $grp->description,
+                        'system' => 1
+                    ]
+                );
+                //checking if it has services
+                if (isset($grp->services)) {
+                    foreach ($grp->services as $srv) {
+                        try {
+                            //Uploading Services Available for this groups
+                            $service = Service::updateOrCreate(
+                                [
+                                    'slug' => $this->slug($srv->name),
+                                    'group_id' => $group->id
+                                ],
+                                [
+                                    'name' => $srv->name,
+                                    'slug' => $this->slug($srv->name),
+                                    'description' => $srv->description,
+                                    'visibility' => $srv->visibility ?? 'private',
+                                    'system' => 1,
+                                    'group_id' => $group->id
+                                ]
+                            );
 
-                        //check for this services has actions
-                        if (isset($srv->actions)) {
-                            foreach ($srv->actions as $action) {
-                                //searching for action in roles Model
-                                $role = Role::where('slug', $this->slug($action->name))->first();
+                            //check for this services has actions
+                            if (isset($srv->actions)) {
+                                foreach ($srv->actions as $action) {
+                                    //searching for action in roles Model
+                                    $role = Role::where('slug', $this->slug($action->name))->first();
 
-                                //create default scopes for this service
-                                Scope::updateOrCreate(
-                                    [
-                                        'service_id' => $service->id,
-                                        'role_id' => $role->id
-                                    ],
-                                    [
-                                        'service_id' => $service->id,
-                                        'role_id' => $role->id,
-                                        'api_key' => $action->api_key,
-                                        'public' => $action->public,
-                                        'active' => $action->active,
-                                    ]
-                                );
+                                    //create default scopes for this service
+                                    Scope::updateOrCreate(
+                                        [
+                                            'service_id' => $service->id,
+                                            'role_id' => $role->id
+                                        ],
+                                        [
+                                            'service_id' => $service->id,
+                                            'role_id' => $role->id,
+                                            'api_key' => $action->api_key,
+                                            'public' => $action->public,
+                                            'active' => $action->active,
+                                        ]
+                                    );
+                                }
                             }
+                        } catch (\Throwable $th) {
+                            Log::info($th->getMessage(), $th->getTrace());
                         }
-                    } catch (\Throwable $th) {
-                        Log::info($th->getMessage(), $th->getTrace());
                     }
                 }
             }
-        }
+        });
+
+    }
+
+    public function deleteGroups()
+    {
+        // Read file json
+        $groups = json_decode(file_get_contents(base_path('database/extra/drop.json')));
+
+        DB::transaction(function () use ($groups) {
+
+            foreach ($groups as $grp) {
+                // find group
+                $group = app(GroupService::class)->findBySlug($grp->name);
+
+                if (empty($group)) {
+                    continue;
+                }
+
+                // Read services
+                foreach ($grp->services as $srv) {
+
+                    //find service
+                    $service = app(ServiceService::class)->findBySlug($srv->name);
+
+                    // Verify services exists on group
+                    if (empty($service) || $service->group_id != $group->id) {
+                        continue;
+                    }
+
+                    // Skip if service does not exist or does not belong to the group
+                    if ($service->scopes->isNotEmpty()) {
+                        foreach ($service->scopes as $scope) {
+                            Log::info("Delete scope by system with gsr_id : $scope->gsr_id for service $service->slug", $scope->toArray());
+                            // Delete scope for user
+                            UserScope::where('scope_id', $scope->id)->delete();
+                            // Delete scope for service
+                            $scope->delete();
+                        }
+                    }
+                    // Delete service
+                    Log::info("Delete service by system $service->slug", $service->toArray());
+                    $service->delete();
+                }
+            }
+        });
     }
 }
