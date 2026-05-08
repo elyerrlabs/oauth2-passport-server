@@ -67,13 +67,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     {{ title }}
                                 </h1>
 
-                                <button
-                                    type="button"
-                                    class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 dark:bg-blue-900/30 px-4 py-2 text-sm font-medium text-blue-900 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-blue-400"
+                                <v-button
+                                    label="X"
                                     @click="closeModal"
-                                >
-                                    X
-                                </button>
+                                    variant="secondary"
+                                    rounded
+                                />
                             </DialogTitle>
                             <div
                                 class="md:p-4 text-gray-700 dark:text-gray-300 grow"
@@ -90,6 +89,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import { ref, watch } from "vue";
+import VButton from "@/components/VButton.vue";
+
 import {
     TransitionRoot,
     TransitionChild,
@@ -126,7 +127,7 @@ watch(
     (value) => {
         isOpen.value = value;
         emits("update:modelValue", value);
-    }
+    },
 );
 
 function closeModal() {

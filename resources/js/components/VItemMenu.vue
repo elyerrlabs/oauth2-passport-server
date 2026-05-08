@@ -1,6 +1,7 @@
 <template>
     <div v-if="items.length" class="mb-6">
         <div
+            v-if="title"
             class="flex justify-between text-gray-700 dark:text-gray-300 font-semibold mb-2"
         >
             <button class="cursor-pointer" @click="toggleMenu">
@@ -48,7 +49,7 @@ const props = defineProps({
     },
     title: {
         type: String,
-        default: "My Menu",
+        default: null,
     },
     icon: {
         type: String,

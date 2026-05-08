@@ -27,37 +27,27 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         <template #aside>
             <!-- Dashboards Section -->
             <v-item-menu
-                :items="$page.props.admin_dashboard"
+                :items="page.props.admin_dashboard"
                 :title="__('Administrator')"
                 icon="mdi mdi-shield-crown-outline text-2xl me-2"
             />
 
             <v-item-menu
-                :items="$page.props.developers.menu"
-                :title="$page.props.developers.name"
+                :items="page.props.developers"
+                :title="__('Developers')"
                 icon="mdi mdi-application-brackets-outline text-2xl me-2"
-                :collapse="false"
             />
 
             <v-item-menu
-                :items="page.props.policies"
-                :title="__('Policies & Legal')"
-                icon="mdi mdi-file-sign text-2xl me-2"
-                :collapse="false"
-            />
-
-            <v-item-menu
-                :items="$page.props?.user_routes"
+                :items="page.props?.user_routes"
                 :title="__('My apps')"
                 icon="mdi mdi-apps text-2xl me-2"
-                :collapse="false"
             />
 
             <v-item-menu
-                :items="$page.props.user_settings"
+                :items="page.props.user_settings"
                 :title="__('Settings')"
                 icon="mdi mdi-account-lock-outline text-2xl me-2"
-                :collapse="false"
             />
         </template>
         <template #main>
