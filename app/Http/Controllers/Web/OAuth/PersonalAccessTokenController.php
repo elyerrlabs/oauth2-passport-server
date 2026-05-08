@@ -55,6 +55,9 @@ class PersonalAccessTokenController extends WebController
     public function __construct(TokenRepository $tokenRepository)
     {
         $this->repository = $tokenRepository;
+        $this->middleware('userCanAny:developer:api:full,developer:api:view')->only('forUser', 'listScopesForApiToken');
+        $this->middleware('userCanAny:developer:api:full,developer:api:create')->only('store');
+        $this->middleware('userCanAny:developer:api:full,developer:api:destroy')->only('destroy');
     }
 
     /**

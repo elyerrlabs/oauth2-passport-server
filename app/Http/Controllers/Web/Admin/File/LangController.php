@@ -37,7 +37,7 @@ final class LangController extends WebController
     public function __construct(protected LangService $langService)
     {
         parent::__construct();
-        $this->middleware('userCanAny:administrator:lang:full');
+        $this->middleware('userCanAny:developer:lang:full');
     }
 
     /**

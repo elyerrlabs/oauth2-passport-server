@@ -49,11 +49,11 @@ class ClientAdminController extends WebController
     {
         parent::__construct();
         $this->repository = $clientRepository;
-        $this->middleware('userCanAny:administrator:application:full,administrator:application:view')->only('index');
-        $this->middleware('userCanAny:administrator:application:full,administrator:application:show')->only('show');
-        $this->middleware('userCanAny:administrator:application:full,administrator:application:create')->only(['store', 'createPersonalClient']);
-        $this->middleware('userCanAny:administrator:application:full,administrator:application:update')->only('update');
-        $this->middleware('userCanAny:administrator:application:full,administrator:application:destroy')->only('destroy');
+        $this->middleware('userCanAny:administrator:oauth:full,administrator:oauth:view')->only('index');
+        $this->middleware('userCanAny:administrator:oauth:full,administrator:oauth:show')->only('show');
+        $this->middleware('userCanAny:administrator:oauth:full,administrator:oauth:create')->only(['store', 'createPersonalClient']);
+        $this->middleware('userCanAny:administrator:oauth:full,administrator:oauth:update')->only('update');
+        $this->middleware('userCanAny:administrator:oauth:full,administrator:oauth:destroy')->only('destroy');
     }
 
     /**

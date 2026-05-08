@@ -40,7 +40,7 @@ class LayoutController extends WebController
     public function __construct(public PageService $pageService)
     {
         parent::__construct();
-        $this->middleware('userCanAny:administrator:pages:full')->except('update');
+        $this->middleware('userCanAny:administrator:pages:full');
     }
 
     /**

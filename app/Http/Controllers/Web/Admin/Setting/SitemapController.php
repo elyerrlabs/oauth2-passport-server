@@ -43,10 +43,10 @@ final class SitemapController extends WebController
     public function __construct(protected SiteMapService $sitemapService)
     {
         parent::__construct();
-        $this->middleware("userCanAny:administrator:seo:full,administrator:seo:view")->only('index', 'metaForm', 'robotForm');
-        $this->middleware("userCanAny:administrator:seo:full,administrator:seo:create")->only('store', 'updateMetaForm', 'updateMeta', 'updateRobot');
-        $this->middleware("userCanAny:administrator:seo:full,administrator:seo:destroy")->only('delete');
-        $this->middleware("userCanAny:administrator:seo:full,administrator:seo:reset")->only('reset');
+        $this->middleware("userCanAny:developer:seo:full,developer:seo:view")->only('index', 'metaForm', 'robotForm');
+        $this->middleware("userCanAny:developer:seo:full,developer:seo:create")->only('store', 'updateMetaForm', 'updateMeta', 'updateRobot');
+        $this->middleware("userCanAny:developer:seo:full,developer:seo:destroy")->only('delete');
+        $this->middleware("userCanAny:developer:seo:full,developer:seo:reset")->only('reset');
     }
 
     /**

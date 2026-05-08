@@ -37,7 +37,7 @@ Route::middleware(['throttle:system:general:settings', 'password.confirm'])
 
         //Route::resource('broadcasts', BroadcastController::class)->only('index', 'store', 'destroy');
     
-        Route::middleware(['auth', 'userCanAny:administrator:logs:full'])->group(function () {
+        Route::middleware(['auth', 'userCanAny:developer:logs:full'])->group(function () {
             Route::get('/logs', [LogViewerController::class, 'index'])->name('logs');
         });
     });

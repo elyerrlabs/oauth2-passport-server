@@ -52,6 +52,10 @@ class ClientController extends WebController
     {
         parent::__construct();
         $this->repository = $clientRepository;
+        $this->middleware('userCanAny:developer:oauth:full,developer:oauth:view')->only('index');
+        $this->middleware('userCanAny:developer:oauth:full,developer:oauth:create')->only('store');
+        $this->middleware('userCanAny:developer:oauth:full,developer:oauth:update')->only('update');
+        $this->middleware('userCanAny:developer:oauth:full,developer:oauth:destroy')->only('delete');
     }
 
     /**
