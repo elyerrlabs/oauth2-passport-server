@@ -99,4 +99,13 @@ class UserController extends WebController
     {
         return Inertia::render("Web/two-factor");
     }
+
+    /**
+     * Notification
+     * @return \Inertia\Response
+     */
+    public function notifications()
+    {
+        return Inertia::render('Web/Notification');
+    }
 }
