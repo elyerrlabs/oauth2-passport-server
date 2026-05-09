@@ -219,8 +219,7 @@ class StripeSubscription implements PaymentMethod
         $user = User::find(auth()->user()->id);
 
         //Check if the user already has a payment provider
-        $provider = PaymentProvider::with('user')
-            ->where('name', config('billing.methods.stripe.key'))
+        $provider = PaymentProvider::where('name', config('billing.methods.stripe.key'))
             ->where('user_id', $user->id)->first();
 
         //If the user does not have a payment provider, create one
@@ -259,7 +258,7 @@ class StripeSubscription implements PaymentMethod
                 'refund_id' => $transaction['refund']['id'],
             ],
         ]);
-        
+
         return $refund->toArray();
     }
 }
