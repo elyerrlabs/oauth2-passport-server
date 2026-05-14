@@ -24,279 +24,233 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
     <!-- Delete Price Button -->
-    <button
-        @click="dialog = true"
-        class="flex items-center justify-center w-8 h-8 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-        :title="__('Delete Price')"
-    >
-        <i class="mdi mdi-trash-can-outline text-sm"></i>
-    </button>
+    <div>
+        <v-button
+            @click="dialog = true"
+            :label="__('Delete Price')"
+            icon="mdi mdi-trash-can-outline"
+            variant="warning"
+        />
 
-    <!-- Confirm Modal -->
-    <v-modal
-        v-model="dialog"
-        :title="__('Delete Price Configuration')"
-        panel-class="w-full lg:w-5xl"
-    >
-        <template #body>
-            <div class="space-y-6">
-                <!-- Warning Header -->
-                <div class="flex items-start gap-4">
-                    <div
-                        class="shrink-0 w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center"
-                    >
-                        <i
-                            class="mdi mdi-currency-usd-off text-2xl text-red-600 dark:text-red-400"
-                        ></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3
-                            class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2"
-                        >
-                            {{ __("Delete Price Configuration") }}
-                        </h3>
-                        <p
-                            class="text-gray-600 dark:text-gray-300 leading-relaxed"
-                        >
-                            {{
-                                __(
-                                    "You are about to permanently delete this price configuration. This action will remove the pricing option from the subscription plan.",
-                                )
-                            }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Price Details Card -->
-                <div
-                    class="bg-white dark:bg-gray-800 border-l-4 dark:border-red-400 border border-gray-200 dark:border-gray-600 rounded-xl p-6 shadow-sm"
-                >
-                    <div
-                        class="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100 dark:border-gray-700"
-                    >
-                        <i
-                            class="mdi mdi-cash-remove text-red-500 dark:text-red-400"
-                        ></i>
-                        <h4
-                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wide"
-                        >
-                            {{ __("Price Configuration Details") }}
-                        </h4>
-                    </div>
-
-                    <div class="space-y-4">
-                        <!-- Amount -->
+        <!-- Confirm Modal -->
+        <v-modal
+            v-model="dialog"
+            :title="__('Delete Price Configuration')"
+            panel-class="w-full lg:w-6xl"
+        >
+            <template #body>
+                <div class="space-y-6">
+                    <!-- Warning Header -->
+                    <div class="flex items-start gap-4">
                         <div
-                            class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600"
+                            class="shrink-0 w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center"
                         >
+                            <i
+                                class="mdi mdi-currency-usd-off text-2xl text-red-600 dark:text-red-400"
+                            ></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3
+                                class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2"
+                            >
+                                {{ __("Delete Price Configuration") }}
+                            </h3>
+                            <p
+                                class="text-gray-600 dark:text-gray-300 leading-relaxed"
+                            >
+                                {{
+                                    __(
+                                        "You are about to permanently delete this price configuration. This action will remove the pricing option from the subscription plan.",
+                                    )
+                                }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Price Details Card -->
+                    <div
+                        class="bg-white dark:bg-gray-800 border-l-4 dark:border-red-400 border border-gray-200 dark:border-gray-600 rounded-xl p-6 shadow-sm"
+                    >
+                        <div
+                            class="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100 dark:border-gray-700"
+                        >
+                            <i
+                                class="mdi mdi-cash-remove text-red-500 dark:text-red-400"
+                            ></i>
+                            <h4
+                                class="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wide"
+                            >
+                                {{ __("Price Configuration Details") }}
+                            </h4>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Amount -->
+                            <div
+                                class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600"
+                            >
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center"
+                                    >
+                                        <i
+                                            class="mdi mdi-cash text-green-600 dark:text-green-400 text-sm"
+                                        ></i>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="font-medium text-gray-700 dark:text-gray-300 text-sm"
+                                        >
+                                            {{ __("Amount") }}
+                                        </div>
+                                        <div
+                                            class="text-2xl font-bold text-red-600 dark:text-red-400"
+                                        >
+                                            {{ item.amount_format }}
+                                            <span
+                                                class="text-sm font-normal text-gray-600 dark:text-gray-400 ml-1"
+                                            >
+                                                {{ item.currency }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Billing Period -->
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center"
+                                    class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
                                 >
                                     <i
-                                        class="mdi mdi-cash text-green-600 dark:text-green-400 text-sm"
+                                        class="mdi mdi-calendar-refresh text-blue-600 dark:text-blue-400 text-sm"
                                     ></i>
                                 </div>
-                                <div>
+                                <div class="flex-1">
                                     <div
-                                        class="font-medium text-gray-700 dark:text-gray-300 text-sm"
+                                        class="font-medium text-gray-700 dark:text-gray-300 text-sm mb-1"
                                     >
-                                        {{ __("Amount") }}
+                                        {{ __("Billing Period") }}
                                     </div>
                                     <div
-                                        class="text-2xl font-bold text-red-600 dark:text-red-400"
+                                        class="text-gray-900 dark:text-gray-100 font-semibold capitalize"
                                     >
-                                        {{ item.amount_format }}
-                                        <span
-                                            class="text-sm font-normal text-gray-600 dark:text-gray-400 ml-1"
-                                        >
-                                            {{ item.currency }}
-                                        </span>
+                                        {{ item.billing_period }}
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Billing Period -->
-                        <div class="flex items-center gap-3">
+                            <!-- Expiration -->
                             <div
-                                class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+                                v-if="item.expiration"
+                                class="flex items-center gap-3"
                             >
-                                <i
-                                    class="mdi mdi-calendar-refresh text-blue-600 dark:text-blue-400 text-sm"
-                                ></i>
-                            </div>
-                            <div class="flex-1">
                                 <div
-                                    class="font-medium text-gray-700 dark:text-gray-300 text-sm mb-1"
+                                    class="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center"
                                 >
-                                    {{ __("Billing Period") }}
+                                    <i
+                                        class="mdi mdi-clock-alert text-amber-600 dark:text-amber-400 text-sm"
+                                    ></i>
                                 </div>
-                                <div
-                                    class="text-gray-900 dark:text-gray-100 font-semibold capitalize"
-                                >
-                                    {{ item.billing_period }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Expiration -->
-                        <div
-                            v-if="item.expiration"
-                            class="flex items-center gap-3"
-                        >
-                            <div
-                                class="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center"
-                            >
-                                <i
-                                    class="mdi mdi-clock-alert text-amber-600 dark:text-amber-400 text-sm"
-                                ></i>
-                            </div>
-                            <div class="flex-1">
-                                <div
-                                    class="font-medium text-gray-700 dark:text-gray-300 text-sm mb-1"
-                                >
-                                    {{ __("Expiration Date") }}
-                                </div>
-                                <div class="text-gray-900 dark:text-gray-100">
-                                    {{ item.expiration }}
+                                <div class="flex-1">
+                                    <div
+                                        class="font-medium text-gray-700 dark:text-gray-300 text-sm mb-1"
+                                    >
+                                        {{ __("Expiration Date") }}
+                                    </div>
+                                    <div
+                                        class="text-gray-900 dark:text-gray-100"
+                                    >
+                                        {{ item.expiration }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Critical Warning -->
-                <div
-                    class="flex items-start gap-4 p-4 rounded-xl border-2"
-                    :class="[
-                        'bg-red-50 dark:bg-red-900/20',
-                        'border-red-200 dark:border-red-700',
-                        'text-red-800 dark:text-red-200',
-                    ]"
-                >
-                    <i
-                        class="mdi mdi-alert-octagon text-red-500 dark:text-red-400 mt-0.5 shrink-0 text-xl"
-                    ></i>
-                    <div class="flex-1">
-                        <div
-                            class="font-bold text-red-900 dark:text-red-100 mb-2"
-                        >
-                            {{ __("Critical: This Action Cannot Be Undone") }}
-                        </div>
-                        <p
-                            class="text-red-700 dark:text-red-200/90 leading-relaxed"
-                        >
-                            {{
-                                __(
-                                    "This price configuration will be permanently deleted from the system. Any active subscriptions using this price may be affected.",
-                                )
-                            }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Footer Buttons -->
-                <div
-                    class="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700"
-                >
-                    <button
-                        @click="dialog = false"
-                        class="px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                    <!-- Critical Warning -->
+                    <div
+                        class="flex items-start gap-4 p-4 rounded-xl border-2"
                         :class="[
-                            'bg-gray-100 dark:bg-gray-700',
-                            'hover:bg-gray-200 dark:hover:bg-gray-600',
-                            'text-gray-700 dark:text-gray-200',
-                            'border border-gray-300 dark:border-gray-600',
-                            'focus:ring-gray-500 dark:focus:ring-gray-400',
-                            'hover:scale-105 transform',
-                        ]"
-                    >
-                        <i class="mdi mdi-close text-lg"></i>
-                        {{ __("Cancel") }}
-                    </button>
-
-                    <button
-                        @click="destroy"
-                        :disabled="loading"
-                        class="px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-                        :class="[
-                            loading
-                                ? 'bg-red-400 dark:bg-red-500 cursor-not-allowed'
-                                : 'bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600',
-                            'text-white dark:text-gray-100',
-                            'border border-red-600 dark:border-red-600',
-                            'focus:ring-red-500 dark:focus:ring-red-400',
-                            loading ? '' : 'hover:scale-105 transform',
+                            'bg-red-50 dark:bg-red-900/20',
+                            'border-red-200 dark:border-red-700',
+                            'text-red-800 dark:text-red-200',
                         ]"
                     >
                         <i
-                            v-if="loading"
-                            class="mdi mdi-loading mdi-spin text-lg"
+                            class="mdi mdi-alert-octagon text-red-500 dark:text-red-400 mt-0.5 shrink-0 text-xl"
                         ></i>
-                        <i v-else class="mdi mdi-trash-can-outline text-lg"></i>
-                        {{ loading ? __("Deleting...") : __("Delete Price") }}
-                    </button>
+                        <div class="flex-1">
+                            <div
+                                class="font-bold text-red-900 dark:text-red-100 mb-2"
+                            >
+                                {{
+                                    __("Critical: This Action Cannot Be Undone")
+                                }}
+                            </div>
+                            <p
+                                class="text-red-700 dark:text-red-200/90 leading-relaxed"
+                            >
+                                {{
+                                    __(
+                                        "This price configuration will be permanently deleted from the system. Any active subscriptions using this price may be affected.",
+                                    )
+                                }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Footer Buttons -->
+                    <div
+                        class="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700"
+                    >
+                        <v-button
+                            @click="dialog = false"
+                            variant="danger"
+                            :label="__('Cancel')"
+                        />
+
+                        <v-button
+                            @click="destroy"
+                            :disabled="loading"
+                            :label="
+                                loading ? __('Deleting...') : __('Delete Price')
+                            "
+                            variant="success"
+                        />
+                    </div>
                 </div>
-            </div>
-        </template>
-    </v-modal>
+            </template>
+        </v-modal>
+    </div>
 </template>
 
 <script setup>
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
+import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 
-const emits = defineEmits(["deleted"]);
 const props = defineProps({
     item: {
         type: Object,
-        required: true,
+        default: () => {},
     },
 });
+
+const form = useForm({});
 const dialog = ref(false);
 const loading = ref(false);
 
-const destroy = async () => {
-    if (loading.value) return;
-
+const destroy = () => {
     loading.value = true;
 
-    try {
-        const res = $server.delete(props.item.links.destroy);
-
-        if (res.status == 200) {
-            dialog.value = false;
-            emits("deleted", props.item.id);
-            $notify.success(__("Price configuration deleted successfully"));
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+    form.delete(props.item?.links?.destroy, {
+        onSuccess: (response) => {},
+        onError: (error) => {},
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 </script>
-
-<style scoped>
-/* Smooth transitions */
-button {
-    transition: all 0.2s ease-in-out;
-}
-
-/* Loading animation */
-.mdi-loading {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-</style>

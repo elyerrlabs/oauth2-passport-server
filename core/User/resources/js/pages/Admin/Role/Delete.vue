@@ -25,22 +25,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <div>
         <!-- Delete Button -->
-        <button
+        <v-button
             @click="dialog = true"
-            class="relative group rounded-full p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800"
-        >
-            <i class="mdi mdi-delete-outline text-lg"></i>
-
-            <!-- Tooltip -->
-            <div
-                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-red-600 dark:bg-red-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
-            >
-                {{ __("Delete role") }}
-                <div
-                    class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-red-600 dark:border-t-red-700"
-                ></div>
-            </div>
-        </button>
+            :title="__('Delete role')"
+            icon="mdi mdi-delete-outline text-md"
+            round
+            variant="danger"
+        />
 
         <!-- Delete Confirmation Modal -->
         <v-modal
@@ -112,10 +103,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 {{ item.slug }}
                             </code>
                         </div>
-                        <input
+
+                        <v-input
                             v-model="confirmationText"
-                            type="text"
-                            class="w-full max-w-md mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-500 dark:bg-gray-800 dark:text-white transition-colors duration-200"
                             :placeholder="__('Enter role name')"
                             @keyup.enter="handleConfirm"
                         />
@@ -146,34 +136,27 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <div
                     class="flex justify-center gap-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-2xl transition-colors duration-200"
                 >
-                    <button
+                    <v-button
                         @click="dialog = false"
                         :disabled="loading"
-                        class="flex items-center gap-2 px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <i class="mdi mdi-close-circle"></i>
-                        {{ __("Cancel") }}
-                    </button>
-                    <button
-                        v-if="!item.system"
+                        :label="__('Cancel')"
+                        :title="__('Cancel')"
+                        icon="mdi mdi-close-circle"
+                        variant="primary"
+                    />
+
+                    <v-button
                         @click="destroy"
+                        :label="loading ? __('Deleting...') : __('Delete Role')"
+                        :title="loading ? __('Deleting...') : __('Delete Role')"
+                        :icon="
+                            loading
+                                ? 'mdi mdi-loading animate-spin'
+                                : 'mdi mdi-delete-forever'
+                        "
                         :disabled="!canDelete || loading"
-                        :class="[
-                            'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200',
-                            !canDelete || loading
-                                ? 'bg-red-400 dark:bg-red-600 cursor-not-allowed'
-                                : 'bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600 focus:ring-red-200 dark:focus:ring-red-800',
-                        ]"
-                    >
-                        <i
-                            v-if="loading"
-                            class="mdi mdi-loading animate-spin"
-                        ></i>
-                        <i v-else class="mdi mdi-delete-forever"></i>
-                        <span>{{
-                            loading ? __("Deleting...") : __("Delete Role")
-                        }}</span>
-                    </button>
+                        variant="success"
+                    />
                 </div>
             </template>
         </v-modal>
@@ -182,7 +165,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import VModal from "@/components/VModal.vue";
-import { useForm } from "@inertiajs/vue3";
+import VInput from "@/components/VInput.vue";
+import VButton from "@/components/VButton.vue";
+
 import { ref, computed } from "vue";
 
 const emits = defineEmits(["deleted"]);

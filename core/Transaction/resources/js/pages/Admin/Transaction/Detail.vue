@@ -1,442 +1,606 @@
-<!--
-OAuth2 Passport Server — a centralized, modular authorization server
-implementing OAuth 2.0 and OpenID Connect specifications.
-
-Copyright (c) 2026 Elvis Yerel Roman Concha
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-
-Author: Elvis Yerel Roman Concha
-Contact: yerel9212@yahoo.es
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
 <template>
     <div>
-        <button
+        <v-button
             @click="dialog = true"
-            class="flex items-center cursor-pointer px-4 py-2.5 justify-center text-blue-600 dark:text-blue-400 border border-blue-600 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md"
-        >
-            <i class="mdi mdi-eye-outline text-sm mr-2"></i>
-            {{ __("View Details") }}
-        </button>
+            icon="mdi mdi-eye-outline"
+            :title="__('View Details')"
+            round
+            variant="success"
+        />
 
-        <!-- Dialog -->
-        <div
-            v-if="dialog"
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+        <v-modal
+            v-model="dialog"
+            :title="__('Transaction Details')"
+            panel-class="w-full lg:w-7xl"
         >
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700"
-            >
-                <!-- Header -->
+            <template #body>
                 <div
-                    class="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white px-6 py-4"
+                    class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-800"
                 >
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
+                    <!-- Modern Header with Gradient -->
+                    <v-header
+                        :title="__('Transaction Overview')"
+                        :description="
+                            __('Complete financial transaction record')
+                        "
+                    >
+                    </v-header>
+
+                    <!-- Content Area -->
+                    <div class="overflow-y-auto max-h-[calc(90vh-200px)]">
+                        <!-- Metrics Cards -->
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-gray-50 dark:bg-gray-800/30 border-b border-gray-200 dark:border-gray-800"
+                        >
+                            <!-- Transaction ID -->
                             <div
-                                class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"
+                                class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
                             >
-                                <i
-                                    class="mdi mdi-file-document-outline text-lg"
-                                ></i>
-                            </div>
-                            <div>
-                                <h2 class="text-xl font-bold">
-                                    {{ __("Transaction Details") }}
-                                </h2>
-                                <p class="text-blue-100 text-sm mt-1">
-                                    {{
-                                        __(
-                                            "Complete transaction information and metadata"
-                                        )
-                                    }}
-                                </p>
-                            </div>
-                        </div>
-                        <button
-                            @click="dialog = false"
-                            class="flex items-center justify-center w-10 h-10 text-white hover:bg-white/20 rounded-xl transition-all duration-200 hover:scale-110"
-                        >
-                            <i class="mdi mdi-close text-xl"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Content -->
-                <div class="p-6 overflow-y-auto max-h-[60vh]">
-                    <!-- Transaction Overview -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                        <!-- Status Card -->
-                        <div
-                            class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4"
-                        >
-                            <div class="flex items-center space-x-3">
-                                <div
-                                    class="w-12 h-12 bg-blue-500 dark:bg-blue-600 rounded-lg flex items-center justify-center"
-                                >
-                                    <i
-                                        class="mdi mdi-receipt text-white text-xl"
-                                    ></i>
-                                </div>
-                                <div>
-                                    <div
-                                        class="text-sm text-blue-600 dark:text-blue-400 font-medium"
-                                    >
-                                        {{ __("Transaction ID") }}
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <p
+                                            class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                        >
+                                            {{ __("Transaction ID") }}
+                                        </p>
+                                        <p
+                                            class="text-sm font-mono font-semibold text-gray-900 dark:text-white mt-1 truncate"
+                                        >
+                                            {{ item.code || item.id }}
+                                        </p>
                                     </div>
                                     <div
-                                        class="text-lg font-bold text-gray-900 dark:text-white"
-                                    >
-                                        {{ item.code || item.id }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Amount Card -->
-                        <div
-                            class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-700 rounded-xl p-4"
-                        >
-                            <div class="flex items-center space-x-3">
-                                <div
-                                    class="w-12 h-12 bg-green-500 dark:bg-green-600 rounded-lg flex items-center justify-center"
-                                >
-                                    <i
-                                        class="mdi mdi-cash text-white text-xl"
-                                    ></i>
-                                </div>
-                                <div>
-                                    <div
-                                        class="text-sm text-green-600 dark:text-green-400 font-medium"
-                                    >
-                                        {{ __("Amount") }}
-                                    </div>
-                                    <div
-                                        class="text-lg font-bold text-gray-900 dark:text-white"
-                                    >
-                                        {{ item.total }} {{ item.currency }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Status Card -->
-                        <div
-                            class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border border-purple-200 dark:border-purple-700 rounded-xl p-4"
-                        >
-                            <div class="flex items-center space-x-3">
-                                <div
-                                    class="w-12 h-12 bg-purple-500 dark:bg-purple-600 rounded-lg flex items-center justify-center"
-                                >
-                                    <i
-                                        class="mdi mdi-check-circle text-white text-xl"
-                                    ></i>
-                                </div>
-                                <div>
-                                    <div
-                                        class="text-sm text-purple-600 dark:text-purple-400 font-medium"
-                                    >
-                                        {{ __("Status") }}
-                                    </div>
-                                    <div
-                                        class="text-lg font-bold text-gray-900 dark:text-white capitalize"
-                                    >
-                                        {{ item.status }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Main transaction information -->
-                    <div class="mb-8">
-                        <div
-                            class="flex items-center space-x-2 text-blue-600 dark:text-blue-400 font-semibold mb-4"
-                        >
-                            <div
-                                class="w-1.5 h-6 bg-blue-600 dark:bg-blue-400 rounded-full"
-                            ></div>
-                            <i class="mdi mdi-information-outline text-lg"></i>
-                            <h3 class="text-lg">
-                                {{ __("Transaction Information") }}
-                            </h3>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div
-                                v-for="(value, key) in filteredItem"
-                                :key="key"
-                                class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 transition-colors duration-200"
-                            >
-                                <div class="flex flex-col space-y-1">
-                                    <div
-                                        class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                                    >
-                                        {{ __(formatKey(key)) }}
-                                    </div>
-                                    <div
-                                        class="text-sm font-semibold text-gray-900 dark:text-white break-words"
-                                    >
-                                        {{ formatValue(value) }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Expandable Sections -->
-                    <div class="space-y-4">
-                        <!-- JSON Response Section -->
-                        <div
-                            v-if="item.response"
-                            class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
-                        >
-                            <button
-                                @click="toggleExpansion('response')"
-                                class="flex items-center w-full text-left p-4 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
-                            >
-                                <div class="flex items-center space-x-3 flex-1">
-                                    <div
-                                        class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+                                        class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
                                     >
                                         <i
-                                            class="mdi mdi-code-json text-blue-600 dark:text-blue-400 text-lg"
+                                            class="mdi mdi-identifier text-blue-600 dark:text-blue-400 text-sm"
                                         ></i>
                                     </div>
-                                    <div>
-                                        <div
-                                            class="font-semibold text-gray-900 dark:text-white"
-                                        >
-                                            {{ __("JSON Response") }}
-                                        </div>
-                                        <div
-                                            class="text-sm text-gray-500 dark:text-gray-400"
-                                        >
-                                            {{ __("Raw API response data") }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <i
-                                    :class="[
-                                        'mdi text-xl text-gray-400 dark:text-gray-500 transition-transform duration-300',
-                                        expandedSections.response
-                                            ? 'mdi-chevron-up'
-                                            : 'mdi-chevron-down',
-                                    ]"
-                                ></i>
-                            </button>
-
-                            <div
-                                v-if="expandedSections.response"
-                                class="border-t border-gray-200 dark:border-gray-700"
-                            >
-                                <div class="p-4 bg-gray-900 rounded-b-xl">
-                                    <pre
-                                        class="text-sm text-green-400 whitespace-pre-wrap overflow-x-auto font-mono"
-                                        >{{ prettyJSON(item.response) }}</pre
-                                    >
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Meta Information Section -->
-                        <div
-                            v-if="item.meta"
-                            class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
-                        >
-                            <button
-                                @click="toggleExpansion('meta')"
-                                class="flex items-center w-full text-left p-4 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                            <!-- Amount -->
+                            <div
+                                class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
                             >
-                                <div class="flex items-center space-x-3 flex-1">
-                                    <div
-                                        class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center"
-                                    >
-                                        <i
-                                            class="mdi mdi-database-search text-purple-600 dark:text-purple-400 text-lg"
-                                        ></i>
-                                    </div>
+                                <div class="flex items-start justify-between">
                                     <div>
-                                        <div
-                                            class="font-semibold text-gray-900 dark:text-white"
+                                        <p
+                                            class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                                         >
-                                            {{ __("Meta Information") }}
-                                        </div>
-                                        <div
-                                            class="text-sm text-gray-500 dark:text-gray-400"
+                                            {{ __("Amount") }}
+                                        </p>
+                                        <p
+                                            class="text-2xl font-bold text-gray-900 dark:text-white mt-1"
                                         >
                                             {{
-                                                __(
-                                                    "Additional metadata and system information"
+                                                formatCurrency(
+                                                    item.total,
+                                                    item.currency,
                                                 )
                                             }}
-                                        </div>
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center"
+                                    >
+                                        <i
+                                            class="mdi mdi-currency-usd text-green-600 dark:text-green-400 text-sm"
+                                        ></i>
                                     </div>
                                 </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div
+                                class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
+                            >
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <p
+                                            class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                        >
+                                            {{ __("Status") }}
+                                        </p>
+                                        <div class="mt-1">
+                                            <span
+                                                :class="statusBadgeClass"
+                                                class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold"
+                                            >
+                                                <i
+                                                    :class="statusIconClass"
+                                                    class="text-xs"
+                                                ></i>
+                                                {{ capitalize(item.status) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center"
+                                    >
+                                        <i
+                                            class="mdi mdi-check-circle text-purple-600 dark:text-purple-400 text-sm"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Method -->
+                            <div
+                                class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
+                            >
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <p
+                                            class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                        >
+                                            {{ __("Payment Method") }}
+                                        </p>
+                                        <p
+                                            class="text-sm font-semibold text-gray-900 dark:text-white mt-1 capitalize"
+                                        >
+                                            {{ item.payment_method || "N/A" }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center"
+                                    >
+                                        <i
+                                            class="mdi mdi-credit-card text-orange-600 dark:text-orange-400 text-sm"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transaction Key Details -->
+                        <div
+                            class="p-6 border-b border-gray-200 dark:border-gray-800"
+                        >
+                            <div class="flex items-center gap-2 mb-4">
+                                <div
+                                    class="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"
+                                ></div>
                                 <i
-                                    :class="[
-                                        'mdi text-xl text-gray-400 dark:text-gray-500 transition-transform duration-300',
-                                        expandedSections.meta
-                                            ? 'mdi-chevron-up'
-                                            : 'mdi-chevron-down',
-                                    ]"
+                                    class="mdi mdi-information-outline text-gray-600 dark:text-gray-400 text-lg"
                                 ></i>
-                            </button>
+                                <h3
+                                    class="text-base font-semibold text-gray-900 dark:text-white"
+                                >
+                                    {{ __("Key Transaction Details") }}
+                                </h3>
+                            </div>
 
                             <div
-                                v-if="expandedSections.meta"
-                                class="border-t border-gray-200 dark:border-gray-700"
+                                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                             >
-                                <div class="p-4 bg-gray-900 rounded-b-xl">
-                                    <pre
-                                        class="text-sm text-amber-400 whitespace-pre-wrap overflow-x-auto font-mono"
-                                        >{{ prettyJSON(item.meta) }}</pre
+                                <div
+                                    v-for="(value, key) in filteredItem"
+                                    :key="key"
+                                    class="group"
+                                >
+                                    <div
+                                        class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700 group-hover:border-blue-300 dark:group-hover:border-blue-600 transition-all"
                                     >
+                                        <p
+                                            class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1"
+                                        >
+                                            {{ formatKey(key) }}
+                                        </p>
+                                        <p
+                                            class="text-sm font-semibold text-gray-900 dark:text-white break-words"
+                                        >
+                                            {{ formatValue(value) }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Expandable Sections -->
+                        <div class="p-6 space-y-4">
+                            <!-- Payment Response -->
+                            <div
+                                v-if="item.response"
+                                class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
+                            >
+                                <button
+                                    @click="toggleExpansion('response')"
+                                    class="flex items-center justify-between w-full p-4 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center"
+                                        >
+                                            <i
+                                                class="mdi mdi-code-json text-indigo-600 dark:text-indigo-400 text-lg"
+                                            ></i>
+                                        </div>
+                                        <div class="text-left">
+                                            <p
+                                                class="font-semibold text-gray-900 dark:text-white"
+                                            >
+                                                {{
+                                                    __(
+                                                        "Payment Gateway Response",
+                                                    )
+                                                }}
+                                            </p>
+                                            <p
+                                                class="text-xs text-gray-500 dark:text-gray-400"
+                                            >
+                                                {{
+                                                    __(
+                                                        "Raw response from payment processor",
+                                                    )
+                                                }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <i
+                                        :class="[
+                                            'mdi text-xl text-gray-400 transition-transform duration-300',
+                                            expandedSections.response
+                                                ? 'mdi-chevron-up'
+                                                : 'mdi-chevron-down',
+                                        ]"
+                                    ></i>
+                                </button>
+                                <div
+                                    v-if="expandedSections.response"
+                                    class="border-t border-gray-200 dark:border-gray-700"
+                                >
+                                    <div class="bg-slate-950 p-4">
+                                        <pre
+                                            class="text-xs text-green-400 whitespace-pre-wrap overflow-x-auto font-mono max-h-96 overflow-y-auto"
+                                            >{{
+                                                prettyJSON(item.response)
+                                            }}</pre
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Meta Information -->
+                            <div
+                                v-if="item.meta"
+                                class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
+                            >
+                                <button
+                                    @click="toggleExpansion('meta')"
+                                    class="flex items-center justify-between w-full p-4 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center"
+                                        >
+                                            <i
+                                                class="mdi mdi-database-outline text-amber-600 dark:text-amber-400 text-lg"
+                                            ></i>
+                                        </div>
+                                        <div class="text-left">
+                                            <p
+                                                class="font-semibold text-gray-900 dark:text-white"
+                                            >
+                                                {{
+                                                    __(
+                                                        "Metadata & Subscription Info",
+                                                    )
+                                                }}
+                                            </p>
+                                            <p
+                                                class="text-xs text-gray-500 dark:text-gray-400"
+                                            >
+                                                {{
+                                                    __(
+                                                        "Transaction metadata and subscription details",
+                                                    )
+                                                }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <i
+                                        :class="[
+                                            'mdi text-xl text-gray-400 transition-transform duration-300',
+                                            expandedSections.meta
+                                                ? 'mdi-chevron-up'
+                                                : 'mdi-chevron-down',
+                                        ]"
+                                    ></i>
+                                </button>
+                                <div
+                                    v-if="expandedSections.meta"
+                                    class="border-t border-gray-200 dark:border-gray-700"
+                                >
+                                    <div class="bg-slate-950 p-4">
+                                        <pre
+                                            class="text-xs text-amber-400 whitespace-pre-wrap overflow-x-auto font-mono max-h-96 overflow-y-auto"
+                                            >{{ prettyJSON(item.meta) }}</pre
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Customer Information -->
+                            <div
+                                v-if="item.owner"
+                                class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
+                            >
+                                <button
+                                    @click="toggleExpansion('customer')"
+                                    class="flex items-center justify-between w-full p-4 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg flex items-center justify-center"
+                                        >
+                                            <i
+                                                class="mdi mdi-account-circle text-cyan-600 dark:text-cyan-400 text-lg"
+                                            ></i>
+                                        </div>
+                                        <div class="text-left">
+                                            <p
+                                                class="font-semibold text-gray-900 dark:text-white"
+                                            >
+                                                {{ __("Customer Information") }}
+                                            </p>
+                                            <p
+                                                class="text-xs text-gray-500 dark:text-gray-400"
+                                            >
+                                                {{
+                                                    __(
+                                                        "Customer details and contact information",
+                                                    )
+                                                }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <i
+                                        :class="[
+                                            'mdi text-xl text-gray-400 transition-transform duration-300',
+                                            expandedSections.customer
+                                                ? 'mdi-chevron-up'
+                                                : 'mdi-chevron-down',
+                                        ]"
+                                    ></i>
+                                </button>
+                                <div
+                                    v-if="expandedSections.customer"
+                                    class="border-t border-gray-200 dark:border-gray-700"
+                                >
+                                    <div
+                                        class="p-4 bg-gray-50 dark:bg-gray-800/30"
+                                    >
+                                        <div
+                                            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                        >
+                                            <div
+                                                class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                                            >
+                                                <i
+                                                    class="mdi mdi-account text-gray-400 text-lg"
+                                                ></i>
+                                                <div>
+                                                    <p
+                                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                                    >
+                                                        {{ __("Full Name") }}
+                                                    </p>
+                                                    <p
+                                                        class="text-sm font-medium text-gray-900 dark:text-white"
+                                                    >
+                                                        {{ item.owner.name }}
+                                                        {{
+                                                            item.owner.last_name
+                                                        }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                                            >
+                                                <i
+                                                    class="mdi mdi-email text-gray-400 text-lg"
+                                                ></i>
+                                                <div>
+                                                    <p
+                                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                                    >
+                                                        {{
+                                                            __("Email Address")
+                                                        }}
+                                                    </p>
+                                                    <p
+                                                        class="text-sm font-medium text-gray-900 dark:text-white"
+                                                    >
+                                                        {{ item.owner.email }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Footer -->
-                <div
-                    class="border-t border-gray-200 dark:border-gray-700 px-6 py-4 bg-gray-50 dark:bg-gray-700/50"
-                >
-                    <div class="flex justify-between items-center">
-                        <div class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __("Transaction created") }}:
-                            {{ item.created || __("N/A") }}
+                    <!-- Footer Actions -->
+                    <div
+                        class="border-t border-gray-200 dark:border-gray-800 px-6 py-4 bg-gray-50 dark:bg-gray-800/50 flex flex-col sm:flex-row justify-between items-center gap-4"
+                    >
+                        <div
+                            class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2"
+                        >
+                            <i class="mdi mdi-calendar-clock text-base"></i>
+                            <span
+                                >{{ __("Processed") }}:
+                                {{ formatDate(item.created) }}</span
+                            >
                         </div>
-                        <div class="flex space-x-3">
-                            <button
+                        <div class="flex gap-3">
+                            <v-button
                                 @click="copyTransactionData"
-                                class="flex items-center px-4 py-2.5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 font-medium"
-                            >
-                                <i class="mdi mdi-content-copy mr-2"></i>
-                                {{ __("Copy Data") }}
-                            </button>
-                            <button
-                                @click="dialog = false"
-                                class="flex items-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-all duration-200 font-medium shadow-sm hover:shadow-md"
-                            >
-                                <i class="mdi mdi-check mr-2"></i>
-                                {{ __("Close") }}
-                            </button>
+                                :label="__('Copy data')"
+                                icon="mdi mdi-content-copy"
+                            />
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </template>
+        </v-modal>
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        item: {
-            type: Object,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            dialog: false,
-            expandedSections: {
-                response: false,
-                meta: false,
-            },
-        };
-    },
-    computed: {
-        filteredItem() {
-            const exclude = [
-                "response",
-                "meta",
-                "links",
-                "id",
-                "code",
-                "total",
-                "currency",
-                "status",
-            ];
-            return Object.keys(this.item)
-                .filter(
-                    (key) =>
-                        !exclude.includes(key) &&
-                        this.item[key] !== null &&
-                        this.item[key] !== undefined &&
-                        this.item[key] !== ""
-                )
-                .reduce((acc, key) => {
-                    acc[key] = this.item[key];
-                    return acc;
-                }, {});
-        },
-    },
-    methods: {
-        formatKey(key) {
-            return key
-                .replace(/_/g, " ")
-                .replace(/\b\w/g, (c) => c.toUpperCase());
-        },
-        formatValue(value) {
-            if (value === null || value === undefined) return "N/A";
-            if (typeof value === "boolean") return value ? __("Yes") : __("No");
-            if (typeof value === "object") {
-                try {
-                    return JSON.stringify(value, null, 2);
-                } catch {
-                    return String(value);
-                }
-            }
-            if (typeof value === "string" && value.length > 100) {
-                return value.substring(0, 100) + "...";
-            }
-            return value;
-        },
-        prettyJSON(jsonData) {
-            try {
-                const parsed =
-                    typeof jsonData === "string"
-                        ? JSON.parse(jsonData)
-                        : jsonData;
-                return JSON.stringify(parsed, null, 2);
-            } catch (e) {
-                return String(jsonData);
-            }
-        },
-        toggleExpansion(section) {
-            this.expandedSections[section] = !this.expandedSections[section];
-        },
-        copyTransactionData() {
-            const dataToCopy = {
-                transaction: this.filteredItem,
-                response: this.item.response,
-                meta: this.item.meta,
-            };
+<script setup>
+import { ref, computed } from "vue";
+import VButton from "@/components/VButton.vue";
+import VModal from "@/components/VModal.vue";
+import VHead from "@/components/VHead.vue";
 
-            navigator.clipboard
-                .writeText(JSON.stringify(dataToCopy, null, 2))
-                .then(() => {
-                    $notify.success(__("Transaction data copied to clipboard"));
-                })
-                .catch(() => {
-                    $notify.error(__("Failed to copy data"));
-                });
-        },
+const props = defineProps({
+    item: {
+        type: Object,
+        required: true,
     },
+});
+
+const dialog = ref(false);
+const expandedSections = ref({
+    response: false,
+    meta: false,
+    customer: false,
+});
+
+const filteredItem = computed(() => {
+    const exclude = [
+        "response",
+        "meta",
+        "links",
+        "id",
+        "code",
+        "total",
+        "currency",
+        "status",
+        "payment_method",
+        "owner",
+        "refund",
+    ];
+    return Object.keys(props.item)
+        .filter(
+            (key) =>
+                !exclude.includes(key) &&
+                props.item[key] !== null &&
+                props.item[key] !== undefined &&
+                props.item[key] !== "",
+        )
+        .reduce((acc, key) => {
+            acc[key] = props.item[key];
+            return acc;
+        }, {});
+});
+
+const statusBadgeClass = computed(() => {
+    const status = props.item.status?.toLowerCase();
+    switch (status) {
+        case "successful":
+        case "succeeded":
+            return "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800";
+        case "pending":
+            return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800";
+        case "failed":
+            return "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800";
+        default:
+            return "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400 border border-gray-200 dark:border-gray-700";
+    }
+});
+
+const statusIconClass = computed(() => {
+    const status = props.item.status?.toLowerCase();
+    switch (status) {
+        case "successful":
+        case "succeeded":
+            return "mdi mdi-check-circle";
+        case "pending":
+            return "mdi mdi-clock-outline";
+        case "failed":
+            return "mdi mdi-close-circle";
+        default:
+            return "mdi mdi-circle-outline";
+    }
+});
+
+const formatKey = (key) =>
+    key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+const formatValue = (value) => {
+    if (value === null || value === undefined) return "N/A";
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (typeof value === "object") {
+        try {
+            return JSON.stringify(value, null, 2);
+        } catch {
+            return String(value);
+        }
+    }
+    if (typeof value === "string" && value.length > 100) {
+        return value.substring(0, 100) + "...";
+    }
+    return value;
+};
+
+const formatCurrency = (amount, currency) => {
+    if (!amount) return "N/A";
+    const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: currency || "USD",
+    });
+    return formatter.format(amount);
+};
+
+const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+    });
+};
+
+const capitalize = (str) =>
+    str ? str.charAt(0).toUpperCase() + str.slice(1) : "N/A";
+
+const prettyJSON = (jsonData) => {
+    try {
+        const parsed =
+            typeof jsonData === "string" ? JSON.parse(jsonData) : jsonData;
+        return JSON.stringify(parsed, null, 2);
+    } catch (e) {
+        return String(jsonData);
+    }
+};
+
+const toggleExpansion = (section) => {
+    expandedSections.value[section] = !expandedSections.value[section];
+};
+
+const copyTransactionData = () => {
+    const dataToCopy = {
+        transaction_id: props.item.id,
+        code: props.item.code,
+        amount: props.item.total,
+        currency: props.item.currency,
+        status: props.item.status,
+        payment_method: props.item.payment_method,
+        customer: props.item.owner,
+        timestamp: props.item.created,
+    };
+
+    navigator.clipboard
+        .writeText(JSON.stringify(dataToCopy, null, 2))
+        .then(() => $notify?.success?.("Transaction data copied to clipboard"))
+        .catch(() => $notify?.error?.("Failed to copy data"));
 };
 </script>

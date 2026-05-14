@@ -25,24 +25,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <div>
         <!-- Action Button -->
-        <button
-            v-if="item?.id"
+        <v-button
+            :label="item?.id ? '' : __('Add new role')"
+            :title="item?.id ? __('Updated new role') : __('Add new role')"
+            :round="item?.id ? true : false"
+            icon="mdi mdi-plus-circle text-3xl"
             @click="open"
-            class="w-8 h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-full flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-        >
-            <i class="mdi mdi-pencil text-lg"></i>
-        </button>
-
-        <button
-            v-else
-            @click="dialog = true"
-            class="rounded flex justify-between items-center text-md bg-blue-600 dark:bg-blue-700 text-white p-2 hover:shadow-xl hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
-        >
-            <i class="mdi mdi-plus-circle text-3xl"></i>
-            <span>
-                {{ __("New role") }}
-            </span>
-        </button>
+            :variant="item?.id ? 'success' : 'secondary'"
+        />
 
         <!-- Modal -->
         <v-modal
@@ -92,48 +82,31 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <div
                     class="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-2xl"
                 >
-                    <button
-                        @click="close"
+                    <v-button
+                        :label="__('Cancel')"
+                        :title="__('Cancel')"
                         :disabled="loading"
-                        class="px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {{ __("Cancel") }}
-                    </button>
+                        variant="danger"
+                        @click="dialog = false"
+                        icon="mdi mdi-close-circle"
+                    />
 
-                    <button
+                    <v-button
                         @click="handleAction"
                         :disabled="loading"
-                        :class="[
-                            'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200',
-                            loading
-                                ? 'bg-blue-400 dark:bg-blue-600 cursor-not-allowed'
-                                : 'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:ring-blue-200 dark:focus:ring-blue-800',
-                        ]"
-                    >
-                        <i
-                            v-if="loading"
-                            class="mdi mdi-loading animate-spin"
-                        ></i>
-                        <i
-                            v-else
-                            :class="
-                                item?.id
-                                    ? 'mdi mdi-content-save'
-                                    : 'mdi mdi-check-circle'
-                            "
-                        ></i>
-                        <span>
-                            {{
-                                loading
-                                    ? item?.id
-                                        ? __("Saving...")
-                                        : __("Creating...")
-                                    : item?.id
-                                      ? __("Update Role")
-                                      : __("Create Role")
-                            }}
-                        </span>
-                    </button>
+                        variant="success"
+                        :icon="
+                            item?.id
+                                ? 'mdi mdi-content-save'
+                                : 'mdi mdi-check-circle'
+                        "
+                        :label="
+                            item?.id ? __('Update role') : __('Create role')
+                        "
+                        :title="
+                            item?.id ? __('Update role') : __('Create role')
+                        "
+                    />
                 </div>
             </template>
         </v-modal>
@@ -145,6 +118,7 @@ import VModal from "@/components/VModal.vue";
 import VInput from "@/components/VInput.vue";
 import VTextarea from "@/components/VTextarea.vue";
 import VSwitch from "@/components/VSwitch.vue";
+import VButton from "@/components/VButton.vue";
 import { usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 
@@ -193,9 +167,9 @@ const createRole = async () => {
             errors.value = {};
             emits("created");
         }
-    } catch (error) {
-        if (error?.response?.status == 422) {
-            errors.value = error.response.data.errors;
+    } catch (e) {
+        if (e?.response?.status == 422) {
+            errors.value = e.response.data.errors;
         }
         if (e?.response?.data?.message) {
             $notify.error(e.response.data.message);
@@ -215,9 +189,9 @@ const updateRole = async () => {
             form.value = {};
             emits("updated");
         }
-    } catch (error) {
-        if (error?.response?.status == 422) {
-            errors.value = error.response.data.errors;
+    } catch (e) {
+        if (e?.response?.status == 422) {
+            errors.value = e.response.data.errors;
         }
         if (e?.response?.data?.message) {
             $notify.error(e.response.data.message);

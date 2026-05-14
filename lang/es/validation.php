@@ -173,6 +173,7 @@ return [
         'quantity' => 'cantidad',
         'delivery' => 'entrega',
         'payment_method' => 'método de pago',
-        'variant_id' => 'variante'
+        'variant_id' => 'variante',
+        'billing_period' => 'periodo'
     ],
 ];

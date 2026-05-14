@@ -26,23 +26,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <div>
         <!-- Trigger Button -->
-        <button
-            v-if="!item"
-            @click="open()"
-            class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 px-4 py-2 text-white rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
-            :class="{ 'animate-pulse': !dialog }"
-        >
-            <i class="mdi mdi-plus-circle text-xl mr-2"></i>
-            {{ __("Create New") }}
-        </button>
-
-        <button
-            v-else
-            @click="open()"
-            class="w-8 h-8 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-full flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-opacity-50"
-        >
-            <i class="mdi mdi-pencil text-lg"></i>
-        </button>
+        <v-button
+            @click="open"
+            :label="item?.id ? '' : __('Add group')"
+            :icon="item?.id ? 'mdi mdi-pencil text-lg' : 'mdi mdi-plus-circle'"
+            size="md"
+            :round="!!item?.id"
+            :variant="item?.id ? 'success' : 'secondary'"
+            :aria-label="item?.id ? __('Update group') : __('Add new group')"
+            :title="item?.id ? __('Update group') : __('Add new group')"
+        />
 
         <!-- Modal -->
         <v-modal
@@ -89,43 +82,36 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <div
                     class="flex justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50"
                 >
-                    <button
+                    <v-button
+                        :label="__('Cancel')"
+                        :disabled="processing"
                         @click="close"
-                        :disabled="processing"
-                        class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <i class="mdi mdi-close-circle"></i>
-                        <span>{{ __("Cancel") }}</span>
-                    </button>
+                        icon="mdi mdi-close-circle"
+                        variant="danger"
+                    />
 
-                    <button
+                    <v-button
                         @click="submit"
+                        :label="item?.id ? '' : __('New group')"
+                        :icon="
+                            isEdit
+                                ? 'mdi mdi-content-save'
+                                : 'mdi mdi-check-circle'
+                        "
+                        size="md"
+                        :round="!!item?.id"
                         :disabled="processing"
-                        class="px-6 py-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <i
-                            class="mdi"
-                            :class="
-                                isEdit ? 'mdi-content-save' : 'mdi-check-circle'
-                            "
-                            v-if="!processing"
-                        ></i>
-                        <div
-                            v-else
-                            class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
-                        ></div>
-                        <span>
-                            {{
-                                processing
-                                    ? isEdit
-                                        ? __("Updating...")
-                                        : __("Creating...")
-                                    : isEdit
-                                      ? __("Update Group")
-                                      : __("Create Group")
-                            }}
-                        </span>
-                    </button>
+                        :variant="item?.id ? 'success' : 'secondary'"
+                        :title="
+                            processing
+                                ? isEdit
+                                    ? __('Updating...')
+                                    : __('Creating...')
+                                : isEdit
+                                  ? __('Update Group')
+                                  : __('Create Group')
+                        "
+                    />
                 </div>
             </template>
         </v-modal>
@@ -139,6 +125,7 @@ import VModal from "@/components/VModal.vue";
 import VInput from "@/components/VInput.vue";
 import VTextarea from "@/components/VTextarea.vue";
 import VSwitch from "@/components/VSwitch.vue";
+import VButton from "@/components/VButton.vue";
 
 // Emits
 const emit = defineEmits(["created", "updated"]);

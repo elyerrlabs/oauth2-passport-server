@@ -276,37 +276,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <div
                             class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700"
                         >
-                            <button
+                            <v-button
                                 @click="update"
                                 :disabled="loading"
-                                class="w-full sm:w-auto bg-blue-600 dark:bg-blue-500 text-white py-3 px-8 rounded-lg font-medium hover:bg-blue-700 dark:hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[140px]"
-                            >
-                                <svg
-                                    v-if="loading"
-                                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <circle
-                                        class="opacity-25"
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        stroke-width="4"
-                                    ></circle>
-                                    <path
-                                        class="opacity-75"
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                </svg>
-                                {{
-                                    loading
-                                        ? __("Updating...")
-                                        : __("Update Information")
-                                }}
-                            </button>
+                                :title="__('Update Information')"
+                                :label="__('Update Information')"
+                                variant="success"
+                            />
                         </div>
                     </div>
                 </div>
@@ -321,6 +297,7 @@ import { useForm, usePage } from "@inertiajs/vue3";
 import VAccountLayout from "@/components/VAccountLayout.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
+import VButton from "@/components/VButton.vue";
 
 const page = usePage();
 

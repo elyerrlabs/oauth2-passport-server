@@ -2,6 +2,8 @@
 
 namespace App\Support;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Inertia\ProvidesInertiaProperties;
 use Inertia\Response;
 
 /**
@@ -43,7 +45,7 @@ final class ResponseFactory extends \Inertia\ResponseFactory
         if (isset($currentRoute->action['module'])) {
             //Module view creation
             $ModuleView = $currentRoute->action['module'] . '::' . $this->rootView;
-             
+
             // Check view exist
             if (view()->exists($ModuleView)) {
                 $this->setRootView($ModuleView);
@@ -60,7 +62,7 @@ final class ResponseFactory extends \Inertia\ResponseFactory
             // Will be resolved in Response::resolveResponsableProperties()
             $props = [$props];
         }
-
+     
         return new Response(
             $component,
             array_merge($this->sharedProps, $props),

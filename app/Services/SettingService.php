@@ -174,6 +174,8 @@ class SettingService
         //expires time to try another request
         settingLoad('auth.passwords.users.throttle', 10);
 
+        settingLoad('auth.password_timeout', 10800);
+
         //------------------------REDIS CONFIGURATION-------------------//
         //redis default settings
         settingLoad('database.redis.default.url', null);

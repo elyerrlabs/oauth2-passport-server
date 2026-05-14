@@ -24,24 +24,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
     <!-- Delete Button -->
-    <button
+    <v-button
         @click="open"
-        class="delete-btn group inline-flex items-center justify-center bg-transparent border border-red-600 dark:border-red-500 text-red-600 dark:text-red-500 rounded-full p-2 hover:bg-red-50 dark:hover:bg-red-900/30 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 hover:shadow-md transform hover:-translate-y-0.5"
-        :title="__('Delete Client')"
         :disabled="loading"
-    >
-        <svg
-            class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-200"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-        >
-            <path
-                fill-rule="evenodd"
-                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                clip-rule="evenodd"
-            />
-        </svg>
-    </button>
+        :title="__('Delete Client')"
+        icon="mdi mdi-delete-outline text-md"
+        round
+        variant="danger"
+    />
 
     <!-- Delete Confirmation Modal -->
     <v-modal
@@ -82,7 +72,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             >
                 {{
                     __(
-                        "Are you sure you want to permanently delete this OAuth client?"
+                        "Are you sure you want to permanently delete this OAuth client?",
                     )
                 }}
             </p>
@@ -145,7 +135,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <p class="text-sm mt-1">
                             {{
                                 __(
-                                    "All applications using this client will immediately lose access. Any active sessions will be terminated."
+                                    "All applications using this client will immediately lose access. Any active sessions will be terminated.",
                                 )
                             }}
                         </p>
@@ -155,170 +145,85 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
             <!-- Confirmation Input -->
             <div class="mb-6">
-                <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                >
-                    {{ __('Type "DELETE" to confirm:') }}
-                </label>
-                <input
+                <v-input
+                    :label="__('Type DELETE to confirm:')"
                     v-model="confirmationText"
-                    type="text"
                     placeholder="DELETE"
-                    :class="[
-                        'w-full px-3 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
-                        confirmationText === 'DELETE'
-                            ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500',
-                    ]"
-                    :disabled="loading"
+                    :hint="
+                        __('This action is permanent and cannot be reversed.')
+                    "
                 />
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    {{ __("This action is permanent and cannot be reversed.") }}
-                </p>
             </div>
 
             <!-- Actions -->
             <div class="flex justify-end space-x-3">
-                <button
+                <v-button
                     @click="close"
                     :disabled="loading"
-                    class="cancel-btn px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {{ __("Cancel") }}
-                </button>
-                <button
+                    :label="__('Cancel')"
+                    variant="danger"
+                />
+
+                <v-button
                     @click="destroy"
                     :disabled="loading || confirmationText !== 'DELETE'"
-                    :class="[
-                        'delete-confirm-btn px-4 py-2.5 text-sm font-medium text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2',
-                        loading || confirmationText !== 'DELETE'
-                            ? 'bg-red-400 dark:bg-red-500'
-                            : 'bg-red-600 dark:bg-red-600 hover:bg-red-700 dark:hover:bg-red-700',
-                    ]"
-                >
-                    <svg
-                        v-if="loading"
-                        class="w-4 h-4 animate-spin"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-                    <svg
-                        v-else
-                        class="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                    <span>{{
-                        loading ? __("Deleting...") : __("Delete Client")
-                    }}</span>
-                </button>
+                    :label="loading ? __('Deleting...') : __('Delete Client')"
+                    variant="ghost"
+                />
             </div>
         </template>
     </v-modal>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
+import VInput from "@/components/VInput.vue";
 
-export default {
-    components: {
-        VModal,
+const emits = defineEmits(["deleted"]);
+
+const props = defineProps({
+    item: {
+        type: Object,
+        required: true,
     },
-    emits: ["deleted"],
+});
 
-    props: {
-        item: {
-            type: Object,
-            required: true,
-        },
-    },
+const dialog = ref(false);
+const loading = ref(false);
+const confirmationText = ref("");
 
-    data() {
-        return {
-            dialog: false,
-            loading: false,
-            confirmationText: "",
-        };
-    },
+const open = () => {
+    confirmationText.value = "";
+    dialog.value = true;
+};
 
-    methods: {
-        open() {
-            this.confirmationText = "";
-            this.dialog = true;
-        },
+const close = () => {
+    dialog.value = false;
+    loading.value = false;
+    confirmationText.value = "";
+};
 
-        close() {
-            this.dialog = false;
-            this.loading = false;
-            this.confirmationText = "";
-        },
+const destroy = async () => {
+    if (confirmationText.value !== "DELETE") return;
 
-        async destroy() {
-            if (this.confirmationText !== "DELETE") return;
+    loading.value = true;
+    try {
+        const res = await $server.delete(props.item.links.destroy);
 
-            this.loading = true;
-            try {
-                const res = await this.$server.delete(this.item.links.destroy);
+        if (res.status == 200) {
+            emits("deleted");
+            close();
 
-                if (res.status == 200) {
-                    this.$emit("deleted", true);
-                    this.close();
-
-                    this.$notify.success({
-                        title: this.__("Deleted!"),
-                        message: this.__("OAuth client deleted successfully"),
-                        timeout: 3000,
-                    });
-                }
-            } catch (e) {
-                const message = this.getErrorMessage(e);
-                this.$notify.error({
-                    title: this.__("Delete Failed"),
-                    message: message,
-                    timeout: 5000,
-                });
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        getErrorMessage(error) {
-            if (error?.response?.data?.message) {
-                return error.response.data.message;
-            }
-            if (error?.response?.status === 404) {
-                return this.__(
-                    "Client not found. It may have been already deleted."
-                );
-            }
-            if (error?.response?.status === 403) {
-                return this.__(
-                    "You don't have permission to delete this client."
-                );
-            }
-            return this.__("Failed to delete client. Please try again.");
-        },
-    },
+            $notify.success(__("OAuth client deleted successfully"));
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            $notify.error(__("Delete Failed"));
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
-
-<style scoped>
-.delete-btn:active {
-    transform: translateY(0);
-    transition: transform 0.1s ease;
-}
-</style>

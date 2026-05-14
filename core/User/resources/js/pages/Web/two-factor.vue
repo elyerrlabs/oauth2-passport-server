@@ -25,31 +25,95 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <template>
     <v-account-layout>
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
-                {{ __("Two-Factor Authentication") }}
-            </h1>
-            <p class="text-gray-600 dark:text-gray-400">
-                {{ __("Add an extra layer of security to your account") }}
-            </p>
-        </div>
-
-        <div
-            class="rounded-2xl border m-auto p-6 bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700"
-        >
-            <div class="w-4xl">
-                <!-- ========================= -->
-                <!-- 2FA NOT ENABLED -->
-                <!-- ========================= -->
-                <div v-if="!isTwoFactorEnabled && !isSetupInProgress">
-                    <h3
-                        class="text-lg font-semibold mb-2 text-gray-900 dark:text-white"
+        <div class="mx-auto max-w-5xl space-y-6 px-4 py-4 sm:px-6">
+            <div
+                class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
+            >
+                <div
+                    class="bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-8 text-white"
+                >
+                    <div
+                        class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between"
                     >
+                        <div class="max-w-2xl">
+                            <div
+                                class="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm"
+                            >
+                                <i class="mdi mdi-shield-key-outline text-2xl"></i>
+                            </div>
+                            <h1 class="text-2xl font-bold sm:text-3xl">
+                                {{ __("Two-Factor Authentication") }}
+                            </h1>
+                            <p class="mt-2 text-sm text-blue-50 sm:text-base">
+                                {{
+                                    __(
+                                        "Protect your account with an extra verification step when signing in.",
+                                    )
+                                }}
+                            </p>
+                        </div>
+
+                        <div
+                            class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:min-w-[320px]"
+                        >
+                            <div
+                                class="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm"
+                            >
+                                <div class="text-xs uppercase tracking-[0.2em] text-blue-100">
+                                    {{ __("Status") }}
+                                </div>
+                                <div class="mt-2 flex items-center gap-2 text-sm font-medium">
+                                    <span
+                                        class="h-2.5 w-2.5 rounded-full"
+                                        :class="
+                                            isTwoFactorEnabled
+                                                ? 'bg-emerald-300'
+                                                : 'bg-amber-300'
+                                        "
+                                    ></span>
+                                    {{
+                                        isTwoFactorEnabled
+                                            ? __("Protected")
+                                            : __("Not enabled")
+                                    }}
+                                </div>
+                            </div>
+
+                            <div
+                                class="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm"
+                            >
+                                <div class="text-xs uppercase tracking-[0.2em] text-blue-100">
+                                    {{ __("Recovery Codes") }}
+                                </div>
+                                <div class="mt-2 text-sm font-medium">
+                                    {{ recoveryCodes.length || 0 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 sm:p-8">
+                    <div
+                        v-if="message"
+                        class="mb-6 flex items-start gap-3 rounded-2xl border p-4 text-sm"
+                        :class="messageClasses"
+                    >
+                        <i :class="messageIcon" class="mt-0.5 text-lg"></i>
+                        <p>{{ message }}</p>
+                    </div>
+
+                    <div class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
+                        <div
+                            class="rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-slate-700 dark:bg-slate-900/30"
+                        >
+                <!-- 2FA NOT ENABLED -->
+                <div v-if="!isTwoFactorEnabled && !isSetupInProgress">
+                    <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
                         {{ __("Enable Two-Factor Authentication") }}
                     </h3>
 
-                    <p class="mb-4 text-gray-600 dark:text-gray-400">
+                    <p class="mb-6 text-gray-600 dark:text-gray-400">
                         {{
                             __(
                                 "Protect your account by requiring a one-time code at login.",
@@ -57,71 +121,98 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         }}
                     </p>
 
-                    <button
+                    <v-button
                         @click="startTwoFactorSetup"
                         :disabled="loading"
-                        class="w-full py-3 rounded-xl font-medium bg-blue-600 hover:bg-blue-700 text-white"
+                        :loading="loading"
+                        :label="__('Start 2FA Setup')"
+                        left-icon="mdi mdi-shield-plus-outline"
+                        variant="primary"
+                        full-width
                     >
-                        {{ __("Start 2FA Setup") }}
-                    </button>
+                    </v-button>
                 </div>
 
-                <!-- ========================= -->
                 <!-- SETUP IN PROGRESS -->
-                <!-- ========================= -->
                 <div v-else-if="isSetupInProgress">
-                    <h3
-                        class="text-lg font-semibold mb-4 text-gray-900 dark:text-white"
-                    >
+                    <div class="mb-6">
+                    <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
                         {{ __("Scan QR Code") }}
                     </h3>
-
-                    <div
-                        v-if="qrCodeSvg"
-                        class="bg-white p-4 rounded-xl inline-block mb-4"
-                        v-html="qrCodeSvg"
-                    />
-
-                    <div class="mb-6">
-                        <p
-                            class="text-sm mb-1 text-gray-600 dark:text-gray-400"
-                        >
-                            {{ __("Manual setup key") }}
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            {{
+                                __(
+                                    "Use Google Authenticator, 1Password, Authy or another compatible app.",
+                                )
+                            }}
                         </p>
-                        <code
-                            class="font-mono text-lg text-blue-600 dark:text-blue-400"
-                        >
-                            {{ secretKey }}
-                        </code>
                     </div>
 
-                    <div class="mb-4">
-                        <label
-                            class="block text-sm mb-2 text-gray-700 dark:text-gray-300"
+                    <div class="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
+                        <div
+                            class="rounded-2xl border border-slate-200 bg-white p-5 text-center dark:border-slate-700 dark:bg-slate-800"
                         >
-                            {{ __("Verification code") }}
-                        </label>
-                        <input
-                            v-model="verificationCode"
-                            @input="formatVerificationCode"
-                            maxlength="6"
-                            :placeholder="__('000000')"
-                            class="w-full text-center text-2xl tracking-widest py-3 rounded-xl border bg-white text-gray-900 border-gray-300 dark:bg-gray-900 dark:text-white dark:border-gray-700"
-                        />
-                    </div>
+                            <div
+                                v-if="qrCodeSvg"
+                                class="inline-flex rounded-2xl bg-white p-4 shadow-sm"
+                                v-html="qrCodeSvg"
+                            />
+                        </div>
 
-                    <button
+                        <div class="space-y-5">
+                            <div
+                                class="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800"
+                            >
+                                <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
+                                    {{ __("Manual setup key") }}
+                                </p>
+                                <code
+                                    class="block break-all rounded-xl bg-slate-100 px-4 py-3 font-mono text-base text-blue-600 dark:bg-slate-900 dark:text-blue-400"
+                                >
+                                    {{ secretKey }}
+                                </code>
+                            </div>
+
+                            <v-input
+                                v-model="verificationCode"
+                                :label="__('Verification code')"
+                                :placeholder="__('000000')"
+                                maxlength="6"
+                                inputmode="numeric"
+                                autocomplete="one-time-code"
+                                :input-class="[
+                                    'text-center text-2xl tracking-[0.35em]',
+                                    verificationCode.length === 6
+                                        ? 'border-green-500 dark:border-green-400'
+                                        : '',
+                                ]"
+                                @input="formatVerificationCode"
+                            />
+
+                            <div class="flex flex-col gap-3 sm:flex-row">
+                    <v-button
                         @click="confirmTwoFactorSetup"
                         :disabled="verificationCode.length !== 6 || loading"
-                        class="w-full py-3 rounded-xl font-medium bg-green-600 hover:bg-green-700 text-white"
+                        :loading="loading"
+                        :label="__('Confirm & Enable')"
+                        left-icon="mdi mdi-check-decagram-outline"
+                        variant="success"
+                        full-width
                     >
-                        {{ __("Confirm & Enable") }}
-                    </button>
+                    </v-button>
+                                <v-button
+                                    @click="cancelSetup"
+                                    :disabled="loading"
+                                    :label="__('Cancel')"
+                                    variant="light"
+                                    full-width
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- ========================= -->
                 <!-- 2FA ENABLED -->
-                <!-- ========================= -->
                 <div v-else>
                     <div class="flex items-center gap-3 mb-4">
                         <div
@@ -155,27 +246,34 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </div>
 
                     <div class="flex gap-3 flex-wrap">
-                        <button
+                        <v-button
                             @click="loadRecoveryCodes"
-                            class="flex-1 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                            :label="__('View Recovery Codes')"
+                            left-icon="mdi mdi-key-chain-variant"
+                            variant="light"
+                            class="flex-1"
                         >
-                            {{ __("View Recovery Codes") }}
-                        </button>
+                        </v-button>
 
-                        <button
+                        <v-button
                             @click="isDisableChallenge = true"
-                            class="flex-1 py-3 rounded-xl border border-red-600 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20"
+                            :label="__('Disable 2FA')"
+                            left-icon="mdi mdi-shield-off-outline"
+                            variant="danger"
+                            class="flex-1"
                         >
-                            {{ __("Disable 2FA") }}
-                        </button>
+                        </v-button>
 
-                        <button
+                        <v-button
                             v-if="recoveryCodes.length"
                             @click="regenerateRecoveryCodes"
-                            class="flex-1 py-3 rounded-xl border border-yellow-500 text-yellow-600 hover:bg-yellow-50 dark:border-yellow-600 dark:text-yellow-400 dark:hover:bg-yellow-900/20"
+                            :loading="loading"
+                            :label="__('Regenerate Recovery Codes')"
+                            left-icon="mdi mdi-refresh"
+                            variant="warning"
+                            class="flex-1"
                         >
-                            {{ __("Regenerate Recovery Codes") }}
-                        </button>
+                        </v-button>
                     </div>
 
                     <div
@@ -198,29 +296,42 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             }}
                         </p>
 
-                        <input
+                        <v-input
                             v-model="disableCode"
-                            @input="formatDisableCode"
-                            maxlength="6"
+                            :label="__('Authentication code')"
                             :placeholder="__('000000')"
-                            class="w-full mb-4 text-center text-2xl tracking-widest py-3 rounded-xl border bg-white text-gray-900 border-red-300 dark:bg-gray-900 dark:text-white dark:border-red-700"
+                            maxlength="6"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            :input-class="[
+                                'mb-4 text-center text-2xl tracking-[0.35em] border-red-300 dark:border-red-700',
+                                disableCode.length === 6
+                                    ? 'border-green-500 dark:border-green-400'
+                                    : '',
+                            ]"
+                            @input="formatDisableCode"
                         />
 
                         <div class="flex gap-3">
-                            <button
+                            <v-button
                                 @click="confirmDisableTwoFactor"
                                 :disabled="disableCode.length !== 6 || loading"
-                                class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium"
+                                :loading="loading"
+                                :label="__('Confirm Disable')"
+                                left-icon="mdi mdi-alert-octagon-outline"
+                                variant="danger"
+                                full-width
                             >
-                                {{ __("Confirm Disable") }}
-                            </button>
+                            </v-button>
 
-                            <button
+                            <v-button
                                 @click="isDisableChallenge = false"
-                                class="flex-1 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                                :disabled="loading"
+                                :label="__('Cancel')"
+                                variant="light"
+                                full-width
                             >
-                                {{ __("Cancel") }}
-                            </button>
+                            </v-button>
                         </div>
                     </div>
 
@@ -231,6 +342,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         >
                             {{ __("Recovery Codes") }}
                         </h4>
+
+                        <p class="mb-3 text-sm text-gray-600 dark:text-gray-400">
+                            {{
+                                __(
+                                    "Store these codes somewhere safe. Each code can be used once if you lose access to your authenticator app.",
+                                )
+                            }}
+                        </p>
 
                         <div class="grid grid-cols-2 gap-2">
                             <code
@@ -243,6 +362,54 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         </div>
                     </div>
                 </div>
+                        </div>
+
+                        <aside class="space-y-4">
+                            <div
+                                class="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-800"
+                            >
+                                <h2 class="mb-3 text-base font-semibold text-gray-900 dark:text-white">
+                                    {{ __("How it works") }}
+                                </h2>
+                                <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+                                    <li class="flex gap-3">
+                                        <span class="mt-0.5 h-2 w-2 rounded-full bg-blue-500"></span>
+                                        <span>{{ __("Scan the QR code with an authenticator app.") }}</span>
+                                    </li>
+                                    <li class="flex gap-3">
+                                        <span class="mt-0.5 h-2 w-2 rounded-full bg-blue-500"></span>
+                                        <span>{{ __("Enter the 6-digit code generated by the app.") }}</span>
+                                    </li>
+                                    <li class="flex gap-3">
+                                        <span class="mt-0.5 h-2 w-2 rounded-full bg-blue-500"></span>
+                                        <span>{{ __("Save your recovery codes in a safe place.") }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div
+                                class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-800 dark:bg-emerald-900/20"
+                            >
+                                <div class="mb-3 flex items-center gap-3">
+                                    <div
+                                        class="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/15"
+                                    >
+                                        <i class="mdi mdi-lock-check-outline text-xl text-emerald-600 dark:text-emerald-400"></i>
+                                    </div>
+                                    <h2 class="text-base font-semibold text-emerald-800 dark:text-emerald-300">
+                                        {{ __("Security Tips") }}
+                                    </h2>
+                                </div>
+
+                                <ul class="space-y-3 text-sm text-emerald-700 dark:text-emerald-300">
+                                    <li>{{ __("Do not share your recovery codes.") }}</li>
+                                    <li>{{ __("Use a trusted authenticator app on a device you control.") }}</li>
+                                    <li>{{ __("Regenerate recovery codes if you think they were exposed.") }}</li>
+                                </ul>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
             </div>
         </div>
     </v-account-layout>
@@ -252,12 +419,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 import { ref, computed, onMounted } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import VAccountLayout from "@/components/VAccountLayout.vue";
+import VButton from "@/components/VButton.vue";
+import VInput from "@/components/VInput.vue";
 
 const page = usePage();
 const user = ref({});
 
 // UI state
-const activeTab = ref("setup");
 const loading = ref(false);
 
 const isDisableChallenge = ref(false);
@@ -286,10 +454,9 @@ const messageType = ref("info");
 // --------------------------------
 onMounted(() => {
     user.value = page.props.user;
-
+    console.log(page.props.user);
+    
     if (user.value.two_factor_enabled) {
-        activeTab.value = "setup";
-
         loadRecoveryCodes();
     }
 });
@@ -297,13 +464,45 @@ onMounted(() => {
 // --------------------------------
 // Helpers
 // --------------------------------
-const formatVerificationCode = (e) => {
-    verificationCode.value = e.target.value.replace(/\D/g, "").slice(0, 6);
+const formatVerificationCode = (value) => {
+    verificationCode.value = String(value).replace(/\D/g, "").slice(0, 6);
 };
 
-const formatDisableCode = (e) => {
-    disableCode.value = e.target.value.replace(/\D/g, "").slice(0, 6);
+const formatDisableCode = (value) => {
+    disableCode.value = String(value).replace(/\D/g, "").slice(0, 6);
 };
+
+const cancelSetup = () => {
+    isSetupInProgress.value = false;
+    qrCodeSvg.value = "";
+    secretKey.value = "";
+    verificationCode.value = "";
+    message.value = "";
+};
+
+const messageClasses = computed(() => {
+    if (messageType.value === "success") {
+        return "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300";
+    }
+
+    if (messageType.value === "error") {
+        return "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300";
+    }
+
+    return "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-300";
+});
+
+const messageIcon = computed(() => {
+    if (messageType.value === "success") {
+        return "mdi mdi-check-circle-outline";
+    }
+
+    if (messageType.value === "error") {
+        return "mdi mdi-alert-circle-outline";
+    }
+
+    return "mdi mdi-information-outline";
+});
 
 // --------------------------------
 // 2FA Actions

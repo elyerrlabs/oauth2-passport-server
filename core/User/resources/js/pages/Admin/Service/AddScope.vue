@@ -25,23 +25,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <div>
         <!-- Button -->
-        <button
-            v-if="!scope || scope?.id"
+        <v-button
             @click="open"
-            class="relative group w-12 h-12 gap-2 border border-blue-600 dark:border-blue-400 px-4 py-2 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-        >
-            <i :class="icon"></i>
-
-            <!-- Tooltip -->
-            <div
-                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
-            >
-                {{ scope ? __("Update Scope") : __("Add Scope") }}
-                <div
-                    class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-600 dark:border-t-blue-500"
-                ></div>
-            </div>
-        </button>
+            :icon="icon"
+            :label="scope?.id ? '' : __('Add Scope')"
+            :round="scope?.id ? true : false"
+        />
 
         <v-modal
             v-model="dialog"
@@ -137,39 +126,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <div
                     class="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-2xl transition-colors duration-200"
                 >
-                    <button
+                    <v-button
                         @click="dialog = false"
+                        :label="__('Cancel')"
                         :disabled="loading"
-                        class="px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {{ __("Cancel") }}
-                    </button>
-                    <button
+                        variant="danger"
+                        icon="mdi mdi-close-circle"
+                    />
+
+                    <v-button
                         @click="addScopes"
                         :disabled="loading"
-                        :class="[
-                            'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200',
-                            loading
-                                ? 'bg-blue-400 dark:bg-blue-600 cursor-not-allowed'
-                                : 'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:ring-blue-200 dark:focus:ring-blue-800',
-                        ]"
-                    >
-                        <i
-                            v-if="loading"
-                            class="mdi mdi-loading animate-spin"
-                        ></i>
-                        <i
-                            v-else
-                            :class="scope ? 'mdi mdi-update' : 'mdi mdi-plus'"
-                        ></i>
-                        <span>{{
-                            loading
-                                ? __(scope ? "Updating..." : "Adding...")
-                                : scope
-                                  ? __("Update Scope")
-                                  : __("Add Scope")
-                        }}</span>
-                    </button>
+                        :label="
+                            scope?.id ? __('Update scope') : __('Add scope')
+                        "
+                        :icon="scope?.id ? 'mdi mdi-update' : 'mdi mdi-plus'"
+                    />
                 </div>
             </template>
         </v-modal>
@@ -181,6 +153,7 @@ import { ref } from "vue";
 import VModal from "@/components/VModal.vue";
 import VSelect from "@/components/VSelect.vue";
 import VSwitch from "@/components/VSwitch.vue";
+import VButton from "@/components/VButton.vue";
 import { usePage } from "@inertiajs/vue3";
 
 const emits = defineEmits(["created"]);
@@ -218,11 +191,11 @@ const open = async () => {
     await getRoles();
 
     if (props.scope?.id) {
-        form.api_key = props.scope.api_key;
-        form.web = props.scope.web;
-        form.active = props.scope.active;
-        form.public = props.scope.public;
-        form.role_id = props.scope?.role?.id;
+        form.value.api_key = props.scope.api_key;
+        form.value.web = props.scope.web;
+        form.value.active = props.scope.active;
+        form.value.public = props.scope.public;
+        form.value.role_id = props.scope?.role?.id;
     }
 
     dialog.value = true;

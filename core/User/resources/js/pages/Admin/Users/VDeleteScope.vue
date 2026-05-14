@@ -1,12 +1,13 @@
 <template>
     <div>
-        <button
+        <v-button
             @click="dialog = true"
-            class="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded transition-colors duration-200"
+            size="sm"
+            variant="danger"
+            icon="mdi mdi-delete"
         >
-            <i class="mdi mdi-delete mr-1.5"></i>
             {{ __("Delete") }}
-        </button>
+        </v-button>
 
         <v-modal
             v-model="dialog"
@@ -158,24 +159,25 @@
                     <div
                         class="flex items-center justify-end gap-3 pt-4 border-t dark:border-gray-700"
                     >
-                        <button
+                        <v-button
                             @click="dialog = false"
-                            class="px-4 py-2 cursor-pointer rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
+                            variant="light"
                         >
                             {{ __("Cancel") }}
-                        </button>
-                        <button
+                        </v-button>
+                        <v-button
                             @click="revokeScope"
                             :disabled="!isConfirmed || processing"
-                            class="px-4 py-2 cursor-pointer rounded-lg bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            :loading="processing"
+                            variant="danger"
+                            icon="mdi mdi-delete"
                         >
-                            <i class="mdi mdi-delete"></i>
                             {{
                                 processing
                                     ? __("Revoking...")
                                     : __("Revoke Permission")
                             }}
-                        </button>
+                        </v-button>
                     </div>
                 </div>
             </template>
@@ -184,6 +186,7 @@
 </template>
 
 <script setup>
+import VButton from "@/components/VButton.vue";
 import VModal from "@/components/VModal.vue";
 import { ref, computed } from "vue";
 
@@ -205,7 +208,7 @@ const isConfirmed = computed(() => {
 
 const revokeScope = async () => {
     if (!isConfirmed.value) return;
-    processing.value = false;
+    processing.value = true;
 
     try {
         const res = await $server.delete(props.item.links.revoke);

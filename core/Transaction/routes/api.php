@@ -51,12 +51,7 @@ Route::group(
         // Route::put('/refunds/{id}/assign', [RefundController::class, 'assignTo'])->name('refunds.assignto');
         // Route::resource('/refunds', RefundController::class)->only('index', 'show', 'update');
 
-        if (config('routes.core.transaction.plans.status', true)) {
-
-            Route::resource('/plans', PlanController::class)->except('edit', 'create');
-            Route::delete('/plans/{plan}/scopes/{scope}', [PlanScopeController::class, 'revoke'])->name('plans.scopes.revoke');
-            Route::delete('/plans/{plan}/prices/{price}', [PlanPriceController::class, 'destroy'])->name('plans.prices.destroy');
-        }
+       
     }
 );
 

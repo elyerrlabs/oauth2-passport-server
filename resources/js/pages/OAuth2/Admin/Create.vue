@@ -24,28 +24,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
     <!-- Create Button -->
-    <button
+    <v-button
         @click="open"
-        class="create-btn group inline-flex items-center space-x-2 px-4 py-2.5 bg-transparent border border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 hover:shadow-md transform hover:-translate-y-0.5"
-    >
-        <svg
-            class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-200"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-        >
-            <path
-                fill-rule="evenodd"
-                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clip-rule="evenodd"
-            />
-        </svg>
-        <span class="font-semibold">{{ __("Create New OAuth Client") }}</span>
-    </button>
+        :label="item?.id ? '' : __('Create New OAuth Client')"
+        :variant="item?.id ? 'success' : 'secondary'"
+        :icon="item?.id ? 'mdi mdi-pencil' : 'mdi mdi-plus-circle'"
+        :round="item?.id ? true : false"
+    />
 
     <!-- Creation Dialog -->
     <v-modal
         v-model="dialog"
-        :title="__('Create New OAuth Client')"
+        :title="
+            item?.id ? __('Update OAuth Client') : __('Create New OAuth Client')
+        "
         panel-class="w-full lg:w-5xl"
     >
         <template #body>
@@ -53,7 +45,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <div v-if="!client?.id">
                 <div class="mb-6">
                     <div class="text-gray-600 dark:text-gray-400 text-sm">
-                        {{ __("Register a new OAuth 2.0 client application") }}
+                        {{
+                            item?.id
+                                ? __(
+                                      "Modify your OAuth 2.0 client application settings",
+                                  )
+                                : __(
+                                      "Register a new OAuth 2.0 client application",
+                                  )
+                        }}
                     </div>
                 </div>
 
@@ -67,7 +67,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         :error="errors.name"
                         :placeholder="
                             __(
-                                'Enter a descriptive name for your client application'
+                                'Enter a descriptive name for your client application',
                             )
                         "
                         :disabled="loading"
@@ -89,7 +89,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             v-model="form.confidential"
                             :label="__('Confidential Client')"
                             :error="errors.confidential"
-                            :disabled="loading"
+                            :disabled="loading || item?.id"
                         />
 
                         <!-- Switch Description -->
@@ -118,10 +118,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 {{
                                     form.confidential
                                         ? __(
-                                              "Confidential clients can keep secrets secure (recommended for server-side applications)."
+                                              "Confidential clients can keep secrets secure (recommended for server-side applications).",
                                           )
                                         : __(
-                                              "Public clients cannot keep secrets secure (suitable for SPA and mobile apps)."
+                                              "Public clients cannot keep secrets secure (suitable for SPA and mobile apps).",
                                           )
                                 }}
                             </span>
@@ -133,59 +133,21 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <div
                     class="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700"
                 >
-                    <button
+                    <v-button
                         @click="close"
                         :disabled="loading"
-                        class="cancel-btn px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {{ __("Cancel") }}
-                    </button>
-                    <button
-                        @click="create"
+                        :label="__('Cancel')"
+                        variant="danger"
+                    />
+
+                    <v-button
+                        @click="handleAction"
                         :disabled="loading || !isFormValid"
-                        :class="[
-                            'create-confirm-btn px-4 py-2.5 text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2',
-                            loading || !isFormValid
-                                ? 'bg-blue-400 dark:bg-blue-500'
-                                : 'bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700',
-                        ]"
-                    >
-                        <svg
-                            v-if="loading"
-                            class="animate-spin h-4 w-4 text-white"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                class="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                stroke-width="4"
-                            ></circle>
-                            <path
-                                class="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                        </svg>
-                        <svg
-                            v-else
-                            class="w-4 h-4"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                        <span class="font-medium">{{
-                            loading ? __("Creating...") : __("Create Client")
-                        }}</span>
-                    </button>
+                        :label="
+                            item?.id ? __('Update Client') : __('Create Client')
+                        "
+                        variant="success"
+                    />
                 </div>
             </div>
 
@@ -220,7 +182,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <p class="text-red-700 dark:text-red-300 text-sm mb-4">
                         {{
                             __(
-                                "These credentials will only be shown once. Please store them securely immediately."
+                                "These credentials will only be shown once. Please store them securely immediately.",
                             )
                         }}
                     </p>
@@ -248,73 +210,30 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         </div>
 
                         <div class="flex space-x-2">
-                            <button
-                                v-if="client.id"
+                            <v-button
                                 @click="copyToClipboard(client.id, 'Client ID')"
-                                class="copy-btn px-3 py-2 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors flex items-center space-x-2 text-sm"
-                                :title="__('Copy Client ID to clipboard')"
-                            >
-                                <svg
-                                    class="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-2"
-                                    />
-                                </svg>
-                                <span>{{ __("Copy ID") }}</span>
-                            </button>
+                                :label="__('Copy Client ID to clipboard')"
+                                variant="primary"
+                            />
 
-                            <button
+                            <v-button
                                 v-if="client.secret"
                                 @click="
                                     copyToClipboard(
                                         client.secret,
-                                        'Client Secret'
+                                        'Client Secret',
                                     )
                                 "
-                                class="copy-btn px-3 py-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors flex items-center space-x-2 text-sm"
-                                :title="__('Copy Client Secret to clipboard')"
-                            >
-                                <svg
-                                    class="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-2"
-                                    />
-                                </svg>
-                                <span>{{ __("Copy Secret") }}</span>
-                            </button>
+                                :label="__('Copy Client Secret to clipboard')"
+                                variant="warning"
+                            />
 
-                            <button
+                            <v-button
+                                v-if="client.secret"
                                 @click="downloadJsonFile"
-                                class="download-btn px-3 py-2 text-white bg-red-600 dark:bg-red-700 border border-transparent rounded-lg hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors flex items-center space-x-2 text-sm"
-                                :title="__('Download as JSON file')"
-                            >
-                                <svg
-                                    class="w-4 h-4"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <span>{{ __("Download All") }}</span>
-                            </button>
+                                :label="__('Download as JSON file')"
+                                variant="success"
+                            />
                         </div>
                     </div>
                 </div>
@@ -403,132 +322,159 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     </v-modal>
 </template>
 
-<script>
+<script setup>
 import VModal from "@/components/VModal.vue";
 import VInput from "@/components/VInput.vue";
 import VSwitch from "@/components/VSwitch.vue";
+import VButton from "@/components/VButton.vue";
+import { ref, computed } from "vue";
+import { usePage } from "@inertiajs/vue3";
 
-export default {
-    components: {
-        VModal,
-        VSwitch,
-        VInput,
+const page = usePage();
+const props = defineProps({
+    item: {
+        type: Object,
+        default: () => [],
     },
-    emits: ["created"],
+});
+const emits = defineEmits(["created", "updated"]);
+const dialog = ref(false);
+const form = ref({
+    name: "",
+    redirect: "",
+    confidential: false, // Default to true for better security
+});
+const errors = ref({});
+const client = ref({});
+const loading = ref(false);
 
-    data() {
-        return {
-            dialog: false,
-            form: {
-                name: "",
-                redirect: "",
-                confidential: false, // Default to true for better security
-            },
-            errors: {},
-            client: {},
-            loading: false,
-        };
-    },
+const isFormValid = computed(() => {
+    return form.value.name.trim() && form.value.redirect.trim();
+});
 
-    computed: {
-        isFormValid() {
-            return this.form.name.trim() && this.form.redirect.trim();
-        },
-    },
+const close = () => {
+    clean();
+    dialog.value = false;
+};
 
-    methods: {
-        close() {
-            this.clean();
-            this.dialog = false;
-        },
+const clean = () => {
+    client.value = {};
+    errors.value = {};
+    form.value = {
+        name: "",
+        redirect: "",
+        confidential: false,
+    };
+    loading.value = false;
+};
 
-        clean() {
-            this.client = {};
-            this.errors = {};
-            this.form = {
-                name: "",
-                redirect: "",
-                confidential: false,
-            };
-            this.loading = false;
-        },
+const open = () => {
+    clean();
 
-        open() {
-            this.clean();
-            this.dialog = true;
-        },
+    if (props.item?.id) {
+        form.value.name = props.item.name;
+        form.value.redirect = props.item.redirect;
+        form.value.confidencial = props.item.confidencial;
+    }
 
-        async copyToClipboard(text, type = "") {
-            try {
-                await navigator.clipboard.writeText(text);
-                this.$notify.success(
-                    this.__(`:type copied to clipboard`, {
-                        type: type || "Text",
-                    })
-                );
-            } catch (e) {
-                this.$notify.error(this.__("Failed to copy to clipboard"));
-            }
-        },
+    dialog.value = true;
+};
 
-        downloadJsonFile() {
-            const clientCopy = { ...this.client };
-            // Remove unnecessary properties
-            delete clientCopy.links;
-            delete clientCopy.revoked;
-            delete clientCopy.provider;
-            delete clientCopy.redirect;
+const copyToClipboard = async (text, type = "") => {
+    try {
+        await navigator.clipboard.writeText(text);
+        $notify.success(
+            __(`:type copied to clipboard`, {
+                type: type || "Text",
+            }),
+        );
+    } catch (e) {
+        $notify.error(__("Failed to copy to clipboard"));
+    }
+};
 
-            const filename = `${clientCopy.name || "client"}-credentials.json`;
-            const jsonString = JSON.stringify(clientCopy, null, 2);
-            const blob = new Blob([jsonString], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
+const downloadJsonFile = () => {
+    const clientCopy = { ...client.value };
+    // Remove unnecessary properties
+    delete clientCopy.links;
+    delete clientCopy.revoked;
+    delete clientCopy.provider;
+    delete clientCopy.redirect;
 
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+    const filename = `${clientCopy.name || "client"}-credentials.json`;
+    const jsonString = JSON.stringify(clientCopy, null, 2);
+    const blob = new Blob([jsonString], { type: "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
 
-            this.$notify.success(
-                this.__("Credentials downloaded successfully")
-            );
-        },
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 
-        async create() {
-            if (!this.isFormValid) return;
+    $notify.success(__("Credentials downloaded successfully"));
+};
 
-            this.loading = true;
-            this.errors = {};
+const handleAction = async () => {
+    if (props.item?.id) {
+        await updateClient();
+    } else {
+        await create();
+    }
+};
 
-            try {
-                const res = await this.$server.post(
-                    this.$page.props.routes.clients,
-                    this.form
-                );
+const create = async () => {
+    if (!isFormValid.value) return;
 
-                if (res.status === 201) {
-                    this.client = res.data;
-                    this.$emit("created", true);
-                    this.$notify.success(
-                        this.__("OAuth client created successfully")
-                    );
-                }
-            } catch (e) {
-                if (e?.response?.status == 422) {
-                    this.errors = e.response.data.errors;
-                }
+    loading.value = true;
+    errors.value = {};
 
-                if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
+    try {
+        const res = await $server.post(page.props.routes.clients, form.value);
+
+        if (res.status === 201) {
+            client.value = res.data;
+            emits("created");
+            $notify.success(__("OAuth client created successfully"));
+        }
+    } catch (e) {
+        if (e?.response?.status == 422) {
+            errors.value = e.response.data.errors;
+        }
+
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
+};
+
+const updateClient = async () => {
+    if (!isFormValid.value) return;
+    loading.value = true;
+    errors.value = {};
+
+    try {
+        const res = await $server.put(props.item.links.update, form.value);
+
+        if (res.status == 200) {
+            emits("updated");
+            dialog.value = false;
+
+            $notify.success(__("OAuth client updated successfully"));
+        }
+    } catch (e) {
+        if (e?.response?.status == 422) {
+            errors.value = e.response.data.errors;
+        } else if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
 

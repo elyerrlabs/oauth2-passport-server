@@ -25,51 +25,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <div>
         <!-- Delete Button -->
-        <button
+        <v-button
             @click="open"
             :disabled="loading"
-            :aria-label="__('Delete API key') + ' ' + item.name"
-            class="delete-btn inline-flex items-center gap-2 px-3 py-2 text-red-600 dark:text-red-500 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 hover:border-red-300 dark:hover:border-red-700 hover:text-red-700 dark:hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 group"
-        >
-            <svg
-                class="w-4 h-4 transition-transform group-hover:scale-110"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-            >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-            </svg>
-            <span class="text-sm font-medium">
-                <span v-if="!loading">{{ __("Delete") }}</span>
-                <span v-else class="flex items-center gap-2">
-                    <svg
-                        class="animate-spin h-3 w-3"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <circle
-                            class="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="4"
-                        ></circle>
-                        <path
-                            class="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                    </svg>
-                    {{ __("Deleting...") }}
-                </span>
-            </span>
-        </button>
+            :title="__('Delete API key') + ' ' + item.name"
+            icon="mdi mdi-delete-outline text-md"
+            round
+            variant="danger"
+        />
 
         <!-- Delete Confirmation Modal -->
         <v-modal v-model="dialog" panel-class="w-full max-w-md">
@@ -127,7 +90,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <p class="text-sm mt-1">
                                 {{
                                     __(
-                                        "Applications using this key will immediately lose access"
+                                        "Applications using this key will immediately lose access",
                                     )
                                 }}
                             </p>
@@ -180,7 +143,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <label
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                     >
-                        {{ __('Type "DELETE" to confirm:') }}
+                        {{ __("Type DELETE to confirm:") }}
                     </label>
                     <input
                         v-model="confirmationText"
@@ -197,7 +160,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                         {{
                             __(
-                                "This action is permanent and cannot be reversed."
+                                "This action is permanent and cannot be reversed.",
                             )
                         }}
                     </p>
@@ -205,152 +168,70 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                 <!-- Actions -->
                 <div class="flex justify-end space-x-3">
-                    <button
+                    <v-button
                         @click="close"
                         :disabled="loading"
-                        class="cancel-btn px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {{ __("Cancel") }}
-                    </button>
-                    <button
+                        :label="__('Cancel')"
+                        variant="danger"
+                    />
+                    <v-button
                         @click="destroy"
                         :disabled="loading || confirmationText !== 'DELETE'"
-                        :class="[
-                            'delete-confirm-btn px-4 py-2.5 text-sm font-medium text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2',
-                            loading || confirmationText !== 'DELETE'
-                                ? 'bg-red-400 dark:bg-red-500'
-                                : 'bg-red-600 dark:bg-red-600 hover:bg-red-700 dark:hover:bg-red-700',
-                        ]"
-                    >
-                        <svg
-                            v-if="loading"
-                            class="w-4 h-4 animate-spin"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                        </svg>
-                        <svg
-                            v-else
-                            class="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                        </svg>
-                        <span>{{
-                            loading ? __("Deleting...") : __("Delete API Key")
-                        }}</span>
-                    </button>
+                        :label="
+                            loading ? __('Deleting...') : __('Delete API Key')
+                        "
+                    />
                 </div>
             </template>
         </v-modal>
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
+const emits = ref(["deleted"]);
 
-export default {
-    emits: ["deleted"],
-    components: {
-        VModal,
+const props = defineProps({
+    item: {
+        type: Object,
+        required: true,
     },
+});
 
-    props: {
-        item: {
-            type: Object,
-            required: true,
-        },
-    },
+const dialog = ref(false);
+const loading = ref(false);
+const confirmationText = ref("");
 
-    data() {
-        return {
-            dialog: false,
-            loading: false,
-            confirmationText: "",
-        };
-    },
+const open = () => {
+    confirmationText.value = "";
+    dialog.value = true;
+};
 
-    methods: {
-        open() {
-            this.confirmationText = "";
-            this.dialog = true;
-        },
+const close = () => {
+    dialog.value = false;
+    loading.value = false;
+    confirmationText.value = "";
+};
 
-        close() {
-            this.dialog = false;
-            this.loading = false;
-            this.confirmationText = "";
-        },
+const destroy = async () => {
+    if (confirmationText.value !== "DELETE") return;
 
-        async destroy() {
-            if (this.confirmationText !== "DELETE") return;
+    loading.value = true;
 
-            this.loading = true;
+    try {
+        const res = await $server.delete(props.item.links.destroy);
 
-            try {
-                const res = await this.$server.delete(this.item.links.destroy);
-
-                if (res.status === 200) {
-                    this.$emit("deleted", true);
-                    this.close();
-
-                    this.$notify.success({
-                        title: this.__("Deleted!"),
-                        message: this.__(
-                            "API key has been permanently deleted"
-                        ),
-                        timeout: 3000,
-                    });
-                }
-            } catch (e) {
-                const message = this.getErrorMessage(e);
-                this.$notify.error({
-                    title: this.__("Delete Failed"),
-                    message: message,
-                    timeout: 5000,
-                });
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        getErrorMessage(error) {
-            if (error?.response?.data?.message) {
-                return error.response.data.message;
-            }
-            if (error?.response?.status === 404) {
-                return this.__(
-                    "API key not found. It may have been already deleted."
-                );
-            }
-            if (error?.response?.status === 403) {
-                return this.__(
-                    "You don't have permission to delete this API key."
-                );
-            }
-            return this.__("Failed to delete API key. Please try again.");
-        },
-    },
+        if (res.status === 200) {
+            emits("deleted");
+            close();
+            $notify.success(__("API key has been permanently deleted"));
+        }
+    } catch (e) {
+        $notify.error(e?.response?.data?.message);
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
-
-<style scoped>
-.delete-btn:active {
-    transform: scale(0.98);
-    transition: transform 0.1s ease;
-}
-</style>

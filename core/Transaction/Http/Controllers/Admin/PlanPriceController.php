@@ -1,6 +1,9 @@
 <?php
 
-namespace Core\Transaction\Http\Controllers\Api\Admin;
+namespace Core\Transaction\Http\Controllers\Admin;
+
+use App\Http\Controllers\WebController;
+use Core\Transaction\Services\PlanService;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -26,34 +29,24 @@ namespace Core\Transaction\Http\Controllers\Api\Admin;
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
-use App\Http\Controllers\ApiController;
-use Core\Transaction\Model\Plan;
-use Core\Transaction\Services\PlanService;
-use Core\User\Model\Scope;
-
-class PlanScopeController extends ApiController
+final class PlanPriceController extends WebController
 {
-    /**
-     * Construct
-     * @param  PlanService $planService
-     */
     public function __construct(protected PlanService $planService)
     {
         parent::__construct();
-        $this->middleware('scope:administrator:plan:full,administrator:plan:revoke')->only('revoke');
+        $this->middleware('userCanAny:administrator:plan:full,administrator:plan:destroy')->only('destroy');
     }
 
     /**
-     * Revoke scopes
-     * @param Plan $plan
-     * @param Scope $scope
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * Revoke prices
+     * @param string $plan_id
+     * @param string $price_id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function revoke(Plan $plan, Scope $scope)
+    public function destroy(string $plan_id, string $price_id)
     {
-        $this->planService->deleteScope($plan->id, $scope->id);
+        $this->planService->deletePrice($plan_id, $price_id);
 
-        return $this->message(__('Scopes revoked successfully'), 200);
+        return redirect()->route('transaction.admin.plans.show', ['plan' => $plan_id])->with('success', __('Price deleted successfully'));
     }
 }

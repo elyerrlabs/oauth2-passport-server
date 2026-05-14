@@ -25,22 +25,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <div>
         <!-- Manage Scopes Button -->
-        <button
+        <v-button
             @click="open"
-            class="relative group w-12 h-12 gap-2 border border-blue-600 dark:border-blue-400 px-4 py-2 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-        >
-            <i class="mdi mdi-shield-lock-open-outline"></i>
-
-            <!-- Tooltip -->
-            <div
-                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
-            >
-                {{ __("Manage Scopes") }}
-                <div
-                    class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-600 dark:border-t-blue-500"
-                ></div>
-            </div>
-        </button>
+            icon="mdi mdi-shield-lock-open-outline"
+            title="Manage Scopes"
+            round
+            variant="secondary"
+        />
 
         <v-modal
             v-model="dialog"
@@ -48,38 +39,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             panel-class="w-full lg:w-7xl"
         >
             <template #body>
-                <!-- Header -->
-                <div class="text-gray-700 dark:text-gray-300 p-6">
-                    <div
-                        class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
-                    >
-                        <div class="flex-1">
-                            <p class="text-gray-700 dark:text-gray-300 mt-1">
-                                {{ __("Managing permissions for:") }}
-                                <strong
-                                    class="text-blue-600 dark:text-blue-400"
-                                    >{{ __(service.name) }}</strong
-                                >
-                            </p>
-                            <div
-                                class="flex items-center gap-1 text-gray-700 dark:text-gray-400 text-sm mt-1"
-                            >
-                                <i class="mdi mdi-account-group"></i>
-                                {{ __("Group:") }}
-                                {{
-                                    __(service.group?.name) ||
-                                    __("Not assigned")
-                                }}
-                            </div>
-                        </div>
-                        <div>
-                            <v-add-scope
-                                :link="service.links.scopes"
-                                @created="getScopes"
-                            />
-                        </div>
-                    </div>
-                </div>
+                <v-head
+                    :title="__('Managing permissions for: ') + service.name"
+                    :description="'Group' + ' ' + service.group?.name"
+                >
+                    <template #actions>
+                        <v-add-scope
+                            :link="service.links.scopes"
+                            @created="getScopes"
+                        />
+                    </template>
+                </v-head>
 
                 <!-- Content -->
                 <div class="p-6 overflow-y-auto">
@@ -427,6 +397,8 @@ import { ref, computed, defineProps } from "vue";
 import VModal from "@/components/VModal.vue";
 import VDeleteScope from "./DeleteScope.vue";
 import VAddScope from "./AddScope.vue";
+import VButton from "@/components/VButton.vue";
+import VHead from "@/components/VHead.vue";
 
 const props = defineProps({
     service: {

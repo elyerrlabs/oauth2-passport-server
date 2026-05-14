@@ -49,7 +49,8 @@ Route::middleware(['throttle:core:transaction:admin', 'password.confirm'])->grou
     // Route::resource('/refunds', RefundController::class)->only('index', 'show', 'update');
 
     if (config('routes.core.transaction.plans.status', true)) {
-
-        Route::resource('/plans', PlanController::class)->except('edit', 'create');
+        Route::resource('plans', PlanController::class);
+        Route::resource('plans.price', PlanPriceController::class)->only('destroy');
+        Route::resource('plans.scopes', PlanScopeController::class)->only('destroy');
     }
 });

@@ -23,25 +23,15 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <div>
+    <div v-if="scope?.gsr_id">
         <!-- Delete Button -->
-        <button
-            v-if="scope?.gsr_id"
+        <v-button
             @click="dialog = true"
-            class="relative group rounded-full p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800"
-        >
-            <i class="mdi mdi-trash-can-outline text-lg"></i>
-
-            <!-- Tooltip -->
-            <div
-                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-red-600 dark:bg-red-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
-            >
-                {{ __("Revoke Scope") }}
-                <div
-                    class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-red-600 dark:border-t-red-700"
-                ></div>
-            </div>
-        </button>
+            :title="__('Revoke scope')"
+            icon="mdi mdi-trash-can-outline"
+            round
+            variant="danger"
+        />
 
         <!-- Delete Confirmation Modal -->
         <v-modal
@@ -208,6 +198,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
 import { ref, computed } from "vue";
 
 const emits = defineEmits(["deleted"]);

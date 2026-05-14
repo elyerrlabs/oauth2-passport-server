@@ -24,28 +24,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
     <!-- Update Button -->
-    <button
+    <v-button
         @click="loadData(item)"
-        class="group p-2.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
         :title="__('Update Commission Rate')"
-    >
-        <div class="flex items-center space-x-2">
-            <div class="relative">
-                <svg
-                    class="w-4 h-4 transition-transform group-hover:scale-110"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91 2.56.62 4.18 1.63 4.18 3.71 0 1.76-1.39 2.83-3.13 3.16z"
-                    />
-                </svg>
-            </div>
-            <span class="text-xs font-medium hidden sm:inline">
-                {{ __("Adjust") }}
-            </span>
-        </div>
-    </button>
+        round
+        variant="success"
+        icon="mdi mdi-pencil"
+    />
 
     <v-modal
         v-model="dialog"
@@ -273,55 +258,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <div
                 class="flex justify-end space-x-4 mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 transition-colors duration-200"
             >
-                <button
+                <v-button
                     @click="dialog = false"
-                    class="px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-offset-gray-900 transition-all duration-300"
-                >
-                    {{ __("Cancel") }}
-                </button>
-                <button
+                    :label="__('Cancel')"
+                    variant="danger"
+                />
+
+                <v-button
                     @click="update"
                     :disabled="updating"
-                    class="px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 rounded-xl hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 focus:scale-105 flex items-center space-x-3 shadow-lg shadow-blue-500/25 dark:shadow-blue-500/40"
-                >
-                    <svg
-                        v-if="updating"
-                        class="w-5 h-5 animate-spin"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <circle
-                            class="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="4"
-                        ></circle>
-                        <path
-                            class="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                    </svg>
-                    <svg
-                        v-else
-                        class="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
-                        />
-                    </svg>
-                    <span class="font-bold">
-                        {{
-                            updating
-                                ? __("Updating...")
-                                : __("Update Commission")
-                        }}
-                    </span>
-                </button>
+                    :title="
+                        updating ? __('Updating...') : __('Update Commission')
+                    "
+                    variant="success"
+                />
             </div>
         </template>
     </v-modal>
@@ -330,6 +280,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script setup>
 import { ref, reactive, watch } from "vue";
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
 import { useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -364,14 +315,14 @@ watch(
             }
             sliderValue.value = form.commission_rate;
         }
-    }
+    },
 );
 
 watch(
     () => sliderValue.value,
     (newValue) => {
         form.commission_rate = parseFloat(newValue);
-    }
+    },
 );
 
 async function loadData(item) {
@@ -502,8 +453,9 @@ async function update() {
 
 /* Smooth transitions for dark mode */
 * {
-    transition-property: color, background-color, border-color,
-        text-decoration-color, fill, stroke;
+    transition-property:
+        color, background-color, border-color, text-decoration-color, fill,
+        stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 200ms;
 }

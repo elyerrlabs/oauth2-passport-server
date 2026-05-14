@@ -197,7 +197,8 @@ return [
         'ip' => 'IP Address',
         'ipv6' => 'IPV6 Address',
         'agent' => 'Agent',
-        'attrs' => 'attributes'
+        'attrs' => 'attributes',
+        'billing_period' => 'period'
     ],
 
 ];

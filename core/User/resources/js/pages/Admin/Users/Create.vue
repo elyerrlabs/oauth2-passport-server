@@ -25,33 +25,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <!-- Create/Edit Button -->
     <div>
-        <button
-            v-if="item?.id"
+        <v-button
             @click="open"
-            class="relative group w-12 h-12 gap-2 border border-blue-600 dark:border-blue-400 px-4 py-2 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-            :title="__('Edit user')"
-        >
-            <i class="mdi mdi-pencil text-lg"></i>
-
-            <!-- Tooltip -->
-            <div
-                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
-            >
-                {{ __("Edit User") }}
-                <div
-                    class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-600 dark:border-t-blue-500"
-                ></div>
-            </div>
-        </button>
-
-        <button
-            v-else
-            @click="open"
-            class="flex items-center gap-2 px-4 py-2 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-        >
-            <i class="mdi mdi-plus-circle"></i>
-            {{ __("New user") }}
-        </button>
+            :label="item?.id ? '' : __('New user')"
+            :icon="item?.id ? 'mdi mdi-pencil text-lg' : 'mdi mdi-plus-circle'"
+            size="md"
+            :round="!!item?.id"
+            :variant="item?.id ? 'success' : 'secondary'"
+            :aria-label="item?.id ? __('Update user') : __('Add new user')"
+            :title="item?.id ? __('Update user') : __('Add new user')"
+        />
 
         <v-modal
             v-model="dialog"
@@ -188,7 +171,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </div>
                 </div>
 
-                <div v-if="item?.id" class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                <div
+                    v-if="item?.id"
+                    class="flex justify-between text-xs text-gray-500 dark:text-gray-400"
+                >
                     <span
                         v-if="form?.verified"
                         class="inline-flex items-center gap-1 px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full"
@@ -262,6 +248,7 @@ import VSelect from "@/components/VSelect.vue";
 import VInput from "@/components/VInput.vue";
 import VSwitch from "@/components/VSwitch.vue";
 import VError from "@/components/VError.vue";
+import VButton from "@/components/VButton.vue";
 import { usePage } from "@inertiajs/vue3";
 
 const is_dark = ref(false);

@@ -55,7 +55,17 @@ return [
                 "name" => __("Transactions"),
                 "route" => "transaction.admin.dashboard",
                 "icon" => "mdi mdi-swap-vertical",
-                'service' => "administrator:transactions"
+                'service' => "administrator:transactions",
+                'position' => 7
+            ],
+
+            'plans' => [
+                "id" => "plans",
+                "name" => __("Plans"),
+                "route" => "transaction.admin.plans.index",
+                "icon" => "mdi mdi-cash-clock",
+                'service' => 'administrator:plan',
+                'position' => 8
             ],
         ],
 
@@ -104,18 +114,45 @@ return [
     "transaction_routes" => [
         [
             "id" => "dashboard",
-            "name" => __("Dashboard"),
+            "name" => "Dashboard",
             "route" => "transaction.admin.dashboard",
             "icon" => "mdi mdi-view-dashboard",
             'service' => 'administrator:transactions',
+            'position' => 1
         ],
         [
             'id' => 'transaction',
-            'name' => __('Transactions'),
+            'name' => 'Transactions',
             'route' => 'transaction.admin.transactions.index',
             'icon' => 'mdi mdi-cash',
             'service' => "administrator:transactions",
+            'position' => 2
         ],
+        [
+            'id' => 'plans',
+            'name' => 'Plans',
+            'route' => 'transaction.admin.plans.index',
+            'icon' => 'mdi mdi-cash',
+            'service' => "administrator:plans",
+            'position' => 3,
+            'menus' => [
+                [
+                    'id' => 'list-plans',
+                    'name' => 'List',
+                    'route' => 'transaction.admin.plans.index',
+                    'icon' => 'mdi mdi-format-list-bulleted-square',
+                    'service' => "administrator:plans",
+                ],
+                [
+                    'id' => 'create-plans',
+                    'name' => 'Add',
+                    'route' => 'transaction.admin.plans.create',
+                    'icon' => 'mdi mdi-plus-box',
+                    'service' => "administrator:plans",
+                ],
+            ]
+        ],
+
         [
             'id' => 'refund',
             'name' => 'Refunds',
@@ -123,12 +160,6 @@ return [
             'icon' => "mdi mdi-cash-refund",
             'service' => 'administrator:refunds',
         ],
-        [
-            "id" => "plans",
-            "name" => __("Plans"),
-            "route" => "transaction.admin.plans.index",
-            "icon" => "mdi mdi-cash-clock",
-            'service' => 'administrator:plan',
-        ],
+
     ]
 ];

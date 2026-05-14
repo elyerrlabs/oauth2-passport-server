@@ -24,55 +24,23 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
     <!-- Create Button -->
-    <button
+    <v-button
         @click="open"
-        class="flex group justify-center items-center gap-2 px-4 py-2.5 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
-    >
-        <svg
-            class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-200"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-        >
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4v16m8-8H4"
-            />
-        </svg>
-        <span class="font-medium">{{ __("Create New API Key") }}</span>
-    </button>
+        :label="__('Create New API Key')"
+        variant="secondary"
+    />
 
     <!-- Dialog -->
-    <v-modal v-model="dialog" panel-class="w-full max-w-7xl">
+    <v-modal
+        v-model="dialog"
+        panel-class="w-full max-w-7xl"
+        :title="__('Generate New API Key')"
+    >
         <template #body>
             <!-- Header -->
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-3">
-                    <div
-                        class="flex items-center justify-center w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg transition-colors duration-200"
-                    >
-                        <svg
-                            class="w-5 h-5 text-indigo-600 dark:text-indigo-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                            />
-                        </svg>
-                    </div>
                     <div>
-                        <h2
-                            class="text-lg font-semibold text-gray-900 dark:text-white"
-                        >
-                            {{ __("Generate New API Key") }}
-                        </h2>
                         <p
                             class="text-sm text-gray-500 dark:text-gray-400 mt-1"
                         >
@@ -90,29 +58,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <div class="space-y-6">
                 <!-- Key Name Section -->
                 <div class="space-y-3">
-                    <label
-                        for="key-name"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        {{ __("Key Name") }}
-                        <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        id="key-name"
+                    <v-input
+                        :label="__('Key Name')"
                         v-model="form.name"
-                        type="text"
                         :placeholder="
                             __('e.g., Production Server, Mobile App, etc.')
                         "
-                        :class="[
-                            'w-full px-3 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
-                            errors.name
-                                ? 'border-red-300 dark:border-red-500 bg-red-50 dark:bg-red-900/20'
-                                : 'border-gray-300 dark:border-gray-600',
-                        ]"
                         :disabled="loading"
+                        :error="errors.name"
                     />
-                    <v-error :error="errors.name" />
                     <p class="text-gray-500 dark:text-gray-400 text-sm">
                         {{
                             __(
@@ -444,267 +398,205 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     }}
                 </div>
                 <div class="flex gap-3">
-                    <button
+                    <v-button
                         @click="close"
                         :disabled="loading"
-                        class="px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {{ token ? __("Done") : __("Cancel") }}
-                    </button>
-                    <button
+                        :label="__('Cancel')"
+                        variant="danger"
+                    />
+                    <v-button
                         v-if="!token"
                         @click="create"
                         :disabled="loading || !form.name.trim()"
-                        :class="[
-                            'inline-flex items-center gap-2 px-4 py-2.5 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm',
-                            loading || !form.name.trim()
-                                ? 'bg-indigo-400 dark:bg-indigo-500'
-                                : 'bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-600',
-                        ]"
-                    >
-                        <svg
-                            v-if="loading"
-                            class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                class="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                stroke-width="4"
-                            ></circle>
-                            <path
-                                class="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                        </svg>
-                        <svg
-                            v-else
-                            class="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z"
-                            />
-                        </svg>
-                        <span>{{
+                        :label="
                             loading
-                                ? __("Generating...")
-                                : __("Generate API Key")
-                        }}</span>
-                    </button>
+                                ? __('Generating...')
+                                : __('Generate API Key')
+                        "
+                    />
                 </div>
             </div>
         </template>
     </v-modal>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
 import VModal from "@/components/VModal.vue";
 import VError from "@/components/VError.vue";
+import VButton from "@/components/VButton.vue";
+import VInput from "@/components/VInput.vue";
+import { usePage } from "@inertiajs/vue3";
 
-export default {
-    emits: ["created"],
-    components: {
-        VModal,
-        VError,
-    },
+const page = usePage();
+const emits = defineEmits(["created"]);
+const loading = ref(false);
+const form = ref({
+    name: "",
+    scopes: [],
+    expiration_date: "",
+});
+const errors = ref({});
+const scopes = ref([]);
+const dialog = ref(false);
+const expandedGroups = ref([]);
+const loadingScopes = ref(true);
+const token = ref(null);
 
-    data() {
-        return {
-            loading: false,
-            form: {
-                name: "",
-                scopes: [],
-                expiration_date: "",
-            },
-            errors: {},
-            scopes: [],
-            dialog: false,
-            expandedGroups: [],
-            loadingScopes: true,
-            token: null,
-        };
-    },
+const groupedScopes = computed(() => {
+    const grouped = {};
 
-    computed: {
-        groupedScopes() {
-            const grouped = {};
+    scopes.value.forEach((scope) => {
+        if (!scope.id || typeof scope.id !== "string") {
+            console.warn("Scope without id or invalid id:", scope);
+            return;
+        }
 
-            this.scopes.forEach((scope) => {
-                if (!scope.id || typeof scope.id !== "string") {
-                    console.warn("Scope without id or invalid id:", scope);
-                    return;
-                }
+        const parts = scope.id.split(":");
+        if (parts.length !== 3) {
+            console.warn("Invalid scope id format:", scope.id);
+            return;
+        }
 
-                const parts = scope.id.split(":");
-                if (parts.length !== 3) {
-                    console.warn("Invalid scope id format:", scope.id);
-                    return;
-                }
+        const [group, service, role] = parts;
 
-                const [group, service, role] = parts;
+        if (!grouped[group]) {
+            grouped[group] = {};
+        }
 
-                if (!grouped[group]) {
-                    grouped[group] = {};
-                }
+        if (!grouped[group][service]) {
+            grouped[group][service] = [];
+        }
 
-                if (!grouped[group][service]) {
-                    grouped[group][service] = [];
-                }
+        grouped[group][service].push({
+            ...scope,
+            roleName: role,
+        });
+    });
 
-                grouped[group][service].push({
-                    ...scope,
-                    roleName: role,
-                });
-            });
+    return grouped;
+});
 
-            return grouped;
-        },
+const selectedScopesCount = computed(() => {
+    return form.value.scopes.length;
+});
 
-        selectedScopesCount() {
-            return this.form.scopes.length;
-        },
-    },
+const open = async () => {
+    dialog.value = true;
+    token.value = null;
+    errors.value = {};
+    form.value.name = "";
+    form.value.scopes = [];
+    expandedGroups.value = [];
+    loadingScopes.value = true;
 
-    methods: {
-        async open() {
-            this.dialog = true;
-            this.token = null;
-            this.errors = {};
-            this.form.name = "";
-            this.form.scopes = [];
-            this.expandedGroups = [];
-            this.loadingScopes = true;
+    await getScopes();
 
-            await this.getScopes();
+    if (Object.keys(groupedScopes).length > 0) {
+        const firstGroup = Object.keys(groupedScopes)[0];
+        expandedGroups.value.push(firstGroup);
+    }
+};
 
-            if (Object.keys(this.groupedScopes).length > 0) {
-                const firstGroup = Object.keys(this.groupedScopes)[0];
-                this.expandedGroups.push(firstGroup);
-            }
-        },
+const close = () => {
+    dialog.value = false;
+    token.value = null;
+    errors.value = {};
+};
 
-        close() {
-            this.dialog = false;
-            this.token = null;
-            this.errors = {};
-        },
+const toggleGroup = (group) => {
+    const index = expandedGroups.value.indexOf(group);
+    if (index > -1) {
+        expandedGroups.value.splice(index, 1);
+    } else {
+        expandedGroups.value.push(group);
+    }
+};
 
-        toggleGroup(group) {
-            const index = this.expandedGroups.indexOf(group);
-            if (index > -1) {
-                this.expandedGroups.splice(index, 1);
-            } else {
-                this.expandedGroups.push(group);
-            }
-        },
+const formatGroupName = (group) => {
+    return group.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+};
 
-        formatGroupName(group) {
-            return group
+const formatServiceName = (service) => {
+    return service.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+};
+
+const getRoleName = (scope) => {
+    if (!scope.roleName) {
+        // Extraer el role del id si no está en scope.roleName
+        const parts = scope.id.split(":");
+        if (parts.length === 3) {
+            return parts[2]
                 .replace(/-/g, " ")
                 .replace(/\b\w/g, (l) => l.toUpperCase());
-        },
+        }
+        return scope.id;
+    }
 
-        formatServiceName(service) {
-            return service
-                .replace(/-/g, " ")
-                .replace(/\b\w/g, (l) => l.toUpperCase());
-        },
+    return scope.roleName
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase());
+};
 
-        getRoleName(scope) {
-            if (!scope.roleName) {
-                // Extraer el role del id si no está en scope.roleName
-                const parts = scope.id.split(":");
-                if (parts.length === 3) {
-                    return parts[2]
-                        .replace(/-/g, " ")
-                        .replace(/\b\w/g, (l) => l.toUpperCase());
-                }
-                return scope.id;
-            }
+const copyToClipboard = async (text) => {
+    try {
+        await navigator.clipboard.writeText(text);
+        $notify.success(__("API key copied to clipboard"));
+    } catch (e) {
+        $notify.error(__("Failed to copy to clipboard"));
+    }
+};
 
-            return scope.roleName
-                .replace(/-/g, " ")
-                .replace(/\b\w/g, (l) => l.toUpperCase());
-        },
+const create = async () => {
+    if (!form.value.name.trim()) {
+        errors.value = { name: __("Key name is required") };
+        return;
+    }
 
-        async copyToClipboard(text) {
-            try {
-                await navigator.clipboard.writeText(text);
-                this.$notify.success(this.__("API key copied to clipboard"));
-            } catch (e) {
-                this.$notify.error(this.__("Failed to copy to clipboard"));
-            }
-        },
+    loading.value = true;
+    token.value = null;
+    errors.value = {};
 
-        async create() {
-            if (!this.form.name.trim()) {
-                this.errors = { name: this.__("Key name is required") };
-                return;
-            }
+    try {
+        const res = await $server.post(page.props.route, form.value);
 
-            this.loading = true;
-            this.token = null;
-            this.errors = {};
+        if (res.status == 200) {
+            token = res.data;
+            emits("created");
+            $notify.success(__("API key generated successfully"));
+        }
+    } catch (e) {
+        if (e?.response?.status == 422) {
+            errors.value = e.response.data.errors;
+        }
 
-            try {
-                const res = await this.$server.post(
-                    this.$page.props.route,
-                    this.form,
-                );
+        if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
+};
 
-                if (res.status == 200) {
-                    this.token = res.data;
-                    this.$emit("created");
-                    this.$notify.success(
-                        this.__("API key generated successfully"),
-                    );
-                }
-            } catch (e) {
-                if (e?.response?.status == 422) {
-                    this.errors = e.response.data.errors;
-                }
+const getScopes = async () => {
+    try {
+        const res = await $server.get("/oauth/scopes");
 
-                if (e?.response?.data?.message) {
-                    this.$notify.error(e.response.data.message);
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
+        if (res.status == 200) {
+            scopes.value = res.data;
+            loadingScopes.value = false;
+        }
+    } catch (error) {
+        $notify.error(__("Failed to load permissions"));
+        loadingScopes.value = false;
+    }
+};
 
-        async getScopes() {
-            try {
-                const res = await this.$server.get("/oauth/scopes");
-
-                if (res.status == 200) {
-                    this.scopes = res.data;
-                    this.loadingScopes = false;
-                }
-            } catch (error) {
-                this.$notify.error(this.__("Failed to load permissions"));
-                this.loadingScopes = false;
-            }
-        },
-
-        getGroupScopeCount(services) {
-            return Object.values(services).reduce(
-                (total, roles) => total + roles.length,
-                0,
-            );
-        },
-    },
+const getGroupScopeCount = (services) => {
+    return Object.values(services).reduce(
+        (total, roles) => total + roles.length,
+        0,
+    );
 };
 </script>
 

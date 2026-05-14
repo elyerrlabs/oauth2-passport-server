@@ -23,554 +23,234 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-layout>
-        <template #aside>
-            <v-item-menu
-                :items="page.props.menus"
-                :title="__('My apps')"
-                icon="mdi mdi-apps text-2xl me-2"
-                :collapse="true"
-            />
-        </template>
-
-        <template #main>
-            <!-- Header Section -->
-            <div
-                class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-xl mb-6 transition-colors duration-200"
-            >
-                <div class="mb-6 md:flex md:justify-between">
-                    <div class="mb-4">
-                        <h1
-                            class="text-md md:text-lg lg:text-3xl font-bold text-blue-600 dark:text-blue-400"
-                        >
-                            {{ __("Services Management") }}
-                        </h1>
-                        <p class="text-gray-600 dark:text-gray-400 mt-1">
-                            {{
-                                __(
-                                    "Manage and organize your application services",
-                                )
-                            }}
-                        </p>
-                    </div>
-
-                    <div class="flex justify-between gap-3">
-                        <!-- Create Button -->
-                        <v-create @created="getServices" />
-
-                        <!-- View Toggle -->
-                        <div
-                            class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1 transition-colors duration-200"
-                        >
-                            <button
-                                v-for="option in viewOptions"
-                                :key="option.value"
-                                @click="viewMode = option.value"
-                                :class="[
-                                    'flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200',
-                                    viewMode === option.value
-                                        ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200',
-                                ]"
-                            >
-                                <i :class="option.icon"></i>
-                                <span>{{ option.label }}</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Enhanced Filter Section -->
+    <v-account-layout>
+        <!-- Header Section -->
+        <v-head
+            :title="__('Services Management')"
+            :description="__('Manage and organize your application services')"
+        >
+            <template #actions>
+                <v-create @created="getServices" />
+            </template>
+            <template #bottom>
                 <div
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4"
                 >
-                    <!-- Name Search Filter -->
-                    <div>
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                        >
-                            {{ __("Search by Name") }}
-                        </label>
-                        <input
-                            type="text"
-                            v-model="search.name"
-                            @input="getServices"
-                            :placeholder="__('Enter service name...')"
-                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                    <v-input
+                        :label="__(' Name')"
+                        v-model="search.name"
+                        @input="getServices"
+                    />
+
+                    <v-select
+                        :label="__('Filter by Group')"
+                        v-model="search.group"
+                        @change="getServices"
+                        :options="groups"
+                        label-key="name"
+                        value-key="slug"
+                    />
+
+                    <v-select
+                        :label="__('Filter by Visibility')"
+                        v-model="search.visibility"
+                        @change="getServices"
+                        :options="[
+                            { name: __('Public'), id: 'public' },
+                            { name: __('Private'), id: 'private' },
+                            { name: __('Internal'), id: 'internal' },
+                        ]"
+                    />
+
+                    <v-select
+                        :label="__('Service Type')"
+                        v-model="search.system"
+                        @change="getServices"
+                        :options="[
+                            { name: __('All Services'), id: '' },
+                            { name: __('System Services'), id: true },
+                            { name: __('Custom Services'), id: false },
+                        ]"
+                    />
+
+                    <v-select
+                        :label="__('Results per page')"
+                        v-model="search.per_page"
+                        @change="changePage"
+                        :options="[
+                            { name: 15, id: 15 },
+                            { name: 50, id: 50 },
+                            { name: 100, id: 100 },
+                            { name: 150, id: 150 },
+                            { name: 200, id: 200 },
+                            { name: 300, id: 300 },
+                        ]"
+                    />
+
+                    <div class="flex justify-center items-end">
+                        <v-button
+                            @click="clearFilters"
+                            :label="__('Clear Filters')"
+                            left-icon="mdi mdi-filter-remove"
+                            variant="light"
                         />
                     </div>
-
-                    <!-- Group Filter -->
-                    <div>
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                        >
-                            {{ __("Filter by Group") }}
-                        </label>
-                        <select
-                            v-model="search.group"
-                            @change="getServices"
-                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                        >
-                            <option value="">{{ __("All Groups") }}</option>
-                            <option
-                                v-for="group in groups"
-                                :key="group.slug"
-                                :value="group.name"
-                            >
-                                {{ __(group.name) }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Visibility Filter -->
-                    <div>
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                        >
-                            {{ __("Filter by Visibility") }}
-                        </label>
-                        <select
-                            v-model="search.visibility"
-                            @change="getServices"
-                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                        >
-                            <option value="">{{ __("All Visibility") }}</option>
-                            <option value="public">{{ __("Public") }}</option>
-                            <option value="private">{{ __("Private") }}</option>
-                            <option value="internal">
-                                {{ __("Internal") }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- System Filter -->
-                    <div>
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                        >
-                            {{ __("Service Type") }}
-                        </label>
-                        <select
-                            v-model="search.system"
-                            @change="getServices"
-                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                        >
-                            <option value="">{{ __("All Services") }}</option>
-                            <option value="true">
-                                {{ __("System Services") }}
-                            </option>
-                            <option value="false">
-                                {{ __("Custom Services") }}
-                            </option>
-                        </select>
-                    </div>
                 </div>
+            </template>
+        </v-head>
 
-                <!-- Quick Stats and Clear Filters -->
-                <div
-                    class="flex flex-col sm:flex-row items-center justify-between gap-4"
-                >
-                    <!-- Quick Stats -->
-                    <div
-                        class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400"
-                    >
-                        <span class="flex items-center gap-1">
-                            <i class="mdi mdi-cog"></i>
-                            {{ services.length }} {{ __("service")
-                            }}{{ services.length !== 1 ? "s" : "" }}
-                        </span>
-                        <span
-                            v-if="systemServicesCount > 0"
-                            class="flex items-center gap-1"
-                        >
-                            <i class="mdi mdi-shield-cog"></i>
-                            {{ systemServicesCount }} {{ __("system") }}
-                        </span>
-                        <span
-                            v-if="customServicesCount > 0"
-                            class="flex items-center gap-1"
-                        >
-                            <i class="mdi mdi-cog"></i>
-                            {{ customServicesCount }} {{ __("custom") }}
-                        </span>
-                    </div>
-
-                    <!-- Clear Filters and Results Per Page -->
-                    <div class="flex items-center gap-3">
-                        <!-- Clear Filters -->
-                        <button
-                            @click="clearFilters"
-                            class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 flex items-center gap-2"
-                        >
-                            <i class="mdi mdi-filter-remove"></i>
-                            {{ __("Clear Filters") }}
-                        </button>
-
-                        <!-- Results Per Page -->
-                        <div class="flex items-center gap-2">
-                            <label
-                                class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap"
-                            >
-                                {{ __("Per page:") }}
-                            </label>
-                            <select
-                                v-model="search.per_page"
-                                @change="changePage"
-                                class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                            >
-                                <option value="10">10</option>
-                                <option value="15">15</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Grid View -->
+        <div class="mb-6">
             <div
-                v-if="viewMode === 'grid' && services.length > 0"
-                class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
+                class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden transition-colors duration-200"
             >
-                <div
-                    v-for="service in services"
-                    :key="service.id"
-                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-lg dark:hover:shadow-gray-900 transition-all duration-200"
+                <v-table
+                    :items="services"
+                    :loading="loading"
+                    :per-page="Number(search.per_page)"
+                    :show-pagination="false"
+                    :empty-text="
+                        __('Try adjusting your filters or create a new service')
+                    "
+                    empty-icon="mdi-cog-off"
+                    loading-text="Loading services..."
+                    table-class="min-w-[1080px] w-full divide-y divide-gray-200 dark:divide-gray-700"
+                    thead-class="bg-white dark:bg-gray-800"
+                    tbody-class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
                 >
-                    <div
-                        class="bg-blue-600 dark:bg-blue-700 text-white p-4 rounded-t-lg"
-                    >
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1 min-w-0">
-                                <div class="font-bold text-lg truncate">
-                                    {{ __(service.name) }}
-                                </div>
-                                <div
-                                    class="text-blue-100 dark:text-blue-200 text-sm opacity-90 truncate"
-                                >
-                                    {{ __(service.group.name) }}
-                                </div>
-                            </div>
-                            <v-detail :service="service" />
-                        </div>
-                    </div>
-
-                    <div class="p-4">
-                        <div
-                            class="text-gray-700 dark:text-gray-300 line-clamp-3 mb-3"
-                        >
-                            {{ __(service.description) }}
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            <span
-                                :class="[
-                                    'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200',
-                                    service.system
-                                        ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300'
-                                        : 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300',
-                                ]"
-                            >
-                                <i
-                                    :class="
-                                        service.system
-                                            ? 'mdi mdi-shield-check'
-                                            : 'mdi mdi-cog'
-                                    "
-                                ></i>
-                                {{
-                                    service.system ? __("System") : __("Custom")
-                                }}
-                            </span>
-
-                            <span
-                                class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium transition-colors duration-200"
-                            >
-                                <i class="mdi mdi-eye"></i>
-                                {{ __(service.visibility) }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div
-                        class="border-t border-gray-200 dark:border-gray-700 p-3"
-                    >
-                        <div class="flex justify-end gap-2">
-                            <v-create :item="service" @updated="getServices" />
-                            <v-delete
-                                v-if="!service.system"
-                                :item="service"
-                                @deleted="getServices"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Empty State for Grid View -->
-            <div
-                v-else-if="viewMode === 'grid' && services.length === 0"
-                class="text-center py-16"
-            >
-                <i
-                    class="mdi mdi-cog-off text-6xl text-gray-300 dark:text-gray-600"
-                ></i>
-                <div class="text-xl text-gray-500 dark:text-gray-400 mt-4">
-                    {{ __("No services found") }}
-                </div>
-                <div class="text-gray-400 dark:text-gray-500">
-                    {{
-                        __(
-                            "Try adjusting your filters or create your first service to get started",
-                        )
-                    }}
-                </div>
-            </div>
-
-            <!-- List View -->
-            <div v-else class="mb-6">
-                <!-- Mobile/Tablet Cards (sm:1, md:2) -->
-                <div class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div
-                        v-for="service in services"
-                        :key="service.id"
-                        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm"
-                    >
-                        <div class="flex items-start justify-between mb-3">
-                            <div class="flex-1 min-w-0">
-                                <h3
-                                    class="font-semibold text-gray-900 dark:text-white truncate"
-                                >
-                                    {{ __(service.name) }}
-                                </h3>
-                                <p
-                                    class="text-sm text-gray-500 dark:text-gray-400"
-                                >
-                                    {{ __(service.group.name) }}
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <v-detail :service="service" />
-                            </div>
-                        </div>
-
-                        <p
-                            v-if="service.description"
-                            class="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2"
-                        >
-                            {{ service.description }}
-                        </p>
-
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            <span
-                                :class="[
-                                    'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium',
-                                    service.system
-                                        ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300'
-                                        : 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300',
-                                ]"
-                            >
-                                <i
-                                    :class="
-                                        service.system
-                                            ? 'mdi mdi-shield-check'
-                                            : 'mdi mdi-cog'
-                                    "
-                                ></i>
-                                {{
-                                    service.system ? __("System") : __("Custom")
-                                }}
-                            </span>
-
-                            <span
-                                class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium"
-                            >
-                                <i class="mdi mdi-eye"></i>
-                                {{ __(service.visibility) }}
-                            </span>
-                        </div>
-
-                        <div class="flex justify-between items-center">
-                            <div
-                                class="text-xs text-gray-500 dark:text-gray-400"
+                    <template #head>
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                             >
                                 {{ __("Service") }}
-                            </div>
-                            <div class="flex space-x-1">
-                                <!--
-                                <v-create :item="service" @updated="getServices" />
-                                <v-delete
-                                v-if="!service.system"
-                                :item="service"
-                                @deleted="getServices"
-                                />
-                                -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Desktop Table (lg+) -->
-                <div class="hidden lg:block">
-                    <div
-                        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden transition-colors duration-200"
-                    >
-                        <!-- Table Header -->
-                        <div
-                            class="grid grid-cols-12 gap-4 p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 font-semibold text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                        >
-                            <div class="col-span-4">{{ __("Service") }}</div>
-                            <div class="col-span-2 text-center">
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                            >
+                                {{ __("Group") }}
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                            >
+                                {{ __("Description") }}
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                            >
                                 {{ __("System") }}
-                            </div>
-                            <div class="col-span-3 text-center">
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                            >
                                 {{ __("Visibility") }}
-                            </div>
-                            <div class="col-span-3 text-right">
+                            </th>
+                            <th
+                                class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                            >
                                 {{ __("Actions") }}
-                            </div>
-                        </div>
+                            </th>
+                        </tr>
+                    </template>
 
-                        <!-- Loading State -->
-                        <div v-if="loading" class="p-8 text-center">
-                            <div
-                                class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"
-                            ></div>
-                            <p class="text-gray-500 dark:text-gray-400 mt-2">
-                                {{ __("Loading...") }}
-                            </p>
-                        </div>
-
-                        <!-- Table Rows -->
-                        <div v-else>
-                            <div
-                                v-for="service in services"
-                                :key="service.id"
-                                class="grid grid-cols-12 gap-4 p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
-                            >
-                                <div class="col-span-4">
-                                    <div
-                                        class="font-semibold text-blue-600 dark:text-blue-400"
-                                    >
-                                        {{ __(service.name) }}
-                                    </div>
-                                    <div
-                                        class="text-sm text-gray-500 dark:text-gray-400"
-                                    >
-                                        {{ __(service.group.name) }}
-                                    </div>
-                                    <div
-                                        v-if="service.description"
-                                        class="text-sm text-gray-600 dark:text-gray-500 mt-1 line-clamp-1"
-                                    >
-                                        {{ __(service.description) }}
-                                    </div>
-                                </div>
-
-                                <div class="col-span-2 flex justify-center">
-                                    <span
-                                        :class="[
-                                            'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200',
-                                            service.system
-                                                ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300'
-                                                : 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300',
-                                        ]"
-                                    >
-                                        <i
-                                            :class="
-                                                service.system
-                                                    ? 'mdi mdi-shield-check'
-                                                    : 'mdi mdi-cog'
-                                            "
-                                        ></i>
-                                        {{
-                                            service.system
-                                                ? __("Yes")
-                                                : __("No")
-                                        }}
-                                    </span>
-                                </div>
-
-                                <div class="col-span-3 flex justify-center">
-                                    <span
-                                        class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium transition-colors duration-200"
-                                    >
-                                        <i class="mdi mdi-eye"></i>
-                                        {{ __(service.visibility) }}
-                                    </span>
-                                </div>
-
-                                <div class="col-span-3">
-                                    <div class="flex justify-end gap-2">
-                                        <v-detail :service="service" />
-                                        <v-create
-                                            :item="service"
-                                            @updated="getServices"
-                                        />
-                                        <v-delete
-                                            v-if="!service.system"
-                                            :item="service"
-                                            @deleted="getServices"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Empty State for List View -->
-                            <div
-                                v-if="services.length === 0"
-                                class="text-center py-16"
-                            >
-                                <i
-                                    class="mdi mdi-cog-off text-5xl text-gray-300 dark:text-gray-600"
-                                ></i>
+                    <template #default="{ items }">
+                        <tr
+                            v-for="service in items"
+                            :key="service.id"
+                            class="transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                        >
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <div
-                                    class="text-gray-500 dark:text-gray-400 mt-4 text-lg"
+                                    class="font-semibold text-blue-600 dark:text-blue-400"
                                 >
-                                    {{ __("No services available") }}
+                                    {{ __(service.name) }}
                                 </div>
-                                <div
-                                    class="text-gray-400 dark:text-gray-500 text-sm mt-2"
+                            </td>
+                            <td
+                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"
+                            >
+                                {{ __(service.group.name) }}
+                            </td>
+                            <td
+                                class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400"
+                            >
+                                <div class="max-w-xs xl:max-w-md">
+                                    {{ __(service.description) }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    :class="[
+                                        'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200',
+                                        service.system
+                                            ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300'
+                                            : 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300',
+                                    ]"
                                 >
-                                    {{
-                                        __(
-                                            "Try adjusting your filters or create a new service",
-                                        )
-                                    }}
+                                    <i
+                                        :class="
+                                            service.system
+                                                ? 'mdi mdi-shield-check'
+                                                : 'mdi mdi-cog'
+                                        "
+                                    ></i>
+                                    {{ service.system ? __("Yes") : __("No") }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 transition-colors duration-200 dark:bg-blue-900/40 dark:text-blue-300"
+                                >
+                                    <i class="mdi mdi-eye"></i>
+                                    {{ __(service.visibility) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex justify-end gap-2">
+                                    <v-detail :service="service" />
+                                    <v-create
+                                        :item="service"
+                                        @updated="getServices"
+                                    />
+                                    <v-delete
+                                        v-if="!service.system"
+                                        :item="service"
+                                        @deleted="getServices"
+                                    />
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </td>
+                        </tr>
+                    </template>
+                </v-table>
             </div>
+        </div>
 
-            <!-- Pagination -->
-            <v-paginate
-                v-model="search.page"
-                :total-pages="pages.total_pages"
-                @change="getServices"
-            />
-        </template>
-    </v-layout>
+        <!-- Pagination -->
+        <v-paginate
+            v-model="search.page"
+            :total-pages="pages.total_pages"
+            @change="getServices"
+        />
+    </v-account-layout>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import VLayout from "@/components/VLayout.vue";
-import VItemMenu from "@/components/VItemMenu.vue";
+import VButton from "@/components/VButton.vue";
+import VAccountLayout from "@/components/VAccountLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
+import VTable from "@/components/VTable.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
 import VDetail from "./Scope.vue";
+import VHead from "@/components/VHead.vue";
+import VInput from "@/components/VInput.vue";
+import VSelect from "@/components/VSelect.vue";
 import { usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 /**
  * State
  */
-const viewMode = ref("list");
 const services = ref([]);
 const loading = ref(false);
 const pages = ref({
@@ -587,19 +267,6 @@ const search = ref({
 });
 
 const groups = ref([]);
-
-const viewOptions = [
-    {
-        value: "list",
-        icon: "mdi mdi-format-list-bulleted",
-        label: __("List"),
-    },
-    {
-        value: "grid",
-        icon: "mdi mdi-view-grid-outline",
-        label: __("Grid"),
-    },
-];
 
 /**
  * Computed
@@ -625,6 +292,14 @@ const changePage = () => {
 };
 
 const clearFilters = () => {
+    search.value = {
+        page: 1,
+        per_page: 15,
+        name: "",
+        group: "",
+        visibility: "",
+        system: "",
+    };
     getServices();
 };
 
@@ -641,8 +316,8 @@ const getServices = async () => {
             pages.value = values.meta.pagination;
         }
     } catch (error) {
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
         }
     } finally {
         loading.value = false;
@@ -661,8 +336,8 @@ const getGroups = async () => {
             groups.value = values.data;
         }
     } catch (error) {
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
+        if (error?.response?.data?.message) {
+            $notify.error(error.response.data.message);
         }
     } finally {
         loading.value = false;

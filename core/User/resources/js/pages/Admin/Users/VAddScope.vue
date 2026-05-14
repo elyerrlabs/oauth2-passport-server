@@ -1,18 +1,13 @@
 <template>
     <div>
-        <button
+        <v-button
             @click="open"
             :disabled="disabled"
-            class="px-3 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            :class="
-                disabled
-                    ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
-            "
-        >
-            <i class="mdi" :class="disabled ? 'mdi-check' : 'mdi-plus'"></i>
-            {{ disabled ? __("Added") : __("Add") }}
-        </button>
+            size="xs"
+            :variant="disabled ? 'secondary' : 'primary'"
+            :icon="disabled ? 'mdi mdi-check' : 'mdi mdi-plus'"
+            :label="disabled ? __('Added') : __('Add')"
+        />
 
         <v-modal
             v-model="dialog"
@@ -199,23 +194,21 @@
                     <div
                         class="flex items-center justify-between pt-4 border-t dark:border-gray-700"
                     >
-                        <button
-                            @click="dialog = false"
-                            class="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
-                        >
+                        <v-button @click="dialog = false" variant="light">
                             {{ __("Cancel") }}
-                        </button>
+                        </v-button>
 
-                        <button
+                        <v-button
                             @click="add"
                             :disabled="loading || disabled"
-                            class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            :loading="loading"
+                            :variant="disabled ? 'secondary' : 'primary'"
+                            :icon="
+                                disabled
+                                    ? 'mdi mdi-check'
+                                    : 'mdi mdi-shield-plus'
+                            "
                         >
-                            <i
-                                v-if="loading"
-                                class="mdi mdi-loading animate-spin"
-                            ></i>
-                            <i v-else class="mdi mdi-shield-plus"></i>
                             {{
                                 loading
                                     ? __("Assigning...")
@@ -223,7 +216,7 @@
                                       ? __("Already Added")
                                       : __("Assign Scope")
                             }}
-                        </button>
+                        </v-button>
                     </div>
                 </div>
             </template>
@@ -232,6 +225,7 @@
 </template>
 
 <script setup>
+import VButton from "@/components/VButton.vue";
 import VModal from "@/components/VModal.vue";
 import { ref, watch } from "vue";
 
@@ -285,7 +279,9 @@ const add = async () => {
 
 watch(dialog, (newVal) => {
     if (!newVal) {
-        form.reset();
+        form.value = {
+            scopes: [],
+        };
     }
 });
 </script>

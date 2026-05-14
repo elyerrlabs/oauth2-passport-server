@@ -170,7 +170,7 @@
   "Block All": "Bloquear todo",
   "Block Time (minutes)": "Tiempo de bloqueo (minutos)",
   "Block access to admin and private sections": "Bloquear el acceso a las secciones de administración y privadas",
-  "Bonus": "Prima",
+  "Bonus": "Bono",
   "Bonus Days": "Días de bonificación",
   "Bonus Duration (Days)": "Duración del bono (días)",
   "Brief description for footer or SEO": "Breve descripción para pie de página o SEO",
@@ -346,7 +346,7 @@
   "Current Permissions:": "Permisos actuales:",
   "Current Status": "Estado actual",
   "Currently Assigned To": "Actualmente asignado a",
-  "Custom": "Costumbre",
+  "Custom": "Personalizado",
   "Custom Configuration": "Configuración personalizada",
   "Custom Role": "Rol personalizado",
   "Custom Roles Only": "Solo roles personalizados",
@@ -1867,5 +1867,6 @@
   "Page deleted succesfully": "Página eliminada exitosamente",
   "Content updated successfully": "Contenido actualizado exitosamente",
   "Page saved successfully": "Pagina actualizada exitosamente",
-  "Sitemap index generation in progress": "Generación de sitemap index esta en progreso"
+  "Sitemap index generation in progress": "Generación de sitemap index esta en progreso",
+  "Lang": "Lenguaje"
 }

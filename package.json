@@ -22,7 +22,6 @@
     "sass": "^1.85.1",
     "sass-loader": "^12.6.0",
     "tailwindcss": "^4.1.18",
-    "vue": "^3.5.26",
     "vue-loader": "^17.4.2",
     "worker-loader": "^3.0.8"
   },
@@ -33,6 +32,7 @@
     "@mdi/font": "^7.4.47",
     "@vuepic/vue-datepicker": "^12.0.3",
     "apexcharts": "^4.7.0",
+    "vue": "^3.5.26",
     "axios": "^1.11.0",
     "flatpickr": "^4.6.13",
     "jodit": "^4.6.13",

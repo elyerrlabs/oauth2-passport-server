@@ -24,14 +24,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <template>
-    <!-- Delete Button -->
-    <button
+    <v-button
         @click="dialog = true"
-        class="w-8 h-8 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:ring-opacity-50"
+        icon="mdi mdi-delete text-lg"
+        round
         :title="__('Delete Group')"
-    >
-        <i class="mdi mdi-delete text-lg"></i>
-    </button>
+        variant="danger"
+    />
 
     <!-- Confirmation Modal -->
     <v-modal
@@ -76,22 +75,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 </div>
 
                 <!-- Confirmation Input -->
-                <div class="space-y-2">
-                    <label
-                        for="confirm-name"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        {{ __("Type the group name to confirm") }}
-                    </label>
-                    <input
-                        id="confirm-name"
-                        v-model="confirmationText"
-                        type="text"
-                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-500 dark:bg-gray-800 dark:text-white transition-colors duration-200"
-                        :placeholder="__('Enter group name')"
-                        @keyup.enter="handleConfirm"
-                    />
-                </div>
+                <v-input
+                    :label="__('Type the group name to confirm')"
+                    :placeholder="__('Enter group name')"
+                    v-model="confirmationText"
+                    @keyup.enter="handleConfirm"
+                />
 
                 <!-- Additional Warning -->
                 <div
@@ -119,33 +108,28 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <div
                 class="flex justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50"
             >
-                <button
-                    @click="dialog = false"
+                <v-button
+                    :label="__('Cancel')"
+                    :title="__('Cancel')"
+                    :aria-label="__('Cancel')"
+                    icon="mdi mdi-close-circle"
                     :disabled="form.processing"
-                    class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <i class="mdi mdi-close-circle"></i>
-                    <span>{{ __("Cancel") }}</span>
-                </button>
+                    @click="dialog = false"
+                    variant="danger"
+                />
 
-                <button
+                <v-button
                     @click="destroy"
                     :disabled="!canDelete"
-                    class="px-6 py-2 bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600 text-white font-medium rounded-lg flex items-center space-x-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <i class="mdi mdi-trash-can" v-if="!form.processing"></i>
-                    <div
-                        v-else
-                        class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
-                    ></div>
-                    <span>
-                        {{
-                            form.processing
-                                ? __("Deleting...")
-                                : __("Delete Group")
-                        }}
-                    </span>
-                </button>
+                    :label="
+                        form.processing ? __('Deleting...') : __('Delete Group')
+                    "
+                    :title="
+                        form.processing ? __('Deleting...') : __('Delete Group')
+                    "
+                    icon="mdi mdi-trash-can"
+                    variant="success"
+                />
             </div>
         </template>
     </v-modal>
@@ -155,6 +139,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 import { ref, watch, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
+import VInput from "@/components/VInput.vue";
 
 // Props
 const props = defineProps({

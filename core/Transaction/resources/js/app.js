@@ -27,6 +27,7 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { setupI18n, __ } from "@/config/locale.js";
 import { $notify } from "@/config/notify.js";
 import "@/config/editor.js";
+import { errors } from "@/config/helpers.js"
 
 //import { $echo } from "./config/echo.js";
 import { $server } from "@/config/axios.js";
@@ -36,6 +37,7 @@ setupI18n();
 window.__ = __;
 window.$notify = $notify;
 window.$server = $server;
+window.$errors = errors;
 
 createInertiaApp({
   resolve: (name) => require(`./pages/${name}.vue`).default,
@@ -44,6 +46,8 @@ createInertiaApp({
 
     // app.config.globalProperties.$echo = $echo;
     app.config.globalProperties.$server = $server;
+    app.config.globalProperties.$notify = $notify;
+    app.config.globalProperties.$errors = errors;
     app.config.globalProperties.__ = __;
 
     app.use(plugin);

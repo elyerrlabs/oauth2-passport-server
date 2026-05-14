@@ -27,273 +27,87 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         <template #aside>
             <v-item-menu
                 :items="page.props.menus"
-                :title="__('My apps')"
                 icon="mdi mdi-apps text-2xl me-2"
                 :collapse="true"
             />
         </template>
         <template #main>
             <!-- Header Section -->
-            <div class="mb-8">
-                <div class="flex items-center space-x-3 mb-2">
-                    <div class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                        <i
-                            class="mdi mdi-chart-areaspline text-blue-600 dark:text-blue-400 text-lg"
-                        ></i>
-                    </div>
-                    <div>
-                        <h1
-                            class="text-2xl font-semibold text-gray-900 dark:text-white"
-                        >
-                            {{ __("Dashboard Analytics") }}
-                        </h1>
-                        <p
-                            class="text-gray-500 dark:text-gray-400 text-sm mt-1"
-                        >
-                            {{
-                                __(
-                                    "Monitor your transaction metrics and performance",
-                                )
-                            }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Statistics Cards -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
-                <div
-                    v-for="card in cards"
-                    :key="card.label"
-                    class="group bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-100 dark:hover:border-blue-800"
-                >
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div
-                                class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1"
-                            >
-                                {{ card.label }}
-                            </div>
-                            <div
-                                class="text-2xl font-bold text-gray-900 dark:text-white"
-                            >
-                                {{ card.value }}
-                            </div>
-                        </div>
-                        <div
-                            class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-100 dark:group-hover:bg-blue-800/40 transition-colors duration-300"
-                        >
-                            <i
-                                :class="[
-                                    card.icon,
-                                    'text-blue-600 dark:text-blue-400 text-base',
-                                ]"
-                            ></i>
-                        </div>
-                    </div>
-                    <div
-                        class="mt-3 w-8 h-0.5 bg-blue-200 dark:bg-blue-700 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    ></div>
-                </div>
-            </div>
-
-            <!-- Filters Section -->
-            <div
-                class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6 mb-8 shadow-sm"
+            <v-head
+                :title="__('Dashboard Analytics')"
+                :descripction="
+                    __('Monitor your transaction metrics and performance')
+                "
             >
-                <div class="flex items-center space-x-2 mb-4">
-                    <i
-                        class="mdi mdi-tune text-gray-400 dark:text-gray-500 text-base"
-                    ></i>
-                    <h2
-                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                <template #bottom>
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6 mb-8 shadow-sm"
                     >
-                        {{ __("Filter Analytics") }}
-                    </h2>
-                </div>
+                        <div class="flex items-center space-x-2 mb-4">
+                            <i
+                                class="mdi mdi-tune text-gray-400 dark:text-gray-500 text-base"
+                            ></i>
+                            <h2
+                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{ __("Filter Analytics") }}
+                            </h2>
+                        </div>
 
-                <div
-                    class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4"
-                >
-                    <!-- Start Date -->
-                    <div>
-                        <label
-                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
+                        <div
+                            class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-2"
                         >
-                            {{ __("Start date") }}
-                        </label>
-                        <div class="relative">
-                            <input
-                                v-model="params.start"
+                            <v-input
+                                :label="__('Start date')"
+                                v-model="search.start"
                                 type="date"
-                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                             />
-                            <div
-                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                            >
-                                <i
-                                    class="mdi mdi-calendar-start text-gray-400 dark:text-gray-500 text-sm"
-                                ></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- End Date -->
-                    <div>
-                        <label
-                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
-                        >
-                            {{ __("End date") }}
-                        </label>
-                        <div class="relative">
-                            <input
-                                v-model="params.end"
+                            <v-input
+                                :label="__('End date')"
+                                v-model="search.end"
                                 type="date"
-                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                             />
-                            <div
-                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                            >
-                                <i
-                                    class="mdi mdi-calendar-end text-gray-400 dark:text-gray-500 text-sm"
-                                ></i>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Status -->
-                    <div>
-                        <label
-                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
-                        >
-                            {{ __("Status") }}
-                        </label>
-                        <div class="relative">
-                            <select
-                                v-model="params.status"
-                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
-                            >
-                                <option
-                                    v-for="option in status"
-                                    :key="option.value"
-                                    :value="option.value"
-                                >
-                                    {{ option.label }}
-                                </option>
-                            </select>
-                            <div
-                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                            >
-                                <i
-                                    class="mdi mdi-status text-gray-400 dark:text-gray-500 text-sm"
-                                ></i>
-                            </div>
-                            <div
-                                class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
-                            >
-                                <i
-                                    class="mdi mdi-chevron-down text-gray-400 dark:text-gray-500 text-sm"
-                                ></i>
-                            </div>
-                        </div>
-                    </div>
+                            <v-select
+                                :label="__('Status')"
+                                v-model="search.status"
+                                :options="status"
+                                label-key="value"
+                                value-key="value"
+                            />
 
-                    <!-- Chart Type -->
-                    <div>
-                        <label
-                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
-                        >
-                            {{ __("Chart type") }}
-                        </label>
-                        <div class="relative">
-                            <select
+                            <v-select
+                                :label="__('Chart type')"
                                 v-model="chartType"
-                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
-                            >
-                                <option
-                                    v-for="type in chartTypes"
-                                    :key="type"
-                                    :value="type"
-                                >
-                                    {{
-                                        __(
-                                            type.charAt(0).toUpperCase() +
-                                                type.slice(1),
-                                        )
-                                    }}
-                                </option>
-                            </select>
-                            <div
-                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                            >
-                                <i
-                                    class="mdi mdi-chart-bar text-gray-400 dark:text-gray-500 text-sm"
-                                ></i>
-                            </div>
-                            <div
-                                class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
-                            >
-                                <i
-                                    class="mdi mdi-chevron-down text-gray-400 dark:text-gray-500 text-sm"
-                                ></i>
+                                :options="[
+                                    { name: 'Bar', id: 'bar' },
+                                    { name: 'Line', id: 'line' },
+                                    { name: 'Area', id: 'Area' },
+                                ]"
+                            />
+
+                            <v-select
+                                :label="__('Date grouping')"
+                                v-model="search.type"
+                                :options="[
+                                    { name: 'Day', id: 'day' },
+                                    { name: 'Month', id: 'month' },
+                                    { name: 'Year', id: 'year' },
+                                ]"
+                            />
+
+                            <!-- Apply Filters Button -->
+                            <div class="flex items-end">
+                                <v-button
+                                    @click="getData"
+                                    icon="mdi mdi-filter text-xs"
+                                    :label="__('Apply')"
+                                />
                             </div>
                         </div>
                     </div>
-
-                    <!-- Date Grouping -->
-                    <div class="space-y-1">
-                        <label
-                            class="block text-xs font-medium text-gray-600 dark:text-gray-400"
-                        >
-                            {{ __("Date grouping") }}
-                        </label>
-                        <div class="relative">
-                            <select
-                                v-model="params.type"
-                                class="w-full px-6 lg:px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-200 appearance-none text-gray-900 dark:text-white"
-                            >
-                                <option
-                                    v-for="type in types"
-                                    :key="type"
-                                    :value="type"
-                                >
-                                    {{
-                                        __(
-                                            type.charAt(0).toUpperCase() +
-                                                type.slice(1),
-                                        )
-                                    }}
-                                </option>
-                            </select>
-                            <div
-                                class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none"
-                            >
-                                <i
-                                    class="mdi mdi-calendar-group text-gray-400 dark:text-gray-500 text-sm"
-                                ></i>
-                            </div>
-                            <div
-                                class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none"
-                            >
-                                <i
-                                    class="mdi mdi-chevron-down text-gray-400 dark:text-gray-500 text-sm"
-                                ></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Apply Filters Button -->
-                    <div class="flex items-end">
-                        <button
-                            @click="getData"
-                            class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transform hover:scale-105"
-                        >
-                            <i class="mdi mdi-filter text-xs"></i>
-                            <span>{{ __("Apply") }}</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+                </template>
+            </v-head>
 
             <!-- Chart Section -->
             <div
@@ -354,223 +168,219 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     </v-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, watch } from "vue";
 import ApexCharts from "vue3-apexcharts";
 import VLayout from "@/components/VLayout.vue";
 import VItemMenu from "@/components/VItemMenu.vue";
+import VHead from "@/components/VHead.vue";
+import VButton from "@/components/VButton.vue";
+import VInput from "@/components/VInput.vue";
+import VSelect from "@/components/VSelect.vue";
+import { usePage } from "@inertiajs/vue3";
 
-export default {
-    components: {
-        ApexCharts,
-        VLayout,
-        VItemMenu,
+const page = usePage();
+
+const search = ref({
+    start: null,
+    end: null,
+    type: "month",
+    status: "successful",
+});
+
+const chartType = ref("line");
+const chartTypes = ["bar", "line", "area"];
+const types = ["day", "month", "year"];
+const transactions_by_month = ref([]);
+const plans_count = ref(0);
+const package_count = ref(0);
+const cards = ref([]);
+const chartSeries = ref([]);
+const chartOptions = ref({});
+const status = ref([]);
+
+watch(
+    () => search.value.type,
+    () => {
+        getData();
     },
+);
 
-    data() {
-        return {
-            params: {
-                start: null,
-                end: null,
-                type: "month",
-                status: "successful",
-            },
-            chartType: "line",
-            chartTypes: ["bar", "line", "area"],
-            types: ["day", "month", "year"],
-            transactions_by_month: [],
-            plans_count: 0,
-            package_count: 0,
-            cards: [],
-            chartSeries: [],
-            chartOptions: {},
-            status: [],
-        };
+watch(
+    () => chartType.value,
+    () => {
+        renderChart();
     },
+);
 
-    watch: {
-        "params.type"(value) {
-            this.getData();
+onMounted(async () => {
+    if (!search.value.start || !search.value.end) {
+        const { start, end } = getDefaultDates();
+        search.value.start = start;
+        search.value.end = end;
+    }
+
+    await getData();
+
+    await getStatus();
+
+    setInterval(async () => {
+        await getData();
+    }, 10000);
+});
+
+const getDefaultDates = () => {
+    const today = new Date();
+    const end = today.toISOString().split("T")[0];
+
+    const pastDate = new Date(today);
+    pastDate.setMonth(today.getMonth() - 6);
+    const start = pastDate.toISOString().split("T")[0];
+
+    return { start, end };
+};
+
+const loadData = (data) => {
+    transactions_by_month.value = data["transactions_by_month"];
+
+    plans_count.value = data["plans"];
+    package_count.value = data["packages"];
+
+    cards.value = [
+        {
+            label: __("Packages"),
+            value: data["packages"],
+            icon: "mdi mdi-package-variant",
         },
-
-        chartType(value) {
-            this.renderChart();
+        {
+            label: __("Plans"),
+            value: data["plans"],
+            icon: "mdi mdi-inventory",
         },
-    },
+        {
+            label: __("Total Transactions"),
+            value: data["transactions"],
+            icon: "mdi mdi-chart-bar",
+        },
+    ];
 
-    created() {
-        if (!this.params.start || !this.params.end) {
-            const { start, end } = this.getDefaultDates();
-            this.params.start = start;
-            this.params.end = end;
+    renderChart();
+};
+
+const getData = async () => {
+    try {
+        const res = await $server.get(page.props.route, {
+            search: search.value,
+        });
+
+        if (res.status == 200) {
+            loadData(res.data.data);
         }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            console.error("Error:", e.response.data.message);
+        }
+    }
+};
 
-        this.getData();
-    },
+const getStatus = async () => {
+    try {
+        const res = await $server.get(page.props.status);
 
-    mounted() {
-        this.getStatus();
-        setInterval(() => {
-            this.getData();
-        }, 10000);
-    },
+        if (res.status == 200) {
+            status.value = res.data.data.map((item) => ({
+                label: item.name,
+                value: item.name,
+                description: item.description,
+            }));
+        }
+    } catch (e) {
+        if (e?.response?.data?.message) {
+            console.error("Error:", e.response.data.message);
+        }
+    }
+};
 
-    methods: {
-        getDefaultDates() {
-            const today = new Date();
-            const end = today.toISOString().split("T")[0];
-
-            const pastDate = new Date(today);
-            pastDate.setMonth(today.getMonth() - 6);
-            const start = pastDate.toISOString().split("T")[0];
-
-            return { start, end };
+const renderChart = () => {
+    chartSeries.value = [
+        {
+            name: __("Transactions"),
+            data: transactions_by_month.value.map((item) => item.total),
         },
+    ];
 
-        loadData(data) {
-            this.transactions_by_month = data["transactions_by_month"];
+    const isDark = document.documentElement.classList.contains("dark");
 
-            this.plans_count = data["plans"];
-            this.package_count = data["packages"];
-
-            this.cards = [
-                {
-                    label: __("Packages"),
-                    value: data["packages"],
-                    icon: "mdi mdi-package-variant",
+    chartOptions.value = {
+        chart: {
+            height: 350,
+            type: chartType.value,
+            zoom: {
+                enabled: false,
+            },
+            toolbar: {
+                show: true,
+                tools: {
+                    download: true,
+                    selection: false,
+                    zoom: false,
+                    zoomin: false,
+                    zoomout: false,
+                    pan: false,
+                    reset: true,
                 },
-                {
-                    label: __("Plans"),
-                    value: data["plans"],
-                    icon: "mdi mdi-inventory",
-                },
-                {
-                    label: __("Total Transactions"),
-                    value: data["transactions"],
-                    icon: "mdi mdi-chart-bar",
-                },
-            ];
-
-            this.renderChart();
+            },
+            animations: {
+                enabled: true,
+                easing: "easeinout",
+                speed: 600,
+            },
+            foreColor: isDark ? "#9CA3AF" : "#6B7280",
         },
-
-        async getData() {
-            try {
-                const res = await this.$server.get(this.$page.props.route, {
-                    params: this.params,
-                });
-
-                if (res.status == 200) {
-                    this.loadData(res.data.data);
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    console.error("Error:", e.response.data.message);
-                }
-            }
+        colors: ["#3B82F6"],
+        dataLabels: {
+            enabled: false,
         },
-
-        async getStatus() {
-            try {
-                const res = await this.$server.get(this.$page.props.status);
-
-                if (res.status == 200) {
-                    this.status = res.data.data.map((item) => ({
-                        label: item.name,
-                        value: item.name,
-                        description: item.description,
-                    }));
-                }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    console.error("Error:", e.response.data.message);
-                }
-            }
+        stroke: {
+            curve: "smooth",
+            width: 2,
         },
-
-        renderChart() {
-            this.chartSeries = [
-                {
-                    name: __("Transactions"),
-                    data: this.transactions_by_month.map((item) => item.total),
-                },
-            ];
-
-            const isDark = document.documentElement.classList.contains("dark");
-
-            this.chartOptions = {
-                chart: {
-                    height: 350,
-                    type: this.chartType,
-                    zoom: {
-                        enabled: false,
-                    },
-                    toolbar: {
-                        show: true,
-                        tools: {
-                            download: true,
-                            selection: false,
-                            zoom: false,
-                            zoomin: false,
-                            zoomout: false,
-                            pan: false,
-                            reset: true,
-                        },
-                    },
-                    animations: {
-                        enabled: true,
-                        easing: "easeinout",
-                        speed: 600,
-                    },
-                    foreColor: isDark ? "#9CA3AF" : "#6B7280",
-                },
-                colors: ["#3B82F6"],
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    curve: "smooth",
-                    width: 2,
-                },
-                grid: {
-                    borderColor: isDark ? "#374151" : "#F3F4F6",
-                    strokeDashArray: 3,
-                },
-                xaxis: {
-                    categories: this.transactions_by_month.map(
-                        (item) => item.month,
-                    ),
-                    labels: {
-                        style: {
-                            colors: isDark ? "#9CA3AF" : "#6B7280",
-                            fontSize: "11px",
-                        },
-                    },
-                },
-                yaxis: {
-                    labels: {
-                        style: {
-                            colors: isDark ? "#9CA3AF" : "#6B7280",
-                            fontSize: "11px",
-                        },
-                    },
-                },
-                tooltip: {
-                    theme: isDark ? "dark" : "light",
-                    style: {
-                        fontSize: "12px",
-                    },
-                },
-                theme: {
-                    mode: isDark ? "dark" : "light",
-                },
-            };
+        grid: {
+            borderColor: isDark ? "#374151" : "#F3F4F6",
+            strokeDashArray: 3,
         },
-
-        formatDate(dateStr) {
-            const options = { year: "numeric", month: "short", day: "numeric" };
-            return new Date(dateStr).toLocaleDateString("en-US", options);
+        xaxis: {
+            categories: transactions_by_month.value.map((item) => item.month),
+            labels: {
+                style: {
+                    colors: isDark ? "#9CA3AF" : "#6B7280",
+                    fontSize: "11px",
+                },
+            },
         },
-    },
+        yaxis: {
+            labels: {
+                style: {
+                    colors: isDark ? "#9CA3AF" : "#6B7280",
+                    fontSize: "11px",
+                },
+            },
+        },
+        tooltip: {
+            theme: isDark ? "dark" : "light",
+            style: {
+                fontSize: "12px",
+            },
+        },
+        theme: {
+            mode: isDark ? "dark" : "light",
+        },
+    };
+};
+
+const formatDate = (dateStr) => {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    return new Date(dateStr).toLocaleDateString("en-US", options);
 };
 </script>
 

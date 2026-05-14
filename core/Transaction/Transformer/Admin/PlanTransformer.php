@@ -75,30 +75,14 @@ class PlanTransformer extends TransformerAbstract
             'scopes' => $plan->assignedScopes($plan->scopes),
             'prices' => $plan->transform($plan->prices, PlanPriceTransformer::class),
             'links' => [
-                'parent' => route('api.transaction.admin.plans.index'),
-                'store' => route('api.transaction.admin.plans.store'),
-                'show' => route('api.transaction.admin.plans.show', ['plan' => $plan]),
-                'update' => route('api.transaction.admin.plans.update', ['plan' => $plan]),
-                'destroy' => route('api.transaction.admin.plans.destroy', ['plan' => $plan]),
+                'parent' => route('transaction.admin.plans.index'),
+                'create' => route('transaction.admin.plans.create'),
+                'store' => route('transaction.admin.plans.store'),
+                'edit' => route('transaction.admin.plans.edit', ['plan' => $plan]),
+                'show' => route('transaction.admin.plans.show', ['plan' => $plan]),
+                'update' => route('transaction.admin.plans.update', ['plan' => $plan]),
+                'destroy' => route('transaction.admin.plans.destroy', ['plan' => $plan]),
             ],
         ];
-    }
-
-
-    /**
-     * Return the original attribute 
-     * @param mixed $index
-     * @return string|null
-     */
-    public static function getOriginalAttributes($index)
-    {
-        $attributes = [
-            'id' => 'id',
-            'name' => 'name',
-            'created' => 'created_at',
-            'updated' => 'updated_at'
-        ];
-
-        return isset($attributes[$index]) ? $attributes[$index] : null;
     }
 }

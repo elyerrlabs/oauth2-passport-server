@@ -71,159 +71,39 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <div class="space-y-5">
                             <!-- Current Password -->
                             <div class="space-y-2">
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    {{ __("Current Password") }}
-                                </label>
-                                <div class="relative">
-                                    <input
-                                        :type="
-                                            showCurrentPassword
-                                                ? 'text'
-                                                : 'password'
-                                        "
-                                        v-model="form.current_password"
-                                        :placeholder="
-                                            __('Enter current password')
-                                        "
-                                        class="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                                        :class="{
-                                            'border-red-500 dark:border-red-400':
-                                                form.errors.current_password,
-                                            'border-green-500 dark:border-green-400':
-                                                form.current_password &&
-                                                !form.errors.current_password,
-                                        }"
-                                    />
-                                    <button
-                                        @click="
-                                            showCurrentPassword =
-                                                !showCurrentPassword
-                                        "
-                                        type="button"
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
-                                        :aria-label="
-                                            showCurrentPassword
-                                                ? 'Hide password'
-                                                : 'Show password'
-                                        "
-                                    >
-                                        <svg
-                                            v-if="showCurrentPassword"
-                                            class="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L6.59 6.59m9.02 9.02l3.411 3.411"
-                                            />
-                                        </svg>
-                                        <svg
-                                            v-else
-                                            class="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                            />
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <v-error
+                                <v-input
+                                    v-model="form.current_password"
+                                    :label="__('Current Password')"
+                                    :placeholder="__('Enter current password')"
                                     :error="form.errors.current_password"
+                                    type="password"
+                                    hide
+                                    autocomplete="current-password"
+                                    :input-class="{
+                                        'border-green-500 dark:border-green-400':
+                                            form.current_password &&
+                                            !form.errors.current_password,
+                                    }"
                                 />
                             </div>
 
                             <!-- New Password -->
                             <div class="space-y-2">
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    {{ __("New Password") }}
-                                </label>
-                                <div class="relative">
-                                    <input
-                                        :type="
-                                            showNewPassword
-                                                ? 'text'
-                                                : 'password'
-                                        "
-                                        v-model="form.password"
-                                        :placeholder="__('Create new password')"
-                                        class="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                                        :class="{
-                                            'border-red-500 dark:border-red-400':
-                                                form.errors.password,
-                                            'border-green-500 dark:border-green-400':
-                                                form.password &&
-                                                !form.errors.password &&
-                                                passwordStrength >= 0.7,
-                                        }"
-                                    />
-                                    <button
-                                        @click="
-                                            showNewPassword = !showNewPassword
-                                        "
-                                        type="button"
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
-                                        :aria-label="
-                                            showNewPassword
-                                                ? 'Hide password'
-                                                : 'Show password'
-                                        "
-                                    >
-                                        <svg
-                                            v-if="showNewPassword"
-                                            class="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L6.59 6.59m9.02 9.02l3.411 3.411"
-                                            />
-                                        </svg>
-                                        <svg
-                                            v-else
-                                            class="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                            />
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
+                                <v-input
+                                    v-model="form.password"
+                                    :label="__('New Password')"
+                                    :placeholder="__('Create new password')"
+                                    :error="form.errors.password"
+                                    type="password"
+                                    hide
+                                    autocomplete="new-password"
+                                    :input-class="{
+                                        'border-green-500 dark:border-green-400':
+                                            form.password &&
+                                            !form.errors.password &&
+                                            passwordStrength >= 0.7,
+                                    }"
+                                />
 
                                 <!-- Password Strength Indicator -->
                                 <div v-if="form.password" class="mt-3">
@@ -281,88 +161,25 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         ></div>
                                     </div>
                                 </div>
-                                <v-error :error="form.errors.password" />
                             </div>
 
                             <!-- Confirm Password -->
                             <div class="space-y-2">
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                >
-                                    {{ __("Confirm Password") }}
-                                </label>
-                                <div class="relative">
-                                    <input
-                                        :type="
-                                            showConfirmPassword
-                                                ? 'text'
-                                                : 'password'
-                                        "
-                                        v-model="form.password_confirmation"
-                                        :placeholder="
-                                            __('Confirm new password')
-                                        "
-                                        class="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                                        :class="{
-                                            'border-red-500 dark:border-red-400':
-                                                form.errors
-                                                    .password_confirmation,
-                                            'border-green-500 dark:border-green-400':
-                                                form.password_confirmation &&
-                                                !form.errors
-                                                    .password_confirmation &&
-                                                passwordsMatch,
-                                        }"
-                                    />
-                                    <button
-                                        @click="
-                                            showConfirmPassword =
-                                                !showConfirmPassword
-                                        "
-                                        type="button"
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
-                                        :aria-label="
-                                            showConfirmPassword
-                                                ? 'Hide password'
-                                                : 'Show password'
-                                        "
-                                    >
-                                        <svg
-                                            v-if="showConfirmPassword"
-                                            class="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L6.59 6.59m9.02 9.02l3.411 3.411"
-                                            />
-                                        </svg>
-                                        <svg
-                                            v-else
-                                            class="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                            />
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
+                                <v-input
+                                    v-model="form.password_confirmation"
+                                    :label="__('Confirm Password')"
+                                    :placeholder="__('Confirm new password')"
+                                    :error="form.errors.password_confirmation"
+                                    type="password"
+                                    hide
+                                    autocomplete="new-password"
+                                    :input-class="{
+                                        'border-green-500 dark:border-green-400':
+                                            form.password_confirmation &&
+                                            !form.errors.password_confirmation &&
+                                            passwordsMatch,
+                                    }"
+                                />
 
                                 <!-- Password Match Indicator -->
                                 <div
@@ -413,44 +230,23 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         }}
                                     </span>
                                 </div>
-                                <v-error
-                                    :error="form.errors.password_confirmation"
-                                />
                             </div>
 
                             <!-- Submit Button -->
                             <div class="pt-2">
-                                <button
+                                <v-button
                                     @click="update"
                                     :disabled="loading || !isFormValid"
-                                    class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm shadow-sm hover:shadow-md"
-                                >
-                                    <svg
-                                        v-if="loading"
-                                        class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            class="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            stroke-width="4"
-                                        ></circle>
-                                        <path
-                                            class="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                        ></path>
-                                    </svg>
-                                    {{
+                                    :loading="loading"
+                                    :label="
                                         loading
-                                            ? __("Updating...")
-                                            : __("Update Password")
-                                    }}
-                                </button>
+                                            ? __('Updating...')
+                                            : __('Update Password')
+                                    "
+                                    variant="primary"
+                                    full-width
+                                >
+                                </v-button>
                             </div>
                         </div>
                     </div>
@@ -531,7 +327,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 >
                                     {{
                                         __(
-                                            "Your password is encrypted and stored securely. We recommend updating it every 3-6 months."
+                                            "Your password is encrypted and stored securely. We recommend updating it every 3-6 months.",
                                         )
                                     }}
                                 </p>
@@ -548,7 +344,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 import { ref, computed } from "vue";
 import VAccountLayout from "@/components/VAccountLayout.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
-import VError from "@/components/VError.vue";
+import VButton from "@/components/VButton.vue";
+import VInput from "@/components/VInput.vue";
 
 const page = usePage();
 
@@ -560,9 +357,6 @@ const form = useForm({
 });
 
 const loading = ref(false);
-const showCurrentPassword = ref(false);
-const showNewPassword = ref(false);
-const showConfirmPassword = ref(false);
 
 // Computed: consejos de seguridad
 const securityTips = computed(() => [
@@ -626,7 +420,7 @@ const passwordStrengthText = computed(() => {
 });
 
 const passwordsMatch = computed(
-    () => form.password === form.password_confirmation && form.password !== ""
+    () => form.password === form.password_confirmation && form.password !== "",
 );
 
 const isFormValid = computed(
@@ -635,7 +429,7 @@ const isFormValid = computed(
         form.password &&
         form.password_confirmation &&
         passwordsMatch.value &&
-        passwordStrength.value >= 0.4
+        passwordStrength.value >= 0.4,
 );
 
 function update() {

@@ -24,27 +24,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
     <!-- Create Personal Access Client Button -->
-    <button
+
+    <v-button
         @click="open"
-        class="personal-client-btn group inline-flex items-center space-x-2 px-4 py-2.5 bg-transparent border border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 hover:shadow-md transform hover:-translate-y-0.5"
         :title="__('Create a personal access client for API authentication')"
         :disabled="loading"
-    >
-        <svg
-            class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-200"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-        >
-            <path
-                fill-rule="evenodd"
-                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                clip-rule="evenodd"
-            />
-        </svg>
-        <span class="font-semibold">{{
-            __("Create Personal Access Client")
-        }}</span>
-    </button>
+        :label="__('Create Personal Access Client')"
+        icon="mdi mdi-lock"
+    />
 
     <!-- Dialog -->
     <v-modal
@@ -53,37 +40,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         panel-class="w-full lg:w-3xl"
     >
         <template #body>
-            <!-- Header Banner -->
-            <div
-                class="bg-blue-600 dark:bg-blue-700 text-white rounded-t-lg -mx-6 -mt-6 px-6 py-4 transition-colors duration-200"
+            <v-head
+                :title="__('Api Token')"
+                :description="
+                    __(
+                        'Personal access clients allow your applications to authenticate with the API using generated tokens.',
+                    )
+                "
             >
-                <div class="text-center">
-                    <div class="flex items-center justify-center mb-2">
-                        <div
-                            class="w-10 h-10 bg-blue-500 dark:bg-blue-600 rounded-full flex items-center justify-center"
-                        >
-                            <svg
-                                class="w-5 h-5 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="text-sm opacity-90 mt-1">
-                        {{
-                            __(
-                                "Personal access clients allow your applications to authenticate with the API using generated tokens."
-                            )
-                        }}
-                    </div>
-                </div>
-            </div>
+            </v-head>
 
             <!-- Form Content -->
             <div class="space-y-6 mt-4">
@@ -102,7 +67,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                         {{
                             __(
-                                "Choose a descriptive name to identify this personal access client"
+                                "Choose a descriptive name to identify this personal access client",
                             )
                         }}
                     </p>
@@ -130,7 +95,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             }}</strong>
                             {{
                                 __(
-                                    "This client will be used to generate API tokens. Keep your tokens secure and never share them publicly."
+                                    "This client will be used to generate API tokens. Keep your tokens secure and never share them publicly.",
                                 )
                             }}
                         </div>
@@ -162,7 +127,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <p>
                                 {{
                                     __(
-                                        "Personal access clients are suitable for first-party applications where you control both the client and the resource server. They use the Password Grant or Personal Access Token flow."
+                                        "Personal access clients are suitable for first-party applications where you control both the client and the resource server. They use the Password Grant or Personal Access Token flow.",
                                     )
                                 }}
                             </p>
@@ -175,171 +140,79 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <div
                 class="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700"
             >
-                <button
+                <v-button
                     @click="close"
                     :disabled="loading"
-                    class="cancel-btn px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                >
-                    <svg
-                        class="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                    <span>{{ __("Cancel") }}</span>
-                </button>
-                <button
+                    :label="__('Cancel')"
+                    variant="danger"
+                />
+
+                <v-button
                     @click="createPersonalAccessClient"
                     :disabled="loading || !isFormValid"
-                    :class="[
-                        'create-btn px-4 py-2.5 text-sm font-medium text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2',
-                        loading || !isFormValid
-                            ? 'bg-blue-400 dark:bg-blue-500'
-                            : 'bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700',
-                    ]"
-                >
-                    <svg
-                        v-if="loading"
-                        class="w-4 h-4 animate-spin"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-                    <svg
-                        v-else
-                        class="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                            clip-rule="evenodd"
-                        />
-                        <path
-                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                        />
-                    </svg>
-                    <span class="font-medium">{{
-                        loading ? __("Creating...") : __("Create Client")
-                    }}</span>
-                </button>
+                    :label="loading ? __('Creating...') : __('Create Client')"
+                />
             </div>
         </template>
     </v-modal>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
 import VModal from "@/components/VModal.vue";
 import VInput from "@/components/VInput.vue";
+import VButton from "@/components/VButton.vue";
+import VHead from "@/components/VHead.vue";
 
-export default {
-    components: {
-        VModal,
-        VInput,
-    },
-    emits: ["created"],
+const emits = defineEmits(["created"]);
 
-    data() {
-        return {
-            dialog: false,
-            loading: false,
-            form: {
-                name: "",
-            },
-            errors: {},
-        };
-    },
+const dialog = ref(false);
+const loading = ref(false);
+const form = ref({
+    name: "",
+});
+const errors = ref({});
 
-    computed: {
-        isFormValid() {
-            return this.form.name?.trim();
-        },
-    },
+const isFormValid = computed(() => {
+    return form.value.name?.trim();
+});
 
-    methods: {
-        open() {
-            this.form.name = "";
-            this.errors = {};
-            this.dialog = true;
-        },
+const open = () => {
+    form.value.name = "";
+    errors.value = {};
+    dialog.value = true;
+};
 
-        close() {
-            this.dialog = false;
-            this.loading = false;
-            this.form.name = "";
-            this.errors = {};
-        },
+const close = () => {
+    dialog.value = false;
+    loading.value = false;
+    form.value.name = "";
+    errors.value = {};
+};
 
-        async createPersonalAccessClient() {
-            if (!this.isFormValid) return;
+const createPersonalAccessClient = async () => {
+    if (!isFormValid.value) return;
 
-            this.loading = true;
-            this.errors = {};
+    loading.value = true;
+    errors.value = {};
 
-            try {
-                const res = await this.$server.post(
-                    this.$page.props.routes.personal,
-                    this.form
-                );
+    try {
+        const res = await $server.post(page.props.routes.personal, form.value);
 
-                if (res.status == 201) {
-                    this.$notify.success({
-                        title: this.__("Success"),
-                        message: this.__(
-                            "Personal access client created successfully"
-                        ),
-                        timeout: 3000,
-                    });
-                    this.$emit("created");
-                    this.close();
-                }
-            } catch (e) {
-                if (e?.response?.status == 422) {
-                    this.errors = e.response.data.errors;
-                    this.$notify.error({
-                        title: this.__("Validation Error"),
-                        message: this.__("Please fix the form errors"),
-                        timeout: 5000,
-                    });
-                } else if (e?.response?.data?.message) {
-                    this.$notify.error({
-                        title: this.__("Error"),
-                        message: e.response.data.message,
-                        timeout: 5000,
-                    });
-                } else {
-                    this.$notify.error({
-                        title: this.__("Error"),
-                        message: this.__(
-                            "Failed to create personal access client"
-                        ),
-                        timeout: 5000,
-                    });
-                }
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
+        if (res.status == 201) {
+            $notify.success(__("Personal access client created successfully"));
+
+            emits("created");
+            close();
+        }
+    } catch (e) {
+        if (e?.response?.status == 422) {
+            errors.value = e.response.data.errors;
+        } else if (e?.response?.data?.message) {
+            $notify.error(e.response.data.message);
+        }
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
-
-<style scoped>
-.personal-client-btn:active {
-    transform: translateY(0);
-    transition: transform 0.1s ease;
-}
-</style>

@@ -25,21 +25,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <div>
         <!-- Delete Button -->
-        <button
+        <v-button
             @click="dialog = true"
-            class="group relative flex items-center justify-center w-11 h-11 rounded-full bg-gradient-to-br from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-        >
-            <i
-                class="mdi mdi-trash-can-outline text-lg transition-transform duration-300 group-hover:rotate-12"
-            ></i>
-
-            <!-- Tooltip -->
-            <span
-                class="absolute bottom-14 px-2.5 py-1 text-xs rounded-md bg-gray-800 dark:bg-gray-700 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap shadow-lg"
-            >
-                {{ __("Delete Plan") }}
-            </span>
-        </button>
+            icon="mdi mdi-trash-can-outline"
+            round
+            :title="__('Delete plan')"
+            variant="danger"
+        />
 
         <!-- Confirm Modal -->
         <VModal
@@ -69,7 +61,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             >
                                 {{
                                     __(
-                                        "You are about to permanently delete the plan"
+                                        "You are about to permanently delete the plan",
                                     )
                                 }}
                                 <strong
@@ -78,7 +70,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 >.
                                 {{
                                     __(
-                                        "This action cannot be undone and will affect all associated data."
+                                        "This action cannot be undone and will affect all associated data.",
                                     )
                                 }}
                             </p>
@@ -128,42 +120,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         class="text-xs text-gray-500 dark:text-gray-400 font-mono mt-1"
                                     >
                                         {{ item.slug }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Description -->
-                            <div
-                                v-if="
-                                    item.description &&
-                                    item.description !== '<p></p>'
-                                "
-                                class="flex items-start gap-3"
-                            >
-                                <div
-                                    class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center"
-                                >
-                                    <i
-                                        class="mdi mdi-text-short text-indigo-600 dark:text-indigo-400 text-sm"
-                                    ></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div
-                                        class="font-medium text-gray-700 dark:text-gray-300 text-sm mb-2"
-                                    >
-                                        {{ __("Description") }}
-                                    </div>
-                                    <div
-                                        class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-600"
-                                    >
-                                        <div
-                                            v-html="
-                                                truncateHtml(
-                                                    item.description,
-                                                    200
-                                                )
-                                            "
-                                        ></div>
                                     </div>
                                 </div>
                             </div>
@@ -267,7 +223,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             >
                                 {{
                                     __(
-                                        "This will permanently delete the plan, all associated pricing configurations, and access scopes. This action cannot be undone and may affect existing subscriptions."
+                                        "This will permanently delete the plan, all associated pricing configurations, and access scopes. This action cannot be undone and may affect existing subscriptions.",
                                     )
                                 }}
                             </p>
@@ -278,48 +234,27 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <div
                         class="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700"
                     >
-                        <button
+                        <v-button
                             @click="dialog = false"
-                            class="px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-                            :class="[
-                                'bg-gray-100 dark:bg-gray-700',
-                                'hover:bg-gray-200 dark:hover:bg-gray-600',
-                                'text-gray-700 dark:text-gray-200',
-                                'border border-gray-300 dark:border-gray-600',
-                                'focus:ring-gray-500 dark:focus:ring-gray-400',
-                                'hover:scale-105 transform',
-                            ]"
-                        >
-                            <i class="mdi mdi-close text-lg"></i>
-                            {{ __("Cancel") }}
-                        </button>
+                            icon="mdi mdi-close"
+                            variant="danger"
+                            :label="__('Cancel')"
+                        />
 
-                        <button
+                        <v-button
                             @click="destroy"
-                            :disabled="loading"
-                            class="px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-                            :class="[
-                                loading
-                                    ? 'bg-red-400 dark:bg-red-500 cursor-not-allowed'
-                                    : 'bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600',
-                                'text-white dark:text-gray-100',
-                                'border border-red-600 dark:border-red-600',
-                                'focus:ring-red-500 dark:focus:ring-red-400',
-                                loading ? '' : 'hover:scale-105 transform',
-                            ]"
-                        >
-                            <i
-                                v-if="loading"
-                                class="mdi mdi-loading mdi-spin text-lg"
-                            ></i>
-                            <i
-                                v-else
-                                class="mdi mdi-trash-can-outline text-lg"
-                            ></i>
-                            {{
-                                loading ? __("Deleting...") : __("Delete Plan")
-                            }}
-                        </button>
+                            :disabled="form.processing"
+                            :icon="
+                                form.processing
+                                    ? 'mdi mdi-loading mdi-spin text-lg'
+                                    : 'mdi mdi-trash-can-outline text-lg'
+                            "
+                            :label="
+                                form.processing
+                                    ? __('Deleting...')
+                                    : __('Delete Plan')
+                            "
+                        />
                     </div>
                 </div>
             </template>
@@ -329,6 +264,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
 import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 
@@ -342,54 +278,19 @@ const props = defineProps({
 });
 
 const dialog = ref(false);
-const loading = ref(false);
 
-const destroy = async () => {
-    if (loading.value) return;
+const form = useForm({});
 
-    loading.value = true;
-
-    const form = useForm();
+const destroy = () => {
     form.delete(props.item.links.destroy, {
         onSuccess: () => {
+            emits("deleted");
             dialog.value = false;
-            emits("deleted", props.item.id);
-            loading.value = false;
-            this.$notify.success({
-                title: __("Success"),
-                message: __("Plan was deleted successfully"),
-            });
+            $notify.success(__("Plan was deleted successfully"));
         },
-        onFinish: () => {
-            loading.value = false;
+        onError: (errors) => {
+            $notify.error(__("Failed to delete plan"));
         },
     });
 };
-
-const truncateHtml = (html, length) => {
-    if (!html) return "";
-    const text = html.replace(/<[^>]*>/g, "");
-    return text.length > length ? text.substring(0, length) + "..." : text;
-};
 </script>
-
-<style scoped>
-/* Smooth transitions */
-button {
-    transition: all 0.2s ease-in-out;
-}
-
-/* Loading animation */
-.mdi-loading {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-</style>

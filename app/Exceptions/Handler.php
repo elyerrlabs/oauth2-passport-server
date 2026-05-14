@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Routing\Exceptions\BackedEnumCaseNotFoundException;
+use Inertia\Inertia;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
@@ -79,30 +80,11 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if ($e instanceof ValidationException) {
-            $errors = $errors = $e->errors();
-
-            $formatted = [];
-
-            foreach ($errors as $field => $messages) {
-
-                foreach ($messages as $key => &$value) {
-                    $value = preg_replace('/\.\d+\./', ' ', $value);
-                    $value = preg_replace('/\.\d+/', ' ', $value);
-                }
-
-                data_set($formatted, $field, $messages);
-            }
-
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'message' => $e->getMessage(),
-                    'errors' => $formatted
-                ], 422);
-            }
+            return $this->validationErrors($request, $e);
         }
 
-        if ($e instanceof NotFoundHttpException && request()->acceptsHtml() && request()->path() == '/') {
-            return redirect()->route('login');
+        if ($e instanceof NotFoundHttpException && request()->acceptsHtml()) {
+            return redirect('/');
         }
 
         if ($e instanceof ModelNotFoundException) {
@@ -110,10 +92,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof TokenMismatchException) {
-            if (request()->wantsJson()) {
-                throw new ReportError(__($e->getMessage()), 419);
-            }
-            return redirect('/');
+            throw new ReportError(__($e->getMessage()), 419);
         }
 
         if ($e instanceof BadRequestHttpException) {
@@ -177,5 +156,64 @@ class Handler extends ExceptionHandler
             $e instanceof RecordsNotFoundException => new NotFoundHttpException('Not found.', $e),
             default => $e,
         };
+    }
+
+    /**
+     * Validation errors
+     * @param mixed $request
+     * @param mixed $e
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    private function validationErrors($request, $e)
+    {
+        $errors = $e->errors();
+
+        $formatted = [];
+
+        foreach ($errors as $field => $messages) {
+            $cleanedMessages = array_map(function ($message) {
+                $message = preg_replace('/\.\d+\./', ' ', $message);
+                $message = preg_replace('/\.\d+/', ' ', $message);
+                $message = str_replace('_', ' ', $message);
+                $message = preg_replace('/\s+/', ' ', $message);
+
+                return trim($message);
+            }, $messages);
+
+            data_set($formatted, $field, $cleanedMessages);
+        }
+
+        // Para peticiones JSON/API
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errors' => $formatted
+            ], 422);
+        }
+
+        // Para Blade/Inertia - aplanar los errores
+        $flattened = [];
+        foreach ($formatted as $field => $messages) {
+            if (is_array($messages)) {
+                // Si es un array anidado
+                if (isset($messages[0]) && is_array($messages[0])) {
+                    foreach ($messages as $index => $nestedMessages) {
+                        foreach ($nestedMessages as $nestedField => $nestedMessage) {
+                            $key = $field . '.' . $index . '.' . $nestedField;
+                            $flattened[$key] = is_array($nestedMessage) ? $nestedMessage[0] : $nestedMessage;
+                        }
+                    }
+                } else {
+                    // Array simple de strings
+                    $flattened[$field] = $messages[0] ?? '';
+                }
+            } else {
+                $flattened[$field] = $messages;
+            }
+        }
+
+        return redirect()->back()
+            ->withInput($request->input())
+            ->withErrors($flattened);
     }
 }

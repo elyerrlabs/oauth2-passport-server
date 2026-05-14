@@ -1,17 +1,14 @@
 <template>
     <!-- Manage Scopes Button -->
-    <button
+    <v-button
         @click="openDialog"
-        class="relative group w-10 h-10 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 focus:ring-offset-2"
-        :title="__('Manage Access Scopes')"
-    >
-        <i class="mdi mdi-shield-account-outline"></i>
-        <div
-            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
-        >
-            {{ __("Manage Scopes") }}
-        </div>
-    </button>
+        round
+        size="md"
+        variant="secondary"
+        icon="mdi mdi-shield-account-outline"
+        :aria-label="__('Manage Access Scopes')"
+        :title="__('Manage access Scopes')"
+    />
 
     <v-modal
         v-model="dialog"
@@ -304,26 +301,22 @@
             <div
                 class="flex items-center justify-between px-5 py-3 border-t border-gray-200 dark:border-gray-700"
             >
-                <button
+                <v-button
                     @click="toggleAll"
-                    class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition"
+                    variant="ghost"
+                    size="xs"
+                    :icon="
+                        allExpanded
+                            ? 'mdi mdi-arrow-collapse-all'
+                            : 'mdi mdi-arrow-expand-all'
+                    "
+                    class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                 >
-                    <i
-                        :class="
-                            allExpanded
-                                ? 'mdi mdi-arrow-collapse-all'
-                                : 'mdi mdi-arrow-expand-all'
-                        "
-                        class="mr-1"
-                    ></i>
                     {{ allExpanded ? __("Collapse All") : __("Expand All") }}
-                </button>
-                <button
-                    @click="dialog = false"
-                    class="px-4 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition"
-                >
+                </v-button>
+                <v-button @click="dialog = false" size="xs" variant="primary">
                     {{ __("Done") }}
-                </button>
+                </v-button>
             </div>
         </template>
     </v-modal>
@@ -333,6 +326,7 @@
 import { ref, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
 import VDeleteScope from "./VDeleteScope.vue";
 import VAddScope from "./VAddScope.vue";
 

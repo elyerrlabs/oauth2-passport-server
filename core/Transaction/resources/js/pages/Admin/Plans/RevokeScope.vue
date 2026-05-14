@@ -24,18 +24,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
     <div>
-        <button
+        <v-button
             @click="dialog = true"
-            class="flex items-center justify-center w-8 h-8 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-gray-900 dark:text-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-            :title="__('Revoke Scope')"
-        >
-            <i class="mdi mdi-key-remove text-sm"></i>
-        </button>
+            :label="__('Revoke Scope')"
+            icon="mdi mdi-key-remove"
+            variant="warning"
+        />
 
         <v-modal
             v-model="dialog"
             :title="__('Revoke Access Scope')"
-            panel-class="w-full lg:w-5xl"
+            panel-class="w-full lg:w-6xl"
         >
             <template #body>
                 <div class="text-left space-y-6">
@@ -316,43 +315,21 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <div
                     class="flex flex-col sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700"
                 >
-                    <button
+                    <v-button
                         @click="dialog = false"
-                        class="px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-                        :class="[
-                            'bg-gray-100 dark:bg-gray-700',
-                            'hover:bg-gray-200 dark:hover:bg-gray-600',
-                            'text-gray-700 dark:text-gray-200',
-                            'border border-gray-300 dark:border-gray-600',
-                            'focus:ring-gray-500 dark:focus:ring-gray-400',
-                            'hover:scale-105 transform',
-                        ]"
-                    >
-                        <i class="mdi mdi-close text-lg"></i>
-                        {{ __("Cancel") }}
-                    </button>
+                        variant="danger"
+                        :label="__('Cancle')"
+                        icon="mdi mdi-close"
+                    />
 
-                    <button
-                        @click="revoke"
+                    <v-button
+                        @click="destroy"
                         :disabled="loading"
-                        class="px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-                        :class="[
-                            loading
-                                ? 'bg-yellow-400 dark:bg-yellow-500 cursor-not-allowed'
-                                : 'bg-yellow-600 dark:bg-yellow-700 hover:bg-yellow-700 dark:hover:bg-yellow-600',
-                            'text-white dark:text-gray-900',
-                            'border border-yellow-600 dark:border-yellow-600',
-                            'focus:ring-yellow-500 dark:focus:ring-yellow-400',
-                            loading ? '' : 'hover:scale-105 transform',
-                        ]"
-                    >
-                        <i
-                            v-if="loading"
-                            class="mdi mdi-loading mdi-spin text-lg"
-                        ></i>
-                        <i v-else class="mdi mdi-key-remove text-lg"></i>
-                        {{ loading ? __("Revoking...") : __("Revoke Scope") }}
-                    </button>
+                        icon="mdi mdi-key-remove"
+                        :label="
+                            loading ? __('Revoking...') : __('Revoke Scope')
+                        "
+                    />
                 </div>
             </template>
         </v-modal>
@@ -361,7 +338,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
 import { ref } from "vue";
+import { useForm } from "@inertiajs/vue3";
 
 const emits = defineEmits(["revoked"]);
 const props = defineProps({
@@ -381,79 +360,19 @@ const props = defineProps({
     },
 });
 
+const form = useForm({});
 const dialog = ref(false);
 const loading = ref(false);
 
-async function revoke() {
-    if (loading.value) return;
+const destroy = async () => {
+    loading.value = false;
 
-    loading.value = true;
-    try {
-        const res = $server.delete(props.item.links.revoke);
-
-        if (res.status == 200) {
-            dialog.value = false;
-            emits("revoked", props.item.id);
-            $notify.success(__("Scope revoked successfully"));
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
-}
+    form.delete(props.item.links.revoke, {
+        onSuccess: (response) => {},
+        onError: (error) => {},
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
+};
 </script>
-
-<style scoped>
-/* Smooth transitions for all interactive elements */
-button {
-    transition: all 0.2s ease-in-out;
-}
-
-/* Focus states for accessibility */
-button:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-}
-
-/* Dark mode specific adjustments */
-@media (prefers-color-scheme: dark) {
-    .dark\:focus\:ring-offset-gray-800:focus {
-        --tw-ring-offset-color: #1f2937;
-    }
-}
-
-/* Loading state animation */
-.mdi-loading {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Ensure proper contrast in both themes */
-.bg-yellow-50 {
-    background-color: rgb(254 252 232);
-}
-
-.dark .bg-yellow-900\/20 {
-    background-color: rgba(120, 53, 15, 0.2);
-}
-
-/* Border contrast improvements */
-.border-yellow-200 {
-    border-color: rgb(254 240 138);
-}
-
-.dark .border-yellow-800 {
-    border-color: rgb(114 59 19);
-}
-</style>

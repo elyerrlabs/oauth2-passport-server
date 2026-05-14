@@ -26,10 +26,12 @@
  */
 
 use App\Models\Setting\Setting;
-use App\Support\Translation\ModuleTranslation;
 use App\Support\CacheKeys;
+use App\Support\Translation\ModuleTranslation;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 if (!function_exists('settingAdd')) {
     /**
@@ -162,6 +164,15 @@ if (!function_exists('normalizeSlug')) {
 }
 
 if (!function_exists('resolveInertiaRoutes')) {
+    /**
+     * Resolve and build menu structure for Inertia.js frontend.
+     *
+     * Processes menu items by validating routes and permissions,
+     * and builds a structured array with support for nested submenus.
+     *
+     * @param array $items
+     * @return array
+     */
     function resolveInertiaRoutes(array $items)
     {
         $menus = [];
@@ -169,10 +180,12 @@ if (!function_exists('resolveInertiaRoutes')) {
         $user = auth()->user();
 
         foreach ($items as $key => $value) {
-
+            // Skip if main route doesn't exist
             if (!Route::has($value['route'])) {
                 continue;
             }
+
+            // Check if user can access this menu
             $canShow = true;
             if (isset($value['service'])) {
                 $canShow = $user && method_exists($user, 'canAccessMenu')
@@ -180,17 +193,61 @@ if (!function_exists('resolveInertiaRoutes')) {
                     : false;
             }
 
+            // Only add the menu if user has access
             if ($canShow) {
                 $menus[$key] = [
                     'id' => $value['id'] ?? null,
                     'name' => $value['name'] ?? null,
                     'icon' => $value['icon'] ?? null,
-                    'route' => isset($value['route']) ? route($value['route']) : null,
+                    'route' => route($value['route']),
                     'show' => $canShow,
-                    'position' => $value['position'] ?? 1,
+                    'position' => $value['position'] ?? 999,
                 ];
+
+                // Process submenus if they exist
+                if (isset($value['menus']) && is_array($value['menus'])) {
+                    $submenus = [];
+
+                    foreach ($value['menus'] as $subValue) {
+                        // Skip if submenu route doesn't exist
+                        if (!isset($subValue['route']) || !Route::has($subValue['route'])) {
+                            continue;
+                        }
+
+                        // Check if user can access this submenu
+                        $subCanShow = true;
+                        if (isset($subValue['service'])) {
+                            $subCanShow = $user && method_exists($user, 'canAccessMenu')
+                                ? $user->canAccessMenu($subValue['service'])
+                                : false;
+                        }
+
+                        // Only add submenu if user has access
+                        if ($subCanShow) {
+                            $submenus[] = [
+                                'id' => $subValue['id'] ?? null,
+                                'name' => $subValue['name'] ?? null,
+                                'icon' => $subValue['icon'] ?? null,
+                                'route' => route($subValue['route']),
+                                'show' => $subCanShow,
+                                'position' => $subValue['position'] ?? 1,
+                            ];
+                        }
+                    }
+
+                    // Only assign submenus if there's at least one accessible
+                    if (!empty($submenus)) {
+                        // Sort submenus by position
+                        usort($submenus, function ($a, $b) {
+                            return $a['position'] - $b['position'];
+                        });
+
+                        $menus[$key]['menus'] = $submenus;
+                    }
+                }
             }
         }
+
         return collect($menus)->sortBy('position')->values()->all();
     }
 }

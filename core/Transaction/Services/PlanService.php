@@ -55,30 +55,12 @@ class PlanService
         //Prepare query
         $query = $this->planRepository->query();
 
-        if ($request->filled('name')) {
-            $query->whereRaw("LOWER(name)", ["%" . strtolower($request->name) . "%"]);
-        }
-
-        if ($request->filled('active')) {
-            $query->where("bonus_activated", $request->active);
-        }
-
-        if ($request->filled('bonus_activated')) {
-            $query->where("bonus_activated", $request->bonus_activated);
-        }
-
-        if ($request->filled('bonus_duration')) {
-            $query->where("bonus_duration", $request->bonus_activated);
-        }
-
-        if ($request->filled('trial_enabled')) {
-            $query->where("trial_enabled", $request->bonus_activated);
-        }
-
-        if ($request->filled('trial_duration')) {
-            $query->where("trial_duration", $request->bonus_activated);
-        }
-
+        $query->when($request->filled('name'), fn($q) => $q->whereRaw("LOWER(name)", ["%" . strtolower($request->name) . "%"]));
+        $query->when($request->filled('active'), fn($q) => $q->where("bonus_activated", $request->active));
+        $query->when($request->filled('bonus_activated', fn($q) => $q->where("bonus_activated", $request->bonus_activated)));
+        $query->when($request->filled('bonus_duration', fn($q) => $q->where("bonus_duration", $request->bonus_duration)));
+        //$query->when($request->when('trial_enabled', fn($q) => $q->where("trial_enabled", $request->trial_enabled)));
+        //$query->when($request->when('trial_duration', fn($q) => $q->where("trial_duration", $request->trial_duration)));
         return $query;
     }
 

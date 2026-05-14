@@ -25,57 +25,23 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <div class="flex space-x-1">
         <!-- Status Toggle Button -->
-        <button
+        <v-button
             @click="open"
-            :class="[
-                'relative group w-12 h-12 border rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-900',
+            round
+            size="md"
+            variant="outline"
+            :icon="
                 item.disabled
-                    ? 'border-green-600 dark:border-green-400 text-green-600 dark:text-green-400 hover:bg-green-600 dark:hover:bg-green-500 hover:text-white focus:ring-green-200 dark:focus:ring-green-800'
-                    : 'border-red-600 dark:border-red-400 text-red-600 dark:text-red-400 hover:bg-red-600 dark:hover:bg-red-500 hover:text-white focus:ring-red-200 dark:focus:ring-red-800',
-            ]"
+                    ? 'mdi mdi-check text-lg'
+                    : 'mdi mdi-close text-lg'
+            "
+            :aria-label="
+                item.disabled ? __('Enable this user') : __('Disable this user')
+            "
             :title="
                 item.disabled ? __('Enable this user') : __('Disable this user')
             "
-        >
-            <svg
-                class="w-5 h-5 mx-auto"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-            >
-                <path
-                    v-if="item.disabled"
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                />
-                <path
-                    v-else
-                    fill-rule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-                />
-            </svg>
-
-            <!-- Tooltip -->
-            <div
-                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
-                :class="
-                    item.disabled
-                        ? 'bg-green-600 dark:bg-green-500'
-                        : 'bg-red-600 dark:bg-red-500'
-                "
-            >
-                {{ item.disabled ? __("Enable User") : __("Disable User") }}
-                <div
-                    class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent"
-                    :class="
-                        item.disabled
-                            ? 'border-t-green-600 dark:border-t-green-500'
-                            : 'border-t-red-600 dark:border-t-red-500'
-                    "
-                ></div>
-            </div>
-        </button>
+        />
 
         <!-- Confirmation Dialog -->
         <v-modal
@@ -181,78 +147,28 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <div
                     class="flex justify-center space-x-3 mt-8 pt-4 border-t border-gray-200 dark:border-gray-700"
                 >
-                    <button
+                    <v-button
                         @click="dialog = false"
-                        class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors"
+                        variant="light"
+                        left-icon="mdi mdi-close"
                     >
-                        <svg
-                            class="w-4 h-4 inline mr-2"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
                         {{ __("Cancel") }}
-                    </button>
-                    <button
+                    </v-button>
+                    <v-button
                         @click="action(item)"
                         :disabled="loading"
-                        :class="[
-                            'px-4 py-2 text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
-                            item.disabled
-                                ? 'bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600 focus:ring-green-500 dark:focus:ring-green-400'
-                                : 'bg-red-600 dark:bg-red-500 hover:bg-red-700 dark:hover:bg-red-600 focus:ring-red-500 dark:focus:ring-red-400',
-                        ]"
+                        :loading="loading"
+                        :variant="item.disabled ? 'success' : 'danger'"
+                        :left-icon="
+                            item.disabled ? 'mdi mdi-check' : 'mdi mdi-delete'
+                        "
                     >
-                        <svg
-                            v-if="loading"
-                            class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                class="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                stroke-width="4"
-                            ></circle>
-                            <path
-                                class="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                        </svg>
-                        <svg
-                            v-else
-                            class="w-4 h-4 inline mr-2"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                v-if="item.disabled"
-                                fill-rule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clip-rule="evenodd"
-                            />
-                            <path
-                                v-else
-                                fill-rule="evenodd"
-                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
                         {{
                             item.disabled
                                 ? __("Enable User")
                                 : __("Disable User")
                         }}
-                    </button>
+                    </v-button>
                 </div>
             </template>
         </v-modal>
@@ -262,6 +178,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script setup>
 import { ref } from "vue";
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
 
 const props = defineProps({
     item: {
