@@ -47,9 +47,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         />
                     </svg>
                 </button>
-                <span class="text-gray-900 dark:text-white">
+                <a
+                    :href="page.props.auth_routes.dashboard"
+                    class="text-gray-900 dark:text-white font-medium"
+                >
                     {{ page.props.app_name }}
-                </span>
+                </a>
             </div>
 
             <div class="flex items-center gap-4">
@@ -76,16 +79,23 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import VNotification from "@/components/VNotification.vue";
 import VProfile from "@/components/VProfile.vue";
 import VTheme from "@/components/VTheme.vue";
 import { usePage } from "@inertiajs/vue3";
+import VButton from "@/components/VButton.vue";
 
 const sidebarVisible = ref(true);
 
+onMounted(() => {
+    sidebarVisible.value =
+        localStorage.getItem("sidebar") === "true" ? true : false;
+});
+
 const toggleSidebar = () => {
     sidebarVisible.value = !sidebarVisible.value;
+    localStorage.setItem("sidebar", sidebarVisible.value);
 };
 
 const page = usePage();

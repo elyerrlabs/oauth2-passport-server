@@ -23,114 +23,174 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <button
-        @click="dialog = true"
-        class="inline-flex items-center px-4 py-2 border border-orange-500 dark:border-orange-400 text-orange-600 dark:text-orange-300 rounded-lg font-medium hover:bg-orange-50 dark:hover:bg-orange-900/20 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-200"
-    >
-        <svg
-            class="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+    <div v-if="item.status == 'pending'">
+        <v-button
+            @click="dialog = true"
+            :title="__('Activate Transaction')"
+            icon="mdi mdi-check-circle"
+            round
+            variant="warning"
+        />
+
+        <v-modal
+            v-model="dialog"
+            panel-class="w-full lg:w-2xl"
+            :title="__('Activate Transaction')"
         >
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-            />
-        </svg>
-        {{ __("Activate Transaction") }}
-    </button>
+            <template #body>
+                <div class="p-6">
+                    <!-- Advertencia -->
+                    <div class="flex items-start mb-5">
+                        <svg
+                            class="w-6 h-6 text-orange-500 dark:text-orange-400 mr-3 mt-0.5 flex-shrink-0"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                            />
+                        </svg>
+                        <span
+                            class="text-gray-900 dark:text-gray-100 font-medium leading-relaxed"
+                        >
+                            {{
+                                __(
+                                    "Are you sure you want to activate this transaction?",
+                                )
+                            }}
+                        </span>
+                    </div>
 
-    <v-modal
-        v-model="dialog"
-        panel-class="w-full lg:w-3xl"
-        :title="__('Activate Transaction')"
-    >
-        <template #body>
-            <!-- Content -->
-            <div class="p-6">
-                <div class="flex items-start mb-4">
-                    <svg
-                        class="w-6 h-6 text-orange-500 dark:text-orange-400 mr-3 mt-0.5 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
-                        />
-                    </svg>
-                    <span
-                        class="text-gray-900 dark:text-gray-100 font-medium leading-relaxed"
-                    >
-                        {{
-                            __(
-                                "Are you sure you want to activate this transaction?"
-                            )
-                        }}
-                    </span>
-                </div>
-
-                <hr class="my-4 border-gray-200 dark:border-gray-700" />
-
-                <div
-                    v-if="item.description"
-                    class="bg-white dark:bg-gray-800 rounded-lg p-4"
-                >
+                    <!-- Detalles de la transacción -->
                     <div
-                        class="text-sm text-gray-600 dark:text-gray-400 font-medium mb-1"
+                        class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 mb-4 border border-gray-200 dark:border-gray-700"
                     >
-                        {{ __("Transaction Details") }}
+                        <h4
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2"
+                        >
+                            <i class="mdi mdi-receipt-text-outline"></i>
+                            {{ __("Transaction Details") }}
+                        </h4>
+
+                        <dl class="space-y-2 text-sm">
+                            <div class="flex flex-wrap gap-1">
+                                <dt
+                                    class="w-28 text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Code") }}:
+                                </dt>
+                                <dd
+                                    class="font-mono text-gray-800 dark:text-gray-200"
+                                >
+                                    {{ item.code }}
+                                </dd>
+                            </div>
+                            <div class="flex flex-wrap gap-1">
+                                <dt
+                                    class="w-28 text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Total") }}:
+                                </dt>
+                                <dd
+                                    class="font-medium text-gray-900 dark:text-white"
+                                >
+                                    {{ item.total }}
+                                    {{ item.currency }}
+                                </dd>
+                            </div>
+                            <div class="flex flex-wrap gap-1">
+                                <dt
+                                    class="w-28 text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Product") }}:
+                                </dt>
+                                <dd class="text-gray-800 dark:text-gray-200">
+                                    {{ productName }}
+                                </dd>
+                            </div>
+                            <div class="flex flex-wrap gap-1">
+                                <dt
+                                    class="w-28 text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Period") }}:
+                                </dt>
+                                <dd
+                                    class="capitalize text-gray-800 dark:text-gray-200"
+                                >
+                                    {{ item.billing_period || "—" }}
+                                </dd>
+                            </div>
+                            <div class="flex flex-wrap gap-1">
+                                <dt
+                                    class="w-28 text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Customer") }}:
+                                </dt>
+                                <dd class="text-gray-800 dark:text-gray-200">
+                                    {{ item.owner?.name }}
+                                    {{ item.owner?.last_name }}
+                                    <span
+                                        class="text-xs text-gray-500 dark:text-gray-400 block"
+                                        >{{ item.owner?.email }}</span
+                                    >
+                                </dd>
+                            </div>
+                            <div class="flex flex-wrap gap-1">
+                                <dt
+                                    class="w-28 text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Created") }}:
+                                </dt>
+                                <dd class="text-gray-800 dark:text-gray-200">
+                                    {{ formatDate(item.created) }}
+                                </dd>
+                            </div>
+                        </dl>
                     </div>
-                    <div class="text-gray-800 dark:text-gray-200">
-                        {{ item.description }}
+
+                    <!-- Mensaje adicional si es renovación -->
+                    <div
+                        v-if="item.renew"
+                        class="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg flex items-start gap-2"
+                    >
+                        <i
+                            class="mdi mdi-refresh-circle mdi-18px flex-shrink-0 mt-0.5"
+                        ></i>
+                        <span>{{
+                            __(
+                                "This transaction represents a renewal. Activating it will extend the existing subscription.",
+                            )
+                        }}</span>
                     </div>
                 </div>
-            </div>
 
-            <!-- Actions -->
-            <div
-                class="flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-800 rounded-b-2xl border-t border-gray-200 dark:border-gray-700"
-            >
-                <button
-                    @click="dialog = false"
-                    class="px-6 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200"
-                >
-                    {{ __("Cancel") }}
-                </button>
-                <button
-                    @click="activateTransaction"
-                    :disabled="disable"
-                    class="inline-flex items-center px-6 py-2 bg-green-600 dark:bg-green-700 text-white font-medium rounded-lg hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                >
-                    <svg
-                        class="w-4 h-4 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                        />
-                    </svg>
-                    {{ __("Activate") }}
-                </button>
-            </div>
-        </template>
-    </v-modal>
+                <!-- Actions -->
+                <div class="flex justify-between items-center px-6 py-4">
+                    <v-button
+                        @click="dialog = false"
+                        :disabled="loading"
+                        :label="__('Cancel')"
+                        variant="danger"
+                    />
+                    <v-button
+                        @click="activateTransaction"
+                        :disabled="loading || !hasActivateLink"
+                        :label="loading ? __('Activating...') : __('Activate')"
+                    />
+                </div>
+            </template>
+        </v-modal>
+    </div>
 </template>
 
 <script setup>
 import VModal from "@/components/VModal.vue";
-import { ref } from "vue";
+import VButton from "@/components/VButton.vue";
+import { ref, computed } from "vue";
 
 const emits = defineEmits(["updated"]);
 
@@ -142,28 +202,58 @@ const props = defineProps({
 });
 
 const dialog = ref(false);
-const disable = ref(false);
+const loading = ref(false);
+
+const hasActivateLink = computed(() => !!props.item?.links?.activate);
+
+// Nombre del producto (prioriza meta.meta.name, luego meta.description o vacío)
+const productName = computed(() => {
+    const meta = props.item?.meta?.meta;
+    if (meta?.name) return meta.name;
+    if (meta?.description)
+        return meta.description.replace(/<[^>]*>/g, "").substring(0, 60);
+    return __("Unknown product");
+});
+
+// Formatear fecha
+const formatDate = (dateString) => {
+    if (!dateString) return "—";
+    try {
+        return new Intl.DateTimeFormat(undefined, {
+            dateStyle: "medium",
+            timeStyle: "short",
+        }).format(new Date(dateString));
+    } catch {
+        return dateString;
+    }
+};
 
 const activateTransaction = async () => {
-    disable.value = true;
+    if (!hasActivateLink.value) {
+        $notify.error(__("Activation link not available for this item."));
+        return;
+    }
+
+    loading.value = true;
 
     try {
         const res = await $server.put(props.item.links.activate);
 
-        if (res.status == 200) {
+        if (res.status === 200) {
             dialog.value = false;
-
             $notify.success(__("Transaction has been activated successfully"));
-
             emits("updated");
+        } else {
+            throw new Error(res.data?.message || __("Activation failed"));
         }
     } catch (e) {
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
+        const message =
+            e?.response?.data?.message ||
+            e?.message ||
+            __("An error occurred while activating the transaction");
+        $notify.error(message);
     } finally {
-        disable.value = false;
-        dialog.value = false;
+        loading.value = false;
     }
 };
 </script>
