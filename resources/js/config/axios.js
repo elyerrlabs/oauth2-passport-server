@@ -18,3 +18,23 @@ export const $server = axios.create({
     Accept: "application/json",
   },
 });
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const { response } = error;
+
+    if (response) {
+      switch (response.status) {
+        case 419:
+        case 423:
+        case 405:
+        case 401:
+          window.location.reload();
+          break;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
