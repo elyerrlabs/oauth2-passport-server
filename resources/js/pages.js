@@ -24,14 +24,12 @@
  */
 import flatpickr from "flatpickr";
 import { $notify } from "@/config/notify.js";
-import * as Vue from "vue";
 import { setupI18n, __ } from "@/config/locale.js";
 import { $server } from "@/config/axios.js";
 import "@/config/editor.js";
 import $ from 'jquery';
 
 window.$notify = $notify;
-window.Vue = Vue;
 window.$server = $server;
 window.__ = __;
 window.$ = window.jQuery = $;
