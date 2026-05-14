@@ -47,7 +47,7 @@
                     <i class="mdi mdi-timer-outline mr-2 text-blue-600 dark:text-blue-400"></i>
                     {{ __('Session Management') }}
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1  gap-6">
 
                     {{-- Session Lifetime --}}
                     <div
@@ -74,6 +74,29 @@
                         </small>
                     </div>
 
+                    {{-- Paswword confirmation --}}
+                    <div
+                        class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center mb-3">
+                            <div
+                                class="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
+                                <i class="mdi mdi-timer-sand-empty text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <label
+                                class="block text-sm font-semibold text-gray-900 dark:text-white">{{ __('Password Confirmation Timeout') }}</label>
+                        </div>
+                        <div>
+                            <input type="number" name="auth[password_timeout]" min="1"
+                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                                value="{{ config('auth.password_timeout') }}">
+
+                        </div>
+                        <small class="block mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            <i class="mdi mdi-information-outline mr-1"></i>
+                            {{ __('Here you may define the amount of seconds before a password confirmation times out and the user is prompted to re-enter their password via the confirmation screen. By default, the timeout lasts for three hours.') }}
+                        </small>
+                    </div>
+
                     {{-- Expire on Close --}}
                     <div
                         class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700">
@@ -97,6 +120,7 @@
                             {{ __('Immediately expire session when browser closes') }}
                         </small>
                     </div>
+
 
                     {{-- Session Encryption --}}
                     <div
