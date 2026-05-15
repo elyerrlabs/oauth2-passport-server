@@ -24,16 +24,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
     <div>
-        <button
+        <v-button
             @click="open"
-            class="p-1 rounded-full text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200"
-        >
-            <span class="mdi mdi-delete text-xl"></span>
-        </button>
+            icon="mdi mdi-delete"
+            variant="danger"
+            :title="__('Delete delivery address')"
+            round
+        />
 
         <v-modal
             v-model="dialog"
-            panel-class="w-full lg:w-4xl"
+            panel-class="w-full lg:w-5xl"
             :title="__('Delete delivery Addresses')"
         >
             <template #body>
@@ -210,19 +211,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <div
                     class="px-4 py-3 bg-gray-50 dark:bg-gray-800 flex justify-end gap-3"
                 >
-                    <button
+                    <v-button
                         @click="dialog = false"
-                        class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                    >
-                        {{ __("Cancel") }}
-                    </button>
-                    <button
+                        :label="__('Cancel')"
+                        variant="danger"
+                    />
+                    <v-button
                         @click="destroy"
-                        class="px-4 py-2 bg-red-600 cursor-pointer hover:bg-red-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2"
-                    >
-                        <span class="mdi mdi-delete"></span>
-                        {{ __("Delete delivery address") }}
-                    </button>
+                        :label="__('Delete delivery address')"
+                        variant="success"
+                        icon="mdi mdi-delete"
+                    />
                 </div>
             </template>
         </v-modal>
@@ -231,6 +230,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
 import { ref } from "vue";
 
 const props = defineProps({

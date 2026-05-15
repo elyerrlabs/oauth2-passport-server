@@ -24,30 +24,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
     <div>
-        <button
-            v-if="item?.id"
+        <v-button
             @click="open"
-            class="p-1 rounded-full text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200"
-        >
-            <span class="mdi mdi-pencil text-xl"></span>
-        </button>
-
-        <button
-            v-else
-            @click="open"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 shadow transition-colors duration-200"
-        >
-            <i class="mdi mdi-map-marker-outline"></i>
-            <span>{{ __("Add new address") }}</span>
-        </button>
+            :icon="item?.id ? 'mdi mdi-pencil' : 'mdi mdi-map-marker-outline'"
+            :round="item?.id ? true : false"
+            :variant="item?.id ? 'success' : 'secondary'"
+            :label="item?.id ? '' : __('Add Delivery Address')"
+            :title="item?.id ? __('Edit Address') : __('Add Delivery Address')"
+        />
 
         <v-modal
             v-model="dialog"
-            panel-class="w-full lg:w-4xl"
+            panel-class="w-full lg:w-6xl"
             :title="__('Delivery Addresses')"
         >
             <template #body>
-                <div class="grid row-cols-1 md:row-cols-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <v-input
                         v-model="form.full_name"
                         :error="errors.full_name"
@@ -232,14 +224,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </div>
                 </div>
                 <div class="px-4 py-3">
-                    <button
+                    <v-button
                         @click="handle"
-                        class="w-full bg-blue-600 cursor-pointer hover:bg-blue-700 text-white py-3 rounded-lg transition-colors duration-200"
-                    >
-                        {{
-                            form.id ? __("Update Address") : __("Save Address")
-                        }}
-                    </button>
+                        :label="form.id ? '' : __('Save Address')"
+                        variant="success"
+                    />
                 </div>
             </template>
         </v-modal>
@@ -247,6 +236,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </template>
 
 <script setup>
+import VButton from "@/components/VButton.vue";
 import VInput from "@/components/VInput.vue";
 import VModal from "@/components/VModal.vue";
 import VSelect from "@/components/VSelect.vue";

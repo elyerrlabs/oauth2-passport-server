@@ -1,150 +1,146 @@
 <template>
     <v-account-layout>
-        <!-- Header -->
-        <div class="mb-8 flex justify-between">
-            <div>
-                <h2
-                    class="text-2xl font-semibold text-gray-900 dark:text-gray-100"
-                >
-                    {{ __("Delivery Addresses") }}
-                </h2>
-                <p class="text-gray-600 dark:text-gray-400 mt-1">
-                    {{ __("Manage your saved delivery addresses") }}
-                </p>
-            </div>
-            <v-create @created="getDeliveryAddresses" />
-        </div>
-
-        <!-- Addresses Grid -->
-        <div
-            v-if="addresses.length > 0"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        <v-head
+            :title="__('Delivery Addresses')"
+            :description="__('Manage your saved delivery addresses')"
         >
-            <div
-                v-for="address in addresses"
-                :key="address.id"
-                class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-gray-700 overflow-hidden"
-            >
-                <!-- Card Header -->
-                <div
-                    class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center"
+            <template #actions>
+                <v-create @created="getDeliveryAddresses" />
+            </template>
+        </v-head>
+
+        <v-table
+            :items="addresses"
+            :loading="loading"
+            :per-page="search.per_page"
+            :show-pagination="false"
+            :empty-text="__('No addresses found. Add your first delivery address.')"
+            empty-icon="mdi-map-marker-off-outline"
+            loading-text="Loading addresses..."
+            table-class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+            thead-class="bg-gray-50 dark:bg-gray-700"
+            tbody-class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+            <template #head>
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        {{ __('Full Name') }}
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        {{ __('Address') }}
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        {{ __('City / State') }}
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        {{ __('Phone') }}
+                    </th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        {{ __('Actions') }}
+                    </th>
+                </tr>
+            </template>
+
+            <template #default="{ items }">
+                <tr
+                    v-for="address in items"
+                    :key="address.id"
+                    class="transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50"
                 >
-                    <h3
-                        class="text-lg font-semibold text-gray-900 dark:text-gray-100"
-                    >
-                        {{ address.full_name }}
-                    </h3>
-                    <div class="flex space-x-2">
-                        <v-create
-                            :item="address"
-                            @updated="getDeliveryAddresses"
-                        />
-
-                        <v-delete
-                            :item="address"
-                            @deleted="getDeliveryAddresses"
-                        />
-                    </div>
-                </div>
-
-                <!-- Card Content -->
-                <div class="p-4 space-y-3">
-                    <!-- Address -->
-                    <div
-                        class="flex items-start space-x-2 text-gray-700 dark:text-gray-300"
-                    >
-                        <span
-                            class="mdi mdi-map-marker text-gray-400 dark:text-gray-500 text-xl shrink-0 mt-0.5"
-                        ></span>
-                        <span class="text-sm flex-1">
-                            {{ address.address }}
-                            <span
-                                v-if="address.address_line_2"
-                                class="text-gray-500 dark:text-gray-400"
-                                >, {{ address.address_line_2 }}</span
-                            >
-                        </span>
-                    </div>
-
-                    <!-- Location -->
-                    <div
-                        class="flex items-start space-x-2 text-gray-700 dark:text-gray-300"
-                    >
-                        <span
-                            class="mdi mdi-city text-gray-400 dark:text-gray-500 text-xl shrink-0 mt-0.5"
-                        ></span>
-                        <span class="text-sm flex-1">
-                            {{ address.district }}, {{ address.city }},
-                            {{ address.state }}, {{ address.country }}
-                            <span
-                                v-if="address.postal_code"
-                                class="text-gray-500 dark:text-gray-400"
-                            >
-                                - {{ address.postal_code }}</span
-                            >
-                        </span>
-                    </div>
-
-                    <!-- Phones -->
-                    <div
-                        class="flex items-start space-x-2 text-gray-700 dark:text-gray-300"
-                    >
-                        <span
-                            class="mdi mdi-phone text-gray-400 dark:text-gray-500 text-xl shrink-0 mt-0.5"
-                        ></span>
-                        <div class="flex items-center flex-wrap gap-1 text-sm">
-                            <span class="text-gray-700 dark:text-gray-300">{{
-                                address.phone
-                            }}</span>
-                            <span
-                                v-if="address.secondary_phone"
-                                class="text-gray-500 dark:text-gray-400"
-                            >
-                                • {{ address.secondary_phone }}
-                            </span>
+                    <!-- Full Name -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center shrink-0">
+                                <i class="mdi mdi-account text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-900 dark:text-white">
+                                    {{ address.full_name }}
+                                </p>
+                                <p v-if="address.references" class="text-xs text-gray-500 dark:text-gray-400 italic max-w-[200px] truncate" :title="address.references">
+                                    {{ __('Ref') }}: {{ address.references }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    </td>
 
-                    <!-- References -->
-                    <div
-                        v-if="address.references"
-                        class="flex items-start space-x-2 text-gray-700 dark:text-gray-300"
-                    >
-                        <span
-                            class="mdi mdi-note-text text-gray-400 dark:text-gray-500 text-xl shrink-0 mt-0.5"
-                        ></span>
-                        <span
-                            class="text-sm flex-1 text-gray-500 dark:text-gray-400 italic"
-                        >
-                            Reference: {{ address.references }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <!-- Address -->
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-gray-900 dark:text-gray-100 max-w-[250px]">
+                            <p class="truncate" :title="address.address">
+                                <i class="mdi mdi-map-marker text-gray-400 dark:text-gray-500 text-xs mr-1"></i>
+                                {{ address.address }}
+                            </p>
+                            <p v-if="address.address_line_2" class="text-xs text-gray-500 dark:text-gray-400 truncate" :title="address.address_line_2">
+                                {{ address.address_line_2 }}
+                            </p>
+                            <p v-if="address.postal_code" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                <i class="mdi mdi-mailbox-outline text-xs mr-1"></i>
+                                {{ address.postal_code }}
+                            </p>
+                        </div>
+                    </td>
+
+                    <!-- City / State -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 dark:text-gray-100">
+                            <p class="font-medium">
+                                <i class="mdi mdi-city text-gray-400 dark:text-gray-500 text-xs mr-1"></i>
+                                {{ address.city }}
+                            </p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                {{ address.district }}, {{ address.state }}
+                            </p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                <i class="mdi mdi-earth text-xs mr-1"></i>
+                                {{ address.country }}
+                            </p>
+                        </div>
+                    </td>
+
+                    <!-- Phone -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 dark:text-gray-100">
+                            <p class="font-medium">
+                                <i class="mdi mdi-phone text-gray-400 dark:text-gray-500 text-xs mr-1"></i>
+                                {{ address.phone }}
+                            </p>
+                            <p v-if="address.secondary_phone" class="text-xs text-gray-500 dark:text-gray-400">
+                                <i class="mdi mdi-phone-plus-outline text-xs mr-1"></i>
+                                {{ address.secondary_phone }}
+                            </p>
+                        </div>
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <v-create
+                                :item="address"
+                                @updated="getDeliveryAddresses"
+                            />
+                            <v-delete
+                                :item="address"
+                                @deleted="getDeliveryAddresses"
+                            />
+                        </div>
+                    </td>
+                </tr>
+            </template>
+        </v-table>
 
         <!-- Empty State -->
         <div
-            v-else
+            v-if="!loading && addresses.length === 0"
             class="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700"
         >
-            <span
-                class="mdi mdi-map-marker-outline text-gray-400 dark:text-gray-600 text-5xl"
-            ></span>
-            <h3
-                class="mt-2 text-sm font-semibold text-gray-900 dark:text-gray-100"
-            >
-                No addresses found
+            <span class="mdi mdi-map-marker-outline text-gray-400 dark:text-gray-600 text-5xl"></span>
+            <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                {{ __('No addresses found') }}
             </h3>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                You haven't added any delivery addresses yet.
+                {{ __("You haven't added any delivery addresses yet.") }}
             </p>
-            <button
-                class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
-            >
-                <span class="mdi mdi-plus mr-2"></span>
-                Add New Address
-            </button>
         </div>
 
         <!-- Pagination -->
@@ -158,6 +154,8 @@
 
 <script setup>
 import VAccountLayout from "@/components/VAccountLayout.vue";
+import VHead from "@/components/VHead.vue";
+import VTable from "@/components/VTable.vue";
 import { usePage } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 import VCreate from "./VCreate.vue";
@@ -167,6 +165,7 @@ import VPaginate from "@/components/VPaginate.vue";
 const page = usePage();
 
 const addresses = ref([]);
+const loading = ref(false);
 const pages = ref({
     total_pages: 0,
 });
@@ -177,8 +176,14 @@ const search = ref({
 });
 
 const getDeliveryAddresses = async () => {
+    loading.value = true;
     try {
-        const res = await $server.get(page.props.api.address);
+        const res = await $server.get(page.props.api.address, {
+            params: {
+                per_page: search.value.per_page,
+                page: search.value.page,
+            },
+        });
         if (res.status == 200) {
             const values = res.data;
             addresses.value = values.data;
@@ -188,6 +193,8 @@ const getDeliveryAddresses = async () => {
         if (error?.response?.data?.message) {
             $notify.error(error.response.data.message);
         }
+    } finally {
+        loading.value = false;
     }
 };
 
