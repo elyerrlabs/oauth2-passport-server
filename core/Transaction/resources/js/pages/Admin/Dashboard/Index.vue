@@ -71,7 +71,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <v-select
                                 :label="__('Status')"
                                 v-model="search.status"
-                                :options="status"
+                                :options="billing_statuses"
                                 label-key="value"
                                 value-key="value"
                             />
@@ -177,30 +177,38 @@ import VHead from "@/components/VHead.vue";
 import VButton from "@/components/VButton.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 
-const search = ref({
+const search = useForm({
     start: null,
     end: null,
     type: "month",
     status: "successful",
 });
 
+const props = defineProps({
+    data: {
+        type: Object,
+        required: true,
+    },
+    billing_statuses: {
+        type: Array,
+        required: true,
+    },
+});
+
 const chartType = ref("line");
-const chartTypes = ["bar", "line", "area"];
-const types = ["day", "month", "year"];
 const transactions_by_month = ref([]);
 const plans_count = ref(0);
 const package_count = ref(0);
 const cards = ref([]);
 const chartSeries = ref([]);
 const chartOptions = ref({});
-const status = ref([]);
 
 watch(
-    () => search.value.type,
+    () => search.type,
     () => {
         getData();
     },
@@ -213,20 +221,14 @@ watch(
     },
 );
 
-onMounted(async () => {
-    if (!search.value.start || !search.value.end) {
+onMounted(() => {
+    if (!search.start || !search.end) {
         const { start, end } = getDefaultDates();
-        search.value.start = start;
-        search.value.end = end;
+        search.start = start;
+        search.end = end;
     }
 
-    await getData();
-
-    await getStatus();
-
-    setInterval(async () => {
-        await getData();
-    }, 10000);
+    loadData(props.data);
 });
 
 const getDefaultDates = () => {
@@ -267,38 +269,19 @@ const loadData = (data) => {
     renderChart();
 };
 
-const getData = async () => {
-    try {
-        const res = await $server.get(page.props.route, {
-            search: search.value,
-        });
-
-        if (res.status == 200) {
-            loadData(res.data.data);
-        }
-    } catch (e) {
-        if (e?.response?.data?.message) {
-            console.error("Error:", e.response.data.message);
-        }
-    }
-};
-
-const getStatus = async () => {
-    try {
-        const res = await $server.get(page.props.status);
-
-        if (res.status == 200) {
-            status.value = res.data.data.map((item) => ({
-                label: item.name,
-                value: item.name,
-                description: item.description,
-            }));
-        }
-    } catch (e) {
-        if (e?.response?.data?.message) {
-            console.error("Error:", e.response.data.message);
-        }
-    }
+const getData = () => {
+    search.get(page.props.route, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: (res) => {
+            loadData(res.props.data);
+        },
+        onError: (e) => {
+            if (e?.response?.data?.message) {
+                console.error("Error:", e.response.data.message);
+            }
+        },
+    });
 };
 
 const renderChart = () => {
@@ -376,11 +359,6 @@ const renderChart = () => {
             mode: isDark ? "dark" : "light",
         },
     };
-};
-
-const formatDate = (dateStr) => {
-    const options = { year: "numeric", month: "short", day: "numeric" };
-    return new Date(dateStr).toLocaleDateString("en-US", options);
 };
 </script>
 

@@ -25,10 +25,6 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Core\Transaction\Http\Controllers\Api\Admin\PlanController;
-use Core\Transaction\Http\Controllers\Api\Admin\PlanPriceController;
-use Core\Transaction\Http\Controllers\Api\Admin\PlanScopeController;
-use Core\Transaction\Http\Controllers\Api\Admin\TransactionManagerController;
 use Core\Transaction\Http\Controllers\Api\Web\DeliveryAddressController;
 use Core\Transaction\Http\Controllers\Api\Web\PaymentController;
 use Illuminate\Support\Facades\Route;
@@ -41,17 +37,15 @@ Route::group(
     ],
     function () {
 
-        Route::get('/transactions', [TransactionManagerController::class, 'index'])->name('transactions.index');
-
         // Route::get('/refunds/review', [RefundReviewController::class, 'index'])->name('refunds.review.index');
         // Route::get('/refunds/{refund}/review', [RefundReviewController::class, 'show'])->name('refunds.review.show');
         // Route::put('/refunds/{refund}/review', [RefundReviewController::class, 'update'])->name('refunds.review.update');
-
+    
         // Route::get('/refunds/list/users', [RefundController::class, 'listUsersForRefundAssignment'])->name('refunds.list.users');
         // Route::put('/refunds/{id}/assign', [RefundController::class, 'assignTo'])->name('refunds.assignto');
         // Route::resource('/refunds', RefundController::class)->only('index', 'show', 'update');
+    
 
-       
     }
 );
 

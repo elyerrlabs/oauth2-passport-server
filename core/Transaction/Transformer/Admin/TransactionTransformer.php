@@ -75,7 +75,7 @@ class TransactionTransformer extends TransformerAbstract
             'response' => $transaction->response,
             'meta' => $transaction->meta,
             'code' => $transaction->code,
-            'activated' => $transaction->activated_by ? $transaction->activatedBy->email :  null,
+            'activated' => $transaction->activated_by ? $transaction->activatedBy->email : null,
             'created' => $this->format_date($transaction->created_at),
             'updated' => $this->format_date($transaction->updated_at),
             'payment_method_id' => $transaction->payment_method_id,
@@ -84,8 +84,9 @@ class TransactionTransformer extends TransformerAbstract
             'refund' => $this->refund($transaction->refund),
             'links' => [
                 'index' => route('transaction.admin.transactions.index'),
-                'activate' => route('transaction.transactions.activate', ['transaction' => $transaction->id]),
-                'cancel' => route('transaction.subscriptions.cancel', ['transaction_id' => $transaction->id])
+                'show' => route('transaction.admin.transactions.show', ['transaction' => $transaction->id]),
+                'activate' => route('transaction.admin.transactions.activate', ['transaction' => $transaction->id]),
+                //'cancel' => route('transaction.admin.transactions.cancel', ['transaction' => $transaction->id])
             ]
         ];
     }

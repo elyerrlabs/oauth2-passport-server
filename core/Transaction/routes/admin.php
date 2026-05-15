@@ -25,7 +25,6 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Core\Transaction\Http\Controllers\Admin\DashboardController;
 use Core\Transaction\Http\Controllers\Admin\PlanController;
 use Core\Transaction\Http\Controllers\Admin\PlanPriceController;
 use Core\Transaction\Http\Controllers\Admin\PlanScopeController;
@@ -36,9 +35,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:core:transaction:admin', 'password.confirm'])->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-
-    Route::get('/transactions', [TransactionManagerController::class, 'index'])->name('transactions.index');
+    Route::put('/subscriptions/{transaction}/activate', [TransactionManagerController::class, 'activate'])->name('transactions.activate');
+    Route::get('/dashboard', [TransactionManagerController::class, 'dashboard'])->name('dashboard');
+    Route::resource('transactions', TransactionManagerController::class)->only('index', 'show');
 
     // Route::get('/refunds/review', [RefundReviewController::class, 'index'])->name('refunds.review.index');
     // Route::get('/refunds/{refund}/review', [RefundReviewController::class, 'show'])->name('refunds.review.show');

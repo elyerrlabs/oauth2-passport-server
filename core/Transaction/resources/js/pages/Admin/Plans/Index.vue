@@ -288,7 +288,7 @@ const search = useForm({
 });
 const pages = ref({ total_pages: 0 });
 
-onMounted(async () => {
+onMounted(() => {
     data(page.props.data);
 });
 
@@ -298,7 +298,7 @@ const data = (data) => {
     pages.value = values.meta.pagination;
 };
 
-const getPlans = async () => {
+const getPlans = () => {
     loading.value = true;
 
     search.get(page.props.routes.plans, {

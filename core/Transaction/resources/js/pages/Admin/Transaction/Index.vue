@@ -54,7 +54,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             :label="__('Code')"
                             v-model="search.code"
                             @input="debouncedSearch"
-                            :placeholder="__('Transaction code')"
+                            :placeholder="__('code')"
                         />
 
                         <!-- Email Filter -->
@@ -69,7 +69,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-select
                             :label="__('Type')"
                             v-model="search.type"
-                            :options="types"
+                            :options="billing_types"
                             @change="searching"
                             :placeholder="__('All types')"
                         />
@@ -78,7 +78,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-select
                             :label="__('Status')"
                             v-model="search.status"
-                            :options="statuses"
+                            :options="billing_statuses"
                             @change="searching"
                             :placeholder="__('All statuses')"
                         />
@@ -215,12 +215,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     <div
                                         class="flex items-center justify-end gap-2"
                                     >
-                                        <v-transaction-activate
+                                        <v-activate
                                             :item="item"
                                             @updated="getTransactions"
                                         />
 
-                                        <v-detail :item="item" />
+                                        <v-button
+                                            :item="item"
+                                            icon="mdi mdi-eye"
+                                            :title="__('Show details')"
+                                            variant="success"
+                                            round
+                                            :to="item.links.show"
+                                            as="a"
+                                        />
                                     </div>
                                 </td>
                             </tr>
@@ -243,8 +251,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script setup>
 import VLayout from "@/components/VLayout.vue";
 import VItemMenu from "@/components/VItemMenu.vue";
-import VTransactionActivate from "@/components/VTransactionActivate.vue";
-import VDetail from "./Detail.vue";
+import VActivate from "./VActivate.vue";
 import VInput from "@/components/VInput.vue";
 import VButton from "@/components/VButton.vue";
 import VHead from "@/components/VHead.vue";
@@ -252,13 +259,28 @@ import VSelect from "@/components/VSelect.vue";
 import VTable from "@/components/VTable.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import { onMounted, ref } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
+
+const props = defineProps({
+    data: {
+        type: Object,
+        default: () => ({}),
+    },
+    billing_types: {
+        type: Array,
+        default: () => [],
+    },
+    billing_statuses: {
+        type: Array,
+        default: () => [],
+    },
+});
 
 const page = usePage();
+
 const loading = ref(false);
 const expandedRow = ref(null);
 const transactions = ref([]);
-const selectedTransaction = ref(null);
 const pages = ref({
     total_pages: 0,
 });
@@ -274,7 +296,7 @@ const columns = [
     "Actions",
 ];
 
-const search = ref({
+const search = useForm({
     page: 1,
     per_page: 15,
     name: "",
@@ -288,21 +310,14 @@ const searchTimeout = ref(null);
 const statuses = ref([]);
 const types = ref([]);
 
-onMounted(async () => {
-    await getTransactions();
-    await getStatuses();
-    await getType();
+onMounted(() => {
+    data(props.data);
 });
 
-//  visibilidad del gateway response
-const showGatewayResponse = ref(null);
-
-const toggleGatewayResponse = (index) => {
-    if (showGatewayResponse.value === index) {
-        showGatewayResponse.value = null;
-    } else {
-        showGatewayResponse.value = index;
-    }
+const data = (data) => {
+    const values = data;
+    transactions.value = values.data;
+    pages.value = values.meta?.pagination;
 };
 
 // Helper: formatted total
@@ -348,11 +363,6 @@ const truncateCode = (code) => {
     return code;
 };
 
-// Check if transaction can be activated
-const check = (item) => {
-    return item.status === "pending" || item.status === "failed";
-};
-
 // Copy to clipboard
 const copyToClipboard = (text) => {
     navigator.clipboard
@@ -365,42 +375,8 @@ const copyToClipboard = (text) => {
         });
 };
 
-// Actions
-const activateTransaction = (item) => {
-    // Emit or open modal – implement according to your VTransactionActivate component
-    // For example: $emit('activate', item) or use a modal
-    $notify.info(__("Activation feature: ") + item.code);
-};
-
-const viewDetails = (item) => {
-    selectedTransaction.value = item;
-};
-
 const toggleRowExpansion = (index) => {
     expandedRow.value = expandedRow.value === index ? null : index;
-};
-
-// Data fetching
-const getStatuses = async () => {
-    try {
-        const res = await $server.get(page.props.api.payment_status);
-        if (res.status === 200) {
-            statuses.value = res.data.data;
-        }
-    } catch (e) {
-        console.error("Error fetching statuses:", e);
-    }
-};
-
-const getType = async () => {
-    try {
-        const res = await $server.get(page.props.api.payment_types);
-        if (res.status === 200) {
-            types.value = res.data.data;
-        }
-    } catch (e) {
-        console.error("Error fetching types:", e);
-    }
 };
 
 const searching = () => {
@@ -419,39 +395,24 @@ const getTransactions = async () => {
     loading.value = true;
     expandedRow.value = null;
 
-    try {
-        const res = await $server.get(
-            page.props.api.transactions,
-            search.value,
-        );
-        if (res.status === 200) {
-            let data = res.data.data;
-            // Ensure data is an array (in case API returns object with numeric keys)
-            if (data && !Array.isArray(data)) {
-                data = Object.values(data);
-            }
-            transactions.value = data || [];
-            pages.value = res.data.meta?.pagination || { total_pages: 0 };
-        }
-    } catch (error) {
-        const message =
-            error?.response?.data?.message || __("Failed to load transactions");
-        $notify.error(message);
-    } finally {
-        loading.value = false;
-    }
+    search.get(page.props.routes.transactions, {
+        onSuccess: (response) => {
+            data(response);
+        },
+        onError: (error) => {
+            const message =
+                error?.response?.data?.message ||
+                __("Failed to load transactions");
+            $notify.error(message);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
 const clearFilters = () => {
-    search.value = {
-        page: 1,
-        per_page: 15,
-        name: "",
-        code: "",
-        email: "",
-        status: "",
-        type: "",
-    };
+    search.resetAndClearErrors();
     searching();
 };
 </script>

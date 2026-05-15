@@ -27,32 +27,33 @@ namespace Core\Transaction\Services;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Core\Transaction\Services\RefundService;
-use Core\Transaction\Jobs\SuccessfullyRefundJob;
-use Illuminate\Support\Facades\Log;
-use Exception;
-use Core\Transaction\Notifications\ProcessRefundNotification;
 use App\Notifications\Subscription\PaymentFailed;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Core\Ecommerce\Model\Order;
-use Core\Ecommerce\Model\Variant;
-use Illuminate\Support\Facades\DB;
+use App\Notifications\Subscription\PaymentSuccessfully;
+use App\Notifications\Subscription\RenewSuccessfully;
+use Core\Partner\Repositories\PartnerRepository;
+use Core\Transaction\Jobs\SuccessfullyRefundJob;
 use Core\Transaction\Model\Checkout;
+use Core\Transaction\Model\Package;
+use Core\Transaction\Model\Plan;
+use Core\Transaction\Model\Transaction;
+use Core\Transaction\Notifications\ProcessRefundNotification;
+use Core\Transaction\Notifications\SuccessfullyRefundNotification;
+use Core\Transaction\Repositories\TransactionRepository;
+use Core\Transaction\Services\Payment\PaymentManager;
+use Core\Transaction\Services\RefundService;
 use Core\User\Repositories\UserRepository;
+use Elyerr\ApiResponse\Assets\Asset;
 use Elyerr\ApiResponse\Assets\JsonResponser;
 use Elyerr\ApiResponse\Exceptions\ReportError;
-use Core\Partner\Repositories\PartnerRepository;
-use App\Notifications\Checkout\CheckoutNotification;
-use App\Notifications\Subscription\RenewSuccessfully;
-use Core\Transaction\Services\Payment\PaymentManager;
-use App\Notifications\Subscription\PaymentSuccessfully;
-use Core\Transaction\Repositories\TransactionRepository;
-use Core\Transaction\Notifications\SuccessfullyRefundNotification;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class TransactionService
 {
-    use JsonResponser;
+    use JsonResponser, Asset;
 
     /**
      * Transaction code
@@ -119,6 +120,48 @@ class TransactionService
     }
 
     /**
+     * Dashboard
+     * @param Request $request
+     * @return array{packages: int, plans: int, transactions: int, transactions_by_month: array}
+     */
+    public function dashboard(Request $request)
+    {
+        //type of filter by day , month or year
+        $type = $request->type ?? 'day';
+        $time = searchByDate($type);
+
+        $transactions_by_month = Transaction::query();
+
+        $transactions_by_month->where('status', $request->input('status') ?? 'successful');
+
+        //Apply filter between days
+        if ($request->has('start') && $request->has('end')) {
+            $request->merge([
+                'start' => $request->start . ' 00:00:00',
+                'end' => $request->end . ' 23:59:59',
+            ]);
+
+            $transactions_by_month->whereBetween('created_at', [$request->start, $request->end]);
+        }
+
+        $transactions_by_month = $transactions_by_month->selectRaw("TO_CHAR(created_at, '{$time}') as month, COUNT(id) as total")
+            ->groupByRaw("TO_CHAR(created_at, '{$time}')")
+            ->orderByRaw("TO_CHAR(created_at, '{$time}')")
+            ->get();
+
+        $plans = Plan::count();
+        $packages = Package::count();
+        $transactions = Transaction::count();
+
+        return [
+            'transactions_by_month' => $transactions_by_month->toArray(),
+            'plans' => $plans,
+            'packages' => $packages,
+            'transactions' => $transactions
+        ];
+    }
+
+    /**
      * Handled transaction refund
      * @throws \Elyerr\ApiResponse\Exceptions\ReportError
      * @return void
@@ -140,6 +183,22 @@ class TransactionService
 
         // Generate new transaction
         $this->generateTransactionRefund($payment_refund);
+    }
+
+    /**
+     * Find transaction
+     * @param mixed $id
+     * @return Transaction|null
+     */
+    public function findById($id)
+    {
+        $model = $this->repository->find($id);
+
+        if (empty($model)) {
+            throw new ReportError("Transaction not found", 404);
+        }
+
+        return $model;
     }
 
     /**
@@ -174,46 +233,28 @@ class TransactionService
                 $transaction->status = config('billing.status.successful.id');
                 $transaction->payment_url = $meta["receipt_url"];
 
-                if (isset($meta['metadata']['checkout_code']) && !empty($meta['metadata']['checkout_code'])) {
+                //for subscription
+                //Dispatch only renew packages
+                $redirect_to = route(
+                    'transaction.subscriptions.show',
+                    ['transaction_code' => $meta['metadata']['transaction_code']]
+                );
 
-                    $checkout = Checkout::with('orders')->where('code', $meta['metadata']['checkout_code'])->first();
+                if ($transaction->renew) {
 
-                    foreach ($checkout->orders as $item) {
-                        // Retrieve the order
-                        $order = Order::find($item->id);
-
-                        // Updated stock for products variant and attributes
-                        $product = Variant::find($order->meta['variant']['id']);
-                        $product->setStock($product->stock - $order->quantity);
-                        $product->push();
-
-                    }
-                    $redirect_to = route('transaction.checkout.success') . "?code={$meta['metadata']['transaction_code']}";
-                    $customer->notify(new CheckoutNotification($redirect_to));
-
-                } else {// Only for subscription
-                    //Dispatch only renew packages
-                    $redirect_to = route(
-                        'transaction.subscriptions.show',
-                        ['transaction_code' => $meta['metadata']['transaction_code']]
+                    $this->packageService->RenewSuccessfully(
+                        $transaction->transactionable,
+                        $transaction->code
                     );
 
-                    if ($transaction->renew) {
+                    //dispatch notification
+                    $customer->notify(new RenewSuccessfully($redirect_to));
 
-                        $this->packageService->RenewSuccessfully(
-                            $transaction->transactionable,
-                            $transaction->code
-                        );
+                } else {// Dispatch only buy packages
+                    $this->packageService->paymentSuccessfully($transaction->transactionable);
 
-                        //dispatch notification
-                        $customer->notify(new RenewSuccessfully($redirect_to));
-
-                    } else {// Dispatch only buy packages
-                        $this->packageService->paymentSuccessfully($transaction->transactionable);
-
-                        //Dispatch notification
-                        $customer->notify(new PaymentSuccessfully($redirect_to));
-                    }
+                    //Dispatch notification
+                    $customer->notify(new PaymentSuccessfully($redirect_to));
                 }
 
                 //Set the package metadata
@@ -348,59 +389,34 @@ class TransactionService
         // Prepare query
         $query = $this->repository->query();
 
-        $query->orderByDesc("updated_at");
+        $query->orderByDesc($request->input('order_by') ?? 'updated_at');
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
+        $query->when($request->filled('status'), function ($q) use ($request) {
+            $q->where('status', $request->status);
+        });
 
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
+        $query->when($request->filled('type'), function ($q) use ($request) {
+            $q->where('type', $request->type);
+        });
 
-            $query->orWhereHas('refund');
-        }
+        $query->when($request->filled('email'), function ($q) use ($request) {
+            $q->whereHas('user', function ($query) use ($request) {
+                $query->whereRaw("LOWER(email) like ?", ["%" . strtolower($request->email) . "%"]);
+            });
+        });
 
-        // Search by email
-        if ($request->filled('email')) {
-            $query->whereHas(
-                'user',
-                function ($query) use ($request) {
-                    $query->whereRaw("LOWER(email) like ?", ["%" . strtolower($request->email) . "%"]);
-                }
-            );
+        $query->when($request->filled('name'), function ($q) use ($request) {
+            $q->whereHas('activatedBy', function ($query) use ($request) {
+                $query->whereRaw("LOWER(name) like ?", ["%" . strtolower($request->name) . "%"]);
+            });
+        });
 
-            $query->whereHas(
-                'user',
-                function ($query) use ($request) {
-                    $query->whereRaw("LOWER(email) like ?", ["%" . strtolower($request->email) . "%"]);
-                }
-            );
-        }
-
-        // Search by name
-        if ($request->filled('name')) {
-            $query->whereHas(
-                'activatedBy',
-                function ($query) use ($request) {
-                    $query->whereRaw("LOWER(name) like ?", ["%" . strtolower($request->name) . "%"]);
-                }
-            );
-
-            $query->whereHas(
-                'user',
-                function ($query) use ($request) {
-                    $query->whereRaw("LOWER(name) like ?", ["%" . strtolower($request->email) . "%"]);
-                }
-            );
-        }
-
-        if ($request->filled('code')) {
-            $query->whereRaw("LOWER(code) like ?", ["%" . strtolower($request->code) . "%"]);
-        }
+        $query->when($request->filled('code'), function ($q) use ($request) {
+            $q->whereRaw("LOWER(code) like ?", ["%" . strtolower($request->code) . "%"]);
+        });
 
         return $query;
     }
-
 
     /**
      * List transaction for user

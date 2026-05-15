@@ -28,9 +28,12 @@ namespace Core\Transaction\Http\Controllers\Admin;
  */
 
 
-use Inertia\Inertia;
-use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
+use Core\Transaction\Repositories\DashboardRepository;
+use Core\Transaction\Services\TransactionService;
+use Core\Transaction\Transformer\Admin\TransactionTransformer;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TransactionManagerController extends WebController
 {
@@ -39,10 +42,30 @@ class TransactionManagerController extends WebController
      * Construct
      * 
      */
-    public function __construct()
+    public function __construct(protected TransactionService $transactionService)
     {
         parent::__construct();
+        $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:dashboard')->only('dashboard');
         $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:view')->only('index');
+        $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:view')->only('index');
+    }
+
+    /**
+     * Dashboard
+     * @param Request $request
+     * @return \Inertia\Response
+     */
+    public function dashboard(Request $request)
+    {
+        $billing_statuses = billing_statuses();
+
+        return Inertia::render("Admin/Dashboard/Index", [
+            "data" => $this->transactionService->dashboard($request),
+            "billing_statuses" => $billing_statuses,
+            "route" => route("transaction.admin.dashboard"),
+            "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
+            'status' => route('api.transaction.payments.status')
+        ]);
     }
 
     /**
@@ -52,16 +75,48 @@ class TransactionManagerController extends WebController
      */
     public function index(Request $request)
     {
+        $data = $this->transactionService->search($request);
+        $billing_types = billings_types();
+        $billing_statuses = billing_statuses();
+
         return Inertia::render(
             "Admin/Transaction/Index",
             [
                 "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
-                "api" => [
-                    'transactions' => route('api.transaction.admin.transactions.index'),
-                    'payment_status' => route('api.transaction.payments.status'),
-                    'payment_types' => route('api.transaction.payments.status')
-                ]
+                "data" => $this->transformCollection($data->paginate($request->input('per_page', 25)), TransactionTransformer::class),
+                "billing_types" => $billing_types,
+                "billing_statuses" => $billing_statuses,
+                "routes" => [
+                    'transactions' => route('transaction.admin.transactions.index'),
+                ],
             ]
         );
+    }
+
+    /**
+     * show
+     * @param mixed $id
+     * @return \Inertia\Response
+     */
+    public function show($id)
+    {
+        $transaction = $this->transactionService->findById($id);
+
+        return Inertia::render("Admin/Transaction/Detail", [
+            "data" => $this->transform($transaction, TransactionTransformer::class),
+            "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
+        ]);
+    }
+
+    /**
+     * Activate transaction
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function activate($id)
+    {
+        $this->transactionService->activate($id);
+
+        return redirect()->back()->with('status', 'Transaction activated successfully');
     }
 }
