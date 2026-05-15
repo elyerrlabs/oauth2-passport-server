@@ -24,7 +24,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <div
             class="min-h-screen bg-gray-50 dark:bg-linear-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-6"
         >
@@ -866,12 +866,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 </div>
             </div>
         </div>
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VSubscription from "@/components/VSubscription.vue";
 import VCancel from "./Cancel.vue";
 import VTransactionActivate from "@/components/VTransactionActivate.vue";

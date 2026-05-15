@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <div
             class="min-h-screen bg-white dark:bg-gray-900 py-4 px-4 sm:px-6 lg:px-8"
         >
@@ -288,13 +288,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 </div>
             </div>
         </div>
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
 import VButton from "@/components/VButton.vue";

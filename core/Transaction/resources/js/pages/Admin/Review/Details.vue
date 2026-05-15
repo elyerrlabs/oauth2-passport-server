@@ -1,5 +1,5 @@
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <div class="mb-6">
             <div
                 class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
@@ -1126,11 +1126,11 @@
                 </div>
             </div>
         </div>
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { ref, onMounted, computed } from "vue";
 

@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <!-- Header Section -->
         <v-head
             :title="__('Groups Management')"
@@ -186,14 +186,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             v-model="search.page"
             @change="getGroups"
         />
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import VButton from "@/components/VButton.vue";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VItemMenu from "@/components/VItemMenu.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VTable from "@/components/VTable.vue";

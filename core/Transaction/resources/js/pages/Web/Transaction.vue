@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <!-- Header Section -->
         <div
             class="bg-white dark:bg-gray-800 p-2 md:p-4 lg:p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6"
@@ -1245,7 +1245,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             v-if="pages.total_pages > 1"
             @change="getTransactions"
         />
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
@@ -1253,7 +1253,7 @@ import VTransactionActivate from "@/components/VTransactionActivate.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
 import VPaginate from "@/components/VPaginate.vue";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import { onMounted, ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 

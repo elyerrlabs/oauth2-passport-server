@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <div class="mx-auto max-w-7xl space-y-6 px-4 py-4 sm:px-6">
             <section
                 class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
@@ -390,12 +390,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 </div>
             </template>
         </v-modal>
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VButton from "@/components/VButton.vue";
 import VModal from "@/components/VModal.vue";
 import VTable from "@/components/VTable.vue";

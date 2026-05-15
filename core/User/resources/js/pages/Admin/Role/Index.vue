@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-account-layout>
+    <v-main-layout>
          
             <v-head
                 :title="__('Roles Management')"
@@ -194,11 +194,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 :total-pages="pages.total_pages"
                 @change="getRoles"
             /> 
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
-import VAccountLayout from "@/components/VAccountLayout.vue"; 
+import VMainLayout from "@/components/VMainLayout.vue"; 
 import VPaginate from "@/components/VPaginate.vue";
 import VButton from "@/components/VButton.vue";
 import VTable from "@/components/VTable.vue";

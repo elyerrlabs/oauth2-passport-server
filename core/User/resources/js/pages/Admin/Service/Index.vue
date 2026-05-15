@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <!-- Header Section -->
         <v-head
             :title="__('Services Management')"
@@ -230,13 +230,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             :total-pages="pages.total_pages"
             @change="getServices"
         />
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import VButton from "@/components/VButton.vue";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VTable from "@/components/VTable.vue";
 import VCreate from "./Create.vue";

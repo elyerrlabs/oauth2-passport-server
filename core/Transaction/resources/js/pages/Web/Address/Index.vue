@@ -1,5 +1,5 @@
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <v-head
             :title="__('Delivery Addresses')"
             :description="__('Manage your saved delivery addresses')"
@@ -149,11 +149,11 @@
             v-model="search.page"
             @change="getDeliveryAddresses"
         />
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VHead from "@/components/VHead.vue";
 import VTable from "@/components/VTable.vue";
 import { usePage } from "@inertiajs/vue3";

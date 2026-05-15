@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-  <v-account-layout>
+  <v-main-layout>
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
       <div class="px-6 py-8 lg:px-10">
         <div class="max-w-6xl mx-auto">
@@ -241,12 +241,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         </div>
       </div>
     </div>
-  </v-account-layout>
+  </v-main-layout>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import VAccountLayout from '@/components/VAccountLayout.vue';
+import VMainLayout from '@/components/VMainLayout.vue';
 import { usePage } from '@inertiajs/vue3';
 
 const page = usePage();

@@ -1,5 +1,5 @@
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <!-- Header Section -->
         <div class="mb-4">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
@@ -505,11 +505,11 @@
                 @update:model-value="getRefunds"
             />
         </div>
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
 import { useForm, usePage } from "@inertiajs/vue3";

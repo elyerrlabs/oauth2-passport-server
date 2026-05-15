@@ -24,7 +24,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <div class="mx-auto max-w-5xl space-y-6 px-4 py-4 sm:px-6">
             <div
                 class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
@@ -412,13 +412,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 </div>
             </div>
         </div>
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { usePage } from "@inertiajs/vue3";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VButton from "@/components/VButton.vue";
 import VInput from "@/components/VInput.vue";
 

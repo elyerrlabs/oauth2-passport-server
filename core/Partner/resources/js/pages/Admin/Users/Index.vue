@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <v-head
             :title="__('Partner Management')"
             :description="__('Manage your partners and their commissions')"
@@ -178,13 +178,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             v-model="search.page"
             @change="getPartners"
         />
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import VUpdate from "./Update.vue";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VHead from "@/components/VHead.vue";
 import VButton from "@/components/VButton.vue";
 import VSwitch from "@/components/VSwitch.vue";

@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <v-head
             :title="__('OAuth Clients')"
             :description="__('Manage your OAuth 2.0 clients and applications')"
@@ -221,12 +221,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 @change="getClients"
             />
         </div>
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VTable from "@/components/VTable.vue";
 import VHead from "@/components/VHead.vue";

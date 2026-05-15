@@ -23,7 +23,7 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <v-account-layout>
+    <v-main-layout>
         <!-- Header Section -->
         <div class="mb-8">
             <div class="flex items-center justify-between">
@@ -871,14 +871,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 />
             </div>
         </div>
-    </v-account-layout>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import { ref, reactive, onMounted } from "vue";
 import VRecurringPayment from "./RecurringPayment.vue";
-import VAccountLayout from "@/components/VAccountLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 
 const props = defineProps({
