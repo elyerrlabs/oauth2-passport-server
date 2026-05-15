@@ -46,8 +46,8 @@ class TransactionManagerController extends WebController
     {
         parent::__construct();
         $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:dashboard')->only('dashboard');
-        $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:view')->only('index');
-        $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:view')->only('index');
+        $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:view')->only('index', 'show');
+        $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:update')->only('activate');
     }
 
     /**
