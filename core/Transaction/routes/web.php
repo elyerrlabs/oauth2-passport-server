@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:core:transaction:web'])->group(function () {
 
-    if (config('module.transaction.module.routes.subscriptions_enabled', true)) {
+    if (config('routes.core.transaction.subscriptions.status', true)) {
         Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
         Route::post('/subscriptions', [UserSubscriptionController::class, 'subscription'])->name('subscriptions.pay');
         Route::post('/subscriptions/renew', [UserSubscriptionController::class, 'renew'])->name('subscriptions.renew');
@@ -45,7 +45,10 @@ Route::middleware(['throttle:core:transaction:web'])->group(function () {
     Route::put('/subscriptions/cancel/{transaction_id}', [UserSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
     Route::put('/subscriptions/{transaction}/activate', [UserSubscriptionController::class, 'activate'])->name('transactions.activate');
 
+    if (config('routes.core.transaction.address.status', true)) {
+        Route::get('delivery-addresses', [DeliveryAddressController::class, 'index'])->name('delivery-addresses.index');
+    }
+
     Route::get('checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-    Route::get('delivery-addresses', [DeliveryAddressController::class, 'index'])->name('delivery-addresses.index');
     Route::get('transactions', [TransactionManagerController::class, 'index'])->name('transactions.index');
 });

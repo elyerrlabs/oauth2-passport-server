@@ -9,6 +9,10 @@ return [
 
     "plans" => [
         "status" => true,
-        "description" => "Disabled routes to the plans"
+        "description" => "Disabled routes for plans"
+    ],
+    "address" => [
+        "status" => true,
+        "description" => "Disabled routes for delivery addresses"
     ]
 ];
