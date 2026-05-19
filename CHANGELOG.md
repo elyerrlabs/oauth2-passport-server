@@ -51,6 +51,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 ## Fixes
 
 - Regenerated cached user data after enabling 2FA (Fortify)
+- Fixed rate limit key generation where user identifiers were being generated incorrectly
 
 ## Services Updated
 
