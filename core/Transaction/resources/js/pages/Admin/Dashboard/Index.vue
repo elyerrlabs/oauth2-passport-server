@@ -32,134 +32,252 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             />
         </template>
         <template #main>
-            <!-- Header Section -->
-            <v-head
-                :title="__('Dashboard Analytics')"
-                :descripction="
-                    __('Monitor your transaction metrics and performance')
-                "
-            >
-                <template #bottom>
+            <div class="space-y-6">
+                <!-- Header Section -->
+                <v-head
+                    :title="__('Dashboard Analytics')"
+                    :description="
+                        __('Monitor your transaction metrics and performance')
+                    "
+                />
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div
-                        class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6 mb-8 shadow-sm"
+                        v-for="card in statsCards"
+                        :key="card.label"
+                        class="relative overflow-hidden bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
                     >
-                        <div class="flex items-center space-x-2 mb-4">
-                            <i
-                                class="mdi mdi-tune text-gray-400 dark:text-gray-500 text-base"
-                            ></i>
-                            <h2
-                                class="text-lg font-semibold text-gray-900 dark:text-white"
-                            >
-                                {{ __("Filter Analytics") }}
-                            </h2>
-                        </div>
-
                         <div
-                            class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-2"
-                        >
-                            <v-input
-                                :label="__('Start date')"
-                                v-model="search.start"
-                                type="date"
-                            />
-                            <v-input
-                                :label="__('End date')"
-                                v-model="search.end"
-                                type="date"
-                            />
-
-                            <v-select
-                                :label="__('Status')"
-                                v-model="search.status"
-                                :options="billing_statuses"
-                            />
-
-                            <v-select
-                                :label="__('Chart type')"
-                                v-model="chartType"
-                                :options="[
-                                    { name: 'Bar', id: 'bar' },
-                                    { name: 'Line', id: 'line' },
-                                    { name: 'Area', id: 'Area' },
-                                ]"
-                            />
-
-                            <v-select
-                                :label="__('Date grouping')"
-                                v-model="search.type"
-                                :options="[
-                                    { name: 'Day', id: 'day' },
-                                    { name: 'Month', id: 'month' },
-                                    { name: 'Year', id: 'year' },
-                                ]"
-                            />
-
-                            <!-- Apply Filters Button -->
-                            <div class="flex items-end">
-                                <v-button
-                                    @click="getData"
-                                    icon="mdi mdi-filter text-xs"
-                                    :label="__('Apply')"
-                                />
+                            class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 rounded-full opacity-10"
+                            :class="card.bgClass"
+                        ></div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-4">
+                                <div
+                                    class="p-3 rounded-lg"
+                                    :class="card.iconBgClass"
+                                >
+                                    <i
+                                        :class="[
+                                            card.icon,
+                                            'text-xl',
+                                            card.iconColorClass,
+                                        ]"
+                                    ></i>
+                                </div>
+                                <span
+                                    class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                >
+                                    {{ card.label }}
+                                </span>
+                            </div>
+                            <div
+                                class="text-3xl font-bold text-gray-900 dark:text-white mb-2"
+                            >
+                                {{ card.value }}
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <span class="text-gray-500 dark:text-gray-400">
+                                    {{ card.subtitle }}
+                                </span>
                             </div>
                         </div>
                     </div>
-                </template>
-            </v-head>
+                </div>
 
-            <!-- Chart Section -->
-            <div
-                class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm"
-            >
+                <!-- Filters Card -->
                 <div
-                    class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6"
+                    class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
-                    <div class="flex items-center space-x-3 mb-3 lg:mb-0">
-                        <div
-                            class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg"
-                        >
-                            <i
-                                class="mdi mdi-chart-line text-blue-600 dark:text-blue-400 text-base"
-                            ></i>
-                        </div>
-                        <div>
-                            <h2
-                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                    <div
+                        class="p-6 border-b border-gray-200 dark:border-gray-700"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg"
                             >
-                                {{ __("Transaction Analytics") }}
-                            </h2>
-                            <p
-                                class="text-gray-500 dark:text-gray-400 text-xs mt-1"
-                            >
-                                {{
-                                    __(
-                                        "Real-time insights and performance metrics",
-                                    )
-                                }}
-                            </p>
+                                <i
+                                    class="mdi mdi-filter-variant text-indigo-600 dark:text-indigo-400 text-xl"
+                                ></i>
+                            </div>
+                            <div>
+                                <h2
+                                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                                >
+                                    {{ __("Filters & Configuration") }}
+                                </h2>
+                                <p
+                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Customize your analytics view") }}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    <div
-                        class="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1.5"
-                    >
-                        <i
-                            class="mdi mdi-sync animate-spin text-blue-600 dark:text-blue-400 text-xs"
-                        ></i>
-                        <span>{{ __("Auto-refresh: 10s") }}</span>
+                    <div class="p-6">
+                        <div
+                            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"
+                        >
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                >
+                                    {{ __("Start Date") }}
+                                </label>
+                                <input
+                                    v-model="search.start"
+                                    type="date"
+                                    class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                >
+                                    {{ __("End Date") }}
+                                </label>
+                                <input
+                                    v-model="search.end"
+                                    type="date"
+                                    class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                >
+                                    {{ __("Status") }}
+                                </label>
+                                <v-select
+                                    v-model="search.status"
+                                    :options="billing_statuses"
+                                    :placeholder="__('Select status')"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                >
+                                    {{ __("Chart Type") }}
+                                </label>
+                                <v-select
+                                    v-model="chartType"
+                                    :options="chartTypes"
+                                    :placeholder="__('Select type')"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                >
+                                    {{ __("Group By") }}
+                                </label>
+                                <v-select
+                                    v-model="search.type"
+                                    :options="groupingOptions"
+                                    :placeholder="__('Select grouping')"
+                                />
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-3">
+                            <v-button
+                                @click="resetFilters"
+                                :label="__('Reset')"
+                                icon="mdi mdi-refresh"
+                                variant="secondary"
+                            />
+                            <v-button
+                                @click="getData"
+                                :label="__('Apply Filters')"
+                                icon="mdi mdi-filter-check"
+                                variant="primary"
+                            />
+                        </div>
                     </div>
                 </div>
 
+                <!-- Chart Section -->
                 <div
-                    class="bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-100 dark:border-gray-700"
+                    class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
-                    <apex-charts
-                        width="100%"
-                        height="350"
-                        :type="chartType"
-                        :options="chartOptions"
-                        :series="chartSeries"
-                        class="chart-container"
-                    />
+                    <div
+                        class="p-6 border-b border-gray-200 dark:border-gray-700"
+                    >
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                        >
+                            <div class="flex items-center space-x-3">
+                                <div
+                                    class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg"
+                                >
+                                    <i
+                                        class="mdi mdi-chart-bell-curve text-blue-600 dark:text-blue-400 text-xl"
+                                    ></i>
+                                </div>
+                                <div>
+                                    <h2
+                                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                                    >
+                                        {{ __("Transaction Trends") }}
+                                    </h2>
+                                    <p
+                                        class="text-sm text-gray-500 dark:text-gray-400"
+                                    >
+                                        {{
+                                            __(
+                                                "Monthly transaction distribution",
+                                            )
+                                        }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <span
+                                    class="flex items-center space-x-1 text-gray-500 dark:text-gray-400"
+                                >
+                                    <i
+                                        class="mdi mdi-circle text-blue-500 text-xs"
+                                    ></i>
+                                    <span>{{ __("Transactions") }}</span>
+                                </span>
+                                <span class="text-gray-300 dark:text-gray-600"
+                                    >|</span
+                                >
+                                <span class="text-gray-500 dark:text-gray-400">
+                                    {{ formatDateRange() }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div
+                            v-if="chartReady"
+                            class="w-full"
+                            style="height: 400px"
+                        >
+                            <apex-charts
+                                width="100%"
+                                height="100%"
+                                :type="chartType"
+                                :options="chartOptions"
+                                :series="chartSeries"
+                            />
+                        </div>
+                        <div
+                            v-else
+                            class="flex items-center justify-center h-96"
+                        >
+                            <div class="text-center">
+                                <i
+                                    class="mdi mdi-chart-line text-6xl text-gray-300 dark:text-gray-600 mb-4"
+                                ></i>
+                                <p class="text-gray-500 dark:text-gray-400">
+                                    {{ __("Loading chart data...") }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </template>
@@ -167,24 +285,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, computed, nextTick } from "vue";
 import ApexCharts from "vue3-apexcharts";
 import VLayout from "@/components/VLayout.vue";
 import VItemMenu from "@/components/VItemMenu.vue";
 import VHead from "@/components/VHead.vue";
 import VButton from "@/components/VButton.vue";
-import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
-
-const search = useForm({
-    start: null,
-    end: null,
-    type: "month",
-    status: "successful",
-});
 
 const props = defineProps({
     data: {
@@ -197,27 +307,60 @@ const props = defineProps({
     },
 });
 
-const chartType = ref("line");
-const transactions_by_month = ref([]);
-const plans_count = ref(0);
-const package_count = ref(0);
-const cards = ref([]);
+const search = useForm({
+    start: null,
+    end: null,
+    type: "month",
+    status: "",
+});
+
+const chartTypes = [
+    { name: __("Line"), id: "line" },
+    { name: __("Bar"), id: "bar" },
+    { name: __("Area"), id: "area" },
+];
+
+const groupingOptions = [
+    { name: __("Daily"), id: "day" },
+    { name: __("Monthly"), id: "month" },
+    { name: __("Yearly"), id: "year" },
+];
+
+const chartType = ref("area");
+const chartReady = ref(false);
+const transactionsByMonth = ref([]);
 const chartSeries = ref([]);
 const chartOptions = ref({});
 
-watch(
-    () => search.type,
-    () => {
-        getData();
+const statsCards = computed(() => [
+    {
+        label: __("Total Transactions"),
+        value: props.data.transactions || 0,
+        icon: "mdi mdi-swap-horizontal-bold",
+        iconBgClass: "bg-blue-100 dark:bg-blue-900/30",
+        iconColorClass: "text-blue-600 dark:text-blue-400",
+        bgClass: "bg-blue-500",
+        subtitle: __("All time transactions"),
     },
-);
-
-watch(
-    () => chartType.value,
-    () => {
-        renderChart();
+    {
+        label: __("Active Packages"),
+        value: props.data.packages || 0,
+        icon: "mdi mdi-package-variant-closed",
+        iconBgClass: "bg-green-100 dark:bg-green-900/30",
+        iconColorClass: "text-green-600 dark:text-green-400",
+        bgClass: "bg-green-500",
+        subtitle: __("Available packages"),
     },
-);
+    {
+        label: __("Active Plans"),
+        value: props.data.plans || 0,
+        icon: "mdi mdi-clipboard-list-outline",
+        iconBgClass: "bg-purple-100 dark:bg-purple-900/30",
+        iconColorClass: "text-purple-600 dark:text-purple-400",
+        bgClass: "bg-purple-500",
+        subtitle: __("Subscription plans"),
+    },
+]);
 
 onMounted(() => {
     if (!search.start || !search.end) {
@@ -226,7 +369,7 @@ onMounted(() => {
         search.end = end;
     }
 
-    loadData(props.data);
+    loadChartData();
 });
 
 const getDefaultDates = () => {
@@ -240,65 +383,96 @@ const getDefaultDates = () => {
     return { start, end };
 };
 
-const loadData = (data) => {
-    transactions_by_month.value = data["transactions_by_month"];
+const loadChartData = async () => {
+    chartReady.value = false;
 
-    plans_count.value = data["plans"];
-    package_count.value = data["packages"];
+    // Pequeño delay para asegurar que el DOM está listo
+    await nextTick();
 
-    cards.value = [
-        {
-            label: __("Packages"),
-            value: data["packages"],
-            icon: "mdi mdi-package-variant",
-        },
-        {
-            label: __("Plans"),
-            value: data["plans"],
-            icon: "mdi mdi-inventory",
-        },
-        {
-            label: __("Total Transactions"),
-            value: data["transactions"],
-            icon: "mdi mdi-chart-bar",
-        },
-    ];
+    transactionsByMonth.value = props.data.transactions_by_month || [];
 
+    await nextTick();
     renderChart();
+
+    // Delay adicional para que ApexCharts se inicialice correctamente
+    setTimeout(() => {
+        chartReady.value = true;
+    }, 100);
 };
 
 const getData = () => {
     search.get(page.props.route, {
         preserveState: true,
         preserveScroll: true,
-        onSuccess: (res) => {
-            loadData(res.props.data);
+        onSuccess: async (res) => {
+            transactionsByMonth.value =
+                res.props.data.transactions_by_month || [];
+            await nextTick();
+            renderChart();
+            chartReady.value = true;
         },
         onError: (e) => {
-            if (e?.response?.data?.message) {
-                console.error("Error:", e.response.data.message);
-            }
+            console.error("Error loading data:", e);
+            $notify?.error?.(__("Error loading analytics data"));
         },
     });
 };
 
+const resetFilters = () => {
+    const { start, end } = getDefaultDates();
+    search.start = start;
+    search.end = end;
+    search.status = "";
+    search.type = "month";
+    getData();
+};
+
+const formatDateRange = () => {
+    if (!search.start || !search.end) return "";
+
+    const start = new Date(search.start);
+    const end = new Date(search.end);
+
+    const formatDate = (date) => {
+        return date.toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+        });
+    };
+
+    return `${formatDate(start)} - ${formatDate(end)}`;
+};
+
 const renderChart = () => {
+    const isDark = document.documentElement.classList.contains("dark");
+    const categories = transactionsByMonth.value.map((item) => {
+        // Formatear la fecha según el tipo de agrupación
+        if (search.type === "year") return item.month;
+        if (search.type === "day") return item.month;
+
+        // Para month, formatear como "Mar 2026"
+        const [year, month] = item.month.split("-");
+        const date = new Date(year, month - 1);
+        return date.toLocaleDateString(undefined, {
+            month: "short",
+            year: "numeric",
+        });
+    });
+
     chartSeries.value = [
         {
             name: __("Transactions"),
-            data: transactions_by_month.value.map((item) => item.total),
+            data: transactionsByMonth.value.map(
+                (item) => Number(item.total) || 0,
+            ),
         },
     ];
 
-    const isDark = document.documentElement.classList.contains("dark");
-
     chartOptions.value = {
         chart: {
-            height: 350,
             type: chartType.value,
-            zoom: {
-                enabled: false,
-            },
+            height: 400,
             toolbar: {
                 show: true,
                 tools: {
@@ -314,72 +488,111 @@ const renderChart = () => {
             animations: {
                 enabled: true,
                 easing: "easeinout",
-                speed: 600,
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150,
+                },
             },
-            foreColor: isDark ? "#9CA3AF" : "#6B7280",
+            background: "transparent",
         },
-        colors: ["#3B82F6"],
+        colors: ["#3B82F6", "#10B981", "#8B5CF6"],
         dataLabels: {
             enabled: false,
         },
         stroke: {
             curve: "smooth",
-            width: 2,
+            width: chartType.value === "bar" ? 0 : 3,
+        },
+        fill: {
+            type: chartType.value === "area" ? "gradient" : "solid",
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.2,
+                stops: [0, 90, 100],
+            },
         },
         grid: {
-            borderColor: isDark ? "#374151" : "#F3F4F6",
-            strokeDashArray: 3,
+            borderColor: isDark ? "#374151" : "#E5E7EB",
+            strokeDashArray: 4,
+            padding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 10,
+            },
         },
         xaxis: {
-            categories: transactions_by_month.value.map((item) => item.month),
+            categories: categories,
             labels: {
                 style: {
-                    colors: isDark ? "#9CA3AF" : "#6B7280",
-                    fontSize: "11px",
+                    colors: isDark ? "#9CA3AF" : "#4B5563",
+                    fontSize: "12px",
+                    fontFamily: "Inter, system-ui, sans-serif",
                 },
+            },
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
             },
         },
         yaxis: {
             labels: {
                 style: {
-                    colors: isDark ? "#9CA3AF" : "#6B7280",
-                    fontSize: "11px",
+                    colors: isDark ? "#9CA3AF" : "#4B5563",
+                    fontSize: "12px",
+                    fontFamily: "Inter, system-ui, sans-serif",
+                },
+                formatter: (value) => {
+                    return Math.round(value);
                 },
             },
+            min: 0,
+            forceNiceScale: true,
         },
         tooltip: {
             theme: isDark ? "dark" : "light",
             style: {
                 fontSize: "12px",
+                fontFamily: "Inter, system-ui, sans-serif",
+            },
+            y: {
+                formatter: (value) => {
+                    return `${value} ${value === 1 ? __("transaction") : __("transactions")}`;
+                },
             },
         },
-        theme: {
-            mode: isDark ? "dark" : "light",
+        legend: {
+            show: false,
+        },
+        markers: {
+            size: chartType.value === "line" ? 4 : 0,
+            strokeWidth: 2,
+            hover: {
+                size: 6,
+            },
         },
     };
 };
 </script>
 
 <style scoped>
-.chart-container {
-    border-radius: 0.5rem;
-}
-
-/* Smooth transitions for theme switching */
+/* Transiciones suaves */
 .bg-white,
-.bg-gray-50,
-.bg-blue-50,
-.border-gray-100,
-.border-gray-200 {
-    transition: all 0.3s ease-in-out;
+.bg-gray-800 {
+    transition: background-color 0.3s ease-in-out;
 }
 
-/* Dark mode transitions */
-.dark .bg-gray-800,
-.dark .bg-gray-700,
-.dark .bg-blue-900\/30,
-.dark .border-gray-700,
-.dark .border-gray-600 {
-    transition: all 0.3s ease-in-out;
+/* Mejora visual para los inputs de fecha */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 </style>

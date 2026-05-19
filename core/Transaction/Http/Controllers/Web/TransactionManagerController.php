@@ -59,19 +59,48 @@ class TransactionManagerController extends WebController
      */
     public function index(Request $request)
     {
-        // Apply pagination
-        $per_page = $request->filled("per_page") ? $request->per_page : 15;
-
-        // Retrieve data using the transaction service
-        $data = $this->transactionService->searchForUser($request)->paginate($per_page);
+        $data = $this->transactionService->searchForUser($request)->paginate($request->input('per_page', 15));
+        $billing_statuses = billing_statuses();
+        $billing_types = billings_types();
 
         return Inertia::render(
-            "Web/Transaction",
+            "Web/Transaction/Index",
             [
                 "data" => $this->transformCollection($data, TransactionTransformer::class),
-                "route" => route('transaction.transactions.index'),
+                "billing_statuses" => $billing_statuses,
+                "billing_types" => $billing_types,
+                "routes" => [
+                    'index' => route('transaction.transactions.index')
+                ],
                 "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
             ]
         );
+    }
+
+    /**
+     * show
+     * @param mixed $id
+     * @return \Inertia\Response
+     */
+    public function show($id)
+    {
+        $transaction = $this->transactionService->findById($id);
+
+        return Inertia::render("Web/Transaction/Detail", [
+            "data" => $this->transform($transaction, TransactionTransformer::class),
+            "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
+        ]);
+    }
+
+    /**
+     * Activate transaction
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function activate($id)
+    {
+        $this->transactionService->activate($id);
+
+        return redirect()->back()->with('status', __('Transaction has been activated successfully'));
     }
 }

@@ -29,7 +29,6 @@ namespace Core\Transaction\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\WebController;
-use Core\Transaction\Repositories\DashboardRepository;
 use Core\Transaction\Services\TransactionService;
 use Core\Transaction\Transformer\Admin\TransactionTransformer;
 use Illuminate\Http\Request;
@@ -47,7 +46,6 @@ class TransactionManagerController extends WebController
         parent::__construct();
         $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:dashboard')->only('dashboard');
         $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:view')->only('index', 'show');
-        $this->middleware('userCanAny:administrator:transactions:full,administrator:transactions:update')->only('activate');
     }
 
     /**
@@ -64,7 +62,6 @@ class TransactionManagerController extends WebController
             "billing_statuses" => $billing_statuses,
             "route" => route("transaction.admin.dashboard"),
             "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
-            'status' => route('api.transaction.payments.status')
         ]);
     }
 
@@ -106,17 +103,5 @@ class TransactionManagerController extends WebController
             "data" => $this->transform($transaction, TransactionTransformer::class),
             "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
         ]);
-    }
-
-    /**
-     * Activate transaction
-     * @param mixed $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function activate($id)
-    {
-        $this->transactionService->activate($id);
-
-        return redirect()->back()->with('status', 'Transaction activated successfully');
     }
 }

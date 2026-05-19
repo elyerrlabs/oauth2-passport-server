@@ -25,7 +25,6 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
 use Core\Transaction\Http\Controllers\Web\CheckoutController;
 use Core\Transaction\Http\Controllers\Web\DeliveryAddressController;
 use Core\Transaction\Http\Controllers\Web\TransactionManagerController;
@@ -43,12 +42,12 @@ Route::middleware(['throttle:core:transaction:web'])->group(function () {
 
     Route::get('/subscriptions/{transaction_code}', [UserSubscriptionController::class, 'show'])->name('subscriptions.show');
     Route::put('/subscriptions/cancel/{transaction_id}', [UserSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
-    Route::put('/subscriptions/{transaction}/activate', [UserSubscriptionController::class, 'activate'])->name('transactions.activate');
 
     if (config('routes.core.transaction.address.status', true)) {
         Route::get('delivery-addresses', [DeliveryAddressController::class, 'index'])->name('delivery-addresses.index');
     }
 
     Route::get('checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-    Route::get('transactions', [TransactionManagerController::class, 'index'])->name('transactions.index');
+    Route::put('/transactions/{transaction}/activate', [TransactionManagerController::class, 'activate'])->name('transactions.activate');
+    Route::resource('transactions', TransactionManagerController::class)->only('index', 'show', 'activate');
 });

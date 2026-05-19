@@ -127,7 +127,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <!-- Main row -->
                             <tr
                                 class="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors duration-150"
-                                @click="toggleRowExpansion(index)"
                             >
                                 <!-- Owner -->
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -251,7 +250,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script setup>
 import VLayout from "@/components/VLayout.vue";
 import VItemMenu from "@/components/VItemMenu.vue";
-import VActivate from "./VActivate.vue";
+import VActivate from "../../Web/Transaction/VActivate.vue";
 import VInput from "@/components/VInput.vue";
 import VButton from "@/components/VButton.vue";
 import VHead from "@/components/VHead.vue";
@@ -279,7 +278,6 @@ const props = defineProps({
 const page = usePage();
 
 const loading = ref(false);
-const expandedRow = ref(null);
 const transactions = ref([]);
 const pages = ref({
     total_pages: 0,
@@ -307,8 +305,6 @@ const search = useForm({
 });
 
 const searchTimeout = ref(null);
-const statuses = ref([]);
-const types = ref([]);
 
 onMounted(() => {
     data(props.data);
@@ -375,10 +371,6 @@ const copyToClipboard = (text) => {
         });
 };
 
-const toggleRowExpansion = (index) => {
-    expandedRow.value = expandedRow.value === index ? null : index;
-};
-
 const searching = () => {
     search.value.page = 1;
     getTransactions();
@@ -393,7 +385,6 @@ const debouncedSearch = () => {
 
 const getTransactions = async () => {
     loading.value = true;
-    expandedRow.value = null;
 
     search.get(page.props.routes.transactions, {
         onSuccess: (response) => {

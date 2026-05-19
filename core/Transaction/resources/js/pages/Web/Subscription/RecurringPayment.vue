@@ -24,36 +24,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <template>
-    <button
+    <v-button
         @click="dialog = true"
-        class="w-full mt-2 px-4 py-2 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 border"
-        :class="buttonClasses"
-    >
-        <span class="flex items-center justify-center space-x-2">
-            <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-            >
-                <path
-                    v-if="item?.is_recurring"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                />
-                <path
-                    v-else
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-            </svg>
-            <span>{{ __(buttonLabel) }}</span>
-        </span>
-    </button>
+        :title="buttonLabel"
+        :label="buttonLabel"
+        icon="mdi mdi-reload"
+        :variant="item?.is_recurring ? 'danger' : 'success'"
+    />
 
     <v-modal
         v-model="dialog"
@@ -72,18 +49,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <div
                 class="flex justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 rounded-b-2xl"
             >
-                <button
-                    @click="recurringPayment"
-                    class="px-6 py-2 border border-green-600 text-green-600 rounded-lg font-medium hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200"
-                >
-                    {{ __("Accept") }}
-                </button>
-                <button
+                <v-button
                     @click="dialog = false"
-                    class="px-6 py-2 border border-red-600 text-red-600 dark:border-red-300 dark:text-red-400 rounded-lg font-medium hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
-                >
-                    {{ __("Cancel") }}
-                </button>
+                    :label="__('Cancel')"
+                    variant="secondary"
+                />
+                <v-button @click="recurringPayment" :label="__('Confirm')" />
             </div>
         </template>
     </v-modal>
@@ -91,7 +62,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import VModal from "@/components/VModal.vue";
+import VButton from "@/components/VButton.vue";
 import { ref, computed } from "vue";
+import { useForm } from "@inertiajs/vue3";
 
 const emits = defineEmits(["success"]);
 
@@ -102,6 +75,8 @@ const props = defineProps({
         default: () => ({}),
     },
 });
+
+const form = useForm({});
 
 const dialog = ref(false);
 
@@ -123,26 +98,20 @@ const dialogMessage = computed(() => {
         : "Do you want to enable recurring payment for this item?";
 });
 
-const buttonClasses = computed(() => {
-    return props.item?.is_recurring
-        ? "border-red-600 text-red-600 hover:bg-red-50 focus:ring-red-500"
-        : "border-green-600 text-green-600 hover:bg-green-50 focus:ring-green-500";
-});
-
 const recurringPayment = async () => {
-    try {
-        const res = await $server.put(props.item.links.recurring);
-
-        if (res.status === 200) {
-            $notify.success(res.data.message);
+    form.put(props.item.links.recurring, {
+        preserveState: true,
+        onSuccess: () => {
             emits("success");
-        }
-    } catch (e) {
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        dialog.value = false;
-    }
+        },
+        onError: (errors) => {
+            if (errors?.message) {
+                $notify.error(errors.message);
+            }
+        },
+        onFinish: () => {
+            dialog.value = false;
+        },
+    });
 };
 </script>

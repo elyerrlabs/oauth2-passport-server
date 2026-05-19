@@ -153,7 +153,7 @@
 </template>
 
 <script setup>
-import VMainLayout from "@/components/VMainLayout.vue";
+import VMainLayout  from "@/components/VMainLayout.vue";
 import VHead from "@/components/VHead.vue";
 import VTable from "@/components/VTable.vue";
 import { usePage } from "@inertiajs/vue3";

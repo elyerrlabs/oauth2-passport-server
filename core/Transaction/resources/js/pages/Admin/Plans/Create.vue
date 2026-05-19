@@ -38,7 +38,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             ></v-head>
 
             <div
-                class="grid grid-cols-1 lg:grid-cols-4 gap-2 p-4 my-4 border border-gray-200 dark:border-gray-400 shadow rounded"
+                class="grid grid-cols-1 lg:grid-cols-4 gap-2 p-4 my-4 border border-gray-200 dark:border-gray-700 shadow rounded"
             >
                 <v-input
                     :label="__('Plan Name')"
@@ -87,7 +87,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
             <!-- Pricing Section -->
             <div
-                class="p-4 my-4 border border-gray-200 dark:border-gray-400 shadow rounded"
+                class="p-4 my-4 border border-gray-200 dark:border-gray-700 shadow rounded"
             >
                 <v-head
                     :title="__('Pricing Configuration')"
@@ -177,7 +177,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
             <!-- Access Scopes Section -->
             <div
-                class="p-4 my-4 border border-gray-200 dark:border-gray-400 shadow rounded"
+                class="p-4 my-4 border border-gray-200 dark:border-gray-700 shadow rounded"
             >
                 <v-head
                     :title="__('Access Scopes')"

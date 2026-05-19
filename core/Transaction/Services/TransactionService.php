@@ -501,7 +501,7 @@ class TransactionService
         $model = $this->repository->find($id);
 
         if ($model->status == config('billing.status.successful.id')) {
-            throw new ReportError("This action is not allowed for the current transaction.", 400);
+            throw new ReportError("This action is not allowed for the current transaction.", 403);
         }
 
         if (
@@ -532,7 +532,7 @@ class TransactionService
 
         //Generate metadata
         $plan = $this->planService->processPlan(
-            $data['plan'],
+            $data['plan_id'],
             $data['billing_period']
         );
 

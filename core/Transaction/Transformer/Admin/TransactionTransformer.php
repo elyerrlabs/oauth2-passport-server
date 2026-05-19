@@ -85,7 +85,7 @@ class TransactionTransformer extends TransformerAbstract
             'links' => [
                 'index' => route('transaction.admin.transactions.index'),
                 'show' => route('transaction.admin.transactions.show', ['transaction' => $transaction->id]),
-                'activate' => route('transaction.admin.transactions.activate', ['transaction' => $transaction->id]),
+                'activate' => route('transaction.transactions.activate', ['transaction' => $transaction->id]),
                 //'cancel' => route('transaction.admin.transactions.cancel', ['transaction' => $transaction->id])
             ]
         ];

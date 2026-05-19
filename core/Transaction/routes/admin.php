@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:core:transaction:admin', 'password.confirm'])->group(function () {
 
-    Route::put('/subscriptions/{transaction}/activate', [TransactionManagerController::class, 'activate'])->name('transactions.activate');
+    Route::put('/transactions/{transaction}/activate', [TransactionManagerController::class, 'activate'])->name('transactions.activate');
     Route::get('/dashboard', [TransactionManagerController::class, 'dashboard'])->name('dashboard');
     Route::resource('transactions', TransactionManagerController::class)->only('index', 'show');
 

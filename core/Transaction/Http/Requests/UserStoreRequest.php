@@ -47,7 +47,7 @@ class UserStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'plan' => ['required', 'exists:plans,id'],
+            'plan_id' => ['required', 'exists:plans,id'],
             'billing_period' => [
                 'required',
                 function ($attribute, $value, $fail) {

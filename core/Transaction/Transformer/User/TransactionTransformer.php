@@ -79,8 +79,9 @@ class TransactionTransformer extends TransformerAbstract
             'payment_method_id' => $transaction->payment_method_id,
             'refund' => $this->refund($transaction->refund),
             'links' => [
+                'index' => route('transaction.transactions.index'),
+                'show' => route('transaction.transactions.show', ['transaction' => $transaction->id]),
                 'activate' => route('transaction.transactions.activate', ['transaction' => $transaction->id]),
-                'cancel' => route('transaction.subscriptions.cancel', ['transaction_id' => $transaction->id])
             ]
         ];
     }

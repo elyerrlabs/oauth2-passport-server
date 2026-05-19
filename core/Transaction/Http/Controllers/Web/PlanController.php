@@ -29,48 +29,35 @@ namespace Core\Transaction\Http\Controllers\Web;
 
 
 use Core\Transaction\Services\PlanService;
-use Core\Transaction\Transformer\User\UserPlanTransformer;
-use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\Transaction\Repositories\PlanRepository;
 
 class PlanController extends WebController
 {
     /**
-     * Plan repository
-     * @var PlanService
-     */
-    public $planService;
-
-    /**
      * Construct
      * @param \Core\Transaction\Services\PlanService $planService
      */
-    public function __construct(PlanService $planService)
+    public function __construct(protected PlanService $planService)
     {
-        $this->planService = $planService;
+
     }
 
     /**
-     * Show the all resources for guest users
-     * @param \Illuminate\Http\Request $request
-     * @return \Inertia\Response
+     * List plans for users
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
-        $per_page = $request->filled('per_page') ? $request->per_page : 15;
+        $data = $this->planService->searchPlanForGuest($request)->paginate($request->input('per_page', 50));
+        $billing_periods = billing_periods();
+        $currencies = billing_currencies();
+        $payment_methods = collect(billing_methods())->where('enable', true)->all();
 
-        $data = $this->planService->searchPlanForGuest($request)->paginate($per_page);
-
-        return Inertia::render('Web/Plan', [
-            'data' => $this->transformCollection($data, UserPlanTransformer::class),
+        return view('Transaction::web.plans', compact('data', 'billing_periods', 'currencies', 'payment_methods'), [
             'routes' => [
                 'plans' => route('transaction.plans.index'),
-                'billing_period' => route('api.transaction.payments.billing-period'),
-                'currencies' => route('api.transaction.payments.currencies'),
-                'methods' => route('api.transaction.payments.methods'),
-                'services' => route('api.transaction.services.list'),
                 'subscription' => route('transaction.subscriptions.pay')
             ],
         ]);

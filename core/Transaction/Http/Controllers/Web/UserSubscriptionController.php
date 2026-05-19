@@ -38,24 +38,9 @@ use Core\Transaction\Http\Requests\UserStoreRequest;
 
 class UserSubscriptionController extends WebController
 {
-    /**
-     * Transaction repository
-     * @var TransactionService
-     */
-    private $transactionService;
-
-    /**
-     * Package repository
-     * @var PackageService
-     */
-    private $packageService;
-
-
-    public function __construct()
+    public function __construct(protected TransactionService $transactionService, protected PackageService $packageService)
     {
         parent::__construct();
-        $this->transactionService = app(TransactionService::class);
-        $this->packageService = app(PackageService::class);
     }
 
     /**
@@ -65,15 +50,16 @@ class UserSubscriptionController extends WebController
      */
     public function index(Request $request)
     {
-        $page = $request->filled('per_page') ? $request->per_page : 15;
-
-        $data = $this->packageService->searchForUser($request)->paginate($page);
+        $data = $this->packageService->searchForUser($request)->paginate($request->input('per_page', 10));
 
         return Inertia::render(
             "Web/Subscription/Index",
             [
-                'data' => fractal($data, UserPackageTransformer::class)->toArray() ?? [],
-                'route' => route('transaction.subscriptions.index')
+                'data' => $this->transformCollection($data, UserPackageTransformer::class),
+                'routes' => [
+                    'subscriptions' => route('transaction.subscriptions.index'),
+                    'plans' => route('transaction.plans.index')
+                ]
             ]
         );
     }
@@ -89,13 +75,9 @@ class UserSubscriptionController extends WebController
         $data = $this->packageService->findByTransactionCode($transaction_code);
 
         return Inertia::render('Web/Subscription/Detail', [
-            'data' => fractal($data, UserPackageTransformer::class)->toArray()['data'] ?? [],
+            'data' => $this->transform($data, UserPackageTransformer::class),
             'routes' => [
                 'plans' => route('transaction.plans.index'),
-                'billing_period' => route('api.transaction.payments.billing-period'),
-                'currencies' => route('api.transaction.payments.currencies'),
-                'methods' => route('api.transaction.payments.methods'),
-                'services' => route('api.transaction.services.list'),
                 'subscription' => route('transaction.subscriptions.pay'),
                 'renew_package' => route('transaction.subscriptions.renew')
             ],
@@ -110,7 +92,7 @@ class UserSubscriptionController extends WebController
     public function subscription(UserStoreRequest $request)
     {
         $request->merge([
-            'user_id' => auth()->user()->id,
+            'user_id' => $request->user()?->id,
         ]);
 
         return $this->transactionService->subscription($request->toArray());
@@ -137,7 +119,7 @@ class UserSubscriptionController extends WebController
     public function renew(UserRenewRequest $request)
     {
         $request->merge([
-            'user_id' => auth()->user()->id,
+            'user_id' => $request->user()?->id,
         ]);
 
         return $this->transactionService->renewByUser($request);
@@ -146,25 +128,12 @@ class UserSubscriptionController extends WebController
     /**
      * Enable or disable recurring payment
      * @param string $package_id
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function recurringPayment(string $package_id)
     {
         $this->packageService->recurringPaymentEnableOrDisable($package_id);
 
-        return $this->message(__('Recurring payment for this package has been updated successfully'), );
-    }
-
-    /**
-     * Activate the transaction
-     * @param \ Core\Transaction\Model\Transaction $transaction
-     * @throws \Elyerr\ApiResponse\Exceptions\ReportError
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function activate(string $id)
-    {
-        $this->transactionService->activate($id);
-
-        return $this->message("Transaction activated successfully");
+        return redirect()->back()->with('status', __('Recurring payment status has been updated'));
     }
 }
