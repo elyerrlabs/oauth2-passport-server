@@ -12,20 +12,20 @@
 @push('css')
     <style nonce="{{ $nonce }}">
         /*
-                                        ─────────────────────────────────────────────
-                                        🎨 CUSTOM STYLES
-                                        ─────────────────────────────────────────────
+        ─────────────────────────────────────────────
+        🎨 CUSTOM STYLES
+        ─────────────────────────────────────────────
 
-                                        ✔ TailwindCSS is available
-                                        ✔ Dark mode supported via 'dark' class
-                                        ✔ You can safely write scoped or global styles
+        ✔ TailwindCSS is available
+        ✔ Dark mode supported via 'dark' class
+        ✔ You can safely write scoped or global styles
 
-                                        Example:
+        Example:
 
-                                        .custom-card {
-                                            @apply bg-white dark:bg-gray-800 rounded-xl shadow p-4;
-                                        }
-                                        */
+        .custom-card {
+            @apply bg-white dark:bg-gray-800 rounded-xl shadow p-4;
+        }
+        */
     </style>
 @endpush
 
@@ -45,49 +45,49 @@
 
 @section('content')
     {{-- 
-                 ─────────────────────────────────────────────
-                🧠     MAIN CONTENT AREA
-                ─────────────────────────────────────────────
-                
-                You can use:
-                
-                ✅ Blade syntax
-                ✅ Laravel helpers:
-                - auth()->user()
-                - config()
-                   - route()
-                   - request()
-                   - session()
-                   - @csrf
+            ─────────────────────────────────────────────
+        🧠     MAIN CONTENT AREA
+        ─────────────────────────────────────────────
+        
+        You can use:
+        
+        ✅ Blade syntax
+        ✅ Laravel helpers:
+        - auth()->user()
+        - config()
+            - route()
+            - request()
+            - session()
+            - @csrf
 
-                   ✅ PHP logic
-                   ✅ HTML 
-                   ✅ Axios ($server)
-                   ✅ jQuery ($)
-                   ✅ TailwindCSS
+            ✅ PHP logic
+            ✅ HTML 
+            ✅ Axios ($server)
+            ✅ jQuery ($)
+            ✅ TailwindCSS
 
-                   ------------------------------------------------
-                   
-                   🔥 EXAMPLES
-                   ------------------------------------------------
-                   
-                   Blade:
+            ------------------------------------------------
+            
+            🔥 EXAMPLES
+            ------------------------------------------------
+            
+            Blade:
 
-                   @if (auth()->check())
-                   <p>Welcome {{ auth()->user()->name }}</p>
-                   @endif
-                   
-                   ------------------------------------------------
-                   
-                   jQuery:
-                   
-                   <button id="clickMe">Click me</button>
-                   
-                   <script>
-                       $('#clickMe').on('click', function() {
-                        alert('Hello from jQuery');
-                    });
-                </script>
+            @if (auth()->check())
+            <p>Welcome {{ auth()->user()->name }}</p>
+            @endif
+            
+            ------------------------------------------------
+            
+            jQuery:
+            
+            <button id="clickMe">Click me</button>
+            
+            <script>
+                $('#clickMe').on('click', function() {
+                alert('Hello from jQuery');
+            });
+        </script>
                 
         --}}
 @endsection
@@ -113,30 +113,30 @@
             () => { // Do not remove this wrapper, it ensures the DOM is fully loaded before executing your scripts
 
                 /*
-                            ─────────────────────────────────────────────
-                            ⚙️ AVAILABLE GLOBALS
-                            ─────────────────────────────────────────────
-                 
-                            $server    → Axios instance
-                            $notify    → Notifications helper
-                            __('text')         → Translations helper
-                            $ / jQuery → jQuery (if loaded via Mix/Webpack)
+                ─────────────────────────────────────────────
+                ⚙️ AVAILABLE GLOBALS
+                ─────────────────────────────────────────────
+        
+                $server    → Axios instance
+                $notify    → Notifications helper
+                __('text')         → Translations helper
+                $ / jQuery → jQuery (if loaded via Mix/Webpack)
 
-                            ------------------------------------------------
-                 
-                            ------------------------------------------------
+                ------------------------------------------------
+        
+                ------------------------------------------------
 
-                            🔥 jQuery EXAMPLE
-                            ------------------------------------------------
+                🔥 jQuery EXAMPLE
+                ------------------------------------------------
 
-                            if (window.$) {
-                                $('#clickMe').on('click', function () {
-                                    console.log('jQuery is working ✅');
-                                });
-                            }
+                if (window.$) {
+                    $('#clickMe').on('click', function () {
+                        console.log('jQuery is working ✅');
+                    });
+                }
 
-                            ------------------------------------------------
-                            */
+                ------------------------------------------------
+                */
 
             }); // End of DOMContentLoaded wrapper
     </script> <!-- End of script wrapper -->

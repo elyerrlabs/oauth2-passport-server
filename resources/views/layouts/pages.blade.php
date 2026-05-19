@@ -3,7 +3,7 @@
 
 <head>
 
-    @include('pages.layouts.favicon')
+    @includeif('pages.layouts.favicon')
     @stack('head')
 
     <link nonce={{ $nonce }} href="{{ mix('css/app.css') }}" rel="stylesheet" />

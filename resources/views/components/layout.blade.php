@@ -3,7 +3,7 @@
 
 <head>
 
-    @include('pages.layouts.favicon')
+    @includeif('pages.layouts.favicon')
 
     {{ $head ?? '' }}
     @stack('head')

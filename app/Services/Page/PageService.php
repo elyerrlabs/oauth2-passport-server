@@ -263,7 +263,23 @@ final class PageService extends \App\Services\Page\Service
 
     public function loadLayoutPath(string $name)
     {
-        return rtrim($this->realPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . "layouts" . DIRECTORY_SEPARATOR . $name . '.blade.php';
+        $path = rtrim($this->realPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . "layouts" . DIRECTORY_SEPARATOR . $name . '.blade.php';
+
+        if (!file_exists($path)) {
+            switch ($name) {
+                case 'favicon': // favicon
+                    $templateFavicon = <<<BLADE
+                    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+                    BLADE;
+                    file_put_contents($path, $templateFavicon);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        return $path;
     }
 
     /**
