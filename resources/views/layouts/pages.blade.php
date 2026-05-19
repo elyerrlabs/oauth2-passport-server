@@ -19,9 +19,9 @@
     @yield('content')
 
     @yield('footer')
-    <x-privacy />
+    @includeIf('pages.layouts.privacy')
     <script nonce={{ $nonce }} src="{{ mix('js/pages.js') }}" defer></script>
-    
+
     @stack('js')
     @stack('modals')
 

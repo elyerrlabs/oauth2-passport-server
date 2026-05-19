@@ -22,7 +22,7 @@
 
     @yield('footer')
 
-    <x-privacy />
+    @includeIf('pages.layouts.privacy')
     @stack('js')
     @stack('modals')
 </body>
