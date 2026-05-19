@@ -168,38 +168,14 @@ return [
         'stripe' => [
             'key' => 'stripe',
             'name' => 'Credit Card (Stripe)',
-            'icon' => 'mdi-credit-card-outline',
+            'icon' => 'mdi mdi-credit-card-outline',
             'enable' => true
-        ],
-        'paypal' => [
-            'key' => 'paypal',
-            'name' => 'PayPal',
-            'icon' => 'mdi-contactless-payment',
-            'enable' => false
         ],
         'offline' => [
             'key' => 'offline',
             'name' => 'Offline',
-            'icon' => 'mdi-cash-register',
+            'icon' => 'mdi mdi-cash-register',
             'enable' => true
-        ],
-        'bank_transfer' => [
-            'key' => 'bank_transfer',
-            'name' => 'Bank Transfer',
-            'icon' => 'mdi-bank-transfer',
-            'enable' => false
-        ],
-        'wallet' => [
-            'key' => 'wallet',
-            'name' => 'Wallet',
-            'icon' => 'mdi-wallet-outline',
-            'enable' => false
-        ],
-        'crypto' => [
-            'key' => 'crypto',
-            'name' => 'Cryptocurrency',
-            'icon' => 'mdi-currency-btc',
-            'enable' => false
         ],
     ],
 
