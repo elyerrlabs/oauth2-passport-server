@@ -12,20 +12,20 @@
 @push('css')
     <style nonce="{{ $nonce }}">
         /*
-        ─────────────────────────────────────────────
-        🎨 CUSTOM STYLES
-        ─────────────────────────────────────────────
+                                        ─────────────────────────────────────────────
+                                        🎨 CUSTOM STYLES
+                                        ─────────────────────────────────────────────
 
-        ✔ TailwindCSS is available
-        ✔ Dark mode supported via 'dark' class
-        ✔ You can safely write scoped or global styles
+                                        ✔ TailwindCSS is available
+                                        ✔ Dark mode supported via 'dark' class
+                                        ✔ You can safely write scoped or global styles
 
-        Example:
+                                        Example:
 
-        .custom-card {
-            @apply bg-white dark:bg-gray-800 rounded-xl shadow p-4;
-        }
-        */
+                                        .custom-card {
+                                            @apply bg-white dark:bg-gray-800 rounded-xl shadow p-4;
+                                        }
+                                        */
     </style>
 @endpush
 
@@ -44,62 +44,52 @@
 @endsection
 
 @section('content')
-    <!--
-    ─────────────────────────────────────────────
-    🧠 MAIN CONTENT AREA
-    ─────────────────────────────────────────────
+    {{-- 
+                 ─────────────────────────────────────────────
+                🧠     MAIN CONTENT AREA
+                ─────────────────────────────────────────────
+                
+                You can use:
+                
+                ✅ Blade syntax
+                ✅ Laravel helpers:
+                - auth()->user()
+                - config()
+                   - route()
+                   - request()
+                   - session()
+                   - @csrf
 
-    You can use:
+                   ✅ PHP logic
+                   ✅ HTML 
+                   ✅ Axios ($server)
+                   ✅ jQuery ($)
+                   ✅ TailwindCSS
 
-    ✅ Blade syntax
-    ✅ Laravel helpers:
-       - auth()->user()
-       - config()
-       - route()
-       - request()
-       - session()
-       - @csrf
+                   ------------------------------------------------
+                   
+                   🔥 EXAMPLES
+                   ------------------------------------------------
+                   
+                   Blade:
 
-    ✅ PHP logic
-    ✅ HTML
-    ✅ Vue 3 (global instance)
-    ✅ Axios ($server)
-    ✅ jQuery ($)
-    ✅ TailwindCSS
-
-    ------------------------------------------------
-
-    🔥 EXAMPLES
-    ------------------------------------------------
-
-    Blade:
-
-    @if(auth()->check())
-        <p>Welcome {{ auth()->user()->name }}</p>
-    @endif
-
-    ------------------------------------------------
-
-    Vue:
-
-    <div id="app" v-cloak>
-        @{{ message }}
-    </div>
-
-    ------------------------------------------------
-
-    jQuery:
-
-    <button id="clickMe">Click me</button>
-
-    <script>
-        $('#clickMe').on('click', function () {
-            alert('Hello from jQuery');
-        });
-    </script>
-
-    ------------------------------------------------
-    -->
+                   @if (auth()->check())
+                   <p>Welcome {{ auth()->user()->name }}</p>
+                   @endif
+                   
+                   ------------------------------------------------
+                   
+                   jQuery:
+                   
+                   <button id="clickMe">Click me</button>
+                   
+                   <script>
+                       $('#clickMe').on('click', function() {
+                        alert('Hello from jQuery');
+                    });
+                </script>
+                
+        --}}
 @endsection
 
 @section('footer')
@@ -118,47 +108,36 @@
 
 @push('js')
     <script nonce="{{ $nonce }}">
-        document.addEventListener("DOMContentLoaded", () => {
+        // Do not remove this wrapper, it ensures the DOM is fully loaded before executing your scripts
+        document.addEventListener("DOMContentLoaded",
+            () => { // Do not remove this wrapper, it ensures the DOM is fully loaded before executing your scripts
 
-            /*
-            ─────────────────────────────────────────────
-            ⚙️ AVAILABLE GLOBALS
-            ─────────────────────────────────────────────
+                /*
+                            ─────────────────────────────────────────────
+                            ⚙️ AVAILABLE GLOBALS
+                            ─────────────────────────────────────────────
+                 
+                            $server    → Axios instance
+                            $notify    → Notifications helper
+                            __('text')         → Translations helper
+                            $ / jQuery → jQuery (if loaded via Mix/Webpack)
 
-            Vue        → Vue 3 (window.Vue)
-            $server    → Axios instance
-            $notify    → Notifications helper
-            __         → Translations helper
-            $ / jQuery → jQuery (if loaded via Mix/Webpack)
+                            ------------------------------------------------
+                 
+                            ------------------------------------------------
 
-            ------------------------------------------------
+                            🔥 jQuery EXAMPLE
+                            ------------------------------------------------
 
-            🔥 VUE EXAMPLE
-            ------------------------------------------------
+                            if (window.$) {
+                                $('#clickMe').on('click', function () {
+                                    console.log('jQuery is working ✅');
+                                });
+                            }
 
-            const { createApp, ref } = Vue;
+                            ------------------------------------------------
+                            */
 
-            createApp({
-                setup() {
-                    const message = ref("Hello from Vue 🚀");
-                    return { message };
-                }
-            }).mount('#app');
-
-            ------------------------------------------------
-
-            🔥 jQuery EXAMPLE
-            ------------------------------------------------
-
-            if (window.$) {
-                $('#clickMe').on('click', function () {
-                    console.log('jQuery is working ✅');
-                });
-            }
-
-            ------------------------------------------------
-            */
-
-        });
-    </script>
+            }); // End of DOMContentLoaded wrapper
+    </script> <!-- End of script wrapper -->
 @endpush

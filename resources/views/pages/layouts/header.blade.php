@@ -1,51 +1,36 @@
 <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
-    <nav class="container mx-auto px-4 lg:px-0 py-4">
+    <nav class="container mx-auto px-4 lg:px-0 py-2">
         <div class="flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <i class="fas fa-passport text-purple-600 text-xl"></i>
+                <i class="fas fa-passport text-purple-600 text-md"></i>
                 <div>
-                    <h1 class="text-sm md:text-lg font-bold text-gray-900 dark:text-white">
-                        {{ __('OAuth2 Passport Server') }}
-                    </h1>
+                    <h4 class="text-sm font-bold text-gray-900 dark:text-white">
+                        {{ config('app.name', 'OPS') }}
+                    </h4>
                     <p class="text-xs text-gray-500 dark:text-gray-400">
-                        {{ __('by Elyerr') }}
+                        {{ config('app.org_name', 'OPS ORG') }}
                     </p>
                 </div>
             </div>
 
             {{-- Desktop menu --}}
-            <div class="hidden md:flex space-x-8 items-center">                
+            <div class="hidden md:flex space-x-8 items-center">
                 @guest
                     <a href="{{ route('login') }}"
                         class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
-                        {{ __('Login') }}
+                        <span class="mdi mdi-login"></span></span> {{ __('Login') }}
                     </a>
 
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}"
                             class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
-                            {{ __('Register') }}
-                        </a>
-                    @endif
-
-                    @if (Route::has('transaction.plans.index'))
-                        <a href="{{ route('transaction.plans.index') }}"
-                            class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
-                            {{ __('Subscriptions') }}
+                            <span class="mdi mdi-account-plus-outline"></span> {{ __('Register') }}
                         </a>
                     @endif
                 @endguest
-
-                @auth
-                    @if (Route::has('user.dashboard'))
-                        <a href="{{ route('user.dashboard') }}"
-                            class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium">
-                            {{ __('Dashboard') }}
-                        </a>
-                    @endif
-                @endauth
-
+                
                 <x-theme />
+                <x-profile />
             </div>
 
             {{-- Mobile button --}}
@@ -59,17 +44,17 @@
         {{-- Mobile menu --}}
         <div id="mobile-menu"
             class="hidden md:hidden mt-4 w-full rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-            <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-700"> 
+            <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-700">
                 @guest
                     <a href="{{ route('login') }}"
                         class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
-                        {{ __('Login') }}
+                        <span class="mdi mdi-login"></span> {{ __('Login') }}
                     </a>
 
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}"
                             class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
-                            {{ __('Register') }}
+                            <span class="mdi mdi-account-plus-outline"></span> {{ __('Register') }}
                         </a>
                     @endif
 
@@ -80,15 +65,6 @@
                         </a>
                     @endif
                 @endguest
-
-                @auth
-                    @if (Route::has('user.dashboard'))
-                        <a href="{{ route('user.dashboard') }}"
-                            class="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium px-4 py-3">
-                            {{ __('Dashboard') }}
-                        </a>
-                    @endif
-                @endauth
             </div>
         </div>
     </nav>
