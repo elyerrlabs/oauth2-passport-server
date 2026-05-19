@@ -47,11 +47,14 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - Add default tamplate for new layouts (login, register, forgot-pasword, plans, favicon)
     - Moved SEO section from settings to pages to centralize page-related SEO management under a single section
 - Move transaction module API endpoints to web routes to render with Inertia instead of Axios
+- Implement CAPTCHA validation on two-factor authentication challenge to prevent brute force attacks
 
 ## Fixes
 
 - Regenerated cached user data after enabling 2FA (Fortify)
 - Fixed rate limit key generation where user identifiers were being generated incorrectly
+- Fixed scope permission validation for Horizon
+- implement CSP-compliant password toggle on register page
 
 ## Services Updated
 
