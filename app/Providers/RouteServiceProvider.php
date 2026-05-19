@@ -67,6 +67,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function configureRateLimiting()
     {
+        // Load rate limits from configuration
         $rateLimits = config('rate_limit') ?? [];
 
         foreach ($rateLimits as $module => $groups) {
@@ -78,8 +79,10 @@ class RouteServiceProvider extends ServiceProvider
                     RateLimiter::for(
                         "{$module}:{$group}:{$key}",
                         function (Request $request) use ($module, $group, $key, $value) {
-
-                            $cacheKey = "rate-limit:{$module}_{$group}_{$key}:" . $request->user()?->id ?: $request->ip();
+                            // Use user ID if authenticated, otherwise use IP address for rate limiting
+                            $user = auth()->check() ? auth()->user()->id : $request->ip();
+                            // Create a unique cache key for the user and the specific rate limit
+                            $cacheKey = "rate-limit:{$module}_{$group}_{$key}:$user";
 
                             // Check if user is already blocked
                             if (Cache::has($cacheKey . ':blocked')) {
@@ -118,8 +121,8 @@ class RouteServiceProvider extends ServiceProvider
 
                             // Set up the initial rate limit
                             return Limit::perMinute($value['limit'])
-                                ->by($request->user()?->id ?: $request->ip())
-                                ->response(function (Request $request) use ($cacheKey, $value) {
+                                ->by($user)
+                                ->response(function (Request $request) use ($cacheKey, $value, $user) {
 
                                 $unlock_time = now()->addMinutes(filter_var($value['block_time'], FILTER_VALIDATE_INT));
 
@@ -129,7 +132,7 @@ class RouteServiceProvider extends ServiceProvider
                                 Log::warning("Rate limit exceeded (initial block)", [
                                     'ip' => $request->ip(),
                                     'path' => $request->path(),
-                                    'user_id' => $request->user()?->id,
+                                    'user_id' => $user,
                                     'blocked_until' => $unlock_time->toDateTimeString()
                                 ]);
 
