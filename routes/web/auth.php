@@ -135,6 +135,7 @@ Route::group([
             ->middleware(array_filter([
                 'guest:' . config('fortify.guard'),
                 $twoFactorLimiter ? 'throttle:' . $twoFactorLimiter : null,
+                'captcha'
             ]))->name('two-factor.login.store');
 
         $twoFactorMiddleware = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword')
