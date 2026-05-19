@@ -29,6 +29,56 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+# [Unreleased]
+
+## ✨ Features
+
+- Updated Vue layouts
+- Improved About component (Vue)
+- Removed unused components
+- Enhanced user interface and cleaned up unused code
+- Updated role assignment command
+- Updated layout menus
+    - Add new layout to manage favicon
+- Updated pages support
+    - Seo support for login, register, forgot-pasword and plans
+    - Add new scope for pages service
+    - Fix scope permitions for LayoutController, PageController and SeoController
+    - Add default tamplate for new layouts (login, register, forgot-pasword, plans, favicon)
+    - Moved SEO section from settings to pages to centralize page-related SEO management under a single section
+- Move transaction module API endpoints to web routes to render with Inertia instead of Axios
+
+## Fixes
+
+- Regenerated cached user data after enabling 2FA (Fortify)
+
+## Services Updated
+
+### Deleted [Group: Administrator]
+
+- application
+- seo
+- page
+- lang
+
+### Deleted [Group: Developer]
+
+- client
+
+### Added [Groups: Developer, Administrator]
+
+- oauth2
+
+### Added [Group: Developer]
+
+- oauth2
+- horizon
+- seo
+- page
+- lang
+
+---
+
 # [v6.0.11]
 
 ## Changed
