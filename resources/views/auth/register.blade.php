@@ -178,7 +178,7 @@
                             </span>
                         </label>
                         @error('accept_terms')
-                            <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
 
                         <label class="flex items-start gap-3 cursor-pointer">
@@ -194,7 +194,7 @@
                             </span>
                         </label>
                         @error('accept_cookies')
-                            <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -235,21 +235,48 @@
         </div>
     </div>
 
-    <script nonce="{{ $nonce ?? '' }}">
-        function togglePassword(inputId) {
-            const passwordInput = document.getElementById(inputId);
-            const button = event.currentTarget;
-            const icon = button.querySelector('i');
+    <script nonce="{{ $nonce }}" data-csp-sha256>
+        function togglePassword(fieldId) {
+            'use strict';
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
+            const input = document.getElementById(fieldId);
+            if (!input) return;
+
+            const button = input.nextElementSibling;
+            if (!button) return;
+
+            const icon = button.querySelector('i');
+            if (!icon) return;
+
+            if (input.type === 'password') {
+                input.type = 'text';
                 icon.classList.remove('mdi-eye');
                 icon.classList.add('mdi-eye-off');
             } else {
-                passwordInput.type = 'password';
+                input.type = 'password';
                 icon.classList.remove('mdi-eye-off');
                 icon.classList.add('mdi-eye');
             }
         }
+
+        // Inicializar eventos de manera segura con CSP
+        document.addEventListener('DOMContentLoaded', function() {
+            // No usar inline event handlers, usar addEventListener
+            const toggleButtons = document.querySelectorAll('button[onclick*="togglePassword"]');
+            toggleButtons.forEach(function(button) {
+                const onclickAttr = button.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes('togglePassword')) {
+                    const match = onclickAttr.match(/togglePassword\('([^']+)'\)/);
+                    if (match && match[1]) {
+                        const fieldId = match[1];
+                        button.removeAttribute('onclick');
+                        button.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            togglePassword(fieldId);
+                        });
+                    }
+                }
+            });
+        });
     </script>
 @endsection
