@@ -31,7 +31,7 @@ use App\Http\Controllers\WebController;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-class LayoutController extends WebController
+class SeoController extends LayoutController
 {
     /**
      * Construct
@@ -39,9 +39,7 @@ class LayoutController extends WebController
      */
     public function __construct(public PageService $pageService)
     {
-        parent::__construct();
-        $this->middleware('userCanAny:developer:pages:full,developer:pages:view')->only('form');
-        $this->middleware('userCanAny:developer:pages:full,developer:pages:update')->only('update');
+        parent::__construct($pageService);
     }
 
     /**
@@ -52,8 +50,8 @@ class LayoutController extends WebController
     public function form(Request $request)
     {
         if (!$request->has('layout')) {
-            return redirect()->route('admin.layouts.schema', [
-                'layout' => 'schema'
+            return redirect()->route('admin.seo.schema', [
+                'layout' => 'login'
             ]);
         }
 
@@ -79,7 +77,7 @@ class LayoutController extends WebController
 
         $content = $this->pageService->loadLayout($layout);
 
-        return view('admin.pages.layout', compact('content', 'layout', 'routes'));
+        return view('admin.pages.seo', compact('content', 'layout', 'routes'));
     }
 
 

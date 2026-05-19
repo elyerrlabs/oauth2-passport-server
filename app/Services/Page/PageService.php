@@ -267,11 +267,185 @@ final class PageService extends \App\Services\Page\Service
 
         if (!file_exists($path)) {
             switch ($name) {
-                case 'favicon': // favicon
+                case 'favicon': // Favicon & Icons
                     $templateFavicon = <<<BLADE
-                    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+                    <!-- Favicon & Browser Icons -->
+                    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+                    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+                    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+                    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+                    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+                    <meta name="theme-color" content="#ffffff">
+                    <meta name="msapplication-TileColor" content="#ffffff">
                     BLADE;
                     file_put_contents($path, $templateFavicon);
+                    break;
+
+                case 'login': // SEO Meta Tags for Login Page
+                    $templateLogin = <<<BLADE
+                    <!--Title-->
+                    @include('layouts.parts.title', ['title' => __('Login')])
+                    <!-- SEO Meta Tags - Login Page --> 
+                    <meta name="description" content="@yield('description', __('Sign in to your account to access your dashboard'))">
+                    <meta name="keywords" content="login, sign in, access, account, authentication">
+                    <meta name="robots" content="noindex, nofollow">
+                    <meta name="googlebot" content="noindex, nofollow">
+                    <meta name="author" content="{{ config('app.name') }}">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <!-- Canonical URL -->
+                    <link rel="canonical" href="{{ url()->current() }}">
+                    <!-- Open Graph / Facebook -->
+                    <meta property="og:type" content="website">
+                    <meta property="og:url" content="{{ url()->current() }}">
+                    <meta property="og:title" content="@yield('title', __('Login') . ' - ' . config('app.name'))">
+                    <meta property="og:description" content="{{ __('Sign in to your account') }}">
+                    <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
+                    <meta property="og:site_name" content="{{ config('app.name') }}">
+                    <!-- Twitter Cards -->
+                    <meta name="twitter:card" content="summary">
+                    <meta name="twitter:url" content="{{ url()->current() }}">
+                    <meta name="twitter:title" content="@yield('title', __('Login') . ' - ' . config('app.name'))">
+                    <meta name="twitter:description" content="{{ __('Sign in to your account') }}">
+                    <meta name="twitter:image" content="{{ asset('images/twitter-image.jpg') }}">
+                    <!-- Security & Additional Meta -->
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    <meta name="referrer" content="strict-origin-when-cross-origin">
+                    BLADE;
+                    file_put_contents($path, $templateLogin);
+                    break;
+
+                case 'register': // SEO Meta Tags for Register Page
+                    $templateRegister = <<<BLADE
+                    <!--Title-->
+                    @include('layouts.parts.title', ['title' => __('Register')])
+                    <!-- SEO Meta Tags - Register Page -->
+                    <title>@yield('title', __('Register') . ' - ' . config('app.name'))</title>
+                    <meta name="description" content="@yield('description', __('Create a new account to get started with our services'))">
+                    <meta name="keywords" content="register, sign up, create account, join, registration">
+                    <meta name="robots" content="noindex, nofollow">
+                    <meta name="googlebot" content="noindex, nofollow">
+                    <meta name="author" content="{{ config('app.name') }}">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <!-- Canonical URL -->
+                    <link rel="canonical" href="{{ url()->current() }}">
+
+                    <!-- Open Graph / Facebook -->
+                    <meta property="og:type" content="website">
+                    <meta property="og:url" content="{{ url()->current() }}">
+                    <meta property="og:title" content="@yield('title', __('Register') . ' - ' . config('app.name'))">
+                    <meta property="og:description" content="{{ __('Join us today and create your account') }}">
+                    <meta property="og:image" content="{{ asset('images/og-register.jpg') }}">
+                    <meta property="og:site_name" content="{{ config('app.name') }}">
+
+                    <!-- Twitter Cards -->
+                    <meta name="twitter:card" content="summary">
+                    <meta name="twitter:url" content="{{ url()->current() }}">
+                    <meta name="twitter:title" content="@yield('title', __('Register') . ' - ' . config('app.name'))">
+                    <meta name="twitter:description" content="{{ __('Create your account now') }}">
+                    <meta name="twitter:image" content="{{ asset('images/twitter-register.jpg') }}">
+
+                    <!-- Security -->
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    BLADE;
+                    file_put_contents($path, $templateRegister);
+                    break;
+
+                case 'forgot-password': // SEO Meta Tags for Forgot Password Page
+                    $templateForgotPassword = <<<BLADE
+                    <!--Title-->
+                    @include('layouts.parts.title', ['title' => __('Forgot password')])
+                    <!-- SEO Meta Tags - Forgot Password Page -->
+                    <meta name="description" content="@yield('description', __('Reset your password easily. Enter your email to receive password reset instructions.'))">
+                    <meta name="keywords" content="forgot password, reset password, recover password, password reset">
+                    <meta name="robots" content="noindex, nofollow">
+                    <meta name="googlebot" content="noindex, nofollow">
+                    <meta name="author" content="{{ config('app.name') }}">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <!-- Canonical URL -->
+                    <link rel="canonical" href="{{ url()->current() }}">
+
+                    <!-- Open Graph / Facebook -->
+                    <meta property="og:type" content="website">
+                    <meta property="og:url" content="{{ url()->current() }}">
+                    <meta property="og:title" content="@yield('title', __('Forgot Password') . ' - ' . config('app.name'))">
+                    <meta property="og:description" content="{{ __('Reset your password in just a few steps') }}">
+                    <meta property="og:image" content="{{ asset('images/og-password.jpg') }}">
+                    <meta property="og:site_name" content="{{ config('app.name') }}">
+
+                    <!-- Twitter Cards -->
+                    <meta name="twitter:card" content="summary">
+                    <meta name="twitter:url" content="{{ url()->current() }}">
+                    <meta name="twitter:title" content="@yield('title', __('Forgot Password') . ' - ' . config('app.name'))">
+                    <meta name="twitter:description" content="{{ __('Reset your password instructions') }}">
+                    <meta name="twitter:image" content="{{ asset('images/twitter-password.jpg') }}">
+
+                    <!-- Security Meta -->
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    BLADE;
+                    file_put_contents($path, $templateForgotPassword);
+                    break;
+
+                case 'plans': // SEO Meta Tags for Plans/Pricing Page
+                    $templatePlans = <<<BLADE
+                    <!--Title-->
+                    @include('layouts.parts.title', ['title' => __('Plans')])
+                    <!-- SEO Meta Tags - Plans & Pricing Page -->
+                    <meta name="description" content="@yield('description', __('Choose the perfect plan for your needs. Compare features and pricing to find the best option.'))">
+                    <meta name="keywords" content="plans, pricing, subscription, packages, pricing plans, membership">
+                    <meta name="robots" content="index, follow">
+                    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
+                    <meta name="author" content="{{ config('app.name') }}">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <!-- Canonical URL -->
+                    <link rel="canonical" href="{{ url()->current() }}">
+
+                    <!-- Open Graph / Facebook -->
+                    <meta property="og:type" content="website">
+                    <meta property="og:url" content="{{ url()->current() }}">
+                    <meta property="og:title" content="@yield('title', __('Plans & Pricing') . ' - ' . config('app.name'))">
+                    <meta property="og:description" content="{{ __('Compare our plans and choose the best option for you') }}">
+                    <meta property="og:image" content="{{ asset('images/og-pricing.jpg') }}">
+                    <meta property="og:image:alt" content="{{ __('Pricing plans comparison') }}">
+                    <meta property="og:site_name" content="{{ config('app.name') }}">
+                    <meta property="og:price:amount" content="@yield('price', '0')">
+                    <meta property="og:price:currency" content="{{ config('app.currency', 'USD') }}">
+
+                    <!-- Twitter Cards -->
+                    <meta name="twitter:card" content="summary_large_image">
+                    <meta name="twitter:url" content="{{ url()->current() }}">
+                    <meta name="twitter:title" content="@yield('title', __('Plans & Pricing') . ' - ' . config('app.name'))">
+                    <meta name="twitter:description" content="{{ __('Find the perfect plan for your needs') }}">
+                    <meta name="twitter:image" content="{{ asset('images/twitter-pricing.jpg') }}">
+                    <meta name="twitter:image:alt" content="{{ __('Pricing plans') }}">
+
+                    <!-- Structured Data for Pricing (Schema.org) -->
+                    <script type="application/ld+json">
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "Product",
+                        "name": "{{ config('app.name') }} Plans",
+                        "description": "{{ __('Subscription plans for our services') }}",
+                        "offers": {
+                            "@type": "AggregateOffer",
+                            "priceCurrency": "{{ config('app.currency', 'USD') }}",
+                            "lowPrice": "@yield('min_price', '0')",
+                            "highPrice": "@yield('max_price', '0')",
+                            "offerCount": "@yield('total_plans', '3')"
+                        }
+                    }
+                    </script>
+
+                    <!-- Additional SEO Meta --> 
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
+                    BLADE;
+                    file_put_contents($path, $templatePlans);
                     break;
 
                 default:

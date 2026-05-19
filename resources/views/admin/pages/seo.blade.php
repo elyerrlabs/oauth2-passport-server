@@ -12,39 +12,47 @@
             <!-- Header -->
             <div class="border-b border-gray-200 px-6 py-5 dark:border-gray-700">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {{ __('Layout manager') }}
+                    {{ __('Seo manager') }}
                 </h3>
             </div>
 
             <!-- Layout selector -->
             <div class="px-6 pt-4">
-
                 <div class="flex flex-wrap gap-2">
-                    <a href="{{ route('admin.layouts.schema', ['layout' => 'footer']) }}"
+                    <a href="{{ route('admin.seo.schema', ['layout' => 'login']) }}"
                         class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
-                        {{ request('layout', 'footer') === 'footer'
-                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
-                        <i class="mdi mdi-page-layout-footer text-lg"></i>
-                        {{ __('Footer') }}
-                    </a>
-
-                    <a href="{{ route('admin.layouts.schema', ['layout' => 'header']) }}"
-                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
-                        {{ request('layout') === 'header'
-                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
-                        <i class="mdi mdi-page-layout-header text-lg"></i>
-                        {{ __('Header') }}
-                    </a>
-
-                    <a href="{{ route('admin.layouts.schema', ['layout' => 'schema']) }}"
-                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
-                        {{ request('layout') === 'schema'
+                        {{ request('layout', 'login') === 'login'
                             ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
                         <i class="mdi mdi-code-braces text-lg"></i>
-                        {{ __('Schema') }}
+                        {{ __('Login') }}
+                    </a>
+
+                    <a href="{{ route('admin.seo.schema', ['layout' => 'register']) }}"
+                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
+                        {{ request('layout') === 'register'
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
+                        <i class="mdi mdi-code-braces text-lg"></i>
+                        {{ __('Register') }}
+                    </a>
+
+                    <a href="{{ route('admin.seo.schema', ['layout' => 'forgot-password']) }}"
+                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
+                        {{ request('layout') === 'forgot-password'
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
+                        <i class="mdi mdi-code-braces text-lg"></i>
+                        {{ __('Forgot password') }}
+                    </a>
+
+                    <a href="{{ route('admin.seo.schema', ['layout' => 'plans']) }}"
+                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
+                        {{ request('layout') === 'plans'
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
+                        <i class="mdi mdi-code-braces text-lg"></i>
+                        {{ __('Plans') }}
                     </a>
                 </div>
             </div>

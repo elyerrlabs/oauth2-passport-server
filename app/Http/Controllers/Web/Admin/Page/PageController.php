@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Web\Admin\Page;
 
 use App\Http\Controllers\WebController;
 use App\Jobs\SitemapIndexJob;
-use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Http\Request;
 use App\Services\Page\PageService;
 
@@ -36,10 +35,37 @@ use App\Services\Page\PageService;
 final class PageController extends WebController
 {
 
+    /**
+     * routes
+     * @var 
+     */
+    protected $routes;
+
     public function __construct(protected PageService $pageService)
     {
         parent::__construct();
-        $this->middleware('userCanAny:administrator:pages:full');
+        $this->middleware('userCanAny:developer:pages:full,developer:pages:view')->only('index', 'show', 'edit');
+        $this->middleware('userCanAny:developer:pages:full,developer:pages:create')->only('store', 'generateSitemapFile');
+        $this->middleware('userCanAny:developer:pages:full,developer:pages:update')->only('update');
+        $this->middleware('userCanAny:developer:pages:full,developer:pages:destroy')->only('destroy');
+
+        $this->routes = [
+            [
+                'name' => __('List of pages'),
+                'route' => route('admin.pages.index'),
+                'icon' => 'mdi mdi-file-document-outline',
+            ],
+            [
+                'name' => __('Layouts'),
+                'route' => route('admin.layouts.schema'),
+                'icon' => 'mdi mdi-file-document-outline',
+            ],
+            [
+                'name' => __('Seo'),
+                'route' => route('admin.seo.schema'),
+                'icon' => 'mdi mdi-file-document-outline',
+            ],
+        ];
     }
 
     /**
@@ -52,7 +78,9 @@ final class PageController extends WebController
         $pages = $this->pageService->search($request);
         $pages = $pages->orderBy('updated_at', 'desc')->paginate(15);
 
-        return view('admin.pages.pages', compact('pages'));
+        return view('admin.pages.pages', compact('pages'), [
+            'routes' => $this->routes
+        ]);
     }
 
     /**
@@ -133,7 +161,9 @@ final class PageController extends WebController
     {
         $page = $this->pageService->edit($id);
 
-        return view('admin.pages.edit', compact('page'));
+        return view('admin.pages.edit', compact('page'), [
+            'routes' => $this->routes
+        ]);
     }
 
 

@@ -29,17 +29,8 @@ namespace App\Http\Controllers\Web\Admin\Setting;
 
 
 use App\Services\SettingService;
-use App\Support\CacheKeys;
 use Illuminate\Http\Request;
-use App\Models\Setting\Setting;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebController;
-use Illuminate\Cache\Repository;
-use Illuminate\Cache\ArrayStore;
-use Illuminate\Cache\FileStore;
-use Illuminate\Filesystem\Filesystem;
 
 class SettingController extends WebController
 {
@@ -211,11 +202,5 @@ class SettingController extends WebController
     public function horizon()
     {
         return view('admin.settings.section.horizon');
-    }
-
-
-    public function seo()
-    {
-        return view('admin.settings.section.seo');
     }
 }

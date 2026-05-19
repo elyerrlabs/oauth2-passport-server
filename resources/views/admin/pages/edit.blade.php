@@ -1,18 +1,3 @@
-@php
-    $routes = [
-        [
-            'name' => __('List of pages'),
-            'route' => route('admin.pages.index'),
-            'icon' => 'mdi mdi-file-document-outline',
-        ],
-        [
-            'name' => __('Layouts'),
-            'route' => route('admin.layouts.schema'),
-            'icon' => 'mdi mdi-file-document-outline',
-        ],
-    ];
-@endphp
-
 <x-admin-layout :routes="$routes">
 
 
