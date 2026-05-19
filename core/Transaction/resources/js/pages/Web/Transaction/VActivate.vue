@@ -27,9 +27,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         <v-button
             @click="dialog = true"
             :title="__('Activate Transaction')"
+            :label="round ? '' : __('Activate Transaction')"
             icon="mdi mdi-check-circle"
-            round
+            :round="round"
             variant="warning"
+            size="xs"
         />
 
         <v-modal
@@ -199,6 +201,10 @@ const props = defineProps({
     item: {
         type: Object,
         required: true,
+    },
+    round: {
+        type: Boolean,
+        default: true,
     },
 });
 

@@ -320,7 +320,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                                 transactionBadgeClass(tx.status)
                                             "
                                         >
-                                            {{ tx.status }}
+                                            {{ setStatus(tx.status) }}
                                         </span>
                                     </div>
 
@@ -395,6 +395,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                             </svg>
                                             {{ __("Receipt") }}
                                         </a>
+
+                                        <v-activate
+                                            :round="false"
+                                            :item="tx"
+                                            @updated="changeStatus"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -490,10 +496,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         {{ data?.transaction?.currency }}
                                     </span>
                                 </div>
-                                <div class="pt-3">
+                                <div class="flex flex-col items-center gap-4">
                                     <v-recurring-payment
                                         :item="data"
                                         @success="changeState"
+                                    />
+
+                                    <v-renew
+                                        :package="data"
+                                        :payment_methods="payment_methods"
                                     />
                                 </div>
                             </div>
@@ -507,11 +518,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import { computed } from "vue";
-import VMainLayout  from "@/components/VMainLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VRecurringPayment from "./RecurringPayment.vue";
+import VRenew from "./VRenew.vue";
+import VActivate from "../Transaction/VActivate.vue";
 
 const props = defineProps({
     data: {
+        type: Object,
+        default: () => ({}),
+    },
+    payment_methods: {
         type: Object,
         default: () => ({}),
     },
@@ -523,6 +540,14 @@ const props = defineProps({
 
 const changeState = () => {
     props.data.is_recurring = !props.data.is_recurring;
+};
+
+const changeStatus = () => {
+    setStatus("successful");
+};
+
+const setStatus = (status) => {
+    return status;
 };
 
 // Computed

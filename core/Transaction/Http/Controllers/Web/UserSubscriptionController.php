@@ -74,12 +74,14 @@ class UserSubscriptionController extends WebController
     {
         $data = $this->packageService->findByTransactionCode($transaction_code);
 
+        $payment_methods = collect(billing_methods())->where('enable', true)->all();
+
         return Inertia::render('Web/Subscription/Detail', [
             'data' => $this->transform($data, UserPackageTransformer::class),
+            'payment_methods' => $payment_methods,
             'routes' => [
                 'plans' => route('transaction.plans.index'),
-                'subscription' => route('transaction.subscriptions.pay'),
-                'renew_package' => route('transaction.subscriptions.renew')
+                'renew' => route('transaction.subscriptions.renew')
             ],
         ]);
     }
