@@ -179,24 +179,23 @@ const handleConfirm = () => {
     }
 };
 
-const destroy = async () => {
+const destroy = () => {
     if (!canDelete.value) {
         return;
     }
 
-    try {
-        const res = await $server.delete(props.item.links.destroy);
-
-        if (res.status == 200) {
+    form.delete(props.item.links.destroy, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             $notify.success(__("Group deleted successfully"));
             emit("deleted");
             dialog.value = false;
             confirmationText.value = "";
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(__(error.response.data.message));
-        }
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+    });
 };
 </script>

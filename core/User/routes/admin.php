@@ -33,8 +33,8 @@ use Core\User\Http\Controllers\Admin\ServiceController;
 
 Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(function () {
 
-    Route::get('groups', [GroupController::class, 'index'])->name('groups.index');
-    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
-    Route::get('services', [ServiceController::class, 'index'])->name('services.index');
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::resource('groups', GroupController::class)->only('index', 'store', 'update', 'destroy');
+    //Route::resource('roles', RoleController::class);
+    //Route::resource('services', ServiceController::class);
+    //Route::resource('users', UserController::class);
 });

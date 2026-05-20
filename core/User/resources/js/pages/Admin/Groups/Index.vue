@@ -43,47 +43,59 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <i class="mdi mdi-filter mr-2 text-blue-500"></i>
                             {{ __("Filter Groups") }}
                         </div>
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end"
-                        >
-                            <v-input
-                                :label="__('Group Name')"
-                                v-model="search.name"
-                                @input="getGroups"
-                            />
+                        <div class="flex justify-around gap-2">
+                            <div
+                                class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-2 items-end"
+                            >
+                                <v-input
+                                    :label="__('Group Name')"
+                                    v-model="search.name"
+                                    @input="getGroups"
+                                />
 
-                            <v-select
-                                :label="__('Choose pagination')"
-                                v-model="search.per_page"
-                                @change="getGroups"
-                                :options="[
-                                    { name: __('All Types'), id: '' },
-                                    { name: __('System Groups'), id: 1 },
-                                    { name: __('User Groups'), id: 0 },
-                                ]"
-                            />
+                                <v-select
+                                    :label="__('Choose pagination')"
+                                    v-model="search.per_page"
+                                    @change="getGroups"
+                                    :options="[
+                                        { name: __('All Types'), id: '' },
+                                        { name: __('System Groups'), id: 1 },
+                                        { name: __('User Groups'), id: 0 },
+                                    ]"
+                                />
 
-                            <v-select
-                                :label="__('Choose pagination')"
-                                v-model="search.per_page"
-                                @change="changePage"
-                                :options="[
-                                    { name: 15, id: 15 },
-                                    { name: 50, id: 50 },
-                                    { name: 100, id: 100 },
-                                    { name: 150, id: 150 },
-                                    { name: 200, id: 200 },
-                                    { name: 300, id: 300 },
-                                ]"
-                            />
+                                <v-select
+                                    :label="__('Choose pagination')"
+                                    v-model="search.per_page"
+                                    @change="changePage"
+                                    :options="[
+                                        { name: 15, id: 15 },
+                                        { name: 50, id: 50 },
+                                        { name: 100, id: 100 },
+                                        { name: 150, id: 150 },
+                                        { name: 200, id: 200 },
+                                        { name: 300, id: 300 },
+                                    ]"
+                                />
+                                <div
+                                    class="flex shrink-0 flex-nowrap justify-around"
+                                >
+                                    <v-button
+                                        :label="__('Search')"
+                                        left-icon="mdi mdi-search"
+                                        @click="getGroups"
+                                        size="xs"
+                                    />
 
-                            <v-button
-                                @click="resetFilters"
-                                :label="__('Reset Filters')"
-                                left-icon="mdi mdi-refresh"
-                                variant="secondary"
-                                full-width
-                            />
+                                    <v-button
+                                        @click="resetFilters"
+                                        :label="__('Reset Filters')"
+                                        left-icon="mdi mdi-refresh"
+                                        variant="secondary"
+                                        size="xs"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -191,10 +203,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import VButton from "@/components/VButton.vue";
 import VMainLayout from "@/components/VMainLayout.vue";
-import VItemMenu from "@/components/VItemMenu.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VTable from "@/components/VTable.vue";
 import VHead from "@/components/VHead.vue";
@@ -208,19 +219,24 @@ const page = usePage();
 const groups = ref([]);
 const loading = ref(false);
 const pages = ref({ total_pages: 0 });
-const search = ref({
+const search = useForm({
     page: 1,
     per_page: 15,
     name: "",
-    system: "", //true | false | null
+    system: null, //true | false | null
     order_type: "desc",
 });
 
-const columns = ref(["Group Name", "Description", "Type", "Actions"]);
+const columns = ref(["Group name", "Description", "Type", "Actions"]);
 
 onMounted(async () => {
-    await getGroups();
+    loadData(page.props.data);
 });
+
+const loadData = (data) => {
+    groups.value = data.data;
+    pages.value = data.meta.pagination;
+};
 
 const changePage = () => {
     getGroups();
@@ -229,29 +245,23 @@ const changePage = () => {
 const getGroups = async () => {
     loading.value = true;
 
-    try {
-        const res = await $server.get(page.props.api.groups, {
-            params: search.value,
-        });
-        if (res.status == 200) {
-            const values = res.data;
-            groups.value = values.data;
-            pages.value = values.meta.pagination;
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+    search.get(page.props.routes.groups, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
+            loadData(res.props.data);
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
 const resetFilters = () => {
-    search.value.name = "";
-    search.value.system = "";
-    search.value.per_page = 15;
-    search.value.page = 1;
+    search.resetAndClearErrors();
     getGroups();
 };
 </script>

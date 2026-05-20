@@ -28,33 +28,83 @@ namespace Core\User\Http\Controllers\Admin;
  */
 
 
-use Inertia\Inertia;
-use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
+use Core\User\Http\Requests\GroupStoreRequest;
+use Core\User\Services\GroupService;
+use Core\User\Transformer\Admin\GroupTransformer;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class GroupController extends WebController
 {
-    public function __construct()
+    public function __construct(protected GroupService $groupService)
     {
         parent::__construct();
         $this->middleware('userCanAny:administrator:group:full,administrator:group:view')->only('index');
+        $this->middleware('userCanAny:administrator:group:full,administrator:group:create')->only('store');
+        $this->middleware('userCanAny:administrator:group:full,administrator:group:update')->only('update');
+        $this->middleware('userCanAny:administrator:group:full,administrator:group:destroy')->only('destroy');
     }
 
     /**
-     * Show resources
-     * @param \Illuminate\Http\Request $request
-     * @return \Elyerr\ApiResponse\Assets\JsonResponser|\Inertia\Response
+     * index
+     * @param Request $request
+     * @return \Inertia\Response
      */
     public function index(Request $request)
     {
+        $data = $this->groupService->search($request)->paginate($request->input('per_page', 15));
+
         return Inertia::render(
             "Admin/Groups/Index",
             [
-                'menus' => resolveInertiaRoutes(config('menus.admin_routes')),
-                'api' => [
-                    'groups' => route('api.user.admin.groups.index')
+                'data' => $this->transformCollection($data, GroupTransformer::class),
+                'routes' => [
+                    'groups' => route('user.admin.groups.index')
                 ]
             ]
         );
+    }
+
+    /**
+     * Store resource
+     * @param GroupStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(GroupStoreRequest $request)
+    {
+        $this->groupService->create($request->toArray());
+
+        return redirect()->route('user.admin.groups.index')->with('status', __('Group registed successfully'));
+    }
+
+    /**
+     * Update resource
+     * @param Request $request
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, string $id)
+    {
+        $this->validate($request, [
+            'description' => ['nullable', 'max:200'],
+        ]);
+
+        $this->groupService->update($id, $request->toArray());
+
+        return redirect()->route('user.admin.groups.index')->with('status', __('Group updated successfully'));
+    }
+
+    /**
+     * Destroy resource
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(string $id)
+    {
+        $model = $this->groupService->delete($id);
+
+        return redirect()->route('user.admin.groups.index')->with('status', __('Group deleted successfully'));
+
     }
 }
