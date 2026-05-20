@@ -239,6 +239,30 @@ final class PageService extends \App\Services\Page\Service
     }
 
     /**
+     * Reset file
+     * @param string $id
+     * @throws ReportError
+     * @return void
+     */
+    public function reset(string $id)
+    {
+        $model = $this->pageRepository->find($id);
+
+        if (empty($model)) {
+            throw new ReportError(__("Page not found"), 404);
+        }
+
+        $draft = $this->draftPathGenerate($model->slug);
+        $prod_path = $model->path;
+
+        if (!file_exists($prod_path)) {
+            throw new ReportError(__("We can't find the production file to reset"), 404);
+        }
+
+        File::copy($prod_path, $draft);
+    }
+
+    /**
      * Update file
      * @param string $path
      * @param   $content

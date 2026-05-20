@@ -1,6 +1,5 @@
 <x-admin-layout :routes="$routes">
 
-
     @push('head')
         @include('layouts.parts.title', ['title' => __('Edit page')])
     @endpush
@@ -41,6 +40,17 @@
                         {{ __('Preview') }}
                     </a>
 
+                    <button type="button" id="resetButton"
+                        class="inline-flex items-center justify-center rounded-lg border border-red-300 bg-white px-4 py-2.5 text-sm font-medium text-red-600 shadow-sm transition hover:bg-red-50 hover:border-red-500 dark:border-red-700 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:border-red-500">
+                        <i class="mdi mdi-refresh mr-2 text-lg"></i>
+                        {{ __('Reset') }}
+                    </button>
+
+                    <form id="resetForm" action="{{ route('admin.pages.reset', ['page' => $page->id]) }}" method="POST"
+                        style="display: none;">
+                        @csrf
+                    </form>
+
                     <a href="{{ route('admin.pages.index') }}"
                         class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:border-blue-500 hover:text-blue-600 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:border-blue-400 dark:hover:text-blue-400">
                         <i class="mdi mdi-arrow-left mr-2 text-lg"></i>
@@ -77,18 +87,6 @@
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
-                        {{-- 
-                    <div>
-                        <label for="slug" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {{ __('Slug') }}
-                        </label>
-                        <input id="slug" name="slug" type="text" value="{{ old('slug', $page->slug) }}"
-                        class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-900/40">
-                        @error('slug')
-                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    --}}
 
                         <div>
                             <label for="is_published"
@@ -108,16 +106,6 @@
                             </select>
                         </div>
 
-                        {{--  
-                        <div>
-                            <label for="published_at" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {{ __('Published at') }}
-                            </label>
-                            <input id="published_at" name="published_at" type="datetime-local" value="{{ $publishedAtValue }}"
-                            class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-900/40">
-                        </div>
-        --}}
-
                         <div>
                             <label for="is_draft"
                                 class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -135,16 +123,7 @@
                                 </option>
                             </select>
                         </div>
-                        {{-- 
-<div>
-    <label for="position" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-        {{ __('Position') }}
-    </label>
-    <input id="position" name="position" type="number" min="0"
-    value="{{ old('position', $page->position ?? 0) }}"
-    class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-900/40">
-</div>
---}}
+
                     </div>
                 </section>
 
@@ -177,3 +156,18 @@
         </div>
     </v-slot:main>
 </x-admin-layout>
+
+<script nonce="{{ $nonce }}">
+    $(document).ready(function() {
+        $('#resetButton').on('click', function(e) {
+            e.preventDefault();
+
+            var confirmMessage =
+                'WARNING: This will reset the template to the production version. All current changes will be lost. Are you sure?';
+
+            if (confirm(confirmMessage)) {
+                $('#resetForm').submit();
+            }
+        });
+    });
+</script>

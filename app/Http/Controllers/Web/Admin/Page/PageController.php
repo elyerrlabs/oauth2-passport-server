@@ -202,4 +202,17 @@ final class PageController extends WebController
 
         return back()->with('status', __('Sitemap index has been generating'));
     }
+
+    /**
+     * Reset
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function reset(string $id)
+    {
+        $this->pageService->reset($id);
+
+        return redirect()->route('admin.pages.edit', ['page' => $id])
+            ->with('status', __('Page reseted successfully'));
+    }
 }

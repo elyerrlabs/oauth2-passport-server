@@ -57,6 +57,7 @@ Route::middleware(['throttle:system:general:pages'])
     ->group(function () {
 
         Route::post('pages/generate-sitemap', [PageController::class, 'generateSitemapFile'])->name('pages.generate-sitemap');
+        Route::post('pages/{page}/reset', [PageController::class, 'reset'])->name('pages.reset');
         Route::resource('pages', PageController::class);
 
         Route::get('layouts', [LayoutController::class, 'form'])->name('layouts.schema');
