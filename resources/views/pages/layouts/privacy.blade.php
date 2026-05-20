@@ -113,15 +113,15 @@
                     <strong>{{ __('We use essential cookies for the platform to function properly:') }}</strong>
                 </p>
                 <p class="privacy-modal__text" style="margin-top: 0.5rem;">
-                    • <strong>name_csrf</strong> —
+                    • <strong>{{config('session.xcsrf-token')}}</strong> —
                     {{ __('Protects your session against cross-site request forgery attacks. This cookie is required for all form submissions and API requests.') }}
                 </p>
                 <p class="privacy-modal__text">
-                    • <strong>name_session</strong> —
+                    • <strong>{{ config('session.cookie')}}</strong> —
                     {{ __('Maintains your authenticated session while you navigate the platform. Without it, you would need to log in on every page.') }}
                 </p>
                 <p class="privacy-modal__text">
-                    • <strong>name_server</strong> —
+                    • <strong>{{ config('system.cookie_name')}}</strong> —
                     {{ __('Essential for API communication between the frontend and Laravel Passport. Enables secure OAuth2 authentication for your own APIs.') }}
                 </p>
                 <p class="privacy-modal__text" style="margin-top: 0.75rem;">
