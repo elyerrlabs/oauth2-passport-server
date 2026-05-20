@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Updated role assignment command
 - Updated layout menus
     - Add new layout to manage favicon
+    - add new layout to manage privacy modal
 - Updated pages support
     - Seo support for login, register, forgot-pasword and plans
     - Add new scope for pages service
