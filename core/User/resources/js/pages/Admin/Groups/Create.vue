@@ -149,11 +149,9 @@ const form = useForm({
     system: false,
 });
 
-const errors = ref({});
-
 // Methods
 const open = () => {
-    form.errors.value = {};
+    form.resetAndClearErrors();
     if (props.item?.id) {
         form.name = props.item.name;
         form.description = props.item.description;
@@ -163,7 +161,7 @@ const open = () => {
 };
 
 const close = () => {
-    form.errors.value = {};
+    form.resetAndClearErrors();
     dialog.value = false;
 };
 

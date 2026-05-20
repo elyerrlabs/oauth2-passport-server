@@ -49,8 +49,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             >
                                 <v-input
                                     :label="__('Group Name')"
-                                    v-model="search.name"
-                                    @input="getGroups"
+                                    v-model="search.name" 
                                 />
 
                                 <v-select

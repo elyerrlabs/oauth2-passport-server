@@ -169,6 +169,7 @@ import VInput from "@/components/VInput.vue";
 import VButton from "@/components/VButton.vue";
 
 import { ref, computed } from "vue";
+import { useForm } from "@inertiajs/vue3";
 
 const emits = defineEmits(["deleted"]);
 const props = defineProps({
@@ -179,6 +180,7 @@ const props = defineProps({
     },
 });
 
+const form = useForm({});
 const loading = ref(false);
 const dialog = ref(false);
 const confirmationText = ref("");
@@ -200,20 +202,21 @@ const destroy = async () => {
 
     loading.value = true;
 
-    try {
-        const res = await $server.delete(props.item.links.destroy);
-        if (res.status == 200) {
+    form.delete(props.item.links.destroy, {
+        preserveScroll: true,
+        preserveScroll: true,
+        onSuccess: (res) => {
             $notify.success(__("Role deleted successfully"));
             emits("deleted");
             dialog.value = false;
             confirmationText.value = "";
-        }
-    } catch (error) {
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 </script>

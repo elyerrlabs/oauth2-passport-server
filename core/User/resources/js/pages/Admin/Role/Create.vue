@@ -47,7 +47,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         v-model="form.name"
                         :placeholder="__('Enter role name')"
                         :required="true"
-                        :error="errors.name"
+                        :error="form.errors.name"
                         :disabled="item?.system"
                     />
 
@@ -56,7 +56,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             v-show="item?.id | item?.system"
                             :label="__('System Role')"
                             v-model="form.system"
-                            :error="errors.system"
+                            :error="form.errors.system"
                             :placeholder="
                                 __(
                                     'System roles have special permissions and cannot be deleted.',
@@ -73,7 +73,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         v-model="form.description"
                         :placeholder="__('Enter role description...')"
                         :required="true"
-                        :error="errors.description"
+                        :error="form.errors.description"
                         :disabled="item?.system"
                     />
                 </div>
@@ -119,7 +119,7 @@ import VInput from "@/components/VInput.vue";
 import VTextarea from "@/components/VTextarea.vue";
 import VSwitch from "@/components/VSwitch.vue";
 import VButton from "@/components/VButton.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 const page = usePage();
@@ -135,78 +135,68 @@ const props = defineProps({
 
 const dialog = ref(false);
 const loading = ref(false);
-const form = ref({
+const form = useForm({
     name: null,
     description: null,
     system: false,
 });
 
-const errors = ref({});
-
 // methods
 const open = () => {
     dialog.value = true;
-    form.value = {};
+    form.resetAndClearErrors();
     if (props.item?.id) {
-        form.value = { ...props.item };
+        form.name = props.item.name;
+        form.description = props.item.description;
+        form.system = props.item.system;
     }
 };
 
-const close = () => {
-    form.value = {};
-    dialog.value = false;
-    loading.value = false;
-};
-
-const createRole = async () => {
-    try {
-        const res = await $server.post(page.props.api.roles, form.value);
-        if (res.status == 201) {
+const createRole = () => {
+    form.post(page.props.routes.roles, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             $notify.success(__("Role created successfully"));
             dialog.value = false;
-            errors.value = {};
+            form.errors.value = {};
             emits("created");
-        }
-    } catch (e) {
-        if (e?.response?.status == 422) {
-            errors.value = e.response.data.errors;
-        }
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
 const updateRole = async () => {
-    try {
-        const res = await $server.put(props.item.links.update, form.value);
-        if (res.status == 200) {
+    form.put(props.item.links.update, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             $notify.success(__("Role updated successfully"));
             dialog.value = false;
-            errors.value = {};
+            form.errors.value = {};
             form.value = {};
             emits("updated");
-        }
-    } catch (e) {
-        if (e?.response?.status == 422) {
-            errors.value = e.response.data.errors;
-        }
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
-const handleAction = async () => {
+const handleAction = () => {
     loading.value = true;
     if (props.item?.id) {
-        await updateRole();
+        updateRole();
     } else {
-        await createRole();
+        createRole();
     }
 };
 </script>
