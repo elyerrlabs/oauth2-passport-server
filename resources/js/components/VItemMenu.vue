@@ -28,8 +28,8 @@
                     }"
                 >
                     <!-- Left side: icon and name -->
-                    <div
-                        class="flex items-center gap-3"
+                    <button
+                        class="flex-1 flex items-center gap-2 cursor-pointer"
                         @click="handleMenuClick(item)"
                     >
                         <div
@@ -41,13 +41,13 @@
                             ></i>
                         </div>
                         <span class="text-md">{{ __(item.name) }}</span>
-                    </div>
+                    </button>
 
                     <!-- Submenu toggle indicator -->
                     <button
                         v-if="item.menus && item.menus.length"
                         @click.stop="toggleSubmenu(item.id)"
-                        class="mr-2 p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
+                        class="mr-2 p-1 shrink-0 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
                     >
                         <span
                             class="inline-block transition-transform duration-200"
