@@ -50,7 +50,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - llow restoring pages to default production layout (overwrites draft)
 - Move transaction module API endpoints to web routes to render with Inertia instead of Axios
 - Implement CAPTCHA validation on two-factor authentication challenge to prevent brute force attacks
-- Update resources for (Group , Roles)
+- Update resources for (Group , Roles, services)
     - Migrate api route to web routes
     - Change from making requests with axios to using Inertia's useForm
     - Update links property for GroupTransformer instead of using api endpoints

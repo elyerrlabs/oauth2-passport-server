@@ -154,7 +154,7 @@ import VModal from "@/components/VModal.vue";
 import VSelect from "@/components/VSelect.vue";
 import VSwitch from "@/components/VSwitch.vue";
 import VButton from "@/components/VButton.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 
 const emits = defineEmits(["created"]);
 const page = usePage();
@@ -179,7 +179,7 @@ const loading = ref(false);
 const roles = ref([]);
 const errors = ref({});
 
-const form = ref({
+const form = useForm({
     api_key: false,
     web: false,
     active: false,
@@ -188,17 +188,16 @@ const form = ref({
 });
 
 const open = async () => {
-    await getRoles();
-
     if (props.scope?.id) {
-        form.value.api_key = props.scope.api_key;
-        form.value.web = props.scope.web;
-        form.value.active = props.scope.active;
-        form.value.public = props.scope.public;
-        form.value.role_id = props.scope?.role?.id;
+        form.api_key = props.scope.api_key;
+        form.web = props.scope.web;
+        form.active = props.scope.active;
+        form.public = props.scope.public;
+        form.role_id = props.scope?.role?.id;
     }
 
     dialog.value = true;
+    await getRoles();
 };
 
 const getRoles = async () => {
@@ -223,9 +222,10 @@ const getRoles = async () => {
 const addScopes = async () => {
     loading.value = true;
 
-    try {
-        const res = await $server.post(props.link, form.value);
-        if (res.status == 201) {
+    form.post(props.link, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
             $notify.success(
                 props.scope?.id
                     ? __("Scope updated successfully")
@@ -233,17 +233,14 @@ const addScopes = async () => {
             );
             emits("created");
             dialog.value = false;
-        }
-    } catch (error) {
-        if (error?.response?.status == 422) {
-            errors.value = error.response.data.errors;
-        }
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 </script>
 

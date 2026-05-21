@@ -73,12 +73,27 @@ class ServiceScopeTransformer extends TransformerAbstract
                 'slug' => $data->role->slug,
                 'description' => $data->role->description
             ],
+            'service' => [
+                'id' => $data->service->id,
+                'name' => $data->service->name,
+                'slug' => $data->service->slug,
+                'description' => $data->service->description,
+                'system' => $data->service->system ? true : false,
+                'visibility' => $data->service->visibility,
+                'group' => [
+                    'id' => $data->service->id,
+                    'name' => $data->service->group->name,
+                    'slug' => $data->service->group->slug,
+                    'description' => $data->service->group->description,
+
+                ],
+            ],
             'created' => $this->format_date($data->created_at),
             'updated' => $this->format_date($data->updated_at),
             'links' => [
-                'index' => route('api.user.admin.services.scopes.index', ['service' => $data->service->id]),
-                'assign' => route('api.user.admin.services.scopes.assign', ['service' => $data->service->id]),
-                'revoke' => route('api.user.admin.services.scopes.revoke', [
+                'index' => route('user.admin.services.scopes.index', ['service' => $data->service->id]),
+                'store' => route('user.admin.services.scopes.store', ['service' => $data->service->id]),
+                'destroy' => route('user.admin.services.scopes.destroy', [
                     'service' => $data->service->id,
                     'scope' => $data->id,
                 ])

@@ -38,24 +38,12 @@ use Illuminate\Database\UniqueConstraintViolationException;
 class ServiceService
 {
     /**
-     * Service
-     * @var ServiceRepository
-     */
-    private $serviceRepository;
-
-    /**
-     * Scope repository
-     * @var ScopeService
-     */
-    private $scopeService;
-
-    /**
      * Construct
      */
-    public function __construct()
-    {
-        $this->serviceRepository = app(ServiceRepository::class);
-        $this->scopeService = app(ScopeService::class);
+    public function __construct(
+        protected ServiceRepository $serviceRepository,
+        protected ScopeService $scopeService
+    ) {
     }
 
     /**

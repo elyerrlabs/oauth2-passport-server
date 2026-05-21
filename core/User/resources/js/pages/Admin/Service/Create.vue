@@ -47,7 +47,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <div class="p-6 space-y-6">
                     <v-input
                         v-model="form.name"
-                        :error="errors.name"
+                        :error="form.errors.name"
                         :required="true"
                         :label="__('Service Name')"
                         :placeholder="__('Enter service name')"
@@ -57,7 +57,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <v-switch
                         v-show="item?.system"
                         v-model="form.system"
-                        :error="errors.system"
+                        :error="form.errors.system"
                         :label="__('System Service')"
                         :disabled="item?.system"
                         :placeholder="
@@ -69,7 +69,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                     <v-textarea
                         v-model="form.description"
-                        :error="errors.description"
+                        :error="form.errors.description"
                         :label="__('Description')"
                         :required="true"
                         :placeholder="__('Enter service description...')"
@@ -84,7 +84,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         label-key="name"
                         value-key="id"
                         :label="__('Group')"
-                        :error="errors.group_id"
+                        :error="form.errors.group_id"
                         v-if="!item?.id"
                         :disabled="item?.system"
                     />
@@ -95,7 +95,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         :placeholder="__('Select visibility level')"
                         :options="visibilityOptions"
                         :required="true"
-                        :error="errors.visibility"
+                        :error="form.errors.visibility"
                         :disabled="item?.system"
                     />
                 </div>
@@ -141,7 +141,7 @@ import VTextarea from "@/components/VTextarea.vue";
 import VSwitch from "@/components/VSwitch.vue";
 import VSelect from "@/components/VSelect.vue";
 import VButton from "@/components/VButton.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 
@@ -162,15 +162,13 @@ const visibilityOptions = [
     { name: __("Public"), id: "public" },
 ];
 
-const form = ref({
+const form = useForm({
     name: null,
     description: null,
     group_id: null,
     system: false,
     visibility: null,
 });
-
-const errors = ref({});
 
 const groups = ref([]);
 
@@ -182,10 +180,13 @@ function close() {
 
 const open = async () => {
     dialog.value = true;
-    form.value = {};
+    form.resetAndClearErrors();
     if (props.item?.id) {
-        form.value = props.item;
-        form.value.group_id = props.item?.group?.id;
+        form.name = props.item.name;
+        form.description = props.item.description;
+        form.group_id = props.item.group.id;
+        form.system = props.item.system;
+        form.visibility = props.item.visibility;
     }
     await getGroups();
 };
@@ -211,54 +212,49 @@ const getGroups = async () => {
 };
 
 const createService = async () => {
-    try {
-        const res = await $server.post(page.props.api.services, form.value);
-        if (res.status == 201) {
+    form.post(page.props.routes.services, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             $notify.success(__("Service created successfully"));
             form.value = {};
             emits("created");
             dialog.value = false;
-        }
-    } catch (e) {
-        if (e?.response?.status == 422) {
-            errors.value = e.response.data.errors;
-        }
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
 const updateService = async () => {
-    try {
-        const res = await $server.put(props.item.links.update, form.value);
-        if (res.status == 200) {
+    form.put(props.item.links.update, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             $notify.success(__("Service updated successfully"));
             form.value = {};
             emits("updated");
             dialog.value = false;
-        }
-    } catch (e) {
-        if (e?.response?.status == 422) {
-            errors.value = e.response.data.errors;
-        }
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
-const handle = async () => {
+const handle = () => {
     loading.value = true;
-
     if (props.item?.id) {
-        await updateService();
+        updateService();
     } else {
-        await createService();
+        createService();
     }
 };
 </script>

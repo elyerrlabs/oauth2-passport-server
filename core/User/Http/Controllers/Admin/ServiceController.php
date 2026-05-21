@@ -27,31 +27,81 @@ namespace Core\User\Http\Controllers\Admin;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Inertia\Inertia;
 use App\Http\Controllers\WebController;
+use Core\User\Http\Requests\ServiceStoreRequest;
+use Core\User\Http\Requests\ServiceUpdateRequest;
+use Core\User\Services\ServiceService;
+use Core\User\Transformer\Admin\ServiceTransformer;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ServiceController extends WebController
 {
 
-    public function __construct()
+    public function __construct(protected ServiceService $serviceService)
     {
         parent::__construct();
         $this->middleware('userCanAny:administrator:service:full,administrator:service:view')->only('index');
+        $this->middleware('userCanAny:administrator:service:full,administrator:service:show')->only('show');
+        $this->middleware('userCanAny:administrator:service:full,administrator:service:create')->only('store');
+        $this->middleware('userCanAny:administrator:service:full,administrator:service:update')->only('update');
+        $this->middleware('userCanAny:administrator:service:full,administrator:service:destroy')->only('destroy');
     }
 
     /**
      * Index
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $data = $this->serviceService->search($request)->paginate($request->input('per_page', 15));
+
         return Inertia::render("Admin/Service/Index", [
-            'menus' => resolveInertiaRoutes(config('menus.admin_routes')),
+            'data' => $this->transformCollection($data, ServiceTransformer::class),
+            'routes' => [
+                'services' => route('user.admin.services.index'),
+            ],
             'api' => [
-                'services' => route('api.user.admin.services.index'),
                 'groups' => route('api.user.admin.groups.index'),
-                'roles' => route('api.user.admin.roles.store')
-            ]
+                'roles' => route('api.user.admin.roles.index')
+            ],
         ]);
+    }
+
+    /**
+     * create new resource
+     * @param ServiceStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(ServiceStoreRequest $request)
+    {
+        $this->serviceService->create($request->toArray());
+
+        return redirect()->route('user.admin.services.index')->with('status', __('Service created successfully'));
+    }
+
+    /**
+     * Update
+     * @param ServiceUpdateRequest $request
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(ServiceUpdateRequest $request, string $id)
+    {
+        $this->serviceService->update($id, $request->toArray());
+
+        return redirect()->route('user.admin.services.index')->with('status', __('Service updated successfully'));
+    }
+
+    /**
+     * Destroy
+     * @param string $id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function destroy(string $id)
+    {
+        $this->serviceService->delete($id);
+
+        return redirect()->route('user.admin.services.index')->with('status', __('Service deleted successfully'));
     }
 }

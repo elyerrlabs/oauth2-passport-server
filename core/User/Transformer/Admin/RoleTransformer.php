@@ -56,18 +56,28 @@ class RoleTransformer extends TransformerAbstract
      */
     public function transform($role)
     {
+        // default web routes
+        $links = [
+            'index' => route('user.admin.roles.index'),
+            'store' => route('user.admin.roles.store'),
+            'update' => route('user.admin.roles.update', ['role' => $role->id]),
+            'destroy' => route('user.admin.roles.destroy', ['role' => $role->id]),
+        ];
+
+        // Links for api routes
+        if (request()->wantsJson()) {
+            $links = [
+                'index' => route('api.user.admin.roles.index'),
+            ];
+        }
+
         return [
             'id' => $role->id,
             'name' => $role->name,
             'slug' => $role->slug,
             'description' => $role->description,
             'system' => $role->system ? true : false,
-            'links' => [
-                'index' => route('user.admin.roles.index'),
-                'store' => route('user.admin.roles.store'),
-                'update' => route('user.admin.roles.update', ['role' => $role->id]),
-                'destroy' => route('user.admin.roles.destroy', ['role' => $role->id]),
-            ],
+            'links' => $links,
         ];
     }
 }

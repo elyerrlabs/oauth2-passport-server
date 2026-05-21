@@ -48,6 +48,45 @@ class ScopeService
         $this->scopeRepository = $scopeRepository;
     }
 
+
+    public function search(Request $request)
+    {
+        // Create query
+        $query = $this->scopeRepository->query();
+
+        $query->when($request->filled('active'), fn($q) => $q->where('active', $request->active));
+        $query->when($request->filled('public'), fn($q) => $q->where('public', $request->public));
+        $query->when($request->filled('service_id'), fn($q) => $q->where('service_id', $request->service_id));
+
+        // search by role name or slug
+        if ($request->has('role_name')) {
+            $query->whereHas(
+                'role',
+                function ($query) use ($request) {
+                    $query->whereRaw(
+                        "LOWER(name) like ?",
+                        ["%" . strtolower($request->role_name) . "%"]
+                    );
+                }
+            );
+        }
+
+        // Search by service name or slug
+        if ($request->has('service_name')) {
+            $query->whereHas(
+                'service',
+                function ($query) use ($request) {
+                    $query->whereRaw(
+                        "LOWER(name) like  ?",
+                        ["%" . strtolower($request->service_name) . "%"]
+                    );
+                }
+            );
+        }
+
+        return $query;
+    }
+
     /**
      * Search for user
      * @param \Illuminate\Http\Request $request
@@ -61,10 +100,6 @@ class ScopeService
         $query->where('active', true);
 
         $query->where('public', false);
-
-        if ($request->disabled_request) {
-            return $query;
-        }
 
         // search by role name or slug
         if ($request->has('role')) {
@@ -119,5 +154,4 @@ class ScopeService
 
         return $query->first();
     }
-
 }

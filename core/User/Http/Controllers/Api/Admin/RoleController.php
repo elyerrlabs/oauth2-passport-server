@@ -29,8 +29,6 @@ namespace Core\User\Http\Controllers\Api\Admin;
  */
 
 use App\Http\Controllers\ApiController;
-use Core\User\Http\Requests\RoleStoreRequest;
-use Core\User\Http\Requests\RoleUpdateRequest;
 use Core\User\Services\RoleService;
 use Core\User\Transformer\Admin\RoleTransformer;
 use Illuminate\Http\Request;
@@ -46,9 +44,6 @@ final class RoleController extends ApiController
     {
         parent::__construct();
         $this->middleware('scope:administrator:role:full,administrator:role:view')->only('index');
-        $this->middleware('scope:administrator:role:full,administrator:role:create')->only('store');
-        $this->middleware('scope:administrator:role:full,administrator:role:update')->only('update');
-        $this->middleware('scope:administrator:role:full,administrator:role:destroy')->only('destroy');
     }
 
     /**
@@ -61,42 +56,5 @@ final class RoleController extends ApiController
         $data = $this->roleService->search($request);
 
         return $this->showAllByBuilder($data, RoleTransformer::class);
-    }
-
-    /**
-     * Store
-     * @param RoleStoreRequest $request
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function store(RoleStoreRequest $request)
-    {
-        $data = $this->roleService->create($request->toArray());
-
-        return $this->showOne($data, RoleTransformer::class, 201);
-    }
-
-    /**
-     * update
-     * @param RoleUpdateRequest $request
-     * @param string $id
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function update(RoleUpdateRequest $request, string $id)
-    {
-        $model =  $this->roleService->update($id, $request->toArray());
-
-        return $this->showOne($model, RoleTransformer::class);
-    }
-
-    /**
-     * Updated
-     * @param string $id
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function destroy(string $id)
-    {
-        $model =  $this->roleService->delete($id);
-
-        return $this->showOne($model, RoleTransformer::class);
     }
 }

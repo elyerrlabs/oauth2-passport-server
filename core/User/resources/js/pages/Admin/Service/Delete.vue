@@ -44,7 +44,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <p class="text-gray-700 dark:text-gray-300">
                         {{ __("Are you sure you want to delete the service") }}
                         <span class="font-bold text-blue-600 dark:text-blue-400"
-                            >"{{ form.name }}"</span
+                            >"{{ item.name }}"</span
                         >?
                     </p>
 
@@ -54,20 +54,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-sm transition-colors duration-200"
                         >
                             <i class="mdi mdi-identifier"></i>
-                            {{ __("ID") }}: {{ form.id }}
+                            {{ __("ID") }}: {{ item.id }}
                         </span>
                         <span
                             class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 rounded-full text-sm transition-colors duration-200"
                         >
                             <i class="mdi mdi-account-group"></i>
                             {{ __("Group") }}:
-                            {{ form.group?.name || __("N/A") }}
+                            {{ item.group?.name || __("N/A") }}
                         </span>
                     </div>
 
                     <div class="flex justify-center gap-2 flex-wrap">
                         <span
-                            v-if="form.system"
+                            v-if="item.system"
                             class="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 rounded-full text-sm transition-colors duration-200"
                         >
                             <i class="mdi mdi-shield-check"></i>
@@ -77,7 +77,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             class="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 rounded-full text-sm transition-colors duration-200"
                         >
                             <i class="mdi mdi-eye"></i>
-                            {{ form.visibility || __("N/A") }}
+                            {{ item.visibility || __("N/A") }}
                         </span>
                     </div>
 
@@ -85,7 +85,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <div
                         :class="[
                             'p-4 rounded-lg border transition-colors duration-200',
-                            form.system
+                            item.system
                                 ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-300'
                                 : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-300',
                         ]"
@@ -94,7 +94,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <i class="mdi mdi-alert mt-0.5 shrink-0"></i>
                             <span class="text-sm text-left">
                                 {{
-                                    form.system
+                                    item.system
                                         ? __(
                                               "Warning: This is a system service. Deleting it may affect application functionality.",
                                           )
@@ -107,7 +107,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </div>
 
                     <!-- Confirmation Input (solo para servicios no system) -->
-                    <div v-if="!form.system" class="space-y-3 pt-2">
+                    <div v-if="!item.system" class="space-y-3 pt-2">
                         <p class="text-sm text-gray-600 dark:text-gray-400">
                             {{ __("To confirm, type the service name below:") }}
                         </p>
@@ -115,7 +115,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <code
                                 class="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg font-mono text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700 text-sm"
                             >
-                                {{ form.slug }}
+                                {{ item.slug }}
                             </code>
                         </div>
                         <v-input
@@ -126,7 +126,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </div>
 
                     <!-- System Service Warning -->
-                    <div v-if="form.system" class="pt-2">
+                    <div v-if="item.system" class="pt-2">
                         <div
                             class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4"
                         >
@@ -156,6 +156,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         :title="__('Cancel')"
                         :label="__('Cancel')"
                         icon="mdi mdi-close-circle"
+                        variant="danger"
                     />
 
                     <v-button
@@ -196,55 +197,41 @@ const loading = ref(false);
 const dialog = ref(false);
 const confirmationText = ref("");
 
-const form = useForm({
-    id: null,
-    name: "",
-    slug: "",
-    group: null,
-    visibility: "",
-    system: false,
-});
+const form = useForm({});
 
 const canDelete = computed(() => {
-    return confirmationText.value === form.slug;
+    return confirmationText.value === props.item.slug;
 });
 
-const handleConfirm = async () => {
+const handleConfirm = () => {
     if (canDelete.value && !loading.value) {
-        await destroy();
+        destroy();
     }
 };
 
 const open = () => {
     confirmationText.value = "";
-
-    if (props.item?.id) {
-    }
-    form.id = props.item.id;
-    form.name = props.item.name;
-    form.slug = props.item.slug;
-    form.group = props.item.group;
-    form.visibility = props.item.visibility;
-    form.system = props.item.system;
+    form.resetAndClearErrors();
 
     dialog.value = true;
 };
 
-const destroy = async () => {
-    try {
-        const res = await $server.delete(props.item.links.destroy);
-        if (res.status == 200) {
+const destroy = () => {
+    form.delete(props.item.links.destroy, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             $notify.success(__("Service deleted successfully"));
             emits("deleted");
             dialog.value = false;
             confirmationText.value = "";
-        }
-    } catch (error) {
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 </script>

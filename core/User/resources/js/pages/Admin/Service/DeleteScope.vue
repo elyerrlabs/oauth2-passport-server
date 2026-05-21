@@ -200,6 +200,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 import VModal from "@/components/VModal.vue";
 import VButton from "@/components/VButton.vue";
 import { ref, computed } from "vue";
+import { useForm } from "@inertiajs/vue3";
 
 const emits = defineEmits(["deleted"]);
 const props = defineProps({
@@ -212,6 +213,7 @@ const props = defineProps({
 const loading = ref(false);
 const dialog = ref(false);
 const confirmationText = ref("");
+const form = useForm({});
 
 const canDelete = computed(() => {
     return confirmationText.value === props.scope.gsr_id.toString();
@@ -230,20 +232,21 @@ const destroy = async () => {
 
     loading.value = true;
 
-    try {
-        const res = await $server.delete(props.scope.links.revoke);
-        if (res.status == 200) {
+    form.delete(props.scope.links.destroy, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             $notify.success(__("Scope revoked successfully"));
             emits("deleted");
             dialog.value = false;
             confirmationText.value = "";
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 </script>

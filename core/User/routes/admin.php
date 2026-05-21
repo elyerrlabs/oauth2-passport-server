@@ -27,14 +27,16 @@
 
 use Illuminate\Support\Facades\Route;
 use Core\User\Http\Controllers\Admin\RoleController;
-use Core\User\Http\Controllers\Admin\UserController;
 use Core\User\Http\Controllers\Admin\GroupController;
 use Core\User\Http\Controllers\Admin\ServiceController;
+use Core\User\Http\Controllers\Admin\ServiceScopeController;
 
 Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(function () {
 
     Route::resource('groups', GroupController::class)->only('index', 'store', 'update', 'destroy');
     Route::resource('roles', RoleController::class)->only('index', 'store', 'update', 'destroy');
-    //Route::resource('services', ServiceController::class);
+    Route::resource('services', ServiceController::class)->only('index', 'store', 'update', 'destroy');
+    Route::resource('services.scopes', ServiceScopeController::class)->only('index', 'store', 'destroy');
+    
     //Route::resource('users', UserController::class);
 });

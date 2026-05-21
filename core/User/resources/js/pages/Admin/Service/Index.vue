@@ -34,7 +34,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             </template>
             <template #bottom>
                 <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4"
                 >
                     <v-input
                         :label="__(' Name')"
@@ -206,7 +206,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex justify-end gap-2">
-                                    <v-detail :service="service" />
+                                    <v-button
+                                        @click="open"
+                                        icon="mdi mdi-shield-lock-open-outline"
+                                        title="Manage Scopes"
+                                        round
+                                        variant="secondary"
+                                        as="a"
+                                        :to="service.links.scopes"
+                                    />
                                     <v-create
                                         :item="service"
                                         @updated="getServices"
@@ -234,18 +242,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import VButton from "@/components/VButton.vue";
 import VMainLayout from "@/components/VMainLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VTable from "@/components/VTable.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
-import VDetail from "./Scope.vue";
 import VHead from "@/components/VHead.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 /**
@@ -257,7 +264,7 @@ const pages = ref({
     total_pages: 0,
 });
 
-const search = ref({
+const search = useForm({
     page: 1,
     per_page: 15,
     name: "",
@@ -268,60 +275,44 @@ const search = ref({
 
 const groups = ref([]);
 
-/**
- * Computed
- */
-const systemServicesCount = computed(
-    () => services.value.filter((s) => s.system).length,
-);
-const customServicesCount = computed(
-    () => services.value.filter((s) => !s.system).length,
-);
-
 onMounted(async () => {
+    loadData(page.props.data);
     await getGroups();
-    await getServices();
 });
 
 /**
  * Methods
  */
-
 const changePage = () => {
     getServices();
 };
 
 const clearFilters = () => {
-    search.value = {
-        page: 1,
-        per_page: 15,
-        name: "",
-        group: "",
-        visibility: "",
-        system: "",
-    };
+    search.resetAndClearErrors();
     getServices();
 };
 
-const getServices = async () => {
+const loadData = (data) => {
+    services.value = data.data;
+    pages.value = data.meta.pagination;
+};
+
+const getServices = () => {
     loading.value = true;
 
-    try {
-        const res = await $server.get(page.props.api.services, {
-            params: search.value,
-        });
-        if (res.status == 200) {
-            const values = res.data;
-            services.value = values.data;
-            pages.value = values.meta.pagination;
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+    search.get(page.props.routes.services, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
+            loadData(res.props.data);
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
 const getGroups = async () => {

@@ -2,15 +2,6 @@
 
 namespace Core\User\Http\Controllers\Api\Admin;
 
-use App\Http\Controllers\ApiController;
-use Core\User\Http\Requests\ServiceStoreRequest;
-use Core\User\Http\Requests\ServiceUpdateRequest;
-use Core\User\Services\GroupService;
-use Core\User\Services\RoleService;
-use Core\User\Services\ServiceService;
-use Core\User\Transformer\Admin\ServiceTransformer;
-use Illuminate\Http\Request;
-
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -36,31 +27,32 @@ use Illuminate\Http\Request;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-final class ServiceController extends ApiController
-{
+use App\Http\Controllers\ApiController; 
+use Core\User\Services\GroupService;
+use Core\User\Transformer\Admin\GroupTransformer;
+use Illuminate\Http\Request;
 
+final class GroupController extends ApiController
+{
     /**
-     * Service scope
-     * @param \Core\User\Services\ServiceService $serviceService
+     * Construct
+     * @param  GroupService $groupService
      */
-    public function __construct(
-        protected ServiceService $serviceService,
-        protected GroupService $groupService,
-        protected RoleService $roleService
-    ) {
+    public function __construct(protected GroupService $groupService)
+    {
         parent::__construct();
-        $this->middleware('scope:administrator:service:full,administrator:service:view')->only('index');
+        $this->middleware('scope:administrator:group:full,administrator:group:view')->only('index');
     }
 
     /**
-     * index
+     * Index
      * @param Request $request
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
-        $data = $this->serviceService->search($request);
+        $data = $this->groupService->search($request);
 
-        return $this->showAllByBuilder($data, ServiceTransformer::class);
+        return $this->showAllByBuilder($data, GroupTransformer::class);
     }
 }
