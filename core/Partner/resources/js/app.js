@@ -29,7 +29,6 @@ import { $notify } from "@/config/notify.js";
 
 //import { $echo } from "./config/echo.js";
 import { $server } from "@/config/axios.js";
-import VueSweetalert2 from "vue-sweetalert2";
 
 setupI18n();
 window.__ = __;
@@ -46,7 +45,6 @@ createInertiaApp({
     app.config.globalProperties.__ = __;
 
     app.use(plugin);
-    app.use(VueSweetalert2);
     app.mount(el);
   },
 }); 

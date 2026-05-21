@@ -31,8 +31,6 @@ import { errors } from "@/config/helpers.js"
 
 //import { $echo } from "./config/echo.js";
 import { $server } from "@/config/axios.js";
-import VueSweetalert2 from "vue-sweetalert2";
-import { VueDatePicker } from '@vuepic/vue-datepicker';
 
 setupI18n();
 window.__ = __;
@@ -51,9 +49,7 @@ createInertiaApp({
     app.config.globalProperties.__ = __;
     app.config.globalProperties.$errors = errors;
 
-    app.component("VueDatePicker", VueDatePicker);
     app.use(plugin);
-    app.use(VueSweetalert2);
     app.mount(el);
   },
 }); 

@@ -30,8 +30,7 @@ import "@/config/editor.js";
 import { errors } from "@/config/helpers.js"
 
 //import { $echo } from "./config/echo.js";
-import { $server } from "@/config/axios.js";
-import VueSweetalert2 from "vue-sweetalert2";
+import { $server } from "@/config/axios.js"; 
 
 setupI18n();
 window.__ = __;
@@ -50,8 +49,7 @@ createInertiaApp({
     app.config.globalProperties.$errors = errors;
     app.config.globalProperties.__ = __;
 
-    app.use(plugin);
-    app.use(VueSweetalert2);
+    app.use(plugin); 
     app.mount(el);
   },
 }); 

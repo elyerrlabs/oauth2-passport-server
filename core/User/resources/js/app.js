@@ -29,9 +29,7 @@ import { $notify } from "@/config/notify.js";
 
 //import { $echo } from "./config/echo.js";
 import { $server } from "@/config/axios.js";
-import VueSweetalert2 from "vue-sweetalert2";
-//Vue date picker
-import { VueDatePicker } from '@vuepic/vue-datepicker';
+//Vue date picker 
 
 setupI18n();
 window.__ = __;
@@ -47,9 +45,7 @@ createInertiaApp({
     app.config.globalProperties.$server = $server;
     app.config.globalProperties.__ = __;
 
-    app.component("VueDatePicker", VueDatePicker);
     app.use(plugin);
-    app.use(VueSweetalert2);
     //  app.use(i18n);
     app.mount(el);
   },
