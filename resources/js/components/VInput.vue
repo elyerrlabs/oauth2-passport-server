@@ -48,6 +48,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         'border-red-600 dark:border-red-500': hasError,
                         'pr-10': canToggleVisibility,
                     },
+                    inputType == 'date' ? 'date' : '',
                 ]"
                 :disabled="disabled"
             />
@@ -56,14 +57,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 v-if="canToggleVisibility"
                 type="button"
                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-200 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-                :aria-label="
-                    revealed ? __('Hide value') : __('Show value')
-                "
+                :aria-label="revealed ? __('Hide value') : __('Show value')"
                 :title="revealed ? __('Hide value') : __('Show value')"
                 @click="toggleVisibility"
             >
                 <i
-                    :class="revealed ? 'mdi mdi-eye-off-outline' : 'mdi mdi-eye-outline'"
+                    :class="
+                        revealed
+                            ? 'mdi mdi-eye-off-outline'
+                            : 'mdi mdi-eye-outline'
+                    "
                     class="text-base"
                 ></i>
             </button>
@@ -88,8 +91,10 @@ defineOptions({
     inheritAttrs: false,
 });
 
-import { computed, ref, useAttrs, watch } from "vue";
+import { computed, onMounted, ref, useAttrs, watch } from "vue";
 import VError from "@/components/VError.vue";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 
 const attrs = useAttrs();
 
@@ -105,6 +110,9 @@ const props = defineProps({
     helper: { type: String, default: null },
     hide: { type: Boolean, default: false },
     inputClass: { type: [String, Array, Object], default: "" },
+    dateFormat: { type: String, default: () => "Y-m-d" },
+    dateLocale: { type: String, default: () => "en" },
+    maxDate: { type: String, default: () => "today" },
 });
 
 const emit = defineEmits(["update:modelValue", "input"]);
@@ -156,6 +164,14 @@ watch(
     },
     { immediate: true },
 );
+
+onMounted(() => {
+    flatpickr(".date", {
+        dateFormat: props.dateFormat,
+        locale: props.dateLocale,
+        maxDate: props.maxDate,
+    });
+});
 
 const handleUp = () => {
     if (props.type === "money") {
