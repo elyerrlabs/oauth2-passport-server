@@ -1,9 +1,7 @@
 @import 'tailwindcss' source(none);
 @import "flatpickr";
 @import '@fortawesome/fontawesome-free/css/all.min.css';
-@import "sweetalert2/dist/sweetalert2.min.css";
-@import "@mdi/font/css/materialdesignicons.css";
-@import '@vuepic/vue-datepicker/dist/main.css';
+@import "@mdi/font/css/materialdesignicons.css"; 
 @import "notyf/notyf.min.css";
 @import "jodit/es2021/jodit.min.css";
 @import "monaco-editor/min/vs/style.css";
