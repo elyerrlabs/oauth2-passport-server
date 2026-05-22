@@ -161,7 +161,7 @@ class Menu
             "app_name" => config('app.name'),
             "org_name" => config("app.org_name"),
             "org_support_email" => config('mail.from.address'),
-            "user" => static::authenticated_user(),            
+            "user" => static::authenticated_user(),
             "auth_routes" => [
                 "login" => route('login'),
                 "forgot_password" => route('password.request'),
@@ -170,8 +170,6 @@ class Menu
                 "dashboard" => route('user.dashboard'),
                 "profile" => "user.profile"
             ],
-            "allow_register" => Route::has('register'),
-            "api" => []
         ];
         return array_merge($keys, static::appendChildMenu($user));
     }
