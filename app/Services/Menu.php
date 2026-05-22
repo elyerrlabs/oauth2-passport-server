@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Inertia;
+namespace App\Services;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server

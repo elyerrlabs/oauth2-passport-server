@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Inertia\Middleware; 
 use Illuminate\Http\Request;
-use App\Services\Inertia\Menu;
+use App\Services\Menu;
 
 class HandleInertiaRequests extends Middleware
 {
