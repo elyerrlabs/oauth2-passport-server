@@ -56,6 +56,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         v-model="search.visibility"
                         @change="getServices"
                         :options="[
+                            { name: __('All'), id: '' },
                             { name: __('Public'), id: 'public' },
                             { name: __('Private'), id: 'private' },
                             { name: __('Internal'), id: 'internal' },
@@ -63,18 +64,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     />
 
                     <v-select
-                        :label="__('Service Type')"
-                        v-model="search.system"
-                        @change="getServices"
-                        :options="[
-                            { name: __('All Services'), id: '' },
-                            { name: __('System Services'), id: true },
-                            { name: __('Custom Services'), id: false },
-                        ]"
-                    />
-
-                    <v-select
-                        :label="__('Results per page')"
+                        :label="__('Choose pagination')"
                         v-model="search.per_page"
                         @change="changePage"
                         :options="[

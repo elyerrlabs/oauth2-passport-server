@@ -34,20 +34,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <template #bottom>
                 <div class="flex justify-around gap-2">
                     <div
-                        class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-2 items-end"
+                        class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2 items-end"
                     >
                         <v-input :label="__('Name')" v-model="search.name" />
-
-                        <v-select
-                            :label="__('Role type')"
-                            v-model="search.system"
-                            @change="getRoles"
-                            :options="[
-                                { name: __('All roles'), id: '' },
-                                { name: __('System roles only'), id: true },
-                                { name: __('Custom roles only'), id: false },
-                            ]"
-                        />
 
                         <!-- Results Per Page -->
                         <v-select
@@ -223,7 +212,6 @@ const search = useForm({
     page: 1,
     per_page: 15,
     name: "",
-    system: "",
     order_type: "desc",
 });
 // mounted

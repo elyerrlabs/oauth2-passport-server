@@ -45,22 +45,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         </div>
                         <div class="flex justify-around gap-2">
                             <div
-                                class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-2 items-end"
+                                class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2 items-end"
                             >
                                 <v-input
                                     :label="__('Group Name')"
-                                    v-model="search.name" 
-                                />
-
-                                <v-select
-                                    :label="__('Choose pagination')"
-                                    v-model="search.per_page"
-                                    @change="getGroups"
-                                    :options="[
-                                        { name: __('All Types'), id: '' },
-                                        { name: __('System Groups'), id: 1 },
-                                        { name: __('User Groups'), id: 0 },
-                                    ]"
+                                    v-model="search.name"
                                 />
 
                                 <v-select
@@ -83,7 +72,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         :label="__('Search')"
                                         left-icon="mdi mdi-search"
                                         @click="getGroups"
-                                        size="xs"
                                     />
 
                                     <v-button
@@ -91,7 +79,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         :label="__('Reset Filters')"
                                         left-icon="mdi mdi-refresh"
                                         variant="secondary"
-                                        size="xs"
                                     />
                                 </div>
                             </div>
@@ -222,7 +209,6 @@ const search = useForm({
     page: 1,
     per_page: 15,
     name: "",
-    system: null, //true | false | null
     order_type: "desc",
 });
 
