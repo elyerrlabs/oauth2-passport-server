@@ -6,7 +6,7 @@
 
 @section('content')
     <div
-        class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 transition-colors duration-300">
+        class="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 transition-colors duration-300">
         <div class="w-full max-w-md">
             <!-- Logo/Brand -->
             <div class="text-center mb-8">
@@ -30,17 +30,18 @@
                     </div>
                     <div class="mt-2 text-xs text-blue-700 dark:text-blue-400 space-y-1">
                         <div class="flex justify-between items-center">
-                            <span><strong>{{ __('Email') }}:</strong> {{ config('system.demo.email') }}</span>
-                            <button type="button" onclick="copyToClipboard('{{ config('system.demo.email') }}', 'email')"
-                                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs">
+                            <span><strong>{{ __('Email') }}:</strong> <span
+                                    id="demo-email">{{ config('system.demo.email') }}</span></span>
+                            <button type="button" data-copy-target="demo-email" data-copy-type="email"
+                                class="copy-button cursor-pointer text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs">
                                 <i class="mdi mdi-content-copy"></i> {{ __('Copy') }}
                             </button>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span><strong>{{ __('Password') }}:</strong> {{ config('system.demo.password') }}</span>
-                            <button type="button"
-                                onclick="copyToClipboard('{{ config('system.demo.password') }}', 'password')"
-                                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs">
+                            <span><strong>{{ __('Password') }}:</strong> <span
+                                    id="demo-password">{{ config('system.demo.password') }}</span></span>
+                            <button type="button" data-copy-target="demo-password" data-copy-type="password"
+                                class="copy-button cursor-pointer text-blue-600 hover:text-blue-800 dark:text-blue-400 text-xs">
                                 <i class="mdi mdi-content-copy"></i> {{ __('Copy') }}
                             </button>
                         </div>
@@ -68,7 +69,7 @@
 
             <!-- Login Form -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
-                <form action="{{ route('login.store') }}" method="POST" class="space-y-5">
+                <form action="{{ route('login.store') }}" method="POST" class="space-y-5" id="login-form">
                     @csrf
 
                     <!-- Email Field -->
@@ -106,7 +107,7 @@
                                           dark:bg-gray-700 dark:text-white transition duration-200"
                                 placeholder="••••••••" required>
                             <button type="button" id="toggle-password"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                class="toggle-password-btn cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                                 <i class="mdi mdi-eye text-lg"></i>
                             </button>
                         </div>
@@ -138,10 +139,9 @@
                         <x-captcha />
                     </div>
 
-
                     <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg
+                        class="w-full bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg
                                    transition duration-200 transform hover:scale-[1.02] active:scale-[0.98]
                                    shadow-md hover:shadow-lg flex items-center justify-center gap-2">
                         <i class="mdi mdi-login text-lg"></i>
@@ -172,48 +172,95 @@
             </div>
         </div>
     </div>
+@endsection
 
-    <script nonce="{{ $nonce ?? '' }}">
+@push('js')
+    <script nonce="{{ $nonce }}">
         // Toggle password visibility
-        document.getElementById('toggle-password')?.addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const icon = this.querySelector('i');
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            if (togglePasswordBtn) {
+                togglePasswordBtn.addEventListener('click', function() {
+                    const passwordInput = document.getElementById('password');
+                    const icon = this.querySelector('i');
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('mdi-eye');
-                icon.classList.add('mdi-eye-off');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('mdi-eye-off');
-                icon.classList.add('mdi-eye');
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        icon.classList.remove('mdi-eye');
+                        icon.classList.add('mdi-eye-off');
+                    } else {
+                        passwordInput.type = 'password';
+                        icon.classList.remove('mdi-eye-off');
+                        icon.classList.add('mdi-eye');
+                    }
+                });
             }
+
+            // Copy to clipboard functionality for all copy buttons
+            const copyButtons = document.querySelectorAll('.copy-button');
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-copy-target');
+                    const type = this.getAttribute('data-copy-type');
+                    const textElement = document.getElementById(targetId);
+
+                    if (textElement) {
+                        const text = textElement.textContent;
+                        navigator.clipboard.writeText(text).then(() => {
+                            const message = type === 'email' ? 'Demo email copied' :
+                                'Demo password copied';
+
+                            // Check if toast system exists
+                            if (typeof $notify !== 'undefined' && $notify.success) {
+                                $notify.success(message);
+                            } else {
+                                // Create a temporary notification
+                                showNotification(message);
+                            }
+                        }).catch(err => {
+                            console.error('Failed to copy: ', err);
+                            showNotification('Failed to copy to clipboard', 'error');
+                        });
+                    }
+                });
+            });
+
         });
 
-        // Copy to clipboard function
-        function copyToClipboard(text, type) {
-            navigator.clipboard.writeText(text).then(() => {
-                // Simple notification (you can replace with your toast system)
-                const message = type === 'email' ? '{{ __('Demo email copied') }}' :
-                    '{{ __('Demo password copied') }}';
+        // Helper function to show notifications without inline styles
+        function showNotification(message, type = 'success') {
+            // Check if notification div already exists
+            let notificationDiv = document.getElementById('temp-notification');
 
-                // Fallback alert if no toast system
-                if (typeof $notify !== 'undefined') {
-                    $notify.success(message);
-                } else {
-                    alert(message);
-                }
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
-        }
-
-        // Auto-fill demo credentials if clicked (optional)
-        @if (config('system.demo.enabled'))
-            function fillDemoCredentials() {
-                document.getElementById('email').value = '{{ config('system.demo.email') }}';
-                document.getElementById('password').value = '{{ config('system.demo.password') }}';
+            if (!notificationDiv) {
+                notificationDiv = document.createElement('div');
+                notificationDiv.id = 'temp-notification';
+                notificationDiv.className =
+                    'fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-lg text-white transition-opacity duration-300';
+                document.body.appendChild(notificationDiv);
             }
-        @endif
+
+            // Set color based on type
+            if (type === 'success') {
+                notificationDiv.className =
+                    'fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-lg text-white bg-green-500 transition-opacity duration-300';
+            } else {
+                notificationDiv.className =
+                    'fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-lg text-white bg-red-500 transition-opacity duration-300';
+            }
+
+            notificationDiv.textContent = message;
+            notificationDiv.style.opacity = '1';
+
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                notificationDiv.style.opacity = '0';
+                setTimeout(() => {
+                    if (notificationDiv.parentNode) {
+                        notificationDiv.parentNode.removeChild(notificationDiv);
+                    }
+                }, 300);
+            }, 3000);
+        }
     </script>
-@endsection
+@endpush
