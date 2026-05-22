@@ -29,7 +29,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             :description="__('Manage system users and their permissions')"
         >
             <template #actions>
-                <v-create @created="getUsers" />
+                <v-button
+                    as="a"
+                    :to="page.props.routes.create"
+                    :label="__('New user')"
+                    icon="mdi mdi-plus-circle"
+                    size="md"
+                    variant="secondary"
+                />
             </template>
             <template #bottom>
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-2 mb-4">
@@ -154,13 +161,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex justify-end space-x-2">
-                                <v-create
-                                    v-if="!user.disabled"
-                                    :item="user"
-                                    @updated="getUsers"
+                                <v-button
+                                    as="a"
+                                    :to="user.links.show"
+                                    icon="mdi mdi-eye"
+                                    size="md"
+                                    round
+                                    variant="success"
+                                    :title="__('Update user')"
                                 />
-                                <v-scopes v-if="!user.disabled" :item="user" />
-
+                               
                                 <v-status :item="user" @updated="getUsers" />
                             </div>
                         </td>
@@ -179,17 +189,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </template>
 
 <script setup>
-import VMainLayout from "@/components/VMainLayout.vue"; 
+import VMainLayout from "@/components/VMainLayout.vue";
 import VHead from "@/components/VHead.vue";
 import VButton from "@/components/VButton.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
 import VPaginate from "@/components/VPaginate.vue";
-import VTable from "@/components/VTable.vue";
-import VCreate from "./Create.vue";
-import VScopes from "./Scopes.vue";
+import VTable from "@/components/VTable.vue"; 
 import VStatus from "./Status.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import { ref, reactive, onMounted, computed } from "vue";
 
 const page = usePage();
@@ -206,7 +214,7 @@ const pages = ref({
     total_pages: 0,
 });
 
-const search = ref({
+const search = useForm({
     page: 1,
     per_page: 15,
     name: "",
@@ -216,6 +224,10 @@ const search = ref({
 
 // Search timeout for debouncing
 const searchTimeout = ref(null);
+
+onMounted(() => {
+    loadData(page.props.data);
+});
 
 // Methods
 
@@ -232,34 +244,30 @@ const debouncedSearch = () => {
 };
 
 const clearFilters = async () => {
-    search.value = {
-        per_page: 15,
-    };
-    await getUsers();
+    search.resetAndClearErrors();
+    getUsers();
+};
+
+const loadData = (data) => {
+    users.value = data.data;
+    pages.value = data.meta.pagination;
 };
 
 const getUsers = async () => {
     loading.value = true;
 
-    try {
-        const res = await $server.get(page.props.api.users, {
-            params: search.value,
-        });
-        if (res.status == 200) {
-            const values = res.data;
-            users.value = values.data;
-            pages.value = values.meta.pagination;
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+    search.get(page.props.routes.users, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
+            loadData(res.props.data);
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
-
-onMounted(async () => {
-    await getUsers();
-});
 </script>

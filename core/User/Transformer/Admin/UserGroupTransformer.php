@@ -63,9 +63,9 @@ class UserGroupTransformer extends TransformerAbstract
             'description' => $group->description,
             'system' => $group->system ? true : false,
             'links' => [
-                'index' => route('user.admin.groups.index'),
-                'assign' => route('user.admin.users.groups.assign', ['user' => $group->pivot->user_id]),
-                'revoke' => route('user.admin.users.groups.revoke', ['user' => $group->pivot->user_id, 'group' => $group->id])
+              //  'index' => route('user.admin.groups.index'),
+              //  'assign' => route('user.admin.users.groups.assign', ['user' => $group->pivot->user_id]),
+              //  'revoke' => route('user.admin.users.groups.revoke', ['user' => $group->pivot->user_id, 'group' => $group->id])
             ],
 
         ];

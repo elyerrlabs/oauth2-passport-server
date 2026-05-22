@@ -57,9 +57,18 @@ class ScopeService
         $query->when($request->filled('active'), fn($q) => $q->where('active', $request->active));
         $query->when($request->filled('public'), fn($q) => $q->where('public', $request->public));
         $query->when($request->filled('service_id'), fn($q) => $q->where('service_id', $request->service_id));
+        $query->when($request->filled('role_id'), fn($q) => $q->where('role_id', $request->role_id));
 
+        if ($request->filled('group_id')) {
+            $query->whereHas(
+                'service',
+                function ($query) use ($request) {
+                    $query->where('group_id', $request->input('group_id'));
+                }
+            );
+        }        
         // search by role name or slug
-        if ($request->has('role_name')) {
+        if ($request->filled('role_name')) {
             $query->whereHas(
                 'role',
                 function ($query) use ($request) {
@@ -72,7 +81,7 @@ class ScopeService
         }
 
         // Search by service name or slug
-        if ($request->has('service_name')) {
+        if ($request->filled('service_name')) {
             $query->whereHas(
                 'service',
                 function ($query) use ($request) {
@@ -102,7 +111,7 @@ class ScopeService
         $query->where('public', false);
 
         // search by role name or slug
-        if ($request->has('role')) {
+        if ($request->has('role_name')) {
             $query->whereHas(
                 'role',
                 function ($query) use ($request) {
@@ -115,7 +124,7 @@ class ScopeService
         }
 
         // Search by service name or slug
-        if ($request->has('service')) {
+        if ($request->has('service_name')) {
             $query->whereHas(
                 'service',
                 function ($query) use ($request) {

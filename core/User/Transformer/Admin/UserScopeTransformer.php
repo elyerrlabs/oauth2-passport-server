@@ -93,9 +93,9 @@ class UserScopeTransformer extends TransformerAbstract
             'created_at' => $this->format_date($data->created_at),
             'updated_at' => $this->format_date($data->updated_at),
             'links' => [
-                'index' => route('api.user.admin.users.scopes.index', ['user' => $data->user_id]),
-                'assign' => route('api.user.admin.users.scopes.assign', ['user' => $data->user_id]),
-                'revoke' => route('api.user.admin.users.scopes.revoke', ['user' => $data->user_id, 'scope' => $data->id]),
+                'index' => route('user.admin.users.scopes.index', ['user' => $data->user_id]),
+                'assign' => route('user.admin.users.scopes.store', ['user' => $data->user_id]),
+                'revoke' => route('user.admin.users.scopes.destroy', ['user' => $data->user_id, 'scope' => $data->id]),
             ]
         ];
     }

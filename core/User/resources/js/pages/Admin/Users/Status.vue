@@ -179,6 +179,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 import { ref } from "vue";
 import VModal from "@/components/VModal.vue";
 import VButton from "@/components/VButton.vue";
+import { useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
     item: {
@@ -191,6 +192,7 @@ const emit = defineEmits(["updated"]);
 
 const dialog = ref(false);
 const loading = ref(false);
+const form = useForm({});
 
 function open() {
     dialog.value = true;
@@ -207,38 +209,40 @@ const action = (item) => {
 const disable = async () => {
     loading.value = true;
 
-    try {
-        const res = await $server.delete(props.item.links.disable);
-        if (res.status == 200) {
+    form.delete(props.item.links.disabled, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
             $notify.success(__("User disabled successfully"));
             emit("updated", true);
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-        dialog.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+            dialog.value = false;
+        },
+    });
 };
 
 const enable = async () => {
     loading.value = true;
 
-    try {
-        const res = await $server.put(props.item.links.enable);
-        if (res.status == 200) {
+    form.put(props.item.links.enabled, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
             $notify.success(__("User enabled successfully"));
             emit("updated", true);
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-        dialog.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+            dialog.value = false;
+        },
+    });
 };
 </script>

@@ -27,9 +27,13 @@ namespace Core\User\Http\Controllers\Admin;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Inertia\Inertia;
-use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
+use Core\User\Http\Requests\UserStoreRequest;
+use Core\User\Http\Requests\UserUpdateRequest;
+use Core\User\Services\UserService;
+use Core\User\Transformer\Admin\UserTransformer;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class UserController extends WebController
 {
@@ -38,10 +42,15 @@ class UserController extends WebController
      * Construct
      *  
      */
-    public function __construct()
+    public function __construct(protected UserService $userService)
     {
         parent::__construct();
         $this->middleware('userCanAny:administrator:user:full,administrator:user:view')->only('index');
+        $this->middleware('userCanAny:administrator:user:full,administrator:user:show')->only('show');
+        $this->middleware('userCanAny:administrator:user:full,administrator:user:create')->only('store');
+        $this->middleware('userCanAny:administrator:user:full,administrator:user:update')->only('update');
+        $this->middleware('userCanAny:administrator:user:full,administrator:user:disable')->only('disable');
+        $this->middleware('userCanAny:administrator:user:full,administrator:user:enable')->only('enable');
     }
 
     /**
@@ -51,12 +60,110 @@ class UserController extends WebController
      */
     public function index(Request $request)
     {
+        $data = $this->userService->search($request)->paginate($request->input('per_page', 15));
+
         return Inertia::render("Admin/Users/Index", [
-            'menus' => resolveInertiaRoutes(config('menus.admin_routes')),
+            'data' => $this->transformCollection($data, UserTransformer::class),
+            'routes' => [
+                'users' => route('user.admin.users.index'),
+                'create' => route('user.admin.users.create'),
+            ],
             'api' => [
-                'users' => route('api.user.admin.users.index'),
                 'scopes' => route('api.user.admin.scopes.index')
             ]
         ]);
+    }
+
+    /**
+     * Show form creation
+     * @return \Inertia\Response
+     */
+    public function create()
+    {
+        return Inertia::render('Admin/Users/Create', [
+            'routes' => [
+                'users' => route('user.admin.users.index'),
+            ],
+        ]);
+    }
+
+    /**
+     * Store
+     * @param UserStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(UserStoreRequest $request)
+    {
+        $data = $this->userService->create($request->toArray());
+
+        return redirect()->route('user.admin.users.show', ['user' => $data->id])->with('status', __('User created successfully'));
+    }
+
+    /**
+     * Show
+     * @param string $id
+     * @return \Inertia\Response
+     */
+    public function show(string $id)
+    {
+        $data = $this->userService->details($id);
+
+        return Inertia::render('Admin/Users/Show', [
+            'data' => $this->transform($data, UserTransformer::class),
+        ]);
+    }
+
+    /**
+     * Create
+     * @param string $id
+     * @return \Inertia\Response
+     */
+    public function edit(string $id)
+    {
+        $data = $this->userService->details($id);
+
+        return Inertia::render('Admin/Users/Create', [
+            'data' => $this->transform($data, UserTransformer::class),
+            'routes' => [
+                'users' => route('user.admin.users.index'),
+            ],
+        ]);
+    }
+
+    /**
+     * Update
+     * @param UserUpdateRequest $request
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(UserUpdateRequest $request, string $id)
+    {
+        $data = $this->userService->update($id, $request->toArray());
+
+        return redirect()->route('user.admin.users.show', ['user' => $data->id])->with('status', __('User updated successfully'));
+    }
+
+    /**
+     * Disable
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disabled(string $id)
+    {
+        $this->userService->disable($id);
+
+        return redirect()->route('user.admin.users.index')->with('status', __('User disabled successfully'));
+    }
+
+    /**
+     * Enable
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function enabled(string $id)
+    {
+        $this->userService->enable($id);
+
+        return redirect()->route('user.admin.users.index')->with('status', __('User enabled successfully'));
     }
 }

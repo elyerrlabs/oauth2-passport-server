@@ -29,8 +29,7 @@ namespace Core\User\Services;
 
 use App\Support\CacheKeys;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Core\User\Repositories\ScopeRepository;
+use Illuminate\Support\Facades\Cache; 
 use Core\User\Repositories\ServiceRepository;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -56,9 +55,7 @@ class ServiceService
         // Prepare query
         $query = $this->serviceRepository->query();
 
-        if ($request->disabled_request) {
-            return $query;
-        }
+        $query->when($request->filled('group_id'), fn($q) => $q->where('group_id', $request->input('group_id')));
 
         if ($request->filled('group')) {
             $query->whereHas(

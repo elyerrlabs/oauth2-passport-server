@@ -42,16 +42,7 @@ Route::group([
     Route::resource('roles', RoleController::class)->only('index');
     Route::resource('groups', GroupController::class)->only('index');
     Route::resource('services', ServiceController::class)->only('index');
-    Route::resource('scopes', ScopeController::class)->only('index');
-
-
-    //Route::get('/users/{user}/scopes', [UserScopeController::class, 'index'])->name('users.scopes.index');
-    //Route::post('/users/{user}/scopes', [UserScopeController::class, 'assign'])->name('users.scopes.assign');
-    //Route::delete('/users/{user}/scopes/{scope}', [UserScopeController::class, 'revoke'])->name('users.scopes.revoke');
-
-    //Route::delete('users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
-    //Route::put('users/{id}/enable', [UserController::class, 'enable'])->name('users.enable');
-    //Route::resource('users', UserController::class)->except('edit', 'create', 'destroy');
+    Route::resource('scopes', ScopeController::class)->only('index'); 
 });
 
 Route::group([

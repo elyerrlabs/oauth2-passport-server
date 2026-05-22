@@ -227,6 +227,7 @@
 <script setup>
 import VButton from "@/components/VButton.vue";
 import VModal from "@/components/VModal.vue";
+import { useForm } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 
 const emits = defineEmits(["created"]);
@@ -243,7 +244,7 @@ const props = defineProps({
 });
 
 const dialog = ref(false);
-const form = ref({
+const form = useForm({
     scopes: [],
 });
 const loading = ref(false);
@@ -251,37 +252,30 @@ const loading = ref(false);
 const open = () => {
     if (props.disabled) return;
     dialog.value = true;
-    form.value.scopes = [props.item.scope.id];
+    form.scopes = [props.item.scope.id];
 };
 
 const add = async () => {
     if (props.disabled || loading.value) return;
 
-    try {
-        const res = await $server.post(
-            props.item.scope.links.scopes,
-            form.value,
-        );
-        if (res.status == 201) {
+    form.post(props.item.scope.links.assign, {
+        forceFormData: true,
+        preserveScroll: true,
+        preserveState: true, 
+        onSuccess: (res) => {
             $notify.success(__("Scope assigned successfully"));
-            emits("created");
+            emits("created"); 
+        },
+        onFinish: () => {
+            loading.value = false;
             dialog.value = false;
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-        dialog.value = false;
-    }
+        },
+    });
 };
 
 watch(dialog, (newVal) => {
     if (!newVal) {
-        form.value = {
-            scopes: [],
-        };
+        form.scopes = [];
     }
 });
 </script>

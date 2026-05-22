@@ -1,11 +1,13 @@
 <?php
 
-namespace Core\User\Http\Controllers\Api\Admin;
+namespace Core\User\Http\Controllers\Admin;
 
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\WebController;
 use Core\User\Http\Requests\UserScopeStoreRequest;
 use Core\User\Services\UserService;
 use Core\User\Transformer\Admin\UserScopeTransformer;
+use Core\User\Transformer\Admin\UserTransformer;
+use Inertia\Inertia;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -32,7 +34,7 @@ use Core\User\Transformer\Admin\UserScopeTransformer;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-final class UserScopeController extends ApiController
+final class UserScopeController extends WebController
 {
     /**
      * Construct of class
@@ -40,10 +42,9 @@ final class UserScopeController extends ApiController
     public function __construct(protected UserService $userService)
     {
         parent::__construct();
-        $this->middleware('scope:administrator:user:full,administrator:user:view')->only('index');
-        $this->middleware('scope:administrator:user:full,administrator:user:assign')->only('assign');
-        $this->middleware('scope:administrator:user:full,administrator:user:revoke')->only('revoke');
-        $this->middleware('scope:administrator:user:full,administrator:user:history')->only('history');
+        $this->middleware('userCanAny:administrator:user:full,administrator:user:view')->only('index');
+        $this->middleware('userCanAny:administrator:user:full,administrator:user:assign')->only('store');
+        $this->middleware('userCanAny:administrator:user:full,administrator:user:revoke')->only('destroy');
     }
 
     /**
@@ -53,34 +54,47 @@ final class UserScopeController extends ApiController
      */
     public function index(string $user_id)
     {
+        $user = $this->userService->find($user_id);
         $data = $this->userService->searchScopesForUser($user_id)->get();
-
-        return $this->showAll($data, UserScopeTransformer::class, 200, false);
+        
+        return Inertia::render('Admin/Users/Scopes', [
+            'user' => $this->transform($user, UserTransformer::class),
+            'data' => $this->transformCollection($data, UserScopeTransformer::class),
+            'routes' => [
+                'scopes' => route('user.admin.users.scopes.index', ['user' => $user_id])
+            ],
+            'api' => [
+                'scopes' => route('api.user.admin.scopes.index'),
+                'roles' => route('api.user.admin.roles.index'),
+                'services' => route('api.user.admin.services.index'),
+                'groups' => route('api.user.admin.groups.index'),
+            ]
+        ]);
     }
 
     /**
      * Assign
      * @param UserScopeStoreRequest $request
      * @param string $user_id
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function assign(UserScopeStoreRequest $request, string $user_id)
+    public function store(UserScopeStoreRequest $request, string $user_id)
     {
         $this->userService->assignScopeForUser($user_id, $request->toArray());
 
-        return $this->message(__('Scopes assigned successfully'), 201);
+        return redirect()->route('user.admin.users.scopes.index', ['user' => $user_id])->with('status', __('Scopes assigned successfully'));
     }
 
     /**
-     * Revoked
+     * Revoke
      * @param string $user_id
      * @param string $scope_id
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function revoke(string $user_id, string $scope_id)
+    public function destroy(string $user_id, string $scope_id)
     {
         $this->userService->revokeScopeForUser($user_id, $scope_id);
 
-        return $this->message(__('Scopes revoked successfully'), 200);
+        return redirect()->route('user.admin.users.scopes.index', ['user' => $user_id])->with('status', __('Scopes revoked successfully'));
     }
 }

@@ -2,12 +2,11 @@
     <div>
         <v-button
             @click="dialog = true"
-            size="sm"
+            size="xs"
             variant="danger"
             icon="mdi mdi-delete"
-        >
-            {{ __("Delete") }}
-        </v-button>
+            :label="__('Delete')"
+        />
 
         <v-modal
             v-model="dialog"
@@ -97,7 +96,7 @@
                             </p>
                         </div>
 
-                        <!-- GSR ID -->
+                        <!-- GSR ID with Copy/Paste -->
                         <div
                             class="mt-3 pt-3 border-t border-red-200 dark:border-red-800"
                         >
@@ -106,10 +105,28 @@
                             >
                                 {{ __("GSR Identifier") }}
                             </div>
-                            <div
-                                class="font-mono text-sm text-gray-800 dark:text-gray-200 break-all bg-white dark:bg-gray-800 px-3 py-2 rounded border"
-                            >
-                                {{ item.scope?.gsr_id }}
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="flex-1 font-mono text-sm text-gray-800 dark:text-gray-200 break-all bg-white dark:bg-gray-800 px-3 py-2 rounded border"
+                                >
+                                    {{ item.scope?.gsr_id }}
+                                </div>
+                                <v-button
+                                    @click="copyToClipboard(item.scope?.gsr_id)"
+                                    variant="secondary"
+                                    size="sm"
+                                    icon="mdi mdi-content-copy"
+                                    :title="__('Copy GSR ID')"
+                                >
+                                </v-button>
+                                <v-button
+                                    @click="pasteFromClipboard"
+                                    variant="secondary"
+                                    size="sm"
+                                    icon="mdi mdi-content-paste"
+                                    :title="__('Paste GSR ID')"
+                                >
+                                </v-button>
                             </div>
                         </div>
                     </div>
@@ -132,26 +149,64 @@
                         <p class="text-sm text-gray-700 dark:text-gray-300">
                             {{ __("To confirm, type the GSR ID:") }}
                         </p>
-                        <div
-                            class="mb-2 p-3 bg-gray-100 dark:bg-gray-800 rounded border"
-                        >
+                        <div class="relative">
                             <div
-                                class="font-mono text-sm text-center text-gray-800 dark:text-gray-200"
+                                class="mb-2 p-3 bg-gray-100 dark:bg-gray-800 rounded border font-mono text-sm text-center text-gray-800 dark:text-gray-200"
                             >
                                 {{ item.scope?.gsr_id }}
                             </div>
+                            <div class="absolute right-2 top-2">
+                                <v-button
+                                    @click="pasteToInput"
+                                    variant="ghost"
+                                    size="xs"
+                                    icon="mdi mdi-content-paste"
+                                    :title="__('Paste to input')"
+                                >
+                                </v-button>
+                            </div>
                         </div>
-                        <input
-                            v-model="confirmationText"
-                            type="text"
-                            class="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                            :placeholder="__('Type the GSR ID to confirm')"
-                        />
+                        <div class="relative">
+                            <input
+                                v-model="confirmationText"
+                                type="text"
+                                class="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                :placeholder="
+                                    __('Type or paste the GSR ID to confirm')
+                                "
+                                @keyup.enter="revokeScope"
+                            />
+                            <div
+                                v-if="confirmationText"
+                                class="absolute right-2 top-2"
+                            >
+                                <v-button
+                                    v-if="!isConfirmed && confirmationText"
+                                    @click="clearConfirmation"
+                                    variant="ghost"
+                                    size="xs"
+                                    icon="mdi mdi-close"
+                                    :title="__('Clear')"
+                                >
+                                </v-button>
+                                <i
+                                    v-else-if="isConfirmed"
+                                    class="mdi mdi-check-circle text-green-500 text-lg"
+                                ></i>
+                            </div>
+                        </div>
                         <p
                             v-if="!isConfirmed && confirmationText"
                             class="text-xs text-red-600 dark:text-red-400"
                         >
                             {{ __("The GSR ID does not match") }}
+                        </p>
+                        <p
+                            v-else-if="isConfirmed && confirmationText"
+                            class="text-xs text-green-600 dark:text-green-400"
+                        >
+                            <i class="mdi mdi-check-circle mr-1"></i>
+                            {{ __("GSR ID verified successfully") }}
                         </p>
                     </div>
 
@@ -159,10 +214,7 @@
                     <div
                         class="flex items-center justify-end gap-3 pt-4 border-t dark:border-gray-700"
                     >
-                        <v-button
-                            @click="dialog = false"
-                            variant="light"
-                        >
+                        <v-button @click="dialog = false" variant="light">
                             {{ __("Cancel") }}
                         </v-button>
                         <v-button
@@ -188,6 +240,7 @@
 <script setup>
 import VButton from "@/components/VButton.vue";
 import VModal from "@/components/VModal.vue";
+import { useForm } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 
 const emits = defineEmits(["deleted"]);
@@ -199,6 +252,7 @@ const props = defineProps({
     },
 });
 
+const form = useForm({});
 const processing = ref(false);
 const dialog = ref(false);
 const confirmationText = ref("");
@@ -210,21 +264,69 @@ const revokeScope = async () => {
     if (!isConfirmed.value) return;
     processing.value = true;
 
-    try {
-        const res = await $server.delete(props.item.links.revoke);
-        if (res.status == 200) {
+    form.delete(props.item.links.revoke, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: (res) => {
             $notify.success(__("Permission revoked successfully"));
             emits("deleted");
-            dialog.value = false;
             confirmationText.value = "";
-        }
-    } catch (error) {
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        processing.value = false;
-        dialog.value = false;
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            processing.value = false;
+            dialog.value = false;
+        },
+    });
+};
+
+const copyToClipboard = async (text) => {
+    try {
+        await navigator.clipboard.writeText(text);
+        $notify.success(__("GSR ID copied to clipboard"));
+    } catch (err) {
+        // Fallback method
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        $notify.success(__("GSR ID copied to clipboard"));
     }
+};
+
+const pasteFromClipboard = async () => {
+    try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+            confirmationText.value = text;
+            $notify.success(__("Pasted from clipboard"));
+        }
+    } catch (err) {
+        $notify.error(
+            __("Unable to paste. Please check clipboard permissions."),
+        );
+    }
+};
+
+const pasteToInput = async () => {
+    try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+            confirmationText.value = text;
+            $notify.success(__("Pasted to confirmation field"));
+        }
+    } catch (err) {
+        $notify.error(
+            __("Unable to paste. Please check clipboard permissions."),
+        );
+    }
+};
+
+const clearConfirmation = () => {
+    confirmationText.value = "";
 };
 </script>

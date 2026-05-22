@@ -23,240 +23,193 @@ Contact: yerel9212@yahoo.es
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-    <!-- Create/Edit Button -->
-    <div>
-        <v-button
-            @click="open"
-            :label="item?.id ? '' : __('New user')"
-            :icon="item?.id ? 'mdi mdi-pencil text-lg' : 'mdi mdi-plus-circle'"
-            size="md"
-            :round="!!item?.id"
-            :variant="item?.id ? 'success' : 'secondary'"
-            :aria-label="item?.id ? __('Update user') : __('Add new user')"
-            :title="item?.id ? __('Update user') : __('Add new user')"
-        />
-
-        <v-modal
-            v-model="dialog"
-            :title="item?.id ? __('Update User') : __('Create New User')"
-            panel-class="w-full lg:w-6xl"
-        >
-            <template #body>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <v-input
-                        v-model="form.name"
-                        :label="__('Name')"
-                        :error="errors.name"
-                        :required="true"
-                        :placeholder="__('Enter user name')"
-                    />
-
-                    <v-input
-                        v-model="form.last_name"
-                        :label="__('Last Name')"
-                        :error="errors.last_name"
-                        :required="true"
-                        :placeholder="__('Enter last name')"
-                    />
-
-                    <v-input
-                        :label="__('Email')"
-                        v-model="form.email"
-                        :error="errors.email"
-                        :required="true"
-                        :placeholder="__('Enter email address')"
-                        :disabled="item?.id"
-                    />
-
-                    <v-select
-                        :label="__('Country')"
-                        v-model="form.country"
-                        :error="errors.country"
-                        :options="countries"
-                        label-key="name_en"
-                        value-key="name_en"
-                        searchable
-                    >
-                        <template #selected="{ option }">
-                            <span class="text-gray-700 p-2 dark:text-gray-200">
-                                {{
-                                    option
-                                        ? `${option.emoji} - ${option.name_en}`
-                                        : __("Select country")
-                                }}
-                            </span>
-                        </template>
-                        <template #option="{ option }">
-                            <span
-                                class="text-gray-700 p-2 dark:text-gray-200 block"
-                            >
-                                {{ option.emoji }} - {{ option.name_en }}
-                            </span>
-                        </template>
-                    </v-select>
-
-                    <v-input
-                        :label="__('City')"
-                        v-model="form.city"
-                        :error="errors.city"
-                        :placeholder="__('Enter city name')"
-                    />
-
-                    <v-select
-                        :label="__('Dial Code')"
-                        v-model="form.dial_code"
-                        :options="dial_codes"
-                        :error="errors.dial_code"
-                        label-key="name_en"
-                        value-key="dial_code"
-                        searchable
-                    >
-                        <template #selected="{ option }">
-                            <span class="text-gray-700 p-2 dark:text-gray-200">
-                                {{
-                                    option
-                                        ? `${option.emoji} - ${option.name_en} ${option.dial_code}`
-                                        : __("Select dial code")
-                                }}
-                            </span>
-                        </template>
-                        <template #option="{ option }">
-                            <span
-                                class="text-gray-700 p-2 dark:text-gray-200 block"
-                            >
-                                {{ option.emoji }} - {{ option.name_en }} -
-                                {{ option.dial_code }}
-                            </span>
-                        </template>
-                    </v-select>
-
-                    <v-input
-                        :label="__('Phone Number')"
-                        v-model="form.phone"
-                        :error="errors.phone"
-                        :placeholder="__('Enter phone number')"
-                    />
-
-                    <v-switch
-                        v-model="form.email_verified_at"
-                        :label="__('Mark email as verified')"
-                        :help-text="
-                            __(
-                                'User will not need to verify their email address',
-                            )
-                        "
-                    />
-
-                    <div>
-                        <label
-                            class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                        >
-                            <i
-                                class="mdi mdi-cake-variant text-gray-500 dark:text-gray-400"
-                            ></i>
-                            {{ __("Birthday") }}
-                        </label>
-                        <VueDatePicker
-                            v-model="form.birthday"
-                            :enable-time-picker="false"
-                            :max-date="new Date()"
-                            format="yyyy-MM-dd"
-                            model-type="format"
-                            :placeholder="__('Select birthday')"
-                            :dark="is_dark"
-                            auto-apply
-                            class="w-full"
-                        />
-                        <v-error :error="errors.birthday" class="mt-1" />
-                    </div>
-                </div>
-
-                <div
-                    v-if="item?.id"
-                    class="flex justify-between text-xs text-gray-500 dark:text-gray-400"
-                >
-                    <span
-                        v-if="form?.verified"
-                        class="inline-flex items-center gap-1 px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full"
-                    >
-                        <i class="mdi mdi-check-circle text-xs"></i>
-                        {{ __("Verified") }}: {{ form.verified }}
-                    </span>
-                    <span class="text-gray-300 dark:text-gray-600">•</span>
-
-                    <span
-                        v-if="form?.created"
-                        class="inline-flex items-center gap-1"
-                    >
-                        <i class="mdi mdi-calendar text-xs"></i>
-                        {{ __("Created") }}: {{ form?.created }}
-                    </span>
-                    <span class="text-gray-300 dark:text-gray-600">•</span>
-                    <span
-                        v-if="form?.updated"
-                        class="inline-flex items-center gap-1"
-                    >
-                        <i class="mdi mdi-update text-xs"></i>
-                        {{ __("Updated") }}: {{ form?.updated }}
-                    </span>
-                </div>
-
-                <!-- Actions -->
-                <div
-                    class="flex justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700"
-                >
-                    <button
-                        @click="close"
-                        class="flex items-center gap-2 px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 transition-colors duration-200"
-                    >
-                        <i class="mdi mdi-close-circle"></i>
-                        {{ __("Cancel") }}
-                    </button>
-                    <button
-                        @click="handled"
-                        :disabled="loading"
-                        :class="[
-                            'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200',
-                            loading
-                                ? 'bg-blue-400 dark:bg-blue-600 cursor-not-allowed'
-                                : 'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:ring-blue-200 dark:focus:ring-blue-800',
-                        ]"
-                    >
-                        <i
-                            v-if="loading"
-                            class="mdi mdi-loading animate-spin"
-                        ></i>
-                        <i v-else class="mdi mdi-account-plus"></i>
-                        <span>{{
-                            loading
-                                ? __(item?.id ? "Updating..." : "Creating...")
-                                : item?.id
-                                  ? __("Update User")
-                                  : __("Create User")
-                        }}</span>
-                    </button>
-                </div>
+    <v-main-layout>
+        <v-head :title="data?.id ? __('Update user') : __('Create new user')">
+            <template #actions>
+                <v-button
+                    as="a"
+                    :to="page.props.routes.users"
+                    :label="__('Back to the users')"
+                    variant="secondary"
+                />
             </template>
-        </v-modal>
-    </div>
+        </v-head>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <v-input
+                v-model="form.name"
+                :label="__('Name')"
+                :error="form.errors.name"
+                :required="true"
+                :placeholder="__('Enter user name')"
+            />
+
+            <v-input
+                v-model="form.last_name"
+                :label="__('Last Name')"
+                :error="form.errors.last_name"
+                :required="true"
+                :placeholder="__('Enter last name')"
+            />
+
+            <v-input
+                :label="__('Email')"
+                v-model="form.email"
+                :error="form.errors.email"
+                :required="true"
+                :placeholder="__('Enter email address')"
+                :disabled="data?.id"
+            />
+
+            <v-select
+                :label="__('Country')"
+                v-model="form.country"
+                :error="form.errors.country"
+                :options="countries"
+                label-key="name_en"
+                value-key="name_en"
+                searchable
+            >
+                <template #selected="{ option }">
+                    <span class="text-gray-700 p-2 dark:text-gray-200">
+                        {{
+                            option
+                                ? `${option.emoji} - ${option.name_en}`
+                                : __("Select country")
+                        }}
+                    </span>
+                </template>
+                <template #option="{ option }">
+                    <span class="text-gray-700 p-2 dark:text-gray-200 block">
+                        {{ option.emoji }} - {{ option.name_en }}
+                    </span>
+                </template>
+            </v-select>
+
+            <v-input
+                :label="__('City')"
+                v-model="form.city"
+                :error="form.errors.city"
+                :placeholder="__('Enter city name')"
+            />
+
+            <v-select
+                :label="__('Dial Code')"
+                v-model="form.dial_code"
+                :options="dial_codes"
+                :error="form.errors.dial_code"
+                label-key="name_en"
+                value-key="dial_code"
+                searchable
+            >
+                <template #selected="{ option }">
+                    <span class="text-gray-700 p-2 dark:text-gray-200">
+                        {{
+                            option
+                                ? `${option.emoji} - ${option.name_en} ${option.dial_code}`
+                                : __("Select dial code")
+                        }}
+                    </span>
+                </template>
+                <template #option="{ option }">
+                    <span class="text-gray-700 p-2 dark:text-gray-200 block">
+                        {{ option.emoji }} - {{ option.name_en }} -
+                        {{ option.dial_code }}
+                    </span>
+                </template>
+            </v-select>
+
+            <v-input
+                :label="__('Phone Number')"
+                v-model="form.phone"
+                :error="form.errors.phone"
+                :placeholder="__('Enter phone number')"
+            />
+
+            <v-switch
+                v-model="form.email_verified_at"
+                :label="__('Mark email as verified')"
+                :help-text="
+                    __('User will not need to verify their email address')
+                "
+            />
+
+            <v-input
+                :label="__('Birthday')"
+                v-model="form.birthday"
+                type="date"
+                :error="form.errors.birthday"
+            />
+        </div>
+
+        <div
+            v-if="data?.id"
+            class="flex justify-between text-xs text-gray-500 dark:text-gray-400"
+        >
+            <span
+                v-if="form?.verified"
+                class="inline-flex items-center gap-1 px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full"
+            >
+                <i class="mdi mdi-check-circle text-xs"></i>
+                {{ __("Verified") }}: {{ form.verified }}
+            </span>
+            <span class="text-gray-300 dark:text-gray-600">•</span>
+
+            <span v-if="form?.created" class="inline-flex items-center gap-1">
+                <i class="mdi mdi-calendar text-xs"></i>
+                {{ __("Created") }}: {{ form?.created }}
+            </span>
+            <span class="text-gray-300 dark:text-gray-600">•</span>
+            <span v-if="form?.updated" class="inline-flex items-center gap-1">
+                <i class="mdi mdi-update text-xs"></i>
+                {{ __("Updated") }}: {{ form?.updated }}
+            </span>
+        </div>
+
+        <!-- Actions -->
+        <div
+            class="flex justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700"
+        >
+            <button
+                @click="handled"
+                :disabled="loading"
+                :class="[
+                    'flex items-center gap-2 px-6 py-2 text-white rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200',
+                    loading
+                        ? 'bg-blue-400 dark:bg-blue-600 cursor-not-allowed'
+                        : 'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:ring-blue-200 dark:focus:ring-blue-800',
+                ]"
+            >
+                <i v-if="loading" class="mdi mdi-loading animate-spin"></i>
+                <i v-else class="mdi mdi-account-plus"></i>
+                <span>{{
+                    loading
+                        ? __(data?.id ? "Updating..." : "Creating...")
+                        : data?.id
+                          ? __("Update User")
+                          : __("Create User")
+                }}</span>
+            </button>
+        </div>
+    </v-main-layout>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import VModal from "@/components/VModal.vue";
 import VSelect from "@/components/VSelect.vue";
 import VInput from "@/components/VInput.vue";
-import VSwitch from "@/components/VSwitch.vue";
-import VError from "@/components/VError.vue";
+import VSwitch from "@/components/VSwitch.vue"; 
 import VButton from "@/components/VButton.vue";
-import { usePage } from "@inertiajs/vue3";
+import VMainLayout from "@/components/VMainLayout.vue";
+import VHead from "@/components/VHead.vue";
+import { useForm, usePage } from "@inertiajs/vue3";
 
 const is_dark = ref(false);
 
 // Emits
 const emits = defineEmits(["created", "updated"]);
+
 const props = defineProps({
-    item: {
+    data: {
         type: Object,
         default: () => {},
     },
@@ -265,8 +218,7 @@ const props = defineProps({
 const page = usePage();
 
 // State
-const dialog = ref(false);
-const form = ref({
+const form = useForm({
     name: null,
     last_name: null,
     email: null,
@@ -278,82 +230,75 @@ const form = ref({
 });
 
 const loading = ref(false);
-const errors = ref({});
 
 const countries = ref([]);
 const dial_codes = ref([]);
 
-onMounted(() => {
+onMounted(async () => {
+    
     isDark();
     window.addEventListener("theme-change", isDark);
+
+    if (props.data?.id) {
+        form.name = props.data.name;
+        form.last_name = props.data.last_name;
+        form.email = props.data.email;
+        form.country = props.data.country;
+        form.dial_code = props.data.dial_code;
+        form.phone = props.data.phone;
+        form.birthday = props.data.birthday;
+        form.email_verified_at = props.data.email_verified_at;
+    }
+
+    await getCountries();
 });
 
 const isDark = () => {
     is_dark.value = localStorage.getItem("theme") == "light" ? false : true;
 };
 
-// Methods
-const close = () => {
-    form.value = {};
-    dialog.value = false;
-};
+const createUser = () => {
+    loading.value = true;
 
-const open = async () => {
-    errors.value = {};
-
-    if (props.item?.id) {
-        form.value = props.item;
-    }
-
-    dialog.value = true;
-    await getCountries();
-};
-
-const createUser = async () => {
-    try {
-        const res = await $server.post(page.props.api.users, form.value);
-        if (res.status == 201) {
+    form.post(page.props.routes.users, {
+        preserveScroll: true,
+        preserveState: true,
+        forceFormData: true,
+        onSuccess: (res) => {
             $notify.success(__("User created successfully"));
-            emits("created");
-            close();
-        }
-    } catch (error) {
-        if (error?.response?.status == 422) {
-            errors.value = error.response.data.errors;
-        }
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
-const updateUser = async () => {
-    try {
-        const res = await $server.put(props.item.links.update, form.value);
-        if (res.status == 200) {
+const updateUser = () => {
+    loading.value = true;
+
+    form.put(props.data.links.update, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             $notify.success(__("User updated successfully"));
-            emits("updated");
-            close();
-        }
-    } catch (error) {
-        if (error?.response?.status == 422) {
-            errors.value = error.response.data.errors;
-        }
-        if (error?.response?.data?.message) {
-            $notify.error(error.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
-const handled = async () => {
-    if (props.item?.id) {
-        await updateUser();
+const handled = () => {
+    if (props.data?.id) {
+        updateUser();
     } else {
-        await createUser();
+        createUser();
     }
 };
 

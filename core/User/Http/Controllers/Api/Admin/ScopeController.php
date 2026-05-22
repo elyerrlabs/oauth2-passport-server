@@ -52,8 +52,8 @@ final class ScopeController extends ApiController
      */
     public function index(Request $request)
     {
-        $scopes = $this->scopeService->searchForUser($request)->get();
+        $scopes = $this->scopeService->search($request);
 
-        return $this->showAll($scopes, ScopeTransformer::class, 200, false);
+        return $this->showAllByBuilder($scopes, ScopeTransformer::class);
     }
 }

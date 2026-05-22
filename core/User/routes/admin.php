@@ -25,11 +25,13 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Illuminate\Support\Facades\Route;
-use Core\User\Http\Controllers\Admin\RoleController;
 use Core\User\Http\Controllers\Admin\GroupController;
+use Core\User\Http\Controllers\Admin\RoleController;
 use Core\User\Http\Controllers\Admin\ServiceController;
 use Core\User\Http\Controllers\Admin\ServiceScopeController;
+use Core\User\Http\Controllers\Admin\UserController;
+use Core\User\Http\Controllers\Admin\UserScopeController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(function () {
 
@@ -37,6 +39,10 @@ Route::middleware(['throttle:core:user:admin', 'password.confirm'])->group(funct
     Route::resource('roles', RoleController::class)->only('index', 'store', 'update', 'destroy');
     Route::resource('services', ServiceController::class)->only('index', 'store', 'update', 'destroy');
     Route::resource('services.scopes', ServiceScopeController::class)->only('index', 'store', 'destroy');
-    
-    //Route::resource('users', UserController::class);
+
+
+    Route::delete('users/{user}/disabled', [UserController::class, 'disabled'])->name('users.disabled');
+    Route::put('users/{user}/enabled', [UserController::class, 'enabled'])->name('users.enabled');
+    Route::resource('users', UserController::class)->except('destroy');
+    Route::resource('users.scopes', UserScopeController::class)->only('index', 'store', 'destroy');
 });
