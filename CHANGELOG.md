@@ -65,6 +65,12 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - Updated user interface
     - Fixed Access token controller to manager API Keys
     - Fix vue components for access token controller for API Keys
+- Partner module updated
+    - fixed partner repository
+    - fixed partner services
+    - updated vue components
+    - Add default partner commission rate setting in admin > settings > payment
+    - Improve referral code validation rules and format constraints
 
 ## Fixes
 
