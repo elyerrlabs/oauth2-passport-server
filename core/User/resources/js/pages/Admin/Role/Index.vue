@@ -87,7 +87,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     :empty-text="
                         __('Try adjusting your filters or create a new role')
                     "
-                    empty-icon="mdi-account-off-outline"
+                    empty-icon="mdi mdi-account-off-outline"
                     loading-text="Loading roles..."
                     table-class="min-w-[860px] w-full divide-y divide-gray-200 dark:divide-gray-700"
                     thead-class="bg-white dark:bg-gray-800"

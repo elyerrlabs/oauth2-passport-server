@@ -95,7 +95,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 :empty-text="
                     __('Try adjusting your filters or create a new user')
                 "
-                empty-icon="mdi-account-off-outline"
+                empty-icon="mdi mdi-account-off-outline"
                 loading-text="Loading users..."
                 table-class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
                 thead-class="bg-gray-50 dark:bg-gray-700"
