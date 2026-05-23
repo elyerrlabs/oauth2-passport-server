@@ -85,28 +85,4 @@ class ClientAdminTransformer extends TransformerAbstract
         ];
         ;
     }
-
-
-    /**
-     * Transform the original attribute
-     * @param mixed $index
-     * @return string|null
-     */
-    public static function getOriginalAttributes($index)
-    {
-        $attributes = [
-            "id" => "id",
-            "user_id" => "user_id",
-            "name" => "name",
-            "provider" => "provider",
-            "redirect" => "redirect",
-            "personal_access_client" => "personal_access_client",
-            "password_client" => "password_client",
-            "revoked" => "revoked",
-            "created_at" => "created_at",
-            "updated_at" => "updated_at",
-        ];
-
-        return isset($attributes[$index]) ? $attributes[$index] : null;
-    }
 }

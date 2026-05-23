@@ -34,24 +34,15 @@ use App\Http\Controllers\WebController;
 use App\Http\Requests\Client\StoreRequest;
 use App\Http\Requests\Client\UpdateRequest;
 use App\Repositories\OAuth\ClientRepository;
+use App\Services\OauthClientService;
 use Elyerr\ApiResponse\Assets\JsonResponser;
 use App\Transformers\OAuth\ClientTransformer;
 
 class ClientController extends WebController
 {
-    use JsonResponser;
-
-    /**
-     * Client repository
-     * @var ClientRepository
-     */
-    public $repository;
-
-
-    public function __construct(ClientRepository $clientRepository)
+    public function __construct(protected OauthClientService $oauthClientService)
     {
         parent::__construct();
-        $this->repository = $clientRepository;
         $this->middleware('userCanAny:developer:oauth:full,developer:oauth:view')->only('index');
         $this->middleware('userCanAny:developer:oauth:full,developer:oauth:create')->only('store');
         $this->middleware('userCanAny:developer:oauth:full,developer:oauth:update')->only('update');
@@ -65,12 +56,13 @@ class ClientController extends WebController
      */
     public function index(Request $request)
     {
-        if (request()->wantsJson()) {
-            return $this->repository->findClientsForUser($request);
-        }
+        $data = $this->oauthClientService->findClientsForUser($request)->paginate($request->input('per_page', 15));
 
         return Inertia::render("OAuth2/Web/Clients/Index", [
-            'route' => Route::has('passport.clients.index') ? route('passport.clients.index') : ''
+            'data' => $this->transformCollection($data, ClientTransformer::class),
+            'routes' => [
+                "clients" => Route::has('passport.clients.index') ? route('passport.clients.index') : ''
+            ]
         ]);
     }
 
@@ -81,7 +73,7 @@ class ClientController extends WebController
      */
     public function store(StoreRequest $request)
     {
-        $client = $this->repository->createClientForUser($request);
+        $client = $this->oauthClientService->createClientForUser($request);
 
         return $this->showOne($client, ClientTransformer::class, 201);
     }
@@ -95,19 +87,21 @@ class ClientController extends WebController
      */
     public function update(UpdateRequest $request, string|int $clientId)
     {
-        $client = $this->repository->updateClientForUser($request, $clientId);
+        $client = $this->oauthClientService->updateClientForUser($request, $clientId);
 
         return $this->showOne($client, ClientTransformer::class);
     }
 
     /**
-     * Delete client for user
-     * @param \Illuminate\Http\Request $request
+     * Delete client
+     * @param Request $request
      * @param string|int $clientId
-     * @return mixed|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function delete(Request $request, string|int $clientId)
     {
-        return $this->repository->deleteClientForUser($request, $clientId);
+        $this->oauthClientService->deleteClientForUser($request, $clientId);
+
+        return redirect()->route('passport.clients.index')->with('status', "OAuth client deleted successfully");
     }
 }
