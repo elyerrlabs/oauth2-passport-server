@@ -85,7 +85,7 @@ class AuthorizationController extends Controller
         );
 
         if ($this->guard->guest()) {
-            switch ($request->get('prompt')) {
+            switch ($request->input('prompt')) {
                 case 'none':
                     throw OAuthServerException::loginRequired($authRequest);
                 case 'internal':
@@ -97,7 +97,7 @@ class AuthorizationController extends Controller
         }
 
         if (
-            $request->get('prompt') === 'login' &&
+            $request->input('prompt') === 'login' &&
             !$request->session()->get('promptedForLogin', false)
         ) {
             $this->guard->logout();
@@ -115,17 +115,17 @@ class AuthorizationController extends Controller
         $client = $this->clients->find($authRequest->getClient()->getIdentifier());
 
         if (
-            $request->get('prompt') !== 'consent' &&
+            $request->input('prompt') !== 'consent' &&
             ($client->skipsAuthorization($user, $scopes) || $this->hasGrantedScopes($user, $client, $scopes))
         ) {
             return $this->approveRequest($authRequest, $psrResponse);
         }
 
-        if ($request->get('prompt') === 'none') {
+        if ($request->input('prompt') === 'none') {
             throw OAuthServerException::consentRequired($authRequest);
         }
 
-        if ($request->get('prompt') === 'internal' && $client->private) {
+        if ($request->input('prompt') === 'internal' && $client->private) {
             return $this->internalPrompt($authRequest, $psrResponse);
         }
 
