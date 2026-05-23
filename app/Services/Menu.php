@@ -168,7 +168,8 @@ class Menu
                 "register" => Route::has('register') ? route('register') : '',
                 "logout" => route('logout'),
                 "dashboard" => route('user.dashboard'),
-                "profile" => "user.profile"
+                "profile" => route("user.profile"),
+                "notifications" => route('user.notifications'),
             ],
         ];
         return array_merge($keys, static::appendChildMenu($user));

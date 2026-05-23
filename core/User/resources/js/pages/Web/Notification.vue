@@ -151,7 +151,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             :items="notifications"
                             :loading="loading"
                             :empty-text="__('No notifications found')"
-                            empty-icon="mdi-bell-off-outline"
+                            empty-icon="mdi mdi-bell-off-outline"
                             loading-text="Loading notifications..."
                             table-class="min-w-[980px] w-full divide-y divide-slate-200 dark:divide-slate-700"
                             thead-class="bg-slate-50 dark:bg-slate-900/40"
