@@ -27,8 +27,6 @@ namespace Core\Partner\Http\Controllers\Web;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
-use Core\Partner\Transformer\DataTransformer;
 use Core\Partner\Transformer\PartnerTransformer;
 use Core\Partner\Transformer\TransactionTransformer;
 use Inertia\Inertia;
@@ -39,13 +37,7 @@ use Core\Partner\Services\PartnerService;
 class PartnerController extends WebController
 {
 
-    /**
-     * User repository
-     * @var PartnerService
-     */
-    public $partnerService;
-
-    public function __construct(PartnerService $partnerService)
+    public function __construct(protected PartnerService $partnerService)
     {
         parent::__construct();
         $this->partnerService = $partnerService;
@@ -67,7 +59,9 @@ class PartnerController extends WebController
 
         return Inertia::render("Web/Index", [
             "data" => $data,
-            "route" => route("partner.dashboard"),
+            "routes" => [
+                'dashboard' => route("partner.dashboard")
+            ],
             "menus" => resolveInertiaRoutes(config('menus.partner_routes'))
         ]);
     }
@@ -95,13 +89,13 @@ class PartnerController extends WebController
      */
     public function sales(Request $request)
     {
-        $page = $request->filled('per_page') ? $request->get('per_page') : 15;
-
-        $data = $this->partnerService->listLastTransactions($request)->paginate($page);
+        $data = $this->partnerService->listLastTransactions($request)->paginate($request->input('per_page', 15));
 
         return Inertia::render("Web/Sales", [
-            "data" => fractal($data, TransactionTransformer::class)->toArray(),
-            "route" => route("partner.sales"),
+            "data" => $this->transformCollection($data, TransactionTransformer::class),
+            "routes" => [
+                'sales' => route("partner.sales")
+            ],
             "menus" => resolveInertiaRoutes(config('menus.partner_routes'))
         ]);
     }

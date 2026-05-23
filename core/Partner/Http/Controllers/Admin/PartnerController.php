@@ -37,21 +37,14 @@ use Core\Partner\Transformer\UserTransformer;
 class PartnerController extends WebController
 {
     /**
-     * Repository
-     * @var PartnerService
-     */
-    public $partnerService;
-
-    /**
      * Construct
      * @param \Core\Partner\Services\PartnerService $partnerService
      */
-    public function __construct(PartnerService $partnerService)
+    public function __construct(protected PartnerService $partnerService)
     {
         parent::__construct();
         $this->middleware('userCanAny:administrator:partner:full,reseller:partner:view')->only('index');
         $this->middleware('userCanAny:administrator:partner:full,administrator:partner:update')->only('update');
-        $this->partnerService = $partnerService;
     }
 
     /**
@@ -61,16 +54,13 @@ class PartnerController extends WebController
      */
     public function index(Request $request)
     {
-        $page = $request->filled('per_page') ? $request->per_page : 15;
+        $partners = $this->partnerService->listPartners($request)->paginate($request->input('per_page', 15));
 
-        $partners = $this->partnerService->listPartners($request)->paginate($page);
-        
         return Inertia::render("Admin/Users/Index", [
-            'data' => fractal($partners, UserTransformer::class)->toArray(),
+            'data' => $this->transformCollection($partners, UserTransformer::class),
             'routes' => [
                 'partners' => route('partner.admin.partner.index')
             ],
-            "menus" => resolveInertiaRoutes(config('menus.admin_routes'))
         ]);
     }
 
@@ -100,6 +90,6 @@ class PartnerController extends WebController
             $user = $this->partnerService->updateCommissionRate($user->id, $request->commission_rate);
         }
 
-        return redirect()->back();
+        return redirect()->route('partner.admin.partner.index')->with('status', __('Partner updated successfuly'));
     }
 }
