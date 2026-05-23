@@ -25,162 +25,252 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <v-layout>
         <template #aside>
-            <v-item-menu
-                :items="page.props.menus"
-                :title="__('My apps')"
-                icon="mdi mdi-apps text-2xl me-2"
-                :collapse="true"
-            />
+            <v-item-menu :items="page.props.menus" />
         </template>
         <template #main>
-            <div class="sales-dashboard p-4">
-                <!-- Header Section -->
-                <div
-                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6"
-                >
-                    <div class="mb-4 sm:mb-0">
-                        <h1
-                            class="text-2xl font-bold text-gray-900 dark:text-white"
-                        >
-                            {{ __("Sales Performance") }}
-                        </h1>
-                        <p
-                            class="text-gray-600 dark:text-gray-300 text-sm mt-1"
-                        >
-                            {{ __("Track your commissions and sales history") }}
-                        </p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <button
+            <v-head
+                :title="__('Sales performance')"
+                :description="__('Track your commissions and sales history')"
+            >
+                <template #actions>
+                    <div>
+                        <v-button
+                            :label="__('Refresh data')"
+                            icon="mdi mdi-reload text-xl"
+                            variant="secondary"
                             @click="getSales"
-                            class="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-all duration-300 hover:scale-105"
-                            :title="__('Refresh data')"
+                            size="md"
+                        />
+                    </div>
+                    <v-select
+                        :label="__('Choose pagination')"
+                        v-model="search.per_page"
+                        @change="getSales"
+                        :options="[
+                            { name: 15, id: 15 },
+                            { name: 50, id: 50 },
+                            { name: 100, id: 100 },
+                            { name: 150, id: 150 },
+                            { name: 200, id: 200 },
+                            { name: 300, id: 300 },
+                        ]"
+                    />
+                </template>
+                <template #bottom>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <!-- Total Sales Value -->
+                        <div
+                            class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-all duration-300"
                         >
-                            <svg
-                                class="w-5 h-5"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
-                                />
-                            </svg>
-                        </button>
-                        <select
-                            v-model="search.per_page"
-                            @change="getSales"
-                            class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[140px] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            <div class="flex items-center">
+                                <div
+                                    class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg mr-3"
+                                >
+                                    <svg
+                                        class="w-5 h-5 text-blue-600 dark:text-blue-400"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91 2.56.62 4.18 1.63 4.18 3.71 0 1.76-1.39 2.83-3.13 3.16z"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div
+                                        class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
+                                    >
+                                        {{ __("TOTAL SALES VALUE") }}
+                                    </div>
+                                    <div
+                                        class="text-lg font-bold text-gray-900 dark:text-white"
+                                    >
+                                        {{ totalSalesValue }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Commissions -->
+                        <div
+                            class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-all duration-300"
                         >
-                            <option value="10">10 {{ __("rows") }}</option>
-                            <option value="15">15 {{ __("rows") }}</option>
-                            <option value="25">25 {{ __("rows") }}</option>
-                            <option value="50">50 {{ __("rows") }}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Stats Overview Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <!-- Total Sales Value -->
-                    <div
-                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-all duration-300"
-                    >
-                        <div class="flex items-center">
-                            <div
-                                class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg mr-3"
-                            >
-                                <svg
-                                    class="w-5 h-5 text-blue-600 dark:text-blue-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91 2.56.62 4.18 1.63 4.18 3.71 0 1.76-1.39 2.83-3.13 3.16z"
-                                    />
-                                </svg>
-                            </div>
-                            <div>
+                            <div class="flex items-center">
                                 <div
-                                    class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
+                                    class="p-2 bg-green-50 dark:bg-green-900/30 rounded-lg mr-3"
                                 >
-                                    {{ __("TOTAL SALES VALUE") }}
+                                    <svg
+                                        class="w-5 h-5 text-green-600 dark:text-green-400"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                                        />
+                                    </svg>
                                 </div>
+                                <div>
+                                    <div
+                                        class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
+                                    >
+                                        {{ __("TOTAL COMMISSIONS") }}
+                                    </div>
+                                    <div
+                                        class="text-lg font-bold text-green-600 dark:text-green-400"
+                                    >
+                                        {{ formatCurrency(totalCommissions) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Transactions -->
+                        <div
+                            class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-all duration-300"
+                        >
+                            <div class="flex items-center">
                                 <div
-                                    class="text-lg font-bold text-gray-900 dark:text-white"
+                                    class="p-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg mr-3"
                                 >
-                                    {{ totalSalesValue }}
+                                    <svg
+                                        class="w-5 h-5 text-orange-600 dark:text-orange-400"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div
+                                        class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
+                                    >
+                                        {{ __("TOTAL TRANSACTIONS") }}
+                                    </div>
+                                    <div
+                                        class="text-lg font-bold text-gray-900 dark:text-white"
+                                    >
+                                        {{ sales.length }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </template>
+            </v-head>
 
-                    <!-- Total Commissions -->
-                    <div
-                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-all duration-300"
+            <v-table
+                :items="sales"
+                :loading="loading"
+                :per-page="search.per_page"
+                :show-pagination="false"
+                :empty-text="__('Theres no found partnes')"
+                empty-icon="mdi mdi-account-off-outline"
+                loading-text="Loading users..."
+                table-class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+                thead-class="bg-gray-50 dark:bg-gray-700"
+                tbody-class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+            >
+                <template #head>
+                    <tr>
+                        <th
+                            v-for="(column, index) in columns"
+                            :key="index"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                        >
+                            {{ __(column) }}
+                        </th>
+                    </tr>
+                </template>
+
+                <template #default="{ items }">
+                    <tr
+                        v-for="row in items"
+                        :key="row.id"
+                        class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
                     >
-                        <div class="flex items-center">
-                            <div
-                                class="p-2 bg-green-50 dark:bg-green-900/30 rounded-lg mr-3"
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                        >
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700"
                             >
-                                <svg
-                                    class="w-5 h-5 text-green-600 dark:text-green-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                                    />
-                                </svg>
-                            </div>
-                            <div>
-                                <div
-                                    class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
-                                >
-                                    {{ __("TOTAL COMMISSIONS") }}
-                                </div>
-                                <div
-                                    class="text-lg font-bold text-green-600 dark:text-green-400"
-                                >
-                                    {{ formatCurrency(totalCommissions) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Total Transactions -->
-                    <div
-                        class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-all duration-300"
-                    >
-                        <div class="flex items-center">
-                            <div
-                                class="p-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg mr-3"
+                                {{ row.total }}
+                            </span>
+                        </td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                        >
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
                             >
-                                <svg
-                                    class="w-5 h-5 text-orange-600 dark:text-orange-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
+                                {{ row.currency }}
+                            </span>
+                        </td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-center"
+                        >
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
+                                :class="getStatusClasses(row.status)"
+                            >
+                                <span
+                                    class="w-2 h-2 rounded-full mr-1.5"
+                                    :class="getStatusDotClass(row.status)"
+                                ></span>
+                                {{ __(row.status) }}
+                            </span>
+                        </td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-right"
+                        >
+                            <div class="flex flex-col items-end">
+                                <span
+                                    class="font-semibold text-green-600 dark:text-green-400"
                                 >
-                                    <path
-                                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
-                                    />
-                                </svg>
+                                    {{ row.commission }}
+                                </span>
+                                <span
+                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __("Commission") }}
+                                </span>
                             </div>
-                            <div>
-                                <div
-                                    class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium"
+                        </td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                        >
+                            <div class="flex flex-col">
+                                <span class="font-medium">{{
+                                    formatDate(row.created)
+                                }}</span>
+                                <span
+                                    class="text-xs text-gray-500 dark:text-gray-400"
                                 >
-                                    {{ __("TOTAL TRANSACTIONS") }}
-                                </div>
-                                <div
-                                    class="text-lg font-bold text-gray-900 dark:text-white"
-                                >
-                                    {{ sales.length }}
-                                </div>
+                                    {{ formatTime(row.created) }}
+                                </span>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                        >
+                            <div class="flex flex-col">
+                                <span class="font-medium">{{
+                                    formatDate(row.updated)
+                                }}</span>
+                                <span
+                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ formatTime(row.updated) }}
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </template>
+            </v-table>
 
+            <div class="sales-dashboard p-4">
                 <!-- Main Data Table -->
                 <div
                     class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-300"
@@ -198,114 +288,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                     <!-- Table -->
                     <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr
-                                    class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-600"
-                                >
-                                    <th
-                                        v-for="(column, index) in columns"
-                                        :key="index"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                                    >
-                                        {{ __(column) }}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody
-                                class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
-                            >
-                                <tr
-                                    v-for="row in sales"
-                                    :key="row.id"
-                                    class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
-                                >
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
-                                    >
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700"
-                                        >
-                                            {{ row.total }}
-                                        </span>
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
-                                    >
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
-                                        >
-                                            {{ row.currency }}
-                                        </span>
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-center"
-                                    >
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
-                                            :class="
-                                                getStatusClasses(row.status)
-                                            "
-                                        >
-                                            <span
-                                                class="w-2 h-2 rounded-full mr-1.5"
-                                                :class="
-                                                    getStatusDotClass(
-                                                        row.status,
-                                                    )
-                                                "
-                                            ></span>
-                                            {{ __(row.status) }}
-                                        </span>
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-right"
-                                    >
-                                        <div class="flex flex-col items-end">
-                                            <span
-                                                class="font-semibold text-green-600 dark:text-green-400"
-                                            >
-                                                {{ row.commission }}
-                                            </span>
-                                            <span
-                                                class="text-xs text-gray-500 dark:text-gray-400"
-                                            >
-                                                {{ __("Commission") }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
-                                    >
-                                        <div class="flex flex-col">
-                                            <span class="font-medium">{{
-                                                formatDate(row.created)
-                                            }}</span>
-                                            <span
-                                                class="text-xs text-gray-500 dark:text-gray-400"
-                                            >
-                                                {{ formatTime(row.created) }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
-                                    >
-                                        <div class="flex flex-col">
-                                            <span class="font-medium">{{
-                                                formatDate(row.updated)
-                                            }}</span>
-                                            <span
-                                                class="text-xs text-gray-500 dark:text-gray-400"
-                                            >
-                                                {{ formatTime(row.updated) }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
                         <!-- Empty State -->
                         <div
                             v-if="!sales.length && !loading"
@@ -447,7 +429,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import VLayout from "@/components/VLayout.vue";
+import VHead from "@/components/VHead.vue";
+import VTable from "@/components/VTable.vue";
 import VItemMenu from "@/components/VItemMenu.vue";
+import VButton from "@/components/VButton.vue";
+import VSelect from "@/components/VSelect.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 
@@ -492,19 +478,22 @@ const totalCommissions = computed(() =>
 );
 
 onMounted(() => {
-    getSales();
+    loadData(page.props.data);
 });
+
+const loadData = (data) => {
+    sales.value = data.data;
+    pages.value = data.meta.pagination;
+};
 
 const getSales = () => {
     loading.value = true;
 
-    search.get(page.props.route, {
+    search.get(page.props.routes.sales, {
         preserveState: true,
         replace: true,
-        onSuccess: (page) => {
-            const values = page.props.data;
-            sales.value = values.data;
-            pages.value = values.meta.pagination;
+        onSuccess: (res) => {
+            loadData(res.props.data);
         },
         onFinish: () => {
             loading.value = false;

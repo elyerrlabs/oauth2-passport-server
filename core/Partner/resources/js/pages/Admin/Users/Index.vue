@@ -31,22 +31,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <template #bottom>
                 <div class="flex items-center justify-between mb-4">
                     <h2
-                        class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-200"
+                        class="flex-1 text-base sm:text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-200"
                     >
                         {{ __("Filters") }}
                     </h2>
-                    <div class="flex items-center space-x-2 sm:space-x-3">
+                    <div
+                        class="shrink-0 flex items-center space-x-2 sm:space-x-3"
+                    >
                         <v-switch
                             v-model="showFilters"
                             :label="__('Show Filters')"
                         />
 
-                        <div class="flex items-center justify-end">
-                            <v-button
-                                @click="resetFilters"
-                                :label="__('Reset filters')"
-                            />
-                        </div>
+                        <v-button
+                            @click="resetFilters"
+                            :label="__('Reset filters')"
+                        />
                     </div>
                 </div>
                 <div
@@ -101,7 +101,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 :per-page="search.per_page"
                 :show-pagination="false"
                 :empty-text="__('Theres no found partnes')"
-                empty-icon="mdi-account-off-outline"
+                empty-icon="mdi mdi-account-off-outline"
                 loading-text="Loading users..."
                 table-class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
                 thead-class="bg-gray-50 dark:bg-gray-700"
@@ -182,7 +182,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, onMounted, watch } from "vue";
 import VUpdate from "./Update.vue";
 import VMainLayout from "@/components/VMainLayout.vue";
 import VHead from "@/components/VHead.vue";
@@ -246,16 +246,19 @@ const debounceGetPartners = () => {
     }, 500);
 };
 
+const loadData = (data) => {
+    users.value = data.data;
+    pages.value = data.meta.pagination;
+};
+
 const getPartners = () => {
     loading.value = true;
 
     search.get(page.props.routes.partners, {
         preserveScroll: true,
         preserveState: true,
-        onSuccess: (page) => {
-            const values = page.props.data;
-            users.value = values.data;
-            pages.value = values.meta.pagination;
+        onSuccess: (res) => {
+            loadData(res.props.data);
         },
         onFinish: () => {
             loading.value = false;
@@ -269,16 +272,6 @@ const resetFilters = () => {
 };
 
 onMounted(() => {
-    const values = page.props.data;
-    users.value = values.data;
-    pages.value = values.meta.pagination;
-
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-});
-
-onBeforeUnmount(() => {
-    window.removeEventListener("resize", checkScreenSize);
-    clearTimeout(debounceTimer.value);
+    loadData(page.props.data);
 });
 </script>

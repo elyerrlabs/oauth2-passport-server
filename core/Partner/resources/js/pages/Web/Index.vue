@@ -25,16 +25,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <v-layout>
         <template #aside>
-            <v-item-menu
-                :items="page.props.menus"
-                :title="__('My apps')"
-                icon="mdi mdi-apps text-2xl me-2"
-                :collapse="true"
-            />
+            <v-item-menu :items="page.props.menus" />
         </template>
         <template #main>
             <div
-                class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-blue-900/20 p-4 lg:p-6 transition-colors duration-300"
+                class="min-h-screen bg-linear-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-blue-900/20 p-4 lg:p-6 transition-colors duration-300"
             >
                 <!-- Header Section -->
                 <div
@@ -43,7 +38,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <div class="mb-4 lg:mb-0">
                         <div class="flex items-center space-x-3 mb-2">
                             <div
-                                class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 rounded-2xl flex items-center justify-center shadow-lg"
+                                class="w-10 h-10 bg-linear-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 rounded-2xl flex items-center justify-center shadow-lg"
                             >
                                 <svg
                                     class="w-6 h-6 text-white"
@@ -122,7 +117,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 <span>{{ __("Start Date") }}</span>
                             </label>
                             <input
-                                v-model="params.start"
+                                v-model="form.start"
                                 type="date"
                                 class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
@@ -149,7 +144,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 <span>{{ __("End Date") }}</span>
                             </label>
                             <input
-                                v-model="params.end"
+                                v-model="form.end"
                                 type="date"
                                 class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
@@ -210,7 +205,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 <span>{{ __("Date Range") }}</span>
                             </label>
                             <select
-                                v-model="params.type"
+                                v-model="form.type"
                                 class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 hover:border-gray-300 dark:hover:border-gray-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             >
                                 <option
@@ -839,578 +834,552 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     </v-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import ApexCharts from "vue3-apexcharts";
 import VLayout from "@/components/VLayout.vue";
 import VItemMenu from "@/components/VItemMenu.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 
-export default {
-    components: {
-        ApexCharts,
-        VLayout,
-        VItem,
+const page = usePage();
+const sales = ref([]);
+const form = useForm({
+    start: null,
+    end: null,
+    type: "day",
+});
+
+const chartType = ref("line");
+const currencyChartType = ref("donut");
+const chartTypes = ref([
+    { label: __("Line"), value: "line" },
+    { label: __("Bar"), value: "bar" },
+    { label: __("Area"), value: "area" },
+]);
+const total_sales = ref(0);
+const total_commission = ref([]);
+const lastUpdated = ref(new Date().toLocaleTimeString());
+
+// Main chart options
+const chartOptions = ref({
+    chart: {
+        height: 350,
+        type: "line",
+        zoom: { enabled: false },
+        toolbar: {
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true,
+            },
+        },
+        animations: {
+            enabled: true,
+            easing: "easeinout",
+            speed: 800,
+        },
+        background: "transparent",
     },
-    data() {
-        return {
-            sales: [],
-            params: {
-                start: null,
-                end: null,
-                type: "day",
-            },
-            chartType: "line",
-            currencyChartType: "donut",
-            chartTypes: [
-                { label: __("Line"), value: "line" },
-                { label: __("Bar"), value: "bar" },
-                { label: __("Area"), value: "area" },
-            ],
-            total_sales: 0,
-            total_commission: [],
-            lastUpdated: new Date().toLocaleTimeString(),
-
-            // Main chart options
-            chartOptions: {
-                chart: {
-                    height: 350,
-                    type: "line",
-                    zoom: { enabled: false },
-                    toolbar: {
-                        show: true,
-                        tools: {
-                            download: true,
-                            selection: true,
-                            zoom: true,
-                            zoomin: true,
-                            zoomout: true,
-                            pan: true,
-                            reset: true,
-                        },
-                    },
-                    animations: {
-                        enabled: true,
-                        easing: "easeinout",
-                        speed: 800,
-                    },
-                    background: "transparent",
-                },
-                theme: {
-                    mode: "light",
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    curve: "smooth",
-                    width: 3,
-                },
-                colors: ["#3B82F6", "#10B981", "#8B5CF6", "#F59E0B"],
-                grid: {
-                    borderColor: "#e5e7eb",
-                    strokeDashArray: 4,
-                },
-                xaxis: {
-                    categories: [],
-                    labels: {
-                        style: {
-                            fontSize: "12px",
-                            colors: "#6b7280",
-                            fontFamily: "Inter, sans-serif",
-                        },
-                    },
-                    axisBorder: {
-                        show: true,
-                        color: "#e5e7eb",
-                    },
-                    axisTicks: {
-                        show: true,
-                        color: "#e5e7eb",
-                    },
-                },
-                yaxis: {
-                    labels: {
-                        formatter: function (val) {
-                            return val.toLocaleString();
-                        },
-                        style: {
-                            fontSize: "12px",
-                            colors: "#6b7280",
-                            fontFamily: "Inter, sans-serif",
-                        },
-                    },
-                },
-                legend: {
-                    position: "top",
-                    horizontalAlign: "right",
-                    fontSize: "12px",
-                    fontFamily: "Inter, sans-serif",
-                    markers: {
-                        width: 12,
-                        height: 12,
-                        radius: 6,
-                    },
-                },
-                tooltip: {
-                    theme: "light",
-                    y: {
-                        formatter: function (val) {
-                            return val.toLocaleString("en-US", {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            });
-                        },
-                    },
-                },
-            },
-            chartSeries: [
-                {
-                    name: __("Total Sales"),
-                    data: [],
-                },
-                {
-                    name: __("Commission"),
-                    data: [],
-                },
-            ],
-
-            // Currency chart options
-            currencyChartOptions: {
-                chart: {
-                    type: "donut",
-                    background: "transparent",
-                },
-                theme: {
-                    mode: "light",
-                },
-                labels: [],
-                colors: [
-                    "#3B82F6",
-                    "#10B981",
-                    "#8B5CF6",
-                    "#F59E0B",
-                    "#EF4444",
-                    "#06B6D4",
-                ],
-                dataLabels: {
-                    enabled: true,
-                    formatter: function (val, opts) {
-                        return (
-                            opts.w.config.labels[opts.seriesIndex] +
-                            ": " +
-                            val.toFixed(1) +
-                            "%"
-                        );
-                    },
-                },
-                legend: {
-                    position: "bottom",
-                    horizontalAlign: "center",
-                    fontSize: "12px",
-                    fontFamily: "Inter, sans-serif",
-                },
-                tooltip: {
-                    y: {
-                        formatter: function (val) {
-                            return val.toLocaleString("en-US", {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            });
-                        },
-                    },
-                },
-                plotOptions: {
-                    pie: {
-                        donut: {
-                            labels: {
-                                show: true,
-                                total: {
-                                    show: true,
-                                    label: __("Total Commission"),
-                                    formatter: function (w) {
-                                        const total =
-                                            w.globals.seriesTotals.reduce(
-                                                (a, b) => a + b,
-                                                0,
-                                            );
-                                        return total.toLocaleString("en-US", {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2,
-                                        });
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-            currencyChartSeries: [],
-            currencyChartData: [],
-
-            types: [
-                { label: __("Daily"), value: "day" },
-                { label: __("Monthly"), value: "month" },
-                { label: __("Yearly"), value: "year" },
-            ],
-            refreshInterval: null,
-            refreshCountdown: 10,
-            countdownInterval: null,
-            themeObserver: null,
-        };
+    theme: {
+        mode: "light",
     },
-
-    computed: {
-        formatTotalCommission() {
-            if (this.total_commission.length === 0) return "$0.00";
-
-            // Sum all commissions across currencies
-            const totalAmount = this.total_commission.reduce((sum, curr) => {
-                const amount = this.parseAmount(curr.total);
-                return sum + amount;
-            }, 0);
-
-            return this.formatNumber(totalAmount);
+    dataLabels: {
+        enabled: false,
+    },
+    stroke: {
+        curve: "smooth",
+        width: 3,
+    },
+    colors: ["#3B82F6", "#10B981", "#8B5CF6", "#F59E0B"],
+    grid: {
+        borderColor: "#e5e7eb",
+        strokeDashArray: 4,
+    },
+    xaxis: {
+        categories: [],
+        labels: {
+            style: {
+                fontSize: "12px",
+                colors: "#6b7280",
+                fontFamily: "Inter, sans-serif",
+            },
         },
-
-        currencyCount() {
-            const currencies = new Set(this.sales.map((sale) => sale.currency));
-            return currencies.size;
+        axisBorder: {
+            show: true,
+            color: "#e5e7eb",
         },
-
-        averageCommission() {
-            if (this.sales.length === 0) return "$0.00";
-
-            const totalCommission = this.sales.reduce((sum, sale) => {
-                return sum + this.parseAmount(sale.commission);
-            }, 0);
-
-            const avg = totalCommission / this.sales.length;
-            return this.formatNumber(avg);
+        axisTicks: {
+            show: true,
+            color: "#e5e7eb",
         },
+    },
+    yaxis: {
+        labels: {
+            formatter: function (val) {
+                return val.toLocaleString();
+            },
+            style: {
+                fontSize: "12px",
+                colors: "#6b7280",
+                fontFamily: "Inter, sans-serif",
+            },
+        },
+    },
+    legend: {
+        position: "top",
+        horizontalAlign: "right",
+        fontSize: "12px",
+        fontFamily: "Inter, sans-serif",
+        markers: {
+            width: 12,
+            height: 12,
+            radius: 6,
+        },
+    },
+    tooltip: {
+        theme: "light",
+        y: {
+            formatter: function (val) {
+                return val.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                });
+            },
+        },
+    },
+});
+const chartSeries = ref([
+    {
+        name: __("Total Sales"),
+        data: [],
+    },
+    {
+        name: __("Commission"),
+        data: [],
+    },
+]);
 
-        currencySummary() {
-            const summary = {};
-
-            this.sales.forEach((sale) => {
-                if (!summary[sale.currency]) {
-                    summary[sale.currency] = {
-                        currency: sale.currency,
-                        total: 0,
-                        salesCount: 0,
-                    };
-                }
-                summary[sale.currency].total += this.parseAmount(
-                    sale.commission,
-                );
-                summary[sale.currency].salesCount += sale.total;
-            });
-
-            // Calculate percentages for progress bars
-            const totalCommission = Object.values(summary).reduce(
-                (sum, curr) => sum + curr.total,
-                0,
+// Currency chart options
+const currencyChartOptions = ref({
+    chart: {
+        type: "donut",
+        background: "transparent",
+    },
+    theme: {
+        mode: "light",
+    },
+    labels: [],
+    colors: ["#3B82F6", "#10B981", "#8B5CF6", "#F59E0B", "#EF4444", "#06B6D4"],
+    dataLabels: {
+        enabled: true,
+        formatter: function (val, opts) {
+            return (
+                opts.w.config.labels[opts.seriesIndex] +
+                ": " +
+                val.toFixed(1) +
+                "%"
             );
-            Object.values(summary).forEach((currency) => {
-                currency.percentage =
-                    totalCommission > 0
-                        ? (currency.total / totalCommission) * 100
-                        : 0;
-            });
-
-            return Object.values(summary);
         },
     },
-
-    watch: {
-        chartType(value) {
-            this.updateChart(this.sales);
-        },
-        currencyChartType(value) {
-            this.updateCurrencyChart(this.sales);
-        },
-        "params.type"(value) {
-            this.getSales();
+    legend: {
+        position: "bottom",
+        horizontalAlign: "center",
+        fontSize: "12px",
+        fontFamily: "Inter, sans-serif",
+    },
+    tooltip: {
+        y: {
+            formatter: function (val) {
+                return val.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                });
+            },
         },
     },
+    plotOptions: {
+        pie: {
+            donut: {
+                labels: {
+                    show: true,
+                    total: {
+                        show: true,
+                        label: __("Total Commission"),
+                        formatter: function (w) {
+                            const total = w.globals.seriesTotals.reduce(
+                                (a, b) => a + b,
+                                0,
+                            );
+                            return total.toLocaleString("en-US", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            });
+                        },
+                    },
+                },
+            },
+        },
+    },
+});
+const currencyChartSeries = ref([]);
+const currencyChartData = ref([]);
 
-    created() {
-        if (!this.params.start || !this.params.end) {
-            const { start, end } = this.getDefaultDates();
-            this.params.start = start;
-            this.params.end = end;
+const types = ref([
+    { label: __("Daily"), value: "day" },
+    { label: __("Monthly"), value: "month" },
+    { label: __("Yearly"), value: "year" },
+]);
+const refreshInterval = ref(null);
+const refreshCountdown = ref(10);
+const countdownInterval = ref(null);
+const themeObserver = ref(null);
+
+const formatTotalCommission = computed(() => {
+    if (total_commission.value.length === 0) return "$0.00";
+
+    // Sum all commissions across currencies
+    const totalAmount = total_commission.value.reduce((sum, curr) => {
+        const amount = parseAmount(curr.total);
+        return sum + amount;
+    }, 0);
+
+    return formatNumber(totalAmount);
+});
+
+const currencyCount = computed(() => {
+    const currencies = new Set(sales.value.map((sale) => sale.currency));
+    return currencies.size;
+});
+
+const averageCommission = computed(() => {
+    if (sales.value.length === 0) return "$0.00";
+
+    const totalCommission = sales.value.reduce((sum, sale) => {
+        return sum + parseAmount(sale.commission);
+    }, 0);
+
+    const avg = totalCommission / sales.value.length;
+    return formatNumber(avg);
+});
+
+const currencySummary = computed(() => {
+    const summary = {};
+
+    sales.value.forEach((sale) => {
+        if (!summary[sale.currency]) {
+            summary[sale.currency] = {
+                currency: sale.currency,
+                total: 0,
+                salesCount: 0,
+            };
         }
+        summary[sale.currency].total += parseAmount(sale.commission);
+        summary[sale.currency].salesCount += sale.total;
+    });
 
-        this.getSales();
-        this.startAutoRefresh();
-        this.setupThemeListener();
+    // Calculate percentages for progress bars
+    const totalCommission = Object.values(summary).reduce(
+        (sum, curr) => sum + curr.total,
+        0,
+    );
+    Object.values(summary).forEach((currency) => {
+        currency.percentage =
+            totalCommission > 0 ? (currency.total / totalCommission) * 100 : 0;
+    });
+
+    return Object.values(summary);
+});
+
+watch(
+    () => chartType.value,
+    (val) => {
+        updateChart(sales.value);
     },
+);
 
-    beforeUnmount() {
-        this.clearIntervals();
-        if (this.themeObserver) {
-            this.themeObserver.disconnect();
+watch(
+    () => currencyChartType.value,
+    (val) => {
+        updateCurrencyChart(sales.value);
+    },
+);
+
+watch(
+    () => form.type,
+    () => {
+        getSales();
+    },
+);
+
+onMounted(() => {
+    if (!form.start || !form.end) {
+        const { start, end } = getDefaultDates();
+        form.start = start;
+        form.end = end;
+    }
+
+    getSales();
+    startAutoRefresh();
+    setupThemeListener();
+});
+
+onBeforeUnmount(() => {
+    clearIntervals();
+    if (themeObserver.value) {
+        themeObserver.value.disconnect();
+    }
+});
+
+const parseAmount = (amount) => {
+    if (typeof amount === "number") return amount;
+    if (typeof amount === "string") {
+        // Remove commas and convert to number
+        return parseFloat(amount.replace(/,/g, "")) || 0;
+    }
+    return 0;
+};
+
+// Helper function to format numbers as currency
+const formatNumber = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(amount);
+};
+
+const setupThemeListener = () => {
+    themeObserver.value = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+                updateChartTheme();
+            }
+        });
+    });
+
+    themeObserver.value.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+    });
+
+    updateChartTheme();
+};
+
+const updateChartTheme = () => {
+    const isDark = document.documentElement.classList.contains("dark");
+    const themeMode = isDark ? "dark" : "light";
+    const textColor = isDark ? "#9ca3af" : "#6b7280";
+    const borderColor = isDark ? "#374151" : "#e5e7eb";
+    const gridColor = isDark ? "#374151" : "#e5e7eb";
+
+    // Update main chart theme
+    chartOptions.value = {
+        ...chartOptions.value,
+        theme: { mode: themeMode },
+        grid: { ...chartOptions.value.grid, borderColor: gridColor },
+        xaxis: {
+            ...chartOptions.value.xaxis,
+            labels: {
+                ...chartOptions.value.xaxis.labels,
+                colors: textColor,
+            },
+            axisBorder: {
+                ...chartOptions.value.xaxis.axisBorder,
+                color: borderColor,
+            },
+            axisTicks: {
+                ...chartOptions.value.xaxis.axisTicks,
+                color: borderColor,
+            },
+        },
+        yaxis: {
+            ...chartOptions.value.yaxis,
+            labels: {
+                ...chartOptions.value.yaxis.labels,
+                colors: textColor,
+            },
+        },
+        tooltip: { ...chartOptions.value.tooltip, theme: themeMode },
+    };
+
+    // Update currency chart theme
+    currencyChartOptions.value = {
+        ...currencyChartOptions.value,
+        theme: { mode: themeMode },
+    };
+};
+
+const getDefaultDates = () => {
+    const today = new Date();
+    const end = today.toISOString().split("T")[0];
+    const pastDate = new Date(today);
+    pastDate.setMonth(today.getMonth() - 3);
+    const start = pastDate.toISOString().split("T")[0];
+    return { start, end };
+};
+
+const getSales = () => {
+    form.get(page.props.routes.dashboard, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: (page) => {
+            sales.value = page.props.data.data || [];
+            total_sales.value = page.props.data.total_sales || 0;
+            total_commission.value = page.props.data.total_commission || [];
+            lastUpdated.value = new Date().toLocaleTimeString();
+
+            updateChart(sales.value);
+            updateCurrencyChart(sales.value);
+            resetRefreshCountdown();
+        },
+    });
+};
+
+const updateChart = (data) => {
+    if (data && data.length > 0) {
+        // Group by date for time series
+        const dateGroups = {};
+        data.forEach((item) => {
+            if (!dateGroups[item.date]) {
+                dateGroups[item.date] = {
+                    date: item.date,
+                    totalSales: 0,
+                    totalCommission: 0,
+                };
+            }
+            dateGroups[item.date].totalSales += item.total;
+            dateGroups[item.date].totalCommission += parseAmount(
+                item.commission,
+            );
+        });
+
+        const sortedDates = Object.keys(dateGroups).sort();
+
+        chartSeries = [
+            {
+                name: __("Total Sales"),
+                data: sortedDates.map((date) => dateGroups[date].totalSales),
+            },
+            {
+                name: __("Commission"),
+                data: sortedDates.map(
+                    (date) => dateGroups[date].totalCommission,
+                ),
+            },
+        ];
+
+        chartOptions.value = {
+            ...chartOptions.value,
+            xaxis: {
+                ...chartOptions.value.xaxis,
+                categories: sortedDates.map((date) => formatDate(date)),
+            },
+        };
+    } else {
+        // Reset chart data
+        chartSeries.value = [
+            { name: __("Total Sales"), data: [] },
+            { name: __("Commission"), data: [] },
+        ];
+    }
+};
+
+const updateCurrencyChart = (data) => {
+    if (data && data.length > 0) {
+        const currencyTotals = {};
+
+        data.forEach((item) => {
+            if (!currencyTotals[item.currency]) {
+                currencyTotals[item.currency] = 0;
+            }
+            currencyTotals[item.currency] += parseAmount(item.commission);
+        });
+
+        currencyChartData.value = Object.keys(currencyTotals).map(
+            (currency) => ({
+                currency,
+                total: currencyTotals[currency],
+            }),
+        );
+
+        currencyChartSeries = currencyChartData.map((item) => item.total);
+        currencyChartOptions = {
+            ...currencyChartOptions,
+            labels: currencyChartData.value.map((item) => item.currency),
+        };
+    } else {
+        currencyChartSeries.value = [];
+        currencyChartOptions.value = {
+            ...currencyChartOptions.value,
+            labels: [],
+        };
+    }
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
+};
+
+const formatCurrency = (amount, currency) => {
+    const numericAmount = parseAmount(amount);
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: currency,
+        minimumFractionDigits: 2,
+    }).format(numericAmount);
+};
+
+const getCurrencyColor = (currency) => {
+    const colors = {
+        USD: "bg-blue-500",
+        EUR: "bg-green-500",
+        PEN: "bg-purple-500",
+        AUD: "bg-orange-500",
+        GBP: "bg-red-500",
+        JPY: "bg-yellow-500",
+    };
+    return colors[currency] || "bg-gray-500";
+};
+
+const viewSaleDetails = (sale) => {
+    // Implement sale details view logic
+    console.log("View sale details:", sale);
+};
+
+const startAutoRefresh = () => {
+    refreshInterval.value = setInterval(() => {
+        getSales();
+    }, 30000); // Refresh every 30 seconds
+
+    countdownInterval.value = setInterval(() => {
+        refreshCountdown.value--;
+        if (refreshCountdown.value <= 0) {
+            resetRefreshCountdown();
         }
-    },
+    }, 1000);
+};
 
-    methods: {
-        // Helper function to parse amounts safely
-        parseAmount(amount) {
-            if (typeof amount === "number") return amount;
-            if (typeof amount === "string") {
-                // Remove commas and convert to number
-                return parseFloat(amount.replace(/,/g, "")) || 0;
-            }
-            return 0;
-        },
+const resetRefreshCountdown = () => {
+    refreshCountdown.value = 30;
+};
 
-        // Helper function to format numbers as currency
-        formatNumber(amount) {
-            return new Intl.NumberFormat("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            }).format(amount);
-        },
+const disableAutoRefresh = () => {
+    clearIntervals();
+    console.log("Auto-refresh disabled");
+};
 
-        setupThemeListener() {
-            this.themeObserver = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.attributeName === "class") {
-                        this.updateChartTheme();
-                    }
-                });
-            });
-
-            this.themeObserver.observe(document.documentElement, {
-                attributes: true,
-                attributeFilter: ["class"],
-            });
-
-            this.updateChartTheme();
-        },
-
-        updateChartTheme() {
-            const isDark = document.documentElement.classList.contains("dark");
-            const themeMode = isDark ? "dark" : "light";
-            const textColor = isDark ? "#9ca3af" : "#6b7280";
-            const borderColor = isDark ? "#374151" : "#e5e7eb";
-            const gridColor = isDark ? "#374151" : "#e5e7eb";
-
-            // Update main chart theme
-            this.chartOptions = {
-                ...this.chartOptions,
-                theme: { mode: themeMode },
-                grid: { ...this.chartOptions.grid, borderColor: gridColor },
-                xaxis: {
-                    ...this.chartOptions.xaxis,
-                    labels: {
-                        ...this.chartOptions.xaxis.labels,
-                        colors: textColor,
-                    },
-                    axisBorder: {
-                        ...this.chartOptions.xaxis.axisBorder,
-                        color: borderColor,
-                    },
-                    axisTicks: {
-                        ...this.chartOptions.xaxis.axisTicks,
-                        color: borderColor,
-                    },
-                },
-                yaxis: {
-                    ...this.chartOptions.yaxis,
-                    labels: {
-                        ...this.chartOptions.yaxis.labels,
-                        colors: textColor,
-                    },
-                },
-                tooltip: { ...this.chartOptions.tooltip, theme: themeMode },
-            };
-
-            // Update currency chart theme
-            this.currencyChartOptions = {
-                ...this.currencyChartOptions,
-                theme: { mode: themeMode },
-            };
-        },
-
-        getDefaultDates() {
-            const today = new Date();
-            const end = today.toISOString().split("T")[0];
-            const pastDate = new Date(today);
-            pastDate.setMonth(today.getMonth() - 3);
-            const start = pastDate.toISOString().split("T")[0];
-            return { start, end };
-        },
-
-        getSales() {
-            const form = useForm(this.params);
-            form.get(this.$page.props.route, {
-                preserveState: true,
-                preserveScroll: true,
-                onSuccess: (page) => {
-                    this.sales = page.props.data.data || [];
-                    this.total_sales = page.props.data.total_sales || 0;
-                    this.total_commission =
-                        page.props.data.total_commission || [];
-                    this.lastUpdated = new Date().toLocaleTimeString();
-
-                    this.updateChart(this.sales);
-                    this.updateCurrencyChart(this.sales);
-                    this.resetRefreshCountdown();
-                },
-            });
-        },
-
-        updateChart(data) {
-            if (data && data.length > 0) {
-                // Group by date for time series
-                const dateGroups = {};
-                data.forEach((item) => {
-                    if (!dateGroups[item.date]) {
-                        dateGroups[item.date] = {
-                            date: item.date,
-                            totalSales: 0,
-                            totalCommission: 0,
-                        };
-                    }
-                    dateGroups[item.date].totalSales += item.total;
-                    dateGroups[item.date].totalCommission += this.parseAmount(
-                        item.commission,
-                    );
-                });
-
-                const sortedDates = Object.keys(dateGroups).sort();
-
-                this.chartSeries = [
-                    {
-                        name: __("Total Sales"),
-                        data: sortedDates.map(
-                            (date) => dateGroups[date].totalSales,
-                        ),
-                    },
-                    {
-                        name: __("Commission"),
-                        data: sortedDates.map(
-                            (date) => dateGroups[date].totalCommission,
-                        ),
-                    },
-                ];
-
-                this.chartOptions = {
-                    ...this.chartOptions,
-                    xaxis: {
-                        ...this.chartOptions.xaxis,
-                        categories: sortedDates.map((date) =>
-                            this.formatDate(date),
-                        ),
-                    },
-                };
-            } else {
-                // Reset chart data
-                this.chartSeries = [
-                    { name: __("Total Sales"), data: [] },
-                    { name: __("Commission"), data: [] },
-                ];
-            }
-        },
-
-        updateCurrencyChart(data) {
-            if (data && data.length > 0) {
-                const currencyTotals = {};
-
-                data.forEach((item) => {
-                    if (!currencyTotals[item.currency]) {
-                        currencyTotals[item.currency] = 0;
-                    }
-                    currencyTotals[item.currency] += this.parseAmount(
-                        item.commission,
-                    );
-                });
-
-                this.currencyChartData = Object.keys(currencyTotals).map(
-                    (currency) => ({
-                        currency,
-                        total: currencyTotals[currency],
-                    }),
-                );
-
-                this.currencyChartSeries = this.currencyChartData.map(
-                    (item) => item.total,
-                );
-                this.currencyChartOptions = {
-                    ...this.currencyChartOptions,
-                    labels: this.currencyChartData.map((item) => item.currency),
-                };
-            } else {
-                this.currencyChartSeries = [];
-                this.currencyChartOptions = {
-                    ...this.currencyChartOptions,
-                    labels: [],
-                };
-            }
-        },
-
-        formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-            });
-        },
-
-        formatCurrency(amount, currency) {
-            const numericAmount = this.parseAmount(amount);
-            return new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: currency,
-                minimumFractionDigits: 2,
-            }).format(numericAmount);
-        },
-
-        getCurrencyColor(currency) {
-            const colors = {
-                USD: "bg-blue-500",
-                EUR: "bg-green-500",
-                PEN: "bg-purple-500",
-                AUD: "bg-orange-500",
-                GBP: "bg-red-500",
-                JPY: "bg-yellow-500",
-            };
-            return colors[currency] || "bg-gray-500";
-        },
-
-        viewSaleDetails(sale) {
-            // Implement sale details view logic
-            console.log("View sale details:", sale);
-        },
-
-        startAutoRefresh() {
-            this.refreshInterval = setInterval(() => {
-                this.getSales();
-            }, 30000); // Refresh every 30 seconds
-
-            this.countdownInterval = setInterval(() => {
-                this.refreshCountdown--;
-                if (this.refreshCountdown <= 0) {
-                    this.resetRefreshCountdown();
-                }
-            }, 1000);
-        },
-
-        resetRefreshCountdown() {
-            this.refreshCountdown = 30;
-        },
-
-        disableAutoRefresh() {
-            this.clearIntervals();
-            console.log("Auto-refresh disabled");
-        },
-
-        clearIntervals() {
-            if (this.refreshInterval) clearInterval(this.refreshInterval);
-            if (this.countdownInterval) clearInterval(this.countdownInterval);
-        },
-    },
+const clearIntervals = () => {
+    if (refreshInterval.value) clearInterval(refreshInterval.value);
+    if (countdownInterval.value) clearInterval(countdownInterval.value);
 };
 </script>
 

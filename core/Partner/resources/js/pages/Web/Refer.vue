@@ -25,12 +25,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <template>
     <v-layout>
         <template #aside>
-            <v-item-menu
-                :items="page.props.menus"
-                :title="__('My apps')"
-                icon="mdi mdi-apps text-2xl me-2"
-                :collapse="true"
-            />
+            <v-item-menu :items="page.props.menus" />
         </template>
         <template #main>
             <div class="referral-container p-4">
