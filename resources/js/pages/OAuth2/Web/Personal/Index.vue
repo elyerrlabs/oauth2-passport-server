@@ -41,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             :per-page="search.per_page"
             :show-pagination="false"
             :empty-text="__('Create your first API Token')"
-            empty-icon="mdi-file-document-outline"
+            empty-icon="mdi mdi-file-document-outline"
             loading-text="Loading tokens..."
             table-class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
             thead-class="bg-gray-50 dark:bg-gray-700/50"
@@ -246,7 +246,7 @@ import VTable from "@/components/VTable.vue";
 import VHead from "@/components/VHead.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 const tokens = ref([]);
@@ -254,34 +254,36 @@ const loading = ref(false);
 const pages = ref({
     total_pages: 0,
 });
-const search = ref({
+const search = useForm({
     page: 1,
     per_page: 15,
 });
 
-onMounted(async () => {
-    await getPersonalAccessToken();
+onMounted(() => {
+    loadData(page.props.data);
 });
+
+const loadData = (data) => {
+    tokens.value = data.data;
+    pages.value = data.meta.pagination;
+};
 
 const getPersonalAccessToken = async () => {
     loading.value = true;
-    try {
-        const res = await $server.get(page.props.route, {
-            params: search.value,
-        });
 
-        if (res.status == 200) {
-            const values = res.data;
-            tokens.value = values.data;
-            pages.value = values.meta.pagination;
-        }
-    } catch (e) {
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+    search.get(page.props.routes.tokens, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
+            loadData(res.props.data);
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
 const getExpirationClass = (expirationDate) => {

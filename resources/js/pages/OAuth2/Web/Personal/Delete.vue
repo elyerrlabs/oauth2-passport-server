@@ -35,7 +35,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         />
 
         <!-- Delete Confirmation Modal -->
-        <v-modal v-model="dialog" panel-class="w-full max-w-md">
+        <v-modal v-model="dialog" panel-class="w-full lg:w-5xl">
             <template #body>
                 <!-- Warning Icon -->
                 <div class="flex justify-center mb-4">
@@ -71,7 +71,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 >
                     <div class="flex items-start gap-3">
                         <svg
-                            class="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
+                            class="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 shrink-0"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -191,7 +191,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 import { ref } from "vue";
 import VModal from "@/components/VModal.vue";
 import VButton from "@/components/VButton.vue";
-const emits = ref(["deleted"]);
+import { useForm } from "@inertiajs/vue3";
+
+const emits = defineEmits(["deleted"]);
 
 const props = defineProps({
     item: {
@@ -200,6 +202,7 @@ const props = defineProps({
     },
 });
 
+const form = useForm({});
 const dialog = ref(false);
 const loading = ref(false);
 const confirmationText = ref("");
@@ -220,18 +223,20 @@ const destroy = async () => {
 
     loading.value = true;
 
-    try {
-        const res = await $server.delete(props.item.links.destroy);
-
-        if (res.status === 200) {
+    form.delete(props.item.links.destroy, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             emits("deleted");
             close();
             $notify.success(__("API key has been permanently deleted"));
-        }
-    } catch (e) {
-        $notify.error(e?.response?.data?.message);
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 </script>
