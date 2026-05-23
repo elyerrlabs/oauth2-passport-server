@@ -102,7 +102,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             ]"
                         >
                             <svg
-                                class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                                class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -229,7 +229,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             />
 
                             <v-button
-                                v-if="client.secret"
                                 @click="downloadJsonFile"
                                 :label="__('Download as JSON file')"
                                 variant="success"
@@ -432,7 +431,7 @@ const create = async () => {
     errors.value = {};
 
     try {
-        const res = await $server.post(page.props.route, form.value);
+        const res = await $server.post(page.props.routes.clients, form.value);
 
         if (res.status === 201) {
             client.value = res.data;

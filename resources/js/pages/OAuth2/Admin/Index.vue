@@ -40,7 +40,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             :per-page="search.per_page"
             :show-pagination="false"
             :empty-text="__('Create your first OAuth client to get started')"
-            empty-icon="mdi-file-document-outline"
+            empty-icon="mdi mdi-file-document-outline"
             loading-text="Loading clients..."
             table-class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
             thead-class="bg-gray-50 dark:bg-gray-700/50"
@@ -217,7 +217,7 @@ import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
 import VPersonalClient from "./PersonalClient.vue";
 import VHead from "@/components/VHead.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 
 const page = usePage();
@@ -227,7 +227,7 @@ const loading = ref(false);
 const pages = ref({
     total_pages: 1,
 });
-const search = ref({
+const search = useForm({
     page: 1,
     per_page: 50,
 });
@@ -246,7 +246,7 @@ const columns = ref([
 ]);
 
 onMounted(async () => {
-    await getClients();
+    loadData(page.props.data);
 });
 
 const formatDate = (dateString) => {
@@ -352,27 +352,26 @@ const getGrantDescription = (grant) => {
     return descriptions[grant] || "OAuth 2.0 Grant Type";
 };
 
+const loadData = (data) => {
+    clients.value = data.data;
+    pages.value = data.meta.pagination;
+};
+
 const getClients = (param = null) => {
     loading.value = true;
-    const params = { ...search.value, ...param };
 
-    $server
-        .get(page.props.routes.clients, {
-            params: params,
-        })
-        .then((res) => {
-            clients.value = res.data.data;
-            const meta = res.data.meta;
-            pages.value = meta.pagination;
-            search.value.current_page = meta.pagination.current_page;
-        })
-        .catch((e) => {
-            if (e?.response?.data?.message) {
-                $notify.error(e.response.data.message);
-            }
-        })
-        .finally(() => {
+    search.get(page.props.routes.clients, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
+            loadData(res.props.data);
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
             loading.value = false;
-        });
+        },
+    });
 };
 </script>

@@ -37,7 +37,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     <v-modal
         v-model="dialog"
         :title="__('Delete OAuth Client')"
-        panel-class="w-full max-w-md"
+        panel-class="w-full lg:w-5xl"
     >
         <template #body>
             <!-- Warning Icon -->
@@ -118,7 +118,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             >
                 <div class="flex items-start space-x-3">
                     <svg
-                        class="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
+                        class="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 shrink-0"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >
@@ -180,6 +180,7 @@ import { ref } from "vue";
 import VModal from "@/components/VModal.vue";
 import VButton from "@/components/VButton.vue";
 import VInput from "@/components/VInput.vue";
+import { useForm } from "@inertiajs/vue3";
 
 const emits = defineEmits(["deleted"]);
 
@@ -190,6 +191,7 @@ const props = defineProps({
     },
 });
 
+const form = useForm({});
 const dialog = ref(false);
 const loading = ref(false);
 const confirmationText = ref("");
@@ -209,21 +211,22 @@ const destroy = async () => {
     if (confirmationText.value !== "DELETE") return;
 
     loading.value = true;
-    try {
-        const res = await $server.delete(props.item.links.destroy);
 
-        if (res.status == 200) {
+    form.delete(props.item.links.destroy, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             emits("deleted");
             close();
 
             $notify.success(__("OAuth client deleted successfully"));
-        }
-    } catch (e) {
-        if (e?.response?.data?.message) {
-            $notify.error(__("Delete Failed"));
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 </script>

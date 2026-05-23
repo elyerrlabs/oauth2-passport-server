@@ -229,7 +229,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             />
 
                             <v-button
-                                v-if="client.secret"
                                 @click="downloadJsonFile"
                                 :label="__('Download as JSON file')"
                                 variant="success"

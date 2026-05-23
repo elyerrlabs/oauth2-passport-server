@@ -43,7 +43,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 :empty-text="
                     __('Create your first OAuth client to get started')
                 "
-                empty-icon="mdi-file-document-outline"
+                empty-icon="mdi mdi-file-document-outline"
                 loading-text="Loading clients..."
                 table-class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
                 thead-class="bg-gray-50 dark:bg-gray-700/50"
@@ -232,13 +232,16 @@ import VTable from "@/components/VTable.vue";
 import VHead from "@/components/VHead.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 const clients = ref([]);
 const loading = ref(false);
 const pages = ref({ total_pages: 1 });
-const search = ref({ page: 1, per_page: 15 });
+const search = useForm({
+    page: 1,
+    per_page: 15,
+});
 const columns = ref([
     "Client",
     "Created",
@@ -246,32 +249,31 @@ const columns = ref([
     "Grant Types",
     "Actions",
 ]);
-onMounted(async () => {
-    await getClients();
+onMounted(() => {
+    loadData(page.props.data);
 });
+
+const loadData = (data) => {
+    clients.value = data.data;
+    pages.value = data.meta.pagination;
+};
 
 const getClients = async () => {
     loading.value = true;
 
-    try {
-        const res = await $server.get(page.props.route, {
-            params: search.value,
-        });
-
-        if (res.status == 200) {
-            const values = res.data;
-
-            clients.value = values.data;
-            pages.value = values.meta.pagination;
-            search.current_page = values.meta.pagination.current_page;
-        }
-    } catch (e) {
-        if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+    search.get(page.props.routes.clients, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
+            loadData(res.props.data);
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
 const getGrantTypes = (grantTypes) => {

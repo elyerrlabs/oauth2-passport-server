@@ -57,7 +57,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <v-input
                         :label="__('Client Name')"
                         v-model="form.name"
-                        :error="errors.name"
+                        :error="form.errors.name"
                         :required="true"
                         :placeholder="
                             __('e.g., My API Client, Mobile App, etc.')
@@ -79,7 +79,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 >
                     <div class="flex items-start">
                         <svg
-                            class="w-5 h-5 mr-2 mt-0.5 flex-shrink-0"
+                            class="w-5 h-5 mr-2 mt-0.5 shrink-0"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                         >
@@ -108,7 +108,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 >
                     <div class="flex items-start space-x-3">
                         <svg
-                            class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                            class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -163,56 +163,51 @@ import VModal from "@/components/VModal.vue";
 import VInput from "@/components/VInput.vue";
 import VButton from "@/components/VButton.vue";
 import VHead from "@/components/VHead.vue";
+import { useForm, usePage } from "@inertiajs/vue3";
 
 const emits = defineEmits(["created"]);
 
+const page = usePage();
 const dialog = ref(false);
 const loading = ref(false);
-const form = ref({
+const form = useForm({
     name: "",
 });
-const errors = ref({});
 
 const isFormValid = computed(() => {
-    return form.value.name?.trim();
+    return form.name?.trim();
 });
 
 const open = () => {
-    form.value.name = "";
-    errors.value = {};
+    form.resetAndClearErrors();
     dialog.value = true;
 };
 
 const close = () => {
     dialog.value = false;
     loading.value = false;
-    form.value.name = "";
-    errors.value = {};
+    form.resetAndClearErrors();
 };
 
 const createPersonalAccessClient = async () => {
     if (!isFormValid.value) return;
 
     loading.value = true;
-    errors.value = {};
 
-    try {
-        const res = await $server.post(page.props.routes.personal, form.value);
-
-        if (res.status == 201) {
+    form.post(page.props.routes.personal, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (res) => {
             $notify.success(__("Personal access client created successfully"));
-
             emits("created");
             close();
-        }
-    } catch (e) {
-        if (e?.response?.status == 422) {
-            errors.value = e.response.data.errors;
-        } else if (e?.response?.data?.message) {
-            $notify.error(e.response.data.message);
-        }
-    } finally {
-        loading.value = false;
-    }
+        },
+        onError: (e) => {
+            console.log(e);
+        },
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 </script>
