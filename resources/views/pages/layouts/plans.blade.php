@@ -29,23 +29,6 @@
 <meta name="twitter:image" content="{{ asset('images/twitter-pricing.jpg') }}">
 <meta name="twitter:image:alt" content="{{ __('Pricing plans') }}">
 
-<!-- Structured Data for Pricing (Schema.org) -->
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "{{ config('app.name') }} Plans",
-    "description": "{{ __('Subscription plans for our services') }}",
-    "offers": {
-        "@type": "AggregateOffer",
-        "priceCurrency": "{{ config('app.currency', 'USD') }}",
-        "lowPrice": "@yield('min_price', '0')",
-        "highPrice": "@yield('max_price', '0')",
-        "offerCount": "@yield('total_plans', '3')"
-    }
-}
-</script>
-
 <!-- Additional SEO Meta -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
