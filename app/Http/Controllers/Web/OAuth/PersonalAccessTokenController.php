@@ -67,14 +67,13 @@ class PersonalAccessTokenController extends WebController
      */
     public function forUser(Request $request)
     {
-        $tokens = $this->repository->forUser($request->user());
-
-        if (request()->wantsJson()) {
-            return $this->showAllByBuilder($tokens, PersonalTokenTransformer::class);
-        }
+        $data = $this->repository->forUser($request->user())->paginate($request->input('per_page', 15));
 
         return Inertia::render("OAuth2/Web/Personal/Index", [
-            'route' => route('passport.personal.tokens.index')
+            'data' => $this->transformCollection($data, PersonalTokenTransformer::class),
+            'routes' => [
+                'tokens' => route('passport.personal.tokens.index')
+            ]
         ]);
     }
 
@@ -121,7 +120,7 @@ class PersonalAccessTokenController extends WebController
 
         $token->revoke();
 
-        return $this->message(__("Token revoked successfully"));
+        return redirect()->route('passport.personal.tokens.index')->with('status', __('Token revoked succesfully'));
     }
 
 
