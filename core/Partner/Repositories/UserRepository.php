@@ -31,15 +31,9 @@ use Core\Partner\Model\User;
 
 class UserRepository
 {
-    /**
-     * Model
-     * @var  User
-     */
-    private $model;
-
-    public function __construct(User $user)
+    public function __construct(protected User $user)
     {
-        $this->model = $user;
+
     }
 
     /**
@@ -48,24 +42,7 @@ class UserRepository
      */
     public function query()
     {
-        $query = $this->model->query();
-
-        $query->with([
-            'userScopes',
-            'userScopes.scope',
-            'userScopes.scope.service',
-            'userScopes.scope.service.group'
-        ]);
-
-        // Only reseller users
-        $query->whereHas(
-            'userScopes.scope.service.group',
-            function ($query) {
-                $query->whereRaw('LOWER(slug) = ?', ['reseller']);
-            }
-        );
-
-        return $query;
+        return $this->user->query()->with('partner');
     }
 
     /**
@@ -75,6 +52,6 @@ class UserRepository
      */
     public function find(string $id)
     {
-        return $this->model->find($id);
+        return $this->user->find($id);
     }
 }

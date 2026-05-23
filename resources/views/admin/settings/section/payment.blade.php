@@ -148,6 +148,40 @@
                 </div>
             </div>
 
+
+            <div
+                class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700">
+                <div class="flex items-center mb-4">
+                    <div
+                        class="flex items-center justify-center w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg mr-3">
+                        <i class="mdi mdi-autorenew text-indigo-600 dark:text-indigo-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        {{ __('Partner settings') }}
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {{ __('Default commission rate') }}
+                        </label>
+
+                        <small class="block mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            <i class="mdi mdi-information-outline mr-1"></i>
+                            {{ __('Accepts integer and decimal values (e.g. 5 or 5.5).') }}
+                        </small>
+                        <input type="text" name="partner[commission_rate]"
+                            value="{{ config('partner.commission_rate', 7) }}"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 transition-colors duration-300">
+                        <small class="block mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            <i class="mdi mdi-information-outline mr-1"></i>
+                            {{ __('This value will be used as the default for all new users. It can be updated later from the administration panel in the Partners section.') }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+
             <!-- Payment Methods -->
             <div>
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center mb-4">
@@ -167,7 +201,8 @@
                                     <i
                                         class="mdi mdi-{{ config('billing.methods.stripe.icon') }} text-indigo-600 dark:text-indigo-400 text-xl"></i>
                                 </div>
-                                <h4 class="text-md font-semibold text-gray-900 dark:text-white">{{ __('Stripe Settings') }}
+                                <h4 class="text-md font-semibold text-gray-900 dark:text-white">
+                                    {{ __('Stripe Settings') }}
                                 </h4>
                             </div>
                             <span
@@ -201,7 +236,8 @@
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Status') }}</label>
                                 <select name="billing[methods][stripe][enable]"
                                     class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 transition-colors duration-300">
-                                    <option value="1" {{ config('billing.methods.stripe.enable') ? 'selected' : '' }}>
+                                    <option value="1"
+                                        {{ config('billing.methods.stripe.enable') ? 'selected' : '' }}>
                                         {{ __('Enabled') }}</option>
                                     <option value="0"
                                         {{ !config('billing.methods.stripe.enable') ? 'selected' : '' }}>

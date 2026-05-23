@@ -1259,7 +1259,7 @@ const updateChart = (data) => {
 
         const sortedDates = Object.keys(dateGroups).sort();
 
-        chartSeries = [
+        chartSeries.value = [
             {
                 name: __("Total Sales"),
                 data: sortedDates.map((date) => dateGroups[date].totalSales),
@@ -1306,7 +1306,7 @@ const updateCurrencyChart = (data) => {
             }),
         );
 
-        currencyChartSeries = currencyChartData.map((item) => item.total);
+        currencyChartSeries.value = currencyChartData.value.map((item) => item.total);
         currencyChartOptions = {
             ...currencyChartOptions,
             labels: currencyChartData.value.map((item) => item.currency),

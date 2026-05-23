@@ -41,31 +41,14 @@ class PartnerService
     use Asset;
 
     /**
-     * @var PartnerRepository
-     */
-    private $partnerRepository;
-
-    /**
-     *
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * Transaction repository
-     * @var TransactionRepository
-     */
-    private $transactionRepository;
-
-    /**
      * Construct
      * @return void
      */
-    public function __construct()
-    {
-        $this->partnerRepository = app(PartnerRepository::class);
-        $this->userRepository = app(UserRepository::class);
-        $this->transactionRepository = app(TransactionRepository::class);
+    public function __construct(
+        protected PartnerRepository $partnerRepository,
+        protected UserRepository $userRepository,
+        protected TransactionRepository $transactionRepository
+    ) {
     }
 
     /**
@@ -79,7 +62,7 @@ class PartnerService
         $transactionQuery = $this->transactionRepository->query();
 
         // Get current user
-        $partner = $this->userRepository->find(auth()->user()->id)->partner;
+        $partner = $this->userRepository->find($request->user()->id)->partner;
 
         // Filter by partner code
         $transactionQuery->whereHas(
@@ -150,25 +133,22 @@ class PartnerService
      */
     public function details(string $user_id)
     {
-        // Retrieve user with partner have
-        $query = $this->userRepository->query();
+        $partner = $this->partnerRepository->query()
+            ->where('user_id', $user_id)
+            ->first();
 
-        // Filter by current user id
-        $query->where('id', $user_id);
-
-        // Get the user with partner relationship
-        $user = $query->first();
-
-        if (empty($user->partner)) {
+        // Create one if it doesn't exist
+        if (empty($partner)) {
             $partner = $this->partnerRepository->create([
                 'code' => $this->generateReferralCode(),
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                'commission_rate' => floatval(config('partner.commission_rate', 7))
             ]);
-
-            return $partner;
         }
 
-        return $user->partner;
+        $partner["links"] = $partner->referLinks();
+
+        return $partner;
     }
 
     /**
@@ -194,20 +174,21 @@ class PartnerService
     public function updateCommissionRate(string $user_id, $percentage)
     {
         try {
-            $user = $this->userRepository->find($user_id);
+            $partner = $this->partnerRepository->query()
+                ->where('user_id', $user_id)
+                ->first();
 
             // If the use does not have a partner, create one
-            if (empty($user->partner)) {
+            if (empty($partner)) {
 
                 return $this->partnerRepository->create([
                     'code' => $this->generateReferralCode(),
-                    'user_id' => $user->id,
+                    'user_id' => $user_id,
                     'commission_rate' => $percentage
                 ]);
 
-
             } else {
-                return $this->partnerRepository->update($user->partner->id, [
+                return $this->partnerRepository->update($partner->id, [
                     'commission_rate' => $percentage
                 ]);
             }
@@ -216,37 +197,6 @@ class PartnerService
         }
 
     }
-
-    /**
-     * Generate or retrieve referral link
-     * @return mixed
-     */
-    public function generateLink()
-    {
-        $query = $this->userRepository->query();
-
-        $query->where('id', auth()->user()->id);
-
-        $user = $query->first();
-
-        if (empty($user)) {
-            throw new ReportError(__("You are not yet registered as a partner, so you cannot generate a referral link. If you believe this is an error, please contact the administrator."), 403);
-        }
-
-        $partner = $user->partner;
-
-        if (empty($partner)) {
-            $partner = $this->partnerRepository->create([
-                'code' => $this->generateReferralCode(),
-                'user_id' => auth()->user()->id
-            ]);
-        }
-
-        $partner["links"] = $partner->referLinks();
-
-        return $partner;
-    }
-
 
     public function partnerDashboard(Request $request)
     {
@@ -263,8 +213,8 @@ class PartnerService
         // Only for current user
         $transactionQuery->whereHas(
             'partner',
-            function ($query) {
-                $query->where('user_id', auth()->user()->id);
+            function ($query) use ($request) {
+                $query->where('user_id', $request->user()->id);
             }
         );
 
@@ -332,20 +282,15 @@ class PartnerService
     public function listLastTransactions(Request $request)
     {
         // Get Current user
-        $user = $this->userRepository->find(auth()->user()->id);
-
-        if (empty($user->partner)) {
-            throw new ReportError(__("You are not registered as a partner."), 403);
-        }
+        $partner = $this->partnerRepository->query()
+            ->where('user_id', $request->user()->id)
+            ->first();
 
         // Create transaction query
-        $transactions = $this->transactionRepository->query();
+        $query = $this->transactionRepository->query();
+        $query->where('status', config('billing.status.successful.id'));
+        $query->where('partner_id', $partner->id);
 
-        $transactions->where('status', config('billing.status.successful.id'));
-
-        // Filter by partner id
-        $transactions->where('partner_id', $user->partner->id);
-
-        return $transactions;
+        return $query;
     }
 }
