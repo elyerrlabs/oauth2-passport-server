@@ -58,6 +58,11 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Remove unused components
     - npm : vue-sweetalert2
     - npm : @vuepic/vue-datepicker
+- OAouth2 resources updted
+    - Add OauthClientService
+    - Update Client repository
+    - Update Controllers
+    - Updated user interface
 
 ## Fixes
 
