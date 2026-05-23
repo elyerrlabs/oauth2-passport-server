@@ -84,6 +84,8 @@ class PartnerService
     {
         $userQuery = $this->userRepository->query();
 
+        $userQuery->whereHas('partner');
+
         if ($request->filled('name')) {
             $userQuery->whereRaw(
                 "LOWER(name) LIKE ?",
