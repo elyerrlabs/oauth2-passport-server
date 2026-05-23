@@ -25,10 +25,14 @@ class CreateNewUser implements CreatesNewUsers
             $input['referral_code'] = session('referral_code');
         }
 
+        $emailValidation = app()->environment('production')
+            ? 'email:rfc,dns'
+            : 'email:rfc';
+
         Validator::make($input, [
             'name' => ['required', 'regex:/^[A-Za-z\s]+$/', 'min:3', 'max:100'],
             'last_name' => ['required', 'regex:/^[A-Za-z\s]+$/', 'min:3', 'max:100'],
-            'email' => ['required', 'email', 'unique:users,email'],
+            'email' => ['required', $emailValidation, 'unique:users,email'],
             'password' => ['required', 'confirmed', 'min:8', 'max:60'],
             'birthday' => [
                 Rule::requiredIf(fn() => filter_var(config('system.birthday.active', false), FILTER_VALIDATE_BOOL)),
