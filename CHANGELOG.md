@@ -63,6 +63,8 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - Update Client repository
     - Update Controllers
     - Updated user interface
+    - Fixed Access token controller to manager API Keys
+    - Fix vue components for access token controller for API Keys
 
 ## Fixes
 
