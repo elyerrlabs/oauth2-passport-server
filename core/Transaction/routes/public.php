@@ -46,7 +46,7 @@ if (config('routes.core.transaction.subscriptions.status', true)) {
 
     Route::get('/plans', [PlanController::class, 'index'])
         ->name('plans.index')
-        ->middleware(['throttle:core:transaction:public']);
+        ->middleware(['throttle:core:transaction:public', 'track.ref']);
 }
 
 Route::group([

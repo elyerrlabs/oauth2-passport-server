@@ -80,11 +80,6 @@ class Authenticate extends Middleware
             }
         }
 
-        // Only referral redirect to the login
-        if (!empty($referral_code = $request->referral_code)) {
-            return route('login', ['referral_code' => $referral_code]);
-        }
-
         return route('login');
     }
 }

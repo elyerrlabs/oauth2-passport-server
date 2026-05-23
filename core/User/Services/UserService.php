@@ -567,38 +567,39 @@ class UserService
      *  Register new users (customers)
      * @param array $data
      */
-    public function registerCustomer(array $data)
+    public function registerCustomer(array $input)
     {
         $group = $this->groupRepository->findBySlug('member');
 
         if (empty($group)) {
             return back()->with('error', __('The registration could not be completed successfully. Our team has been notified of the issue and is working to resolve it. We appreciate your patience and encourage you to try again later'));
         }
+        
+        return DB::transaction(function () use ($input, $group) {
 
-        return DB::transaction(function () use ($data, $group) {
-
-            // Create user
-            $user = $this->userRepository->create([
-                'name' => $data['name'],
-                'last_name' => $data['last_name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'birthday' => $data['birthday'] ?? null,
+            $data = [
+                'name' => $input['name'],
+                'last_name' => $input['last_name'],
+                'email' => $input['email'],
+                'password' => Hash::make($input['password']),
+                'birthday' => $input['birthday'] ?? null,
                 'email_verified_at' => config('system.registration.email.verification', false) ? null : now(), // if it the email verification is true, so the field is null otherwise is now()
-                'accept_terms' => $data['accept_terms'],
-                'accept_cookies' => $data['accept_cookies']
-            ]);
+                'accept_terms' => $input['accept_terms'],
+                'accept_cookies' => $input['accept_cookies']
+            ];
+            
+            // Add referral code
+            if (class_exists(\Core\Partner\Model\Partner::class) && !empty($input['referral_code'])) {
 
-            // Check for referral code
-            if (!empty($data['referral_code']) && class_exists(\Core\Partner\Model\Partner::class)) {
-
-                $partner = \Core\Partner\Model\Partner::where('code', $data['referral_code'])->first();
+                $partner = \Core\Partner\Model\Partner::where('code', $input['referral_code'])->first();
 
                 if ($partner) {
-                    $user->partner_id = $partner->id;
-                    $user->push();
+                    $data['partner_id'] = $partner->id;
                 }
             }
+
+            // Create user
+            $user = $this->userRepository->create($data);
 
             $user->groups()->attach($group->id);
 

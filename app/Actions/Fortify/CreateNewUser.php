@@ -21,10 +21,8 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        $this->recoveryReferralCode(request());
-
-        if (request()->has('referral_code')) {
-            $input['referral_code'] = request()->get('referral_code');
+        if (session()->has('referral_code')) {
+            $input['referral_code'] = session('referral_code');
         }
 
         Validator::make($input, [
@@ -50,36 +48,12 @@ class CreateNewUser implements CreatesNewUsers
             'accept_terms' => ['required', 'boolean'],
             'accept_cookies' => ['required', 'boolean'],
             'referral_code' => ['nullable'],
+        ], [
+            'email.required' => 'The credentials provided are invalid.',
+            'email.email' => 'The credentials provided are invalid.',
+            'email.unique' => 'The credentials provided are invalid.',
         ])->validate();
 
         return app(UserService::class)->registerCustomer($input);
-    }
-
-
-    /**
-     * Recovery referral code from the redirect_to session
-     * This method extracts the referral code from the redirect_to URL if it exists.
-     * It checks if the redirect_to session variable is set, parses the URL,
-     * and retrieves the referral_code from the query parameters.
-     * If a referral code is found, it merges it into the request.
-     * @return void
-     */
-    private function recoveryReferralCode(Request $request): void
-    {
-        $redirect_to = session()->get('url.intended');
-        $referral_code = null;
-
-        if ($redirect_to) {
-            $parsedUrl = parse_url($redirect_to);
-
-            if (isset($parsedUrl['query'])) {
-                parse_str($parsedUrl['query'], $query_params);
-                $referral_code = $query_params['referral_code'] ?? null;
-            }
-
-            if ($referral_code) {
-                $request->merge(['referral_code' => $referral_code]);
-            }
-        }
     }
 }

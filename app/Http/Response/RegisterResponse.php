@@ -56,7 +56,7 @@ final class RegisterResponse implements \Laravel\Fortify\Contracts\RegisterRespo
             auth()->login($this->user);
 
             // Redirect to the user profile
-            return redirect()->route('user.profile')->with(
+            return redirect()->route('user.dashboard')->with(
                 'status',
                 __('Your account has been registered successfully')
             );
