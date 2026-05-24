@@ -28,7 +28,6 @@
 use Illuminate\Support\Facades\Route;
 use OpenIDConnect\Laravel\JwksController;
 use App\Http\Controllers\Web\OAuth\ClientController;
-use Laravel\Passport\Http\Controllers\ScopeController;
 use App\Http\Controllers\Web\OAuth\AuthorizationController;
 use Laravel\Passport\Http\Controllers\DeviceCodeController;
 use App\Http\Controllers\Web\OAuth\OpenId\DiscoveryController;
@@ -38,7 +37,6 @@ use App\Http\Controllers\Web\OAuth\PersonalAccessTokenController;
 use Laravel\Passport\Http\Controllers\DenyAuthorizationController;
 use Laravel\Passport\Http\Controllers\DeviceAuthorizationController;
 use Laravel\Passport\Http\Controllers\ApproveAuthorizationController;
-use Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController;
 use Laravel\Passport\Http\Controllers\DenyDeviceAuthorizationController;
 use Laravel\Passport\Http\Controllers\ApproveDeviceAuthorizationController;
 
@@ -84,36 +82,20 @@ Route::group([
                 [DenyAuthorizationController::class, 'deny']
             )->name('authorizations.deny');
 
-           /* Route::get(
-                '/device/authorize',
-                [DeviceAuthorizationController::class]
-            )->name('device.authorizations.authorize');
+            /* Route::get(
+                 '/device/authorize',
+                 [DeviceAuthorizationController::class]
+             )->name('device.authorizations.authorize');
 
-            Route::post(
-                '/device/authorize',
-                [ApproveDeviceAuthorizationController::class]
-            )->name('device.authorizations.approve');
+             Route::post(
+                 '/device/authorize',
+                 [ApproveDeviceAuthorizationController::class]
+             )->name('device.authorizations.approve');
 
-            Route::delete(
-                '/device/authorize',
-                [DenyDeviceAuthorizationController::class]
-            )->name('device.authorizations.deny');*/
-
-            Route::get(
-                '/scopes',
-                [ScopeController::class, 'all']
-            )->name('scopes.index');
-
-            Route::get(
-                '/tokens',
-                [AuthorizedAccessTokenController::class, 'forUser']
-            )->name('tokens.index');
-
-            Route::delete(
-                '/tokens/{token_id}',
-                [AuthorizedAccessTokenController::class, 'destroy']
-            )->name('tokens.destroy');
-
+             Route::delete(
+                 '/device/authorize',
+                 [DenyDeviceAuthorizationController::class]
+             )->name('device.authorizations.deny');*/
 
             if (config('routes.system.clients.oauth.status', true)) {
                 Route::get(
@@ -138,7 +120,7 @@ Route::group([
             }
 
 
-            if (config('routes.clients.api.status', true)) {
+            if (config('routes.system.clients.api.status', true)) {
 
                 Route::get(
                     '/scopes',
