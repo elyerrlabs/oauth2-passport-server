@@ -101,7 +101,7 @@
                 </header>
 
                 <!-- Main Content -->
-                <div class="min-h-[450px] p-6 sm:p-8 md:p-10">
+                <div class="text-gray-900 dark:text-white p-6 sm:p-8 md:p-10">
                     <div
                         class="prose prose-gray max-w-none 
                                 dark:prose-invert 
