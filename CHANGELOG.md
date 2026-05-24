@@ -78,6 +78,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Fixed rate limit key generation where user identifiers were being generated incorrectly
 - Fixed scope permission validation for Horizon
 - implement CSP-compliant password toggle on register page
+- Re-write cache clear command
 
 ## Services Updated
 
