@@ -36,7 +36,7 @@ return [
                 'name' => 'Policies',
                 'route' => 'admin.policies.terms-and-conditions',
                 'icon' => "mdi mdi-file-sign",
-                'show' => "administrator:settings",
+                'service' => "administrator:settings",
             ]
         ],
 
