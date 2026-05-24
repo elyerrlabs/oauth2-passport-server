@@ -27,10 +27,11 @@ namespace Core\Partner\Model;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Models\Master; 
+use App\Models\Master;
 use Core\Partner\Model\User;
-use Core\Transaction\Model\Transaction;  
+use Core\Transaction\Model\Transaction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Route;
 
 class Partner extends Master
 {
@@ -66,7 +67,7 @@ class Partner extends Master
      */
     public function referLinks()
     {
-        return $this->code ? route('transaction.plans.index', ['referral_code' => $this->code]) : null;
+        return $this->code && Route::has('transaction.plans.index') ? route('transaction.plans.index', ['referral_code' => $this->code]) : null;
     }
 
     /**
