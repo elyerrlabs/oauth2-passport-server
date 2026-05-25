@@ -71,6 +71,10 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - updated vue components
     - Add default partner commission rate setting in admin > settings > payment
     - Improve referral code validation rules and format constraints
+- Sitemap (favicon management)
+    - Add support to upload multiple files into public directory for seo purpose
+    - Add support to list all files (images)
+    - Add delete file funcionality
 
 ## Fixes
 
@@ -79,6 +83,8 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Fixed scope permission validation for Horizon
 - implement CSP-compliant password toggle on register page
 - Re-write cache clear command
+- Fixed favicon default layout
+- Fixed notification status for warning type
 
 ## Services Updated
 
