@@ -46,10 +46,8 @@ class Session extends Master
         //  'user_id'
     ];
 
-    public function getLastActivityAttribute($value)
+    public function user()
     {
-        $date = date('Y-m-d H:i:s', $value);
-
-        return $this->format_date($date);
+        return $this->belongsTo(\Core\User\Model\User::class);
     }
 }

@@ -75,7 +75,7 @@
                     <span class="xs:inline truncate">{{ __('Back to Dashboard') }}</span>
                 </a>
             </div>
-            <div class="min-h-[44px] flex items-center">
+            <div class="min-h-[44px] flex items-center gap-4">
                 <x-theme />
                 <x-profile />
             </div>

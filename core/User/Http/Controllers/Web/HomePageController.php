@@ -30,20 +30,15 @@ namespace Core\User\Http\Controllers\Web;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WebController;
-use Core\User\Repositories\DashboardRepository;
+use App\Services\SessionService;
+use App\Transformers\Session\SessionTransformer;
 
 class HomePageController extends WebController
 {
-    /**
-     * Repository
-     * @var \Core\User\Repositories\DashboardRepository
-     */
-    public $repository;
 
-    public function __construct(DashboardRepository $dashboardRepository)
+    public function __construct(protected SessionService $sessionService)
     {
         parent::__construct();
-        $this->repository = $dashboardRepository;
     }
 
     /**
@@ -53,12 +48,10 @@ class HomePageController extends WebController
      */
     public function dashboard(Request $request)
     {
-        if ($request->wantsJson()) {
-            return $this->repository->user($request);
-        }
+        $sessions = $this->sessionService->searchForUser($request)->get();
 
         return Inertia::render("Web/About", [
-            'route' => route('user.dashboard'),
+            "sessions" => $this->transformCollection($sessions, SessionTransformer::class)
         ]);
     }
 }

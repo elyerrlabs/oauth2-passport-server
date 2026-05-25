@@ -27,10 +27,15 @@ namespace App\Transformers\Session;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use Elyerr\ApiResponse\Assets\Asset;
+use Illuminate\Support\Carbon;
 use League\Fractal\TransformerAbstract;
 
 class SessionTransformer extends TransformerAbstract
 {
+
+    use Asset;
+
     /**
      * List of resources to automatically include
      *
@@ -56,14 +61,15 @@ class SessionTransformer extends TransformerAbstract
      */
     public function transform($session)
     {
+        $lastActivity = Carbon::createFromTimestamp($session->last_activity);
+
         return [
             'id' => $session->id,
             'ip' => $session->ip_address,
             'agent' => $session->user_agent,
-            'last_activity' => $session->last_activity,
-            'actual' => request()->session()->getId() == $session->id ?: false,
+            'last_activity' => $this->format_date($lastActivity),
+            'current' => request()->session()->getId() == $session->id,
             'links' => [
-                'parent' => route('sessions.index'),
                 'destroy' => route('sessions.destroy', ['session' => $session->id]),
             ],
         ];

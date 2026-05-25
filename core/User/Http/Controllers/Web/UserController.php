@@ -31,6 +31,7 @@ namespace Core\User\Http\Controllers\Web;
 use Core\User\Services\UserService;
 use Inertia\Inertia;
 use App\Http\Controllers\WebController;
+use App\Services\SessionService;
 use Core\User\Http\Requests\UserPersonalUpdateRequest;
 use Core\User\Http\Requests\UserPersonalPasswordRequest;
 
@@ -41,8 +42,10 @@ class UserController extends WebController
      * Construct
      * @param \Core\User\Services\UserService $userService
      */
-    public function __construct(protected UserService $userService)
-    {
+    public function __construct(
+        protected UserService $userService,
+        protected SessionService $sessionService
+    ) {
         parent::__construct();
     }
 
@@ -85,7 +88,9 @@ class UserController extends WebController
      */
     public function changePassword(UserPersonalPasswordRequest $request)
     {
-        $this->userService->updatePassword($request->user()->idd, $request->toArray());
+        $this->userService->updatePassword($request->user()->id, $request->toArray());
+
+        $this->sessionService->closeAllSession();
 
         return redirect()->route('user.password');
     }

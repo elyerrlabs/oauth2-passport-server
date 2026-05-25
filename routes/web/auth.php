@@ -40,6 +40,7 @@ use App\Http\Controllers\Web\Auth\AuthenticatedSessionController;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\ConfirmedPasswordStatusController;
 use App\Http\Controllers\Web\Auth\ConfirmedTwoFactorAuthenticationController;
+use Core\User\Http\Controllers\Web\SessionController;
 use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
 use Laravel\Fortify\Http\Controllers\TwoFactorSecretKeyController;
 use Laravel\Fortify\RoutePath;
@@ -170,4 +171,7 @@ Route::group([
             ->middleware($twoFactorMiddleware)
             ->name('two-factor.regenerate-recovery-codes');
     }
+
+
+    Route::resource('sessions', SessionController::class)->only('destroy');
 });
