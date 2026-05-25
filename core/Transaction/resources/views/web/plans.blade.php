@@ -373,7 +373,7 @@
                     <div class="mb-8 text-center border-b border-gray-200 dark:border-gray-700 pb-6">
                         <span
                             class="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Total to
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                pay') }}</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            pay') }}</span>
                         <div class="flex items-baseline justify-center gap-2 mt-2">
                             <span id="modalPriceCurrency"
                                 class="text-2xl font-bold text-gray-600 dark:text-gray-400">USD</span>
@@ -558,44 +558,47 @@
 
 @push('js')
     <script nonce="{{ $nonce }}">
-        const plans = @json($data);
-        const billing_periods = @json($billing_periods);
-        let plan_selected = '';
-        let price_selected = '';
-        let method = ''
-
-        // Define button classes for active and disabled states
-        const activeButtonClasses = 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer';
-        const disabledButtonClasses = 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed';
-
-        const modal = $('#modal');
-        $('.payment-method').on('click', chooseMethod);
-
-        function chooseMethod() {
-            method = $(this).data('method');
-            $('.payment-method').removeClass('selected');
-            $(this).addClass('selected');
-
-            // Enable btn confirm payment
-            if (method != '') {
-                $("#confirmBtn").removeClass(disabledButtonClasses)
-                $("#confirmBtn").addClass(activeButtonClasses)
-                $("#confirmBtn").prop('disabled', false)
-            }
-        }
-
-        // make payment 
-        $('#confirmBtn').on('click', function(e) {
-            e.preventDefault()
-            continuePayment()
-        });
-
-        // Close modal on cancel, close button, or overlay click
-        $("#cancelModalBtn, #closeModalBtn, #modalOverlay").on('click', function() {
-            modal.addClass('hidden');
-        });
-
         document.addEventListener("DOMContentLoaded", function() {
+
+            const plans = @json($data);
+            const billing_periods = @json($billing_periods);
+            let plan_selected = '';
+            let price_selected = '';
+            let method = ''
+
+            // Define button classes for active and disabled states
+            const activeButtonClasses = 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer';
+            const disabledButtonClasses =
+                'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed';
+
+            const modal = $('#modal');
+            $('.payment-method').on('click', chooseMethod);
+
+            function chooseMethod() {
+                method = $(this).data('method');
+                $('.payment-method').removeClass('selected');
+                $(this).addClass('selected');
+
+                // Enable btn confirm payment
+                if (method != '') {
+                    $("#confirmBtn").removeClass(disabledButtonClasses)
+                    $("#confirmBtn").addClass(activeButtonClasses)
+                    $("#confirmBtn").prop('disabled', false)
+                }
+            }
+
+            // make payment 
+            $('#confirmBtn').on('click', function(e) {
+                e.preventDefault()
+                continuePayment()
+            });
+
+            // Close modal on cancel, close button, or overlay click
+            $("#cancelModalBtn, #closeModalBtn, #modalOverlay").on('click', function() {
+                modal.addClass('hidden');
+            });
+
+
             // Handle price option click
             $('.price-option').on('click', function() {
                 // Remove selected class from all options and add to the clicked one
@@ -606,59 +609,64 @@
                 SelectPlan($(this).data('planId'), $(this).data('priceId'));
 
             });
-        })
 
-        // Function to find the billing period based on its ID
-        function findPeriod() {
-            return billing_periods.find(p => p.id === price_selected.billing_period) || {
-                name: ''
-            };
-        }
 
-        /** * Function to handle plan and price selection
-         * @param {string} planId - The ID of the selected plan
-         * @param {string} priceId - The ID of the selected price
-         */
-        function SelectPlan(planId, priceId) {
-            // Find the selected plan and price from the data
-            plan_selected = plans.data.find(p => p.id === planId) || '';
-            price_selected = plan_selected.prices.find(pr => pr.id === priceId) || '';
+            // Function to find the billing period based on its ID
+            function findPeriod() {
+                return billing_periods.find(p => p.id === price_selected.billing_period) || {
+                    name: ''
+                };
+            }
 
-            // Disable all buttons first and reset their text
-            $('.select-plan-btn').each(function(btn) {
-                $(this).addClass(disabledButtonClasses);
-                $(this).removeClass(activeButtonClasses);
-                $(this).prop('disabled', true);
-                $(this).html('<i class="mdi mdi-lock text-sm mr-2"></i>{{ __('Select a price first') }}');
-            });
+            /** * Function to handle plan and price selection
+             * @param {string} planId - The ID of the selected plan
+             * @param {string} priceId - The ID of the selected price
+             */
+            function SelectPlan(planId, priceId) {
+                // Find the selected plan and price from the data 
 
-            // Enable the button and update its text
-            const button = $('#plan-detail-' + planId);
-            button.prop('disabled', false);
-            button.removeClass(disabledButtonClasses);
-            button.addClass(activeButtonClasses);
-            button.html('<i class="mdi mdi-lock-open text-sm mr-2"></i>{{ __('Proceed to checkout') }}');
+                plan_selected = plans.data.find(p => p.id === planId) || '';
+                price_selected = plan_selected.prices.find(pr => pr.id === priceId) || '';
 
-            // open modal on button click
-            button.off('click').on('click', function() {
-                loadModalData();
-                modal.removeClass('hidden');
-            });
-        }
+                // Disable all buttons first and reset their text
+                $('.select-plan-btn').each(function(btn) {
+                    $(this).addClass(disabledButtonClasses);
+                    $(this).removeClass(activeButtonClasses);
+                    $(this).prop('disabled', true);
+                    $(this).html(
+                        '<i class="mdi mdi-lock text-sm mr-2"></i>{{ __('Select a price first') }}'
+                    );
+                });
 
-        /**
-         * Function to load selected plan and price details into the modal
-         */
-        function loadModalData() {
-            // Populate modal with selected plan and price details
-            $('#modalPlanName').text(plan_selected.name);
-            $('#modalPriceAmount').text((price_selected.amount / 100).toFixed(2));
-            $('#modalPriceCurrency').text(price_selected.currency);
+                // Enable the button and update its text
+                const button = $('#plan-detail-' + planId);
+                button.prop('disabled', false);
+                button.removeClass(disabledButtonClasses);
+                button.addClass(activeButtonClasses);
+                button.html(
+                    '<i class="mdi mdi-lock-open text-sm mr-2"></i>{{ __('Proceed to checkout') }}'
+                );
 
-            $('#modalServicesContainer').empty();
+                // open modal on button click
+                button.off('click').on('click', function() {
+                    loadModalData();
+                    modal.removeClass('hidden');
+                });
+            }
 
-            plan_selected.scopes.forEach(scope => {
-                $('#modalServicesContainer').append(`
+            /**
+             * Function to load selected plan and price details into the modal
+             */
+            function loadModalData() {
+                // Populate modal with selected plan and price details
+                $('#modalPlanName').text(plan_selected.name);
+                $('#modalPriceAmount').text((price_selected.amount / 100).toFixed(2));
+                $('#modalPriceCurrency').text(price_selected.currency);
+
+                $('#modalServicesContainer').empty();
+
+                plan_selected.scopes.forEach(scope => {
+                    $('#modalServicesContainer').append(`
                     <div class="service-item bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4 mb-3">
                         <div class="mb-2 pb-2 border-b border-gray-200 dark:border-gray-600">
                             <h3 class="font-bold text-gray-800 dark:text-white">${scope.service.group.name}</h3>
@@ -683,55 +691,60 @@
                         </div>
                     </div>
                 `);
-            });
+                });
 
-            const period = findPeriod();
-            $('#modalPricePeriod').text('/ ' + period.name);
-            $('#modalDescription').html(plan_selected.description || '{{ __('No description available.') }}');
-            $('#modalBillingPlan').text(plan_selected.name);
-            $('#modalBillingPeriod').text(period.name);
-            $('#modalBillingSubtotal').text((price_selected.amount / 100).toFixed(2) + ' ' + price_selected.currency);
+                const period = findPeriod();
+                $('#modalPricePeriod').text('/ ' + period.name);
+                $('#modalDescription').html(plan_selected.description ||
+                    '{{ __('No description available.') }}');
+                $('#modalBillingPlan').text(plan_selected.name);
+                $('#modalBillingPeriod').text(period.name);
+                $('#modalBillingSubtotal').text((price_selected.amount / 100).toFixed(2) + ' ' +
+                    price_selected
+                    .currency);
 
-            // Bonus & Trial
-            if (plan_selected.bonus_enabled && plan_selected.bonus_duration > 0) {
-                $('#modalBonusDays').text(plan_selected.bonus_duration);
-                $('#modalBonusContainer').removeClass('hidden');
-            } else {
-                $('#modalBonusContainer').addClass('hidden');
+                // Bonus & Trial
+                if (plan_selected.bonus_enabled && plan_selected.bonus_duration > 0) {
+                    $('#modalBonusDays').text(plan_selected.bonus_duration);
+                    $('#modalBonusContainer').removeClass('hidden');
+                } else {
+                    $('#modalBonusContainer').addClass('hidden');
+                }
             }
-        }
 
-        function getReferralLink() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get("referral_code");
-        }
+            function getReferralLink() {
+                const params = new URLSearchParams(window.location.search);
+                return params.get("referral_code");
+            }
 
-        async function continuePayment() {
-            const btn = $('#confirmBtn')
-            btn.prop('disabled', true);
-            btn.html(
-                `<svg class="animate-spin h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            async function continuePayment() {
+                const btn = $('#confirmBtn')
+                btn.prop('disabled', true);
+                btn.html(
+                    `<svg class="animate-spin h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 {{ __('Processing...') }}
                 `);
 
-            try {
-                const res = await $server.post('/system/transaction/subscriptions', {
-                    plan_id: plan_selected.id,
-                    billing_period: price_selected.billing_period,
-                    payment_method: method,
-                    referral_code: getReferralLink(),
-                });
+                try {
+                    const res = await $server.post('/system/transaction/subscriptions', {
+                        plan_id: plan_selected.id,
+                        billing_period: price_selected.billing_period,
+                        payment_method: method,
+                        referral_code: getReferralLink(),
+                    });
 
-                if (res.status == 201) {
-                    window.location.href = res.data.data.redirect_to;
+                    if (res.status == 201) {
+                        window.location.href = res.data.data.redirect_to;
+                    }
+                } catch (e) {
+                    if (e?.response?.data?.message) {
+                        $notify.error(e.response.data.message);
+                    }
+                } finally {
+                    $('#confirmBtn').prop('disabled', false);
                 }
-            } catch (e) {
-                if (e?.response?.data?.message) {
-                    $notify.error(e.response.data.message);
-                }
-            } finally {
-                $('#confirmBtn').prop('disabled', false);
             }
-        }
+
+        });
     </script>
 @endpush

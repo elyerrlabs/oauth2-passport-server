@@ -60,7 +60,7 @@ class PlanController extends WebController
             "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
             "data" => $this->transformCollection($plans->paginate($request->input('per_page', 15)), PlanTransformer::class),
             "routes" => [
-                'index' => route('transaction.admin.plans.index'),
+                'plans' => route('transaction.admin.plans.index'),
                 'create' => route('transaction.admin.plans.create'),
             ],
 
@@ -81,7 +81,7 @@ class PlanController extends WebController
             "periods" => $billing_periods,
             "currencies" => $currencies,
             "routes" => [
-                'index' => route('transaction.admin.plans.index'),
+                'plans' => route('transaction.admin.plans.index'),
                 'store' => route('transaction.admin.plans.store')
             ],
             'api' => [
