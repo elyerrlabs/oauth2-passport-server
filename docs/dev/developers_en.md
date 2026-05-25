@@ -40,6 +40,7 @@ The project runs **100% on Docker**, which means:
 ## 🌱 Branches
 
 - **main** → Stable branch (production)
+- **main** → Staging branch (testing)
 - **dev** → Active development branch (**use this one for development**)
 
 > ⚠️ Everything described in this guide assumes you are working on the `dev` branch.
@@ -66,7 +67,6 @@ Optional (recommended) tools:
 ```sh
 git clone https://github.com/elyerrlabs/oauth2-passport-server.git
 cd oauth2-passport-server
-git checkout dev
 ```
 
 ---

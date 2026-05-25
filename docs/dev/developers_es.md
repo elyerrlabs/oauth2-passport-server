@@ -40,6 +40,7 @@ El proyecto funciona **100 % con Docker**, lo que significa que:
 ## 🌱 Ramas
 
 - **main** → Rama estable (producción)
+- **staging** → Rama staging (testing)
 - **dev** → Rama de desarrollo activo (**usar esta para trabajar**)
 
 > ⚠️ Todo lo descrito en esta guía asume que estás trabajando sobre la rama `dev`.
@@ -66,7 +67,6 @@ Herramientas opcionales (recomendadas):
 ```sh
 git clone https://github.com/elyerrlabs/oauth2-passport-server.git
 cd oauth2-passport-server
-git checkout dev
 ```
 
 ---

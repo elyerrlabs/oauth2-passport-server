@@ -53,8 +53,12 @@ Antes de comenzar, asegúrate de contar con:
 - **main** — _Estable_
   Refleja la última versión estable lista para producción.
 
-- **vx.x.x** — _Versiones_
+- **vx.x.x** — _Versiones_ (recomenda)
   Etiquetas que siguen versionado semántico para lanzamientos estables.
+
+- **staging** — _Testing_
+  Contiene los cambios más recientes para pruebas, se usa para revisar los cambios en un entorno de testing y detectar errorres antes de pasar a entornos reales de produccion y poder corregir cualquier fallo.
+  **No debe usarse en producción.**
 
 - **dev** — _Desarrollo_
   Contiene los cambios más recientes para pruebas.
@@ -82,7 +86,7 @@ Todas las configuraciones están **desacopladas del código**, permitiendo adapt
 ### 1️⃣ Clonar el Repositorio
 
 ```bash
-git clone git@github.com:elyerr/oauth2-passport-server.git
+git clone -b main --single-branch git@github.com:elyerr/oauth2-passport-server.git
 cd oauth2-passport-server
 ```
 
@@ -90,7 +94,7 @@ cd oauth2-passport-server
 
 ### 2️⃣ Configuración del Entorno
 
-Crea el archivo de entorno para producción:
+Crea el archivo de entorno para producción: tener en en cuenta que este archivo .env solo sera sera necesario una sola vez para inciar el proyecto , luego de inciar el sistema creara un volumne `env` y almacenara una copia del original, y siempre que escogera primero al al del volumen y si este es eliminado buscara el original, asi que lo recomendable si deceas hacer un cambio en el env luego de iniciar el proyecto debes modificarlo desde el contenedor y editar lo que tengas que editar.
 
 ```bash
 cp .env.example .env
@@ -127,8 +131,13 @@ DB_PASSWORD=<contraseña-muy-segura>
 
 Ejecuta el despliegue con:
 
+- para produccion
 ```bash
 ./deploy-prod.sh
+```
+- para staging
+```bash
+./deploy-staging.sh
 ```
 
 Este script se encarga de:
@@ -142,7 +151,16 @@ Este script se encarga de:
 
 ## 🚀 Script de Ejecución en Contenedor (`./run`)
 
-Se ha creado el script `./run` para facilitar la ejecución de comandos dentro del contenedor de la aplicación sin necesidad de escribir manualmente `docker exec`.
+- para produccion
+```bash
+./run
+```
+- para staging
+```bash
+./runs
+```
+
+Se ha creado estos scripts para facilitar la ejecución de comandos dentro del contenedor de la aplicación sin necesidad de escribir manualmente `docker exec`.
 
 El script ejecuta los comandos como el usuario `www-data`, asegurando permisos correctos en el entorno.
 
@@ -255,6 +273,7 @@ Redis puede estar alojado en:
 ```text
 Host: <host-del-servidor-redis>
 Puerto: 6379
+Usuario: <opcional>
 Contraseña: <opcional>
 ```
 
@@ -287,7 +306,7 @@ Esto habilita:
 - Ejecución eficiente de tareas
 
 > 💡 Sin Redis correctamente configurado, Horizon no podrá procesar las colas.
-
+> Nota: si todo esta configurado correctamenta y horizon no detecta los cambios al momento, espera unos 30 minutos si aún sigue sin reiniciarse , la forma mas sencilla es reiniciar el contendor eso no toma ni 1 minuto con el scrip `./deploy-prod.sh` o `./deploy-staging.sh` sea el caso, esto hara que todos los cambios sean refrescados.
 ---
 
 ## 🌐 Configuración de Nginx (Ejemplo)
@@ -337,7 +356,7 @@ php artisan passport:keys --force
     - `payment_intent.payment_failed`
     - `checkout.session.expired`
     - `charge.succeeded`
-    - `charge.refund.updated`
+    - `charge.refund.updated` (Pronto disponible)
 
 ---
 
