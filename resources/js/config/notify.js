@@ -29,9 +29,9 @@ const notyf = new Notyf({
     },
     {
       type: "warning",
-      background: "var(--warning-color, #ffc107)",
+      background: "var(--warning-color, #3174d4)",
       icon: {
-        className: "mdi mdi-alert-circle",
+        className: "mdi mdi-close-circle",
         tagName: "i",
         color: "#000",
       },

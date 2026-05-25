@@ -2,7 +2,10 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         @if (session('status'))
-            $notify.warning("{{ session('status') }}");
+            $notify.open({
+                type: 'warning',
+                message: "{{ session('status') }}"
+            });
         @endif
 
         @if (session('success'))
