@@ -29,14 +29,15 @@ namespace App\Services;
  */
 
 use Elyerr\ApiResponse\Exceptions\ReportError;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Sitemap\Sitemap;
-use Illuminate\Http\Request;
 use Spatie\Sitemap\SitemapIndex;
 use Spatie\Sitemap\Tags\Sitemap as SitemapTag;
 use Spatie\Sitemap\Tags\Url;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Route;
 
 class SiteMapService
 {
@@ -348,16 +349,54 @@ class SiteMapService
 
         Storage::disk('backups')->makeDirectory($this->storage);
 
-        $files = ['robots.txt', 'favicon.ico']; 
+        // files statics
+        $files = ['robots.txt'];
+
+        // Extenssion 
+        $extensions = [
+            'png',
+            'jpg',
+            'jpeg',
+            'gif',
+            'webp',
+            'svg',
+            'ico',
+            'bmp',
+            'avif',
+        ];
+
+        $publicFiles = scandir($public);
+
+        foreach ($publicFiles as $file) {
+
+            $path = "{$public}/{$file}";
+
+            // Ignorar directorios
+            if (!is_file($path)) {
+                continue;
+            }
+
+            // Verificar extensión
+            $extension = strtolower(
+                pathinfo($file, PATHINFO_EXTENSION)
+            );
+
+            if (in_array($extension, $extensions)) {
+                $files[] = $file;
+            }
+        }
 
         foreach ($files as $file) {
+
             $from = "{$public}/{$file}";
             $to = "{$this->storage}/{$file}";
 
             if (file_exists($from)) {
-                $content = file_get_contents($from);
 
-                Storage::disk('backups')->put($to, $content);
+                Storage::disk('backups')->put(
+                    $to,
+                    file_get_contents($from)
+                );
             }
         }
     }
@@ -433,15 +472,33 @@ class SiteMapService
         }
     }
 
-    public function getFaviconData()
+    public function getImagesData()
     {
-        $faviconPath = public_path('favicon.ico');
+        $publicPath = public_path();
+        $images = [];
 
-        if (file_exists($faviconPath)) {
-            return url('favicon.ico');
+        // Extensiones de imagen comunes
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'ico', 'svg', 'bmp', 'avif'];
+
+        // Escanear la raíz de public
+        $files = scandir($publicPath);
+
+        foreach ($files as $file) {
+            // Obtener la extensión del archivo
+            $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+            // Verificar si es una imagen y no es un directorio
+            if (in_array($extension, $imageExtensions) && is_file($publicPath . '/' . $file)) {
+
+                $images[] = [
+                    'path' => '/' . $file,
+                    'url' => url($file),
+                    'name' => $file
+                ];
+            }
         }
 
-        return null;
+        return $images;
     }
 
     /**
@@ -451,8 +508,24 @@ class SiteMapService
      */
     public function updateFavicon(Request $request)
     {
-        $favicon = $request->file('favicon');
-        $favicon->move(public_path(), 'favicon.ico');
+        foreach ($request->file('images') as $value) {
+            $value->move(public_path(), $value->getClientOriginalName());
+        }
+
+        $this->backupFiles();
+    }
+
+    /**
+     * Delete file
+     * @param string $path
+     * @return void
+     */
+    public function deleteFile(string $path)
+    {
+        $decodePath = base64_decode($path);
+        $backupPath = $this->storage . $decodePath;
+        File::delete(public_path($decodePath));
+        Storage::disk('backups')->delete($backupPath);
     }
 
     /**

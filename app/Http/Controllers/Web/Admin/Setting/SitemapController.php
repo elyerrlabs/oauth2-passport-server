@@ -37,6 +37,8 @@ use Illuminate\Http\Request;
 final class SitemapController extends WebController
 {
 
+    public array $routes;
+
     /**
      * Construct
      */
@@ -45,8 +47,26 @@ final class SitemapController extends WebController
         parent::__construct();
         $this->middleware("userCanAny:developer:seo:full,developer:seo:view")->only('index', 'metaForm', 'robotForm');
         $this->middleware("userCanAny:developer:seo:full,developer:seo:create")->only('store', 'updateMetaForm', 'updateMeta', 'updateRobot');
-        $this->middleware("userCanAny:developer:seo:full,developer:seo:destroy")->only('delete');
+        $this->middleware("userCanAny:developer:seo:full,developer:seo:destroy")->only('delete', 'deleteFavicon');
         $this->middleware("userCanAny:developer:seo:full,developer:seo:reset")->only('reset');
+
+        $this->routes = [
+            [
+                'name' => 'Sitemap URLs',
+                'route' => route('admin.sitemaps.index'),
+                'icon' => 'mdi mdi-sitemap',
+            ],
+            [
+                'name' => 'Robots.txt',
+                'route' => route('admin.sitemaps.robot.form'),
+                'icon' => 'mdi mdi-robot',
+            ],
+            [
+                'name' => 'Favicon',
+                'route' => route('admin.sitemaps.favicon.form'),
+                'icon' => 'mdi mdi-upload-circle-outline',
+            ],
+        ];
     }
 
     /**
@@ -57,7 +77,9 @@ final class SitemapController extends WebController
     {
         $data = $this->sitemapService->listRoutes()->toArray();
 
-        return view('admin.sitemap.index', compact('data'));
+        return view('admin.sitemap.index', compact('data'), [
+            'routes' => $this->routes
+        ]);
     }
 
     /**
@@ -142,7 +164,9 @@ final class SitemapController extends WebController
     public function robotForm()
     {
         $content = $this->sitemapService->getRobotData();
-        return view('admin.sitemap.robot', compact('content'));
+        return view('admin.sitemap.robot', compact('content'), [
+            'routes' => $this->routes
+        ]);
     }
 
     /**
@@ -167,9 +191,11 @@ final class SitemapController extends WebController
      */
     public function faviconForm()
     {
-        $favicon = $this->sitemapService->getFaviconData();
+        $images = $this->sitemapService->getImagesData();
 
-        return view('admin.sitemap.favicon', compact('favicon'));
+        return view('admin.sitemap.favicon', compact('images'), [
+            'routes' => $this->routes
+        ]);
     }
 
     /**
@@ -180,11 +206,19 @@ final class SitemapController extends WebController
     public function updateFavicon(Request $request)
     {
         $request->validate([
-            'favicon' => 'required|file|mimes:ico,png',
+            'images' => 'nullable|array|max:20',
+            'images.*' => 'file|mimes:jpg,jpeg,png,gif,webp,ico,svg,bmp,avif|max:5120',
         ]);
 
         $this->sitemapService->updateFavicon($request);
 
-        return redirect()->back()->with('status', __('Favicon updated successfully'));
+        return redirect()->back()->with('status', __('Public images and favicon updated successfully'));
+    }
+
+    public function deleteFavicon(string $path)
+    {
+        $this->sitemapService->deleteFile($path);
+
+        return redirect()->back()->with('status', __('File deleted successfully'));
     }
 }

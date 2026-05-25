@@ -83,4 +83,5 @@ Route::group([
 
     Route::get('/favicon', [SitemapController::class, 'faviconForm'])->name('favicon.form');
     Route::post('/favicon', [SitemapController::class, 'updateFavicon'])->name('favicon.update');
+    Route::delete('/favicon/{path}', [SitemapController::class, 'deleteFavicon'])->name('favicon.delete');
 });

@@ -1,23 +1,3 @@
-@php
-    $routes = [
-        [
-            'name' => 'Sitemap URLs',
-            'route' => route('admin.sitemaps.index'),
-            'icon' => 'mdi mdi-sitemap',
-        ],
-        [
-            'name' => 'Robots.txt',
-            'route' => route('admin.sitemaps.robot.form'),
-            'icon' => 'mdi mdi-robot',
-        ],
-        [
-            'name' => 'Favicon',
-            'route' => route('admin.sitemaps.favicon.form'),
-            'icon' => 'mdi mdi-upload-circle-outline',
-        ],
-    ];
-@endphp
-
 <x-admin-layout :routes="$routes">
 
     @push('head')
