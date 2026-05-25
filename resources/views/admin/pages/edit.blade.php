@@ -124,6 +124,23 @@
                             </select>
                         </div>
 
+                        <div>
+                            <label for="index"
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {{ __('Index page') }}
+                            </label>
+                            <select id="index" name="index"
+                                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-900/40">
+                                <option value="0"
+                                    {{ (string) old('index', (int) $page->index) === '0' ? 'selected' : '' }}>
+                                    {{ __('No') }}
+                                </option>
+                                <option value="1"
+                                    {{ (string) old('index', (int) $page->index) === '1' ? 'selected' : '' }}>
+                                    {{ __('Yes') }}
+                                </option>
+                            </select>
+                        </div>
                     </div>
                 </section>
 

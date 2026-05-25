@@ -45,11 +45,31 @@
                             <option value="name" {{ request('order_by') == 'name' ? 'selected' : '' }}>
                                 {{ __('Name') }}
                             </option>
+                            <option value="created_at" {{ request('order_by') == 'created_at' ? 'selected' : '' }}>
+                                {{ __('Created') }}
+                            </option>
                             <option value="is_published" {{ request('order_by') == 'is_published' ? 'selected' : '' }}>
                                 {{ __('Published') }}
                             </option>
                             <option value="is_draft" {{ request('order_by') == 'is_draft' ? 'selected' : '' }}>
                                 {{ __('Draft') }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="md:w-40">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ 'Indexable' }}</label>
+                        <select name="index"
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <option value="" {{ request('index') == 'asc' ? 'selected' : '' }}>
+                                {{ __('All') }}
+                            </option>
+                            <option value="1" {{ request('index') == '1' ? 'selected' : '' }}>
+                                {{ __('Indexable') }}
+                            </option>
+                            <option value="0" {{ request('index') == '0' ? 'selected' : '' }}>
+                                {{ __('No indexable') }}
                             </option>
                         </select>
                     </div>
@@ -112,6 +132,15 @@
                                     <td class="px-6 py-4">
                                         <div class="text-sm font-medium text-gray-900 dark:text-white">
                                             {{ $page->name }}
+                                            @if ($page->index)
+                                                <small class="block bg-green-700 text-white p-1 rounded">
+                                                    Indexable
+                                                </small>
+                                            @else
+                                                <small class="block bg-red-700 text-white p-1 rounded">
+                                                    No Indexable
+                                                </small>
+                                            @endif
                                         </div>
                                     </td>
 

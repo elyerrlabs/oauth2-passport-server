@@ -53,9 +53,11 @@ final class PageService extends \App\Services\Page\Service
     {
         $query = $this->pageRepository->query();
 
-        $query->when($request->filled('name'), fn() => $query->whereRaw('LOWER(slug) LIKE ?', ["%" . $request->name . "%"]));
+        $query->when($request->filled('name'), fn($q) => $q->whereRaw('LOWER(slug) LIKE ?', ["%" . $request->name . "%"]));
 
-        $query->orderBy($request->filled('order_by') ? $request->order_by : 'name', $request->filled('order_type') ? $request->order_type : 'asc');
+        $query->when($request->filled('index'), fn($q) => $q->where('index', $request->input('index')));
+
+        $query->orderBy($request->filled('order_by') ? $request->order_by : 'created_at', $request->filled('order_type') ? $request->order_type : 'asc');
 
         return $query;
     }
@@ -150,6 +152,7 @@ final class PageService extends \App\Services\Page\Service
             'path' => $path,
             'is_draft' => $data['is_draft'] ?? true,
             'is_published' => $data['is_draft'] ?? false,
+            'index' => $data['index'] ?? false
         ]);
     }
 
@@ -205,6 +208,7 @@ final class PageService extends \App\Services\Page\Service
             'path' => $publishedPath,
             'is_published' => $data['is_published'] ?? false,
             'is_draft' => $isDraft,
+            'index' => $data['index'] ?? false
         ]);
 
         return $model;
@@ -641,7 +645,7 @@ final class PageService extends \App\Services\Page\Service
      */
     public function indexPages()
     {
-        $this->pageRepository->query()->chunk(1000, function ($chunk, $index) {
+        $this->pageRepository->query()->where('index', true)->chunk(1000, function ($chunk, $index) {
 
             $filename = "posts_{$index}.xml";
             // public path

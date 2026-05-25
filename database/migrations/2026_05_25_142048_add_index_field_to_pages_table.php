@@ -1,9 +1,5 @@
 <?php
 
-namespace App\Models\Page;
-
-use App\Models\Master;
-
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -29,16 +25,28 @@ use App\Models\Master;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-class Page extends Master
-{
-    public $pages = 'pages';
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-    protected $fillable = [
-        'name',
-        'slug',
-        'path',
-        'is_published',
-        'is_draft',
-        'index'
-    ];
-}
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('pages', function (Blueprint $table) {
+            $table->boolean('index')->default(false)->index();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('pages', function (Blueprint $table) {
+            $table->dropColumn('index');
+        });
+    }
+};
