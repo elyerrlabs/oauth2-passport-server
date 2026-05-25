@@ -75,6 +75,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - Add support to upload multiple files into public directory for seo purpose
     - Add support to list all files (images)
     - Add delete file funcionality
+- Add new command to delete config keys
 
 ## Fixes
 
