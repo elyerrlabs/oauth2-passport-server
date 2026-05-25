@@ -76,6 +76,10 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - Add support to list all files (images)
     - Add delete file funcionality
 - Add new command to delete config keys
+- Add session support
+    - List all sessions
+    - Delete session
+    - Close all sessions when the password is updated
 
 ## Fixes
 
