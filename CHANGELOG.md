@@ -80,6 +80,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - List all sessions
     - Delete session
     - Close all sessions when the password is updated
+- Add index key for selective page indexing instead of full indexing
 
 ## Fixes
 
