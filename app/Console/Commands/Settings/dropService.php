@@ -29,6 +29,7 @@ namespace App\Console\Commands\Settings;
 
 use App\Support\CacheVersions;
 use Core\User\Model\UserScope;
+use Core\User\Repositories\GroupRepository;
 use Core\User\Services\ServiceService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -42,7 +43,7 @@ class dropService extends Command
      *
      * @var string
      */
-    protected $signature = 'settings:drop-service {service-slug}';
+    protected $signature = 'settings:drop-service';
 
     /**
      * The console command description.
@@ -59,14 +60,87 @@ class dropService extends Command
      */
     public function handle()
     {
-        $slug = $this->argument('service-slug');
+        // Get groups
+        $groups = app(GroupRepository::class)
+            ->query()
+            ->with('services:id,group_id,name,slug')
+            ->get(['id', 'name', 'slug']);
+
+        // Validate groups
+        if ($groups->isEmpty()) {
+            $this->error('No groups found.');
+
+            return Command::FAILURE;
+        }
+
+        $this->info('Available groups:');
+        $this->newLine();
+
+        // Build selectable group list
+        $groupChoices = [];
+
+        foreach ($groups as $group) {
+
+            $servicesCount = $group->services->count();
+
+            $label = "{$group->slug} ({$servicesCount} services)";
+
+            $groupChoices[$group->slug] = $label;
+
+            $this->line("- {$label}");
+        }
+
+        $this->newLine();
+
+        // Select group
+        $selectedGroupSlug = $this->choice(
+            'Select a group',
+            array_keys($groupChoices)
+        );
+
+        // Find selected group
+        $group = $groups->firstWhere('slug', $selectedGroupSlug);
+
+        // Validate services
+        if (!$group || $group->services->isEmpty()) {
+
+            $this->error("The selected group does not contain services.");
+
+            return Command::FAILURE;
+        }
+
+        $this->newLine();
+        $this->info("Services inside group [{$group->slug}]:");
+        $this->newLine();
+
+        // Build selectable services list
+        $serviceChoices = [];
+
+        foreach ($group->services as $service) {
+
+            $label = "{$service->slug} ({$service->name})";
+
+            $serviceChoices[$service->slug] = $label;
+
+            $this->line("- {$label}");
+        }
+
+        $this->newLine();
+
+        // Select service
+        $selectedServiceSlug = $this->choice(
+            'Select a service to delete',
+            array_keys($serviceChoices)
+        );
 
         // Find service
-        $service = app(ServiceService::class)->findBySlug($slug);
+        $service = $group->services
+            ->firstWhere('slug', $selectedServiceSlug);
 
         // Validate service
         if (!$service) {
-            $this->error("Service [$slug] was not found.");
+
+            $this->error("Service [$selectedServiceSlug] was not found.");
 
             return Command::FAILURE;
         }
@@ -87,7 +161,12 @@ class dropService extends Command
         $this->info("Target service: {$service->name} ({$service->slug})");
 
         // Confirmation
-        if (!$this->confirm('Are you sure you want to permanently delete this service?', false)) {
+        if (
+            !$this->confirm(
+                'Are you sure you want to permanently delete this service?',
+                false
+            )
+        ) {
 
             $this->info('Operation cancelled.');
 
@@ -95,8 +174,9 @@ class dropService extends Command
         }
 
         // Delete service
-        $this->deleteGroups($slug);
+        $this->deleteGroups($service->slug);
 
+        // Update cache version
         Cache::increment(CacheVersions::SCOPES);
 
         $this->info('Service deleted successfully.');
