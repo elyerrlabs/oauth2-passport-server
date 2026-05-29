@@ -28,6 +28,7 @@ namespace App\Console\Commands\Settings;
  */
 
 
+use App\Support\CacheVersions;
 use Core\User\Model\Group;
 use Core\User\Model\Role;
 use Core\User\Model\Scope;
@@ -37,6 +38,7 @@ use Core\User\Services\GroupService;
 use Core\User\Services\ServiceService;
 use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -67,7 +69,8 @@ class settingsRolesUpload extends Command
         $this->info("Upload roles");
         $this->upload_roles();
         $this->upload_groups();
-        $this->deleteGroups();
+        Cache::increment(CacheVersions::SCOPES);
+
         $this->info("Uploaded successfully");
     }
 
@@ -167,47 +170,5 @@ class settingsRolesUpload extends Command
 
     }
 
-    public function deleteGroups()
-    {
-        // Read file json
-        $groups = json_decode(file_get_contents(base_path('database/extra/drop.json')));
 
-        DB::transaction(function () use ($groups) {
-
-            foreach ($groups as $grp) {
-                // find group
-                $group = app(GroupService::class)->findBySlug($grp->name);
-
-                if (empty($group)) {
-                    continue;
-                }
-
-                // Read services
-                foreach ($grp->services as $srv) {
-
-                    //find service
-                    $service = app(ServiceService::class)->findBySlug($srv->name);
-
-                    // Verify services exists on group
-                    if (empty($service) || $service->group_id != $group->id) {
-                        continue;
-                    }
-
-                    // Skip if service does not exist or does not belong to the group
-                    if ($service->scopes->isNotEmpty()) {
-                        foreach ($service->scopes as $scope) {
-                            Log::info("Delete scope by system with gsr_id : $scope->gsr_id for service $service->slug", $scope->toArray());
-                            // Delete scope for user
-                            UserScope::where('scope_id', $scope->id)->delete();
-                            // Delete scope for service
-                            $scope->delete();
-                        }
-                    }
-                    // Delete service
-                    Log::info("Delete service by system $service->slug", $service->toArray());
-                    $service->delete();
-                }
-            }
-        });
-    }
 }
