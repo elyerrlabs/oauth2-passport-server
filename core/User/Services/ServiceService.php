@@ -28,8 +28,9 @@ namespace Core\User\Services;
  */
 
 use App\Support\CacheKeys;
+use App\Support\CacheVersions;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache; 
+use Illuminate\Support\Facades\Cache;
 use Core\User\Repositories\ServiceRepository;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -239,7 +240,7 @@ class ServiceService
                 ]
             );
 
-        Cache::forget(CacheKeys::passportScopes());
+        Cache::increment(CacheVersions::SCOPES);
         return $model;
     }
 
@@ -264,7 +265,7 @@ class ServiceService
             throw new ReportError(__("This resource cannot be deleted because it is being used by another resource."), 403);
         }
 
-        Cache::forget(CacheKeys::passportScopes());
+        Cache::increment(CacheVersions::SCOPES);
 
         return $scope;
     }

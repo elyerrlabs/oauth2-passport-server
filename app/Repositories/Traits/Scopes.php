@@ -28,10 +28,8 @@ namespace App\Repositories\Traits;
 
 use App\Support\CacheKeys;
 use Laravel\Passport\Scope;
-use Core\User\Model\UserScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Core\User\Model\Scope as ModelScope;
 
 trait Scopes
 {
@@ -51,12 +49,16 @@ trait Scopes
      */
     public function scopes($api_key = true, $web = true)
     {
-        $user = Auth::user(); // Get user Current User 
-        $cacheKey = CacheKeys::userScopes($user->id); // Recovery cache key
+        // Current user
+        $user = Auth::user();
 
-        $query = ModelScope::query();
+        // Recovery cache key
+        $cacheKey = CacheKeys::userScopes($user->id);
 
-        // With eager loading
+        // Create query builder for Scopes
+        $query = \Core\User\Model\Scope::query();
+
+        // Load relations
         $query->with([
             'role',
             'scopeUsers',
@@ -64,44 +66,60 @@ trait Scopes
             'service',
         ]);
 
-        // Search by active scopes
+        // Filter only active scopes
         $query->where('active', true);
 
-        // Scopes for api key web
+        // Filter scopes with api key or web
         if ($api_key && !$web) {
             $query->where('api_key', true);
         } elseif ($web && !$api_key) {
             $query->where('web', true);
         }
 
+        // Using cache
         return Cache::remember(
             $cacheKey,
             now()->addDays(intval(config('cache.expires', 90))),
             function () use ($user, $query) {
 
-                // Admin users
+                // Load openid scopes
+                $openidScopes = collect(config('openid.passport.tokens_can'))->map(fn($description, $id) => new Scope($id, $description));
+
+                // ------ Start scopes for Admin -----
                 if ($user->isAdmin()) {
+                    // For admin users return all scopes   
                     return $query->get()
                         ->map(fn($scope) => new Scope($scope->gsr_id, $scope->role->description))
-                        ->values();
+                        ->concat($openidScopes)->values();
                 }
-
-                // Non admin users 
+                // ---- End Admin Scopes --------
     
-                $query->whereHas(
-                    'scopeUsers',
-                    function ($query) use ($user) {
-                        //By users
-                        $query->where('user_id', $user->id);
+                // ------ Start Non Admin users ------
+                $query->where(function ($q) use ($user) {
 
-                        // Search by expiration date
-                        $query->whereNull('end_date')->orWhere('end_date', '>', now());
+                    // Load public scopes
+                    $q->where('public', true);
+
+                    // Load user scopes
+                    $q->orWhereHas(
+                        'scopeUsers',
+                        function ($query) use ($user) {
+
+                        // Filter scopes assigned to the authenticated user
+                        $query->where('user_id', $user->id)
+
+                            ->where(function ($query) {
+                            // Include scopes without expiration date
+                            // or scopes that are still valid
+                            $query->whereNull('end_date')->orWhere('end_date', '>', now());
+                        });
                     }
-                );
+                    );
+                });
 
                 return $query->get()
                     ->map(fn($scope) => new Scope($scope->gsr_id, $scope->role->description))
-                    ->values();
+                    ->concat($openidScopes)->values();
             }
         );
     }

@@ -1,6 +1,8 @@
 <?php
 namespace App\Support;
 
+use Illuminate\Support\Facades\Cache;
+
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
  * implementing OAuth 2.0 and OpenID Connect specifications.
@@ -28,63 +30,152 @@ namespace App\Support;
 
 class CacheKeys
 {
+    /**
+     * Cache version
+     * @param string $key
+     * @return int
+     */
+    protected static function version(string $key): int
+    {
+        return Cache::get($key, 1);
+    }
+
+    /**
+     * Cache default keys
+     * @param string $key
+     * @return bool
+     */
     public static function exceptKeys(string $key)
     {
         return !in_array($key, ['cache.default', 'cache.expires']);
     }
+
+    /**
+     * Cache keys user
+     * @param string $user_id
+     * @return string
+     */
     public static function user(string $user_id)
     {
-        return "user:$user_id";
+        $version = self::version(CacheVersions::USERS);
+
+        return "v:$version:user:$user_id";
     }
 
+    /**
+     * Cache key user scopes
+     * @param string $user_id
+     * @return string
+     */
     public static function userScopes(string $user_id)
     {
-        return "user:$user_id:scopes";
+        $version = self::version(CacheVersions::SCOPES);
+
+        return "v:$version:user:$user_id:scopes";
     }
 
+    /**
+     * Cache keys user scopes api key
+     * @param string $user_id
+     * @return string
+     */
     public static function userScopesApiKey(string $user_id)
     {
-        return "user:$user_id:scopes:api_key";
+        $version = self::version(CacheVersions::SCOPES);
+
+        return "v:$version:user:$user_id:scopes:api_key";
     }
 
-
+    /**
+     * Cache keys user admin
+     * @param string $user_id
+     * @return string
+     */
     public static function userAdmin(string $user_id)
     {
-        return "user:$user_id:admin";
+        $version = self::version(CacheVersions::SCOPES);
+
+        return "v:$version:user:$user_id:admin";
     }
 
+    /**
+     * Cache keys user gorups
+     * @param string $user_id
+     * @return string
+     */
     public static function userGroups(string $user_id)
     {
-        return "user:$user_id:groups";
+        $version = self::version(CacheVersions::USERS);
+
+        return "v:$version:user:$user_id:groups";
     }
 
+    /**
+     * Cache key user auth
+     * @param string $user_id
+     * @return string
+     */
     public static function userAuth(string $user_id)
     {
-        return "user:$user_id:auth";
+        $version = self::version(CacheVersions::USERS);
+
+        return "v:$version:user:$user_id:auth";
     }
 
+    /**
+     * Cache keys user scopes
+     * @param string $user_id
+     * @return string
+     */
     public static function userScopeList(string $user_id)
     {
-        return "user:$user_id:scopes:list";
+        $version = self::version(CacheVersions::SCOPES);
+
+        return "v:$version:user:$user_id:scopes:list";
     }
 
+    /**
+     * Cache key passport
+     * @return string
+     */
     public static function passportScopes()
     {
-        return "passport:scopes";
+        $version = self::version(CacheVersions::SCOPES);
+
+        return "v:$version:passport:scopes";
     }
 
+    /**
+     * Cache keys settings
+     * @param string $key
+     * @return string
+     */
     public static function settings(string $key)
     {
-        return "settings:$key";
+        $version = self::version(CacheVersions::SETTINGS);
+
+        return "v:$version:settings:$key";
     }
 
+    /**
+     * Cache keys broadcast
+     * @return string
+     */
     public static function broadcast()
     {
-        return "broadcast:channels";
+        $version = self::version(CacheVersions::BROADCAST);
+
+        return "v:$version:broadcast:channels";
     }
 
+    /**
+     * Cache config keys
+     * @return string
+     */
     public static function config()
     {
-        return "config:keys";
+        $version = self::version(CacheVersions::CONFIG);
+
+        return "v:$version:config:keys";
     }
 }
