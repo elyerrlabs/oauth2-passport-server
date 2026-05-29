@@ -8,6 +8,7 @@ use Core\User\Model\Service;
 use Core\User\Services\ScopeService;
 use Core\User\Services\ServiceService;
 use Core\User\Transformer\Admin\ServiceScopeTransformer;
+use Core\User\Transformer\Admin\ServiceTransformer;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -63,8 +64,11 @@ final class ServiceScopeController extends WebController
 
         $data = $this->scopeService->search($request)->paginate($request->input('per_page', 50));
 
+        $service = $this->serviceService->find($service_id);
+
         return Inertia::render("Admin/Service/Scope", [
             'data' => $this->transformCollection($data, ServiceScopeTransformer::class),
+            'service' => $this->transform($service, ServiceTransformer::class),
             'routes' => [
                 'scopes' => route('user.admin.services.scopes.index', ['service' => $service_id]),
                 'services' => route('user.admin.services.index')

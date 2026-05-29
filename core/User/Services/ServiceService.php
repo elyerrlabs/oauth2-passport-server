@@ -119,6 +119,16 @@ class ServiceService
     }
 
     /**
+     * Find
+     * @param string $id
+     * @return \Core\User\Repositories\TModel|\Core\User\Repositories\TValue|null
+     */
+    public function find(string $id)
+    {
+        return $this->serviceRepository->find($id);
+    }
+
+    /**
      * Find by slug
      * @param string $slug
      * @return \Core\User\Model\Service

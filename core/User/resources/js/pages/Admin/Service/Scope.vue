@@ -393,11 +393,11 @@ const webScopesCount = computed(
 
 onMounted(() => {
     loadData(page.props.data);
+    service.value = page.props.service;
 });
 
 const loadData = (data) => {
     scopes.value = data.data;
-    service.value = scopes.value[0]?.service;
     pages.value = data.meta.pagination;
 };
 

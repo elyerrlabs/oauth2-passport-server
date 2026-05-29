@@ -233,6 +233,7 @@ const addScopes = async () => {
             );
             emits("created");
             dialog.value = false;
+            form.resetAndClearErrors();
         },
         onError: (e) => {
             console.log(e);
