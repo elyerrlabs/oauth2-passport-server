@@ -31,6 +31,30 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
+# Unreleased
+
+### Feat
+
+- Add new command settings:drop-service to remove orphans services
+- Delete option to remove orphan services to the updaload settings:roles-upload
+
+### Fixed
+
+- Fixed scope management flow when services had no existing scopes
+    - Resolved error occurring while loading service data without scopes
+    - Fixed issue where form was not properly reset after creating or updating a scope
+    - Added dedicated service lookup function within service layer for safer retrieval
+    - Moved service data rendering from scope relationship to controller layer
+        - Prevents failures when no scopes exist
+        - Ensures service can still be created even with empty scope state
+
+### Changed
+
+- Improved scope management logic for add and delete operations on service scopes
+    - Service data is now consistently retrieved independently from scopes
+
+---
+
 # [v6.0.13]
 
 ### Added
