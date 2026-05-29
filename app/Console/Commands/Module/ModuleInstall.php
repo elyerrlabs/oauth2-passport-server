@@ -39,7 +39,6 @@ class ModuleInstall extends Command
     use HandlesModulePublicAssets;
 
     protected $signature = 'module:install
-    {--name= : Module name}
     {--provider= : Provider type (git or packagist)}
     {--source= : Git URL or Packagist package name}
     {--path= : Installation target path}
@@ -51,14 +50,11 @@ class ModuleInstall extends Command
     {--current_version= : Currently installed version}
     {--env= : Installation environment (dev or production)}';
 
-
     protected $description = 'Install a third-party module';
-
 
     public function handle(): int
     {
         // attributes
-        $name = $this->option('name');
         $provider = $this->option('provider');
         $source = $this->option('source');
         $protocol = $this->option('protocol');
@@ -68,10 +64,31 @@ class ModuleInstall extends Command
         $passphrase = $this->option('passphrase');
         $currentVersion = $this->option('current_version');
 
-        // ask for name
-        if (!$name) {
-            $name = $this->ask('Module name');
+        // Choose provider
+        if (!$provider) {
+            $provider = $this->choice(
+                'Select provider',
+                ['git', 'packagist'],
+                0
+            );
         }
+
+        // Ask source
+        if (!$source) {
+            $source = $this->ask('Source (Git URL or Packagist name)');
+        }
+
+        /**
+         * Extract module name from source
+         */
+
+        $name = $this->extractModuleName($source, $provider);
+
+        if (!$name) {
+            $this->error('Unable to extract module name from source.');
+            return self::FAILURE;
+        }
+
         // Normalize name
         $name = normalizeModuleName($name);
 
@@ -84,7 +101,6 @@ class ModuleInstall extends Command
             $this->error("Module '{$name}' already exists in filesystem.");
             return self::FAILURE;
         }
-
 
         $environment = $this->option('env');
 
@@ -101,28 +117,15 @@ class ModuleInstall extends Command
             return self::FAILURE;
         }
 
-
-        // Check if it the modules is already registered
-        if (app(\App\Repositories\ModuleRepository::class)
+        // Check if the module is already registered
+        if (
+            app(\App\Repositories\ModuleRepository::class)
                 ->query()
                 ->where('name', $name)
                 ->exists()
         ) {
             $this->error("Module '{$name}' already registered in database.");
             return self::FAILURE;
-        }
-
-        // Choose provider
-        if (!$provider) {
-            $provider = $this->choice(
-                'Select provider',
-                ['git', 'packagist'],
-                0
-            );
-        }
-
-        if (!$source) {
-            $source = $this->ask('Source (Git URL or Packagist name)');
         }
 
         /**
@@ -137,10 +140,15 @@ class ModuleInstall extends Command
             if (!$protocol) {
 
                 if (str_starts_with($source, 'git@')) {
+
                     $protocol = 'ssh';
+
                 } elseif (str_starts_with($source, 'https://')) {
+
                     $protocol = 'https';
+
                 } else {
+
                     $protocol = $this->choice(
                         'Select protocol',
                         ['ssh', 'https'],
@@ -154,16 +162,25 @@ class ModuleInstall extends Command
                 $private = false;
             }
 
-            // For http ask for private repo
+            // HTTPS
             if ($protocol === 'https') {
 
                 if ($this->option('private') !== null) {
-                    $private = filter_var($this->option('private'), FILTER_VALIDATE_BOOLEAN);
+
+                    $private = filter_var(
+                        $this->option('private'),
+                        FILTER_VALIDATE_BOOLEAN
+                    );
+
                 } else {
-                    $private = $this->confirm('Is the repository private?', false);
+
+                    $private = $this->confirm(
+                        'Is the repository private?',
+                        false
+                    );
                 }
 
-                //  ask for credentials for private repo
+                // Ask credentials
                 if ($private) {
 
                     if (!$username) {
@@ -175,22 +192,73 @@ class ModuleInstall extends Command
                     }
 
                     if (!$passphrase) {
-                        $passphrase = $this->secret('Passphrase to encrypt the token');
+                        $passphrase = $this->secret(
+                            'Passphrase to encrypt the token'
+                        );
                     }
 
                     if (!$passphrase) {
-                        $this->error('Passphrase is required to encrypt the token.');
+                        $this->error(
+                            'Passphrase is required to encrypt the token.'
+                        );
+
                         return self::FAILURE;
                     }
 
-                    $token = encryptWithPassphrase($token, $passphrase);
+                    $token = encryptWithPassphrase(
+                        $token,
+                        $passphrase
+                    );
                 }
             }
         }
 
-
         if (!$currentVersion) {
-            $currentVersion = $this->ask('Current version (optional)', '');
+
+            $versions = $this->fetchRepositoryVersions(
+                $source,
+                $provider
+            );
+
+            if (!empty($versions)) {
+
+                $this->newLine();
+                $this->info('Available versions:');
+                $this->newLine();
+
+                foreach ($versions as $index => $version) {
+                    $this->line(($index + 1) . ". {$version}");
+                }
+
+                $this->newLine();
+
+                $versions[] = 'manual';
+
+                $selectedVersion = $this->choice(
+                    'Select a version',
+                    $versions,
+                    0
+                );
+
+                if ($selectedVersion === 'manual') {
+
+                    $currentVersion = $this->ask(
+                        'Enter custom version/tag/branch',
+                        ''
+                    );
+
+                } else {
+
+                    $currentVersion = $selectedVersion;
+                }
+
+            } else {
+
+                $currentVersion = $this->ask(
+                    'Current version (optional)',
+                    ''
+                );
+            }
         }
 
         $data = [
@@ -202,6 +270,7 @@ class ModuleInstall extends Command
             'private' => $private,
             'username' => $username,
             'token' => $token,
+            'passphrase' => $passphrase,
             'current_version' => $currentVersion,
         ];
 
@@ -214,48 +283,107 @@ class ModuleInstall extends Command
         $this->line("Private: " . ($data['private'] ? 'Yes' : 'No'));
         $this->line("Path: {$data['path']}");
         $this->line("Current Version: {$data['current_version']}");
+
         if (!File::isDirectory($thirdPartyPath)) {
             File::makeDirectory($thirdPartyPath, 0755, true);
         }
 
         return DB::transaction(function () use ($data, $modulePath, $environment, $name) {
 
-            // clone repository
+            // Clone repository
             if (!$this->cloneRepository($data)) {
                 return self::FAILURE;
             }
 
-            // Register module on the database
-            app(\App\Repositories\ModuleRepository::class)->create($data);
+            // Register module
+            app(\App\Repositories\ModuleRepository::class)
+                ->create($data);
 
-            settingAdd("module.third-party.{$name}.module_enabled", 1);
+            settingAdd(
+                "module.third-party.{$name}.module_enabled",
+                1
+            );
 
             // Install dependencies
-            if (!$this->runComposerInstall($modulePath, $environment)) {
+            if (
+                !$this->runComposerInstall(
+                    $modulePath,
+                    $environment
+                )
+            ) {
                 File::deleteDirectory($modulePath);
+
                 return self::FAILURE;
             }
 
             if (!$this->ensureModulePublicSymlink($modulePath)) {
+
                 File::deleteDirectory($modulePath);
+
                 return self::FAILURE;
             }
 
             // Run migrations
             if (!$this->runMigrations()) {
+
                 File::deleteDirectory($modulePath);
+
                 return self::FAILURE;
             }
 
             $this->info('Loading module services...');
+
             if (!$this->loadServiceByModule($name)) {
                 return self::FAILURE;
             }
 
-            $this->info("Module '{$name}' installed successfully.");
+            $this->info(
+                "Module '{$name}' installed successfully."
+            );
 
             return self::SUCCESS;
         });
+    }
+
+    protected function extractModuleName(
+        string $source,
+        string $provider
+    ): ?string {
+        /**
+         * Git examples:
+         * git@github.com:vendor/module-name.git
+         * https://github.com/vendor/module-name.git
+         */
+
+        if ($provider === 'git') {
+
+            $path = parse_url($source, PHP_URL_PATH);
+
+            // SSH fallback
+            if (!$path && str_contains($source, ':')) {
+                $path = explode(':', $source)[1] ?? null;
+            }
+
+            if (!$path) {
+                return null;
+            }
+
+            return pathinfo($path, PATHINFO_FILENAME);
+        }
+
+        /**
+         * Packagist example:
+         * vendor/module-name
+         */
+
+        if ($provider === 'packagist') {
+
+            $segments = explode('/', $source);
+
+            return end($segments) ?: null;
+        }
+
+        return null;
     }
 
     protected function runMigrations(): bool
@@ -263,6 +391,7 @@ class ModuleInstall extends Command
         $this->info('Running migrations...');
 
         try {
+
             Artisan::call('migrate', [
                 '--force' => true
             ]);
@@ -270,9 +399,13 @@ class ModuleInstall extends Command
             $this->line(Artisan::output());
 
             return true;
+
         } catch (\Throwable $e) {
 
-            $this->error('Migration failed: ' . $e->getMessage());
+            $this->error(
+                'Migration failed: ' . $e->getMessage()
+            );
+
             return false;
         }
     }
@@ -280,11 +413,19 @@ class ModuleInstall extends Command
     protected function loadServiceByModule(string $url): bool
     {
         try {
+
             Artisan::call('module:services-loads');
+
             $this->line(Artisan::output());
+
             return true;
+
         } catch (\Throwable $th) {
-            $this->error('Service loading failed: ' . $th->getMessage());
+
+            $this->error(
+                'Service loading failed: ' . $th->getMessage()
+            );
+
             return false;
         }
     }
@@ -296,7 +437,10 @@ class ModuleInstall extends Command
         $source = $data['source'];
 
         // Inject credentials for private HTTPS
-        if ($data['protocol'] === 'https' && $data['private']) {
+        if (
+            $data['protocol'] === 'https'
+            && $data['private']
+        ) {
 
             $decryptedToken = decryptWithPassphrase(
                 $data['token'],
@@ -315,8 +459,9 @@ class ModuleInstall extends Command
             'clone'
         ];
 
-        //
+        // Branch
         if (!empty($data['current_version'])) {
+
             $command[] = '--branch';
             $command[] = $data['current_version'];
             $command[] = '--single-branch';
@@ -326,6 +471,7 @@ class ModuleInstall extends Command
         $command[] = $data['path'];
 
         $process = new Process($command);
+
         $process->setTimeout(null);
 
         $process->run(function ($type, $buffer) {
@@ -333,16 +479,19 @@ class ModuleInstall extends Command
         });
 
         if (!$process->isSuccessful()) {
+
             $this->error('Git clone failed.');
+
             return false;
         }
 
         return true;
     }
 
-
-    protected function runComposerInstall(string $path, string $environment): bool
-    {
+    protected function runComposerInstall(
+        string $path,
+        string $environment
+    ): bool {
         $this->info('Running composer install...');
 
         $command = [
@@ -353,6 +502,7 @@ class ModuleInstall extends Command
         ];
 
         if ($environment === 'production') {
+
             $command[] = '--no-dev';
             $command[] = '--optimize-autoloader';
         }
@@ -360,15 +510,102 @@ class ModuleInstall extends Command
         $process = new Process($command, $path);
 
         $process->setTimeout(null);
+
         $process->run(function ($type, $buffer) {
             echo $buffer;
         });
 
         if (!$process->isSuccessful()) {
+
             $this->error('Composer install failed.');
+
             return false;
         }
 
         return true;
+    }
+
+
+    protected function fetchRepositoryVersions(
+        string $source,
+        string $provider
+    ): array {
+        try {
+
+            /**
+             * Packagist
+             */
+            if ($provider === 'packagist') {
+
+                $url = "https://repo.packagist.org/p2/{$source}.json";
+
+                $response = Http::timeout(15)->get($url);
+
+                if (!$response->successful()) {
+                    return [];
+                }
+
+                $packages = $response
+                    ->json("packages.{$source}", []);
+
+                return collect($packages)
+                    ->pluck('version')
+                    ->filter()
+                    ->unique()
+                    ->take(10)
+                    ->values()
+                    ->toArray();
+            }
+
+            /**
+             * Git
+             */
+            if ($provider === 'git') {
+
+                $command = [
+                    'git',
+                    'ls-remote',
+                    '--tags',
+                    $source
+                ];
+
+                $process = new Process($command);
+
+                $process->setTimeout(30);
+
+                $process->run();
+
+                if (!$process->isSuccessful()) {
+                    return [];
+                }
+
+                $output = $process->getOutput();
+
+                preg_match_all(
+                    '/refs\/tags\/([^\^{}\n]+)/',
+                    $output,
+                    $matches
+                );
+
+                return collect($matches[1] ?? [])
+                    ->filter()
+                    ->unique()
+                    ->sortDesc()
+                    ->take(10)
+                    ->values()
+                    ->toArray();
+            }
+
+            return [];
+
+        } catch (\Throwable $th) {
+
+            $this->warn(
+                'Unable to fetch repository versions: '
+                . $th->getMessage()
+            );
+
+            return [];
+        }
     }
 }
