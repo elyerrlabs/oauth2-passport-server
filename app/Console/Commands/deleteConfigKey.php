@@ -57,5 +57,7 @@ class deleteConfigKey extends Command
         app(SettingService::class)->resetConfigKeys();
 
         $this->info("Config keys has been deleted.");
+
+        return Command::SUCCESS;
     }
 }
