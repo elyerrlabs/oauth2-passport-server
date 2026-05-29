@@ -29,6 +29,54 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+# Changelog
+
+# [v6.0.13]
+
+### Added
+
+- Introduced **cache versioning system** for scalable cache invalidation
+    - Prevents mass cache deletion using Redis KEYS/SCAN
+    - Enables O(1) invalidation via version increment strategy
+- Added `CacheVersions` for managing domain-based cache invalidation
+    - scopes
+    - users
+    - settings
+    - config
+    - broadcast
+- Extended `CacheKeys` to support versioned cache keys
+    - user scopes
+    - api scopes
+    - passport scopes
+    - user groups and auth cache
+
+### Fixed
+
+- Fixed **scope update cache invalidation issue**
+    - Scope changes were not reflected due to missing version-based cache invalidation
+    - Cache keys were previously static and did not reflect updated scope state
+    - Added `Cache::increment(CacheVersions::SCOPES)` after `updateOrCreate`
+    - Ensured updated scopes are immediately reflected across users and API responses
+
+### Changed
+
+- Refactored scope caching system to use versioned keys instead of static keys
+- Improved scope invalidation flow using `Cache::increment()` instead of manual deletion
+- Updated cache strategy to support scalable multi-user environments (millions of users)
+
+### Improved
+
+- Reduced need for cache scanning or bulk deletion
+- Improved performance for scope updates and permission propagation
+- Better separation between user-level cache and global system cache
+
+### Notes
+
+- Scope updates now invalidate cache globally via version bump
+- User-specific cache is still invalidated individually when required
+
+---
+
 # [v6.0.12]
 
 ## ✨ Features
