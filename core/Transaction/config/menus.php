@@ -117,7 +117,7 @@ return [
             'name' => 'Plans',
             'route' => 'transaction.admin.plans.index',
             'icon' => 'mdi mdi-cash',
-            'service' => "administrator:plans",
+            'service' => "administrator:plan",
             'position' => 3,
             'menus' => [
                 [
@@ -125,14 +125,14 @@ return [
                     'name' => 'List',
                     'route' => 'transaction.admin.plans.index',
                     'icon' => 'mdi mdi-format-list-bulleted-square',
-                    'service' => "administrator:plans",
+                    'service' => "administrator:plan",
                 ],
                 [
                     'id' => 'create-plans',
                     'name' => 'Add',
                     'route' => 'transaction.admin.plans.create',
                     'icon' => 'mdi mdi-plus-box',
-                    'service' => "administrator:plans",
+                    'service' => "administrator:plan",
                 ],
             ]
         ],

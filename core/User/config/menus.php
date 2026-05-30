@@ -75,7 +75,7 @@ return [
                 "name" => "Clients OAuth",
                 "route" => "admin.clients.index",
                 "icon" => "mdi mdi-apps",
-                'service' => 'administrator:application',
+                'service' => 'administrator:oauth',
                 'position' => 5
             ],
             "settings" => [

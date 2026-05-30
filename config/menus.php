@@ -45,7 +45,7 @@ return [
                 "name" => "OAuth2 Clients",
                 "route" => "passport.clients.index",
                 "icon" => "mdi mdi-connection",
-                "service" => "developer:oauth2",
+                "service" => "developer:oauth",
                 "position" => 1
             ],
             'api' => [
@@ -70,7 +70,7 @@ return [
                 "name" => "Page Creator",
                 "route" => "admin.pages.index",
                 "icon" => "mdi mdi-hammer-wrench",
-                "service" => "developer:page"
+                "service" => "developer:pages"
             ],
             "langs" => [
                 "name" => "Lang",
@@ -82,7 +82,7 @@ return [
                 "name" => "Logs",
                 "route" => "admin.logs",
                 "icon" => "mdi mdi-text-box-outline",
-                "service" => "developer:log"
+                "service" => "developer:logs"
             ]
         ],
 
@@ -112,7 +112,7 @@ return [
             "name" => "List of pages",
             "route" => "admin.sitemaps.index",
             "icon" => "mdi mdi-sitemap-outline",
-            'service' => "administrator:seo"
+            'service' => "developer:seo"
 
         ],
         [
@@ -120,7 +120,7 @@ return [
             "name" => "Robot",
             "route" => "admin.sitemaps.robot.form",
             "icon" => "mdi mdi-robot-angry-outline",
-            'service' => "administrator:seo"
+            'service' => "developer:seo"
         ]
     ],
 ];
