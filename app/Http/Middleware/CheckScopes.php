@@ -71,7 +71,7 @@ class CheckScopes extends middleware
                     return $next($request);
                 }
 
-                throw new ReportError(__("You do not have the necessary permissions"), 403);
+                throw new ReportError(__("You do not have the necessary permissions to perform this action"), 403);
             }
         }
 
@@ -92,7 +92,7 @@ class CheckScopes extends middleware
             return $next($request);
         }
 
-        throw new ReportError(__("You do not have the necessary permissions"), 403);
+        throw new ReportError(__("You do not have the necessary permissions to perform this action"), 403);
 
     }
 }

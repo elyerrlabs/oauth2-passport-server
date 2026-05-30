@@ -48,7 +48,7 @@ class CheckClientCredentials extends middleware
     protected function validateScopes($token, $scopes)
     {
         //Disable temporarily
-        throw new ReportError(__("You do not have the necessary permissions"), 403);
+        throw new ReportError(__("You do not have the necessary permissions to perform this action"), 403);
     }
 
 }
