@@ -31,6 +31,14 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
+- Add scope protection to reloadCache route
+- Improve error handling in userCanAny middleware
+- Improve authorization error messages in OAuth middlewares
+- Correct scope authorization in PartnerController for admin users
+- Resolve menu visibility issue caused by incorrect service keys
+
+---
+
 # [v6.1.0]
 
 ### Feat
