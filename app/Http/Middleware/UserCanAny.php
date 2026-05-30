@@ -53,7 +53,7 @@ class UserCanAny
         }
 
         $userScopes = $this->scopes(false)->pluck('id') ?? [];
-        
+
         // Clean spaces
         $scopes = array_map('trim', $scopes);
 
@@ -61,10 +61,9 @@ class UserCanAny
             return $next($request);
         }
 
-        if ($request->wantsJson()) {
-            throw new ReportError(__("You do not have the necessary permissions"), 403);
-        }
-
-        return redirect()->route('user.dashboard')->with('error', __("You don’t have permission to perform this action"));
+        throw new ReportError(
+            __("You do not have the necessary permissions to perform this action"),
+            403
+        );
     }
 }
