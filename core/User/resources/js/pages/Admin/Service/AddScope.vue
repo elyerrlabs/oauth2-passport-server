@@ -54,7 +54,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <v-select
                                 :label="__('Select Role')"
                                 v-model="form.role_id"
-                                :error="errors.role_id"
+                                :error="form.errors.role_id"
                                 :options="roles"
                                 :required="true"
                                 searchable
@@ -73,7 +73,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <v-switch
                                 v-model="form.api_key"
                                 :label="__('API Key Access')"
-                                :error="errors.api_key"
+                                :error="form.errors.api_key"
                                 :required="true"
                                 :placeholder="
                                     __(
@@ -86,7 +86,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <v-switch
                                 v-model="form.web"
                                 :label="__('Web Access')"
-                                :error="errors.web"
+                                :error="form.errors.web"
                                 :required="true"
                                 :placeholder="
                                     __(
@@ -99,7 +99,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <v-switch
                                 v-model="form.active"
                                 :label="__('Active')"
-                                :error="errors.active"
+                                :error="form.errors.active"
                                 :required="true"
                                 :placeholder="
                                     __('Enable this scope for immediate use')
@@ -110,7 +110,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <v-switch
                                 v-model="form.public"
                                 :label="__('Public Access')"
-                                :error="errors.public"
+                                :error="form.errors.public"
                                 :required="true"
                                 :placeholder="
                                     __(
@@ -176,8 +176,7 @@ const props = defineProps({
 
 const dialog = ref(false);
 const loading = ref(false);
-const roles = ref([]);
-const errors = ref({});
+const roles = ref([]); 
 
 const form = useForm({
     api_key: false,
