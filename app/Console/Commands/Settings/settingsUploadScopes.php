@@ -33,16 +33,13 @@ use Core\User\Model\Group;
 use Core\User\Model\Role;
 use Core\User\Model\Scope;
 use Core\User\Model\Service;
-use Core\User\Model\UserScope;
-use Core\User\Services\GroupService;
-use Core\User\Services\ServiceService;
 use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class settingsRolesUpload extends Command
+class SettingsUploadScopes extends Command
 {
     use Asset;
 
@@ -51,7 +48,7 @@ class settingsRolesUpload extends Command
      *
      * @var string
      */
-    protected $signature = 'settings:roles-upload';
+    protected $signature = 'settings:upload-scopes';
 
     /**
      * The console command description.
@@ -82,7 +79,7 @@ class settingsRolesUpload extends Command
     {
         $roles = Role::rolesByDefault();
         foreach ($roles as $role) {
-            Role::updateOrCreate(
+            Role::firstOrCreate(
                 ['slug' => $this->slug($role->name)],
                 [
                     'name' => $role->name,
@@ -107,7 +104,7 @@ class settingsRolesUpload extends Command
             foreach ($groups as $grp) {
 
                 //upload system groups
-                $group = Group::updateOrCreate(
+                $group = Group::firstOrCreate(
                     [
                         'slug' => $this->slug($grp->name)
                     ],
@@ -123,7 +120,7 @@ class settingsRolesUpload extends Command
                     foreach ($grp->services as $srv) {
                         try {
                             //Uploading Services Available for this groups
-                            $service = Service::updateOrCreate(
+                            $service = Service::firstOrCreate(
                                 [
                                     'slug' => $this->slug($srv->name),
                                     'group_id' => $group->id
@@ -145,7 +142,7 @@ class settingsRolesUpload extends Command
                                     $role = Role::where('slug', $this->slug($action->name))->first();
 
                                     //create default scopes for this service
-                                    Scope::updateOrCreate(
+                                    Scope::firstOrCreate(
                                         [
                                             'service_id' => $service->id,
                                             'role_id' => $role->id

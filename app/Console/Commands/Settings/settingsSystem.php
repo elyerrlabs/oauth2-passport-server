@@ -28,9 +28,9 @@ namespace App\Console\Commands\Settings;
  */
 
 use App\Services\SettingService;
-use Illuminate\Console\Command; 
-use App\Services\SiteMapService; 
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Console\Command;
+use App\Services\SiteMapService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
 
 class settingsSystem extends Command
@@ -60,7 +60,7 @@ class settingsSystem extends Command
         Log::info("Install server");
         Artisan::call('settings:key-generator');
         Artisan::call('migrate', ['--force' => true]);
-        Artisan::call('settings:roles-upload');
+        Artisan::call('settings:upload-scopes');
         Artisan::call('settings:countries-upload');
         Artisan::call('settings:channels-upload');
         Artisan::call('passport:keys');
