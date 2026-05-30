@@ -197,7 +197,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex justify-end gap-2">
                                     <v-button
-                                        @click="open"
                                         icon="mdi mdi-shield-lock-open-outline"
                                         title="Manage Scopes"
                                         round
