@@ -37,6 +37,16 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 - Add new command settings:drop-service to remove orphans services
 - Delete option to remove orphan services to the updaload settings:roles-upload
+    - delete service for group `administrator`
+        - application
+        - seo
+        - logs
+        - pages
+        - lang
+        - horizon,
+        - terminal
+    - delete service for group `developer`
+        - client
 
 ### Fixed
 
@@ -47,6 +57,17 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - Moved service data rendering from scope relationship to controller layer
         - Prevents failures when no scopes exist
         - Ensures service can still be created even with empty scope state
+- Fixed command module:install interactive installation flow
+    - Removed manual --name option to prevent installation inconsistencies
+    - Automatically extract module name from Git or Packagist source
+    - Added module name normalization from source
+    - Added interactive version selector with latest repository versions
+    - Added support for listing latest Git tags
+    - Added support for fetching Packagist package versions
+    - Added manual version fallback option
+    - Improved provider and protocol detection flow
+    - Improved validation for existing filesystem and database modules
+    - Improved interactive installation experience and configuration flow
 
 ### Changed
 
