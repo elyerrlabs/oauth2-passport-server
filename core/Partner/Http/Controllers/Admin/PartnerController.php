@@ -43,7 +43,7 @@ class PartnerController extends WebController
     public function __construct(protected PartnerService $partnerService)
     {
         parent::__construct();
-        $this->middleware('userCanAny:administrator:partner:full,reseller:partner:view')->only('index');
+        $this->middleware('userCanAny:administrator:partner:full,administrator:partner:view')->only('index');
         $this->middleware('userCanAny:administrator:partner:full,administrator:partner:update')->only('update');
     }
 
