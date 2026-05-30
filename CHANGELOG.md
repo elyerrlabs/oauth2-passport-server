@@ -31,6 +31,8 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
+# [v6.1.1]
+
 - Add scope protection to reloadCache route
 - Improve error handling in userCanAny middleware
 - Improve authorization error messages in OAuth middlewares
