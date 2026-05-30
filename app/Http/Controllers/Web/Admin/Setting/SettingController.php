@@ -38,7 +38,7 @@ class SettingController extends WebController
     {
         parent::__construct();
         $this->middleware('userCanAny:administrator:settings:full, administrator:settings:view')->except('update');
-        $this->middleware('userCanAny:administrator:settings:full, administrator:settings:update')->only('update');
+        $this->middleware('userCanAny:administrator:settings:full, administrator:settings:update')->only('update', 'reloadCache');
     }
 
     /**
