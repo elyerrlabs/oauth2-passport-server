@@ -31,6 +31,19 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
+# Unreleased
+
+## Added
+
+- Added `settings:upload-scopes` command
+    - Dedicated command for uploading and synchronizing system scopes
+
+- Added `settings:reset-scopes` command
+    - Restore all default system scopes
+    - Rebuild scope configuration from package defaults
+
+---
+
 # [v6.1.1]
 
 - Add scope protection to reloadCache route
