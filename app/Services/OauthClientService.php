@@ -246,9 +246,20 @@ final class OauthClientService
      */
     public function searchClientsForAdmin(Request $request)
     {
-        return $this->client->query()
-            ->where('private', true)
-            ->orderBy($request->input('order_by', 'created_at'), $request->input('order_type', 'desc'));
+        $query = $this->client->query();
+
+        $query->when(
+            $request->filled('name'),
+            fn($q) => $q->whereRaw('LOWER(name) like ?', ['%' . $request->name . '%'])
+        );
+
+        $query->where('private', true)
+            ->orderBy(
+                $request->input('order_by', 'created_at'),
+                $request->input('order_type', 'desc')
+            );
+
+        return $query;
     }
 
     /**
