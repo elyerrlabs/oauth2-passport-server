@@ -456,7 +456,7 @@ class ModuleUpdate extends Command
     protected function loadServices(): bool
     {
         try {
-            Artisan::call('module:services-loads');
+            Artisan::call('module:services-uploads');
             $output = Artisan::output();
             $this->line($output);
             return true;

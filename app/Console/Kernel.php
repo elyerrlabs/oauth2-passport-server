@@ -7,13 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    protected $commands = [
-        \App\Console\Commands\Module\ModuleMake::class,
-        \App\Console\Commands\Module\ModuleDelete::class,
-        \App\Console\Commands\Module\ModuleInstall::class,
-        \App\Console\Commands\Module\ModuleServices::class,
-        \App\Console\Commands\CleanTmpFileCommand::class
-    ];
+    protected $commands = [];
 
     /**
      * Define the application's command schedule.

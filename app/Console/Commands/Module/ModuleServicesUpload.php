@@ -31,7 +31,7 @@ use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class ModuleServices extends Command
+class ModuleServicesUpload extends Command
 {
     use Asset;
 
@@ -40,7 +40,7 @@ class ModuleServices extends Command
      *
      * @var string
      */
-    protected $signature = 'module:services-loads';
+    protected $signature = 'module:service-uploads';
 
     /**
      * The console command description.
@@ -88,7 +88,7 @@ class ModuleServices extends Command
     {
         $roles = json_decode(file_get_contents($file), true);
         foreach ($roles as $role) {
-            \Core\User\Model\Role::updateOrCreate(
+            \Core\User\Model\Role::firstOrCreate(
                 ['slug' => $this->slug($role['name'])],
                 [
                     'name' => $role['name'],
@@ -111,7 +111,7 @@ class ModuleServices extends Command
 
         foreach ($groups as $grp) {
             //upload system groups
-            $group = \Core\User\Model\Group::updateOrCreate(
+            $group = \Core\User\Model\Group::firstOrCreate(
                 [
                     'slug' => $this->slug($grp['name'])
                 ],
@@ -127,7 +127,7 @@ class ModuleServices extends Command
                 foreach ($grp['services'] as $srv) {
                     try {
                         //Uploading Services Available for this groups
-                        $service = \Core\User\Model\Service::updateOrCreate(
+                        $service = \Core\User\Model\Service::firstOrCreate(
                             [
                                 'slug' => $this->slug($srv['name']),
                                 'group_id' => $group->id
@@ -145,11 +145,11 @@ class ModuleServices extends Command
                         //check for this services has actions
                         if (isset($srv['actions'])) {
                             foreach ($srv['actions'] as $action) {
-                                
+
                                 //searching for action in roles Model
                                 $role = \Core\User\Model\Role::where('slug', $this->slug($action['name']))->first();
                                 //create default scopes for this service
-                                \Core\User\Model\Scope::updateOrCreate(
+                                \Core\User\Model\Scope::firstOrCreate(
                                     [
                                         'service_id' => $service->id,
                                         'role_id' => $role->id

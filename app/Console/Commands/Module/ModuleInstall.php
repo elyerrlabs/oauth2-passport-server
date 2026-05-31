@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\Process\Process;
 
 /**
@@ -414,7 +415,7 @@ class ModuleInstall extends Command
     {
         try {
 
-            Artisan::call('module:services-loads');
+            Artisan::call('module:services-uploads');
 
             $this->line(Artisan::output());
 
