@@ -531,12 +531,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 {{ session.ip || "127.0.0.1" }}
                             </p>
                             <p
-                                class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono"
-                            >
-                                <i class="mdi mdi-identifier"></i>
-                                {{ session.id?.substring(0, 16) }}...
-                            </p>
-                            <p
                                 class="text-xs text-slate-500 dark:text-slate-400 mt-1"
                             >
                                 <i class="mdi mdi-clock-outline"></i>
@@ -554,6 +548,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 </span>
                             </p>
                             <v-delete-session
+                                v-if="!session.current"
                                 :item="session"
                                 @deleted="deleteSession"
                             />
@@ -607,17 +602,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 <div
                                     class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"
                                 >
-                                    <div>
-                                        <span
-                                            class="text-slate-500 dark:text-slate-400"
-                                            >{{ __("Session ID") }}:</span
-                                        >
-                                        <code
-                                            class="ml-2 text-xs bg-white dark:bg-slate-900 px-2 py-1 rounded font-mono"
-                                        >
-                                            {{ session.id }}
-                                        </code>
-                                    </div>
                                     <div>
                                         <span
                                             class="text-slate-500 dark:text-slate-400"
@@ -681,6 +665,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         </span>
                                     </div>
                                     <v-delete-session
+                                        v-if="!session.current"
                                         :item="session"
                                         @deleted="deleteSession"
                                     />

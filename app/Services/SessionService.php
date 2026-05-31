@@ -34,7 +34,8 @@ final class SessionService
     {
         $query = $this->sessionRepository->query();
 
-        $query->where('user_id', $request->user()->id);
+        $query->where('user_id', $request->user()->id)
+            ->orderByDesc('last_activity');
 
         return $query;
     }
