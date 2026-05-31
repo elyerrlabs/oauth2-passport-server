@@ -39,13 +39,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <v-input
                         :label="__(' Name')"
                         v-model="search.name"
-                        @input="getServices"
+                        @input="searcher"
                     />
 
                     <v-select
                         :label="__('Filter by Group')"
                         v-model="search.group"
-                        @change="getServices"
+                        @change="searcher"
                         :options="groups"
                         label-key="name"
                         value-key="slug"
@@ -54,7 +54,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <v-select
                         :label="__('Filter by Visibility')"
                         v-model="search.visibility"
-                        @change="getServices"
+                        @change="searcher"
                         :options="[
                             { name: __('All'), id: '' },
                             { name: __('Public'), id: 'public' },
@@ -66,7 +66,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <v-select
                         :label="__('Choose pagination')"
                         v-model="search.per_page"
-                        @change="changePage"
+                        @change="searcher"
                         :options="[
                             { name: 15, id: 15 },
                             { name: 50, id: 50 },
@@ -276,8 +276,18 @@ const changePage = () => {
     getServices();
 };
 
+const searcher = () => {
+    search.page = 1;
+    getServices();
+};
+
 const clearFilters = () => {
-    search.resetAndClearErrors();
+    search.page = 1;
+    search.per_page = 15;
+    search.name = "";
+    search.group = "";
+    search.visibility = "";
+    search.system = "";
     getServices();
 };
 

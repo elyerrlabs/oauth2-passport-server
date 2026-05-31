@@ -42,7 +42,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-select
                             :label="__('Results per page')"
                             v-model="search.per_page"
-                            @change="changePage"
+                            @change="searcher"
                             :options="[
                                 { name: 15, id: 15 },
                                 { name: 50, id: 50 },
@@ -56,7 +56,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <!-- Clear Filters -->
                         <div class="flex shrink-0 flex-nowrap justify-around">
                             <v-button
-                                @click="getRoles"
+                                @click="searcher"
                                 :label="__('Search')"
                                 left-icon="mdi mdi-search"
                                 size="md"
@@ -221,11 +221,14 @@ onMounted(() => {
 
 // methods
 const clearFilters = () => {
-    search.resetAndClearErrors();
+    search.page = 1;
+    search.per_page = 15;
+    search.name = "";
+    search.order_type = "desc";
     getRoles();
 };
 
-const changePage = () => {
+const searcher = () => {
     search.page = 1;
     getRoles();
 };

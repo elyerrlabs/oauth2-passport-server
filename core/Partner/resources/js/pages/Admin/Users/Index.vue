@@ -35,52 +35,23 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     >
                         {{ __("Filters") }}
                     </h2>
-                    <div
-                        class="shrink-0 flex items-center space-x-2 sm:space-x-3"
-                    >
-                        <v-switch
-                            v-model="showFilters"
-                            :label="__('Show Filters')"
-                        />
-
-                        <v-button
-                            @click="resetFilters"
-                            :label="__('Reset filters')"
-                        />
-                    </div>
                 </div>
-                <div
-                    v-if="showFilters"
-                    class="grid grid-cols-1 md:grid-cols-5 gap-3"
-                >
-                    <v-input
-                        :label="__('Name')"
-                        v-model="search.name"
-                        @input="debounceGetPartners"
-                    />
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <v-input :label="__('Name')" v-model="search.name" />
 
                     <v-input
                         :label="__('Last name')"
                         v-model="search.last_name"
-                        @input="debounceGetPartners"
                     />
 
-                    <v-input
-                        :label="__('Email')"
-                        v-model="search.last_name"
-                        @input="debounceGetPartners"
-                    />
+                    <v-input :label="__('Email')" v-model="search.last_name" />
 
-                    <v-input
-                        :label="__('Code')"
-                        v-model="search.code"
-                        @input="debounceGetPartners"
-                    />
+                    <v-input :label="__('Code')" v-model="search.code" />
 
                     <v-select
                         :label="__('Choose pagination')"
                         v-model="search.per_page"
-                        @change="debounceGetPartners"
+                        @change="searcher"
                         :options="[
                             { name: 15, id: 15 },
                             { name: 50, id: 50 },
@@ -90,6 +61,23 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             { name: 300, id: 300 },
                         ]"
                     />
+
+                    <div class="flex items-end justify-around">
+                        <v-button
+                            @click="searcher"
+                            :label="__('Search')"
+                            left-icon="mdi mdi-search"
+                            size="md"
+                        />
+
+                        <v-button
+                            @click="resetFilters"
+                            :label="__('Clear')"
+                            left-icon="mdi mdi-filter-remove"
+                            variant="secondary"
+                            size="md"
+                        />
+                    </div>
                 </div>
             </template>
         </v-head>
@@ -187,7 +175,6 @@ import VUpdate from "./Update.vue";
 import VMainLayout from "@/components/VMainLayout.vue";
 import VHead from "@/components/VHead.vue";
 import VButton from "@/components/VButton.vue";
-import VSwitch from "@/components/VSwitch.vue";
 import VInput from "@/components/VInput.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VSelect from "@/components/VSelect.vue";
@@ -195,10 +182,8 @@ import VTable from "@/components/VTable.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
-const showFilters = ref(true);
 const loading = ref(false);
 const users = ref([]);
-const debounceTimer = ref(null);
 
 const pages = ref({
     total_pages: 0,
@@ -216,34 +201,12 @@ const search = useForm({
     code: "",
 });
 
-// Responsive screen detection
-const isLargeScreen = ref(false);
-
-const checkScreenSize = () => {
-    isLargeScreen.value = window.innerWidth >= 1024; // lg breakpoint
-};
-
-watch(
-    () => showFilters.value,
-    (val) => {
-        showFilters.value = val;
-    },
-);
-
 const userInitials = (user) => {
     return (
         `${user.name?.charAt(0) || ""}${
             user.last_name?.charAt(0) || ""
         }`.toUpperCase() || "U"
     );
-};
-
-const debounceGetPartners = () => {
-    clearTimeout(debounceTimer.value);
-    debounceTimer.value = setTimeout(() => {
-        search.page = 1; // Reset to first page when filtering
-        getPartners();
-    }, 500);
 };
 
 const loadData = (data) => {
@@ -267,7 +230,17 @@ const getPartners = () => {
 };
 
 const resetFilters = () => {
-    search.reset();
+    search.page = 1;
+    search.per_page = 15;
+    search.name = "";
+    search.last_name = "";
+    search.email = "";
+    search.code = "";
+    getPartners();
+};
+
+const searcher = () => {
+    search.page = 1;
     getPartners();
 };
 

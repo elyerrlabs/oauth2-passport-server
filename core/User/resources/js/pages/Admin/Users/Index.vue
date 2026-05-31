@@ -43,28 +43,25 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <v-input
                         :label="__('Name')"
                         v-model="search.name"
-                        @input="debouncedSearch"
                         :placeholder="__('Enter name...')"
                     />
 
                     <v-input
                         :label="__('Last Name')"
                         v-model="search.last_name"
-                        @input="debouncedSearch"
                         :placeholder="__('Enter last name ...')"
                     />
 
                     <v-input
                         :label="__('Email')"
                         v-model="search.email"
-                        @input="debouncedSearch"
                         :placeholder="__('Enter email ...')"
                     />
 
                     <v-select
                         :label="__('Choose pagination')"
                         v-model="search.per_page"
-                        @change="changePage"
+                        @change="searcher"
                         :options="[
                             { name: 15, id: 15 },
                             { name: 50, id: 50 },
@@ -74,10 +71,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             { name: 300, id: 300 },
                         ]"
                     />
-                    <div class="flex items-end justify-end">
+                    <div class="flex items-end justify-around">
+                        <v-button
+                            :label="__('Search')"
+                            size="md"
+                            @click="searcher"
+                        />
+
                         <v-button
                             :label="__('Reset')"
-                            variant="primary"
+                            variant="secondary"
                             size="md"
                             @click="clearFilters"
                         />
@@ -86,98 +89,88 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             </template>
         </v-head>
 
-        <div class="mb-6">
-            <v-table
-                :items="users"
-                :loading="loading"
-                :per-page="search.per_page"
-                :show-pagination="false"
-                :empty-text="
-                    __('Try adjusting your filters or create a new user')
-                "
-                empty-icon="mdi mdi-account-off-outline"
-                loading-text="Loading users..."
-                table-class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
-                thead-class="bg-gray-50 dark:bg-gray-700"
-                tbody-class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
-            >
-                <template #head>
-                    <tr>
-                        <th
-                            v-for="(column, index) in columns"
-                            :key="index"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-                        >
-                            {{ column }}
-                        </th>
-                    </tr>
-                </template>
-
-                <template #default="{ items }">
-                    <tr
-                        v-for="user in items"
-                        :key="user.id"
-                        class="transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+        <v-table
+            :items="users"
+            :loading="loading"
+            :per-page="search.per_page"
+            :show-pagination="false"
+            :empty-text="__('Try adjusting your filters or create a new user')"
+            empty-icon="mdi mdi-account-off-outline"
+            loading-text="Loading users..."
+            table-class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+            thead-class="bg-gray-50 dark:bg-gray-700"
+            tbody-class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+            <template #head>
+                <tr>
+                    <th
+                        v-for="(column, index) in columns"
+                        :key="index"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                     >
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <div
-                                class="font-bold text-blue-600 dark:text-blue-400"
-                            >
-                                {{ user.name }}
-                                {{ user.last_name }}
-                            </div>
-                        </td>
+                        {{ column }}
+                    </th>
+                </tr>
+            </template>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <div class="text-gray-900 dark:text-gray-100">
-                                {{ user.email }}
-                            </div>
-                        </td>
+            <template #default="{ items }">
+                <tr
+                    v-for="user in items"
+                    :key="user.id"
+                    class="transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                >
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <div class="font-bold text-blue-600 dark:text-blue-400">
+                            {{ user.name }}
+                            {{ user.last_name }}
+                        </div>
+                    </td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <span
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <div class="text-gray-900 dark:text-gray-100">
+                            {{ user.email }}
+                        </div>
+                    </td>
+
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <span
+                            :class="[
+                                'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200',
+                                user.disabled
+                                    ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300'
+                                    : 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300',
+                            ]"
+                        >
+                            <i
                                 :class="[
-                                    'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200',
+                                    'mdi mr-1 text-sm',
                                     user.disabled
-                                        ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300'
-                                        : 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300',
+                                        ? 'mdi-close-circle text-orange-600 dark:text-orange-400'
+                                        : 'mdi-check-circle text-green-600 dark:text-green-400',
                                 ]"
-                            >
-                                <i
-                                    :class="[
-                                        'mdi mr-1 text-sm',
-                                        user.disabled
-                                            ? 'mdi-close-circle text-orange-600 dark:text-orange-400'
-                                            : 'mdi-check-circle text-green-600 dark:text-green-400',
-                                    ]"
-                                ></i>
-                                {{
-                                    user.disabled
-                                        ? __("Inactive")
-                                        : __("Active")
-                                }}
-                            </span>
-                        </td>
+                            ></i>
+                            {{ user.disabled ? __("Inactive") : __("Active") }}
+                        </span>
+                    </td>
 
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex justify-end space-x-2">
-                                <v-button
-                                    as="a"
-                                    :to="user.links.show"
-                                    icon="mdi mdi-eye"
-                                    size="md"
-                                    round
-                                    variant="success"
-                                    :title="__('Update user')"
-                                />
-                               
-                                <v-status :item="user" @updated="getUsers" />
-                            </div>
-                        </td>
-                    </tr>
-                </template>
-            </v-table>
-        </div>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex justify-end space-x-2">
+                            <v-button
+                                as="a"
+                                :to="user.links.show"
+                                icon="mdi mdi-eye"
+                                size="md"
+                                round
+                                variant="success"
+                                :title="__('Update user')"
+                            />
+
+                            <v-status :item="user" @updated="getUsers" />
+                        </div>
+                    </td>
+                </tr>
+            </template>
+        </v-table>
 
         <!-- Pagination -->
         <v-paginate
@@ -195,7 +188,7 @@ import VButton from "@/components/VButton.vue";
 import VInput from "@/components/VInput.vue";
 import VSelect from "@/components/VSelect.vue";
 import VPaginate from "@/components/VPaginate.vue";
-import VTable from "@/components/VTable.vue"; 
+import VTable from "@/components/VTable.vue";
 import VStatus from "./Status.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { ref, reactive, onMounted, computed } from "vue";
@@ -222,29 +215,23 @@ const search = useForm({
     email: "",
 });
 
-// Search timeout for debouncing
-const searchTimeout = ref(null);
-
 onMounted(() => {
     loadData(page.props.data);
 });
 
 // Methods
 
-const changePage = () => {
+const searcher = () => {
+    search.page = 1;
     getUsers();
 };
 
-const debouncedSearch = () => {
-    clearTimeout(searchTimeout.value);
-    searchTimeout.value = setTimeout(async () => {
-        search.page = 1;
-        await getUsers();
-    }, 500);
-};
-
 const clearFilters = async () => {
-    search.resetAndClearErrors();
+    search.page = 1;
+    search.per_page = 15;
+    search.name = "";
+    search.last_name = "";
+    search.email = "";
     getUsers();
 };
 

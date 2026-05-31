@@ -45,7 +45,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-input
                             :label="__('Name')"
                             v-model="search.name"
-                            @input="debouncedSearch"
                             :placeholder="__('Filter by name')"
                         />
 
@@ -53,7 +52,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-input
                             :label="__('Code')"
                             v-model="search.code"
-                            @input="debouncedSearch"
                             :placeholder="__('code')"
                         />
 
@@ -61,7 +59,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         <v-input
                             :label="__('Email')"
                             v-model="search.email"
-                            @input="debouncedSearch"
                             :placeholder="__('Email')"
                         />
 
@@ -70,7 +67,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             :label="__('Type')"
                             v-model="search.type"
                             :options="billing_types"
-                            @change="searching"
+                            @change="searcher"
                             :placeholder="__('All types')"
                         />
 
@@ -79,15 +76,21 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             :label="__('Status')"
                             v-model="search.status"
                             :options="billing_statuses"
-                            @change="searching"
+                            @change="searcher"
                             :placeholder="__('All statuses')"
                         />
 
                         <!-- Clear Filters -->
-                        <div class="flex items-end">
+                        <div class="flex items-end justify-around">
+                            <v-button
+                                @click="searcher"
+                                :label="__('Search')"
+                                variant="secondary"
+                            />
+
                             <v-button
                                 @click="clearFilters"
-                                :label="__('Clear filters')"
+                                :label="__('Clear')"
                                 variant="secondary"
                             />
                         </div>
@@ -304,8 +307,6 @@ const search = useForm({
     type: "",
 });
 
-const searchTimeout = ref(null);
-
 onMounted(() => {
     data(props.data);
 });
@@ -371,24 +372,19 @@ const copyToClipboard = (text) => {
         });
 };
 
-const searching = () => {
-    search.value.page = 1;
+const searcher = () => {
+    search.page = 1;
     getTransactions();
-};
-
-const debouncedSearch = () => {
-    if (searchTimeout.value) clearTimeout(searchTimeout.value);
-    searchTimeout.value = setTimeout(() => {
-        searching();
-    }, 500);
 };
 
 const getTransactions = async () => {
     loading.value = true;
 
     search.get(page.props.routes.transactions, {
+        preserveScroll: true,
+        preserveState: true,
         onSuccess: (response) => {
-            data(response);
+            data(response.props.data);
         },
         onError: (error) => {
             const message =
@@ -403,7 +399,13 @@ const getTransactions = async () => {
 };
 
 const clearFilters = () => {
-    search.resetAndClearErrors();
-    searching();
+    search.page = 1;
+    search.per_page = 15;
+    search.name = "";
+    search.code = "";
+    search.email = "";
+    search.status = "";
+    search.type = "";
+    getTransactions();
 };
 </script>

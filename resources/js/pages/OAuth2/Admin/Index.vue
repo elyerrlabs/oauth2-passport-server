@@ -32,6 +32,45 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <v-personal-client @created="getClients" />
                 <v-create @created="getClients" />
             </template>
+            <template #bottom>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <v-input
+                        v-model="search.name"
+                        :label="__('Name')"
+                        :placeholder="__('Enter   name ...')"
+                    />
+
+                    <v-select
+                        :label="__('Choose pagination')"
+                        v-model="search.per_page"
+                        @change="searcher"
+                        :options="[
+                            { name: 15, id: 15 },
+                            { name: 50, id: 50 },
+                            { name: 100, id: 100 },
+                            { name: 150, id: 150 },
+                            { name: 200, id: 200 },
+                            { name: 300, id: 300 },
+                        ]"
+                    />
+                    <div class="flex items-end justify-around">
+                        <v-button
+                            @click="searcher"
+                            :label="__('Search')"
+                            left-icon="mdi mdi-search"
+                            size="md"
+                        />
+
+                        <v-button
+                            @click="clearFilters"
+                            :label="__('Clear Filters')"
+                            left-icon="mdi mdi-filter-remove"
+                            variant="light"
+                            size="md"
+                        />
+                    </div>
+                </div>
+            </template>
         </v-head>
 
         <v-table
@@ -213,6 +252,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 import VMainLayout from "@/components/VMainLayout.vue";
 import VPaginate from "@/components/VPaginate.vue";
 import VTable from "@/components/VTable.vue";
+import VInput from "@/components/VInput.vue";
+import VButton from "@/components/VButton.vue";
+import VSelect from "@/components/VSelect.vue";
 import VCreate from "./Create.vue";
 import VDelete from "./Delete.vue";
 import VPersonalClient from "./PersonalClient.vue";
@@ -230,6 +272,7 @@ const pages = ref({
 const search = useForm({
     page: 1,
     per_page: 50,
+    name: "",
 });
 
 const columns = ref([
@@ -257,6 +300,19 @@ const formatDate = (dateString) => {
         month: "short",
         day: "numeric",
     });
+};
+
+const clearFilters = () => {
+    search.page = 1;
+    search.per_page = 50;
+    search.name = "";
+
+    getClients();
+};
+
+const searcher = () => {
+    search.page = 1;
+    getClients();
 };
 
 const formatTimeAgo = (dateString) => {

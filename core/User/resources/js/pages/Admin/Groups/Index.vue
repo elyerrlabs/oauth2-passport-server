@@ -55,7 +55,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 <v-select
                                     :label="__('Choose pagination')"
                                     v-model="search.per_page"
-                                    @change="changePage"
+                                    @change="searcher"
                                     :options="[
                                         { name: 15, id: 15 },
                                         { name: 50, id: 50 },
@@ -71,7 +71,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     <v-button
                                         :label="__('Search')"
                                         left-icon="mdi mdi-search"
-                                        @click="getGroups"
+                                        @click="searcher"
                                     />
 
                                     <v-button
@@ -223,7 +223,8 @@ const loadData = (data) => {
     pages.value = data.meta.pagination;
 };
 
-const changePage = () => {
+const searcher = () => {
+    search.page = 1;
     getGroups();
 };
 
@@ -246,7 +247,10 @@ const getGroups = async () => {
 };
 
 const resetFilters = () => {
-    search.resetAndClearErrors();
+    search.page = 1;
+    search.per_page = 15;
+    search.name = "";
+    search.order_type = "desc";
     getGroups();
 };
 </script>

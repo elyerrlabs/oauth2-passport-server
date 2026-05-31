@@ -24,19 +24,17 @@
                 </template>
                 <template #bottom>
                     <div
-                        class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4"
+                        class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4"
                     >
                         <v-input
                             :label="__('Name')"
                             v-model="search.name"
                             :placeholder="__('Plan name')"
-                            @input="getPlans"
                         />
 
                         <v-select
                             :label="__('Status')"
                             v-model="search.active"
-                            @change="getPlans"
                             :options="[
                                 { name: __('All'), id: '' },
                                 { name: __('Active'), id: '1' },
@@ -47,7 +45,7 @@
                         <v-select
                             :label="__('Bonus')"
                             v-model="search.bonus_activated"
-                            @change="getPlans"
+                            @change="searcher"
                             :options="[
                                 { name: __('All'), id: '' },
                                 { name: __('Yes'), id: '1' },
@@ -58,15 +56,14 @@
                         <v-input
                             :label="__('Bonus Days')"
                             v-model="search.bonus_duration"
-                            @input="getPlans"
                             :placeholder="__('Days')"
                             type="number"
                         />
 
                         <v-select
-                            :label="__('Items per page')"
+                            :label="__('Pagination')"
                             v-model="search.per_page"
-                            @change="getPlans"
+                            @change="searcher"
                             :options="[
                                 { name: 15, id: 15 },
                                 { name: 50, id: 50 },
@@ -76,6 +73,20 @@
                                 { name: 300, id: 300 },
                             ]"
                         />
+
+                        <div class="flex items-end justify-around">
+                            <v-button
+                                @click="searcher"
+                                :label="__('Search')"
+                                variant="secondary"
+                            />
+
+                            <v-button
+                                @click="clearFilters"
+                                :label="__('Clear')"
+                                variant="secondary"
+                            />
+                        </div>
                     </div>
                 </template>
             </v-head>
@@ -302,13 +313,30 @@ const getPlans = () => {
     loading.value = true;
 
     search.get(page.props.routes.plans, {
+        preserveScroll: true,
+        preserveState: true,
         onSuccess: (page) => {
-            data(page);
+            data(page.props.data);
         },
         onFinish: () => {
             loading.value = false;
         },
     });
+};
+
+const searcher = () => {
+    search.page = 1;
+    getPlans();
+};
+
+const clearFilters = () => {
+    search.page = 1;
+    search.per_page = 15;
+    search.name = "";
+    search.active = "";
+    search.bonus_activated = "";
+    search.bonus_duration = "";
+    getPlans();
 };
 
 const formatPrice = (price) => {
