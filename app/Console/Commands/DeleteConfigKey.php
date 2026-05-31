@@ -30,7 +30,7 @@ namespace App\Console\Commands;
 use App\Services\SettingService;
 use Illuminate\Console\Command;
 
-class deleteConfigKey extends Command
+class DeleteConfigKey extends Command
 {
     /**
      * The name and signature of the console command.

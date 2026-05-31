@@ -31,7 +31,7 @@ namespace App\Console\Commands\Settings;
 use App\Models\Global\Country;
 use Illuminate\Console\Command;
 
-class settingsCountriesUpload extends Command
+class SettingsCountriesUpload extends Command
 {
     /**
      * The name and signature of the console command.

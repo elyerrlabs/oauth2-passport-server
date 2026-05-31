@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class dropService extends Command
+class DropService extends Command
 {
     /**
      * The name and signature of the console command.

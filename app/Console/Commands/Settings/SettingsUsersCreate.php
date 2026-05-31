@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\DB;
 use Core\User\Model\Service;
 use Illuminate\Support\Facades\Hash;
 
-class settingsUsersCreate extends Command
+class SettingsUsersCreate extends Command
 {
     /**
      * The name and signature of the console command.

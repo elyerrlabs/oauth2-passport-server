@@ -27,46 +27,58 @@ namespace App\Console\Commands\Settings;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Services\SettingService;
-use Illuminate\Console\Command;
-use App\Services\SiteMapService;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Artisan;
 
-class settingsSystem extends Command
+use Illuminate\Console\Command;
+use Elyerr\ApiResponse\Assets\Asset;
+use App\Models\Broadcasting\Broadcast;
+
+class SttingsChannelsUpload extends Command
 {
+    use Asset;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'settings:system-start';
+    protected $signature = 'settings:channels-upload';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Install essential data to start the server';
+    protected $description = 'Upload channels';
 
     /**
-     * Loading default settings for the system, for example default roles, services,
-     * list of countries and channel for broadcast system
+     * Summary of handle
      * @return void
      */
     public function handle()
     {
-        $this->info("Install server");
-        Log::info("Install server");
-        Artisan::call('settings:key-generator');
-        Artisan::call('migrate', ['--force' => true]);
-        Artisan::call('settings:upload-scopes');
-        Artisan::call('settings:countries-upload');
-        Artisan::call('settings:channels-upload');
-        Artisan::call('passport:keys');
-        SettingService::setDefaultKeys();
-        (new SiteMapService(false))->restorePublicFromBackup();
-        $this->info("Server installed successfully");
-        Log::info("Server installed successfully");
+        $this->info("Upload channels");
+        $this->upload_groups();
+        $this->info("Uploaded successfully");
+    }
+
+    /**
+     * Upload default channels
+     * @return void
+     */
+    public function upload_groups()
+    {
+        $broadcasts = Broadcast::channelsByDefault();
+
+        foreach ($broadcasts as $broadcast) {
+            Broadcast::updateOrcreate(
+                ['name' => $broadcast->name],
+                [
+                    'name' => $broadcast->name,
+                    'slug' => $this->slug($broadcast->name),
+                    'description' => $broadcast->description,
+                    'system' => true,
+                ]
+            )->save();
+        }
     }
 }
