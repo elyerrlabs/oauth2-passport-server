@@ -42,6 +42,11 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - Restore all default system scopes
     - Rebuild scope configuration from package defaults
 
+- rename files to comply with PSR-4 autoloading standard
+- rename module:services-load to module:service-upload
+- fix serach for admin functionaly for OauthClientService
+- Fix filters for index.vue components
+
 ---
 
 # [v6.1.1]
