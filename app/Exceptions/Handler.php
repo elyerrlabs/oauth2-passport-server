@@ -84,6 +84,11 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof NotFoundHttpException && request()->acceptsHtml()) {
+
+            if (request()->path() === '/') {
+                return redirect()->route('login');
+            }
+
             return redirect('/');
         }
 
