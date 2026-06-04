@@ -31,6 +31,12 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
+# [v6.1.3]
+
+- Added fallback redirect for non-existent pages to improve navigation experience.
+
+---
+
 # [v6.1.2]
 
 ## Added
