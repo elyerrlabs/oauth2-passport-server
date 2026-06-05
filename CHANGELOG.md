@@ -31,6 +31,21 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Improved the `module:make` command with Elymod version selection support.
+    - Latest release discovery from Packagist.
+    - Interactive version picker.
+    - Custom version installation.
+    - `--elymod-version` option support.
+    - Compatibility with existing stable and dev workflows.
+
+- Fixed `module:delete` command.
+    - check if the module exists before trying to delete it.
+
+
 # [v6.1.3]
 
 - Added fallback redirect for non-existent pages to improve navigation experience.
