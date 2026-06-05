@@ -160,7 +160,10 @@ class ModuleDelete extends Command
         | Remove module registry entry
         |--------------------------------------------------------------------------
         */
-        app(ModuleRepository::class)->findByName($name)->delete();
+        $module = app(ModuleRepository::class)->findByName($name);
+        if (!empty($module)) {
+            $module->delete();
+        }
 
         $this->newLine();
         $this->info("Module '{$name}' successfully removed.");
