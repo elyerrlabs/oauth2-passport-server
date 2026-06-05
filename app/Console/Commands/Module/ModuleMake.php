@@ -7,6 +7,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Process;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -44,8 +46,9 @@ class ModuleMake extends Command
      * @var string
      */
     protected $signature = 'module:make
-        {name : Module name}
-        {--dev : Use local development template first, then Packagist dev if not found}';
+    {name : Module name}
+    {--dev : Use local development template first, then Packagist dev if not found}
+    {--elymod-version= : Elymod version to install}';
 
     /**
      * The console command description.
@@ -61,6 +64,15 @@ class ModuleMake extends Command
     {
         $name = normalizeModuleName($this->argument('name'));
         $useDev = (bool) $this->option('dev');
+        $version = null;
+
+        if (!$useDev) {
+            $version = $this->option('elymod-version');
+
+            if (!$version) {
+                $version = $this->askForVersion();
+            }
+        }
 
         $root = base_path();
         $thirdPartyPath = $root . DIRECTORY_SEPARATOR . 'third-party';
@@ -94,7 +106,7 @@ class ModuleMake extends Command
         try {
             $source = $useDev
                 ? $this->createDevModuleProject($name, $thirdPartyPath, $localTemplatePath)
-                : $this->createStableModuleProject($name, $thirdPartyPath);
+                : $this->createStableModuleProject($name, $thirdPartyPath, $version);
 
             if ($source === null) {
                 throw new \RuntimeException('Failed to create the module project.');
@@ -137,18 +149,35 @@ class ModuleMake extends Command
         return $process->isSuccessful();
     }
 
-    protected function createStableModuleProject(string $name, string $thirdPartyPath): ?string
-    {
-        $this->info('Using stable Elymod template from Composer.');
+    protected function createStableModuleProject(
+        string $name,
+        string $thirdPartyPath,
+        ?string $version = null
+    ): ?string {
+        $version = $version
+            ? ltrim($version, 'v')
+            : null;
+
+        $this->info(
+            $version
+            ? "Using Elymod version {$version}."
+            : 'Using latest stable Elymod template.'
+        );
+
+        $package = $version
+            ? "elyerr/elymod:{$version}"
+            : 'elyerr/elymod';
 
         $process = $this->runCreateProjectProcess([
             'composer',
             'create-project',
-            'elyerr/elymod',
+            $package,
             $name,
         ], $thirdPartyPath);
 
-        return $process->isSuccessful() ? 'packagist' : null;
+        return $process->isSuccessful()
+            ? 'packagist'
+            : null;
     }
 
     protected function createDevModuleProject(string $name, string $thirdPartyPath, string $localTemplatePath): ?string
@@ -231,5 +260,82 @@ class ModuleMake extends Command
         }
 
         app(ModuleRepository::class)->query()->where('name', $name)->delete();
+    }
+
+
+    protected function getAvailableVersions(int $limit = 10): array
+    {
+        $process = new Process([
+            'composer',
+            'show',
+            'elyerr/elymod',
+            '--all',
+            '--format=json',
+        ]);
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return [];
+        }
+
+        $data = json_decode($process->getOutput(), true);
+
+        if (!isset($data['versions'])) {
+            return [];
+        }
+
+        $versions = collect($data['versions'])
+            ->filter(fn($version) => preg_match('/^v?\d+\.\d+\.\d+$/', $version))
+            ->unique()
+            ->values()
+            ->all();
+
+        usort($versions, static function ($a, $b) {
+            return version_compare(
+                ltrim($b, 'v'),
+                ltrim($a, 'v')
+            );
+        });
+
+        return array_slice($versions, 0, $limit);
+    }
+
+    protected function askForVersion(): ?string
+    {
+        $versions = $this->getAvailableVersions();
+
+        if (empty($versions)) {
+            $this->warn('Unable to retrieve Elymod versions from Packagist.');
+
+            return text(
+                label: 'Enter Elymod version manually',
+                required: true
+            );
+        }
+
+        $options = [];
+
+        foreach ($versions as $version) {
+            $options[$version] = $version;
+        }
+
+        $options['custom'] = 'Custom version';
+
+        $selected = select(
+            label: 'Select Elymod version',
+            options: $options,
+            default: $versions[0]
+        );
+
+        if ($selected === 'custom') {
+            return text(
+                label: 'Enter Elymod version',
+                placeholder: 'v1.1.2',
+                required: true
+            );
+        }
+
+        return $selected;
     }
 }
