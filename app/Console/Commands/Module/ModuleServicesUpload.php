@@ -40,7 +40,7 @@ class ModuleServicesUpload extends Command
      *
      * @var string
      */
-    protected $signature = 'module:service-uploads';
+    protected $signature = 'module:services-uploads';
 
     /**
      * The console command description.
