@@ -42,9 +42,17 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - `--elymod-version` option support.
     - Compatibility with existing stable and dev workflows.
 
-- Fixed `module:delete` command.
-    - check if the module exists before trying to delete it.
+- Improved interactivity of module commands.
+    - Optimized option selection in commands, allowing only "yes" or "no" inputs where applicable.
+    - Removed unnecessary selection lists to simplify user experience.
+    - Minor fixes and prompt clarity improvements.
 
+### Fixed
+
+- Fixed `module:delete` command.
+    - Check if the module exists before attempting to delete it.
+
+---
 
 # [v6.1.3]
 
