@@ -90,7 +90,7 @@ class ClientAdminController extends WebController
     {
         $this->oauthClientService->updateClientForAdmin($client->id, $request->toArray());
 
-        return $this->showOne($client, ClientAdminTransformer::class, 201);
+        return $this->showOne($client, ClientAdminTransformer::class, 200);
     }
 
     /**
