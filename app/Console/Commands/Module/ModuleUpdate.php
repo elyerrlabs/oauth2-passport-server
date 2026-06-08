@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands\Module;
 
+use App\Repositories\ModuleRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Process;
+use function Laravel\Prompts\select;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -46,15 +48,20 @@ class ModuleUpdate extends Command
 
     protected $moduleRepository;
 
-    public function __construct()
+    public function __construct(ModuleRepository $moduleRepository)
     {
         parent::__construct();
-        $this->moduleRepository = app(\App\Repositories\ModuleRepository::class);
+        $this->moduleRepository = $moduleRepository;
     }
 
     public function handle(): int
     {
-        $name = $this->option('name');
+        $moduleNames = $this->moduleRepository->query()->pluck('name', 'name')->toArray();
+
+        $name = select(
+            label: 'Select the module to update',
+            options: $moduleNames
+        );
 
         // List modules from database if no name provided
         if (!$name) {
@@ -125,38 +132,31 @@ class ModuleUpdate extends Command
         // Get available versions (branches/tags)
         $availableVersions = $this->getAvailableVersions($modulePath);
 
-        if (!empty($availableVersions)) {
-            $this->info('Available versions (branches/tags):');
-            foreach ($availableVersions as $index => $version) {
-                $marker = '';
-                if ($version === $module->current_version) {
-                    $marker = ' <info>(current)</info>';
-                }
-                $this->line("  [{$index}] {$version}{$marker}");
-            }
-            $this->newLine();
+        // Ask for target version
+        // Get the last 10 versions
+        $availableVersions = array_slice($availableVersions, 0, 10);
+
+        // Agregar opción para versión personalizada
+        $availableVersions[] = 'Custom version…';
+
+        // Usar choice()
+        $versionChoice = $this->choice(
+            'Select the target version to update to',
+            $availableVersions,
+            $module->current_version
+        );
+
+        // Si eligió "Custom version…", pedir la versión manualmente
+        if ($versionChoice === 'Custom version…') {
+            $version = $this->ask('Enter the target version manually');
+        } else {
+            $version = $versionChoice;
         }
 
-        // Ask for target version
-        $version = $this->option('target-version');
+        // Validar que haya un valor
         if (!$version) {
-            if (!empty($availableVersions)) {
-                $versionIndex = $this->ask('Enter the version number from the list or type a version manually');
-
-                // Check if user entered an index number
-                if (is_numeric($versionIndex) && isset($availableVersions[(int) $versionIndex])) {
-                    $version = $availableVersions[(int) $versionIndex];
-                } else {
-                    $version = $versionIndex;
-                }
-            } else {
-                $version = $this->ask('Enter the target version (branch or tag)');
-            }
-
-            if (!$version) {
-                $this->error('Version is required to update.');
-                return self::FAILURE;
-            }
+            $this->error('Version is required to update.');
+            return self::FAILURE;
         }
 
         // Don't update if same version
@@ -252,7 +252,7 @@ class ModuleUpdate extends Command
             $this->error('Update failed: Service loading failed');
             return self::FAILURE;
         }
-        
+
         $this->newLine();
         $this->info("✓ Module '{$name}' updated successfully to version {$version}.");
         $this->line("Previous version: " . ($previousVersion ?: 'N/A'));
@@ -302,7 +302,7 @@ class ModuleUpdate extends Command
             }
 
             // Get all tags
-            $tagProcess = new Process(['git', 'tag', '-l'], $modulePath);
+            $tagProcess = new Process(['git', 'tag', '--sort=-v:refname', '-l'], $modulePath);
             $tagProcess->run();
 
             $tags = [];

@@ -7,6 +7,8 @@ use App\Services\SettingService;
 use Illuminate\Support\Facades\File;
 use App\Repositories\ModuleRepository;
 use Illuminate\Support\Facades\Artisan;
+use function Laravel\Prompts\select;
+
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -65,12 +67,11 @@ class ModuleDelete extends Command
         }
 
         $this->info('Installed modules:');
-        $this->table(['#', 'Module'], $modules->map(
-            fn($m, $i) => [$i, $m]
-        ));
 
-        $name = $this->argument('name')
-            ?? $this->ask('Which module do you want to remove?');
+        $name = select(
+            label: 'Select the module you want to remove',
+            options: $modules->toArray()
+        );
 
         if (!$modules->contains($name)) {
             $this->error("Module '{$name}' not found.");
@@ -106,16 +107,24 @@ class ModuleDelete extends Command
 
         if (!$this->option('force')) {
 
-            $confirm = $this->ask("To confirm, type the module name again");
+            // Confirmación tipo CLI real (NO select)
+            $confirm = strtolower(trim($this->ask(
+                "Type YES to confirm deletion of module '{$name}'"
+            )));
 
-            if ($confirm !== $name) {
-                $this->error('Confirmation mismatch. Operation cancelled.');
+            if ($confirm !== 'yes') {
+                $this->error('Operation cancelled.');
                 return self::FAILURE;
             }
 
+            // Segunda confirmación solo si purge config
             if ($purgeConfig) {
-                if (!$this->confirm('Are you absolutely sure you want to DELETE configuration keys?')) {
-                    $this->error('Purge cancelled.');
+                $confirmPurge = strtolower(trim($this->ask(
+                    "Type YES to permanently delete configuration keys"
+                )));
+
+                if ($confirmPurge !== 'yes') {
+                    $this->error('Config purge cancelled.');
                     return self::FAILURE;
                 }
             }

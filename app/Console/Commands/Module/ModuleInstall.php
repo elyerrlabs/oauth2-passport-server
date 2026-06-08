@@ -221,18 +221,8 @@ class ModuleInstall extends Command
                 $provider
             );
 
-            if (!empty($versions)) {
-
-                $this->newLine();
-                $this->info('Available versions:');
-                $this->newLine();
-
-                foreach ($versions as $index => $version) {
-                    $this->line(($index + 1) . ". {$version}");
-                }
-
-                $this->newLine();
-
+            if (!empty($versions)) { 
+ 
                 $versions[] = 'manual';
 
                 $selectedVersion = $this->choice(
