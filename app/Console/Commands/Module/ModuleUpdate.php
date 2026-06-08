@@ -58,6 +58,12 @@ class ModuleUpdate extends Command
     {
         $moduleNames = $this->moduleRepository->query()->pluck('name', 'name')->toArray();
 
+        if (empty($moduleNames)) {
+            $this->error('No modules found in the database.');
+            return self::FAILURE;
+        }
+
+
         $name = select(
             label: 'Select the module to update',
             options: $moduleNames
