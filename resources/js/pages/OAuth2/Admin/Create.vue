@@ -89,7 +89,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             v-model="form.confidential"
                             :label="__('Confidential Client')"
                             :error="errors.confidential"
-                            :disabled="loading || item?.id"
+                            :disabled="loading || item?.id ? true : false"
                         />
 
                         <!-- Switch Description -->
