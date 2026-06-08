@@ -29,11 +29,11 @@ const notyf = new Notyf({
     },
     {
       type: "warning",
-      background: "var(--warning-color, #3174d4)",
+      background: "var(--warning-color, #ffdd13)",
       icon: {
         className: "mdi mdi-close-circle",
         tagName: "i",
-        color: "#000",
+        color: "#1c1a10",
       },
     },
   ],
