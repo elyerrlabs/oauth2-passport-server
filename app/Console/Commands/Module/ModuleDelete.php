@@ -6,8 +6,6 @@ use Illuminate\Console\Command;
 use App\Services\SettingService;
 use Illuminate\Support\Facades\File;
 use App\Repositories\ModuleRepository;
-use Illuminate\Support\Facades\Artisan;
-use function Laravel\Prompts\select;
 
 
 /**
@@ -68,9 +66,9 @@ class ModuleDelete extends Command
 
         $this->info('Installed modules:');
 
-        $name = select(
-            label: 'Select the module you want to remove',
-            options: $modules->toArray()
+        $name = $this->choice(
+            'Select the module you want to remove',
+            $modules->toArray()
         );
 
         if (!$modules->contains($name)) {

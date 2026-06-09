@@ -7,8 +7,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Process;
-use function Laravel\Prompts\select;
-use function Laravel\Prompts\text;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -306,33 +304,29 @@ class ModuleMake extends Command
         $versions = $this->getAvailableVersions();
 
         if (empty($versions)) {
-            $this->warn('Unable to retrieve Elymod versions from Packagist.');
 
-            return text(
-                label: 'Enter Elymod version manually',
-                required: true
+            $this->warn(
+                'Unable to retrieve Elymod versions from Packagist.'
+            );
+
+            return $this->ask(
+                'Enter Elymod version manually'
             );
         }
 
-        $options = [];
+        $versions[] = 'Custom version';
 
-        foreach ($versions as $version) {
-            $options[$version] = $version;
-        }
-
-        $options['custom'] = 'Custom version';
-
-        $selected = select(
-            label: 'Select Elymod version',
-            options: $options,
-            default: $versions[0]
+        $selected = $this->choice(
+            'Select Elymod version',
+            $versions,
+            0
         );
 
-        if ($selected === 'custom') {
-            return text(
-                label: 'Enter Elymod version',
-                placeholder: 'v1.1.2',
-                required: true
+        if ($selected === 'Custom version') {
+
+            return $this->ask(
+                'Enter Elymod version',
+                'v1.1.2'
             );
         }
 

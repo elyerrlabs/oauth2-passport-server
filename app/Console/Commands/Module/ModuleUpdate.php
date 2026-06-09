@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Process;
-use function Laravel\Prompts\select;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -64,9 +63,9 @@ class ModuleUpdate extends Command
         }
 
 
-        $name = select(
-            label: 'Select the module to update',
-            options: $moduleNames
+        $name = $this->choice(
+            'Select the module to update',
+            $moduleNames
         );
 
         // List modules from database if no name provided
@@ -136,32 +135,48 @@ class ModuleUpdate extends Command
         $this->newLine();
 
         // Get available versions (branches/tags)
-        $availableVersions = $this->getAvailableVersions($modulePath);
+        $version = $this->option('target-version');
 
-        // Ask for target version
-        // Get the last 10 versions
-        $availableVersions = array_slice($availableVersions, 0, 10);
+        if (!$version) {
 
-        // Agregar opción para versión personalizada
-        $availableVersions[] = 'Custom version…';
+            $availableVersions = $this->getAvailableVersions(
+                $module
+            );
 
-        // Usar choice()
-        $versionChoice = $this->choice(
-            'Select the target version to update to',
-            $availableVersions,
-            $module->current_version
-        );
+            $availableVersions = array_slice(
+                $availableVersions,
+                0,
+                20
+            );
 
-        // Si eligió "Custom version…", pedir la versión manualmente
-        if ($versionChoice === 'Custom version…') {
-            $version = $this->ask('Enter the target version manually');
-        } else {
-            $version = $versionChoice;
+            $availableVersions[] = 'Custom version…';
+
+            $versionChoice = $this->choice(
+                'Select the target version to update to',
+                $availableVersions,
+                0
+            );
+
+            if ($versionChoice === 'Custom version…') {
+
+                $version = $this->ask(
+                    'Enter the target version manually'
+                );
+
+            } else {
+
+                $version = trim(
+                    preg_replace('/^[^a-zA-Z0-9]*/u', '', $versionChoice)
+                );
+            }
         }
 
-        // Validar que haya un valor
         if (!$version) {
-            $this->error('Version is required to update.');
+
+            $this->error(
+                'Version is required to update.'
+            );
+
             return self::FAILURE;
         }
 
@@ -270,56 +285,143 @@ class ModuleUpdate extends Command
     /**
      * Get available versions (branches and tags) from the module repository
      */
-    protected function getAvailableVersions(string $modulePath): array
+    protected function getAvailableVersions(object $module): array
     {
         $this->info('Fetching available versions...');
 
         try {
-            // Fetch remote branches and tags
-            $fetchProcess = new Process(['git', 'fetch', '--all', '--tags'], $modulePath);
-            $fetchProcess->setTimeout(300);
-            $fetchProcess->run();
 
-            if (!$fetchProcess->isSuccessful()) {
-                $this->warn('Could not fetch from remote. Using local branches/tags only.');
+            /**
+             * Packagist
+             */
+            if ($module->provider === 'packagist') {
+
+                $url = "https://repo.packagist.org/p2/{$module->source}.json";
+
+                $response = \Illuminate\Support\Facades\Http::timeout(15)
+                    ->get($url);
+
+                if (!$response->successful()) {
+                    return [];
+                }
+
+                $packages = $response->json(
+                    "packages.{$module->source}",
+                    []
+                );
+
+                return collect($packages)
+                    ->pluck('version')
+                    ->filter()
+                    ->unique()
+                    ->take(20)
+                    ->values()
+                    ->toArray();
             }
 
-            // Get all branches
-            $branchProcess = new Process(['git', 'branch', '-a'], $modulePath);
-            $branchProcess->run();
+            /**
+             * Git
+             */
+            if ($module->provider === 'git') {
 
-            $branches = [];
-            if ($branchProcess->isSuccessful()) {
-                $lines = explode("\n", trim($branchProcess->getOutput()));
-                foreach ($lines as $line) {
-                    $line = trim(str_replace('*', '', $line));
-                    // Skip HEAD references
-                    if (str_contains($line, 'HEAD')) {
-                        continue;
-                    }
-                    // Clean remotes/origin/ prefix
-                    $line = preg_replace('/^remotes\/origin\//', '', $line);
-                    $line = trim($line);
+                $modulePath = $module->path;
 
-                    if (!empty($line) && !str_contains($line, '/')) {
-                        $branches[] = $line;
+                $fetchProcess = new Process([
+                    'git',
+                    'fetch',
+                    '--all',
+                    '--tags',
+                    '--prune'
+                ], $modulePath);
+
+                $fetchProcess->setTimeout(300);
+                $fetchProcess->run();
+
+                $versions = [];
+
+                /**
+                 * Branches
+                 */
+                $branchProcess = new Process([
+                    'git',
+                    'for-each-ref',
+                    '--format=%(refname:short)',
+                    'refs/remotes/origin'
+                ], $modulePath);
+
+                $branchProcess->run();
+
+                if ($branchProcess->isSuccessful()) {
+
+                    foreach (
+                        explode(
+                            "\n",
+                            trim($branchProcess->getOutput())
+                        ) as $branch
+                    ) {
+
+                        $branch = trim($branch);
+
+                        if (
+                            empty($branch)
+                            || str_contains($branch, 'HEAD')
+                        ) {
+                            continue;
+                        }
+
+                        $branch = preg_replace(
+                            '/^origin\//',
+                            '',
+                            $branch
+                        );
+
+                        $versions[] = "🌿 {$branch}";
                     }
                 }
+
+                /**
+                 * Tags
+                 */
+                $tagProcess = new Process([
+                    'git',
+                    'tag',
+                    '--list',
+                    '--sort=-version:refname'
+                ], $modulePath);
+
+                $tagProcess->run();
+
+                if ($tagProcess->isSuccessful()) {
+
+                    foreach (
+                        explode(
+                            "\n",
+                            trim($tagProcess->getOutput())
+                        ) as $tag
+                    ) {
+
+                        $tag = trim($tag);
+
+                        if (!empty($tag)) {
+                            $versions[] = "🏷️ {$tag}";
+                        }
+                    }
+                }
+
+                return array_values(
+                    array_unique($versions)
+                );
             }
 
-            // Get all tags
-            $tagProcess = new Process(['git', 'tag', '--sort=-v:refname', '-l'], $modulePath);
-            $tagProcess->run();
-
-            $tags = [];
-            if ($tagProcess->isSuccessful()) {
-                $tags = array_filter(explode("\n", trim($tagProcess->getOutput())));
-            }
-
-            return array_values(array_unique(array_merge($branches, $tags)));
+            return [];
 
         } catch (\Throwable $e) {
-            $this->warn('Could not fetch available versions: ' . $e->getMessage());
+
+            $this->warn(
+                'Could not fetch available versions: '
+                . $e->getMessage()
+            );
+
             return [];
         }
     }
