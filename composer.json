@@ -8,17 +8,17 @@
     "authorization server",
     "oauth2 server"
   ],
-  "license": "proprietary",
+  "license": "AGPL-3.0-or-later",
   "support": {
     "email": "yerel9212@yahoo.es",
-    "source": "https://gitlab.com/elyerr/oauth2-passport-server",
-    "issues": "https://gitlab.com/elyerr/oauth2-passport-server/-/issues"
+    "source": "https://github.com/elyerrlabs/oauth2-passport-server",
+    "issues": "https://github.com/elyerrlabs/oauth2-passport-server/issues"
   },
   "authors": [
     {
       "name": "Elvis Yerel Roman Concha",
       "email": "yerel9212@yahoo.es",
-      "homepage": "https://gitlab.com/elyerr/oauth2-passport-server",
+      "homepage": "https://github.com/elyerrlabs/oauth2-passport-server",
       "role": "Owner"
     }
   ],
