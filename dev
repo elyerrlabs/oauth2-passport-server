@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$1" = "--root" ]; then
+    shift
+    docker exec -it ops-dev-app-1 "$@"
+else
+    docker exec -it --user "$(id -u):$(id -g)" ops-dev-app-1 "$@"
+fi

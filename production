@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$1" == "--root" ]; then
+    shift
+    docker exec -it ops-app-1 "$@"
+else
+    docker exec -it --user www-data:www-data ops-app-1 "$@"
+fi
