@@ -21,7 +21,7 @@ COPY package-lock.json package-lock.json
 COPY webpack.mix.js webpack.mix.js
 
 RUN apk add --no-cache --virtual .build-deps npm unzip \
-    && npm install \
+    && npm ci \
     && npm run production \
     && npm cache clean --force
 
