@@ -234,7 +234,7 @@ If you modify project files as `root`, they will be owned by root and **cannot b
 👉 Use this access **only for internal container tasks**, never to edit project code.
 
 ```sh
-./opsr bash
+./dev --root bash
 ```
 
 ---
@@ -246,21 +246,21 @@ To work with the code, run Artisan, Composer, or NPM, you **must use the host us
 During deployment (`deploy-dev.sh`), a local helper called `ops` is automatically generated and handles this correctly.
 
 ```sh
-./ops bash
+./dev bash
 ```
 
 You can also run commands directly:
 
 ```sh
-./ops <command>
+./dev <command>
 ```
 
 Examples:
 
 ```sh
-./ops php artisan
-./ops composer install
-./ops npm run watch
+./dev php artisan
+./dev composer install
+./dev npm run watch
 ```
 
 ---
@@ -270,19 +270,19 @@ Examples:
 ### List available Artisan commands
 
 ```sh
-./ops php artisan
+./dev php artisan
 ```
 
 ### Create system users
 
 ```sh
-./ops php artisan settings:create-user
+./dev php artisan settings:create-user
 ```
 
 ### Install PHP dependencies (Composer)
 
 ```sh
-./ops composer install
+./dev composer install
 ```
 
 > ⚠️ This is usually already handled by `deploy-dev.sh`.
@@ -290,13 +290,13 @@ Examples:
 ### Install JavaScript dependencies
 
 ```sh
-./ops npm install
+./dev npm install
 ```
 
 ### Compile assets and watch for changes
 
 ```sh
-./ops npm run watch
+./dev npm run watch
 ```
 
 > 💡 Ideal for frontend development with hot reload.
@@ -322,7 +322,7 @@ php artisan payment:charge-recurring
 ### Check Supervisor status
 
 ```sh
-./opsr supervisorctl status
+./dev --root supervisorctl status
 ```
 
 ---

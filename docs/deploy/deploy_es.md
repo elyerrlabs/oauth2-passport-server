@@ -132,10 +132,13 @@ DB_PASSWORD=<contraseña-muy-segura>
 Ejecuta el despliegue con:
 
 - para produccion
+
 ```bash
 ./deploy-prod.sh
 ```
+
 - para staging
+
 ```bash
 ./deploy-staging.sh
 ```
@@ -149,34 +152,28 @@ Este script se encarga de:
 
 ---
 
-## 🚀 Script de Ejecución en Contenedor (`./run`)
+## 🚀 Script de Ejecución en Contenedores
 
-- para produccion
+| Comando        | Descripción                                                               |
+| -------------- | ------------------------------------------------------------------------- |
+| `./dev`        | Abre una terminal o ejecuta comandos dentro del contenedor de desarrollo. |
+| `./staging`    | Abre una terminal o ejecuta comandos dentro del contenedor de staging.    |
+| `./production` | Abre una terminal o ejecuta comandos dentro del contenedor de producción. |
+
+### Acceso Root
+
+Utilice la opción `--root` para ejecutar comandos como usuario root dentro del contenedor:
+
 ```bash
-./run
-```
-- para staging
-```bash
-./runs
+./dev --root bash
+./staging --root bash
+./production --root bash
 ```
 
 Se ha creado estos scripts para facilitar la ejecución de comandos dentro del contenedor de la aplicación sin necesidad de escribir manualmente `docker exec`.
 
 El script ejecuta los comandos como el usuario `www-data`, asegurando permisos correctos en el entorno.
-
-```bash
-#!/bin/bash
-docker exec -it --user www-data:www-data ops-app-1 "$@"
-```
-
-### Uso
-
-Ejemplo para ejecutar comandos Artisan:
-
-```bash
-./run php artisan migrate
-```
-
+ 
 ---
 
 ## 👤 Configuración del Primer Usuario
@@ -184,7 +181,7 @@ Ejemplo para ejecutar comandos Artisan:
 Después del despliegue en producción, debes crear el primer usuario administrador:
 
 ```bash
-./run php artisan settings:create-user
+./production php artisan settings:create-user
 ```
 
 ---
@@ -211,11 +208,11 @@ No se recomienda ejecutarlo en entornos de producción, ya que está pensado par
 En entornos productivos normalmente solo necesitarás ejecutar comandos usando la siguiente manera:
 
 ```bash
-./run php artisan r:l
-./run php artisan list
-./run php artisan module:install
-./run php artisan module:delete
-./run php artisan module:db:seed
+./production php artisan r:l
+./production php artisan list
+./production php artisan module:install
+./production php artisan module:delete
+./production php artisan module:db:seed
 ```
 
 ---
@@ -307,6 +304,7 @@ Esto habilita:
 
 > 💡 Sin Redis correctamente configurado, Horizon no podrá procesar las colas.
 > Nota: si todo esta configurado correctamenta y horizon no detecta los cambios al momento, espera unos 30 minutos si aún sigue sin reiniciarse , la forma mas sencilla es reiniciar el contendor eso no toma ni 1 minuto con el scrip `./deploy-prod.sh` o `./deploy-staging.sh` sea el caso, esto hara que todos los cambios sean refrescados.
+
 ---
 
 ## 🌐 Configuración de Nginx (Ejemplo)

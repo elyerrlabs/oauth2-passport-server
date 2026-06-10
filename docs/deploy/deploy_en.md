@@ -141,11 +141,13 @@ DB_PASSWORD=<very-secure-password>
 Run the deployment script:
 
 - Production
+
 ```bash
 ./deploy-prod.sh
 ```
 
 - Staging
+
 ```bash
 ./deploy-staging.sh
 ```
@@ -159,34 +161,27 @@ This script is responsible for:
 
 ---
 
-## 🚀 Container Execution Script (`./run`)
+## 🚀 Container Execution Script
 
-- Production
-```bash
-./run
-```
+| Command        | Description                                                        |
+| -------------- | ------------------------------------------------------------------ |
+| `./dev`        | Open a shell or execute commands inside the development container. |
+| `./staging`    | Open a shell or execute commands inside the staging container.     |
+| `./production` | Open a shell or execute commands inside the production container.  |
 
-- Staging
+### Root Access
+
+Use the `--root` option to execute commands as the root user inside the container:
+
 ```bash
-./runs
+./dev --root bash
+./staging --root bash
+./production --root bash
 ```
 
 These scripts were created to simplify command execution inside the application container without manually typing `docker exec`.
 
 The script executes commands as the `www-data` user, ensuring proper permissions inside the environment.
-
-```bash
-#!/bin/bash
-docker exec -it --user www-data:www-data ops-app-1 "$@"
-```
-
-### Usage
-
-Example running Artisan commands:
-
-```bash
-./run php artisan migrate
-```
 
 ---
 
@@ -195,7 +190,7 @@ Example running Artisan commands:
 After deploying the application in production, you must create the first administrator user:
 
 ```bash
-./run php artisan settings:create-user
+./production php artisan settings:create-user
 ```
 
 ---
@@ -204,12 +199,12 @@ After deploying the application in production, you must create the first adminis
 
 The system includes several Artisan commands for module management:
 
-| Command          | Description                                                  |
-| ---------------- | ------------------------------------------------------------ |
-| `module:install` | Installs a third-party module                                |
-| `module:delete`  | Removes an Elymod module and its assets symbolic link        |
-| `module:db:seed` | Executes database seeders for a specific module              |
-| `module:make`    | Creates a new module inside the `third-party` directory      |
+| Command          | Description                                             |
+| ---------------- | ------------------------------------------------------- |
+| `module:install` | Installs a third-party module                           |
+| `module:delete`  | Removes an Elymod module and its assets symbolic link   |
+| `module:db:seed` | Executes database seeders for a specific module         |
+| `module:make`    | Creates a new module inside the `third-party` directory |
 
 ⚠️ **Important (Production)**  
 The `module:make` command is intended **for development purposes only**.  
@@ -222,11 +217,11 @@ It is not recommended to run it in production environments since it is designed 
 In production environments, you will normally only need to execute commands like:
 
 ```bash
-./run php artisan r:l
-./run php artisan list
-./run php artisan module:install
-./run php artisan module:delete
-./run php artisan module:db:seed
+./production php artisan r:l
+./production php artisan list
+./production php artisan module:install
+./production php artisan module:delete
+./production php artisan module:db:seed
 ```
 
 ---

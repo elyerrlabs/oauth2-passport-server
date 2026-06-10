@@ -233,7 +233,7 @@ Si modificas archivos del proyecto como `root`, estos quedarán con permisos de 
 👉 Usa este acceso **solo para tareas internas del contenedor**, nunca para editar código del proyecto.
 
 ```sh
-./opsr bash
+./dev --root bash
 ```
 
 ---
@@ -245,21 +245,21 @@ Para trabajar con el código, ejecutar Artisan, Composer o NPM, **debes usar el 
 Durante el despliegue (`deploy-dev.sh`) se genera automáticamente un helper local llamado `ops`, que ya maneja esto correctamente.
 
 ```sh
-./ops bash
+./dev bash
 ```
 
 También puedes ejecutar comandos directamente:
 
 ```sh
-./ops <comando>
+./dev <comando>
 ```
 
 Ejemplos:
 
 ```sh
-./ops php artisan
-./ops composer install
-./ops npm run watch
+./dev php artisan
+./dev composer install
+./dev npm run watch
 ```
 
 ---
@@ -269,19 +269,19 @@ Ejemplos:
 ### Listar comandos disponibles de Artisan
 
 ```sh
-./ops php artisan
+./dev php artisan
 ```
 
 ### Crear usuarios del sistema
 
 ```sh
-./ops php artisan settings:create-user
+./dev php artisan settings:create-user
 ```
 
 ### Instalar dependencias PHP (Composer)
 
 ```sh
-./ops composer install
+./dev composer install
 ```
 
 > ⚠️ Normalmente esto ya lo ejecuta `deploy-dev.sh`.
@@ -289,13 +289,13 @@ Ejemplos:
 ### Instalar dependencias JavaScript
 
 ```sh
-./ops npm install
+./dev npm install
 ```
 
 ### Compilar assets y escuchar cambios
 
 ```sh
-./ops npm run watch
+./dev npm run watch
 ```
 
 > 💡 Ideal para desarrollo frontend con hot-reload.
@@ -321,7 +321,7 @@ php artisan payment:charge-recurring
 ### Ver estado de Supervisor
 
 ```sh
-./opsr supervisorctl status
+./dev --root supervisorctl status
 ```
 
 ---
