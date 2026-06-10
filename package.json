@@ -30,7 +30,6 @@
     "@headlessui/vue": "^1.7.23",
     "@inertiajs/vue3": "^2.0.8",
     "@mdi/font": "^7.4.47",
-    "apexcharts": "^4.7.0",
     "axios": "^1.11.0",
     "flatpickr": "^4.6.13",
     "jodit": "^4.6.13",
@@ -41,6 +40,9 @@
     "stream-browserify": "^3.0.0",
     "vue": "^3.5.26",
     "vue-i18n": "^11.1.11",
-    "vue3-apexcharts": "^1.8.0"
+    "vue3-apexcharts": "^1.11.1"
+  },
+  "overrides": {
+    "webpack": "~5.74.0"
   }
 }
