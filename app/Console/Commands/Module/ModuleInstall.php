@@ -74,9 +74,19 @@ class ModuleInstall extends Command
             );
         }
 
+        if (!in_array($provider, ['git', 'packagist'])) {
+            $this->error('Invalid provider. Allowed: git or packagist.');
+            return self::FAILURE;
+        }
+
         // Ask source
         if (!$source) {
             $source = $this->ask('Source (Git URL or Packagist name)');
+        }
+
+        if (!$source) {
+            $this->error('Source is required.');
+            return self::FAILURE;
         }
 
         /**
@@ -221,8 +231,8 @@ class ModuleInstall extends Command
                 $provider
             );
 
-            if (!empty($versions)) { 
- 
+            if (!empty($versions)) {
+
                 $versions[] = 'manual';
 
                 $selectedVersion = $this->choice(
