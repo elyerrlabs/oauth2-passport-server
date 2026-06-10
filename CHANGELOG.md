@@ -47,10 +47,27 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
     - Removed unnecessary selection lists to simplify user experience.
     - Minor fixes and prompt clarity improvements.
 
+- Added root access support to container execution scripts.
+    - Introduced the `--root` option for executing commands as the root user inside containers.
+    - Simplified container access workflow by removing the need for dedicated root-specific scripts.
+
+### Changed
+
+- Updated container execution documentation.
+    - Replaced references to root-specific scripts with the new `--root` option.
+    - Added usage examples and improved command descriptions.
+
+- Updated Docker image build process.
+    - Replaced `npm install` with `npm ci` in staging and production images.
+    - Improved build reproducibility and dependency consistency across environments.
+
 ### Fixed
 
 - Fixed `module:delete` command.
     - Check if the module exists before attempting to delete it.
+
+- Fixed frontend build compatibility.
+    - Locked Webpack to `5.74.x` to maintain compatibility with Laravel Mix 6 and related tooling.
 
 ---
 
