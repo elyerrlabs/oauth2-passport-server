@@ -78,16 +78,16 @@ mix.webpackConfig({
     ],
 })
 
-mix.js('resources/js/app.js', 'js').version()
-    .js('resources/js/pages.js', 'js/pages.js').version()
+mix.js('resources/js/app.js', 'js')
+    .js('resources/js/pages.js', 'js/pages.js')
     //  .sass('resources/scss/app.css', 'css')
     .postCss('resources/css/app.css', 'css', [
         require('@tailwindcss/postcss'),
         require("autoprefixer"),
-    ]).version()
+    ]).version();
 
 /**
- *  
+ * Load and process assets from core modules
  */
 loadAssets().forEach(({ module, type, file }) => {
     if (type === 'js') {
