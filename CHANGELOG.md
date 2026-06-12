@@ -31,7 +31,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
-## [Unreleased]
+## [v7.0.0]
 
 ### Added
 
