@@ -1307,8 +1307,8 @@ const updateCurrencyChart = (data) => {
         );
 
         currencyChartSeries.value = currencyChartData.value.map((item) => item.total);
-        currencyChartOptions = {
-            ...currencyChartOptions,
+        currencyChartOptions.value = {
+            ...currencyChartOptions.value,
             labels: currencyChartData.value.map((item) => item.currency),
         };
     } else {
