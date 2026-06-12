@@ -31,6 +31,40 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Added Vite support for Elymod modules.
+- Added `@module_vite` directive for loading module assets compiled with Vite.
+- Added support for module-specific Vite manifests and build directories.
+- Added support for running Laravel Mix and Vite modules side by side during migration.
+
+### Changed
+
+- Migrated the host application asset pipeline from Laravel Mix to Vite.
+- Updated frontend tooling, build scripts, and development workflow to use Vite.
+- Updated project documentation and examples to reflect the Vite workflow.
+
+### Deprecated
+
+- Laravel Mix is no longer used for compiling host application assets.
+- Webpack-based host build configuration is deprecated in favor of Vite.
+
+### Removed
+
+- Removed Laravel Mix build configuration and tooling from the host application.
+- Removed host-specific Webpack compilation workflow.
+
+### Compatibility
+
+- Existing Elymod modules compiled with Laravel Mix remain fully supported.
+- New and existing modules may use either Laravel Mix or Vite.
+- No migration is required for third-party modules using Laravel Mix.
+- Vite is now the recommended asset bundler for new modules.
+
+---
+
 ## [v6.1.4]
 
 ### Added
