@@ -39,12 +39,20 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Added `@module_vite` directive for loading module assets compiled with Vite.
 - Added support for module-specific Vite manifests and build directories.
 - Added support for running Laravel Mix and Vite modules side by side during migration.
+- Added support for Elymod v2 module generation through the `module:make` command.
+    - Added `--driver` option to select the asset environment when creating modules.
+    - Added support for both `vite` and `mix` drivers.
+    - Vite is now the default driver when no `--driver` option is provided.
+    - Added compatibility checks for Elymod v2 templates and scaffolding.
 
 ### Changed
 
 - Migrated the host application asset pipeline from Laravel Mix to Vite.
 - Updated frontend tooling, build scripts, and development workflow to use Vite.
 - Updated project documentation and examples to reflect the Vite workflow.
+- Updated `module:make` to generate modules using Elymod v2 templates.
+    - Improved module creation workflow to support multiple asset build environments.
+    - Refactored module stubs into dedicated `vite` and `mix` template directories.
 
 ### Deprecated
 
@@ -56,12 +64,27 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Removed Laravel Mix build configuration and tooling from the host application.
 - Removed host-specific Webpack compilation workflow.
 
-### Compatibility
+### Migration Notes for Elymod v1.x Modules
 
-- Existing Elymod modules compiled with Laravel Mix remain fully supported.
-- New and existing modules may use either Laravel Mix or Vite.
-- No migration is required for third-party modules using Laravel Mix.
-- Vite is now the recommended asset bundler for new modules.
+Modules created with Elymod v1.x are not fully compatible with the Elymod v2.x development environment out of the box. To continue using Laravel Mix without migrating to Vite, the following updates are required:
+
+- Update all frontend dependencies in `package.json` to the versions provided in the latest Elymod `stubs/mix` template.
+- Remove the deprecated Inertia package from the `require-dev` section of `composer.json`.
+- Add the new `build-fix.js` script included in `stubs/mix`.
+- Adjust the existing `webpack.mix.js` configuration to match the current Elymod Mix environment and register the `build-fix.js` plugin.
+- The `build-fix.js` plugin rewrites asset URLs generated inside CSS files, ensuring correct handling of fonts, icons, and other third-party assets referenced through `url(...)`.
+- Replace the module `app/Providers/ServiceProvider.php` with the updated version included in the latest Elymod stubs.
+- Review and update any asset-related configuration files to align with the current Elymod Mix environment.
+
+After applying these changes, existing Elymod v1.x modules can continue using Laravel Mix and should work correctly with OAuth2 Passport Server v7+ without requiring a migration to Vite.
+
+
+### Compatibility Notes
+
+- Supported Elymod versions: v2.0.0+.
+- Legacy modules created with Elymod v1.x must be migrated to the updated Laravel Mix environment.
+- To migrate, update the module dependencies and replace the asset build configuration with the files provided in `stubs/mix`.
+- Once updated, legacy modules can continue running on OAuth2 Passport Server v7+ without requiring a full migration to Vite.
 
 ---
 
