@@ -18,11 +18,11 @@ COPY third-party third-party
 COPY artisan artisan
 COPY package.json package.json
 COPY package-lock.json package-lock.json
-COPY webpack.mix.js webpack.mix.js
+COPY vite.config.js vite.config.js
 
 RUN apk add --no-cache --virtual .build-deps npm unzip \
     && npm ci \
-    && npm run production \
+    && npm run build \
     && npm cache clean --force
 
 

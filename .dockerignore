@@ -35,7 +35,7 @@
 !LICENSE.md
 !package.json
 !package-lock.json
-!webpack.mix.js 
+!vite.config.js 
 !third-party/.dockerignore
 !.gitignore
 !.dockerignore
