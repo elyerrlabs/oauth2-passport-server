@@ -53,6 +53,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Updated `module:make` to generate modules using Elymod v2 templates.
     - Improved module creation workflow to support multiple asset build environments.
     - Refactored module stubs into dedicated `vite` and `mix` template directories.
+- Updated docker environment for vite support
 
 ### Deprecated
 
