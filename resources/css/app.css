@@ -1,4 +1,4 @@
-@import 'tailwindcss' source(none);
+@import 'tailwindcss';
 @import "flatpickr";
 @import '@fortawesome/fontawesome-free/css/all.min.css';
 @import "@mdi/font/css/materialdesignicons.css"; 
@@ -8,9 +8,7 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@import "tailwindcss";
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
 @source "../**/*.vue";

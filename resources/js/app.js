@@ -24,6 +24,7 @@
  */
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { setupI18n, __ } from "@/config/locale.js";
 import { $notify } from "@/config/notify.js";
 import "@/config/editor.js";
@@ -39,7 +40,9 @@ window.$server = $server;
 window.$errors = errors;
 
 createInertiaApp({
-  resolve: (name) => require(`./pages/${name}.vue`).default,
+  nonce: document.querySelector('meta[name="nonce"]')?.getAttribute('content'),
+  http: $server,
+  resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob('./pages/**/*.vue')),
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) });
 

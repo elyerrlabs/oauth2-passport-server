@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @push('css')
-    <link nonce={{ $nonce }} href="{{ mix('css/app.css') }}" rel="stylesheet" />
+    @vite(['resources/css/app.css', 'core/User/resources/js/app.js'])
 @endpush
 
 @push('head')
@@ -11,9 +11,5 @@
 @endpush
 
 @section('content')
-    @inertia
+    <x-inertia::app />
 @endsection
-
-@push('js')
-    <script nonce={{ $nonce }} src="{{ mix('js/core/user/app.js') }}"></script>
-@endpush

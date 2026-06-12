@@ -5,8 +5,10 @@
 
     @includeif('pages.layouts.favicon')
     @stack('head')
-
-    <link nonce={{ $nonce }} href="{{ mix('css/app.css') }}" rel="stylesheet" />
+    <meta name="nonce" content="{{ $nonce }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    @vite(['resources/css/app.css', 'resources/js/pages.js'])
 
     @stack('css')
 </head>
@@ -20,7 +22,6 @@
 
     @yield('footer')
     @includeIf('pages.layouts.privacy')
-    <script nonce={{ $nonce }} src="{{ mix('js/pages.js') }}" defer></script>
 
     @stack('js')
     @stack('modals')

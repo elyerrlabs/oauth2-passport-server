@@ -7,13 +7,9 @@
 @endpush
 
 @push('css')
-    <link nonce={{ $nonce }} href="{{ mix('css/app.css') }}" rel="stylesheet" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 @endpush
 
 @section('content')
-    @inertia
+    <x-inertia::app />
 @endsection
-
-@push('js')
-    <script nonce={{ $nonce }} src="{{ mix('js/app.js') }}"></script>
-@endpush

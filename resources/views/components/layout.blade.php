@@ -8,7 +8,7 @@
     {{ $head ?? '' }}
     @stack('head')
 
-    <link nonce="{{ $nonce }}" href="{{ mix('css/app.css') }}" rel="stylesheet" />
+    @vite(['resources/css/app.css', 'resources/js/pages.js'])
 
     @stack('css')
 </head>
@@ -24,8 +24,6 @@
     {{ $footer ?? '' }}
 
     @includeIf('pages.layouts.privacy')
-
-    <script nonce="{{ $nonce }}" src="{{ mix('js/pages.js') }}" defer></script>
 
     @stack('js')
     @stack('modals')

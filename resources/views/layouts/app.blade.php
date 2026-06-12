@@ -4,11 +4,11 @@
 <head>
     @includeif('pages.layouts.favicon')
     @stack('head')
+    <meta name="nonce" content="{{ $nonce }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link nonce={{ $nonce }} rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
-    <script nonce={{ $nonce }} src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
     @include('layouts.parts.translation')
-    @inertiaHead
+    <x-inertia::head />
     @stack('css')
 </head>
 

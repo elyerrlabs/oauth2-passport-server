@@ -2,9 +2,12 @@
 
 namespace App\Support;
 
+use BackedEnum;
 use Illuminate\Contracts\Support\Arrayable;
 use Inertia\ProvidesInertiaProperties;
 use Inertia\Response;
+use InvalidArgumentException;
+use UnitEnum;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -38,7 +41,7 @@ final class ResponseFactory extends \Inertia\ResponseFactory
      *
      * @param  array<array-key, mixed>|\Illuminate\Contracts\Support\Arrayable<array-key, mixed>|ProvidesInertiaProperties  $props
      */
-    public function render(string $component, $props = []): Response
+    public function render($component, $props = []): Response
     {
         $currentRoute = request()->route();
         // Verify the module
@@ -52,7 +55,19 @@ final class ResponseFactory extends \Inertia\ResponseFactory
             }
         }
 
-        if (config('inertia.ensure_pages_exist', false)) {
+        $component = $this->transformComponent($component);
+
+        $component = match (true) {
+            $component instanceof BackedEnum => $component->value,
+            $component instanceof UnitEnum => $component->name,
+            default => $component,
+        };
+
+        if (!is_string($component)) {
+            throw new InvalidArgumentException('Component argument must be of type string or a string BackedEnum');
+        }
+
+        if (config('inertia.pages.ensure_pages_exist', false)) {
             $this->findComponentOrFail($component);
         }
 
@@ -62,15 +77,15 @@ final class ResponseFactory extends \Inertia\ResponseFactory
             // Will be resolved in Response::resolveResponsableProperties()
             $props = [$props];
         }
-     
+
         return new Response(
             $component,
-            array_merge($this->sharedProps, $props),
+            $this->sharedProps,
+            $props,
             $this->rootView,
             $this->getVersion(),
             $this->encryptHistory ?? config('inertia.history.encrypt', false),
             $this->urlResolver,
         );
     }
-
 }
