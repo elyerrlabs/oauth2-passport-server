@@ -27,23 +27,23 @@ namespace App\Providers;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Console\Commands\CleanTmpFileCommand;
 use App\Guard\TokenGuard;
+use App\Models\OAuth\Bridge\AccessTokenRepository;
+use App\Models\OAuth\Bridge\AuthCodeRepository;
+use App\Services\SettingService;
+use App\Support\ModuleVite;
 use App\Support\Translation\ModuleTranslation;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Translation\FileLoader;
 use Laravel\Fortify\Fortify;
-use Laravel\Passport\Passport;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Passport\ClientRepository;
-use Illuminate\Support\ServiceProvider;
-use League\OAuth2\Server\ResourceServer;
-use Laravel\Passport\PassportUserProvider;
-use App\Models\OAuth\Bridge\AuthCodeRepository;
-use App\Models\OAuth\Bridge\AccessTokenRepository;
-use App\Services\SettingService;
-use Illuminate\Console\Scheduling\Schedule;
-use Laravel\Passport\Bridge\AuthCodeRepository as LaravelAuthCodeRepository;
 use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository;
+use Laravel\Passport\Bridge\AuthCodeRepository as LaravelAuthCodeRepository;
+use Laravel\Passport\ClientRepository;
+use Laravel\Passport\Passport;
+use Laravel\Passport\PassportUserProvider;
+use League\OAuth2\Server\ResourceServer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -65,6 +65,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LaravelAccessTokenRepository::class, AccessTokenRepository::class);
         $this->app->bind(\Inertia\ResponseFactory::class, \App\Support\ResponseFactory::class);
         $this->app->bind(\Illuminate\Contracts\Routing\ResponseFactory::class, \App\Support\RoutingResponseFactory::class);
+
+        //Register module vite
+        $this->app->singleton('module_vite', function ($app) {
+            return new ModuleVite();
+        });
     }
 
     /**
@@ -84,6 +89,11 @@ class AppServiceProvider extends ServiceProvider
                 $this->app->make('encrypter'),
                 $this->app->make('request')
             );
+        });
+
+        // Add blade directive to load resource for module
+        Blade::directive('module_vite', function ($expression) {
+            return "<?php echo app('module_vite')($expression); ?>";
         });
     }
 
