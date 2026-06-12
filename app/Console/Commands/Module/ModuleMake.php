@@ -6,6 +6,7 @@ use App\Repositories\ModuleRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
 /**
@@ -33,7 +34,6 @@ use Symfony\Component\Process\Process;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
 class ModuleMake extends Command
 {
     use HandlesModulePublicAssets;
@@ -46,7 +46,8 @@ class ModuleMake extends Command
     protected $signature = 'module:make
     {name : Module name}
     {--dev : Use local development template first, then Packagist dev if not found}
-    {--elymod-version= : Elymod version to install}';
+    {--elymod-version= : Elymod version to install}
+    {--driver=vite : Frontend asset driver to use (vite or mix)}';
 
     /**
      * The console command description.
@@ -60,9 +61,10 @@ class ModuleMake extends Command
      */
     public function handle()
     {
-        $name = normalizeModuleName($this->argument('name'));
+        $name = Str::kebab($this->argument('name'));
         $useDev = (bool) $this->option('dev');
         $version = null;
+        $driver = $this->option('driver');
 
         if (!$useDev) {
             $version = $this->option('elymod-version');
@@ -103,8 +105,8 @@ class ModuleMake extends Command
 
         try {
             $source = $useDev
-                ? $this->createDevModuleProject($name, $thirdPartyPath, $localTemplatePath)
-                : $this->createStableModuleProject($name, $thirdPartyPath, $version);
+                ? $this->createDevModuleProject($name, $thirdPartyPath, $localTemplatePath, $driver)
+                : $this->createStableModuleProject($name, $thirdPartyPath, $version, $driver);
 
             if ($source === null) {
                 throw new \RuntimeException('Failed to create the module project.');
@@ -150,7 +152,8 @@ class ModuleMake extends Command
     protected function createStableModuleProject(
         string $name,
         string $thirdPartyPath,
-        ?string $version = null
+        ?string $version = '',
+        ?string $driver = 'vite'
     ): ?string {
         $version = $version
             ? ltrim($version, 'v')
@@ -166,37 +169,49 @@ class ModuleMake extends Command
             ? "elyerr/elymod:{$version}"
             : 'elyerr/elymod';
 
-        $process = $this->runCreateProjectProcess([
-            'composer',
-            'create-project',
-            $package,
-            $name,
-        ], $thirdPartyPath);
+        $process = $this->runCreateProjectProcess(
+            [
+                'composer',
+                'create-project',
+                $package,
+                $name,
+            ],
+            $thirdPartyPath,
+            [
+                'ELYMOD_DRIVER' => $driver,
+            ]
+        );
 
         return $process->isSuccessful()
             ? 'packagist'
             : null;
     }
 
-    protected function createDevModuleProject(string $name, string $thirdPartyPath, string $localTemplatePath): ?string
+    protected function createDevModuleProject(string $name, string $thirdPartyPath, string $localTemplatePath, ?string $driver = 'vite'): ?string
     {
         if (File::isDirectory($localTemplatePath) && File::exists($localTemplatePath . DIRECTORY_SEPARATOR . 'composer.json')) {
             $this->info("Using local Elymod dev template: {$localTemplatePath}");
 
-            $process = $this->runCreateProjectProcess([
-                'composer',
-                'create-project',
-                '--stability=dev',
-                'elyerr/elymod',
-                $name,
-                '--repository=' . json_encode([
-                    'type' => 'path',
-                    'url' => $localTemplatePath,
-                    'options' => [
-                        'symlink' => false,
-                    ],
-                ], JSON_UNESCAPED_SLASHES),
-            ], $thirdPartyPath);
+            $process = $this->runCreateProjectProcess(
+                [
+                    'composer',
+                    'create-project',
+                    '--stability=dev',
+                    'elyerr/elymod',
+                    $name,
+                    '--repository=' . json_encode([
+                        'type' => 'path',
+                        'url' => $localTemplatePath,
+                        'options' => [
+                            'symlink' => false,
+                        ],
+                    ], JSON_UNESCAPED_SLASHES),
+                ],
+                $thirdPartyPath,
+                [
+                    'ELYMOD_DRIVER' => $driver,
+                ]
+            );
 
             if ($process->isSuccessful()) {
                 return 'local-dev';
@@ -208,14 +223,20 @@ class ModuleMake extends Command
         $this->warn("Local Elymod dev template not found at {$localTemplatePath}.");
         $this->info('Trying Packagist dev version for Elymod...');
 
-        $process = $this->runCreateProjectProcess([
-            'composer',
-            'create-project',
-            '--stability=dev',
-            '--prefer-source',
-            'elyerr/elymod:dev-dev',
-            $name,
-        ], $thirdPartyPath);
+        $process = $this->runCreateProjectProcess(
+            [
+                'composer',
+                'create-project',
+                '--stability=dev',
+                '--prefer-source',
+                'elyerr/elymod:dev-dev',
+                $name,
+            ],
+            $thirdPartyPath,
+            [
+                'ELYMOD_DRIVER' => $driver,
+            ]
+        );
 
         if ($process->isSuccessful()) {
             return 'packagist-dev';
@@ -224,9 +245,9 @@ class ModuleMake extends Command
         throw new \RuntimeException('Dev version of elyerr/elymod was not found locally or on Composer Packagist.');
     }
 
-    protected function runCreateProjectProcess(array $command, string $workingDirectory): Process
+    protected function runCreateProjectProcess(array $command, string $workingDirectory, array $env): Process
     {
-        $process = new Process($command, $workingDirectory);
+        $process = new Process($command, $workingDirectory, $env);
         $process->setTimeout(null);
         $process->run(function ($type, $buffer) {
             echo $buffer;
@@ -284,7 +305,17 @@ class ModuleMake extends Command
         }
 
         $versions = collect($data['versions'])
-            ->filter(fn($version) => preg_match('/^v?\d+\.\d+\.\d+$/', $version))
+            ->filter(function ($version) {
+                if (!preg_match('/^v?\d+\.\d+\.\d+$/', $version)) {
+                    return false;
+                }
+
+                return version_compare(
+                    ltrim($version, 'v'),
+                    '2.0.0',
+                    '>='
+                );
+            })
             ->unique()
             ->values()
             ->all();
