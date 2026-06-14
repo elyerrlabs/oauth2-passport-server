@@ -95,7 +95,7 @@ docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 php artisan storage:link
 docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 chmod 600 secrets/oauth/*.key
 
 ## install and build docker dependencies
-docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 npm install && npm run dev
+docker exec -it --user $(id -u):$(id -g) ops-dev-app-1 npm install && npm run build
 
 ## Clean up unused Docker images
 docker image prune -f
