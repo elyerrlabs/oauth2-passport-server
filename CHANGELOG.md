@@ -31,6 +31,15 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Updated Horizon to version 5.1.3.
+- Improved the development environment deployment script.
+
+---
+
 ## [v7.0.0]
 
 ### Added
@@ -78,7 +87,6 @@ Modules created with Elymod v1.x are not fully compatible with the Elymod v2.x d
 - Review and update any asset-related configuration files to align with the current Elymod Mix environment.
 
 After applying these changes, existing Elymod v1.x modules can continue using Laravel Mix and should work correctly with OAuth2 Passport Server v7+ without requiring a migration to Vite.
-
 
 ### Compatibility Notes
 
