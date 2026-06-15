@@ -1,7 +1,24 @@
 #!/bin/bash
-if [ "$1" == "--root" ]; then
-    shift
-    docker exec -it ops-staging-app-1 "$@"
+ROOT=false
+STOP=false
+ARGS=()
+
+for arg in "$@"; do
+    if [ "$arg" = "--root" ]; then
+        ROOT=true
+    elif [ "$arg" = "--stop" ]; then
+        STOP=true
+    else
+        ARGS+=("$arg")
+    fi
+done
+
+if [ "$STOP" = true ]; then
+    docker compose -f docker-compose-staging.yml down
+
+elif [ "$ROOT" = true ]; then
+    docker exec -it ops-staging-app-1 "${ARGS[@]}"
+
 else
-    docker exec -it --user "www-data:www-data" ops-staging-app-1 "$@"
+    docker exec -it --user "www-data:www-data" ops-staging-app-1 "${ARGS[@]}"
 fi
