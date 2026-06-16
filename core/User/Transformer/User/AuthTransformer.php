@@ -29,12 +29,10 @@ namespace Core\User\Transformer\User;
 
 use Core\User\Model\User;
 use App\Repositories\Traits\Scopes;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class AuthTransformer extends TransformerAbstract
 {
-    use Asset;
     use Scopes;
 
     /**
@@ -77,11 +75,11 @@ class AuthTransformer extends TransformerAbstract
             'lang' => $user->lang,
             'groups' => $user->myGroups(),
             'verify_email' => $user->email_verified_at ? true : false,
-            'verified' => $this->format_date($user->email_verified_at),
-            'created' => $this->format_date($user->created_at),
-            'updated' => $this->format_date($user->updated_at),
-            'disabled' => $this->format_date($user->deleted_at),
-            'last_connected' => $this->format_date($user->last_connected),
+            'verified' => format_date($user->email_verified_at),
+            'created' => format_date($user->created_at),
+            'updated' => format_date($user->updated_at),
+            'disabled' => format_date($user->deleted_at),
+            'last_connected' => format_date($user->last_connected),
             'two_factor_enabled' => !empty($user->two_factor_secret) && !empty($user->two_factor_confirmed_at),
             'links' => [
                 'update' => route('user.update'),

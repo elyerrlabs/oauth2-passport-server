@@ -27,16 +27,14 @@ namespace Core\Transaction\Http\Requests;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Rules\BooleanRule;
 use Core\Transaction\Model\Plan;
 use App\Repositories\Traits\Generic;
-use Elyerr\ApiResponse\Assets\Asset;
+use Elyerr\ApiResponse\Rules\MoneyRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PlanStoreRequest extends FormRequest
 {
     use Generic;
-    use Asset;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -129,17 +127,7 @@ class PlanStoreRequest extends FormRequest
                     }
                 }
             ],
-            'prices.*.amount' => [
-                'required',
-                function ($attribute, $value, $fail) {
-
-                    $price = str_replace('.', '', $value);
-
-                    if (filter_var($price, FILTER_VALIDATE_INT) == false) {
-                        $fail("The value is invalid");
-                    }
-                }
-            ],
+            'prices.*.amount' => ['required', new MoneyRule()],
         ];
     }
 

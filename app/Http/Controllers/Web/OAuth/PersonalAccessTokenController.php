@@ -70,7 +70,7 @@ class PersonalAccessTokenController extends WebController
         $data = $this->repository->forUser($request->user())->paginate($request->input('per_page', 15));
 
         return Inertia::render("OAuth2/Web/Personal/Index", [
-            'data' => $this->transformCollection($data, PersonalTokenTransformer::class),
+            'data' => transformCollection($data, PersonalTokenTransformer::class),
             'routes' => [
                 'tokens' => route('passport.personal.tokens.index')
             ]

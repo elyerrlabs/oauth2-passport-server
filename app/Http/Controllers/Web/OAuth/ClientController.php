@@ -59,7 +59,7 @@ class ClientController extends WebController
         $data = $this->oauthClientService->findClientsForUser($request)->paginate($request->input('per_page', 15));
 
         return Inertia::render("OAuth2/Web/Clients/Index", [
-            'data' => $this->transformCollection($data, ClientTransformer::class),
+            'data' => transformCollection($data, ClientTransformer::class),
             'routes' => [
                 "clients" => Route::has('passport.clients.index') ? route('passport.clients.index') : ''
             ]

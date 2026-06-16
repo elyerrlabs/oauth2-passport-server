@@ -68,7 +68,7 @@ class Plan extends Master
     public function assignedScopes($scopes)
     {
         $scopes = $scopes->where('active', 1);
-        return $this->transform($scopes, new PlanScopeTransformer($this));
+        return transformModel($scopes, new PlanScopeTransformer($this));
     }
 
     /**

@@ -29,12 +29,10 @@ namespace Core\User\Transformer\Admin;
 
 use Core\User\Model\Service;
 use Core\User\Transformer\Admin\ServiceScopeTransformer;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class ServiceTransformer extends TransformerAbstract
 {
-    use Asset;
 
     /**
      * List of resources to automatically include
@@ -76,8 +74,8 @@ class ServiceTransformer extends TransformerAbstract
 
             ],
             'scopes' => fractal($data->scopes, ServiceScopeTransformer::class)->toArray()['data'] ?? [],
-            'created' => $this->format_date($data->created_at),
-            'updated' => $this->format_date($data->updated_at),
+            'created' => format_date($data->created_at),
+            'updated' => format_date($data->updated_at),
             'links' => [
                 'index' => route('user.admin.services.index'),
                 'store' => route('user.admin.services.store'),

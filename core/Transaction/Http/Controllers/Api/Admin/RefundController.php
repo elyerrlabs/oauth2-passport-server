@@ -62,7 +62,7 @@ class RefundController extends ApiController
     {
         $data = $this->refundService->search($request);
 
-        return  $this->transformCollection($data, RefundTransformer::class);
+        return  transformCollection($data, RefundTransformer::class);
     }
 
     /**

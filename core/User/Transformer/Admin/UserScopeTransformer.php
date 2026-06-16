@@ -28,12 +28,10 @@ namespace Core\User\Transformer\Admin;
  */
 
 use Core\User\Model\UserScope;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class UserScopeTransformer extends TransformerAbstract
 {
-    use Asset;
 
     /**
      * List of resources to automatically include
@@ -65,7 +63,7 @@ class UserScopeTransformer extends TransformerAbstract
             'expiration_date' => $data->end_date,
             'package_id' => $data->package_id,
             'status' => $data->revoked(),
-            'end_date' => $this->format_date($data->end_date),
+            'end_date' => format_date($data->end_date),
             'scope' => [
                 'id' => $data->scope->id,
                 'gsr_id' => $data->scope->getGsrID(),
@@ -90,8 +88,8 @@ class UserScopeTransformer extends TransformerAbstract
                     'description' => $data->scope->role->description
                 ],
             ],
-            'created_at' => $this->format_date($data->created_at),
-            'updated_at' => $this->format_date($data->updated_at),
+            'created_at' => format_date($data->created_at),
+            'updated_at' => format_date($data->updated_at),
             'links' => [
                 'index' => route('user.admin.users.scopes.index', ['user' => $data->user_id]),
                 'assign' => route('user.admin.users.scopes.store', ['user' => $data->user_id]),

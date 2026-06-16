@@ -27,13 +27,11 @@ namespace Core\Transaction\Transformer\Admin;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Core\Transaction\Model\Plan;
-use Elyerr\ApiResponse\Assets\Asset;
+use Core\Transaction\Model\Plan; 
 use League\Fractal\TransformerAbstract;
 
 class PlanTransformer extends TransformerAbstract
 {
-    use Asset;
 
     /**
      * List of resources to automatically include
@@ -70,8 +68,8 @@ class PlanTransformer extends TransformerAbstract
             'bonus_duration' => $plan->bonus_duration,
             'trial_enabled' => $plan->trial_enabled ? true : false,
             'trial_duration' => $plan->trial_duration,
-            'created' => $this->format_date($plan->created_at),
-            'updated' => $this->format_date($plan->updated_at),
+            'created' => format_date($plan->created_at),
+            'updated' => format_date($plan->updated_at),
             'scopes' => $plan->assignedScopes($plan->scopes),
             'prices' => $plan->transform($plan->prices, PlanPriceTransformer::class),
             'links' => [

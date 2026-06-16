@@ -26,13 +26,11 @@ namespace App\Transformers\Broadcast;
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
-use Elyerr\ApiResponse\Assets\Asset;
+ 
 use League\Fractal\TransformerAbstract;
 
 class BroadcastTransformer extends TransformerAbstract
-{
-    use Asset;
+{ 
     /**
      * List of resources to automatically include
      *
@@ -64,8 +62,8 @@ class BroadcastTransformer extends TransformerAbstract
             'slug' => $data->slug,
             'description' => $data->description,
             'system' => $data->system,
-            'created' => $this->format_date($data->created_at),
-            'updated' => $this->format_date($data->updated_at),
+            'created' => format_date($data->created_at),
+            'updated' => format_date($data->updated_at),
             'links' => [
                 'parent' => route('admin.broadcasts.index'),
                 'store' => route('admin.broadcasts.store'),

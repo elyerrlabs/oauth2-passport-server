@@ -27,12 +27,10 @@ namespace App\Models\OAuth;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use Laravel\Passport\Token as PassportToken;
 
 class Token extends PassportToken
 {
-    use Asset;
 
     /**
      * Getter for Created at field
@@ -41,7 +39,7 @@ class Token extends PassportToken
      */
     public function getCreatedAtAttribute($value)
     {
-        return $this->format_date($value);
+        return format_date($value);
     }
 
     /**
@@ -51,7 +49,7 @@ class Token extends PassportToken
      */
     public function getUpdatedAtAttribute($value)
     {
-        return $this->format_date($value);
+        return format_date($value);
     }
 
     /**
@@ -61,7 +59,7 @@ class Token extends PassportToken
      */
     public function getExpiresAtAttribute($value)
     {
-        return $this->format_date($value, 'Y-m-d H:i');
+        return format_date($value, 'Y-m-d H:i');
     }
 
     /**

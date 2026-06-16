@@ -27,14 +27,12 @@ namespace App\Console\Commands\Module;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ModuleServicesUpload extends Command
 {
-    use Asset;
-
     /**
      * The name and signature of the console command.
      *
@@ -89,10 +87,10 @@ class ModuleServicesUpload extends Command
         $roles = json_decode(file_get_contents($file), true);
         foreach ($roles as $role) {
             \Core\User\Model\Role::firstOrCreate(
-                ['slug' => $this->slug($role['name'])],
+                ['slug' => Str::slug($role['name'])],
                 [
                     'name' => $role['name'],
-                    'slug' => $this->slug($role['name']),
+                    'slug' => Str::slug($role['name']),
                     'description' => $role['description'],
                     'system' => 0
                 ]
@@ -113,11 +111,11 @@ class ModuleServicesUpload extends Command
             //upload system groups
             $group = \Core\User\Model\Group::firstOrCreate(
                 [
-                    'slug' => $this->slug($grp['name'])
+                    'slug' => Str::slug($grp['name'])
                 ],
                 [
                     'name' => $grp['name'],
-                    'slug' => $this->slug($grp['name']),
+                    'slug' => Str::slug($grp['name']),
                     'description' => $grp['description'],
                     'system' => 1
                 ]
@@ -129,12 +127,12 @@ class ModuleServicesUpload extends Command
                         //Uploading Services Available for this groups
                         $service = \Core\User\Model\Service::firstOrCreate(
                             [
-                                'slug' => $this->slug($srv['name']),
+                                'slug' => Str::slug($srv['name']),
                                 'group_id' => $group->id
                             ],
                             [
                                 'name' => $srv['name'],
-                                'slug' => $this->slug($srv['name']),
+                                'slug' => Str::slug($srv['name']),
                                 'description' => $srv['description'],
                                 'visibility' => $srv['visibility'] ?? 'private',
                                 'system' => 0,
@@ -147,7 +145,7 @@ class ModuleServicesUpload extends Command
                             foreach ($srv['actions'] as $action) {
 
                                 //searching for action in roles Model
-                                $role = \Core\User\Model\Role::where('slug', $this->slug($action['name']))->first();
+                                $role = \Core\User\Model\Role::where('slug', Str::slug($action['name']))->first();
                                 //create default scopes for this service
                                 \Core\User\Model\Scope::firstOrCreate(
                                     [

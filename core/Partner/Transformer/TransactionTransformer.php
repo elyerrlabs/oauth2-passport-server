@@ -26,13 +26,12 @@ namespace Core\Partner\Transformer;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 use Core\Transaction\Model\Transaction;
 
 class TransactionTransformer extends TransformerAbstract
 {
-    use Asset;
+
     /**
      * List of resources to automatically include
      *
@@ -64,11 +63,11 @@ class TransactionTransformer extends TransformerAbstract
             'status' => $transaction->status,
             'cents' => (int) $transaction->total,
             'partner_commission_rate' => floatval($transaction->partner_commission_rate),
-            'total' => $this->formatMoney($transaction->total),
-            'commission' => $this->formatMoney(($transaction->total * ($transaction->partner_commission_rate / 100))),
+            'total' => format_money($transaction->total),
+            'commission' => format_money(($transaction->total * ($transaction->partner_commission_rate / 100))),
             'commission_cents' => ($transaction->total * ($transaction->partner_commission_rate / 100)),
-            'created' => $this->format_date($transaction->created_at),
-            'updated' => $this->format_date($transaction->updated_at),
+            'created' => format_date($transaction->created_at),
+            'updated' => format_date($transaction->updated_at),
         ];
     }
 

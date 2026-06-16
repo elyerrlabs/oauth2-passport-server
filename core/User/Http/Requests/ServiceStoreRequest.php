@@ -27,8 +27,6 @@ namespace Core\User\Http\Requests;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Rules\BooleanRule;
-use App\Rules\StringOnlyRule;
 use Illuminate\Validation\Rule;
 use Core\User\Model\Service;
 use Illuminate\Foundation\Http\FormRequest;

@@ -29,13 +29,10 @@ namespace Core\Transaction\Transformer\Admin;
 
 use Core\Transaction\Model\Plan;
 use Core\User\Model\Scope;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class PlanScopeTransformer extends TransformerAbstract
 {
-    use Asset;
-
     /**
      * Plan 
      * @var 
@@ -97,8 +94,8 @@ class PlanScopeTransformer extends TransformerAbstract
                 'slug' => $scope->role->slug,
                 'description' => $scope->role->description
             ],
-            'created' => $this->format_date($scope->created_at),
-            'updated' => $this->format_date($scope->updated_at),
+            'created' => format_date($scope->created_at),
+            'updated' => format_date($scope->updated_at),
             'links' => [
                 'revoke' => route('transaction.admin.plans.scopes.destroy', [
                     'plan' => $this->plan->id,

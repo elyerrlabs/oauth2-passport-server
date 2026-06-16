@@ -27,15 +27,11 @@ namespace Core\User\Http\Requests;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Rules\StringOnlyRule;
 use Core\User\Model\Role;
-use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoleStoreRequest extends FormRequest
 {
-    use Asset;
-
     /**
      * Determine if the user is authorized to make this request.
      */

@@ -25,7 +25,7 @@
   ],
   "require": {
     "php": "^8.2.0",
-    "elyerr/api-response": "^1.0",
+    "elyerr/api-response": "^v2.0.0",
     "elyerr/horizon": "^5.1",
     "guzzlehttp/guzzle": "^7.2",
     "http-interop/http-factory-guzzle": "^1.2",

@@ -28,14 +28,11 @@ namespace Core\Transaction\Transformer\User;
  */
 
 use Core\Transaction\Transformer\User\UserPlanPriceTransformer;
-use Core\Transaction\Model\Plan;
-use Elyerr\ApiResponse\Assets\Asset;
+use Core\Transaction\Model\Plan; 
 use League\Fractal\TransformerAbstract;
 
 class UserPlanTransformer extends TransformerAbstract
 {
-    use Asset;
-
     /**
      * List of resources to automatically include
      *
@@ -69,8 +66,8 @@ class UserPlanTransformer extends TransformerAbstract
             'bonus_duration' => $plan->bonus_duration,
             'trial_enabled' => $plan->trial_enabled ? true : false,
             'trial_duration' => $plan->trial_duration,
-            'created' => $this->format_date($plan->created_at),
-            'updated' => $this->format_date($plan->updated_at),
+            'created' => format_date($plan->created_at),
+            'updated' => format_date($plan->updated_at),
             'prices' => fractal($plan->prices, UserPlanPriceTransformer::class)->toArray()['data'] ?? [],
             'scopes' => fractal($plan->scopes, UserPlanScopeTransformer::class)->toArray()['data'] ?? []
         ];

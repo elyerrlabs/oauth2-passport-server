@@ -57,7 +57,7 @@ class PartnerController extends WebController
         $partners = $this->partnerService->listPartners($request)->paginate($request->input('per_page', 15));
 
         return Inertia::render("Admin/Users/Index", [
-            'data' => $this->transformCollection($partners, UserTransformer::class),
+            'data' => transformCollection($partners, UserTransformer::class),
             'routes' => [
                 'partners' => route('partner.admin.partner.index')
             ],

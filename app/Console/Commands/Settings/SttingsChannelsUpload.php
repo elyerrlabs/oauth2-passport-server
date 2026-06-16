@@ -28,13 +28,12 @@ namespace App\Console\Commands\Settings;
  */
 
 
-use Illuminate\Console\Command;
-use Elyerr\ApiResponse\Assets\Asset;
 use App\Models\Broadcasting\Broadcast;
+use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class SttingsChannelsUpload extends Command
 {
-    use Asset;
 
     /**
      * The name and signature of the console command.
@@ -74,7 +73,7 @@ class SttingsChannelsUpload extends Command
                 ['name' => $broadcast->name],
                 [
                     'name' => $broadcast->name,
-                    'slug' => $this->slug($broadcast->name),
+                    'slug' => Str::slug($broadcast->name),
                     'description' => $broadcast->description,
                     'system' => true,
                 ]

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c65b8249623845a82149b27de1e54d8",
+    "content-hash": "cbc022479d51886379803ab17434eae4",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -730,25 +730,24 @@
         },
         {
             "name": "elyerr/api-response",
-            "version": "v1.0.28",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/elyerr/api-response.git",
-                "reference": "04bdb5eebf0fe70f2ae9a6a04de24a6100316252"
+                "reference": "56fcd53b71b80214b6b6bfaea03c94066faf0fc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/elyerr%2Fapi-response/repository/archive.zip?sha=04bdb5eebf0fe70f2ae9a6a04de24a6100316252",
-                "reference": "04bdb5eebf0fe70f2ae9a6a04de24a6100316252",
+                "url": "https://gitlab.com/api/v4/projects/elyerr%2Fapi-response/repository/archive.zip?sha=56fcd53b71b80214b6b6bfaea03c94066faf0fc6",
+                "reference": "56fcd53b71b80214b6b6bfaea03c94066faf0fc6",
                 "shasum": ""
             },
             "require": {
-                "spatie/laravel-fractal": "^6.0"
+                "spatie/laravel-fractal": "^6.4"
             },
             "require-dev": {
-                "laravel/framework": "^10.0",
-                "php": "^8.0.2",
-                "phpunit/phpunit": "^10.4"
+                "laravel/framework": "^12.0",
+                "php": "^8.2.0"
             },
             "type": "library",
             "extra": {
@@ -759,6 +758,9 @@
                 }
             },
             "autoload": {
+                "files": [
+                    "src/Support/helper.php"
+                ],
                 "psr-4": {
                     "Elyerr\\ApiResponse\\": "src/"
                 }
@@ -770,15 +772,17 @@
             "authors": [
                 {
                     "name": "Elvis Yerel Roman Concha",
-                    "email": "yerel9212@yahoo.es"
+                    "email": "yerel9212@yahoo.es",
+                    "homepage": "https://github.com/elyerrlabs",
+                    "role": "owner"
                 }
             ],
             "description": "Add news functionalities for oauth2 passport server",
             "support": {
                 "issues": "https://gitlab.com/elyerr/api-response/-/issues",
-                "source": "https://gitlab.com/elyerr/api-response/-/tree/v1.0.28"
+                "source": "https://gitlab.com/elyerr/api-response/-/tree/v2.0.0"
             },
-            "time": "2025-11-27T23:46:27+00:00"
+            "time": "2026-06-15T19:55:17+00:00"
         },
         {
             "name": "elyerr/horizon",
@@ -4593,16 +4597,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "3.0.54",
+            "version": "3.0.55",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "5418963581a6d3e69f030d8c972238cb6add3166"
+                "reference": "db9744e6d47e742b1f974e965ad49bdd041105af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/5418963581a6d3e69f030d8c972238cb6add3166",
-                "reference": "5418963581a6d3e69f030d8c972238cb6add3166",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/db9744e6d47e742b1f974e965ad49bdd041105af",
+                "reference": "db9744e6d47e742b1f974e965ad49bdd041105af",
                 "shasum": ""
             },
             "require": {
@@ -4683,7 +4687,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.54"
+                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.55"
             },
             "funding": [
                 {
@@ -4699,7 +4703,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-14T19:54:17+00:00"
+            "time": "2026-06-14T23:24:10+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -10282,16 +10286,16 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "2.4.0",
+            "version": "2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "9007ea6f45ecf352a9422b36644e4bfc039b9155"
+                "reference": "2ccb7c2e821038c03a3e6e1700c570c158c55f70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9007ea6f45ecf352a9422b36644e4bfc039b9155",
-                "reference": "9007ea6f45ecf352a9422b36644e4bfc039b9155",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/2ccb7c2e821038c03a3e6e1700c570c158c55f70",
+                "reference": "2ccb7c2e821038c03a3e6e1700c570c158c55f70",
                 "shasum": ""
             },
             "require": {
@@ -10342,9 +10346,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/2.4.0"
+                "source": "https://github.com/webmozarts/assert/tree/2.4.1"
             },
-            "time": "2026-05-20T13:07:01+00:00"
+            "time": "2026-06-15T15:31:57+00:00"
         }
     ],
     "packages-dev": [

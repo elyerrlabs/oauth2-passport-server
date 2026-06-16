@@ -39,13 +39,11 @@ use Core\User\Notification\UserUpdatedEmail;
 use Core\User\Notification\UserCreatedAccount;
 use App\Support\CacheKeys;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
-use Elyerr\ApiResponse\Assets\Asset;
+use Illuminate\Support\Facades\Hash; 
 use Illuminate\Http\Request;
 
 class UserService
 {
-    use Asset;
 
     /**
      * User repository
@@ -112,7 +110,7 @@ class UserService
     public function create(array $data)
     {
         // Create password
-        $temp_password = $this->passwordTempGenerate(32);
+        $temp_password = generateRandomString(32);
 
         $user = $this->userRepository->create([
             'name' => $data['name'],
@@ -574,7 +572,7 @@ class UserService
         if (empty($group)) {
             return back()->with('error', __('The registration could not be completed successfully. Our team has been notified of the issue and is working to resolve it. We appreciate your patience and encourage you to try again later'));
         }
-        
+
         return DB::transaction(function () use ($input, $group) {
 
             $data = [
@@ -587,7 +585,7 @@ class UserService
                 'accept_terms' => $input['accept_terms'],
                 'accept_cookies' => $input['accept_cookies']
             ];
-            
+
             // Add referral code
             if (class_exists(\Core\Partner\Model\Partner::class) && !empty($input['referral_code'])) {
 

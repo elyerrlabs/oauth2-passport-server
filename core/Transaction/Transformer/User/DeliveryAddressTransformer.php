@@ -28,12 +28,10 @@ namespace Core\Transaction\Transformer\User;
  */
 
 use Core\Transaction\Model\DeliveryAddress;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class DeliveryAddressTransformer extends TransformerAbstract
 {
-    use Asset;
 
     /**
      * List of resources to automatically include

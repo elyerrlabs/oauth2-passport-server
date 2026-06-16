@@ -58,8 +58,8 @@ final class UserScopeController extends WebController
         $data = $this->userService->searchScopesForUser($user_id)->get();
         
         return Inertia::render('Admin/Users/Scopes', [
-            'user' => $this->transform($user, UserTransformer::class),
-            'data' => $this->transformCollection($data, UserScopeTransformer::class),
+            'user' => transformModel($user, UserTransformer::class),
+            'data' => transformCollection($data, UserScopeTransformer::class),
             'routes' => [
                 'scopes' => route('user.admin.users.scopes.index', ['user' => $user_id])
             ],

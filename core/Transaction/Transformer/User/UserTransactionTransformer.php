@@ -27,13 +27,11 @@ namespace Core\Transaction\Transformer\User;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use Core\Transaction\Model\Transaction;
 use League\Fractal\TransformerAbstract;
 
 class UserTransactionTransformer extends TransformerAbstract
 {
-    use Asset;
     /**
      * List of resources to automatically include
      *
@@ -64,7 +62,7 @@ class UserTransactionTransformer extends TransformerAbstract
             'code' => $transaction->code,
             'currency' => strtoupper($transaction->currency),
             'status' => $transaction->status,
-            'total' => $this->formatMoney($transaction->total),
+            'total' => format_money($transaction->total),
             'cents' => $transaction->total,
             'payment_method' => $transaction->payment_method,
             'billing_period' => $transaction->billing_period,
@@ -74,8 +72,8 @@ class UserTransactionTransformer extends TransformerAbstract
             'payment_url' => $transaction->payment_url ?? $transaction->response['url'],
             'meta' => $transaction->meta,
             'refund' => fractal($transaction->refund, UserRefundTransformer::class)->toArray()['data'] ?? [],
-            'created' => $this->format_date($transaction->created_at),
-            'updated' => $this->format_date($transaction->updated_at),
+            'created' => format_date($transaction->created_at),
+            'updated' => format_date($transaction->updated_at),
             'refund_expiration_date' => $this->getExpirationDate($transaction),
             'refund_expired' => $this->hasExpired($transaction),
             'links' => [
@@ -93,7 +91,7 @@ class UserTransactionTransformer extends TransformerAbstract
      */
     public function getExpirationDate($transaction)
     {
-        return $this->format_date(
+        return format_date(
             $transaction->created_at->addDays(
                 config('billing.refund.grace_period_days', 60)
             )

@@ -29,13 +29,10 @@ namespace App\Transformers\OAuth;
 
 use Illuminate\Support\Facades\Route;
 use App\Models\OAuth\Client;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class ClientTransformer extends TransformerAbstract
 {
-    use Asset;
-
     /**
      * List of resources to automatically include
      *
@@ -72,8 +69,8 @@ class ClientTransformer extends TransformerAbstract
             "grant_types" => implode(", ", $client->grant_types),
             "discovery_uri" => $client->openid_connect_configuration,
             "revoked" => $client->revoked,
-            "created_at" => $this->format_date($client->created_at),
-            "updated_at" => $this->format_date($client->updated_at),
+            "created_at" => format_date($client->created_at),
+            "updated_at" => format_date($client->updated_at),
             'links' => [
                 'index' => Route::has('passport.clients.index') ? route('passport.clients.index') : '',
                 'store' => route('passport.clients.store'),

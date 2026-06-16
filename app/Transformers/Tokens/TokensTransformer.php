@@ -27,13 +27,10 @@ namespace App\Transformers\Tokens;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class TokensTransformer extends TransformerAbstract
 {
-    use Asset;
-
     /**
      * List of resources to automatically include
      *
@@ -64,9 +61,9 @@ class TokensTransformer extends TransformerAbstract
             'agent' => $token->name,
             'scope' => implode(",", $token->scopes),
             'revoked' => $token->revoked,
-            'expires' => $token->expires_at ? $this->format_date($token->expires_at) : null,
-            'created' => $token->created_at ? $this->format_date($token->created_at) : null,
-            'updated' => $token->updated_at ? $this->format_date($token->updated_at) : null,
+            'expires' => $token->expires_at ? format_date($token->expires_at) : null,
+            'created' => $token->created_at ? format_date($token->created_at) : null,
+            'updated' => $token->updated_at ? format_date($token->updated_at) : null,
             'links' => [
                 'index' => route('tokens.index'),
                 'store' => route('tokens.store'),

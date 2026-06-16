@@ -80,7 +80,7 @@ class TransactionManagerController extends WebController
             "Admin/Transaction/Index",
             [
                 "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
-                "data" => $this->transformCollection($data->paginate($request->input('per_page', 25)), TransactionTransformer::class),
+                "data" => transformCollection($data->paginate($request->input('per_page', 25)), TransactionTransformer::class),
                 "billing_types" => $billing_types,
                 "billing_statuses" => $billing_statuses,
                 "routes" => [
@@ -100,7 +100,7 @@ class TransactionManagerController extends WebController
         $transaction = $this->transactionService->findById($id);
 
         return Inertia::render("Admin/Transaction/Detail", [
-            "data" => $this->transform($transaction, TransactionTransformer::class),
+            "data" => transformModel($transaction, TransactionTransformer::class),
             "menus" => resolveInertiaRoutes(config('menus.transaction_routes')),
         ]);
     }

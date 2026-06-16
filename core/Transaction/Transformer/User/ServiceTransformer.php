@@ -28,15 +28,11 @@ namespace Core\Transaction\Transformer\User;
  */
 
 
-use Core\Transaction\Model\Package;
 use Core\User\Model\Service;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
-use Core\Transaction\Transformer\User\UserTransactionTransformer;
 
 class ServiceTransformer extends TransformerAbstract
 {
-    use Asset;
 
     /**
      * List of resources to automatically include

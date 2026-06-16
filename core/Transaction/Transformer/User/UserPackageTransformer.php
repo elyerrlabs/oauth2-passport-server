@@ -29,14 +29,11 @@ namespace Core\Transaction\Transformer\User;
 
 
 use Core\Transaction\Model\Package;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 use Core\Transaction\Transformer\User\UserTransactionTransformer;
 
 class UserPackageTransformer extends TransformerAbstract
 {
-
-    use Asset;
 
     /**
      * List of resources to automatically include
@@ -65,17 +62,17 @@ class UserPackageTransformer extends TransformerAbstract
     {
         return [
             'id' => $package->id,
-            'start_at' => $this->format_date($package->start_at),
-            'end_at' => $this->format_date($package->end_at),
-            'last_renewal_at' => $this->format_date($package->lastTransaction->created_at),
+            'start_at' => format_date($package->start_at),
+            'end_at' => format_date($package->end_at),
+            'last_renewal_at' => format_date($package->lastTransaction->created_at),
             'is_recurring' => $package->is_recurring,
             'billing_period' => billing_get_status_name($package->lastTransaction->billing_period),
             'status' => $package->lastTransaction->status,
             'meta' => $package->meta,
             'transaction' => $package->transform($package->lastTransaction, UserTransactionTransformer::class),
             'transactions' => $package->transform($package->transactions, UserTransactionTransformer::class),
-            'created' => $this->format_date($package->created_at),
-            'updated' => $this->format_date($package->updated),
+            'created' => format_date($package->created_at),
+            'updated' => format_date($package->updated),
             'links' => [
                 'index' => route('transaction.subscriptions.index'),
                 'show' => route('transaction.subscriptions.show', [

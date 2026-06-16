@@ -60,7 +60,7 @@ final class NotificationController extends ApiController
      */
     public function listUnreadNotifications()
     {
-        $data =  $this->notificationService->listUnreadNotifications()->latest()->take(500)->get();
+        $data = $this->notificationService->listUnreadNotifications()->latest()->take(500)->get();
 
         return $this->showAll($data, NotificationTransformer::class);
     }

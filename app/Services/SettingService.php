@@ -27,9 +27,7 @@ namespace App\Services;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Exceptions\ReportError;
-use Redis;
-use RedisException;
+use Elyerr\ApiResponse\Exceptions\ReportError; 
 use App\Support\CacheKeys;
 use Core\User\Model\Scope;
 use App\Models\OAuth\Token;
@@ -41,8 +39,7 @@ use Laravel\Passport\Passport;
 use App\Models\Setting\Setting;
 use App\Models\OAuth\RefreshToken;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\URL;
-use Elyerr\ApiResponse\Assets\Asset;
+use Illuminate\Support\Facades\URL; 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
@@ -50,8 +47,6 @@ use Illuminate\Database\QueryException;
 
 class SettingService
 {
-    use Asset;
-
     public function __construct(protected Setting $model)
     {
 
@@ -461,7 +456,7 @@ class SettingService
             $moduleConfigKey = $route['config_key'];
         }
 
-        $data = $this->transformRequest($data);
+        $data = transformConfigRequest($data);
 
         foreach ($data as $key => $value) {
             settingAdd("{$moduleConfigKey}{$key}", $value);

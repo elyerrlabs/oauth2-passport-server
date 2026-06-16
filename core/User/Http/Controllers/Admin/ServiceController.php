@@ -57,7 +57,7 @@ class ServiceController extends WebController
         $data = $this->serviceService->search($request)->paginate($request->input('per_page', 15));
 
         return Inertia::render("Admin/Service/Index", [
-            'data' => $this->transformCollection($data, ServiceTransformer::class),
+            'data' => transformCollection($data, ServiceTransformer::class),
             'routes' => [
                 'services' => route('user.admin.services.index'),
             ],

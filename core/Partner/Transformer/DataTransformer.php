@@ -27,14 +27,10 @@ namespace Core\Partner\Transformer;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class DataTransformer extends TransformerAbstract
 {
-
-    use Asset;
-
     /**
      * List of resources to automatically include
      *
@@ -62,7 +58,7 @@ class DataTransformer extends TransformerAbstract
     {
         return [
             'date' => $partner->date,
-            'commission' => $this->formatMoney($partner->commission),
+            'commission' => format_money($partner->commission),
             'currency' => strtoupper($partner->currency),
             'total' => $partner->total,
         ];

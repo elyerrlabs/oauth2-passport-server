@@ -23,7 +23,6 @@ namespace Core\User\Http\Requests;
  * SPDX-License-Identifier: LicenseRef-NC-Open-Source-Project
  */
 
-use App\Rules\BooleanRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoleUpdateRequest extends FormRequest

@@ -29,14 +29,10 @@ namespace Core\Transaction\Transformer\Admin;
 
 use App\Transformers\File\FilePrivateTransformer;
 use Core\Transaction\Model\Refund;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class RefundTransformer extends TransformerAbstract
 {
-
-    use Asset;
-
     public function transform(Refund $refund)
     {
         return [
@@ -44,7 +40,7 @@ class RefundTransformer extends TransformerAbstract
             'reason' => $refund->reason,
             'description' => $refund->description,
             'cents' => $refund->amount,
-            'amount' => $this->formatMoney($refund->amount),
+            'amount' => format_money($refund->amount),
             'currency' => strtoupper($refund->currency),
             'type' => $refund->type, // 'refund','appeal'
             'status' => $refund->status, //'pending', 'under_review', 'approved', 'waiting_for_return','processing','completed','rejected','canceled'
@@ -70,8 +66,8 @@ class RefundTransformer extends TransformerAbstract
             'transactionable' => fractal($refund->transaction, TransactionTransformer::class)->toArray()['data'] ?? [],
             'appeal' => fractal($refund->children, static::class)->toArray()['data'] ?? [],
             'files' => fractal($refund->files, new FilePrivateTransformer($refund->id))->toArray()['data'] ?? [],
-            'created' => $this->format_date($refund->created_at),
-            'updated' => $this->format_date($refund->updated_at),
+            'created' => format_date($refund->created_at),
+            'updated' => format_date($refund->updated_at),
             'web' => [
                 'index' => route('transaction.admin.refunds.index'),
                 'show' => route('transaction.admin.refunds.show', ['refund' => $refund->id]),

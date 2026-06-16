@@ -60,7 +60,7 @@ class RoleController extends WebController
         $data = $this->roleService->search($request)->paginate($request->input('per_page', 15));
 
         return Inertia::render("Admin/Role/Index", [
-            'data' => $this->transformCollection($data, RoleTransformer::class),
+            'data' => transformCollection($data, RoleTransformer::class),
             'routes' => [
                 'roles' => route('user.admin.roles.index'),
             ]

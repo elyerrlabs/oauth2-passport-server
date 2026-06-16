@@ -55,7 +55,7 @@ class UserSubscriptionController extends WebController
         return Inertia::render(
             "Web/Subscription/Index",
             [
-                'data' => $this->transformCollection($data, UserPackageTransformer::class),
+                'data' => transformCollection($data, UserPackageTransformer::class),
                 'routes' => [
                     'subscriptions' => route('transaction.subscriptions.index'),
                     'plans' => route('transaction.plans.index')
@@ -77,7 +77,7 @@ class UserSubscriptionController extends WebController
         $payment_methods = collect(billing_methods())->where('enable', true)->all();
 
         return Inertia::render('Web/Subscription/Detail', [
-            'data' => $this->transform($data, UserPackageTransformer::class),
+            'data' => transformModel($data, UserPackageTransformer::class),
             'payment_methods' => $payment_methods,
             'routes' => [
                 'plans' => route('transaction.plans.index'),

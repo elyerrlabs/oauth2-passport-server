@@ -27,13 +27,10 @@ namespace Core\User\Transformer\User;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class NotificationTransformer extends TransformerAbstract
 {
-
-    use Asset;
 
     /**
      * List of resources to automatically include
@@ -67,8 +64,8 @@ class NotificationTransformer extends TransformerAbstract
             "title" => $data->title ?? null,
             "message" => $data->message ?? null,
             "link" => $data->url ?? null,
-            "created" => $this->format_date($notification->created_at),
-            "read_at" => $this->format_date($notification->read_at),
+            "created" => format_date($notification->created_at),
+            "read_at" => format_date($notification->read_at),
             'links' => [
                 'index' => route('api.user.user.notification.index'),
                 'destroy_all' => route('api.user.user.notification.destroy-all'),

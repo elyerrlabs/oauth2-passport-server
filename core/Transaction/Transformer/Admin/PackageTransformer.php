@@ -29,15 +29,12 @@ namespace Core\Transaction\Transformer\Admin;
 
 
 use Core\Transaction\Model\Package;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 use Core\User\Transformer\Admin\UserTransformer;
 use Core\Transaction\Transformer\Admin\TransactionTransformer;
 
 class PackageTransformer extends TransformerAbstract
 {
-    use Asset;
-
     /**
      * List of resources to automatically include
      *
@@ -65,15 +62,15 @@ class PackageTransformer extends TransformerAbstract
     {
         return [
             'id' => $package->id,
-            'start_at' => $this->format_date($package->start_at),
-            'end_at' => $this->format_date($package->end_at),
+            'start_at' => format_date($package->start_at),
+            'end_at' => format_date($package->end_at),
             'is_recurring' => $package->is_recurring,
             'transaction' => $package->transform($package->lastTransaction, TransactionTransformer::class),
             'transactions' => $package->transform($package->transactions, TransactionTransformer::class),
             'meta' => $package->meta, // save plan
             'user' => $package->transform($package->user, UserTransformer::class),
-            'create' => $this->format_date($package->created_at),
-            'updated' => $this->format_date($package->updated),
+            'create' => format_date($package->created_at),
+            'updated' => format_date($package->updated),
         ];
     }
 

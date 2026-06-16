@@ -58,7 +58,7 @@ class GroupController extends WebController
         return Inertia::render(
             "Admin/Groups/Index",
             [
-                'data' => $this->transformCollection($data, GroupTransformer::class),
+                'data' => transformCollection($data, GroupTransformer::class),
                 'routes' => [
                     'groups' => route('user.admin.groups.index')
                 ]

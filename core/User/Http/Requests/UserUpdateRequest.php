@@ -28,8 +28,6 @@ namespace Core\User\Http\Requests;
  */
 
 use Core\User\Model\User;
-use App\Rules\BooleanRule;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserUpdateRequest extends FormRequest

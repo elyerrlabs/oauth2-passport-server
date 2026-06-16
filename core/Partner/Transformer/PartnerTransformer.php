@@ -28,13 +28,10 @@ namespace Core\Partner\Transformer;
  */
 
 use Core\Partner\Model\Partner;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class PartnerTransformer extends TransformerAbstract
 {
-
-    use Asset;
 
     /**
      * List of resources to automatically include
@@ -64,8 +61,8 @@ class PartnerTransformer extends TransformerAbstract
         return [
             'code' => $partner->code,
             'commission_rate' => $partner->commission_rate,
-            'created' => $this->format_date($partner->created_at),
-            'updated' => $this->format_date($partner->updated_at),
+            'created' => format_date($partner->created_at),
+            'updated' => format_date($partner->updated_at),
             'referral_links' => $partner->referLinks()
         ];
     }

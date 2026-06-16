@@ -33,16 +33,14 @@ use Core\User\Model\Group;
 use Core\User\Model\Role;
 use Core\User\Model\Scope;
 use Core\User\Model\Service;
-use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class SettingsResetScopes extends Command
 {
-    use Asset;
-
     /**
      * The name and signature of the console command.
      *
@@ -80,10 +78,10 @@ class SettingsResetScopes extends Command
         $roles = Role::rolesByDefault();
         foreach ($roles as $role) {
             Role::updateOrCreate(
-                ['slug' => $this->slug($role->name)],
+                ['slug' => Str::slug($role->name)],
                 [
                     'name' => $role->name,
-                    'slug' => $this->slug($role->name),
+                    'slug' => Str::slug($role->name),
                     'description' => $role->description,
                     'system' => 1
                 ]
@@ -106,11 +104,11 @@ class SettingsResetScopes extends Command
                 //upload system groups
                 $group = Group::updateOrCreate(
                     [
-                        'slug' => $this->slug($grp->name)
+                        'slug' => Str::slug($grp->name)
                     ],
                     [
                         'name' => $grp->name,
-                        'slug' => $this->slug($grp->name),
+                        'slug' => Str::slug($grp->name),
                         'description' => $grp->description,
                         'system' => 1
                     ]
@@ -122,12 +120,12 @@ class SettingsResetScopes extends Command
                             //Uploading Services Available for this groups
                             $service = Service::updateOrCreate(
                                 [
-                                    'slug' => $this->slug($srv->name),
+                                    'slug' => Str::slug($srv->name),
                                     'group_id' => $group->id
                                 ],
                                 [
                                     'name' => $srv->name,
-                                    'slug' => $this->slug($srv->name),
+                                    'slug' => Str::slug($srv->name),
                                     'description' => $srv->description,
                                     'visibility' => $srv->visibility ?? 'private',
                                     'system' => 1,
@@ -139,7 +137,7 @@ class SettingsResetScopes extends Command
                             if (isset($srv->actions)) {
                                 foreach ($srv->actions as $action) {
                                     //searching for action in roles Model
-                                    $role = Role::where('slug', $this->slug($action->name))->first();
+                                    $role = Role::where('slug', Str::slug($action->name))->first();
 
                                     //create default scopes for this service
                                     Scope::updateOrCreate(

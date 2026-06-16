@@ -26,8 +26,7 @@ namespace App\Http\Requests\Client;
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
-use App\Rules\BooleanRule;
+ 
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest

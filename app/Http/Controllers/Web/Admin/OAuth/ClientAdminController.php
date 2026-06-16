@@ -60,7 +60,7 @@ class ClientAdminController extends WebController
         $data = $this->oauthClientService->searchClientsForAdmin($request)->paginate($request->input('per_page', 15));
 
         return Inertia::render("OAuth2/Admin/Index", [
-            "data" => $this->transformCollection($data, ClientAdminTransformer::class),
+            "data" => transformCollection($data, ClientAdminTransformer::class),
             "routes" => [
                 'clients' => route("admin.clients.index"),
                 'personal' => route("admin.clients.personal.store")

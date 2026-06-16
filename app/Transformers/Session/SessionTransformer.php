@@ -27,14 +27,11 @@ namespace App\Transformers\Session;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Support\Carbon;
 use League\Fractal\TransformerAbstract;
 
 class SessionTransformer extends TransformerAbstract
 {
-
-    use Asset;
 
     /**
      * List of resources to automatically include
@@ -67,7 +64,7 @@ class SessionTransformer extends TransformerAbstract
             'id' => $session->id,
             'ip' => $session->ip_address,
             'agent' => $session->user_agent,
-            'last_activity' => $this->format_date($lastActivity),
+            'last_activity' => format_date($lastActivity),
             'current' => request()->session()->getId() == $session->id,
             'links' => [
                 'destroy' => route('sessions.destroy', ['session' => $session->id]),

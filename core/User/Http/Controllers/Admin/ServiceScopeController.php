@@ -67,8 +67,8 @@ final class ServiceScopeController extends WebController
         $service = $this->serviceService->find($service_id);
 
         return Inertia::render("Admin/Service/Scope", [
-            'data' => $this->transformCollection($data, ServiceScopeTransformer::class),
-            'service' => $this->transform($service, ServiceTransformer::class),
+            'data' => transformCollection($data, ServiceScopeTransformer::class),
+            'service' => transformModel($service, ServiceTransformer::class),
             'routes' => [
                 'scopes' => route('user.admin.services.scopes.index', ['service' => $service_id]),
                 'services' => route('user.admin.services.index')

@@ -92,7 +92,7 @@ class PartnerController extends WebController
         $data = $this->partnerService->listLastTransactions($request)->paginate($request->input('per_page', 15));
 
         return Inertia::render("Web/Sales", [
-            "data" => $this->transformCollection($data, TransactionTransformer::class),
+            "data" => transformCollection($data, TransactionTransformer::class),
             "routes" => [
                 'sales' => route("partner.sales")
             ],

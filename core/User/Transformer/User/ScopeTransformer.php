@@ -27,14 +27,10 @@ namespace Core\User\Transformer\User;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Core\User\Model\Scope;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class ScopeTransformer extends TransformerAbstract
 {
-    use Asset;
-
     /**
      * List of resources to automatically include
      *

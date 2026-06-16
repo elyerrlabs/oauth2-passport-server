@@ -27,13 +27,11 @@ namespace Core\Transaction\Transformer\Admin;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 use Core\Transaction\Model\Transaction;
 
 class TransactionTransformer extends TransformerAbstract
 {
-    use Asset;
     /**
      * List of resources to automatically include
      *
@@ -64,7 +62,7 @@ class TransactionTransformer extends TransformerAbstract
             'currency' => strtoupper($transaction->currency),
             'type' => $transaction->type,
             'status' => $transaction->status,
-            'total' => $this->formatMoney($transaction->total),
+            'total' => format_money($transaction->total),
             'payment_method' => $transaction->payment_method,
             'billing_period' => $transaction->billing_period,
             'renew' => $transaction->renew,
@@ -76,8 +74,8 @@ class TransactionTransformer extends TransformerAbstract
             'meta' => $transaction->meta,
             'code' => $transaction->code,
             'activated' => $transaction->activated_by ? $transaction->activatedBy->email : null,
-            'created' => $this->format_date($transaction->created_at),
-            'updated' => $this->format_date($transaction->updated_at),
+            'created' => format_date($transaction->created_at),
+            'updated' => format_date($transaction->updated_at),
             'payment_method_id' => $transaction->payment_method_id,
             'partner_commission_rate' => $transaction->partner_commission_rate,
             'owner' => $this->owner($transaction->user),
@@ -154,7 +152,7 @@ class TransactionTransformer extends TransformerAbstract
         return [
             'reason' => $refund->reason,
             'description' => $refund->description,
-            'amount' => $this->formatMoney($refund->amount),
+            'amount' => format_money($refund->amount),
             'currency' => strtoupper($refund->currency),
             'type' => $refund->type,
             'status' => $refund->status,

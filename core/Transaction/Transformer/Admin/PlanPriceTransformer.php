@@ -28,12 +28,10 @@ namespace Core\Transaction\Transformer\Admin;
  */
 
 use App\Models\Common\Price;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class PlanPriceTransformer extends TransformerAbstract
 {
-    use Asset;
 
     /**
      * List of resources to automatically include
@@ -66,10 +64,10 @@ class PlanPriceTransformer extends TransformerAbstract
             'billing_period_name' => config("billing.period.{$price->billing_period}.id"),
             'currency' => $price->currency,
             'amount' => $price->amount,
-            'amount_format' => $this->formatMoney($price->amount),
-            'expiration' => $this->format_date(billing_get_expiration_date($price->billing_period), 'Y-m-d H:i'),
-            'created' => $this->format_date($price->created_at),
-            'updated' => $this->format_date($price->updated_at),
+            'amount_format' => format_money($price->amount),
+            'expiration' => format_date(billing_get_expiration_date($price->billing_period), 'Y-m-d H:i'),
+            'created' => format_date($price->created_at),
+            'updated' => format_date($price->updated_at),
             'links' => [
                 'destroy' => route('transaction.admin.plans.price.destroy', [
                     'plan' => $price->priceable->id,

@@ -27,7 +27,6 @@ namespace App\Http\Controllers;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Assets\Asset;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Traits\Standard;
 use Elyerr\ApiResponse\Assets\JsonResponser;
@@ -43,8 +42,7 @@ class Controller extends BaseController
         Standard,
         DispatchesJobs,
         ValidatesRequests,
-        JsonResponser,
-        Asset;
+        JsonResponser;
 
     /**
      * Return information about the current users and transform date in the process
@@ -55,32 +53,5 @@ class Controller extends BaseController
         $user = fractal(Auth::user(), AuthTransformer::class);
 
         return json_decode(json_encode($user))->data;
-    }
-
-    /**
-     * Transform model data
-     * @param mixed $data
-     * @param mixed $transformer
-     */
-    public function transform($data, $transformer)
-    {
-        return fractal(
-            $data,
-            $transformer
-        )->toArray()['data'] ?? [];
-    }
-
-    /**
-     * Transform collection
-     * @param mixed $data
-     * @param mixed $transformer
-     * @return array
-     */
-    public function transformCollection($data, $transformer)
-    {
-        return fractal(
-            $data,
-            $transformer
-        )->toArray() ?? [];
     }
 }

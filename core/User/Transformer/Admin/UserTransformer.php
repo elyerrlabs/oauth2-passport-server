@@ -28,13 +28,11 @@ namespace Core\User\Transformer\Admin;
  */
 
 use App\Repositories\Traits\Scopes;
-use Core\User\Model\User;
-use Elyerr\ApiResponse\Assets\Asset;
+use Core\User\Model\User; 
 use League\Fractal\TransformerAbstract;
 
 class UserTransformer extends TransformerAbstract
 {
-    use Asset;
     use Scopes;
 
     /**
@@ -78,10 +76,10 @@ class UserTransformer extends TransformerAbstract
             'full_phone' => $user->dial_code . " " . $user->phone,
             'lang' => $user->lang,
             'email_verified_at' => $user->email_verified_at ? true : false,
-            'verified' => $this->format_date($user->email_verified_at),
-            'created' => $this->format_date($user->created_at),
-            'updated' => $this->format_date($user->updated_at),
-            'disabled' => $this->format_date($user->deleted_at),
+            'verified' => format_date($user->email_verified_at),
+            'created' => format_date($user->created_at),
+            'updated' => format_date($user->updated_at),
+            'disabled' => format_date($user->deleted_at),
             'scopes' => fractal($user->userScopes, UserScopeTransformer::class)->toArray()['data'] ?? [],
             'links' => [
                 'index' => route('user.admin.users.index'),

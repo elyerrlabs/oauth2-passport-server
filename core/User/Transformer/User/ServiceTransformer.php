@@ -28,12 +28,10 @@ namespace Core\User\Transformer\User;
 
 use Core\User\Model\Service;
 use Core\User\Transformer\User\ScopeTransformer;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class ServiceTransformer extends TransformerAbstract
 {
-    use Asset;
 
     /**
      * List of resources to automatically include

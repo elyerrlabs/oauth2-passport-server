@@ -28,7 +28,7 @@ namespace Core\Transaction\Http\Requests;
  */
 
 use App\Repositories\Traits\Generic;
-use App\Rules\BooleanRule;
+use Elyerr\ApiResponse\Rules\MoneyRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PlanUpdateRequest extends FormRequest
@@ -114,17 +114,7 @@ class PlanUpdateRequest extends FormRequest
                     }
                 }
             ],
-            'prices.*.amount' => [
-                'required',
-                function ($attribute, $value, $fail) {
-
-                    $price = str_replace('.', '', $value);
-
-                    if (filter_var($price, FILTER_VALIDATE_INT) == false) {
-                        $fail("The value is invalid");
-                    }
-                }
-            ],
+            'prices.*.amount' => ['required', new MoneyRule()],
         ];
     }
 }

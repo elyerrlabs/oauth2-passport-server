@@ -63,7 +63,7 @@ class UserController extends WebController
         $data = $this->userService->search($request)->paginate($request->input('per_page', 15));
 
         return Inertia::render("Admin/Users/Index", [
-            'data' => $this->transformCollection($data, UserTransformer::class),
+            'data' => transformCollection($data, UserTransformer::class),
             'routes' => [
                 'users' => route('user.admin.users.index'),
                 'create' => route('user.admin.users.create'),
@@ -109,7 +109,7 @@ class UserController extends WebController
         $data = $this->userService->details($id);
 
         return Inertia::render('Admin/Users/Show', [
-            'data' => $this->transform($data, UserTransformer::class),
+            'data' => transformModel($data, UserTransformer::class),
         ]);
     }
 
@@ -123,7 +123,7 @@ class UserController extends WebController
         $data = $this->userService->details($id);
 
         return Inertia::render('Admin/Users/Create', [
-            'data' => $this->transform($data, UserTransformer::class),
+            'data' => transformModel($data, UserTransformer::class),
             'routes' => [
                 'users' => route('user.admin.users.index'),
             ],

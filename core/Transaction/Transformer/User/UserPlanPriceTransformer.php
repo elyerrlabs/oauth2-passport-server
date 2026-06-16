@@ -28,13 +28,10 @@ namespace Core\Transaction\Transformer\User;
  */
 
 use App\Models\Common\Price;
-use Elyerr\ApiResponse\Assets\Asset;
 use League\Fractal\TransformerAbstract;
 
 class UserPlanPriceTransformer extends TransformerAbstract
 {
-    use Asset;
-
     /**
      * List of resources to automatically include
      *
@@ -66,8 +63,8 @@ class UserPlanPriceTransformer extends TransformerAbstract
             'billing_period_name' => config("billing.period.{$price->billing_period}.id"),
             'currency' => $price->currency,
             'amount' => $price->amount,
-            'amount_format' => $this->formatMoney($price->amount),
-            'expiration' => $this->format_date(billing_get_expiration_date($price->billing_period)),
+            'amount_format' => format_money($price->amount),
+            'expiration' => format_date(billing_get_expiration_date($price->billing_period)),
         ];
     }
 }

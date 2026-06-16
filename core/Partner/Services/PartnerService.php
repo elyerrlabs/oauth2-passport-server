@@ -29,7 +29,6 @@ namespace Core\Partner\Services;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Elyerr\ApiResponse\Assets\Asset;
 use Core\Partner\Repositories\UserRepository;
 use Core\Partner\Transformer\DataTransformer;
 use Elyerr\ApiResponse\Exceptions\ReportError;
@@ -38,8 +37,6 @@ use Core\Transaction\Repositories\TransactionRepository;
 
 class PartnerService
 {
-    use Asset;
-
     /**
      * Construct
      * @return void
@@ -262,7 +259,7 @@ class PartnerService
                 $sum = $items->sum('commission');
                 return [
                     'currency' => $currency,
-                    'total' => $this->formatMoney($sum),
+                    'total' => format_money($sum),
                 ];
             })
             ->values()

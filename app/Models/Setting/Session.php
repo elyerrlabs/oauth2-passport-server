@@ -28,11 +28,9 @@ namespace App\Models\Setting;
 
 use App\Models\Master;
 use App\Transformers\Session\SessionTransformer;
-use Elyerr\ApiResponse\Assets\Asset;
 
 class Session extends Master
 {
-    use Asset;
 
     public $table = "sessions";
 
