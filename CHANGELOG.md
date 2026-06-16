@@ -28,15 +28,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
-
-# Changelog
+ 
 
 ## [Unreleased]
 
 ### Changed
 
-- Updated Horizon to version 5.1.3.
+- Updated Horizon to version 5.1.2
+- Update  api-response to version v2.0.0
 - Improved the development environment deployment script.
+- improve docker helper scripts with root and stop support
 
 ---
 
