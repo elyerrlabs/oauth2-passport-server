@@ -29,7 +29,7 @@ set -e
 
 cd /var/www 
 
-echo "⚙️ Running system configuration..."
+echo "Running system configuration..."
 
 ENV_PATH="/var/www/env/.env"
 
@@ -60,9 +60,9 @@ chown -R www-data:www-data /home/www-data/.ssh
 
 php artisan storage:link
 
-echo "🛠️ Starting Supervisor..."
+echo "Starting Supervisor..."
 supervisord -c /etc/supervisord.conf &  
 
-echo "✅ All services started"
+echo "All services started"
 
 tail -f /dev/null

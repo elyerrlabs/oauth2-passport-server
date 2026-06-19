@@ -60,10 +60,10 @@ RUN apk add --no-cache \
 # Create dev user and group
 RUN \
     if ! getent group dev >/dev/null; then \
-        addgroup -g ${GID} dev; \
+    addgroup -g ${GID} dev; \
     fi && \
     if ! id dev >/dev/null 2>&1; then \
-        adduser -D -u ${UID} -G dev -s /bin/bash dev; \
+    adduser -D -u ${UID} -G dev -s /bin/bash dev; \
     fi
 
 # Symlink php
@@ -71,7 +71,14 @@ RUN ln -sf /usr/bin/php84 /usr/bin/php
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN mkdir -p /etc/supervisor.d 
 
+USER dev
 WORKDIR /home/dev/code
+
+RUN composer global require elyerr/elyscope && \
+    echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc && \
+    source ~/.bashrc
+
+USER root
 
 COPY php/www.conf /etc/php84/php-fpm.d/www.conf
 COPY php/php.ini /etc/php84/conf.d/99-custom.ini
@@ -87,14 +94,14 @@ RUN chmod 550 /usr/local/bin/entrypoint.sh
 # Replace UID and GID in configuration files
 RUN \
     find \
-        /etc/php84 \
-        /etc/nginx \
-        /etc/supervisor.d \
-        /usr/local/bin/entrypoint.sh \
-        -type f \
-        -exec sed -i \
-            -e "s|\${UID}|dev|g" \
-            -e "s|\${GID}|dev|g" {} + \
+    /etc/php84 \
+    /etc/nginx \
+    /etc/supervisor.d \
+    /usr/local/bin/entrypoint.sh \
+    -type f \
+    -exec sed -i \
+    -e "s|\${UID}|dev|g" \
+    -e "s|\${GID}|dev|g" {} + \
     2>/dev/null
 
 

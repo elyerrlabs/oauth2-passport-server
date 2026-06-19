@@ -87,6 +87,8 @@ RUN apk add --no-cache \
 RUN ln -sf /usr/bin/php84 /usr/bin/php
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+RUN composer global require elyerr/elyscope
+
 RUN apk add --no-cache --virtual unzip \
     && composer install --no-dev --optimize-autoloader \
     && composer clear-cache 
@@ -142,13 +144,39 @@ RUN apk add --no-cache \
     protobuf \
     openssh
 
-# Add user and group www-data
+# Add user and group www-data:www-data
 RUN getent passwd www-data || adduser -S -G www-data -s /usr/sbin/nologin www-data
 
 # Symlink php
 RUN ln -sf /usr/bin/php84 /usr/bin/php
 RUN mkdir -p /etc/supervisor.d 
+# Remove orphan directory
+RUN rm -rf localhost
 
+# Nginx configuration
+COPY docker/production/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker/production/nginx/default.conf /etc/nginx/http.d/default.conf
+RUN chmod 440 /etc/nginx/http.d/default.conf
+
+# Php84 settins
+COPY docker/production/php/www.conf /etc/php84/php-fpm.d/www.conf
+COPY docker/production/php/php.ini /etc/php84/conf.d/99-custom.ini
+
+# Supervisor files
+COPY docker/production/supervisor/laravel.ini /etc/supervisor.d/laravel.ini
+COPY docker/production/supervisor/servers.ini /etc/supervisor.d/servers.ini
+
+# Composer
+COPY --from=bphp /usr/local/bin/composer /usr/local/bin/composer
+# Elyscope dependencies
+COPY --from=bphp  /root/.composer /home/www-data/.composer
+RUN chown -R www-data:www-data /home/www-data/.composer
+
+# Entry point settings
+COPY docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 550 /usr/local/bin/entrypoint.sh
+
+USER www-data
 WORKDIR /var/www/
 
 COPY app app
@@ -165,23 +193,13 @@ COPY third-party third-party
 COPY artisan artisan
 COPY LICENSE.md LICENSE.md
 
-COPY docker/production/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY docker/production/nginx/default.conf /etc/nginx/http.d/default.conf
-COPY docker/production/php/www.conf /etc/php84/php-fpm.d/www.conf
-COPY docker/production/php/php.ini /etc/php84/conf.d/99-custom.ini
-COPY docker/production/supervisor/laravel.ini /etc/supervisor.d/laravel.ini
-COPY docker/production/supervisor/servers.ini /etc/supervisor.d/servers.ini
-COPY docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh 
-
-# supervisor config to manage services
-RUN chmod 440 /etc/nginx/http.d/default.conf \
-    && chmod 550 /usr/local/bin/entrypoint.sh \
-    && rm -rf docker \
-    && rm -rf public
-
 COPY --from=bnode /var/www/public public
 COPY --from=bphp  /var/www/vendor vendor
 COPY --from=bphp  /var/www/bootstrap/cache bootstrap/cache 
 COPY --from=bphp  /var/www/composer.json composer.json
 COPY --from=bphp  /var/www/composer.lock composer.lock
-COPY --from=bphp  /usr/local/bin/composer /usr/local/bin/composer
+
+RUN echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc && \
+    source ~/.bashrc
+
+USER root
