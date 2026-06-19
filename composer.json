@@ -27,6 +27,7 @@
     "php": "^8.2.0",
     "elyerr/api-response": "^v2.0.0",
     "elyerr/horizon": "^5.1",
+    "elyerr/laravel-runtime": "^1.1",
     "guzzlehttp/guzzle": "^7.2",
     "http-interop/http-factory-guzzle": "^1.2",
     "inertiajs/inertia-laravel": "^3.1",
