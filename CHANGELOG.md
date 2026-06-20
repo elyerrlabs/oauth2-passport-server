@@ -34,13 +34,14 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 ### Changed
 
-* Updated Horizon to version 5.1.2.
-* Updated API Response to version 2.0.0.
-* Improved the development environment deployment script.
-* Enhanced Docker helper scripts with root and stop support.
-* Added Elyscope support for Elymod modules.
-* Added Laravel Runtime to support Elymod module development.
-* Added Laravel Runtime to support Elymod module development.
+- Updated Horizon to version 5.1.2.
+- Updated API Response to version 2.0.0.
+- Improved the development environment deployment script.
+- Enhanced Docker helper scripts with root and stop support.
+- Added Elyscope support for Elymod modules.
+- Added Laravel Runtime to support Elymod module development.
+- Added Laravel Runtime to support Elymod module development.
+- Migrate to Laravel 12.x from Laravel 13.x
 
 ---
 
