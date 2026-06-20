@@ -29,7 +29,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Cookie\CookieValuePrefix;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery as Middleware;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class VerifyCsrfToken extends Middleware

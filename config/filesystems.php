@@ -41,7 +41,7 @@ return [
         'tmp' => [
             'driver' => 'local',
             'root' => storage_path('app/tmp'),
-            'serve' => true,
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],
@@ -49,7 +49,7 @@ return [
         'backups' => [
             'driver' => 'local',
             'root' => storage_path('app/backups'),
-            'serve' => true,
+            'serve' => false,
             'visibility' => 'private',
             'throw' => false,
             'report' => false,

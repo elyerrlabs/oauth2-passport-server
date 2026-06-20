@@ -27,7 +27,7 @@ namespace App\Services;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Exceptions\ReportError; 
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use App\Support\CacheKeys;
 use Core\User\Model\Scope;
 use App\Models\OAuth\Token;
@@ -39,7 +39,7 @@ use Laravel\Passport\Passport;
 use App\Models\Setting\Setting;
 use App\Models\OAuth\RefreshToken;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\URL; 
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
@@ -192,7 +192,7 @@ class SettingService
         //------------------------CACHE CONFIGURATION-------------------//
         settingLoad('cache.default', 'file');
         settingLoad('cache.expires', 30);
-        settingLoad('cache.prefix', Str::slug(config('app.name', 'oauth2_server'), '_') . '_cache_');
+        settingLoad('cache.prefix', Str::slug((string) env('APP_NAME', 'laravel')).'-cache-');
 
         settingLoad('cache.stores.database.connection', null);
         settingLoad('cache.stores.database.table', 'cache');
