@@ -28,7 +28,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
- 
 
 ## [Unreleased]
 
@@ -42,6 +41,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Added Laravel Runtime to support Elymod module development.
 - Added Laravel Runtime to support Elymod module development.
 - Migrate to Laravel 12.x from Laravel 13.x
+    - migrate application bootstrap to Laravel 13 structure
 
 ---
 
