@@ -1,20 +1,10 @@
 <?php
 
-use App\Exceptions\OAuthAuthenticationException;
-use Elyerr\ApiResponse\Exceptions\ReportError;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Exceptions\RenderException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
-use Illuminate\Session\TokenMismatchException;
-use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -76,51 +66,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
 
         $exceptions->render(function (Throwable $e, Request $request) {
-
-            if ($e instanceof ValidationException) {
-                return $this->validationErrors($request, $e);
-            }
-
-            if ($e instanceof NotFoundHttpException && request()->acceptsHtml()) {
-
-                if (request()->path() === '/') {
-                    return redirect()->route('login');
-                }
-
-                return redirect('/');
-            }
-
-            if ($e instanceof ModelNotFoundException) {
-                throw new ReportError(__("Model not be found"), 404);
-            }
-
-            if ($e instanceof TokenMismatchException) {
-                throw new ReportError(__($e->getMessage()), 419);
-            }
-
-            if ($e instanceof BadRequestHttpException) {
-                throw new ReportError(__($e->getMessage()), 400);
-            }
-
-            if ($e instanceof AuthorizationException) {
-                throw new ReportError(__("Don't have the access rights"), 403);
-            }
-
-            if ($e instanceof OAuthAuthenticationException) {
-
-                return redirectToHome();
-            }
-
-            if (method_exists($e, 'render') && $response = $e->render($request)) {
-                return Router::toResponse($request, $response);
-            }
-
-            if ($e instanceof Responsable) {
-                return $e->toResponse($request);
-            }
-
-            if ($e instanceof AccessDeniedHttpException) {
-                throw new ReportError(__("You haven't logged in yet. Please log in to unlock all features."), 401);
-            }
+            RenderException::render($e, $request);
         });
     })->create();
