@@ -29,14 +29,13 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Laravel\Passport\Client;
 use App\Repositories\Traits\Scopes;
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Symfony\Component\HttpFoundation\Response;
 use Laravel\Passport\Exceptions\AuthenticationException;
-use Laravel\Passport\Http\Middleware\CheckToken as middleware;
+use Laravel\Passport\Http\Middleware\CheckToken as Middleware;
 
-class CheckScopes extends middleware
+class CheckScopes extends Middleware
 {
     use Scopes;
 
@@ -93,6 +92,5 @@ class CheckScopes extends middleware
         }
 
         throw new ReportError(__("You do not have the necessary permissions to perform this action"), 403);
-
     }
 }
