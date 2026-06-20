@@ -108,41 +108,24 @@ class RouteServiceProvider extends ServiceProvider
                                     $new_remaining_time
                                 );
 
-
-                                Log::warning("Rate limit exceeded (blocked user kept trying)", [
-                                    'ip' => $request->ip(),
-                                    'path' => $request->path(),
-                                    'user_id' => $request->user()?->id,
-                                    'blocked_until' => $new_remaining_time,
-                                ]);
-
                                 throw new ReportError("Too many attempts. Your access is blocked until {$new_remaining_time} (UTC).", 429);
                             }
 
                             // Set up the initial rate limit
                             return Limit::perMinute($value['limit'])
                                 ->by($user)
-                                ->response(function (Request $request) use ($cacheKey, $value, $user) {
+                                ->response(function () use ($cacheKey, $value) {
 
-                                $unlock_time = now()->addMinutes(filter_var($value['block_time'], FILTER_VALIDATE_INT));
+                                    $unlock_time = now()->addMinutes(filter_var($value['block_time'], FILTER_VALIDATE_INT));
 
-                                Cache::put($cacheKey . ':blocked', true, $unlock_time);
-                                Cache::put($cacheKey . ':remaining_minutes', $unlock_time, $unlock_time);
+                                    Cache::put($cacheKey . ':blocked', true, $unlock_time);
+                                    Cache::put($cacheKey . ':remaining_minutes', $unlock_time, $unlock_time);
 
-                                Log::warning("Rate limit exceeded (initial block)", [
-                                    'ip' => $request->ip(),
-                                    'path' => $request->path(),
-                                    'user_id' => $user,
-                                    'blocked_until' => $unlock_time->toDateTimeString()
-                                ]);
-
-                                throw new ReportError("Too many attempts. Your access is temporarily blocked until {$unlock_time} (UTC).", 429);
-                            });
+                                    throw new ReportError("Too many attempts. Your access is temporarily blocked until {$unlock_time} (UTC).", 429);
+                                });
                         }
                     );
-
                 }
-
             }
         }
     }
