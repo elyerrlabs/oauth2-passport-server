@@ -36,7 +36,7 @@ return [
 
             "transactions" => [
                 "id" => "transaction",
-                "name" => __("Transactions"),
+                "name" => "Transactions",
                 "route" => "transaction.admin.dashboard",
                 "icon" => "mdi mdi-swap-vertical",
                 'service' => "administrator:transactions",
@@ -45,7 +45,7 @@ return [
 
             'plans' => [
                 "id" => "plans",
-                "name" => __("Plans"),
+                "name" => "Plans",
                 "route" => "transaction.admin.plans.index",
                 "icon" => "mdi mdi-cash-clock",
                 'service' => 'administrator:plan',
@@ -56,7 +56,7 @@ return [
         "admin_routes" => [
             'refunds' => [
                 'id' => 'review-refund',
-                'name' => __('Review refunds'),
+                'name' => 'Review refunds',
                 'route' => "transaction.admin.refunds.review.index",
                 'icon' => "mdi mdi-credit-card-refund-outline",
                 'service' => 'administrator:refunds',
@@ -66,28 +66,28 @@ return [
         "user_routes" => [
             'transaction' => [
                 'id' => 'transaction',
-                'name' => __('My transactions'),
+                'name' => 'My transactions',
                 'route' => 'transaction.transactions.index',
                 'icon' => 'mdi mdi-cash-edit',
                 'service' => true,
             ],
             'my_subscription' => [
                 'id' => 'subscriptions',
-                'name' => __('My subscriptions'),
+                'name' => 'My subscriptions',
                 'route' => 'transaction.subscriptions.index',
                 'icon' => 'mdi mdi-gift-outline',
                 'service' => true,
             ],
             'buy_subscription' => [
                 'id' => 'store',
-                'name' => __('Buy subscription'),
+                'name' => 'Buy subscription',
                 'route' => 'transaction.plans.index',
                 'icon' => 'mdi mdi-currency-usd',
                 'service' => true,
             ],
             'delivery_address' => [
                 'id' => 'index',
-                'name' => __('My Delivery address'),
+                'name' => 'My Delivery address',
                 'route' => 'transaction.delivery-addresses.index',
                 'icon' => 'mdi mdi-map-marker-outline',
                 'service' => true,

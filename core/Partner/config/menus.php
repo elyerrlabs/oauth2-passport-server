@@ -33,7 +33,7 @@ return [
 
             "partner" => [
                 "id" => "partner",
-                "name" => __("Partner"),
+                "name" => "Partner",
                 "route" => "partner.dashboard",
                 "icon" => "mdi mdi-account-cash",
                 'service' => 'reseller:partner',
@@ -44,7 +44,7 @@ return [
 
             "partner" => [
                 "id" => "list",
-                "name" => __("Partners"),
+                "name" => "Partners",
                 "route" => "partner.admin.partner.index",
                 "icon" => "mdi mdi-handshake-outline",
                 'service' => 'administrator:partner',
@@ -57,7 +57,7 @@ return [
     "admin_routes" => [
         [
             "id" => "list",
-            "name" => __("Partners"),
+            "name" => "Partners",
             "route" => "partner.admin.partner.index",
             "icon" => "mdi mdi-handshake-outline",
             'service' => 'administrator:partner',
@@ -68,21 +68,21 @@ return [
     "partner_routes" => [
         [
             "id" => "dashboard",
-            "name" => __("Dashboard"),
+            "name" => "Dashboard",
             "route" => "partner.dashboard",
             "icon" => "mdi mdi-account-cash",
             'service' => 'reseller:partner',
         ],
         [
             "id" => "referral_link",
-            "name" => __("Referral Link"),
+            "name" => "Referral Link",
             "route" => "partner.show",
             "icon" => "mdi mdi-reload",
             'service' => 'reseller:partner',
         ],
         [
             "id" => "sales",
-            "name" => __("My Sales"),
+            "name" => "My Sales",
             "route" => "partner.sales",
             "icon" => "mdi mdi-cash-multiple",
             'service' => 'reseller:partner',

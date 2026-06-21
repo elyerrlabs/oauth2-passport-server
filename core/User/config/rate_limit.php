@@ -34,25 +34,25 @@ return [
     'admin' => [
         'limit' => 300,
         'block_time' => 120,
-        'name' => __('Rate Limit for Admin routes')
+        'name' => 'Rate Limit for Admin routes'
     ],
 
     'api_admin' => [
         'limit' => 300,
         'block_time' => 120,
-        'name' => __('Rate Limit for Api Admin routes')
+        'name' => 'Rate Limit for Api Admin routes'
     ],
 
     'api_users' => [
         'limit' => 300,
         'block_time' => 120,
-        'name' => __('Rate Limit for Api user routes')
+        'name' => 'Rate Limit for Api user routes'
     ],
 
     'web' => [
         'limit' => 300,
         'block_time' => 120,
-        'name' => __('Rate Limit for Web routes')
+        'name' => 'Rate Limit for Web routes'
     ],
 
 ];

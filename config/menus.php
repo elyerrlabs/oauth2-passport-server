@@ -89,7 +89,7 @@ return [
         //"user_routes" => [
         // "ecommerce" => [ // group
         //     "id" => "my-route", // id
-        //     "name" => __("My Route"),
+        //     "name" => "My Route",
         //     "route" => "example.route",
         //     "icon" => "mdi-store-cog",
         //     'service' => true // true or scope, example "administrator:role:view"
