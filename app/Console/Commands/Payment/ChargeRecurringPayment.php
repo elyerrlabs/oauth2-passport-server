@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Commands\Payment;
+namespace App\Console\Commands\Payment;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
