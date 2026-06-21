@@ -79,7 +79,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        SettingService::getDefaultSetting();
+        app(SettingService::class)->getDefaultSetting();
 
         Auth::extend('oauth2-passport-server', function ($app, $name, array $config) {
             return new TokenGuard(

@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use App\Services\SettingService;
 use Illuminate\Support\Facades\File;
 use App\Repositories\ModuleRepository;
-
+use App\Repositories\SettingRepository;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -49,6 +49,7 @@ class ModuleDelete extends Command
     public function handle(): int
     {
         $modulesPath = base_path('third-party');
+        $settingRepository = app(SettingRepository::class);
 
         if (!File::exists($modulesPath)) {
             $this->error('No third-party directory found.');
@@ -138,7 +139,7 @@ class ModuleDelete extends Command
             app(SettingService::class)->deleteKeysByModule("third-party.{$name}");
             $this->info("Module configuration keys deleted.");
         } else {
-            settingAdd("module.third-party.{$name}.module_enabled", 0);
+            $settingRepository->add("module.third-party.{$name}.module_enabled", 0);
             $this->info("Module '{$name}' marked as disabled.");
         }
 

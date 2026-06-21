@@ -72,7 +72,7 @@ class SettingController extends WebController
      */
     public function reloadCache(Request $request)
     {
-        $this->settingService::resetConfigKeys();
+        $this->settingService->resetConfigKeys();
 
         return redirect($request->current_route)->with('status', __('Cache updated successfully'));
     }

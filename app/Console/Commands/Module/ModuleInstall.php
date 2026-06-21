@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Module;
 
 use Illuminate\Console\Command;
+use App\Repositories\SettingRepository;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -55,6 +56,7 @@ class ModuleInstall extends Command
 
     public function handle(): int
     {
+        $settingRepository = app(SettingRepository::class);
         // attributes
         $provider = $this->option('provider');
         $source = $this->option('source');
@@ -131,9 +133,9 @@ class ModuleInstall extends Command
         // Check if the module is already registered
         if (
             app(\App\Repositories\ModuleRepository::class)
-                ->query()
-                ->where('name', $name)
-                ->exists()
+            ->query()
+            ->where('name', $name)
+            ->exists()
         ) {
             $this->error("Module '{$name}' already registered in database.");
             return self::FAILURE;
@@ -153,11 +155,9 @@ class ModuleInstall extends Command
                 if (str_starts_with($source, 'git@')) {
 
                     $protocol = 'ssh';
-
                 } elseif (str_starts_with($source, 'https://')) {
 
                     $protocol = 'https';
-
                 } else {
 
                     $protocol = $this->choice(
@@ -182,7 +182,6 @@ class ModuleInstall extends Command
                         $this->option('private'),
                         FILTER_VALIDATE_BOOLEAN
                     );
-
                 } else {
 
                     $private = $this->confirm(
@@ -247,12 +246,10 @@ class ModuleInstall extends Command
                         'Enter custom version/tag/branch',
                         ''
                     );
-
                 } else {
 
                     $currentVersion = $selectedVersion;
                 }
-
             } else {
 
                 $currentVersion = $this->ask(
@@ -289,7 +286,7 @@ class ModuleInstall extends Command
             File::makeDirectory($thirdPartyPath, 0755, true);
         }
 
-        return DB::transaction(function () use ($data, $modulePath, $environment, $name) {
+        return DB::transaction(function () use ($data, $modulePath, $environment, $name, $settingRepository) {
 
             // Clone repository
             if (!$this->cloneRepository($data)) {
@@ -300,10 +297,7 @@ class ModuleInstall extends Command
             app(\App\Repositories\ModuleRepository::class)
                 ->create($data);
 
-            settingAdd(
-                "module.third-party.{$name}.module_enabled",
-                1
-            );
+            $settingRepository->add("module.third-party.{$name}.module_enabled", 1);
 
             // Install dependencies
             if (
@@ -400,7 +394,6 @@ class ModuleInstall extends Command
             $this->line(Artisan::output());
 
             return true;
-
         } catch (\Throwable $e) {
 
             $this->error(
@@ -420,7 +413,6 @@ class ModuleInstall extends Command
             $this->line(Artisan::output());
 
             return true;
-
         } catch (\Throwable $th) {
 
             $this->error(
@@ -598,12 +590,11 @@ class ModuleInstall extends Command
             }
 
             return [];
-
         } catch (\Throwable $th) {
 
             $this->warn(
                 'Unable to fetch repository versions: '
-                . $th->getMessage()
+                    . $th->getMessage()
             );
 
             return [];

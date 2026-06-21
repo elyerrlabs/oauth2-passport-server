@@ -25,67 +25,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Models\Setting\Setting;
-use App\Support\CacheKeys;
 use App\Support\Translation\ModuleTranslation;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-
-if (!function_exists('settingAdd')) {
-    /**
-     * Add or update an item
-     * @param mixed $key
-     * @param mixed $value
-     * @param mixed $cache
-     * @return void
-     */
-    function settingAdd($key, $value)
-    {
-        try {
-
-            // Save database
-            Setting::updateOrCreate(
-                [
-                    'key' => $key,
-                ],
-                [
-                    'key' => $key,
-                    'value' => $value,
-                ]
-            );
-
-        } catch (\Exception $th) {
-            Log::error("Error creating settings : " . $th->getMessage(), $th->getTrace());
-        }
-    }
-}
-
-
-if (!function_exists('settingLoad')) {
-    /**
-     * Add an item only if it does not exist
-     * @param mixed $key
-     * @param mixed $value
-     * @param mixed $cache
-     * @return void
-     */
-    function settingLoad($key, $value)
-    {
-        try {
-            Setting::firstOrCreate(
-                [
-                    'key' => $key,
-                ],
-                [
-                    'value' => $value
-                ]
-            );
-        } catch (\Exception $th) {
-        }
-    }
-}
 
 if (!function_exists("getCurrencySymbol")) {
     /**
@@ -96,37 +37,6 @@ if (!function_exists("getCurrencySymbol")) {
     {
         $currencies = config('billing.currency');
         return $currencies[$key]['symbol'] ?? null;
-    }
-}
-
-if (!function_exists('settingItem')) {
-
-    /**
-     * Get the setting item
-     * @param mixed $key
-     * @param mixed $default
-     * @param mixed $cache
-     */
-    function settingItem($key, $default = null)
-    {
-        try {
-
-            if (CacheKeys::exceptKeys($key)) {
-
-                $cacheKey = CacheKeys::settings($key);
-
-                // Verify key and return if exists
-                if (Cache::has($cacheKey)) {
-                    return Cache::get($cacheKey);
-                }
-            }
-
-            $data = Setting::where('key', $key)->first();
-
-            return $data ? $data->value : $default;
-        } catch (\Exception $e) {
-        }
-        return $default;
     }
 }
 
@@ -141,7 +51,6 @@ if (!function_exists('redirectToHome')) {
         return redirect()->route('user.dashboard');
     }
 }
-
 
 if (!function_exists('normalizeSlug')) {
     /**

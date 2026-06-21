@@ -36,8 +36,8 @@ use App\Models\OAuth\Client;
 use Illuminate\Http\Request;
 use App\Models\OAuth\AuthCode;
 use Laravel\Passport\Passport;
-use App\Models\Setting\Setting;
 use App\Models\OAuth\RefreshToken;
+use App\Repositories\SettingRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
@@ -47,16 +47,15 @@ use Illuminate\Database\QueryException;
 
 class SettingService
 {
-    public function __construct(protected Setting $model)
+    public function __construct(protected SettingRepository $settingRepository)
     {
-
     }
 
     /**
      * Cache key
      * @return string
      */
-    public static function cacheKey()
+    public function cacheKey()
     {
         return "settings";
     }
@@ -65,46 +64,41 @@ class SettingService
      * Restore the all config keys
      * @return void
      */
-    public static function resetConfigKeys()
+    public function resetConfigKeys()
     {
-        file_put_contents(static::pid(), time());
+        file_put_contents($this->pid(), time());
     }
 
     /**
      * Set a pid to reset cache
      * @return string
      */
-    public static function pid()
+    public function pid()
     {
         return base_path('.cache.pid');
     }
 
-    public static function ping()
+    public function ping()
     {
-
-
         Cache::store('redis')->get('ping');
-
-
     }
 
     /**
      * Load configs
      */
-    public static function loadConfigKeys()
+    public function loadConfigKeys()
     {
         try {
-
-            if (file_exists(static::pid())) {
+            if (file_exists($this->pid())) {
                 Cache::forget(CacheKeys::config());
-                unlink(static::pid());
+                unlink($this->pid());
             }
 
             $settings = Cache::remember(
                 CacheKeys::config(),
                 now()->addDays(intval(config('cache.expires', 90))),
                 function () {
-                    return \App\Models\Setting\Setting::pluck('value', 'key')->toArray();
+                    return $this->settingRepository->getConfig();
                 }
             );
 
@@ -136,10 +130,9 @@ class SettingService
      * Set default values
      * @return void
      */
-    public static function getDefaultSetting()
+    public function getDefaultSetting()
     {
-
-        static::loadConfigKeys();
+        $this->loadConfigKeys();
 
         //Horizon cache settings
         Config::set('database.redis.horizon.url', config('database.redis.cache.url', null));
@@ -149,7 +142,7 @@ class SettingService
         Config::set('database.redis.horizon.port', intval(config('database.redis.cache.port', 6379)));
         Config::set('database.redis.horizon.database', intval(config('database.redis.cache.database', 0)));
 
-        static::getPassportSetting();
+        $this->getPassportSetting();
 
         URL::forceScheme(env('APP_URL_SCHEME', 'https'));
     }
@@ -158,239 +151,239 @@ class SettingService
      * Add default setting into the system
      * @return void
      */
-    public static function setDefaultKeys()
+    public function setDefaultKeys()
     {
         //App name
-        settingLoad('app.name', 'Oauth2 Server');
-        settingLoad('app.org_name', 'Server org');
+        $this->settingRepository->load('app.name', 'Oauth2 Server');
+        $this->settingRepository->load('app.org_name', 'Server org');
 
         //expires time for reset password
-        settingLoad('auth.passwords.users.expire', 10);
+        $this->settingRepository->load('auth.passwords.users.expire', 10);
         //expires time to try another request
-        settingLoad('auth.passwords.users.throttle', 10);
+        $this->settingRepository->load('auth.passwords.users.throttle', 10);
 
-        settingLoad('auth.password_timeout', 10800);
+        $this->settingRepository->load('auth.password_timeout', 10800);
 
         //------------------------REDIS CONFIGURATION-------------------//
         //redis default settings
-        settingLoad('database.redis.default.url', null);
-        settingLoad('database.redis.default.host', '127.0.0.1');
-        settingLoad('database.redis.default.username', null);
-        settingLoad('database.redis.default.password', null);
-        settingLoad('database.redis.default.port', '6379');
-        settingLoad('database.redis.default.database', 0);
+        $this->settingRepository->load('database.redis.default.url', null);
+        $this->settingRepository->load('database.redis.default.host', '127.0.0.1');
+        $this->settingRepository->load('database.redis.default.username', null);
+        $this->settingRepository->load('database.redis.default.password', null);
+        $this->settingRepository->load('database.redis.default.port', '6379');
+        $this->settingRepository->load('database.redis.default.database', 0);
 
         //redis cache settings
-        settingLoad('database.redis.cache.url', null);
-        settingLoad('database.redis.cache.host', '127.0.0.1');
-        settingLoad('database.redis.cache.username', null);
-        settingLoad('database.redis.cache.password', null);
-        settingLoad('database.redis.cache.port', '6379');
-        settingLoad('database.redis.cache.database', 1);
+        $this->settingRepository->load('database.redis.cache.url', null);
+        $this->settingRepository->load('database.redis.cache.host', '127.0.0.1');
+        $this->settingRepository->load('database.redis.cache.username', null);
+        $this->settingRepository->load('database.redis.cache.password', null);
+        $this->settingRepository->load('database.redis.cache.port', '6379');
+        $this->settingRepository->load('database.redis.cache.database', 1);
         //------------------------END REDIS CONFIGURATION-------------------//
 
         //------------------------CACHE CONFIGURATION-------------------//
-        settingLoad('cache.default', 'file');
-        settingLoad('cache.expires', 30);
-        settingLoad('cache.prefix', Str::slug((string) env('APP_NAME', 'laravel')).'-cache-');
+        $this->settingRepository->load('cache.default', 'file');
+        $this->settingRepository->load('cache.expires', 30);
+        $this->settingRepository->load('cache.prefix', Str::slug((string) env('APP_NAME', 'laravel')) . '-cache-');
 
-        settingLoad('cache.stores.database.connection', null);
-        settingLoad('cache.stores.database.table', 'cache');
+        $this->settingRepository->load('cache.stores.database.connection', null);
+        $this->settingRepository->load('cache.stores.database.table', 'cache');
 
-        settingLoad('cache.stores.redis.connection', 'cache');
-        settingLoad('cache.stores.redis.lock_connection', 'default');
+        $this->settingRepository->load('cache.stores.redis.connection', 'cache');
+        $this->settingRepository->load('cache.stores.redis.lock_connection', 'default');
 
-        settingLoad('cache.stores.memcached.persistent_id', null);
-        settingLoad('cache.stores.memcached.sasl.username', null);
-        settingLoad('cache.stores.memcached.sasl.password', null);
-        settingLoad('cache.stores.memcached.servers.0.host', '127.0.0.1');
-        settingLoad('cache.stores.memcached.servers.0.port', 11211);
-        settingLoad('cache.stores.memcached.servers.0.weight', 100);
+        $this->settingRepository->load('cache.stores.memcached.persistent_id', null);
+        $this->settingRepository->load('cache.stores.memcached.sasl.username', null);
+        $this->settingRepository->load('cache.stores.memcached.sasl.password', null);
+        $this->settingRepository->load('cache.stores.memcached.servers.0.host', '127.0.0.1');
+        $this->settingRepository->load('cache.stores.memcached.servers.0.port', 11211);
+        $this->settingRepository->load('cache.stores.memcached.servers.0.weight', 100);
 
-        settingLoad('cache.stores.dynamodb.key', null);
-        settingLoad('cache.stores.dynamodb.secret', null);
-        settingLoad('cache.stores.dynamodb.region', 'us-east-1');
-        settingLoad('cache.stores.dynamodb.table', 'cache');
-        settingLoad('cache.stores.dynamodb.endpoint', null);
+        $this->settingRepository->load('cache.stores.dynamodb.key', null);
+        $this->settingRepository->load('cache.stores.dynamodb.secret', null);
+        $this->settingRepository->load('cache.stores.dynamodb.region', 'us-east-1');
+        $this->settingRepository->load('cache.stores.dynamodb.table', 'cache');
+        $this->settingRepository->load('cache.stores.dynamodb.endpoint', null);
         //------------------------END CACHE CONFIGURATION-------------------//
 
 
         //---------------------QUEUES CONFIG--------------------///
         //default queues
-        settingLoad('queue.default', 'database');
+        $this->settingRepository->load('queue.default', 'database');
 
         //Sync setting
-        //settingLoad('queue.connections.sync.driver', 'sync');
+        //$this->settingRepository->load('queue.connections.sync.driver', 'sync');
 
         //Database settings
-        //settingLoad('queue.connections.database.driver', 'database');
-        settingLoad('queue.connections.database.table', 'jobs');
-        settingLoad('queue.connections.database.queue', 'default');
-        settingLoad('queue.connections.database.retry_after', 90);
-        settingLoad('queue.connections.database.after_commit', false);
+        //$this->settingRepository->load('queue.connections.database.driver', 'database');
+        $this->settingRepository->load('queue.connections.database.table', 'jobs');
+        $this->settingRepository->load('queue.connections.database.queue', 'default');
+        $this->settingRepository->load('queue.connections.database.retry_after', 90);
+        $this->settingRepository->load('queue.connections.database.after_commit', false);
 
         //beanstalkd Settings
-        //settingLoad('queue.connections.beanstalkd.driver', 'beanstalkd');
-        settingLoad('queue.connections.beanstalkd.host', 'localhost');
-        settingLoad('queue.connections.beanstalkd.queue', 'default');
-        settingLoad('queue.connections.beanstalkd.retry_after', 90);
-        settingLoad('queue.connections.beanstalkd.block_for', 0);
-        settingLoad('queue.connections.beanstalkd.after_commit', false);
+        //$this->settingRepository->load('queue.connections.beanstalkd.driver', 'beanstalkd');
+        $this->settingRepository->load('queue.connections.beanstalkd.host', 'localhost');
+        $this->settingRepository->load('queue.connections.beanstalkd.queue', 'default');
+        $this->settingRepository->load('queue.connections.beanstalkd.retry_after', 90);
+        $this->settingRepository->load('queue.connections.beanstalkd.block_for', 0);
+        $this->settingRepository->load('queue.connections.beanstalkd.after_commit', false);
 
         //AWS settings
-        //settingLoad('queue.connections.sqs.driver', 'sqs');
-        settingLoad('queue.connections.sqs.key', null);
-        settingLoad('queue.connections.sqs.secret', null);
-        settingLoad('queue.connections.sqs.prefix', 'https://sqs.us-east-1.amazonaws.com/your-account-id');
-        settingLoad('queue.connections.sqs.queue', 'default');
-        settingLoad('queue.connections.sqs.suffix', null);
-        settingLoad('queue.connections.sqs.region', 'us-east-1');
-        settingLoad('queue.connections.sqs.after_commit', false);
+        //$this->settingRepository->load('queue.connections.sqs.driver', 'sqs');
+        $this->settingRepository->load('queue.connections.sqs.key', null);
+        $this->settingRepository->load('queue.connections.sqs.secret', null);
+        $this->settingRepository->load('queue.connections.sqs.prefix', 'https://sqs.us-east-1.amazonaws.com/your-account-id');
+        $this->settingRepository->load('queue.connections.sqs.queue', 'default');
+        $this->settingRepository->load('queue.connections.sqs.suffix', null);
+        $this->settingRepository->load('queue.connections.sqs.region', 'us-east-1');
+        $this->settingRepository->load('queue.connections.sqs.after_commit', false);
 
         //Redis Settings
-        //settingLoad('queue.connections.redis.driver', 'redis');
-        settingLoad('queue.connections.redis.connection', 'default');
-        settingLoad('queue.connections.redis.queue', 'default');
-        settingLoad('queue.connections.redis.retry_after', 90);
-        settingLoad('queue.connections.redis.block_for', null);
-        settingLoad('queue.connections.redis.after_commit', false);
+        //$this->settingRepository->load('queue.connections.redis.driver', 'redis');
+        $this->settingRepository->load('queue.connections.redis.connection', 'default');
+        $this->settingRepository->load('queue.connections.redis.queue', 'default');
+        $this->settingRepository->load('queue.connections.redis.retry_after', 90);
+        $this->settingRepository->load('queue.connections.redis.block_for', null);
+        $this->settingRepository->load('queue.connections.redis.after_commit', false);
 
         //Fail queue settings
-        //settingLoad('queue.failed.driver', 'database-uuids');
-        //settingLoad('queue.failed.database', 'pgsql');
-        //settingLoad('queue.failed.table', 'failed_jobs');
+        //$this->settingRepository->load('queue.failed.driver', 'database-uuids');
+        //$this->settingRepository->load('queue.failed.database', 'pgsql');
+        //$this->settingRepository->load('queue.failed.table', 'failed_jobs');
         //---------------------END QUEUES CONFIG--------------------///
 
         //----------FILESYSTEM SETTINGS------------------------------------------
-        settingLoad('filesystems.default', 'local');
-        settingLoad('filesystems.disks.local.driver', 'local');
-        settingLoad('filesystems.disks.local.root', storage_path('app'));
-        settingLoad('filesystems.disks.local.throw', false);
+        $this->settingRepository->load('filesystems.default', 'local');
+        $this->settingRepository->load('filesystems.disks.local.driver', 'local');
+        $this->settingRepository->load('filesystems.disks.local.root', storage_path('app'));
+        $this->settingRepository->load('filesystems.disks.local.throw', false);
 
-        //settingLoad('filesystems.disks.public.driver', 'local');
-        settingLoad('filesystems.disks.public.root', storage_path('app/public'));
-        settingLoad('filesystems.disks.public.url', config('app.url', null) . '/storage');
-        settingLoad('filesystems.disks.public.visibility', 'public');
-        settingLoad('filesystems.disks.public.throw', false);
+        //$this->settingRepository->load('filesystems.disks.public.driver', 'local');
+        $this->settingRepository->load('filesystems.disks.public.root', storage_path('app/public'));
+        $this->settingRepository->load('filesystems.disks.public.url', config('app.url', null) . '/storage');
+        $this->settingRepository->load('filesystems.disks.public.visibility', 'public');
+        $this->settingRepository->load('filesystems.disks.public.throw', false);
 
-        //settingLoad('filesystems.disks.s3.driver', 's3');
-        settingLoad('filesystems.disks.s3.key', null);
-        settingLoad('filesystems.disks.s3.secret', null);
-        settingLoad('filesystems.disks.s3.region', null);
-        settingLoad('filesystems.disks.s3.bucket', null);
-        settingLoad('filesystems.disks.s3.url', null);
-        settingLoad('filesystems.disks.s3.endpoint', null);
-        settingLoad('filesystems.disks.s3.use_path_style_endpoint', false);
-        settingLoad('filesystems.disks.s3.throw', false);
+        //$this->settingRepository->load('filesystems.disks.s3.driver', 's3');
+        $this->settingRepository->load('filesystems.disks.s3.key', null);
+        $this->settingRepository->load('filesystems.disks.s3.secret', null);
+        $this->settingRepository->load('filesystems.disks.s3.region', null);
+        $this->settingRepository->load('filesystems.disks.s3.bucket', null);
+        $this->settingRepository->load('filesystems.disks.s3.url', null);
+        $this->settingRepository->load('filesystems.disks.s3.endpoint', null);
+        $this->settingRepository->load('filesystems.disks.s3.use_path_style_endpoint', false);
+        $this->settingRepository->load('filesystems.disks.s3.throw', false);
 
-        settingLoad('filesystems.links.public', public_path('storage'));
-        settingLoad('filesystems.links.storage', storage_path('app/public'));
+        $this->settingRepository->load('filesystems.links.public', public_path('storage'));
+        $this->settingRepository->load('filesystems.links.storage', storage_path('app/public'));
 
 
         //-------EMAIL SETTINGS -------------------------
-        settingLoad('mail.default', 'smtp');
+        $this->settingRepository->load('mail.default', 'smtp');
 
-        //settingLoad('mail.mailers.smtp.transport', 'smtp');
-        settingLoad('mail.mailers.smtp.host', 'smtp.mailgun.org');
-        settingLoad('mail.mailers.smtp.port', 587);
-        settingLoad('mail.mailers.smtp.encryption', 'tls');
-        settingLoad('mail.mailers.smtp.username', null);
-        settingLoad('mail.mailers.smtp.password', null);
-        settingLoad('mail.mailers.smtp.timeout', null);
-        settingLoad('mail.mailers.smtp.local_domain', null);
+        //$this->settingRepository->load('mail.mailers.smtp.transport', 'smtp');
+        $this->settingRepository->load('mail.mailers.smtp.host', 'smtp.mailgun.org');
+        $this->settingRepository->load('mail.mailers.smtp.port', 587);
+        $this->settingRepository->load('mail.mailers.smtp.encryption', 'tls');
+        $this->settingRepository->load('mail.mailers.smtp.username', null);
+        $this->settingRepository->load('mail.mailers.smtp.password', null);
+        $this->settingRepository->load('mail.mailers.smtp.timeout', null);
+        $this->settingRepository->load('mail.mailers.smtp.local_domain', null);
 
-        //settingLoad('mail.mailers.ses.transport', 'ses');
-        //settingLoad('mail.mailers.mailgun.transport', 'mailgun');
-        //settingLoad('mail.mailers.postmark.transport', 'postmark');
+        //$this->settingRepository->load('mail.mailers.ses.transport', 'ses');
+        //$this->settingRepository->load('mail.mailers.mailgun.transport', 'mailgun');
+        //$this->settingRepository->load('mail.mailers.postmark.transport', 'postmark');
 
-        //settingLoad('mail.mailers.sendmail.transport', 'sendmail');
+        //$this->settingRepository->load('mail.mailers.sendmail.transport', 'sendmail');
 
-        //settingLoad('mail.mailers.log.transport', 'log');
-        //settingLoad('mail.mailers.log.channel', 'MAIL_LOG_CHANNEL');
+        //$this->settingRepository->load('mail.mailers.log.transport', 'log');
+        //$this->settingRepository->load('mail.mailers.log.channel', 'MAIL_LOG_CHANNEL');
 
-        //settingLoad('mail.mailers.array.transport', 'array');
+        //$this->settingRepository->load('mail.mailers.array.transport', 'array');
 
-        //settingLoad('mail.mailers.failover.transport', 'failover');
-        //settingLoad('mail.mailers.failover.mailers', ['smtp', 'log']);
+        //$this->settingRepository->load('mail.mailers.failover.transport', 'failover');
+        //$this->settingRepository->load('mail.mailers.failover.mailers', ['smtp', 'log']);
 
-        settingLoad('mail.from.address', 'hello@example.com');
-        settingLoad('mail.from.name', 'Example');
+        $this->settingRepository->load('mail.from.address', 'hello@example.com');
+        $this->settingRepository->load('mail.from.name', 'Example');
 
         //---------Setting services ---------------
-        settingLoad('services.mailgun.domain', null);
-        settingLoad('services.mailgun.secret', null);
-        settingLoad('services.mailgun.endpoint', 'api.mailgun.net');
-        settingLoad('services.mailgun.scheme', 'https');
+        $this->settingRepository->load('services.mailgun.domain', null);
+        $this->settingRepository->load('services.mailgun.secret', null);
+        $this->settingRepository->load('services.mailgun.endpoint', 'api.mailgun.net');
+        $this->settingRepository->load('services.mailgun.scheme', 'https');
 
-        settingLoad('services.passport.token', null);
+        $this->settingRepository->load('services.passport.token', null);
 
-        settingLoad('services.ses.key', null);
-        settingLoad('services.ses.secret', null);
-        settingLoad('services.ses.region', null);
+        $this->settingRepository->load('services.ses.key', null);
+        $this->settingRepository->load('services.ses.secret', null);
+        $this->settingRepository->load('services.ses.region', null);
 
-        settingLoad('services.captcha.driver', "hcaptcha");
-        settingLoad('services.captcha.enabled', false);
+        $this->settingRepository->load('services.captcha.driver', "hcaptcha");
+        $this->settingRepository->load('services.captcha.enabled', false);
 
-        settingLoad('services.captcha.providers.turnstile.api', 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
-        settingLoad('services.captcha.providers.turnstile.secret', null);
-        settingLoad('services.captcha.providers.turnstile.sitekey', null);
+        $this->settingRepository->load('services.captcha.providers.turnstile.api', 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
+        $this->settingRepository->load('services.captcha.providers.turnstile.secret', null);
+        $this->settingRepository->load('services.captcha.providers.turnstile.sitekey', null);
 
-        settingLoad('services.captcha.providers.hcaptcha.api', 'https://hcaptcha.com/siteverify');
-        settingLoad('services.captcha.providers.hcaptcha.secret', null);
-        settingLoad('services.captcha.providers.hcaptcha.sitekey', null);
+        $this->settingRepository->load('services.captcha.providers.hcaptcha.api', 'https://hcaptcha.com/siteverify');
+        $this->settingRepository->load('services.captcha.providers.hcaptcha.secret', null);
+        $this->settingRepository->load('services.captcha.providers.hcaptcha.sitekey', null);
 
         //Payment settings
-        settingLoad('billing.methods.stripe.name', 'Credit Card (Stripe)');
-        settingLoad('billing.methods.stripe.icon', 'mdi-credit-card-outline');
-        settingLoad('billing.methods.stripe.enable', true);
-        settingLoad('services.stripe.secret', null);
-        settingLoad('services.stripe.key', null);
-        settingLoad('services.stripe.webhook_secret', null);
+        $this->settingRepository->load('billing.methods.stripe.name', 'Credit Card (Stripe)');
+        $this->settingRepository->load('billing.methods.stripe.icon', 'mdi-credit-card-outline');
+        $this->settingRepository->load('billing.methods.stripe.enable', true);
+        $this->settingRepository->load('services.stripe.secret', null);
+        $this->settingRepository->load('services.stripe.key', null);
+        $this->settingRepository->load('services.stripe.webhook_secret', null);
 
-        settingLoad('billing.methods.offline.name', 'Offline');
-        settingLoad('billing.methods.offline.icon', 'mdi-cash-register');
-        settingLoad('billing.methods.offline.enable', true);
+        $this->settingRepository->load('billing.methods.offline.name', 'Offline');
+        $this->settingRepository->load('billing.methods.offline.icon', 'mdi-cash-register');
+        $this->settingRepository->load('billing.methods.offline.enable', true);
 
-        SettingLoad('billing.renew.enable', false);
-        SettingLoad('billing.renew.hours_before', 10);
-        SettingLoad('billing.renew.bonus_enabled', false);
-        SettingLoad('billing.renew.grace_period_days', 5);
+        $this->settingRepository->load('billing.renew.enable', false);
+        $this->settingRepository->load('billing.renew.hours_before', 10);
+        $this->settingRepository->load('billing.renew.bonus_enabled', false);
+        $this->settingRepository->load('billing.renew.grace_period_days', 5);
 
         //System settings
-        settingLoad('system.home_page', "/");
-        settingLoad('system.cookie_name', "oauth2_server");
-        settingLoad('system.passport_token_services', null);
-        settingLoad('system.verify_account_time', 5);
-        settingLoad('system.disable_create_user_by_command', false);
-        settingLoad('system.destroy_user_after', 30);
-        settingLoad('system.code_2fa_email_expires', 5);
-        settingLoad('system.csp_enabled', false);
-        settingLoad('system.privacy_url', null);
-        settingLoad('system.terms_url', null);
-        settingLoad('system.policy_cookies', null);
-        settingLoad('system.birthday.active', false);
-        settingLoad('system.birthday.limit', 18);
-        settingLoad('system.demo.enabled', false);
-        settingLoad('system.demo.email', null);
-        settingLoad('system.demo.password', null);
-        settingLoad('system.legal.terms_and_condition', null);
-        settingLoad('system.legal.policies_of_privacy', null);
-        settingLoad('system.legal.policies_of_cookies', null);
+        $this->settingRepository->load('system.home_page', "/");
+        $this->settingRepository->load('system.cookie_name', "oauth2_server");
+        $this->settingRepository->load('system.passport_token_services', null);
+        $this->settingRepository->load('system.verify_account_time', 5);
+        $this->settingRepository->load('system.disable_create_user_by_command', false);
+        $this->settingRepository->load('system.destroy_user_after', 30);
+        $this->settingRepository->load('system.code_2fa_email_expires', 5);
+        $this->settingRepository->load('system.csp_enabled', false);
+        $this->settingRepository->load('system.privacy_url', null);
+        $this->settingRepository->load('system.terms_url', null);
+        $this->settingRepository->load('system.policy_cookies', null);
+        $this->settingRepository->load('system.birthday.active', false);
+        $this->settingRepository->load('system.birthday.limit', 18);
+        $this->settingRepository->load('system.demo.enabled', false);
+        $this->settingRepository->load('system.demo.email', null);
+        $this->settingRepository->load('system.demo.password', null);
+        $this->settingRepository->load('system.legal.terms_and_condition', null);
+        $this->settingRepository->load('system.legal.policies_of_privacy', null);
+        $this->settingRepository->load('system.legal.policies_of_cookies', null);
 
 
 
         //Session settings
-        //settingLoad('session.driver', 'database');
-        settingLoad('session.lifetime', 7200);
-        settingLoad('session.expire_on_close', false);
-        settingLoad('session.encrypt', false);
-        settingLoad('session.table', 'sessions');
-        settingLoad('session.cookie', 'oauth2_session');
-        settingLoad('session.xcsrf-token', 'oauth2_csrf');
-        settingLoad('session.path', '/');
-        settingLoad('session.secure', false);
-        settingLoad('session.http_only', true);
-        settingLoad('session.partitioned', false);
+        //$this->settingRepository->load('session.driver', 'database');
+        $this->settingRepository->load('session.lifetime', 7200);
+        $this->settingRepository->load('session.expire_on_close', false);
+        $this->settingRepository->load('session.encrypt', false);
+        $this->settingRepository->load('session.table', 'sessions');
+        $this->settingRepository->load('session.cookie', 'oauth2_session');
+        $this->settingRepository->load('session.xcsrf-token', 'oauth2_csrf');
+        $this->settingRepository->load('session.path', '/');
+        $this->settingRepository->load('session.secure', false);
+        $this->settingRepository->load('session.http_only', true);
+        $this->settingRepository->load('session.partitioned', false);
     }
 
 
@@ -398,7 +391,7 @@ class SettingService
      * Setting for laravel passport
      * @return void
      */
-    public static function getPassportSetting()
+    public function getPassportSetting()
     {
         Passport::authorizationView('vendor.passport.authorize');
         Passport::loadKeysFrom(base_path('secrets/oauth'));
@@ -459,11 +452,11 @@ class SettingService
         $data = transformConfigRequest($data);
 
         foreach ($data as $key => $value) {
-            settingAdd("{$moduleConfigKey}{$key}", $value);
+            $this->settingRepository->add("{$moduleConfigKey}{$key}", $value);
         }
 
         //Set a pid to reset cache
-        file_put_contents(static::pid(), time());
+        file_put_contents($this->pid(), time());
     }
 
     /**
@@ -548,7 +541,6 @@ class SettingService
                     403
                 );
             }
-
         } catch (\Throwable $e) {
             Log::error("Redis exception", array_merge($context, [
                 'error' => $e->getMessage(),
@@ -575,15 +567,24 @@ class SettingService
      */
     public function deleteKey(string $key)
     {
-        $setting = $this->model->where('key', $key)->first();
+        $setting = $this->settingRepository->hasKey($key);
 
         if (!empty($setting)) {
-            $setting->delete();
+            $this->settingRepository->deleteKey($key);
         }
     }
 
     public function deleteKeysByModule(string $key)
     {
-        $this->model->whereRaw("key LIKE ?", ["%$key%"])->delete();
+        $this->settingRepository->deleteKeysByModule($key);
+    }
+
+    /**
+     * Migrate old config to file from db
+     * @return void
+     */
+    public function migrateConfig()
+    {
+        $this->settingRepository->importOldConfig();
     }
 }

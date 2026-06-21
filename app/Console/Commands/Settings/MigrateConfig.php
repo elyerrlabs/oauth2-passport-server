@@ -28,45 +28,32 @@ namespace App\Console\Commands\Settings;
  */
 
 use App\Services\SettingService;
-use Illuminate\Console\Command;
-use App\Services\SiteMapService;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Console\Command;
 
-class SettingsSystem extends Command
+class MigrateConfig extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'settings:system-start';
+    protected $signature = 'settings:migrate-config';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Install essential data to start the server';
+    protected $description = 'Migrate legacy config (v7 and below) from DB to settings file';
 
     /**
-     * Loading default settings for the system, for example default roles, services,
-     * list of countries and channel for broadcast system
-     * @return void
+     * Execute the console command.
      */
     public function handle()
     {
-        $this->info("Install server");
-        Log::info("Install server");
-        Artisan::call('settings:key-generator');
-        Artisan::call('migrate', ['--force' => true]);
-        Artisan::call('settings:upload-scopes');
-        Artisan::call('settings:countries-upload');
-        Artisan::call('settings:channels-upload');
-        Artisan::call('passport:keys');
-        app(SettingService::class)->setDefaultKeys();
-        (new SiteMapService(false))->restorePublicFromBackup();
-        $this->info("Server installed successfully");
-        Log::info("Server installed successfully");
+        app(SettingService::class)->migrateConfig();
+        $this->info("Database has been migrate to the file successfully");
+        Log::info("Database has been migrate to the file successfully");
     }
 }
