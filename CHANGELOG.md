@@ -42,6 +42,18 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Added Laravel Runtime to support Elymod module development.
 - Migrate to Laravel 12.x from Laravel 13.x
     - migrate application bootstrap to Laravel 13 structure
+- Migrated settings storage from database to dedicated file-based configuration.
+- Added SettingRepository for settings management.
+- Refactored settings services to use repository injection.
+- Replaced static settings methods with instance-based methods.
+- Added command to migrate legacy settings from database to file storage.
+- Removed configuration translation/transformation layer.
+- Simplified settings loading and persistence workflow.
+- Refactored Core and Third-Party Service Providers.
+- Standardized service provider lifecycle following Laravel conventions.
+- Moved configuration registration and merging logic to provider registration phase.
+- Improved dynamic module discovery and provider registration.
+- Reorganized module resource loading (routes, views, translations, and migrations).
 
 ---
 
