@@ -28,3 +28,4 @@ supervisord.pid
 .codex
 .cache.pid
 !.dockerignore
+settings.php
