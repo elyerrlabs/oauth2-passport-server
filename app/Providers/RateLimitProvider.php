@@ -29,17 +29,18 @@ namespace App\Providers;
 
 use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
-class RouteServiceProvider extends ServiceProvider
+class RateLimitProvider extends ServiceProvider
 {
 
-    public const HOME = '/';
+    public function register()
+    {
+    }
+
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -49,15 +50,6 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
-
-        $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
-
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
-        });
     }
 
     /**
@@ -75,12 +67,12 @@ class RouteServiceProvider extends ServiceProvider
             foreach ($groups as $group => $items) {
 
                 foreach ($items as $key => $value) {
-
                     RateLimiter::for(
                         "{$module}:{$group}:{$key}",
                         function (Request $request) use ($module, $group, $key, $value) {
                             // Use user ID if authenticated, otherwise use IP address for rate limiting
-                            $user = auth()->check() ? auth()->user()->id : $request->ip();
+                            $user = $request->user() ? $request->user()->id : $request->ip();
+
                             // Create a unique cache key for the user and the specific rate limit
                             $cacheKey = "rate-limit:{$module}_{$group}_{$key}:$user";
 
@@ -116,13 +108,13 @@ class RouteServiceProvider extends ServiceProvider
                                 ->by($user)
                                 ->response(function () use ($cacheKey, $value) {
 
-                                    $unlock_time = now()->addMinutes(filter_var($value['block_time'], FILTER_VALIDATE_INT));
+                                $unlock_time = now()->addMinutes(filter_var($value['block_time'], FILTER_VALIDATE_INT));
 
-                                    Cache::put($cacheKey . ':blocked', true, $unlock_time);
-                                    Cache::put($cacheKey . ':remaining_minutes', $unlock_time, $unlock_time);
+                                Cache::put($cacheKey . ':blocked', true, $unlock_time);
+                                Cache::put($cacheKey . ':remaining_minutes', $unlock_time, $unlock_time);
 
-                                    throw new ReportError("Too many attempts. Your access is temporarily blocked until {$unlock_time} (UTC).", 429);
-                                });
+                                throw new ReportError("Too many attempts. Your access is temporarily blocked until {$unlock_time} (UTC).", 429);
+                            });
                         }
                     );
                 }

@@ -81,7 +81,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-
         // Override Authorization controller
         $this->app->when(AuthorizationController::class)
             ->needs(StatefulGuard::class)

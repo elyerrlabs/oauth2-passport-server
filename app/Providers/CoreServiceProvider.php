@@ -39,55 +39,16 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
-    }
-
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
-        $this->loadModules();
-    }
-
-    /**
-     * Register configuration files for core modules
-     * @return void
-     */
-    private function loadModules(): void
-    {
         $modulesPath = base_path('core');
 
         foreach (File::directories($modulesPath) as $modulePath) {
-            $moduleName = basename($modulePath);
+
+            $moduleName = $this->moduleName(basename($modulePath));
+
             $configPath = $modulePath . '/config';
-            $migrationPath = $modulePath . '/migrations';
-            $routesPath = $modulePath . '/routes';
-            $pathView = $modulePath . '/resources/views';
-            $module = $configPath . "/module.php";
 
-
-            $moduleFile = $configPath . "/module.php";
-
-            // Check if the module is active
-            if (file_exists($moduleFile)) {
-                // Load config
-                $moduleConfig = include $moduleFile;
-
-                // verify keys
-                if (is_array($moduleConfig) && array_key_exists('module_enabled', $moduleConfig)) {
-
-                    $newkey = 'module.core.' . strtolower($moduleName) . '.module_enabled';
-                    $value = isset($moduleConfig['module_enabled']) ? $moduleConfig['module_enabled'] : true;
-
-                    if (config($newkey, true) == false) {
-                        continue;
-                    }
-                }
-            }
-
-            if (is_dir($migrationPath)) {
-                $this->loadMigrationsFrom($migrationPath);
+            if (!$this->moduleIsActive($moduleName)) {
+                continue;
             }
 
             // Read config dir
@@ -96,35 +57,34 @@ class CoreServiceProvider extends ServiceProvider
                 $key = basename($file, '.php');
 
                 $currentConfig = config($key, []);
-                $loadFile = include $file;
+
+                $filePath = include $file;
+                $moduleConfig['core'][$moduleName] = include $file;
 
                 // Merge configs
                 switch ($key) {
                     case 'rate_limit':
-                        $rate_limit['core'][strtolower($moduleName)] = $loadFile;
-                        $merged = $this->mergeConfigSmart($rate_limit, $currentConfig);
+                        $merged = $this->mergeConfigSmart($moduleConfig, $currentConfig);
                         config()->set($key, $merged);
                         break;
 
                     case 'routes':
-                        $routes['core'][strtolower($moduleName)] = $loadFile;
-                        $merged = $this->mergeConfigSmart($routes, $currentConfig);
+                        $merged = $this->mergeConfigSmart($moduleConfig, $currentConfig);
                         config()->set($key, $merged);
                         break;
 
                     case 'module':
-                        $modules['core'][strtolower($moduleName)] = $loadFile;
-                        $merged = $this->mergeConfigSmart($modules, $currentConfig);
+                        $merged = $this->mergeConfigSmart($moduleConfig, $currentConfig);
                         config()->set($key, $merged);
                         break;
 
                     case 'menus': // Merge Menus
-                        $merged = $this->mergeConfigSmart($loadFile, $currentConfig);
+                        $merged = $this->mergeConfigSmart($filePath, $currentConfig);
                         config()->set($key, $merged);
 
                         break;
                     case 'auth':
-                        $merged = $this->mergeConfigSmart($currentConfig, $loadFile);
+                        $merged = $this->mergeConfigSmart($currentConfig, $filePath);
                         config()->set('auth', $merged);
                         break;
                     default:
@@ -132,12 +92,35 @@ class CoreServiceProvider extends ServiceProvider
                         break;
                 }
             }
+        }
+    }
+
+    /**
+     * Bootstrap services.
+     */
+    public function boot(): void
+    {
+        $modulesPath = base_path('core');
+
+        foreach (File::directories($modulesPath) as $modulePath) {
+            $moduleName = $this->moduleName(basename($modulePath));
+            $migrationPath = $modulePath . '/migrations';
+            $routesPath = $modulePath . '/routes';
+            $pathView = $modulePath . '/resources/views';
+
+            if (!$this->moduleIsActive($moduleName)) {
+                continue;
+            }
+
+            if (is_dir($migrationPath)) {
+                $this->loadMigrationsFrom($migrationPath);
+            }
 
             // Load views
-            $this->loadViewsFrom($pathView, ucfirst($moduleName));
+            $this->loadViewsFrom($pathView, Str::studly($moduleName));
 
             if (is_dir($modulePath . '/lang')) {
-                $this->loadTranslationsFrom($modulePath . '/lang', ucfirst($moduleName));
+                $this->loadTranslationsFrom($modulePath . '/lang', Str::studly($moduleName));
             }
 
             //Module root
@@ -151,10 +134,10 @@ class CoreServiceProvider extends ServiceProvider
 
                         if (file_exists($routesPath . '/admin.php')) {
                             Route::group([
-                                'prefix' => strtolower($moduleName) . '/admin',
-                                'as' => strtolower($moduleName) . '.admin.',
+                                'prefix' => $this->moduleName($moduleName) . '/admin',
+                                'as' => $this->moduleName($moduleName) . '.admin.',
                                 'middleware' => ['web'],
-                                'module' => ucfirst($moduleName),
+                                'module' => Str::studly($moduleName),
                                 'module_type' => 'core',
                                 'module_path' => $moduleRootPath
                             ], function () use ($routesPath) {
@@ -164,10 +147,10 @@ class CoreServiceProvider extends ServiceProvider
 
                         if (file_exists($routesPath . '/web.php')) {
                             Route::group([
-                                'prefix' => strtolower($moduleName),
-                                'as' => strtolower($moduleName) . ".",
+                                'prefix' => $this->moduleName($moduleName),
+                                'as' => $this->moduleName($moduleName) . ".",
                                 'middleware' => ['web'],
-                                'module' => ucfirst($moduleName),
+                                'module' => Str::studly($moduleName),
                                 'module_type' => 'core',
                                 'module_path' => $moduleRootPath
                             ], function () use ($routesPath) {
@@ -176,8 +159,8 @@ class CoreServiceProvider extends ServiceProvider
                         }
 
                         if (file_exists($routesPath . '/api.php')) {
-                            Route::prefix("api/" . strtolower($moduleName))
-                                ->as('api.' . strtolower($moduleName) . '.')
+                            Route::prefix("api/" . $this->moduleName($moduleName))
+                                ->as('api.' . $this->moduleName($moduleName) . '.')
                                 ->middleware('api')
                                 ->group($routesPath . '/api.php');
                         }
@@ -186,19 +169,38 @@ class CoreServiceProvider extends ServiceProvider
 
                 if (file_exists($routesPath . '/public.php')) {
                     Route::group([
-                        'as' => strtolower($moduleName) . '.',
+                        'as' => $this->moduleName($moduleName) . '.',
                         'middleware' => ['web'],
-                        'module' => ucfirst($moduleName),
+                        'module' => Str::studly($moduleName),
                         'module_type' => 'core',
                         'module_path' => $moduleRootPath
                     ], function () use ($routesPath) {
                         require $routesPath . '/public.php';
                     });
                 }
-
             }
         }
     }
+
+    /**
+     * Module name
+     * @param mixed $name
+     * @return ''|string
+     */
+    public function moduleName($name)
+    {
+        return Str::kebab($name);
+    }
+
+    /**
+     * Module active
+     * @param string $name
+     */
+    public function moduleIsActive(string $name)
+    {
+        return config("module.core.$name.module_enabled", true);
+    }
+
 
     /**
      * Merge configs
@@ -215,11 +217,9 @@ class CoreServiceProvider extends ServiceProvider
                 if ($this->isNumericArray($base[$key]) && $this->isNumericArray($value)) {
                     $base[$key] = array_values(array_merge($base[$key], $value));
                     ksort($base);
-
                 } else { // Associative
                     $base[$key] = $this->mergeConfigSmart($base[$key], $value);
                     ksort($base);
-
                 }
             } else {
                 $base[$key] = $value;

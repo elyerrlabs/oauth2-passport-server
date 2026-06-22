@@ -56,7 +56,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Passport::ignoreRoutes();
         Fortify::ignoreRoutes();
-        $this->loadRateLimitModules();
         $this->app->singleton('translation.loader', function ($app) {
             return new FileLoader($app['files'], ModuleTranslation::loaderPaths());
         });

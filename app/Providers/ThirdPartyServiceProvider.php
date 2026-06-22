@@ -28,6 +28,7 @@ namespace App\Providers;
  */
 
 use Composer\Autoload\ClassLoader;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
@@ -39,130 +40,93 @@ class ThirdPartyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
-    }
-
-    public function boot()
-    {
-        $this->loadModules();
-    }
-
-
-    public function loadModules()
-    {
         $modulesPath = base_path('third-party');
 
         // Read all directories
         foreach (File::directories($modulesPath) as $modulePath) {
 
-            $baseName = basename($modulePath);
+            $moduleName = $this->moduleName(basename($modulePath));
 
-            // Module name
-            $moduleName = strtolower($baseName);
+            if (!$this->moduleIsActive($moduleName)) {
+                continue;
+            }
 
-            // File config relative path
-            $module = "{$modulePath}/config/module.php";
+            if (is_dir($modulePath . '/lang')) {
+                $this->loadTranslationsFrom($modulePath . '/lang', Str::studly($moduleName));
+            }
 
-            // Check the existing module file
-            if (file_exists($module)) {
-                // Load module file
-                $moduleConfig = include $module;
-                // Checking the keys exists [module_enabled]
-                if (isset($moduleConfig['module_enabled']) && $moduleConfig['module_enabled']) {
+            /**
+             * @var ClassLoader $loader
+             */
+            $loader = $this->getComposerLoader();
 
-                    $Key = "module.third-party.{$moduleName}.module_enabled";
+            if (!$loader) {
+                continue;
+            }
 
-                    //Verify if it the module is enable
-                    if (!config($Key, $moduleConfig['module_enabled'])) {
-                        continue;
-                    }
-                    // Start to load module
-                    /**
-                     * @var ClassLoader $loader
-                     */
-                    $loader = require base_path('vendor/autoload.php');
+            $composerPath = $modulesPath . "/{$moduleName}/composer.json";
 
-                    $composerPath = $modulesPath . "/{$baseName}/composer.json";
+            if (!file_exists($composerPath)) {
+                continue;
+            }
 
-                    if (!file_exists($composerPath)) {
-                        continue;
-                    }
+            $composer = json_decode(file_get_contents($composerPath), true);
 
-                    $composer = json_decode(file_get_contents($composerPath), true);
+            // Load dynamic namespaces
+            $namespaces = $composer['autoload']['psr-4'];
+            $realPath = realpath(dirname($composerPath));
+            foreach ($namespaces as $namespace => $path) {
+                $loader->setPsr4($namespace, "{$realPath}/$path");
+            }
 
-                    // Load dynamic namespaces
-                    $namespaces = $composer['autoload']['psr-4'];
-                    $realPath = realpath(dirname($composerPath));
-                    foreach ($namespaces as $namespace => $path) {
-                        $loader->setPsr4($namespace, "{$realPath}/$path");
-                    }
-
-                    // register providers
-                    $providers = $composer['extra']['laravel']['providers'] ?? [];
-
-                    foreach ($providers as $provider) {
-                        if (class_exists($provider)) {
-                            $this->app->register($provider);
-                        } else {
-                            Log::warning("Provider $provider cannot be found");
-                        }
-                    }
-
-                    if (is_dir($modulePath . '/lang')) {
-                        $this->loadTranslationsFrom($modulePath . '/lang', ucfirst($baseName));
-                    }
-
-                    // path to import morph class
-                    $morphPath = "{$modulePath}/config/morph.php";
-                    if (file_exists($morphPath)) {
-                        $morph = include $morphPath;
-                        $currentMorph = config('morph', []);
-                        $data = $this->mergeConfigSmart($currentMorph, $morph);
-                        config()->set('morph', $data);
-                    }
+            // register providers
+            $providers = $composer['extra']['laravel']['providers'] ?? [];
+            foreach ($providers as $provider) {
+                if (class_exists($provider)) {
+                    $this->app->register($provider);
+                } else {
+                    Log::warning("Provider $provider cannot be found for module $moduleName");
                 }
             }
         }
     }
 
+    public function boot()
+    {
+    }
 
     /**
-     * Merge configs
-     * @param array $base
-     * @param array $merge
-     * @return array
+     * Get composer autload
+     * @return ClassLoader|null
      */
-    private function mergeConfigSmart(array $base, array $merge): array
+    private function getComposerLoader()
     {
-        foreach ($merge as $key => $value) {
+        foreach (spl_autoload_functions() as $autoload) {
 
-            if (isset($base[$key]) && is_array($base[$key]) && is_array($value)) {
-
-                if ($this->isNumericArray($base[$key]) && $this->isNumericArray($value)) {
-                    $base[$key] = array_values(array_merge($base[$key], $value));
-                    ksort($base);
-                } else { // Associative
-                    $base[$key] = $this->mergeConfigSmart($base[$key], $value);
-                    ksort($base);
-                }
-            } else {
-                $base[$key] = $value;
-                ksort($base);
+            if (is_array($autoload) && $autoload[0] instanceof ClassLoader) {
+                return $autoload[0];
             }
         }
-        ksort($base);
-        return $base;
+
+        return null;
     }
 
     /**
-     * Verify arrays
-     * @param array $array
-     * @return bool
+     * Module name
+     * @param mixed $name
+     * @return ''|string
      */
-    private function isNumericArray(array $array): bool
+    public function moduleName($name)
     {
-        return array_keys($array) === range(0, count($array) - 1);
+        return Str::kebab($name);
     }
 
-
+    /**
+     * Module active
+     * @param string $name
+     */
+    public function moduleIsActive(string $name)
+    {
+        return config("module.third-party.$name.module_enabled", true);
+    }
 }

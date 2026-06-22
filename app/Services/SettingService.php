@@ -47,9 +47,7 @@ use Illuminate\Database\QueryException;
 
 class SettingService
 {
-    public function __construct(protected SettingRepository $settingRepository)
-    {
-    }
+    public function __construct(protected SettingRepository $settingRepository) {}
 
     /**
      * Cache key
@@ -132,6 +130,8 @@ class SettingService
      */
     public function getDefaultSetting()
     {
+        URL::forceScheme(env('APP_URL_SCHEME', 'https'));
+        
         $this->loadConfigKeys();
 
         //Horizon cache settings
@@ -143,8 +143,6 @@ class SettingService
         Config::set('database.redis.horizon.database', intval(config('database.redis.cache.database', 0)));
 
         $this->getPassportSetting();
-
-        URL::forceScheme(env('APP_URL_SCHEME', 'https'));
     }
 
     /**
