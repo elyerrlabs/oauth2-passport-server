@@ -224,7 +224,7 @@
                                             class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">{{ __('Host') }}</label>
                                         <input type="text" name="cache[stores][memcached][servers][0][host]"
                                             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 transition-colors duration-300"
-                                            value="{{ SettingItem('cache.stores.memcached.servers.0.host') }}"
+                                            value="{{ config('cache.stores.memcached.servers.0.host') }}"
                                             placeholder="127.0.0.1">
                                     </div>
                                     <div>
@@ -232,7 +232,7 @@
                                             class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">{{ __('Port') }}</label>
                                         <input type="number" name="cache[stores][memcached][servers][0][port]"
                                             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 transition-colors duration-300"
-                                            value="{{ SettingItem('cache.stores.memcached.servers.0.port') }}"
+                                            value="{{ config('cache.stores.memcached.servers.0.port') }}"
                                             placeholder="11211" min="1" max="65535">
                                     </div>
                                     <div>
@@ -240,7 +240,7 @@
                                             class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">{{ __('Weight') }}</label>
                                         <input type="number" name="cache[stores][memcached][servers][0][weight]"
                                             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 transition-colors duration-300"
-                                            value="{{ SettingItem('cache.stores.memcached.servers.0.weight') }}"
+                                            value="{{ config('cache.stores.memcached.servers.0.weight') }}"
                                             placeholder="100" min="1">
                                     </div>
                                 </div>
