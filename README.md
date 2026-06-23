@@ -4,233 +4,238 @@
 
 OAuth2 Passport Server is a modern Identity and Access Management (IAM) platform designed to centralize authentication, authorization, and permissions across applications, APIs, microservices, and enterprise systems.
 
-Built on top of OAuth2, OpenID Connect (OIDC), and Elymod, the platform provides a centralized Identity Provider (IdP) capable of managing users, applications, permissions, subscriptions, and services from a single location.
+Built on OAuth2, OpenID Connect (OIDC), and Elymod, it provides a centralized Identity Provider (IdP) for managing users, applications, permissions, subscriptions, and services from a single system.
 
-Designed for startups, SaaS platforms, enterprises, and distributed architectures, OAuth2 Passport Server helps organizations eliminate fragmented authentication systems while maintaining full compatibility with industry standards.
+Designed for SaaS platforms, startups, and enterprise architectures, it eliminates fragmented authentication systems while remaining fully compliant with industry standards.
 
 ---
 
-## Why OAuth2 Passport Server?
+## Problem Statement
 
-As organizations grow, authentication and authorization become fragmented across multiple systems:
+As systems grow, identity becomes fragmented across:
 
-* Web applications
-* Mobile applications
-* APIs
-* Internal tools
-* Microservices
-* Customer portals
-* Third-party integrations
+- Web applications
+- Mobile applications
+- APIs
+- Microservices
+- Internal tools
+- External integrations
 
-Each application often maintains its own users, roles, and permissions.
+This leads to:
 
-This results in:
+- Duplicate user accounts
+- Inconsistent permissions
+- High maintenance cost
+- Security risks
+- Difficult integrations
 
-* Duplicate user accounts
-* Permission inconsistencies
-* Increased maintenance costs
-* Security vulnerabilities
-* Difficult integrations
-* Poor user experience
+---
 
-OAuth2 Passport Server solves these challenges by acting as the central authority responsible for identity, authentication, and access management across the entire organization.
+## Solution
+
+OAuth2 Passport Server centralizes identity while separating business logic through a modular architecture.
+
+```text
+Identity & Security → Core Platform
+Business Features   → Modules
+```
+
+The core handles:
+
+- Authentication
+- Authorization
+- OAuth2 / OpenID Connect
+- Identity management
+- Access control
+
+Everything else is implemented as independent modules.
+
+---
+
+## Modular Architecture
+
+### Plug-and-Play Modules
+
+Modules can be installed, updated, enabled, or removed without modifying the core system.
+
+Each module is fully isolated but integrated with the Identity Provider.
+
+### Dependency Isolation
+
+Each module can manage its own:
+
+- Composer dependencies
+- Node.js dependencies
+- Build pipelines
+- Internal architecture
+
+This prevents dependency conflicts across the ecosystem.
+
+### Fault Isolation
+
+If a module fails:
+
+```text
+Module Failure → Module Disabled → Core Continues Running
+```
 
 ---
 
 ## Key Features
 
-### Identity and Access Management (IAM)
+### Identity & Access Management (IAM)
 
-Centralized user authentication and authorization across applications, services, and APIs.
-
-### Identity Provider (IdP)
-
-Act as a centralized identity provider for web applications, mobile applications, APIs, and microservices.
-
-### OpenID Connect Provider
-
-Built-in OpenID Connect support including:
-
-* Discovery Endpoint
-* JWKS Endpoint
-* Identity Tokens
-* Standardized Authentication Flows
-* Third-Party Integrations
+Centralized authentication and authorization across all systems.
 
 ### OAuth2 Authorization Server
 
-Currently supported flows:
+Supports:
 
-* Authorization Code Flow
-* Authorization Code Flow with PKCE
-* Refresh Tokens
+- Authorization Code Flow
+- PKCE
+- Refresh Tokens
 
-Built following modern OAuth2 security recommendations.
+### OpenID Connect Provider
+
+Includes:
+
+- Discovery endpoint
+- JWKS endpoint
+- ID tokens
+- Standard OIDC flows
 
 ### Single Sign-On (SSO)
 
-Authenticate once and access multiple connected applications through a centralized identity system.
+Authenticate once and access multiple applications.
 
-### Hierarchical Scope Management
+---
 
-Permissions are generated using a structured scope model:
+## Permission System
+
+Hierarchical scope-based model:
 
 ```text
-group_service_role
+group_service_action
 ```
 
 Examples:
 
 ```text
 billing_invoices_read
-billing_invoices_create
 billing_payments_manage
-
-crm_contacts_read
 crm_contacts_update
-
 support_tickets_close
 ```
 
-This approach provides significantly more granular authorization than traditional role-based systems.
+Benefits:
 
-Benefits include:
+- Fine-grained control
+- Consistent naming
+- Easier auditing
+- Cross-service compatibility
 
-* Fine-grained access control
-* Consistent permission naming
-* Easier auditing
-* Better scalability
-* Cross-service interoperability
+---
 
-### Service Marketplace
+## Service Marketplace
 
-Organizations can publish services and manage access through subscriptions.
+Services can be published and accessed via subscriptions.
 
-When a user gains access to a service, the corresponding scopes can be assigned automatically, allowing connected applications to immediately recognize updated permissions.
+When a user subscribes, permissions (scopes) are assigned automatically.
 
-### Microservice Authentication
+---
 
-Perfect for:
+## Microservice Ready
 
-* Microservices
-* Service-Oriented Architectures (SOA)
-* API Ecosystems
-* Distributed Systems
+Designed for:
 
-Applications can validate tokens using OpenID Connect standards without requiring direct database communication.
+- Microservices
+- SOA architectures
+- API ecosystems
+
+Tokens can be validated via OpenID Connect without direct database access.
 
 ---
 
 ## OpenID Connect Discovery
 
-OAuth2 Passport Server implements the OpenID Connect Discovery specification.
+Supports automatic discovery via:
 
-Applications can automatically discover server capabilities using:
-
-```text
+```
 /.well-known/openid-configuration
 ```
 
-Supported discovery information includes:
+Includes:
 
-* Issuer
-* Authorization Endpoint
-* Token Endpoint
-* JWKS Endpoint
-* Logout Endpoint
-* Supported Scopes
-* Supported Grant Types
-
-This enables seamless integration with OpenID Connect compatible applications and services.
+- Issuer
+- Authorization endpoint
+- Token endpoint
+- JWKS endpoint
+- Supported scopes
+- Supported grants
 
 ---
 
-## Powered by Elymod
+## Elymod Ecosystem
 
-OAuth2 Passport Server is built on Elymod, a modular application framework designed to extend platform functionality without modifying the core system.
+OAuth2 Passport Server is built on **Elymod**, a modular framework for extending functionality without modifying the core system.
 
-Unlike traditional identity providers, new capabilities can be installed as independent modules.
+### Components
 
-### Benefits
-
-* Zero core modifications
-* Upgrade-safe extensions
-* Independent module lifecycle
-* Vendor-friendly architecture
-* Enterprise scalability
-* Feature isolation
+- Elymod → module lifecycle management
+- Elymod App → standard module structure
+- Elyscope → dependency isolation (Composer + PHP-Scoper bridge)
 
 ---
 
-## Dependency Isolation
+## Architecture
 
-Each module can manage its own dependencies independently.
-
-### PHP Dependencies
-
-Modules can include their own Composer dependencies without affecting the core application.
-
-### Node.js Dependencies
-
-Modules can maintain their own frontend ecosystem, including:
-
-* package.json
-* Build Pipelines
-* Frontend Frameworks
-* JavaScript Libraries
-* Asset Compilation Tools
-
-This prevents dependency conflicts and allows modules to evolve independently.
+```
+OAuth2 Passport Server
+        ↓
+Laravel Runtime
+        ↓
+Elymod
+        ↓
+Elymod App
+        ↓
+Elyscope
+```
 
 ---
 
-## Independent Licensing
+## Security
 
-Each module may define its own licensing model:
-
-* Open Source
-* Commercial
-* Enterprise
-* Internal Use
-
-Organizations can deploy only the functionality they require while maintaining a centralized identity platform.
-
----
-
-## Enterprise Ready
-
-OAuth2 Passport Server is designed for:
-
-* SaaS Platforms
-* Enterprises
-* Government Systems
-* Internal Corporate Applications
-* API Platforms
-* Multi-Service Architectures
-* Customer Portals
-* Identity Providers (IdP)
+- OAuth2 compliant
+- OpenID Connect compliant
+- PKCE support
+- JWT (RS256)
+- JWKS support
+- Centralized authorization
+- Scope-based access control
 
 ---
 
-## Security Features
+## Enterprise Use Cases
 
-* OAuth2 Compliant
-* OpenID Connect Compliant
-* PKCE Support
-* Refresh Tokens
-* RS256 Token Signing
-* JWKS Support
-* Centralized Authorization
-* Hierarchical Scope-Based Permissions
-* CSP-Compatible Administration Interface
-* Secure Authentication Workflows
+- SaaS platforms
+- Enterprises
+- Government systems
+- API platforms
+- Multi-service ecosystems
+- Customer portals
 
 ---
 
 ## Vision
 
-OAuth2 Passport Server is more than an OAuth2 authorization server.
+A modular identity platform where authentication and authorization act as a stable foundation, while all business features evolve independently through isolated modules.
 
-It is a modular identity platform designed to become the central authentication, authorization, and access management layer for modern organizations.
+---
 
-By combining OAuth2, OpenID Connect, advanced permission management, service subscriptions, and Elymod's modular architecture, organizations can build complete digital ecosystems on top of a secure and standards-compliant identity foundation.
+## Documentation
+
+- [Development guide](docs/dev/developers_en.md)
+- [Development guide in Spanish](docs/dev/developers_es.md)
+- [Production deployment guide](docs/deploy/deploy_en.md)
+- [Production deployment guide in Spanish](docs/deploy/deploy_es.md)
+- [Changelog](CHANGELOG.md)
