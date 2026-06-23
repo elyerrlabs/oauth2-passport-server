@@ -351,6 +351,11 @@ class SettingRepository
 
         $settings = \App\Models\Setting\Setting::pluck('value', 'key')->toArray();
 
+        if (count($settings) == 0) {
+            echo "Nothing to migrate\n";
+            return;
+        }
+
         $data = [];
 
         foreach ($settings as $key => $value) {
