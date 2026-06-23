@@ -64,7 +64,6 @@ class ModuleMake extends Command
         $name = Str::kebab($this->argument('name'));
         $useDev = (bool) $this->option('dev');
         $version = null;
-        $driver = $this->option('driver');
 
         if (!$useDev) {
             $version = $this->option('elymod-version');
@@ -73,6 +72,11 @@ class ModuleMake extends Command
                 $version = $this->askForVersion();
             }
         }
+
+        if (!$this->validateVersion($version)) {
+            return;
+        }
+
 
         $root = base_path();
         $thirdPartyPath = $root . DIRECTORY_SEPARATOR . 'third-party';
@@ -300,7 +304,7 @@ class ModuleMake extends Command
                     return false;
                 }
 
-                return version_compare(ltrim($version, 'v'), '3.0.0', '>=');
+                return version_compare(ltrim($version, 'v'), ltrim($this->minVersion(), 'v'), '>=');
             })
             ->unique()
             ->values()
@@ -333,9 +337,32 @@ class ModuleMake extends Command
 
         if ($selected === 'Custom version') {
 
-            return $this->ask('Enter Elymod version', 'v2.0.0');
+            return $this->ask('Enter Elymod version', $this->minVersion());
         }
 
         return $selected;
+    }
+
+    /**
+     * Min version for elymod
+     * @return string
+     */
+    private function minVersion()
+    {
+        return "v3.0.1";
+    }
+
+    /**
+     * Version validation
+     * @param string $version
+     * @return bool
+     */
+    private function validateVersion(string $version): bool
+    {
+        if (version_compare(ltrim($version, 'v'), ltrim($this->minVersion(), 'v'), '<')) {
+            $this->error("This version is not supported. Minimum version required: {$this->minVersion()}");
+            return false;
+        }
+        return true;
     }
 }
