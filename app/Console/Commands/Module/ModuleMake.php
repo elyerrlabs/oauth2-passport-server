@@ -105,8 +105,8 @@ class ModuleMake extends Command
 
         try {
             $source = $useDev
-                ? $this->createDevModuleProject($name, $thirdPartyPath, $localTemplatePath, $driver)
-                : $this->createStableModuleProject($name, $thirdPartyPath, $version, $driver);
+                ? $this->createDevModuleProject($name, $thirdPartyPath, $localTemplatePath)
+                : $this->createStableModuleProject($name, $thirdPartyPath, $version);
 
             if ($source === null) {
                 throw new \RuntimeException('Failed to create the module project.');
@@ -153,7 +153,6 @@ class ModuleMake extends Command
         string $name,
         string $thirdPartyPath,
         ?string $version = '',
-        ?string $driver = 'vite'
     ): ?string {
         $version = $version
             ? ltrim($version, 'v')
@@ -176,10 +175,7 @@ class ModuleMake extends Command
                 $package,
                 $name,
             ],
-            $thirdPartyPath,
-            [
-                'ELYMOD_DRIVER' => $driver,
-            ]
+            $thirdPartyPath
         );
 
         return $process->isSuccessful()
@@ -187,7 +183,7 @@ class ModuleMake extends Command
             : null;
     }
 
-    protected function createDevModuleProject(string $name, string $thirdPartyPath, string $localTemplatePath, ?string $driver = 'vite'): ?string
+    protected function createDevModuleProject(string $name, string $thirdPartyPath, string $localTemplatePath): ?string
     {
         if (File::isDirectory($localTemplatePath) && File::exists($localTemplatePath . DIRECTORY_SEPARATOR . 'composer.json')) {
             $this->info("Using local Elymod dev template: {$localTemplatePath}");
@@ -208,9 +204,6 @@ class ModuleMake extends Command
                     ], JSON_UNESCAPED_SLASHES),
                 ],
                 $thirdPartyPath,
-                [
-                    'ELYMOD_DRIVER' => $driver,
-                ]
             );
 
             if ($process->isSuccessful()) {
@@ -232,10 +225,7 @@ class ModuleMake extends Command
                 'elyerr/elymod:dev-dev',
                 $name,
             ],
-            $thirdPartyPath,
-            [
-                'ELYMOD_DRIVER' => $driver,
-            ]
+            $thirdPartyPath
         );
 
         if ($process->isSuccessful()) {
@@ -245,9 +235,9 @@ class ModuleMake extends Command
         throw new \RuntimeException('Dev version of elyerr/elymod was not found locally or on Composer Packagist.');
     }
 
-    protected function runCreateProjectProcess(array $command, string $workingDirectory, array $env): Process
+    protected function runCreateProjectProcess(array $command, string $workingDirectory): Process
     {
-        $process = new Process($command, $workingDirectory, $env);
+        $process = new Process($command, $workingDirectory);
         $process->setTimeout(null);
         $process->run(function ($type, $buffer) {
             echo $buffer;
@@ -310,11 +300,7 @@ class ModuleMake extends Command
                     return false;
                 }
 
-                return version_compare(
-                    ltrim($version, 'v'),
-                    '2.0.0',
-                    '>='
-                );
+                return version_compare(ltrim($version, 'v'), '3.0.0', '>=');
             })
             ->unique()
             ->values()
@@ -336,29 +322,18 @@ class ModuleMake extends Command
 
         if (empty($versions)) {
 
-            $this->warn(
-                'Unable to retrieve Elymod versions from Packagist.'
-            );
+            $this->warn('Unable to retrieve Elymod versions from Packagist.');
 
-            return $this->ask(
-                'Enter Elymod version manually'
-            );
+            return $this->ask('Enter Elymod version manually');
         }
 
         $versions[] = 'Custom version';
 
-        $selected = $this->choice(
-            'Select Elymod version',
-            $versions,
-            0
-        );
+        $selected = $this->choice('Select Elymod version', $versions, 0);
 
         if ($selected === 'Custom version') {
 
-            return $this->ask(
-                'Enter Elymod version',
-                'v1.1.2'
-            );
+            return $this->ask('Enter Elymod version', 'v2.0.0');
         }
 
         return $selected;
