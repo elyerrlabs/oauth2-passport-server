@@ -162,6 +162,7 @@ class Menu
             "org_name" => config("app.org_name"),
             "org_support_email" => config('mail.from.address'),
             "user" => static::authenticated_user(),
+            "app_version" => version(),
             "auth_routes" => [
                 "login" => route('login'),
                 "forgot_password" => route('password.request'),

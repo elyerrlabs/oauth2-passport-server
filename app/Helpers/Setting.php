@@ -356,4 +356,14 @@ if (!function_exists('config_module')) {
             return $name;
         }
     }
+
+    if (!function_exists("version")) {
+        /**
+         * Version
+         */
+        function version()
+        {
+            return json_decode(file_get_contents(base_path('composer.json')))?->version;
+        }
+    }
 }

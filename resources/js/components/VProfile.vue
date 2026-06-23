@@ -35,12 +35,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     class="p-2 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white shadow-sm group-hover:shadow transition-shadow"
                 >
                     <template v-if="user?.id">
-                        <span class="text-sm">
+                        <span class="text-xs">
                             {{ getUserInitials }}
                         </span>
                     </template>
                     <template v-else>
-                        <i class="mdi mdi-account text-sm"></i>
+                        <i class="mdi mdi-account text-xs"></i>
                     </template>
                 </div>
             </div>
@@ -58,14 +58,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </template>
                 </div>
                 <div
+                    v-if="!user?.id"
                     class="text-xs text-gray-500 dark:text-gray-400 leading-tight"
                 >
-                    <template v-if="user?.id">
-                        {{ user.email }}
-                    </template>
-                    <template v-else>
-                        {{ __("Sign in") }}
-                    </template>
+                    {{ __("Sign in") }}
                 </div>
             </div>
 
@@ -312,7 +308,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     <div
                         class="text-xs text-gray-500 dark:text-gray-400 text-center"
                     >
-                        {{ __("Secure connection") }}
+                        {{ __("Secure connection") }} - {{ __("version") }}
+                        {{ $page.props?.app_version }}
                         <i class="mdi mdi-shield-check text-green-500 ml-1"></i>
                     </div>
                 </div>

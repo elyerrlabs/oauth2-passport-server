@@ -225,10 +225,10 @@
         <div class="px-3 py-2 bg-gray-50/80 dark:bg-gray-900/30 border-t border-gray-100 dark:border-gray-700">
             <div class="flex items-center justify-center space-x-1.5 text-[10px] text-gray-500 dark:text-gray-400">
                 <i class="mdi mdi-shield-check text-green-500 text-[10px]"></i>
-                <span>{{ __('Secure connection') }}</span>
+                <span>{{ __('Secure connection') }}</span> - {{ __('version') }}
+                {{ version() }}
                 <span class="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
                 <i class="mdi mdi-lock text-gray-400 text-[10px]"></i>
-                <span>{{ __('Encrypted') }}</span>
             </div>
         </div>
     </div>
