@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @include('layouts.parts.translation')
+    @includeIf('pages.layouts.fonts')    
     <x-inertia::head />
     @stack('css')
 </head>

@@ -64,6 +64,15 @@
                         <i class="mdi mdi-code-braces text-lg"></i>
                         {{ __('Privacy Modal') }}
                     </a>
+
+                    <a href="{{ route('admin.layouts.schema', ['layout' => 'fonts']) }}"
+                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all
+                        {{ request('fonts') === 'fonts'
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
+                        <i class="mdi mdi-code-braces text-lg"></i>
+                        {{ __('Fonts') }}
+                    </a>
                 </div>
             </div>
 
