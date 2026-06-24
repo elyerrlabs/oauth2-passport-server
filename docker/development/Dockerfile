@@ -74,7 +74,8 @@ RUN mkdir -p /etc/supervisor.d
 USER dev
 WORKDIR /home/dev/code
 
-RUN composer global require elyerr/elyscope && \
+RUN composer clear-cache && \
+    composer global require elyerr/elyscope && \
     echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc && \
     source ~/.bashrc
 

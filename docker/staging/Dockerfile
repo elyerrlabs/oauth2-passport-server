@@ -87,7 +87,8 @@ RUN apk add --no-cache \
 RUN ln -sf /usr/bin/php84 /usr/bin/php
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN composer global require elyerr/elyscope
+RUN composer clear-cache && \
+    composer global require elyerr/elyscope
 
 RUN apk add --no-cache --virtual unzip \
     && composer install --no-dev --optimize-autoloader \
