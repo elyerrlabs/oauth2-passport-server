@@ -50,7 +50,7 @@ class HomePageController extends WebController
     {
         $sessions = $this->sessionService->searchForUser($request)->get();
 
-        return Inertia::render("Web/About", [
+        return Inertia::render("Web/Dashboard", [
             "sessions" => transformCollection($sessions, SessionTransformer::class)
         ]);
     }
