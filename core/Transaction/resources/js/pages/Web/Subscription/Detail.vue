@@ -30,7 +30,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <!-- Breadcrumb -->
                 <nav class="flex items-center space-x-2 text-xs mb-4">
                     <a
-                        :href="data?.links?.index"
+                        :href="subscription?.links?.index"
                         class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                     >
                         {{ __("Subscriptions") }}
@@ -50,7 +50,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                     </svg>
                     <span
                         class="text-gray-700 dark:text-gray-300 font-medium"
-                        >{{ data?.meta?.name }}</span
+                        >{{ subscription?.meta?.name }}</span
                     >
                 </nav>
 
@@ -71,10 +71,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         class="w-1.5 h-1.5 rounded-full mr-1.5"
                                         :class="statusDotClass"
                                     ></span>
-                                    {{ data?.status }}
+                                    {{ subscription?.status }}
                                 </span>
                                 <span
-                                    v-if="data?.is_recurring"
+                                    v-if="subscription?.is_recurring"
                                     class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
                                 >
                                     <svg
@@ -94,15 +94,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <h1
                                 class="text-xl font-bold text-gray-900 dark:text-white mb-1"
                             >
-                                {{ data?.meta?.name }}
+                                {{ subscription?.meta?.name }}
                             </h1>
                             <div
                                 v-if="
-                                    data?.meta?.description &&
-                                    data.meta.description !== '<p></p>'
+                                    subscription?.meta?.description &&
+                                    subscription.meta.description !== '<p></p>'
                                 "
                                 class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl"
-                                v-html="data.meta.description"
+                                v-html="subscription.meta.description"
                             ></div>
                         </div>
 
@@ -118,11 +118,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <p
                                 class="text-2xl font-bold text-gray-900 dark:text-white"
                             >
-                                {{ data?.meta?.price?.amount_format }}
+                                {{ subscription?.meta?.price?.amount_format }}
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                {{ data?.meta?.price?.currency }} /
-                                {{ __(data?.meta?.price?.billing_period) }}
+                                {{ subscription?.meta?.price?.currency }} /
+                                {{
+                                    __(
+                                        subscription?.meta?.price
+                                            ?.billing_period,
+                                    )
+                                }}
                             </p>
                         </div>
                     </div>
@@ -138,7 +143,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <p
                                 class="text-sm font-medium text-gray-900 dark:text-white"
                             >
-                                {{ formatDate(data?.start_at) }}
+                                {{ formatDate(subscription?.start_at) }}
                             </p>
                         </div>
                         <div>
@@ -153,7 +158,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                         : 'text-green-600'
                                 "
                             >
-                                {{ formatDate(data?.end_at) }}
+                                {{ formatDate(subscription?.end_at) }}
                             </p>
                         </div>
                         <div>
@@ -163,7 +168,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <p
                                 class="text-sm font-medium text-gray-900 dark:text-white"
                             >
-                                {{ formatDate(data?.last_renewal_at) }}
+                                {{ formatDate(subscription?.last_renewal_at) }}
                             </p>
                         </div>
                     </div>
@@ -201,7 +206,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                             <div class="p-4">
                                 <div class="grid gap-3">
                                     <div
-                                        v-for="scope in data?.meta?.scopes"
+                                        v-for="scope in subscription?.meta
+                                            ?.scopes"
                                         :key="scope.id"
                                         class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4 border border-gray-200 dark:border-gray-600/50 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
                                     >
@@ -279,7 +285,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                 class="divide-y divide-gray-100 dark:divide-gray-700"
                             >
                                 <div
-                                    v-for="tx in data?.transactions"
+                                    v-for="tx in subscription?.transactions"
                                     :key="tx.id"
                                     class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/20 transition-colors"
                                 >
@@ -432,7 +438,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     <span
                                         class="font-mono text-gray-900 dark:text-white text-xs"
                                         >{{
-                                            data?.meta?.transaction_code
+                                            subscription?.meta?.transaction_code
                                         }}</span
                                     >
                                 </div>
@@ -446,7 +452,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     <span
                                         class="text-gray-900 dark:text-white capitalize"
                                         >{{
-                                            data?.transaction?.payment_method
+                                            subscription?.transaction
+                                                ?.payment_method
                                         }}</span
                                     >
                                 </div>
@@ -459,7 +466,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     >
                                     <span
                                         class="text-gray-900 dark:text-white capitalize"
-                                        >{{ __(data?.billing_period) }}</span
+                                        >{{
+                                            __(subscription?.billing_period)
+                                        }}</span
                                     >
                                 </div>
                                 <div
@@ -472,13 +481,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     <span
                                         class="text-xs font-medium"
                                         :class="
-                                            data?.is_recurring
+                                            subscription?.is_recurring
                                                 ? 'text-green-600'
                                                 : 'text-gray-400'
                                         "
                                     >
                                         {{
-                                            data?.is_recurring
+                                            subscription?.is_recurring
                                                 ? __("Yes")
                                                 : __("No")
                                         }}
@@ -492,18 +501,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     <span
                                         class="font-bold text-gray-900 dark:text-white"
                                     >
-                                        {{ data?.transaction?.total }}
-                                        {{ data?.transaction?.currency }}
+                                        {{ subscription?.transaction?.total }}
+                                        {{
+                                            subscription?.transaction?.currency
+                                        }}
                                     </span>
                                 </div>
                                 <div class="flex flex-col items-center gap-4">
                                     <v-recurring-payment
-                                        :item="data"
+                                        :item="subscription"
                                         @success="changeState"
                                     />
 
                                     <v-renew
-                                        :package="data"
+                                        :package="subscription"
                                         :payment_methods="payment_methods"
                                     />
                                 </div>
@@ -517,7 +528,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
 import VMainLayout from "@/components/VMainLayout.vue";
 import VRecurringPayment from "./RecurringPayment.vue";
 import VRenew from "./VRenew.vue";
@@ -538,8 +549,10 @@ const props = defineProps({
     },
 });
 
+const subscription = ref(props.data);
+
 const changeState = () => {
-    props.data.is_recurring = !props.data.is_recurring;
+    subscription.value.is_recurring = !subscription.value.is_recurring;
 };
 
 const changeStatus = () => {
@@ -564,7 +577,7 @@ const statusClasses = computed(() => {
         expired:
             "bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 border border-orange-200 dark:border-orange-700",
     };
-    return classes[props.data?.status] || classes.pending;
+    return classes[subscription.value?.status] || classes.pending;
 });
 
 const statusDotClass = computed(() => {
@@ -576,12 +589,12 @@ const statusDotClass = computed(() => {
         cancelled: "bg-gray-500",
         expired: "bg-orange-500",
     };
-    return dots[props.data?.status] || "bg-gray-500";
+    return dots[subscription.value?.status] || "bg-gray-500";
 });
 
 const isExpired = computed(() => {
-    if (!props.data?.end_at) return false;
-    return new Date(props.data.end_at) < new Date();
+    if (!subscription.value?.end_at) return false;
+    return new Date(subscription.value.end_at) < new Date();
 });
 
 // Functions

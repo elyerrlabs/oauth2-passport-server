@@ -203,7 +203,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     <v-button
                                         :title="__('Show detail')"
                                         as="a"
-                                        :href="pkg.links.show"
+                                        :to="pkg.links.show"
                                         icon="mdi mdi-eye"
                                         variant="success"
                                         round
@@ -233,7 +233,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script setup>
 import { ref, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
-import VMainLayout  from "@/components/VMainLayout.vue";
+import VMainLayout from "@/components/VMainLayout.vue";
 import VHead from "@/components/VHead.vue";
 import VButton from "@/components/VButton.vue";
 import VTable from "@/components/VTable.vue";

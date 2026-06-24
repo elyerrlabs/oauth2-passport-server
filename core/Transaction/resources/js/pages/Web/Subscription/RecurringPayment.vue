@@ -101,6 +101,7 @@ const dialogMessage = computed(() => {
 const recurringPayment = async () => {
     form.put(props.item.links.recurring, {
         preserveState: true,
+        preserveScroll: true,
         onSuccess: () => {
             emits("success");
         },
