@@ -127,6 +127,6 @@ class ThirdPartyServiceProvider extends ServiceProvider
      */
     public function moduleIsActive(string $name)
     {
-        return config("module.third-party.$name.module_enabled", true);
+        return (bool) settingItem("module.third-party.$name.module_enabled", true);
     }
 }
