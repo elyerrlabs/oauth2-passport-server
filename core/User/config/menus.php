@@ -37,7 +37,7 @@ return [
 
     "merge" => [
 
-        "admin_dashboard" => [
+        "admin_menu" => [
             'groups' => [
                 "id" => "groups",
                 "name" => "Groups",

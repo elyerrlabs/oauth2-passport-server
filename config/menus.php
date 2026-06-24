@@ -30,7 +30,7 @@ return [
 
     "merge" => [
 
-        "admin_dashboard" => [
+        "admin_menu" => [
 
             "legal" => [
                 'name' => 'Policies',

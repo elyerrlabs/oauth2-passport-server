@@ -32,7 +32,7 @@ return [
      */
     "merge" => [
 
-        "admin_dashboard" => [
+        "admin_menu" => [
 
             "transactions" => [
                 "id" => "transaction",

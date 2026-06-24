@@ -40,7 +40,7 @@ return [
             ],
         ],
 
-        "admin_dashboard" => [
+        "admin_menu" => [
 
             "partner" => [
                 "id" => "list",

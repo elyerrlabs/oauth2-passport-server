@@ -27,7 +27,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         <template #aside>
             <!-- Dashboards Section -->
             <v-item-menu
-                :items="page.props.admin_dashboard"
+                :items="page.props.admin_menu"
                 :title="__('Administrator')"
                 icon="mdi mdi-shield-crown-outline text-2xl me-2"
             />
