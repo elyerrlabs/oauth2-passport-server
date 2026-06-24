@@ -46,8 +46,7 @@ class ModuleMake extends Command
     protected $signature = 'module:make
     {name : Module name}
     {--dev : Use local development template first, then Packagist dev if not found}
-    {--elymod-version= : Elymod version to install}
-    {--driver=vite : Frontend asset driver to use (vite or mix)}';
+    {--elymod-version= : Elymod version to install}';
 
     /**
      * The console command description.
@@ -71,10 +70,10 @@ class ModuleMake extends Command
             if (!$version) {
                 $version = $this->askForVersion();
             }
-        }
 
-        if (!$this->validateVersion($version)) {
-            return;
+            if (!$this->validateVersion($version)) {
+                return;
+            }
         }
 
 
@@ -349,7 +348,7 @@ class ModuleMake extends Command
      */
     private function minVersion()
     {
-        return "v3.0.1";
+        return "v3.0.2";
     }
 
     /**
