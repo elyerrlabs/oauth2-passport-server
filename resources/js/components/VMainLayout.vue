@@ -37,12 +37,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 :title="__('Developers')"
                 icon="mdi mdi-application-brackets-outline text-2xl me-2"
             />
-
-            <v-item-menu
+            <!--
+                <v-item-menu
                 :items="page.props?.user_routes"
                 :title="__('My apps')"
                 icon="mdi mdi-apps text-2xl me-2"
-            />
+                />
+                -->
 
             <v-item-menu
                 :items="page.props.user_settings"
