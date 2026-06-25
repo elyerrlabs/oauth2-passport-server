@@ -149,9 +149,15 @@ const form = useForm({
     system: false,
 });
 
+const resetForm = () => {
+    form.name = "";
+    form.description = "";
+    form.system = false;
+};
+
 // Methods
 const open = () => {
-    form.resetAndClearErrors();
+    resetForm();
     if (props.item?.id) {
         form.name = props.item.name;
         form.description = props.item.description;
@@ -161,7 +167,6 @@ const open = () => {
 };
 
 const close = () => {
-    form.resetAndClearErrors();
     dialog.value = false;
 };
 

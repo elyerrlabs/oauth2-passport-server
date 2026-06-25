@@ -211,8 +211,6 @@ const handleConfirm = () => {
 
 const open = () => {
     confirmationText.value = "";
-    form.resetAndClearErrors();
-
     dialog.value = true;
 };
 

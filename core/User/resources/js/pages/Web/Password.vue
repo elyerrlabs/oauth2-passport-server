@@ -176,7 +176,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                                     :input-class="{
                                         'border-green-500 dark:border-green-400':
                                             form.password_confirmation &&
-                                            !form.errors.password_confirmation &&
+                                            !form.errors
+                                                .password_confirmation &&
                                             passwordsMatch,
                                     }"
                                 />
@@ -432,14 +433,19 @@ const isFormValid = computed(
         passwordStrength.value >= 0.4,
 );
 
+const reset = () => {
+    form.current_password = "";
+    form.password = "";
+    form.password_confirmation = "";
+};
+
 function update() {
     loading.value = true;
-
+    reset();
     form.put(page.props.user.links.change_password, {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
-            form.resetAndClearErrors();
             $notify.success(__("Password has been updated successfully"));
         },
         onFinish: () => {

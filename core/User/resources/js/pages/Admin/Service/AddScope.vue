@@ -176,7 +176,7 @@ const props = defineProps({
 
 const dialog = ref(false);
 const loading = ref(false);
-const roles = ref([]); 
+const roles = ref([]);
 
 const form = useForm({
     api_key: false,
@@ -186,7 +186,16 @@ const form = useForm({
     role_id: "",
 });
 
+const resetForm = () => {
+    form.api_key = false;
+    form.web = false;
+    form.active = false;
+    form.public = false;
+    form.role_id = "";
+};
+
 const open = async () => {
+    resetForm();
     if (props.scope?.id) {
         form.api_key = props.scope.api_key;
         form.web = props.scope.web;
@@ -232,7 +241,6 @@ const addScopes = async () => {
             );
             emits("created");
             dialog.value = false;
-            form.resetAndClearErrors();
         },
         onError: (e) => {
             console.log(e);

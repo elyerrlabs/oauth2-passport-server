@@ -370,7 +370,6 @@ async function update() {
             emit("updated", true);
             dialog.value = false;
             $notify.success(__("Commission rate updated successfully"));
-            form.resetAndClearErrors();
         },
         onFinish: () => {
             updating.value = false;

@@ -178,9 +178,18 @@ function close() {
     loading.value = false;
 }
 
+const resetForm = () => {
+    form.name = "";
+    form.description = "";
+    form.group_id = "";
+    form.system = false;
+    form.visibility = false;
+};
+
+// Methods
 const open = async () => {
+    resetForm();
     dialog.value = true;
-    form.resetAndClearErrors();
     if (props.item?.id) {
         form.name = props.item.name;
         form.description = props.item.description;

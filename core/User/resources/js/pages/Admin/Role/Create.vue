@@ -141,10 +141,16 @@ const form = useForm({
     system: false,
 });
 
-// methods
+const resetForm = () => {
+    form.name = "";
+    form.description = "";
+    form.system = false;
+};
+
+// Methods
 const open = () => {
+    resetForm();
     dialog.value = true;
-    form.resetAndClearErrors();
     if (props.item?.id) {
         form.name = props.item.name;
         form.description = props.item.description;

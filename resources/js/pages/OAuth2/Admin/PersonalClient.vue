@@ -178,15 +178,18 @@ const isFormValid = computed(() => {
     return form.name?.trim();
 });
 
+const resetForm = () => {
+    form.name = "";
+};
+
 const open = () => {
-    form.resetAndClearErrors();
+    resetForm();
     dialog.value = true;
 };
 
 const close = () => {
     dialog.value = false;
     loading.value = false;
-    form.resetAndClearErrors();
 };
 
 const createPersonalAccessClient = async () => {

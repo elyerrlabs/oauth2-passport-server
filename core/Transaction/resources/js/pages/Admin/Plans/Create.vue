@@ -558,7 +558,6 @@ const open = async () => {
 };
 
 const close = () => {
-    form.resetAndClearErrors();
     selectedScopesMap.value.clear();
     selectedServiceId.value = null;
 };
