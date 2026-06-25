@@ -47,7 +47,10 @@ Route::middleware(['throttle:core:transaction:web'])->group(function () {
         Route::get('delivery-addresses', [DeliveryAddressController::class, 'index'])->name('delivery-addresses.index');
     }
 
-    Route::get('checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::put('/transactions/{transaction}/activate', [TransactionManagerController::class, 'activate'])->name('transactions.activate');
-    Route::resource('transactions', TransactionManagerController::class)->only('index', 'show', 'activate');
+
+    if (config('routes.core.transaction.subscriptions.status', true)) {
+        Route::get('checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+        Route::resource('transactions', TransactionManagerController::class)->only('index', 'show', 'activate');
+    }
 });
