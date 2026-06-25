@@ -168,33 +168,13 @@ class SettingRepository
     }
 
     /**
-     * Delete a single key.
-     */
-    public function deleteKey(string $key): void
-    {
-        if (!$this->hasKey($key)) {
-            throw new ReportError(
-                "Key [$key] does not exist",
-                404
-            );
-        }
-
-        $data = $this->removeNestedValue(
-            $this->readFile(),
-            $key
-        );
-
-        $this->writeFile($data);
-    }
-
-    /**
      * Delete a module and all children.
      *
-     * Example:
-     * deleteKeysByModule('oauth')
-     * deleteKeysByModule('oauth.client')
+     * Examples:
+     * deleteKeys('oauth')
+     * deleteKeys('oauth.client')
      */
-    public function deleteKeysByModule(string $module): int
+    public function deleteKeys(string $module): int
     {
         $data = $this->readFile();
 
@@ -202,26 +182,50 @@ class SettingRepository
 
         $deleted = 0;
 
-        foreach (array_keys($flat) as $key) {
+        foreach ($flat as $key => $value) {
 
-            if (
-                $key === $module ||
-                str_starts_with($key, $module . '.')
-            ) {
-                $data = $this->removeNestedValue(
-                    $data,
-                    $key
-                );
-
+            if (str_contains($key, $module)) {
+                unset($flat[$key]);
                 $deleted++;
             }
         }
 
-        if ($deleted > 0) {
-            $this->writeFile($data);
-        }
+        $data = $this->nestedValues($flat);
+
+        $this->writeFile($data);
 
         return $deleted;
+    }
+
+
+    /**
+     * Convert flat dot notation array to nested array.
+     */
+    protected function nestedValues(array $flat): array
+    {
+        $nested = [];
+
+        foreach ($flat as $key => $value) {
+
+            $segments = explode('.', $key);
+
+            $current = &$nested;
+
+            foreach ($segments as $segment) {
+
+                if (!isset($current[$segment]) || !is_array($current[$segment])) {
+                    $current[$segment] = [];
+                }
+
+                $current = &$current[$segment];
+            }
+
+            $current = $value;
+
+            unset($current);
+        }
+
+        return $nested;
     }
 
     /**

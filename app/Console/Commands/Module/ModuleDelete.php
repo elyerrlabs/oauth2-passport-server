@@ -136,7 +136,7 @@ class ModuleDelete extends Command
         */
 
         if ($purgeConfig) {
-            app(SettingService::class)->deleteKeysByModule("third-party.{$name}");
+            app(SettingService::class)->deleteKeys("third-party.{$name}");
             $this->info("Module configuration keys deleted.");
         } else {
             $settingRepository->add("module.third-party.{$name}.module_enabled", 0);

@@ -53,7 +53,7 @@ class DeleteConfigKey extends Command
     {
         $prefix = $this->argument('prefix');
 
-        app(SettingService::class)->deleteKeysByModule($prefix);
+        app(SettingService::class)->deleteKeys($prefix);
         app(SettingService::class)->resetConfigKeys();
 
         $this->info("Config keys has been deleted.");

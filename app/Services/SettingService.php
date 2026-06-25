@@ -47,7 +47,9 @@ use Illuminate\Database\QueryException;
 
 class SettingService
 {
-    public function __construct(protected SettingRepository $settingRepository) {}
+    public function __construct(protected SettingRepository $settingRepository)
+    {
+    }
 
     /**
      * Cache key
@@ -131,7 +133,7 @@ class SettingService
     public function getDefaultSetting()
     {
         URL::forceScheme(env('APP_URL_SCHEME', 'https'));
-        
+
         $this->loadConfigKeys();
 
         //Horizon cache settings
@@ -559,22 +561,13 @@ class SettingService
     }
 
     /**
-     * Delete the config key
+     * Delete a module and all children.
      * @param string $key
      * @return void
      */
-    public function deleteKey(string $key)
+    public function deleteKeys(string $key)
     {
-        $setting = $this->settingRepository->hasKey($key);
-
-        if (!empty($setting)) {
-            $this->settingRepository->deleteKey($key);
-        }
-    }
-
-    public function deleteKeysByModule(string $key)
-    {
-        $this->settingRepository->deleteKeysByModule($key);
+        $this->settingRepository->deleteKeys($key);
     }
 
     /**
