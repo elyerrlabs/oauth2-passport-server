@@ -70,6 +70,8 @@ class RenderException
         if ($throwable instanceof AccessDeniedHttpException) {
             throw new ReportError(__("You haven't logged in yet. Please log in to unlock all features."), 401);
         }
+
+        return $throwable;
     }
 
     /**
