@@ -59,26 +59,31 @@ class CoreServiceProvider extends ServiceProvider
                 $currentConfig = config($key, []);
 
                 $filePath = include $file;
-                $moduleConfig['core'][$moduleName] = include $file;
 
                 // Merge configs
                 switch ($key) {
                     case 'rate_limit':
+                        $moduleConfig = [];
+                        $moduleConfig['core'][$moduleName] = include $file;
                         $merged = $this->mergeConfigSmart($moduleConfig, $currentConfig);
                         config()->set($key, $merged);
                         break;
 
                     case 'routes':
+                        $moduleConfig = [];
+                        $moduleConfig['core'][$moduleName] = include $file;
                         $merged = $this->mergeConfigSmart($moduleConfig, $currentConfig);
                         config()->set($key, $merged);
                         break;
 
                     case 'module':
+                        $moduleConfig = [];
+                        $moduleConfig['core'][$moduleName] = include $file;
                         $merged = $this->mergeConfigSmart($moduleConfig, $currentConfig);
                         config()->set($key, $merged);
                         break;
 
-                    case 'menus': // Merge Menus
+                    case 'menus': // Merge Menus 
                         $merged = $this->mergeConfigSmart($filePath, $currentConfig);
                         config()->set($key, $merged);
 
