@@ -18,7 +18,7 @@
                             <input
                                 v-model="searchTerm"
                                 type="text"
-                                :placeholder="__('Buscar...')"
+                                :placeholder="__('Search...')"
                                 class="w-full pl-9 pr-10 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all duration-200 outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 hover:bg-white dark:hover:bg-slate-800"
                             />
                             <div
@@ -41,24 +41,21 @@
             class="px-4 sm:px-6 lg:px-8 py-6 bg-slate-50/50 dark:bg-slate-950/30 min-h-screen"
         >
             <div class="max-w-7xl mx-auto">
-                <!-- Contador de resultados -->
+                <!-- Results counter -->
                 <div
                     v-if="searchTerm"
                     class="mb-4 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400"
                 >
-                    <span
-                        >{{ totalResults }}
-                        {{ __("resultados encontrados") }}</span
-                    >
+                    <span>{{ totalResults }} {{ __("results found") }}</span>
                     <button
                         @click="searchTerm = ''"
                         class="text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
                     >
-                        {{ __("Limpiar") }}
+                        {{ __("Clear") }}
                     </button>
                 </div>
 
-                <!-- Sección: Aplicaciones -->
+                <!-- Section: Applications -->
                 <div v-if="filtered_apps.length" class="mb-8">
                     <div class="flex items-center gap-2 mb-3">
                         <div
@@ -67,7 +64,7 @@
                         <h3
                             class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
                         >
-                            {{ __("Aplicaciones") }}
+                            {{ __("Applications") }}
                         </h3>
                         <span
                             class="text-[10px] font-normal text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-1.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800"
@@ -118,7 +115,7 @@
                     </div>
                 </div>
 
-                <!-- Sección: Administración (Nivel Medio) -->
+                <!-- Section: Administration (Mid Level) -->
                 <div v-if="filtered_admin.length" class="mb-8">
                     <div class="flex items-center gap-2 mb-3">
                         <div
@@ -127,7 +124,7 @@
                         <h3
                             class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
                         >
-                            {{ __("Administración") }}
+                            {{ __("Administration") }}
                         </h3>
                         <span
                             class="text-[10px] font-normal text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 px-1.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-800"
@@ -178,8 +175,8 @@
                     </div>
                 </div>
 
-                <!-- Sección: Configuración -->
-                <div v-if="filtered_settings.length" class="mb-8">
+                <!-- Section: User Settings -->
+                <div v-if="filtered_user_settings.length" class="mb-8">
                     <div class="flex items-center gap-2 mb-3">
                         <div
                             class="w-1 h-4 bg-purple-500 dark:bg-purple-400 rounded-full"
@@ -187,7 +184,7 @@
                         <h3
                             class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
                         >
-                            {{ __("Configuración") }}
+                            {{ __("User Settings") }}
                         </h3>
                         <span
                             class="text-[10px] font-normal text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/30 px-1.5 py-0.5 rounded-full border border-purple-200 dark:border-purple-800"
@@ -197,14 +194,14 @@
                         <span
                             class="text-[10px] text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-full"
                         >
-                            {{ filtered_settings.length }}
+                            {{ filtered_user_settings.length }}
                         </span>
                     </div>
                     <div
                         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2"
                     >
                         <a
-                            v-for="setting in filtered_settings"
+                            v-for="setting in filtered_user_settings"
                             :key="setting.id"
                             :href="setting.route"
                             class="group bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-700 hover:shadow-md transition-all duration-200 p-3 flex items-center gap-3 relative"
@@ -238,14 +235,6 @@
                                             : setting.name
                                     "
                                 ></span>
-                                <p
-                                    class="text-[10px] text-slate-400 dark:text-slate-500 truncate"
-                                >
-                                    {{
-                                        setting.description ||
-                                        __("Configuración")
-                                    }}
-                                </p>
                             </div>
                             <i
                                 class="mdi mdi-chevron-right text-slate-300 dark:text-slate-600 text-sm group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-200"
@@ -254,7 +243,77 @@
                     </div>
                 </div>
 
-                <!-- NUEVA SECCIÓN: Panel de Administración Superior (Top Level Admin) -->
+                <!-- Section: Admin Settings -->
+                <div v-if="filtered_admin_settings.length" class="mb-8">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div
+                            class="w-1 h-4 bg-amber-500 dark:bg-amber-400 rounded-full"
+                        ></div>
+                        <h3
+                            class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2"
+                        >
+                            <span>{{ __("Admin Settings") }}</span>
+                            <span
+                                class="text-[10px] font-normal text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 px-1.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800"
+                            >
+                                {{ __("Admin Settings") }}
+                            </span>
+                        </h3>
+                        <span
+                            class="text-[10px] text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-full"
+                        >
+                            {{ filtered_admin_settings.length }}
+                        </span>
+                    </div>
+                    <div
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2"
+                    >
+                        <a
+                            v-for="setting in filtered_admin_settings"
+                            :key="setting.id"
+                            :href="setting.route"
+                            class="group bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-700 hover:shadow-md transition-all duration-200 p-3 flex items-center gap-3 relative"
+                        >
+                            <!-- Admin Settings badge -->
+                            <div class="absolute -top-1 -right-1">
+                                <span
+                                    class="text-[8px] font-bold uppercase bg-amber-500 text-white px-1.5 py-0.5 rounded-full shadow-sm"
+                                >
+                                    {{ __("Admin") }}
+                                </span>
+                            </div>
+
+                            <div
+                                class="w-10 h-10 bg-amber-50 dark:bg-amber-950/30 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/50 transition-colors duration-200"
+                            >
+                                <i
+                                    :class="[
+                                        setting.icon || 'mdi mdi-cog-box',
+                                        'text-amber-600 dark:text-amber-400 group-hover:text-amber-700 dark:group-hover:text-amber-300 text-lg transition-colors duration-200',
+                                    ]"
+                                ></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <span
+                                    class="text-[11px] font-medium text-slate-700 dark:text-slate-300"
+                                    v-html="
+                                        searchTerm
+                                            ? highlightMatch(
+                                                  setting.name,
+                                                  'amber',
+                                              )
+                                            : setting.name
+                                    "
+                                ></span>
+                            </div>
+                            <i
+                                class="mdi mdi-chevron-right text-slate-300 dark:text-slate-600 text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-200"
+                            ></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Section: Top Level Admin Panel -->
                 <div v-if="filtered_top_admin.length" class="mb-8">
                     <div class="flex items-center gap-2 mb-3">
                         <div
@@ -263,9 +322,7 @@
                         <h3
                             class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2"
                         >
-                            <span>{{
-                                __("Panel de Administración Superior")
-                            }}</span>
+                            <span>{{ __("Top Level Admin Panel") }}</span>
                             <span
                                 class="text-[10px] font-normal text-rose-500 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30 px-1.5 py-0.5 rounded-full border border-rose-200 dark:border-rose-800"
                             >
@@ -287,7 +344,7 @@
                             :href="admin.route"
                             class="group bg-white dark:bg-slate-900 rounded-xl border-2 border-rose-200 dark:border-rose-800 hover:border-rose-400 dark:hover:border-rose-600 hover:shadow-lg transition-all duration-200 p-3 text-center relative"
                         >
-                            <!-- Insignia de nivel superior -->
+                            <!-- Top level badge -->
                             <div class="absolute -top-1 -right-1">
                                 <span
                                     class="text-[8px] font-bold uppercase bg-rose-500 text-white px-1.5 py-0.5 rounded-full shadow-sm"
@@ -314,17 +371,11 @@
                                         : admin.name
                                 "
                             ></span>
-                            <p
-                                v-if="admin.description"
-                                class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 truncate"
-                            >
-                                {{ admin.description }}
-                            </p>
                         </a>
                     </div>
                 </div>
 
-                <!-- Sin resultados -->
+                <!-- No results -->
                 <div
                     v-if="!totalResults && searchTerm"
                     class="text-center py-12"
@@ -337,7 +388,7 @@
                         ></i>
                     </div>
                     <p class="text-sm text-slate-500 dark:text-slate-400">
-                        {{ __("No se encontraron resultados para") }}
+                        {{ __("No results found for") }}
                         <span
                             class="font-medium text-slate-700 dark:text-slate-300"
                             >"{{ searchTerm }}"</span
@@ -366,45 +417,40 @@ const admin_settings = ref([]);
 const filtered_apps = computed(() => {
     if (!searchTerm.value.trim()) return user_routes.value;
     const term = searchTerm.value.toLowerCase();
-    return user_routes.value.filter(
-        (app) =>
-            app.name.toLowerCase().includes(term) ||
-            (app.description && app.description.toLowerCase().includes(term)),
+    return user_routes.value.filter((app) =>
+        app.name.toLowerCase().includes(term),
     );
 });
 
 const filtered_admin = computed(() => {
     if (!searchTerm.value.trim()) return admin_routes.value;
     const term = searchTerm.value.toLowerCase();
-    return admin_routes.value.filter(
-        (admin) =>
-            admin.name.toLowerCase().includes(term) ||
-            (admin.description &&
-                admin.description.toLowerCase().includes(term)),
+    return admin_routes.value.filter((admin) =>
+        admin.name.toLowerCase().includes(term),
+    );
+});
+
+const filtered_user_settings = computed(() => {
+    if (!searchTerm.value.trim()) return user_settings.value;
+    const term = searchTerm.value.toLowerCase();
+    return user_settings.value.filter((setting) =>
+        setting.name.toLowerCase().includes(term),
+    );
+});
+
+const filtered_admin_settings = computed(() => {
+    if (!searchTerm.value.trim()) return admin_settings.value;
+    const term = searchTerm.value.toLowerCase();
+    return admin_settings.value.filter((setting) =>
+        setting.name.toLowerCase().includes(term),
     );
 });
 
 const filtered_top_admin = computed(() => {
     if (!searchTerm.value.trim()) return top_admin_routes.value;
     const term = searchTerm.value.toLowerCase();
-    return top_admin_routes.value.filter(
-        (admin) =>
-            admin.name.toLowerCase().includes(term) ||
-            (admin.description &&
-                admin.description.toLowerCase().includes(term)),
-    );
-});
-
-const filtered_settings = computed(() => {
-    if (!searchTerm.value.trim())
-        return [...user_settings.value, ...admin_settings.value];
-    const term = searchTerm.value.toLowerCase();
-    const allSettings = [...user_settings.value, ...admin_settings.value];
-    return allSettings.filter(
-        (setting) =>
-            setting.name.toLowerCase().includes(term) ||
-            (setting.description &&
-                setting.description.toLowerCase().includes(term)),
+    return top_admin_routes.value.filter((admin) =>
+        admin.name.toLowerCase().includes(term),
     );
 });
 
@@ -412,8 +458,9 @@ const totalResults = computed(() => {
     return (
         filtered_apps.value.length +
         filtered_admin.value.length +
-        filtered_top_admin.value.length +
-        filtered_settings.value.length
+        filtered_user_settings.value.length +
+        filtered_admin_settings.value.length +
+        filtered_top_admin.value.length
     );
 });
 
@@ -434,6 +481,7 @@ const highlightMatch = (text, color = "indigo") => {
         blue: "bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200",
         purple: "bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200",
         rose: "bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-200",
+        amber: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200",
         indigo: "bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-200",
     };
     const highlightClass = colorMap[color] || colorMap.indigo;
