@@ -267,8 +267,8 @@ if (!function_exists('config_module')) {
      */
     function config_module($key = null, $default = null)
     {
-        $route = request()->route()->action;
-
+        $route = request()->route()?->action;
+        
         if (isset($route['config_key'])) {
             $key = "{$route['config_key']}{$key}";
         }
