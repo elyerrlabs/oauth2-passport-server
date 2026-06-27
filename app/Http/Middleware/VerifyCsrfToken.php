@@ -28,6 +28,7 @@ namespace App\Http\Middleware;
  */
 
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery as Middleware;
 use Symfony\Component\HttpFoundation\Cookie;

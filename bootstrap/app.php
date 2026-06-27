@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
 
+        $middleware->replace(
+            Illuminate\Http\Middleware\TrustProxies::class,
+            \App\Http\Middleware\TrustProxies::class
+        );
 
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
@@ -25,9 +29,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'client' => \App\Http\Middleware\CheckClientCredentials::class,
             'scopes' => \App\Http\Middleware\CheckScopes::class,
             'scope' => \App\Http\Middleware\CheckForAnyScope::class,
-            'authorize' => \App\Http\Middleware\DenyGrantType::class,
-            'verify.credentials' => \App\Http\Middleware\verifyCredentials::class,
-            'reactive.account' => \App\Http\Middleware\ReactiveAccount::class,
             'userCanAny' => \App\Http\Middleware\UserCanAny::class,
             'captcha' => \App\Http\Middleware\VerifyCaptcha::class,
             'demo' => \App\Http\Middleware\VerifyDemoUser::class,
@@ -35,14 +36,12 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->web(
-            remove: [
-                \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
-                \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            replace: [
+                \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class =>
+                    \App\Http\Middleware\VerifyCsrfToken::class,
             ],
             prepend: [
                 \App\Http\Middleware\SecureHeaders::class,
-                \App\Http\Middleware\EncryptCookies::class,
-                \App\Http\Middleware\VerifyCsrfToken::class,
             ],
             append: [
                 \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
@@ -66,6 +65,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
 
         $exceptions->render(function (Throwable $e, Request $request) {
-            return  RenderException::render($e, $request);
+            RenderException::render($e, $request);
         });
     })->create();
