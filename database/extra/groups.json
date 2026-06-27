@@ -699,8 +699,34 @@
     ]
   },
   {
-    "name": "member",
-    "description": "Default user with the lowest level of access who signs up"
+    "name": "settings",
+    "description": "Dedicated group for managing configuration permissions through services",
+    "services": [
+      {
+        "name": "admin",
+        "description": "Top level service for admin users",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      }
+    ]
   },
   {
     "name": "commerce",

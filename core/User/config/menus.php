@@ -82,7 +82,7 @@ return [
                 "name" => "Settings",
                 "route" => "admin.settings.general",
                 "icon" => "mdi mdi-cogs",
-                'service' => 'administrator:settings',
+                'service' => 'settings:admin',
             ],
         ],
 
