@@ -34,9 +34,17 @@ use App\Http\Controllers\WebController;
 
 class SettingController extends WebController
 {
-    public function __construct(protected SettingService $settingService)
+
+    /**
+     * Settings Service
+     * @var SettingService
+     */
+    protected $settingService;
+
+    public function __construct()
     {
         parent::__construct();
+        $this->settingService = app(SettingService::class);
         $this->middleware('userCanAny:settings:admin:full, settings:admin:view')->except('update');
         $this->middleware('userCanAny:settings:admin:full, settings:admin:update')->only('update', 'reloadCache');
     }
