@@ -226,9 +226,9 @@ class Auth extends Authenticatable implements MustVerifyEmail
 
     /**
      * Check if the user has a group
-     * @param mixed $group
+     * @param mixed $scope
      */
-    public function canAccessMenu($group): bool
+    public function canAccessMenu(string $scope): bool
     {
         if (!auth()->check()) {
             return false;
@@ -238,12 +238,17 @@ class Auth extends Authenticatable implements MustVerifyEmail
             return true;
         }
 
-        $groups = $this->scopes()
-            ->pluck('id')
-            ->map(fn($item) => implode(':', array_slice(explode(':', $item), 0, 2)))
-            ->toArray();
+        $scopes = $this->scopes()->pluck('id');
 
-        return in_array($group, $groups, true);
+        // Scope completo: settings:elymod-app:view
+        if (substr_count($scope, ':') >= 2) {
+            return $scopes->contains($scope);
+        }
+
+        // Scope base: settings:elymod-app
+        return $scopes->contains(
+            fn($item) => str_starts_with($item, $scope . ':')
+        );
     }
 
 
