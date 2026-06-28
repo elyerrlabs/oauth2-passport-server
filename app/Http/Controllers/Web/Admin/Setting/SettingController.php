@@ -37,8 +37,8 @@ class SettingController extends WebController
     public function __construct(protected SettingService $settingService)
     {
         parent::__construct();
-        $this->middleware('userCanAny:administrator:settings:full, administrator:settings:view')->except('update');
-        $this->middleware('userCanAny:administrator:settings:full, administrator:settings:update')->only('update', 'reloadCache');
+        $this->middleware('userCanAny:settings:admin:full, settings:admin:view')->except('update');
+        $this->middleware('userCanAny:settings:admin:full, settings:admin:update')->only('update', 'reloadCache');
     }
 
     /**
