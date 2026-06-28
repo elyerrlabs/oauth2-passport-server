@@ -3,59 +3,84 @@
         <!-- Menu title section with collapse toggle -->
         <div
             v-if="title"
-            class="flex justify-between text-gray-700 dark:text-gray-300 font-semibold mb-2"
+            class="flex justify-between items-center text-slate-700 dark:text-slate-300 font-medium mb-3 px-1"
         >
-            <button class="cursor-pointer" @click="toggleMenu">
-                <span :class="icon" class="text-xl me-2"></span>
-                <span>
+            <button
+                class="cursor-pointer flex items-center gap-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 group"
+                @click="toggleMenu"
+            >
+                <span
+                    class="text-lg transition-transform duration-300 group-hover:scale-110"
+                    :class="icon"
+                ></span>
+                <span
+                    class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+                >
                     {{ __(title) }}
                 </span>
             </button>
-            <button class="cursor-pointer" @click="toggleMenu">
-                <span :class="toggleIcon"></span>
+            <button
+                class="cursor-pointer p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200"
+                @click="toggleMenu"
+            >
+                <span
+                    class="text-slate-400 dark:text-slate-500 text-lg transition-transform duration-300"
+                    :class="toggleIcon"
+                ></span>
             </button>
         </div>
 
         <!-- Menu items list -->
-        <div class="space-y-2" v-if="toggle">
+        <div class="space-y-1.5" v-if="toggle">
             <div v-for="(item, index) in items" :key="index">
                 <!-- Main menu item (not clickable if it has submenus) -->
                 <div
-                    class="group w-full flex items-center justify-between cursor-pointer gap-3 py-1 text-xs rounded-xl transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    class="group w-full flex items-center justify-between cursor-pointer gap-3 py-2 px-2 text-sm rounded-xl transition-all duration-300 text-slate-700 dark:text-slate-300 hover:bg-dlinear-to-r hover:from-indigo-50/50 hover:to-transparent dark:hover:from-indigo-950/30 dark:hover:to-transparent"
                     :class="{
-                        'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm':
+                        'bg-dlinear-to-r from-indigo-50/80 to-transparent dark:from-indigo-950/40 dark:to-transparent text-indigo-700 dark:text-indigo-300 shadow-sm':
                             isActive(item) || hasActiveSubmenu(item),
                     }"
                 >
                     <!-- Left side: icon and name -->
                     <button
-                        class="flex-1 flex items-center gap-2 cursor-pointer"
+                        class="flex-1 flex items-center gap-3 cursor-pointer"
                         @click="handleMenuClick(item)"
                     >
                         <div
-                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-200 dark:bg-gray-700 transition-all duration-200 group-hover:scale-110 group-hover:bg-gray-300 dark:group-hover:bg-gray-600"
+                            class="w-9 h-9 flex items-center justify-center rounded-xl bg-dlinear-to-br from-slate-100 to-slate-200/50 dark:from-slate-700/50 dark:to-slate-800/50 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:from-indigo-100 group-hover:to-indigo-200/50 dark:group-hover:from-indigo-900/30 dark:group-hover:to-indigo-800/30"
+                            :class="{
+                                'from-indigo-100 to-indigo-200/50 dark:from-indigo-900/30 dark:to-indigo-800/30 shadow-md':
+                                    isActive(item) || hasActiveSubmenu(item),
+                            }"
                         >
                             <i
-                                class="text-gray-600 dark:text-gray-300 text-xs"
-                                :class="item.icon"
+                                class="text-slate-600 dark:text-slate-400 text-sm transition-colors duration-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
+                                :class="[
+                                    item.icon,
+                                    {
+                                        'text-indigo-600 dark:text-indigo-400':
+                                            isActive(item) ||
+                                            hasActiveSubmenu(item),
+                                    },
+                                ]"
                             ></i>
                         </div>
-                        <span class="text-md">{{ __(item.name) }}</span>
+                        <span class="text-sm font-medium">{{
+                            __(item.name)
+                        }}</span>
                     </button>
 
                     <!-- Submenu toggle indicator -->
                     <button
                         v-if="item.menus && item.menus.length"
                         @click.stop="toggleSubmenu(item.id)"
-                        class="mr-2 p-1 shrink-0 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
+                        class="mr-1 p-1.5 shrink-0 rounded-lg cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-all duration-200"
                     >
                         <span
-                            class="inline-block transition-transform duration-200"
+                            class="inline-block transition-transform duration-300 text-slate-400 dark:text-slate-500"
                             :class="{ 'rotate-180': isSubmenuOpen(item.id) }"
                         >
-                            <i
-                                class="mdi mdi-chevron-down text-sm text-gray-400"
-                            ></i>
+                            <i class="mdi mdi-chevron-down text-sm"></i>
                         </span>
                     </button>
                 </div>
@@ -67,24 +92,34 @@
                         item.menus.length &&
                         isSubmenuOpen(item.id)
                     "
-                    class="ml-2 mt-1 space-y-1 border-l-2 border-gray-200 dark:border-gray-600 pl-4"
+                    class="ml-8 mt-0.5 space-y-0.5 border-l-2 border-slate-200/60 dark:border-slate-700/60 pl-4"
                 >
                     <button
                         v-for="(submenu, subIndex) in item.menus"
                         :key="`${index}-${subIndex}`"
                         @click="open(submenu)"
-                        class="group w-full flex items-center cursor-pointer gap-2 py-1.5 text-xs rounded-lg transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600"
+                        class="group w-full flex items-center cursor-pointer gap-3 py-1.5 px-2 text-sm rounded-lg transition-all duration-300 text-slate-600 dark:text-slate-400 hover:bg-dlinear-to-r hover:from-indigo-50/30 hover:to-transparent dark:hover:from-indigo-950/20 dark:hover:to-transparent"
                         :class="{
-                            'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm':
+                            'bg-dlinear-to-r from-indigo-50/50 to-transparent dark:from-indigo-950/30 dark:to-transparent text-indigo-700 dark:text-indigo-300 shadow-sm':
                                 isActive(submenu),
                         }"
                     >
                         <div
-                            class="w-7 h-7 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700 transition-all duration-200 group-hover:scale-110 group-hover:bg-gray-200 dark:group-hover:bg-gray-600"
+                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-dlinear-to-br from-slate-100 to-slate-200/50 dark:from-slate-700/50 dark:to-slate-800/50 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:from-indigo-100 group-hover:to-indigo-200/50 dark:group-hover:from-indigo-900/30 dark:group-hover:to-indigo-800/30"
+                            :class="{
+                                'from-indigo-100 to-indigo-200/50 dark:from-indigo-900/30 dark:to-indigo-800/30 shadow-md':
+                                    isActive(submenu),
+                            }"
                         >
                             <i
-                                class="text-gray-500 dark:text-gray-400 text-xs"
-                                :class="submenu.icon"
+                                class="text-slate-500 dark:text-slate-400 text-xs transition-colors duration-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
+                                :class="[
+                                    submenu.icon,
+                                    {
+                                        'text-indigo-600 dark:text-indigo-400':
+                                            isActive(submenu),
+                                    },
+                                ]"
                             ></i>
                         </div>
                         <span class="text-sm">{{ __(submenu.name) }}</span>
@@ -123,7 +158,7 @@ const props = defineProps({
 
 // Menu section toggle state
 const toggle = ref(props.collapse);
-const toggleIcon = ref("mdi mdi-arrow-down-circle-outline text-2xl me-2");
+const toggleIcon = ref("mdi mdi-chevron-up");
 
 // Track which submenus are currently open (all open by default)
 const openSubmenus = ref({});
@@ -143,8 +178,8 @@ props.items.forEach((item) => {
 const toggleMenu = () => {
     toggle.value = !toggle.value;
     toggleIcon.value = toggle.value
-        ? "mdi mdi-arrow-up-circle-outline text-2xl me-2"
-        : "mdi mdi-arrow-down-circle-outline text-2xl me-2";
+        ? "mdi mdi-chevron-up"
+        : "mdi mdi-chevron-down";
 };
 
 /**
@@ -205,3 +240,67 @@ const hasActiveSubmenu = (item) => {
     return item.menus.some((submenu) => isActive(submenu));
 };
 </script>
+
+<style scoped>
+/* Animaciones suaves */
+.group {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto de hover mejorado */
+.group:hover {
+    transform: translateX(2px);
+}
+
+/* Transición suave para submenús */
+.border-l-2 {
+    transition: border-color 0.3s ease;
+}
+
+/* Efecto de brillo en hover */
+.group-hover\:shadow-md {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mejora de accesibilidad visual */
+button:focus-visible {
+    outline: 2px solid #818cf8;
+    outline-offset: 2px;
+}
+
+/* Dark mode optimizado */
+.dark .group:hover {
+    background: linear-dlinear(to right, rgba(99, 102, 241, 0.1), transparent);
+}
+
+/* Scrollbar personalizada para el menú */
+.menu-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.menu-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.menu-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 20px;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.dark .menu-scroll::-webkit-scrollbar-thumb {
+    background: #475569;
+}
+
+.dark .menu-scroll::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+</style>
