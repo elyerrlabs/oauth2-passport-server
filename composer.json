@@ -64,7 +64,8 @@
     },
     "files": [
       "app/Helpers/Setting.php",
-      "app/Helpers/Payment.php"
+      "app/Helpers/Payment.php",
+      "app/Helpers/User.php"
     ]
   },
   "autoload-dev": {
