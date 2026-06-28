@@ -57,25 +57,22 @@ class ModuleServicesUpload extends Command
         $modulesPath = base_path('third-party');
         $moduleDirectories = glob($modulesPath . '/*/database/extra/*.json');
 
+        // Load roles first
         foreach ($moduleDirectories as $file) {
+            if (basename($file) === 'roles.json') {
+                $this->loadRoles($file);
+            }
+        }
 
-            switch (basename($file)) {
-                case 'groups.json':
-                    $this->loadGroups($file);
-                    break;
-
-                case 'roles.json':
-                    $this->loadRoles($file);
-                    break;
-                default:
-                    $this->warn("No service loader defined for file: $file");
+        // Load groups after roles
+        foreach ($moduleDirectories as $file) {
+            if (basename($file) === 'groups.json') {
+                $this->loadGroups($file);
             }
         }
 
         $this->info('Module services loaded successfully.');
     }
-
-
 
     /**
      * Load roles with service and related groups
