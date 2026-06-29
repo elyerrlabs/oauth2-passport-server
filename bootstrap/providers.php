@@ -2,6 +2,7 @@
 
 return [
     App\Providers\AppServiceProvider::class,
+    App\Providers\DirectiveServiceProvider::class,
     App\Providers\BroadcastServiceProvider::class,
     App\Providers\CoreServiceProvider::class,
     App\Providers\FortifyServiceProvider::class,

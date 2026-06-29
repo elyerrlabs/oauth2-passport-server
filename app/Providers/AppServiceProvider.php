@@ -29,7 +29,6 @@ namespace App\Providers;
 
 use App\Guard\TokenGuard;
 use App\Services\SettingService;
-use App\Support\ModuleVite;
 use App\Support\Translation\ModuleTranslation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
@@ -75,11 +74,6 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Contracts\Routing\ResponseFactory::class,
             \App\Support\RoutingResponseFactory::class
         );
-
-        //Register vite for modules @module_vite
-        $this->app->singleton('module_vite', function ($app) {
-            return new ModuleVite();
-        });
     }
 
     /**
