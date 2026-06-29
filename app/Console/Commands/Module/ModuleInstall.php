@@ -485,10 +485,10 @@ class ModuleInstall extends Command
         string $path,
         string $environment
     ): bool {
-        $this->info('Running composer install...');
+        $this->info('Running Elyscope install...');
 
         $command = [
-            'composer',
+            'elyscope',
             'install',
             '--no-interaction',
             '--prefer-dist'
@@ -510,7 +510,7 @@ class ModuleInstall extends Command
 
         if (!$process->isSuccessful()) {
 
-            $this->error('Composer install failed.');
+            $this->error('Elyscope install failed.');
 
             return false;
         }

@@ -503,10 +503,10 @@ class ModuleUpdate extends Command
      */
     protected function runComposerUpdate(string $path, string $environment): bool
     {
-        $this->info('Running composer update...');
+        $this->info('Running Elyscope update...');
 
         $command = [
-            'composer',
+            'elyscope',
             'update',
             '--no-interaction',
             '--prefer-dist',
@@ -529,7 +529,7 @@ class ModuleUpdate extends Command
         });
 
         if (!$process->isSuccessful()) {
-            $this->error('Composer update failed.');
+            $this->error('Elyscope update failed.');
             return false;
         }
 
