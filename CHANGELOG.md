@@ -54,6 +54,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Moved configuration registration and merging logic to provider registration phase.
 - Improved dynamic module discovery and provider registration.
 - Reorganized module resource loading (routes, views, translations, and migrations).
+- improve OpenID Connect and OAuth2 compatibility
 
 ---
 
