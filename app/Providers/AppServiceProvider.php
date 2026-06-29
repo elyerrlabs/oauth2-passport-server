@@ -28,18 +28,13 @@ namespace App\Providers;
  */
 
 use App\Guard\TokenGuard;
-use App\Models\OAuth\Bridge\AccessTokenRepository;
-use App\Models\OAuth\Bridge\AuthCodeRepository;
 use App\Services\SettingService;
 use App\Support\ModuleVite;
 use App\Support\Translation\ModuleTranslation;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Translation\FileLoader;
 use Laravel\Fortify\Fortify;
-use Laravel\Passport\Bridge\AccessTokenRepository as LaravelAccessTokenRepository;
-use Laravel\Passport\Bridge\AuthCodeRepository as LaravelAuthCodeRepository;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
 use Laravel\Passport\PassportUserProvider;
@@ -59,13 +54,29 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('translation.loader', function ($app) {
             return new FileLoader($app['files'], ModuleTranslation::loaderPaths());
         });
-        //Override AuthCodeRepository  and AccessTokenRepository
-        $this->app->bind(LaravelAuthCodeRepository::class, AuthCodeRepository::class);
-        $this->app->bind(LaravelAccessTokenRepository::class, AccessTokenRepository::class);
-        $this->app->bind(\Inertia\ResponseFactory::class, \App\Support\ResponseFactory::class);
-        $this->app->bind(\Illuminate\Contracts\Routing\ResponseFactory::class, \App\Support\RoutingResponseFactory::class);
 
-        //Register module vite
+        // Binding classes
+        $this->app->bind(
+            \Laravel\Passport\Bridge\AuthCodeRepository::class,
+            \App\Models\OAuth\Bridge\AuthCodeRepository::class
+        );
+
+        $this->app->bind(
+            \Laravel\Passport\Bridge\AccessTokenRepository::class,
+            \App\Models\OAuth\Bridge\AccessTokenRepository::class
+        );
+
+        $this->app->bind(
+            \Inertia\ResponseFactory::class,
+            \App\Support\ResponseFactory::class
+        );
+
+        $this->app->bind(
+            \Illuminate\Contracts\Routing\ResponseFactory::class,
+            \App\Support\RoutingResponseFactory::class
+        );
+
+        //Register vite for modules @module_vite
         $this->app->singleton('module_vite', function ($app) {
             return new ModuleVite();
         });
@@ -80,6 +91,9 @@ class AppServiceProvider extends ServiceProvider
     {
         app(SettingService::class)->getDefaultSetting();
 
+        /**
+         * Custom Passport guard with app-specific CSRF cookie/header naming.
+         */
         Auth::extend('oauth2-passport-server', function ($app, $name, array $config) {
             return new TokenGuard(
                 $this->app->make(ResourceServer::class),
@@ -89,30 +103,5 @@ class AppServiceProvider extends ServiceProvider
                 $this->app->make('request')
             );
         });
-
-        // Add blade directive to load resource for module
-        Blade::directive('module_vite', function ($expression) {
-            return "<?php echo app('module_vite')($expression); ?>";
-        });
-    }
-
-    /**
-     * Load rates limits
-     * @return void
-     */
-    protected function loadRateLimitModules(): void
-    {
-        $base = config('rate_limit') ?? [];
-
-        foreach (glob(base_path('third-party/*/config/rate_limit.php')) as $file) {
-
-            $module = basename(dirname(dirname($file)));
-
-            $config = require $file;
-
-            $base['third-party'][strtolower($module)] = $config;
-        }
-
-        config()->set('rate_limit', $base);
     }
 }

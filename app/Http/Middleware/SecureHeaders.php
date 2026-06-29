@@ -56,13 +56,10 @@ class SecureHeaders
             $response->headers->set("Permissions-Policy", "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), speaker=(self), display-capture=()");
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 
-            //Ignore csp policies in this route
-            if (!in_array($request->route()->getName(), ['passport.authorizations.authorize'])) {
-                $response->headers->set(
-                    "Content-Security-Policy",
-                    $this->GeneralContentSecurityPolicy($nonce)
-                );
-            }
+            $response->headers->set(
+                "Content-Security-Policy",
+                $this->GeneralContentSecurityPolicy($nonce)
+            );
         }
 
         return $response;
@@ -84,7 +81,7 @@ class SecureHeaders
             //"style-src-attr 'self' 'nonce-{$nonce}'",
             //"media-src 'self'",
             "object-src 'self'",
-           // "child-src 'self'",
+            // "child-src 'self'",
             //"frame-src 'self' https://newassets.hcaptcha.com/ https://challenges.cloudflare.com",
             "frame-ancestors 'self'",
             //"img-src 'self' data: blob:",

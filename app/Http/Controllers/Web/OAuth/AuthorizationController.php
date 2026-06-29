@@ -27,6 +27,7 @@ namespace App\Http\Controllers\Web\OAuth;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Laravel\Passport\Bridge\User;
@@ -49,11 +50,9 @@ class AuthorizationController extends Controller
 
     /**
      * Create a new controller instance.
-     *
-     * @param  \League\OAuth2\Server\AuthorizationServer  $server
-     * @param  \Illuminate\Contracts\Auth\StatefulGuard  $guard
-     * @param  \Laravel\Passport\Contracts\AuthorizationViewResponse  $response
-     * @return void
+     * @param AuthorizationServer $server
+     * @param StatefulGuard $guard
+     * @param ClientRepository $clients
      */
     public function __construct(
         protected AuthorizationServer $server,
@@ -66,11 +65,11 @@ class AuthorizationController extends Controller
 
     /**
      * Authorize a client to access the user's account.
-     * @param \Psr\Http\Message\ServerRequestInterface $psrRequest
-     * @param \Illuminate\Http\Request $request
-     * @param \Laravel\Passport\ClientRepository $clients
-     * @param \Laravel\Passport\TokenRepository $tokens
-     * @return AuthorizationViewResponse|\Illuminate\Http\Response
+     * @param ServerRequestInterface $psrRequest
+     * @param Request $request
+     * @param ResponseInterface $psrResponse
+     * @param AuthorizationViewResponse $viewResponse
+     * @return AuthorizationViewResponse|Response
      */
     public function authorize(
         ServerRequestInterface $psrRequest,
@@ -84,22 +83,26 @@ class AuthorizationController extends Controller
             ($psrRequest->getQueryParams()['response_type'] ?? null) === 'token'
         );
 
+        $prompt = $request->string('prompt')->explode(' ')->map(trim(...))->filter()->values();
+
+        // If the prompt parameter includes "none", all other prompt values will be ignored
+        // An error will be returned if the end-user is not already authenticated or the
+        // OAuth client does not have pre-configured consent for the requested scopes.
+        if ($prompt->contains('none')) {
+            $prompt = collect(['none']);
+        }
+
         if ($this->guard->guest()) {
-            switch ($request->input('prompt')) {
-                case 'none':
-                    throw OAuthServerException::loginRequired($authRequest);
-                case 'internal':
-                    return $this->internalPrompt($authRequest, $psrResponse);
-                default:
-                    $this->promptForLogin($request);
-                    break;
+            if ($prompt->contains('none')) {
+                throw OAuthServerException::loginRequired($authRequest);
+            } elseif ($prompt->contains('intenal')) {
+                return $this->internalPrompt($authRequest, $psrResponse);
+            } else {
+                $this->promptForLogin($request);
             }
         }
 
-        if (
-            $request->input('prompt') === 'login' &&
-            !$request->session()->get('promptedForLogin', false)
-        ) {
+        if ($prompt->contains('login') && !$request->session()->get('promptedForLogin', false)) {
             $this->guard->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
@@ -115,22 +118,22 @@ class AuthorizationController extends Controller
         $client = $this->clients->find($authRequest->getClient()->getIdentifier());
 
         if (
-            $request->input('prompt') !== 'consent' &&
+            $prompt->doesntContain('consent') &&
             ($client->skipsAuthorization($user, $scopes) || $this->hasGrantedScopes($user, $client, $scopes))
         ) {
             return $this->approveRequest($authRequest, $psrResponse);
         }
 
-        if ($request->input('prompt') === 'none') {
+        if ($prompt->contains('none')) {
             throw OAuthServerException::consentRequired($authRequest);
         }
 
-        if ($request->input('prompt') === 'internal' && $client->private) {
+        if ($prompt->contains('internal') && $client->private) {
             return $this->internalPrompt($authRequest, $psrResponse);
         }
 
         $request->session()->put('authToken', $authToken = Str::random());
-        $request->session()->put('authRequest', $authRequest);
+        $request->session()->put('authRequest', serialize($authRequest));
 
         return $viewResponse->withParameters([
             'client' => $client,
@@ -143,8 +146,9 @@ class AuthorizationController extends Controller
 
     /**
      * Prompt the user to login by throwing an AuthenticationException.
-     *
-     * @throws \Laravel\Passport\Exceptions\AuthenticationException
+     * @param Request $request
+     * @throws AuthenticationException
+     * @return never
      */
     protected function promptForLogin(Request $request): never
     {
@@ -154,7 +158,8 @@ class AuthorizationController extends Controller
         throw new AuthenticationException(guards: isset($this->guard->name) ? [$this->guard->name] : []);
     }
 
-    /**
+
+    /** 
      * Handles the custom "internal" prompt type for trusted first-party applications.
      *
      * This flow allows internal applications to perform silent authorization if the user is
@@ -162,14 +167,13 @@ class AuthorizationController extends Controller
      * and the authorization request is stored in session for continuation after login.
      *
      * If the user is authenticated, the request is automatically approved without requiring consent.
-     *
-     * @param  \League\OAuth2\Server\RequestTypes\AuthorizationRequestInterface  $authRequest
-     * @param  \Psr\Http\Message\ResponseInterface  $responseInterface
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param mixed $authRequest
+     * @param ResponseInterface $responseInterface
+     * @return Response|\Illuminate\Http\RedirectResponse
      */
     protected function internalPrompt($authRequest, ResponseInterface $responseInterface)
     {
-        $user = auth()->user();
+        $user = request()->user();
 
         if (is_null($user)) {
 
@@ -212,8 +216,10 @@ class AuthorizationController extends Controller
      */
     public function denyActionForDemoUser()
     {
-        if (auth()->check() && auth()->user()->email == config('system.demo.email')) {
-            abort(403, __("Access denied: Your session is authenticated with restricted demo credentials that do not allow the use of OAuth2/OpenID Connect protocols. Authorized credentials are required. You may request a valid test user to evaluate OAuth2 and OpenID Connect."));
+        $user = request()->user();
+
+        if (!empty($user) && $user->email == config('system.demo.email')) {
+            throw new ReportError(__("Access denied: Your session is authenticated with restricted demo credentials that do not allow the use of OAuth2/OpenID Connect protocols. Authorized credentials are required. You may request a valid test user to evaluate OAuth2 and OpenID Connect."), 403);
         }
     }
 }
