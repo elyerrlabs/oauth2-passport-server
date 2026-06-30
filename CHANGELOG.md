@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 ## Unreleased
 
 - Replace orphaned VueDatePicker with native date input
+- Correct module configuration registration and improve config_module helper
 
 ---
 
