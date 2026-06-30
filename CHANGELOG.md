@@ -55,6 +55,8 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Improved dynamic module discovery and provider registration.
 - Reorganized module resource loading (routes, views, translations, and migrations).
 - improve OpenID Connect and OAuth2 compatibility
+- Merge pages and sitemap, replace policy editor with Blade layouts, and update layouts
+- Removed unused policy keys `policies_of_cookies`, `policies_of_privacy`, `terms_and_condition`
 
 ---
 
