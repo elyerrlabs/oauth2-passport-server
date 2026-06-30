@@ -41,6 +41,7 @@
     "rap2hpoutre/laravel-log-viewer": "^3.1",
     "spatie/laravel-fractal": "^6.4",
     "spatie/laravel-sitemap": "^8.1",
+    "stevebauman/purify": "*",
     "stripe/stripe-php": "^20.2",
     "symfony/http-client": "^8.1",
     "symfony/mailgun-mailer": "^8.1"
