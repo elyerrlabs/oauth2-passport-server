@@ -39,8 +39,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Enhanced Docker helper scripts with root and stop support.
 - Added Elyscope support for Elymod modules.
 - Added Laravel Runtime to support Elymod module development.
-- Added Laravel Runtime to support Elymod module development.
-- Migrate to Laravel 12.x from Laravel 13.x
+- Migrate to Laravel 13.x from Laravel 12.x
     - migrate application bootstrap to Laravel 13 structure
 - Migrated settings storage from database to dedicated file-based configuration.
 - Added SettingRepository for settings management.
