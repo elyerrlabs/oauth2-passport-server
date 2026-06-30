@@ -1,4 +1,3 @@
-<h2>Terms and Conditions</h2>
 <p>Welcome to our website. By accessing or using this website, you agree to comply with and be bound by the following terms and conditions. These terms govern your use of the website and all services provided.</p>
 <h3>Use of Website</h3>
 <p>You may use the website for lawful purposes only. You must not engage in any activity that may damage, disable, or interfere with the proper functioning of the website.</p>

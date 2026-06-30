@@ -1,4 +1,3 @@
-<h2 class="text-2xl font-semibold mb-4">Cookies Policy</h2>
 <p class="mb-3">Our website uses cookies to ensure the proper functioning of the site and to maintain your session while you navigate through different pages. These cookies are essential for providing a seamless and secure user experience.</p>
 <p class="mb-3">We want to emphasize that our website does <strong>not</strong> use any cookies to track your browsing behavior, monitor your activity, or collect personal data for marketing purposes. All cookies implemented are strictly technical and functional in nature.</p>
 <p class="mb-3">Specifically, the cookies we use are designed to:</p>

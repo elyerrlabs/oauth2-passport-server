@@ -650,7 +650,6 @@ final class PageService extends \App\Services\Page\Service
                     break;
                 case 'terms-and-conditions':
                     $content = <<<BLADE
-                    <h2>Terms and Conditions</h2>
                     <p>Welcome to our website. By accessing or using this website, you agree to comply with and be bound by the following terms and conditions. These terms govern your use of the website and all services provided.</p>
                     <h3>Use of Website</h3>
                     <p>You may use the website for lawful purposes only. You must not engage in any activity that may damage, disable, or interfere with the proper functioning of the website.</p>
@@ -667,7 +666,6 @@ final class PageService extends \App\Services\Page\Service
                     break;
                 case 'policies-of-privacy':
                     $content = <<<BLADE
-                    <h2>Privacy Policy</h2>
                     <p>We value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you visit our website.</p>
                     <h3>Information Collection</h3>
                     <p>We may collect information such as your name, email address, and usage data when you interact with our website. This data is used solely for providing and improving our services.</p>
@@ -686,7 +684,6 @@ final class PageService extends \App\Services\Page\Service
                     break;
                 case 'policies-of-cookies':
                     $content = <<<BLADE
-                    <h2 class="text-2xl font-semibold mb-4">Cookies Policy</h2>
                     <p class="mb-3">Our website uses cookies to ensure the proper functioning of the site and to maintain your session while you navigate through different pages. These cookies are essential for providing a seamless and secure user experience.</p>
                     <p class="mb-3">We want to emphasize that our website does <strong>not</strong> use any cookies to track your browsing behavior, monitor your activity, or collect personal data for marketing purposes. All cookies implemented are strictly technical and functional in nature.</p>
                     <p class="mb-3">Specifically, the cookies we use are designed to:</p>

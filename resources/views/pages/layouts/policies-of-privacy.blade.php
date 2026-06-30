@@ -1,4 +1,3 @@
-<h2>Privacy Policy</h2>
 <p>We value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you visit our website.</p>
 <h3>Information Collection</h3>
 <p>We may collect information such as your name, email address, and usage data when you interact with our website. This data is used solely for providing and improving our services.</p>
