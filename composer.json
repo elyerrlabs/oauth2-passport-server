@@ -1,6 +1,6 @@
 {
   "name": "elyerr/oauth2-passport-server",
-  "version": "v7.0.0",
+  "version": "v8.0.0",
   "type": "project",
   "description": "A robust and centralized authorization server built with Laravel. It provides secure authentication and authorization for modern applications using both OAuth2 and OpenID Connect protocols",
   "keywords": [
