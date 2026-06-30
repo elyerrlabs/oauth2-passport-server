@@ -442,7 +442,7 @@ class SettingService
     public function update(Request $request)
     {
         $data = $request->except('_method', '_token', 'current_route');
-        $route = Route::getRoutes()->getByName($request->current_route)->action;
+        $route = Route::getRoutes()->getByName($request->current_route)?->action;
         $moduleConfigKey = null;
 
         if (isset($route['config_key']) && $route['config_key']) {
@@ -452,7 +452,10 @@ class SettingService
         $data = transformConfigRequest($data);
 
         foreach ($data as $key => $value) {
-            $this->settingRepository->add("{$moduleConfigKey}{$key}", $value);
+
+            $configKey = empty($moduleConfigKey) ? $key : "$moduleConfigKey.$key";
+
+            $this->settingRepository->add($configKey, $value);
         }
 
         //Set a pid to reset cache

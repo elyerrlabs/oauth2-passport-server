@@ -276,18 +276,9 @@ if (!function_exists('config_module')) {
         $route = request()->route()?->action;
 
         if (isset($route['config_key'])) {
-            $key = "{$route['config_key']}{$key}";
+            $key = "{$route['config_key']}.{$key}";
         }
-
-        if (is_null($key)) {
-            return app('config');
-        }
-
-        if (is_array($key)) {
-            return app('config')->set($key);
-        }
-
-        return app('config')->get($key, $default);
+        return config($key, $default);
     }
 }
 
