@@ -218,48 +218,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
                             <!-- Birthday -->
                             <div class="space-y-2">
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                                >
-                                    {{ __("Birthday") }}
-                                </label>
-                                <div class="relative">
-                                    <VueDatePicker
-                                        v-model="form.birthday"
-                                        :enable-time-picker="false"
-                                        :max-date="new Date()"
-                                        format="yyyy-MM-dd"
-                                        model-type="format"
-                                        :placeholder="
-                                            __('Select your birthday')
-                                        "
-                                        auto-apply
-                                        :dark="is_dark"
-                                    />
-                                    <div
-                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none"
-                                    >
-                                        <svg
-                                            class="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div
-                                    v-if="form.errors.birthday"
-                                    class="text-sm text-red-600 dark:text-red-400 mt-1"
-                                >
-                                    {{ form.errors.birthday[0] }}
-                                </div>
+                                <v-input
+                                    :label="__('Birthday')"
+                                    v-model="form.birthday"
+                                    type="date"
+                                    :error="form.errors.birthday"
+                                />
                             </div>
 
                             <div class="space-y-2">
