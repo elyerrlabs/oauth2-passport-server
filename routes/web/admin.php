@@ -31,6 +31,7 @@ use App\Http\Controllers\Web\Admin\File\LangController;
 use App\Http\Controllers\Web\Admin\Page\PageController;
 use App\Http\Controllers\Web\Admin\Page\LayoutController;
 use App\Http\Controllers\Web\Admin\OAuth\ClientAdminController;
+use App\Http\Controllers\Web\Admin\Page\PoliciesController;
 use App\Http\Controllers\Web\Admin\Page\SeoController;
 
 Route::middleware(['throttle:system:general:settings', 'password.confirm'])
@@ -62,9 +63,8 @@ Route::middleware(['throttle:system:general:pages'])
 
         Route::get('layouts', [LayoutController::class, 'form'])->name('layouts.schema');
         Route::put('layouts', [LayoutController::class, 'update'])->name('layouts.update');
-
-        Route::get('seo', [SeoController::class, 'form'])->name('seo.schema');
-        Route::put('seo', [SeoController::class, 'update'])->name('seo.update');
+        Route::get('policies', [PoliciesController::class, 'form'])->name('policies.schema'); 
+        Route::get('seo', [SeoController::class, 'form'])->name('seo.schema'); 
 
         Route::get('langs', [LangController::class, 'index'])->name('langs.index');
         Route::post('langs', [LangController::class, 'store'])->name('langs.store');

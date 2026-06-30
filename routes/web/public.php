@@ -25,8 +25,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
 use App\Http\Controllers\Web\Home\PageController;
+use App\Http\Controllers\Web\Home\PoliciesController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:system:general:public'])->group(function () {

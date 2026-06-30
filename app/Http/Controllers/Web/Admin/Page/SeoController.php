@@ -55,43 +55,12 @@ class SeoController extends LayoutController
             ]);
         }
 
-        $routes = [
-            [
-                'name' => __('List of pages'),
-                'route' => route('admin.pages.index'),
-                'icon' => 'mdi mdi-file-document-outline',
-            ],
-            [
-                'name' => __('Layouts'),
-                'route' => route('admin.layouts.schema'),
-                'icon' => 'mdi mdi-file-document-outline',
-            ],
-            [
-                'name' => __('Seo'),
-                'route' => route('admin.seo.schema'),
-                'icon' => 'mdi mdi-file-document-outline',
-            ],
-        ];
+        $routes = resolveInertiaRoutes(config('menus.pages'));
 
         $layout = $request->input('layout');
 
         $content = $this->pageService->loadLayout($layout);
 
         return view('admin.pages.seo', compact('content', 'layout', 'routes'));
-    }
-
-
-    /**
-     * updated
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request)
-    {
-        $path = $this->pageService->loadLayoutPath($request->input('layout'));
-
-        $this->pageService->updateFile($path, $request->input('content'));
-
-        return back()->with('status', __('Layout updated successfully'));
     }
 }

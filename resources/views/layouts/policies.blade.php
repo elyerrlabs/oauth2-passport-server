@@ -10,7 +10,7 @@
 
 @section('content')
     <div
-        class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex justify-center items-start py-12 transition-colors duration-300">
+        class="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex justify-center items-start py-12 transition-colors duration-300">
 
         <!-- Main Content Area -->
         <main class="w-full max-w-4xl px-4 sm:px-6">
@@ -72,7 +72,7 @@
                 <header class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 px-8 pt-8 pb-4">
                     <div class="flex items-start gap-4">
                         <!-- MDI Icon based on policy type -->
-                        <div class="flex-shrink-0">
+                        <div class="shrink-0">
                             @switch(Route::currentRouteName())
                                 @case('legal.policies-of-cookies')
                                     <i class="mdi mdi-cookie text-3xl text-blue-600 dark:text-blue-400"></i>
@@ -117,7 +117,7 @@
                                 prose-ol:list-decimal prose-ol:pl-6
                                 prose-li:my-1
                                 prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-4 prose-blockquote:italic">
-                        {!! $content !!}
+                        @includeIf($path)
                     </div>
                 </div>
 

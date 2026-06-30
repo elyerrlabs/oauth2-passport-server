@@ -29,40 +29,31 @@
             <!-- Layout selector -->
             <div class="px-6 pt-4 pb-3 border-b border-gray-100 dark:border-gray-700">
                 <div class="flex flex-wrap items-center gap-1.5">
-                    <a href="{{ route('admin.seo.schema', ['layout' => 'login']) }}"
+                    <a href="{{ route('admin.policies.schema', ['layout' => 'terms-and-conditions']) }}"
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150
-                            {{ request('layout', 'login') === 'login'
+                            {{ request('layout', 'terms-and-conditions') === 'terms-and-conditions'
                                 ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800'
                                 : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700/50' }}">
                         <i class="mdi mdi-login text-sm"></i>
-                        {{ __('Login') }}
+                        {{ __('Terms and condition') }}
                     </a>
 
-                    <a href="{{ route('admin.seo.schema', ['layout' => 'register']) }}"
+                    <a href="{{ route('admin.policies.schema', ['layout' => 'policies-of-privacy']) }}"
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150
-                            {{ request('layout') === 'register'
+                            {{ request('layout', 'policies-of-privacy') === 'policies-of-privacy'
                                 ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800'
                                 : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700/50' }}">
                         <i class="mdi mdi-account-plus text-sm"></i>
-                        {{ __('Register') }}
+                        {{ __('Policies of privacy') }}
                     </a>
 
-                    <a href="{{ route('admin.seo.schema', ['layout' => 'forgot-password']) }}"
+                    <a href="{{ route('admin.policies.schema', ['layout' => 'policies-of-cookies']) }}"
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150
-                            {{ request('layout') === 'forgot-password'
+                            {{ request('layout', 'policies-of-cookies') === 'policies-of-cookies'
                                 ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800'
                                 : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700/50' }}">
                         <i class="mdi mdi-lock-reset text-sm"></i>
-                        {{ __('Forgot password') }}
-                    </a>
-
-                    <a href="{{ route('admin.seo.schema', ['layout' => 'plans']) }}"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150
-                            {{ request('layout') === 'plans'
-                                ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800'
-                                : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700/50' }}">
-                        <i class="mdi mdi-view-dashboard text-sm"></i>
-                        {{ __('Plans') }}
+                        {{ __('Policies of cookies') }}
                     </a>
                 </div>
             </div>
@@ -92,8 +83,8 @@
                         </button>
                     </div>
 
-                    <x-editor label="" content="{{ $content }}" preview="{{ false }}"
-                        jodit="{{ false }}" name="content" lang="php"
+                    <x-editor label="" content="{{ $content }}" preview="{{ true }}"
+                        jodit="{{ true }}" name="content" lang="php"
                         class="rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm focus:ring-1 focus:ring-blue-500" />
                 </div>
 

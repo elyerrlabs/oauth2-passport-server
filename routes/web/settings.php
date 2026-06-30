@@ -25,10 +25,9 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Http\Controllers\Web\Admin\Setting\SitemapController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\Admin\Page\SitemapController;
 use App\Http\Controllers\Web\Admin\Setting\SettingController;
-use App\Http\Controllers\Web\Admin\Policies\PoliciesController;
 
 Route::group([
     'prefix' => 'settings',
@@ -54,18 +53,6 @@ Route::group([
     Route::put('/', [SettingController::class, 'update'])->name('update');
     Route::put('/cache/reload', [SettingController::class, 'reloadCache'])->name('reload');
 });
-
-Route::group([
-    'prefix' => 'policies',
-    'as' => 'policies.',
-    'middleware' => ['throttle:system:general:settings', 'password.confirm']
-], function () {
-    // Route::get("/", [PoliciesController::class, 'dashboard'])->name('dashboard');
-    Route::get('terms-and-conditions', [PoliciesController::class, 'termsAndConditionForm'])->name('terms-and-conditions');
-    Route::get('policies-of-privacy', [PoliciesController::class, 'policiesOfPrivacyForm'])->name('policies-of-privacy');
-    Route::get('policies-of-cookies', [PoliciesController::class, 'policiesOfCookiesForm'])->name('policies-of-cookies');
-});
-
 
 Route::group([
     'prefix' => 'sitemaps',

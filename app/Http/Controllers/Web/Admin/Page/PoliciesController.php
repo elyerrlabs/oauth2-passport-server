@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Web\Admin\Page;
 
 use Illuminate\Http\Request;
 use App\Services\Page\PageService;
-use App\Http\Controllers\WebController;
 
 /**
  * OAuth2 Passport Server — a centralized, modular authorization server
@@ -31,7 +30,7 @@ use App\Http\Controllers\WebController;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-class LayoutController extends WebController
+class PoliciesController extends LayoutController
 {
     /**
      * Construct
@@ -39,9 +38,7 @@ class LayoutController extends WebController
      */
     public function __construct(public PageService $pageService)
     {
-        parent::__construct();
-        $this->middleware('userCanAny:developer:pages:full,developer:pages:view')->only('form');
-        $this->middleware('userCanAny:developer:pages:full,developer:pages:update')->only('update');
+        parent::__construct($pageService);
     }
 
     /**
@@ -52,8 +49,8 @@ class LayoutController extends WebController
     public function form(Request $request)
     {
         if (!$request->has('layout')) {
-            return redirect()->route('admin.layouts.schema', [
-                'layout' => 'schema'
+            return redirect()->route('admin.policies.schema', [
+                'layout' => 'terms-and-conditions'
             ]);
         }
 
@@ -63,21 +60,6 @@ class LayoutController extends WebController
 
         $content = $this->pageService->loadLayout($layout);
 
-        return view('admin.pages.layout', compact('content', 'layout', 'routes'));
-    }
-
-
-    /**
-     * updated
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request)
-    {
-        $path = $this->pageService->loadLayoutPath($request->input('layout'));
-
-        $this->pageService->updateFile($path, $request->input('content'));
-
-        return back()->with('status', __('Layout updated successfully'));
+        return view('admin.pages.policies', compact('content', 'layout', 'routes'));
     }
 }

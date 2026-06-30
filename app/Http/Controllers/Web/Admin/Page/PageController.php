@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Admin\Page;
 
 use App\Http\Controllers\WebController;
+use Illuminate\Support\Facades\DB;
 use App\Jobs\SitemapIndexJob;
 use Illuminate\Http\Request;
 use App\Services\Page\PageService;
@@ -35,12 +36,6 @@ use App\Services\Page\PageService;
 final class PageController extends WebController
 {
 
-    /**
-     * routes
-     * @var 
-     */
-    protected $routes;
-
     public function __construct(protected PageService $pageService)
     {
         parent::__construct();
@@ -48,24 +43,6 @@ final class PageController extends WebController
         $this->middleware('userCanAny:developer:pages:full,developer:pages:create')->only('store', 'generateSitemapFile');
         $this->middleware('userCanAny:developer:pages:full,developer:pages:update')->only('update');
         $this->middleware('userCanAny:developer:pages:full,developer:pages:destroy')->only('destroy');
-
-        $this->routes = [
-            [
-                'name' => __('List of pages'),
-                'route' => route('admin.pages.index'),
-                'icon' => 'mdi mdi-file-document-outline',
-            ],
-            [
-                'name' => __('Layouts'),
-                'route' => route('admin.layouts.schema'),
-                'icon' => 'mdi mdi-file-document-outline',
-            ],
-            [
-                'name' => __('Seo'),
-                'route' => route('admin.seo.schema'),
-                'icon' => 'mdi mdi-file-document-outline',
-            ],
-        ];
     }
 
     /**
@@ -77,9 +54,9 @@ final class PageController extends WebController
     {
         $pages = $this->pageService->search($request);
         $pages = $pages->orderBy('updated_at', 'desc')->paginate(15);
-
+        
         return view('admin.pages.pages', compact('pages'), [
-            'routes' => $this->routes
+            'routes' => resolveInertiaRoutes(config('menus.pages'))
         ]);
     }
 
@@ -96,7 +73,7 @@ final class PageController extends WebController
             'name' => ['required'],
             'slug' => [
                 function ($attribute, $value, $fail) use ($pageId) {
-                    $query = \DB::table('pages');
+                    $query = DB::table('pages');
 
                     if ($pageId) {
                         $query->where('id', '!=', $pageId);
@@ -162,7 +139,7 @@ final class PageController extends WebController
         $page = $this->pageService->edit($id);
 
         return view('admin.pages.edit', compact('page'), [
-            'routes' => $this->routes
+            'routes' => resolveInertiaRoutes(config('menus.pages'))
         ]);
     }
 

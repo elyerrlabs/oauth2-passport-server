@@ -102,7 +102,7 @@
         </div>
 
         <!-- Preview Tab -->
-        <div id="preview-tab" class="tab-content hidden">
+        <div id="preview-tab" class="tab-content hidden text-gray-700 dark:text-white">
             <div class="mb-2 flex justify-between items-center">
                 <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Preview') }}</label>
                 <button type="button" id="refresh-preview"
