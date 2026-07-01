@@ -572,13 +572,4 @@ class SettingService
     {
         $this->settingRepository->deleteKeys($key);
     }
-
-    /**
-     * Migrate old config to file from db
-     * @return void
-     */
-    public function migrateConfig()
-    {
-        $this->settingRepository->importOldConfig();
-    }
 }

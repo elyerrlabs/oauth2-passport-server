@@ -324,41 +324,4 @@ class SettingRepository
 
         return $result;
     }
-
-
-    /**
-     * Import flat configuration.
-     *
-     * [
-     *   'app.name' => 'Demo',
-     *   'app.debug' => true,
-     * ]
-     */
-    public function importOldConfig(): void
-    {
-        if (file_exists($this->configFile)) {
-            unlink($this->configFile);
-        }
-
-        $this->loadConfigurationFile();
-
-        $settings = \App\Models\Setting\Setting::pluck('value', 'key')->toArray();
-
-        if (count($settings) == 0) {
-            echo "Nothing to migrate\n";
-            return;
-        }
-
-        $data = [];
-
-        foreach ($settings as $key => $value) {
-            $data = $this->setNestedValue(
-                $data,
-                $key,
-                $value
-            );
-        }
-
-        $this->writeFile($data);
-    }
 }
