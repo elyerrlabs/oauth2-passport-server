@@ -29,3 +29,4 @@ supervisord.pid
 .cache.pid
 !.dockerignore
 settings.php
+settings.php.lock

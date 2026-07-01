@@ -66,7 +66,7 @@ class SettingService
      */
     public function resetConfigKeys()
     {
-        file_put_contents($this->pid(), time());
+        file_put_contents($this->pid(), time(), LOCK_EX);
     }
 
     /**
@@ -91,7 +91,7 @@ class SettingService
         try {
             if (file_exists($this->pid())) {
                 Cache::forget(CacheKeys::config());
-                unlink($this->pid());
+                @unlink($this->pid());
             }
 
             $settings = Cache::remember(
@@ -449,17 +449,34 @@ class SettingService
             $moduleConfigKey = $route['config_key'];
         }
 
-        $data = transformConfigRequest($data);
+        $data = $this->transformConfigRequest($data);
+        $settings = [];
 
         foreach ($data as $key => $value) {
 
             $configKey = empty($moduleConfigKey) ? $key : "$moduleConfigKey.$key";
 
-            $this->settingRepository->add($configKey, $value);
+            $settings[$configKey] = $value;
         }
 
+        $this->settingRepository->addMany($settings);
+
         //Set a pid to reset cache
-        file_put_contents($this->pid(), time());
+        $this->resetConfigKeys();
+    }
+
+    /**
+     * Transform request data when the project helper is available.
+     * @param array $data
+     * @return array
+     */
+    protected function transformConfigRequest(array $data): array
+    {
+        if (function_exists('transformConfigRequest')) {
+            return transformConfigRequest($data);
+        }
+
+        return $data;
     }
 
     /**

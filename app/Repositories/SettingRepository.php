@@ -31,7 +31,7 @@ class SettingRepository
             mkdir(dirname($path), 0750, true);
         }
 
-        file_put_contents($path, "<?php\n\nreturn [];\n");
+        $this->writeFileAtPath($path, []);
     }
 
     /**
@@ -60,7 +60,13 @@ class SettingRepository
             throw new ReportError('Settings file not found', 500);
         }
 
-        return require $this->configFile;
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($this->configFile, true);
+        }
+
+        $data = require $this->configFile;
+
+        return is_array($data) ? $data : [];
     }
 
     /**
@@ -70,9 +76,108 @@ class SettingRepository
      */
     private function writeFile(array $data): void
     {
-        $content = "<?php\n\nreturn " . var_export($data, true) . ";\n";
+        $this->writeFileAtPath($this->configFile, $data);
+    }
 
-        file_put_contents($this->configFile, $content);
+    /**
+     * Read, mutate and write settings while holding the same file lock.
+     * @param callable $callback
+     * @return mixed
+     */
+    private function updateFile(callable $callback): mixed
+    {
+        return $this->withFileLock($this->configFile, function () use ($callback) {
+            $data = $this->readFile();
+            $result = $callback($data);
+
+            if (is_array($result)) {
+                $data = $result;
+                $result = null;
+            }
+
+            $this->writeFileUnlocked($this->configFile, $data);
+
+            return $result;
+        });
+    }
+
+    /**
+     * Write a PHP config array using a lock and atomic rename.
+     * @param string $path
+     * @param array $data
+     * @return void
+     */
+    private function writeFileAtPath(string $path, array $data): void
+    {
+        $this->withFileLock($path, function () use ($path, $data) {
+            $this->writeFileUnlocked($path, $data);
+        });
+    }
+
+    /**
+     * Run a callback with an exclusive lock for a config file.
+     * @param string $path
+     * @param callable $callback
+     * @return mixed
+     */
+    private function withFileLock(string $path, callable $callback): mixed
+    {
+        $directory = dirname($path);
+
+        if (!is_dir($directory)) {
+            mkdir($directory, 0750, true);
+        }
+
+        $lockPath = "{$path}.lock";
+        $lock = fopen($lockPath, 'c');
+
+        if ($lock === false) {
+            throw new ReportError('Unable to open settings lock file', 500);
+        }
+
+        try {
+            if (!flock($lock, LOCK_EX)) {
+                throw new ReportError('Unable to lock settings file', 500);
+            }
+
+            return $callback();
+        } finally {
+            flock($lock, LOCK_UN);
+            fclose($lock);
+        }
+    }
+
+    /**
+     * Write a PHP config array. Caller must hold the file lock.
+     * @param string $path
+     * @param array $data
+     * @return void
+     */
+    private function writeFileUnlocked(string $path, array $data): void
+    {
+        $content = "<?php\n\nreturn " . var_export($data, true) . ";\n";
+        $directory = dirname($path);
+        $temporary = tempnam($directory, basename($path) . '.tmp.');
+
+        if ($temporary === false) {
+            throw new ReportError('Unable to create temporary settings file', 500);
+        }
+
+        if (file_put_contents($temporary, $content, LOCK_EX) === false) {
+            @unlink($temporary);
+            throw new ReportError('Unable to write temporary settings file', 500);
+        }
+
+        chmod($temporary, 0640);
+
+        if (!rename($temporary, $path)) {
+            @unlink($temporary);
+            throw new ReportError('Unable to replace settings file', 500);
+        }
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($path, true);
+        }
     }
 
     /**
@@ -125,19 +230,13 @@ class SettingRepository
      */
     public function load(string $key, mixed $value): void
     {
-        if ($this->hasKey($key)) {
-            return;
-        }
+        $this->updateFile(function (array $data) use ($key, $value) {
+            if ($this->getNestedValue($data, $key, '__missing__') !== '__missing__') {
+                return $data;
+            }
 
-        $data = $this->readFile();
-
-        $data = $this->setNestedValue(
-            $data,
-            $key,
-            $value
-        );
-
-        $this->writeFile($data);
+            return $this->setNestedValue($data, $key, $value);
+        });
     }
 
     /**
@@ -145,15 +244,25 @@ class SettingRepository
      */
     public function add(string $key, mixed $value): void
     {
-        $data = $this->readFile();
+        $this->updateFile(function (array $data) use ($key, $value) {
+            return $this->setNestedValue($data, $key, $value);
+        });
+    }
 
-        $data = $this->setNestedValue(
-            $data,
-            $key,
-            $value
-        );
+    /**
+     * Add or replace several keys with a single read/write cycle.
+     * @param array<string, mixed> $values
+     * @return void
+     */
+    public function addMany(array $values): void
+    {
+        $this->updateFile(function (array $data) use ($values) {
+            foreach ($values as $key => $value) {
+                $data = $this->setNestedValue($data, $key, $value);
+            }
 
-        $this->writeFile($data);
+            return $data;
+        });
     }
 
     /**
@@ -165,23 +274,24 @@ class SettingRepository
      */
     public function deleteKeys(string $module): int
     {
-        $data = $this->readFile();
-
-        $flat = $this->flattenConfig($data);
-
         $deleted = 0;
 
-        foreach ($flat as $key => $value) {
+        $this->updateFile(function (array $data) use ($module, &$deleted) {
 
-            if (str_contains($key, $module)) {
-                unset($flat[$key]);
-                $deleted++;
+            $flat = $this->flattenConfig($data);
+
+            foreach ($flat as $key => $value) {
+
+                if (str_contains($key, $module)) {
+                    unset($flat[$key]);
+                    $deleted++;
+                }
             }
-        }
 
-        $data = $this->nestedValues($flat);
+            $data = $this->nestedValues($flat);
 
-        $this->writeFile($data);
+            return $data;
+        });
 
         return $deleted;
     }
@@ -263,36 +373,6 @@ class SettingRepository
         }
 
         $temp = $value;
-
-        return $array;
-    }
-
-    /**
-     * Remove nested value using dot notation.
-     */
-    private function removeNestedValue(
-        array $array,
-        string $key
-    ): array {
-        $keys = explode('.', $key);
-
-        $lastKey = array_pop($keys);
-
-        $temp = &$array;
-
-        foreach ($keys as $segment) {
-
-            if (
-                !isset($temp[$segment]) ||
-                !is_array($temp[$segment])
-            ) {
-                return $array;
-            }
-
-            $temp = &$temp[$segment];
-        }
-
-        unset($temp[$lastKey]);
 
         return $array;
     }
