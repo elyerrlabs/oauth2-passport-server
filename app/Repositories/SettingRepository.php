@@ -28,7 +28,7 @@ class SettingRepository
         }
 
         if (!is_dir(dirname($path))) {
-            mkdir(dirname($path), 0755, true);
+            mkdir(dirname($path), 0750, true);
         }
 
         file_put_contents($path, "<?php\n\nreturn [];\n");
@@ -40,17 +40,6 @@ class SettingRepository
      */
     private function loadConfigurationFile(): string
     {
-        $paths = [
-            base_path('env/settings.php'),
-            base_path('settings.php'),
-        ];
-
-        foreach ($paths as $path) {
-            if (file_exists($path)) {
-                return $path;
-            }
-        }
-
         $file = app()->environment('production', 'staging')
             ? base_path('env/settings.php')
             : base_path('settings.php');
