@@ -36,6 +36,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Correct settings.php file discovery and creation
 - Remove command settings:migrate-config
 - Remove old settings resources
+- Fix atomic settings updates in production
 
 ---
 
