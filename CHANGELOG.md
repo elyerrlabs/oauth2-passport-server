@@ -33,6 +33,9 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 - Replace orphaned VueDatePicker with native date input
 - Correct module configuration registration and improve config_module helper
+- Correct settings.php file discovery and creation
+- Remove command settings:migrate-config
+- Remove old settings resources
 
 ---
 
