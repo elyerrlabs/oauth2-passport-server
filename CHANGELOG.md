@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
-## Unreleased
+## [v8.0.1]
 
 - Replace orphaned VueDatePicker with native date input
 - Correct module configuration registration and improve config_module helper
