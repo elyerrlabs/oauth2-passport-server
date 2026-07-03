@@ -27,12 +27,6 @@
 
 return [
 
-    //redirect after login
-    "redirect_to" => "/account",
-
-    // Default redirect after login or main page
-    "home_page" => "/",
-
     // Custom cookie name for the session (null = default)
     "cookie_name" => null,
 
@@ -56,11 +50,6 @@ return [
 
     // Enable Content Security Policy (CSP) headers
     "csp_enabled" => false,
-
-    //Policies
-    "terms_url" => null,
-    "privacy_url" => null,
-    "policy_cookies" => null,
 
     "birthday" => [
         "active" => false, // Activate birthday
