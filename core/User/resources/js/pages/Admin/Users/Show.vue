@@ -147,18 +147,6 @@
                         <label
                             class="text-xs font-medium uppercase text-gray-500 dark:text-gray-400 tracking-wide"
                         >
-                            {{ __("Commission Rate") }}
-                        </label>
-                        <span
-                            class="text-base font-medium text-gray-900 dark:text-gray-100"
-                        >
-                            {{ user.commission_rate }}%
-                        </span>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label
-                            class="text-xs font-medium uppercase text-gray-500 dark:text-gray-400 tracking-wide"
-                        >
                             {{ __("Language") }}
                         </label>
                         <span
@@ -341,7 +329,7 @@
 import { ref, onMounted } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import VMainLayout from "@/components/VMainLayout.vue";
-import VButton from "@/components/VButton.vue"; 
+import VButton from "@/components/VButton.vue";
 
 const page = usePage();
 const user = ref({});
