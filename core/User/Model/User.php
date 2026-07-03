@@ -26,12 +26,9 @@ namespace Core\User\Model;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Models\Common\Order;
-use Core\Transaction\Model\Refund;
 use App\Models\Auth;
 use App\Repositories\Contracts\Dynamic;
 use Illuminate\Http\Request;
-use App\Models\Setting\Terminal;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -55,9 +52,6 @@ class User extends Auth
         'phone',
         'birthday',
         'email_verified_at',
-        'partner_id',
-        'accept_cookies',
-        'accept_terms',
         'lang'
     ];
 
@@ -77,8 +71,6 @@ class User extends Auth
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'accept_cookies' => 'boolean',
-        'accept_terms' => 'boolean',
     ];
 
     /**
@@ -113,28 +105,5 @@ class User extends Auth
         }
 
         return false;
-    }
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
-
-    /**
-     * Get all refunds owned by the user.
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Refund, User>
-     */
-    public function ownedRefunds()
-    {
-        return $this->hasMany(Refund::class, 'user_id');
-    }
-
-    /**
-     * Get all refunds handled or processed by the admin user.
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Refund, User>
-     */
-    public function handledRefunds()
-    {
-        return $this->hasMany(Refund::class, 'handled_id');
     }
 }

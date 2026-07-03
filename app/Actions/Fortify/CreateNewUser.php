@@ -21,10 +21,6 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        if (session()->has('referral_code')) {
-            $input['referral_code'] = session('referral_code');
-        }
-
         $emailValidation = app()->environment('production')
             ? 'email:rfc,dns'
             : 'email:rfc';
@@ -49,9 +45,6 @@ class CreateNewUser implements CreatesNewUsers
                     }
                 },
             ],
-            'accept_terms' => ['required', 'boolean'],
-            'accept_cookies' => ['required', 'boolean'],
-            'referral_code' => ['nullable'],
         ], [
             'email.required' => 'The credentials provided are invalid.',
             'email.email' => 'The credentials provided are invalid.',

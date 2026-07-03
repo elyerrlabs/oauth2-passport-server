@@ -39,7 +39,7 @@ use Core\User\Notification\UserUpdatedEmail;
 use Core\User\Notification\UserCreatedAccount;
 use App\Support\CacheKeys;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class UserService
@@ -124,8 +124,6 @@ class UserService
             'phone' => $data['phone'] ?? null,
             'birthday' => $data['birthday'] ?? null,
             'email_verified_at' => isset($data['email_verified_at']) && $data['email_verified_at'] ? now() : null,
-            'accept_terms' => $data['accept_terms'] ?? true,
-            'accept_cookies' => $data['accept_cookies'] ?? true,
         ]);
 
         Cache::put(CacheKeys::user($user->id), $user);
@@ -582,19 +580,7 @@ class UserService
                 'password' => Hash::make($input['password']),
                 'birthday' => $input['birthday'] ?? null,
                 'email_verified_at' => config('system.registration.email.verification', false) ? null : now(), // if it the email verification is true, so the field is null otherwise is now()
-                'accept_terms' => $input['accept_terms'],
-                'accept_cookies' => $input['accept_cookies']
             ];
-
-            // Add referral code
-            if (class_exists(\Core\Partner\Model\Partner::class) && !empty($input['referral_code'])) {
-
-                $partner = \Core\Partner\Model\Partner::where('code', $input['referral_code'])->first();
-
-                if ($partner) {
-                    $data['partner_id'] = $partner->id;
-                }
-            }
 
             // Create user
             $user = $this->userRepository->create($data);

@@ -40,8 +40,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'scope' => \App\Http\Middleware\CheckForAnyScope::class,
             'userCanAny' => \App\Http\Middleware\UserCanAny::class,
             'captcha' => \App\Http\Middleware\VerifyCaptcha::class,
-            'demo' => \App\Http\Middleware\VerifyDemoUser::class,
-            'track.ref' => \App\Http\Middleware\TrackReferralCode::class,
+            'demo' => \App\Http\Middleware\VerifyDemoUser::class, 
         ]);
 
         $middleware->web(

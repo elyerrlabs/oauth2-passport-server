@@ -115,7 +115,6 @@ class SettingsUsersCreate extends Command
             'name' => $name,
             'last_name' => $lastName,
             'email' => $email,
-            'accept_terms' => true,
             'password' => Hash::make($password),
             'email_verified_at' => now(),
             'deleted_at' => now(),
