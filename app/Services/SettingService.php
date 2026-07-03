@@ -27,7 +27,6 @@ namespace App\Services;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use Elyerr\ApiResponse\Exceptions\ReportError;
 use App\Support\CacheKeys;
 use Core\User\Model\Scope;
 use App\Models\OAuth\Token;
@@ -37,13 +36,14 @@ use Illuminate\Http\Request;
 use App\Models\OAuth\AuthCode;
 use Laravel\Passport\Passport;
 use App\Models\OAuth\RefreshToken;
-use App\Repositories\SettingRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cache; 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
+use App\Repositories\SettingRepository;
 use Illuminate\Database\QueryException;
+use Elyerr\ApiResponse\Exceptions\ReportError;
 
 class SettingService
 {
@@ -332,43 +332,18 @@ class SettingService
         $this->settingRepository->load('services.captcha.providers.hcaptcha.secret', null);
         $this->settingRepository->load('services.captcha.providers.hcaptcha.sitekey', null);
 
-        //Payment settings
-        $this->settingRepository->load('billing.methods.stripe.name', 'Credit Card (Stripe)');
-        $this->settingRepository->load('billing.methods.stripe.icon', 'mdi-credit-card-outline');
-        $this->settingRepository->load('billing.methods.stripe.enable', true);
-        $this->settingRepository->load('services.stripe.secret', null);
-        $this->settingRepository->load('services.stripe.key', null);
-        $this->settingRepository->load('services.stripe.webhook_secret', null);
-
-        $this->settingRepository->load('billing.methods.offline.name', 'Offline');
-        $this->settingRepository->load('billing.methods.offline.icon', 'mdi-cash-register');
-        $this->settingRepository->load('billing.methods.offline.enable', true);
-
-        $this->settingRepository->load('billing.renew.enable', false);
-        $this->settingRepository->load('billing.renew.hours_before', 10);
-        $this->settingRepository->load('billing.renew.bonus_enabled', false);
-        $this->settingRepository->load('billing.renew.grace_period_days', 5);
-
-        //System settings
-        $this->settingRepository->load('system.home_page', "/");
+        //System settings 
         $this->settingRepository->load('system.cookie_name', "oauth2_server");
         $this->settingRepository->load('system.passport_token_services', null);
         $this->settingRepository->load('system.verify_account_time', 5);
         $this->settingRepository->load('system.disable_create_user_by_command', false);
         $this->settingRepository->load('system.destroy_user_after', 30);
-        $this->settingRepository->load('system.code_2fa_email_expires', 5);
         $this->settingRepository->load('system.csp_enabled', false);
-        $this->settingRepository->load('system.privacy_url', null);
-        $this->settingRepository->load('system.terms_url', null);
-        $this->settingRepository->load('system.policy_cookies', null);
         $this->settingRepository->load('system.birthday.active', false);
         $this->settingRepository->load('system.birthday.limit', 18);
         $this->settingRepository->load('system.demo.enabled', false);
         $this->settingRepository->load('system.demo.email', null);
         $this->settingRepository->load('system.demo.password', null);
-        $this->settingRepository->load('system.legal.terms_and_condition', null);
-        $this->settingRepository->load('system.legal.policies_of_privacy', null);
-        $this->settingRepository->load('system.legal.policies_of_cookies', null);
 
 
 
