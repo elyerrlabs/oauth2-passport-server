@@ -27,12 +27,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
-use App\Http\Controllers\Web\Admin\File\LangController;
-use App\Http\Controllers\Web\Admin\Page\PageController;
-use App\Http\Controllers\Web\Admin\Page\LayoutController;
 use App\Http\Controllers\Web\Admin\OAuth\ClientAdminController;
-use App\Http\Controllers\Web\Admin\Page\PoliciesController;
-use App\Http\Controllers\Web\Admin\Page\SeoController;
 
 Route::middleware(['throttle:system:general:settings', 'password.confirm'])
     ->group(function () {
@@ -53,22 +48,3 @@ Route::middleware(['throttle:system:general:passport', 'password.confirm'])
         Route::post('/clients/personal', [ClientAdminController::class, 'createPersonalClient'])->name('clients.personal.store');
 
     });
-
-Route::middleware(['throttle:system:general:pages'])
-    ->group(function () {
-
-        Route::post('pages/generate-sitemap', [PageController::class, 'generateSitemapFile'])->name('pages.generate-sitemap');
-        Route::post('pages/{page}/reset', [PageController::class, 'reset'])->name('pages.reset');
-        Route::resource('pages', PageController::class);
-
-        Route::get('layouts', [LayoutController::class, 'form'])->name('layouts.schema');
-        Route::put('layouts', [LayoutController::class, 'update'])->name('layouts.update');
-        Route::get('policies', [PoliciesController::class, 'form'])->name('policies.schema'); 
-        Route::get('seo', [SeoController::class, 'form'])->name('seo.schema'); 
-
-        Route::get('langs', [LangController::class, 'index'])->name('langs.index');
-        Route::post('langs', [LangController::class, 'store'])->name('langs.store');
-        Route::put('langs', [LangController::class, 'update'])->name('langs.update');
-        Route::delete('langs/{file}', [LangController::class, 'destroy'])->name('langs.delete');
-    });
-
