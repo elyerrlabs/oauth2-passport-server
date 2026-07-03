@@ -28,18 +28,6 @@
 use App\Support\Translation\ModuleTranslation;
 use Illuminate\Support\Facades\Route;
 
-if (!function_exists("getCurrencySymbol")) {
-    /**
-     * Retrieve the symbol of the currency
-     * @param string $key
-     */
-    function getCurrencySymbol(string $key): ?string
-    {
-        $currencies = config('billing.currency');
-        return $currencies[$key]['symbol'] ?? null;
-    }
-}
-
 if (!function_exists('redirectToHome')) {
 
     /**

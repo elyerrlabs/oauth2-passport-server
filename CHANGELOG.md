@@ -29,6 +29,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+# Unreleased
+
+> **Note:** The removed components are being extracted from the core to make the framework more modular and maintainable. They will be available as independent modules, allowing optional installation, easier maintenance, and a smaller core.
+
+- Removed the **Transaction** and **Partner** core modules.
+- Removed payment helpers.
+- Removed the following administrator service: **refunds**, **plans**, **transactions**, and **partner**.
+- Removed the **partner** group from the reseller service.
+- Removed the configuration keys: `core.partner` and `core.transaction`.
+- Composer package removed paquete `stripe/stripe-php` and `stevebauman/purify`
+- Moved all exception handling to bootstrap/app.php and removed the RenderException class
+
+---
+
 ## [v8.0.1]
 
 - Replace orphaned VueDatePicker with native date input

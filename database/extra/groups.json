@@ -21,48 +21,6 @@
           }
         ]
       },
-
-      {
-        "name": "refunds",
-        "description": "Manage and track refund requests and their status.",
-        "actions": [
-          {
-            "name": "full",
-            "public": 0,
-            "active": 1,
-            "api_key": 0,
-            "web": 1
-          },
-          {
-            "name": "view",
-            "public": 0,
-            "active": 1,
-            "api_key": 0,
-            "web": 1
-          },
-          {
-            "name": "update",
-            "public": 0,
-            "active": 1,
-            "api_key": 0,
-            "web": 1
-          },
-          {
-            "name": "assign",
-            "public": 0,
-            "active": 1,
-            "api_key": 0,
-            "web": 1
-          },
-          {
-            "name": "review",
-            "public": 0,
-            "active": 1,
-            "api_key": 0,
-            "web": 1
-          }
-        ]
-      },
       {
         "name": "group",
         "description": "Service to manage resource of groups",
@@ -412,68 +370,6 @@
         ]
       },
       {
-        "name": "transactions",
-        "description": "Service to manage transaction into the admin manager",
-        "actions": [
-          {
-            "name": "full",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "dashboard",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "view",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "update",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          }
-        ]
-      },
-
-      {
-        "name": "partner",
-        "description": "Service to manage partners",
-        "actions": [
-          {
-            "name": "full",
-            "public": 0,
-            "active": 1,
-            "api_key": 0,
-            "web": 0
-          },
-          {
-            "name": "dashboard",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "update",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "view",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          }
-        ]
-      },
-      {
         "name": "oauth",
         "description": "Service to manage applications oauth2 server",
         "actions": [
@@ -735,48 +631,12 @@
   },
   {
     "name": "enterprise",
-    "description": "Exclusive services designed for businesses, providing advanced cloud solutions, dedicated infrastructure, and enterprise-grade security."
+    "description": "Exclusive services designed for businesses, providing advanced cloud solutions, dedicated infrastructure, and enterprise-grade security.",
+    "services": []
   },
   {
     "name": "reseller",
     "description": "Tailored for businesses and individuals looking to resell services, this plan offers full white-label capabilities, scalable resources",
-    "services": [
-      {
-        "name": "partner",
-        "description": "Designed to build trust and mutual growth, this program allows users to earn by sharing referral links.",
-        "actions": [
-          {
-            "name": "full",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "dashboard",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "view",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "create",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "show",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          }
-        ]
-      }
-    ]
+    "services": []
   }
 ]

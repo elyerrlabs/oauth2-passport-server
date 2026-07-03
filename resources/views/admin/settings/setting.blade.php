@@ -24,7 +24,6 @@
             $routes = [
                 'admin.settings.general' => ['icon' => 'mdi-cog-outline', 'label' => __('General')],
                 'admin.settings.session' => ['icon' => 'mdi-clock-outline', 'label' => __('Session')],
-                'admin.settings.payment' => ['icon' => 'mdi-credit-card-outline', 'label' => __('Payment')],
                 'admin.settings.email' => ['icon' => 'mdi-email-outline', 'label' => __('Email')],
                 'admin.settings.routes' => ['icon' => 'mdi-routes', 'label' => __('Routes')],
                 'admin.settings.redis' => ['icon' => 'mdi-database', 'label' => __('Redis')],
