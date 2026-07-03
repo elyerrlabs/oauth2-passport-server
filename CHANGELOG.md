@@ -35,11 +35,14 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 
 - Removed the **Transaction** and **Partner** core modules.
 - Removed payment helpers.
-- Removed the following administrator service: **refunds**, **plans**, **transactions**, and **partner**.
+- Removed the following administrator service: **refunds**, **plan**, **transactions**, and **partner**.
 - Removed the **partner** group from the reseller service.
 - Removed the configuration keys: `core.partner`, `core.transaction`, `rate_limit.partner`, `rate_limit.partner`, `rate_limit.ecommerce` .
 - Composer package removed paquete `stripe/stripe-php` and `stevebauman/purify`
 - Moved all exception handling to bootstrap/app.php and removed the RenderException class
+- remove pages, seo, sitemap funtionalities.
+- The following developers services removed : `pages`, `seo`, 
+
 
 ---
 
