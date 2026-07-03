@@ -35,7 +35,7 @@
 
         <!-- Module form -->
         @foreach (config('module', []) as $type => $group)
-            <div class="mb-8  ">
+            <div class="mb-8 flex-1">
                 <h2 class="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-4">
                     {{ strtoupper($type === 'core' ? 'System Modules' : 'Third-party Modules') }}
                 </h2>
@@ -55,17 +55,12 @@
                             </h3>
 
 
-                            @if ($type === 'core')
-                                <span
-                                    class="ml-3 px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
-                                    CORE
-                                </span>
-                            @else
-                                <span
-                                    class="ml-3 px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    THIRD
-                                </span>
-                            @endif
+
+                            <span
+                                class="ml-3 px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                THIRD
+                            </span>
+
                         </div>
 
                         <div
