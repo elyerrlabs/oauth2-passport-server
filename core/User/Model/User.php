@@ -28,8 +28,6 @@ namespace Core\User\Model;
 
 use App\Models\Auth;
 use App\Repositories\Contracts\Dynamic;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Auth
@@ -83,27 +81,5 @@ class User extends Auth
         unset($data[0]);
 
         return implode($data);
-    }
-
-
-    /**
-     * Verify the correct user and check if they have activated 2FA.
-     *
-     * @param Request $request
-     */
-    public static function validate(Request $request)
-    {
-        $request->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if ($user && $user->m2fa && Hash::check($request->password, $user->password)) {
-            return true;
-        }
-
-        return false;
     }
 }
