@@ -1,10 +1,19 @@
 <?php
 
-use App\Exceptions\RenderException;
+use App\Exceptions\OAuthAuthenticationException;
+use Elyerr\ApiResponse\Exceptions\ReportError;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -65,6 +74,67 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
 
         $exceptions->render(function (Throwable $e, Request $request) {
-            RenderException::render($e, $request);
+
+            if ($e instanceof ValidationException) {
+
+                $errors = $e->errors();
+
+                $formatted = [];
+
+                foreach ($errors as $field => $messages) {
+                    $cleanedMessages = array_map(function ($message) {
+                        $message = preg_replace('/\.\d+\./', ' ', $message);
+                        $message = preg_replace('/\.\d+/', ' ', $message);
+                        $message = str_replace('_', ' ', $message);
+                        $message = preg_replace('/\s+/', ' ', $message);
+
+                        return trim($message);
+                    }, $messages);
+
+                    data_set($formatted, $field, $cleanedMessages);
+                }
+
+                // Reponse JSON/API
+                if ($request->wantsJson() || $request->is('api/*')) {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                        'errors' => $formatted
+                    ], 422);
+                }
+            }
+
+            if ($e instanceof NotFoundHttpException && request()->acceptsHtml()) {
+
+                if (request()->path() === '/') {
+                    return redirect()->route('login');
+                }
+
+                return redirect('/');
+            }
+
+            if ($e instanceof OAuthAuthenticationException) {
+
+                return redirectToHome();
+            }
+
+            if ($e instanceof ModelNotFoundException) {
+                throw new ReportError(__("Model not be found"), 404);
+            }
+
+            if ($e instanceof TokenMismatchException) {
+                throw new ReportError(__($e->getMessage()), 419);
+            }
+
+            if ($e instanceof BadRequestHttpException) {
+                throw new ReportError(__($e->getMessage()), 400);
+            }
+
+            if ($e instanceof AuthorizationException) {
+                throw new ReportError(__("Don't have the access rights"), 403);
+            }
+
+            if ($e instanceof AccessDeniedHttpException) {
+                throw new ReportError(__("You haven't logged in yet. Please log in to unlock all features."), 401);
+            }
         });
     })->create();
