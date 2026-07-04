@@ -30,3 +30,4 @@ supervisord.pid
 !.dockerignore
 settings.php
 settings.php.lock
+resources/views/pages
