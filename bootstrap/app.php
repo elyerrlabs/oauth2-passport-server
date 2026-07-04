@@ -17,7 +17,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__ . '/../routes/web.php',
         api: __DIR__ . '/../routes/api.php',
         commands: __DIR__ . '/../routes/console.php',
         //channels: __DIR__ . '/../routes/channels.php',
@@ -40,7 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'scope' => \App\Http\Middleware\CheckForAnyScope::class,
             'userCanAny' => \App\Http\Middleware\UserCanAny::class,
             'captcha' => \App\Http\Middleware\VerifyCaptcha::class,
-            'demo' => \App\Http\Middleware\VerifyDemoUser::class, 
+            'demo' => \App\Http\Middleware\VerifyDemoUser::class,
         ]);
 
         $middleware->web(
