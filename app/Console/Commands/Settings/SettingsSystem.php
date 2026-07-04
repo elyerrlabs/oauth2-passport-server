@@ -28,8 +28,7 @@ namespace App\Console\Commands\Settings;
  */
 
 use App\Services\SettingService;
-use Illuminate\Console\Command;
-use App\Services\SiteMapService;
+use Illuminate\Console\Command; 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
 
@@ -65,7 +64,6 @@ class SettingsSystem extends Command
         Artisan::call('settings:channels-upload');
         Artisan::call('passport:keys');
         app(SettingService::class)->setDefaultKeys();
-        (new SiteMapService(false))->restorePublicFromBackup();
         $this->info("Server installed successfully");
         Log::info("Server installed successfully");
     }
