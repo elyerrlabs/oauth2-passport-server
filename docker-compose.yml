@@ -41,7 +41,6 @@ services:
             - third-party-public:/var/www/public/third-party
             - ssh:/home/www-data/.ssh
             - pages:/var/www/resources/views/pages
-            - lang:/var/www/lang
         command: sh -c "/usr/local/bin/entrypoint.sh"
         networks:
             - public-net
@@ -57,7 +56,6 @@ volumes:
     ssh:
     env:
     pages:
-    lang:
 
 networks:
     public-net:
