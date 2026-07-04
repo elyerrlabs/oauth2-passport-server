@@ -38,11 +38,11 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Removed the following administrator service: **refunds**, **plan**, **transactions**, and **partner**.
 - Removed the **partner** group from the reseller service.
 - Removed the configuration keys: `core.partner`, `core.transaction`, `rate_limit.partner`, `rate_limit.partner`, `rate_limit.ecommerce` .
-- Composer package removed paquete `stripe/stripe-php` and `stevebauman/purify`
+- Composer package removed paquete `stripe/stripe-php` , `stevebauman/purify` and `spatie/laravel-sitemap`
 - Moved all exception handling to bootstrap/app.php and removed the RenderException class
-- remove pages, seo, sitemap funtionalities.
-- The following developers services removed : `pages`, `seo`, 
-
+- Removed pages, seo, lang, sitemap funtionalities.
+- The following developers services removed : `pages`, `seo`,
+- Add support for route overriding
 
 ---
 
