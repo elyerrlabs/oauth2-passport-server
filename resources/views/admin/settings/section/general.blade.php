@@ -158,6 +158,58 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-2"><i
                         class="mdi mdi-information-outline mr-1"></i>{{ __('Used in invoices and footer.') }}</p>
             </div>
+
+            <!-- Legal Pages -->
+            <div
+                class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-300">
+                <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-3">
+                        <i class="mdi mdi-file-document-multiple-outline text-blue-600 dark:text-blue-400"></i>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-900 dark:text-white">
+                        {{ __('Legal Pages') }}
+                    </label>
+                </div>
+
+                <div class="space-y-4">
+
+                    <!-- Privacy Policy -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {{ __('Privacy Policy URL') }}
+                        </label>
+                        <input type="text" name="system[privacy_url]"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                            placeholder="legal.policies-of-privacy" value="{{ config('system.privacy_url') }}">
+                    </div>
+
+                    <!-- Terms & Conditions -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {{ __('Terms & Conditions URL') }}
+                        </label>
+                        <input type="text" name="system[terms_url]"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                            placeholder="legal.terms-and-conditions" value="{{ config('system.terms_url') }}">
+                    </div>
+
+                    <!-- Cookie Policy -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {{ __('Cookie Policy URL') }}
+                        </label>
+                        <input type="text" name="system[policy_cookies]"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                            placeholder="legal.policies-of-cookies" value="{{ config('system.policy_cookies') }}">
+                    </div>
+
+                </div>
+
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                    <i class="mdi mdi-information-outline mr-1"></i>
+                    {{ __('Configure fallback URLs for your legal pages. The system will use the default named routes (legal.terms-and-conditions, legal.policies-of-privacy, and legal.policies-of-cookies) when available. If a route does not exist, it will automatically use the corresponding configured URL.') }}
+                </p>
+            </div>
         </div>
     </div>
 @endsection

@@ -164,13 +164,13 @@
                                 class="mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                             <span class="text-sm text-gray-600 dark:text-gray-400">
                                 {{ __('I accept the') }}
-                                <a href="{{ config('system.terms_url') ?? route('legal.terms-and-conditions') }}"
+                                <a href="{{ Route::has('legal.terms-and-conditions') ? route('legal.terms-and-conditions') : config('system.terms_url') }}"
                                     target="_blank"
                                     class="text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline">
                                     {{ __('Terms and Conditions') }}
                                 </a>
                                 {{ __('and') }}
-                                <a href="{{ config('system.privacy_url') ?? route('legal.policies-of-privacy') }}"
+                                <a href="{{ Route::has('legal.policies-of-privacy') ? route('legal.policies-of-privacy') : config('system.privacy_url') }}"
                                     target="_blank"
                                     class="text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline">
                                     {{ __('Privacy Policy') }}
@@ -186,7 +186,7 @@
                                 class="mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                             <span class="text-sm text-gray-600 dark:text-gray-400">
                                 {{ __('I accept the') }}
-                                <a href="{{ config('system.policy_cookies') ?? route('legal.policies-of-cookies') }}"
+                                <a href="{{ Route::has('legal.policies-of-cookies') ? route('legal.policies-of-cookies') : config('system.policy_cookies', '#') }}"
                                     target="_blank"
                                     class="text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline">
                                     {{ __('Cookies Policy') }}
