@@ -27,12 +27,11 @@ namespace Core\User\Model;
  */
 
 use App\Models\Auth;
-use App\Repositories\Contracts\Dynamic;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Auth
 {
-    use SoftDeletes, Dynamic;
+    use SoftDeletes;
 
     public $tag = "user";
 
