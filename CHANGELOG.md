@@ -45,6 +45,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Add support for route overriding
 - Removed lang, pages,seo and layouts resources
 - Remove File resurces ( service, repositories and directories)
+- Rename pages table to content_pages
 
 ---
 
