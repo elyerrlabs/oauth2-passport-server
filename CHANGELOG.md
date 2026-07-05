@@ -47,6 +47,31 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Remove File resurces ( service, repositories and directories)
 - Rename pages table to content_pages
 
+### Refactor deployment scripts
+
+- Consolidated deployment scripts into environment-specific executables:
+    - Merged `deploy-dev.sh` into `dev`:
+        - Deploy: `./dev --deploy`
+        - Stop containers: `./dev --stop`
+        - Open a root shell: `./dev --root bash`
+        - Open a user shell: `./dev bash`
+
+    - Merged `deploy-staging.sh` into `staging`:
+        - Deploy: `./staging --deploy`
+        - Stop containers: `./staging --stop`
+        - Open a root shell: `./staging --root bash`
+        - Open a user shell: `./staging bash`
+
+    - Merged `deploy-prod.sh` into `production`:
+        - Deploy: `./production --deploy`
+        - Stop containers: `./production --stop`
+        - Open a root shell: `./production --root bash`
+        - Open a user shell: `./production bash`
+
+- Renamed deployment templates:
+    - `docker-compose.yml` → `template.yaml`
+    - `docker-compose-dev.yml` → `template-dev.yaml`
+
 ---
 
 ## [v8.0.1]
