@@ -43,6 +43,8 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Removed pages, seo, lang, sitemap funtionalities.
 - The following developers services removed : `pages`, `seo`,
 - Add support for route overriding
+- Removed lang, pages,seo and layouts resources
+- Remove File resurces ( service, repositories and directories)
 
 ---
 
