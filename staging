@@ -1,4 +1,139 @@
 #!/bin/bash
+
+deploy() {
+    # -----------------------------------------------------------------------------
+    # OAuth2 Passport Server — a centralized, modular authorization server
+    # implementing OAuth 2.0 and OpenID Connect specifications.
+    #
+    # Copyright (c) 2026 Elvis Yerel Roman Concha
+    #
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU Affero General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+    #
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    # GNU Affero General Public License for more details.
+    #
+    # You should have received a copy of the GNU Affero General Public License
+    # along with this program. If not, see <https://www.gnu.org/licenses/>.
+    #
+    # Author: Elvis Yerel Roman Concha
+    # Contact: yerel9212@yahoo.es
+    #
+    # SPDX-License-Identifier: AGPL-3.0-or-later
+    # -----------------------------------------------------------------------------
+    IMAGE="elyerr/oauth2-passport-server:staging"
+    COMPOSE_FILE="docker-staging.yml"
+    ENV_FILE=".env"
+    
+    # -------------------------------------------------------------------------
+    # Detect ENV and set it to production in .env
+    # -------------------------------------------------------------------------
+    set_env_var() {
+        local key="$1"
+        local value="$2"
+        
+        if grep -q "^${key}=" "$ENV_FILE"; then
+            sed -i "s|^${key}=.*|${key}=${value}|" "$ENV_FILE"
+        else
+            tail -c1 "$ENV_FILE" | read -r _ || echo >> "$ENV_FILE"
+            echo "${key}=${value}" >> "$ENV_FILE"
+        fi
+    }
+    
+    set_env_var "APP_ENV" "production"
+    
+    echo "Downloading image ..."
+    docker pull $IMAGE
+    
+    # Required environment variables
+    required_keys=(
+        DB_CONNECTION
+        DB_HOST
+        DB_PORT
+        DB_DATABASE
+        DB_USERNAME
+        DB_PASSWORD
+    )
+    
+    # Step 1: Ensure docker-staging.yml exists
+    if [ ! -f "$COMPOSE_FILE" ]; then
+        if [ -f "template.yml" ]; then
+            cp template.yml "$COMPOSE_FILE"
+            echo "[INFO] Created $COMPOSE_FILE from template.yml"
+        else
+            echo "[ERROR] Neither $COMPOSE_FILE nor template.yml found. Aborting."
+            exit 1
+        fi
+    fi
+    
+    # Step 2: Ensure .env file exists
+    if [ ! -f "$ENV_FILE" ]; then
+        echo "[ERROR] .env file not found. Please create it first."
+        exit 1
+    fi
+    
+    # Step 3: Validate that required environment variables exist and have values
+    for key in "${required_keys[@]}"; do
+        if ! grep -q "^$key=" "$ENV_FILE"; then
+            echo "[ERROR] Missing required environment variable: $key"
+            exit 1
+        fi
+        
+        value=$(grep "^$key=" "$ENV_FILE" | cut -d '=' -f2-)
+        if [[ -z "$value" ]]; then
+            echo "[ERROR] Environment variable $key has no value. Please fill it in $ENV_FILE"
+            exit 1
+        fi
+    done
+    
+    # Replace image line under "app:"
+    awk -v image="$IMAGE" '
+/^[[:space:]]*app:/ {
+    in_app = 1
+    print
+    next
+}
+in_app && /^[[:space:]]*image:/ {
+    print "        image: " image
+    next
+}
+/^[[:space:]]*[a-zA-Z0-9_-]+:/ && !/^[[:space:]]*app:/ {
+    in_app = 0
+}
+{ print }
+    ' "$COMPOSE_FILE" > "$COMPOSE_FILE.tmp" && mv "$COMPOSE_FILE.tmp" "$COMPOSE_FILE"
+    
+    # Ensure name: ops-staging is set at the top of the compose file
+    if grep -q "^name:" "$COMPOSE_FILE"; then
+        sed -i 's/^name:.*/name: ops-staging/' "$COMPOSE_FILE"
+        echo "[INFO] Updated 'name:' to 'ops-staging'"
+    else
+        sed -i '1s/^/name: ops-staging\n/' "$COMPOSE_FILE"
+        echo "[INFO] Inserted 'name: ops-staging' at the top"
+    fi
+    
+    echo "[INFO] Updated app service image to: $IMAGE"
+    
+    echo "[INFO] Stopping containers..."
+    docker compose -f "$COMPOSE_FILE" down
+    
+    echo "[INFO] Starting containers..."
+    docker compose -f "$COMPOSE_FILE" up -d --build
+    
+    echo "[INFO] Cleaning up unused images..."
+    docker image prune -f
+}
+
+if [ "$1" = "--deploy" ]; then
+    shift
+    deploy "$@"
+    exit
+fi
+
 ROOT=false
 STOP=false
 ARGS=()
@@ -6,7 +141,7 @@ ARGS=()
 for arg in "$@"; do
     if [ "$arg" = "--root" ]; then
         ROOT=true
-    elif [ "$arg" = "--stop" ]; then
+        elif [ "$arg" = "--stop" ]; then
         STOP=true
     else
         ARGS+=("$arg")
@@ -14,11 +149,11 @@ for arg in "$@"; do
 done
 
 if [ "$STOP" = true ]; then
-    docker compose -f docker-compose-staging.yml down
-
-elif [ "$ROOT" = true ]; then
+    docker compose -f docker-staging.yml down
+    
+    elif [ "$ROOT" = true ]; then
     docker exec -it ops-staging-app-1 "${ARGS[@]}"
-
+    
 else
     docker exec -it --user "www-data:www-data" ops-staging-app-1 "${ARGS[@]}"
 fi

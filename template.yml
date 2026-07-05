@@ -34,13 +34,13 @@ services:
             - .env:/root/.env
             - env:/var/www/env
             - app-secrets:/var/www/secrets
-            - files:/var/www/storage/app
-            - sitemaps:/var/www/public/sitemaps
+        #    - files:/var/www/storage/app # Only for content modoule
+        #    - sitemaps:/var/www/public/sitemaps # Only for content modoule
             - logs:/var/www/storage/logs
             - third-party:/var/www/third-party
             - third-party-public:/var/www/public/third-party
             - ssh:/home/www-data/.ssh
-            - pages:/var/www/resources/views/pages
+        #    - pages:/var/www/resources/views/pages # Only for content modoule
         command: sh -c "/usr/local/bin/entrypoint.sh"
         networks:
             - public-net

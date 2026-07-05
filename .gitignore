@@ -26,8 +26,10 @@ docker-compose-latest.yml
 docker-compose-prod.yml 
 supervisord.pid
 .codex
-.cache.pid
+*.pid
 !.dockerignore
 settings.php
 settings.php.lock
 resources/views/pages
+docker-compose*
+docker-*
