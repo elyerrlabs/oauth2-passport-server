@@ -47,7 +47,6 @@ class MorphServiceProvider extends ServiceProvider
     {
         $morph = [
             (new \Core\User\Model\User())->tag => \Core\User\Model\User::class,
-            (new \App\Models\Common\File())->tag => \App\Models\Common\File::class,
         ];
 
         Relation::morphMap(array_merge(
