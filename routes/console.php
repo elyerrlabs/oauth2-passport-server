@@ -15,6 +15,4 @@ use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('passport:purge')->withoutOverlapping();
 
-Schedule::command('payment:charge-recurring')->everyFourHours()->withoutOverlapping();
-
 Schedule::command('clean:tmp-files')->daily()->withoutOverlapping();
