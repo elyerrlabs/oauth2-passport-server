@@ -24,10 +24,6 @@ docker-build:
     - if: '$CI_COMMIT_BRANCH == "staging"'
       when: on_success
 
-    # Production
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: on_success
-
     - when: never
 
   before_script:
@@ -39,10 +35,6 @@ docker-build:
       elif [[ "$CI_COMMIT_BRANCH" == "staging" ]]; then
         DOCKER_IMAGE_TAG="staging"
         DOCKERFILE_PATH="docker/staging/Dockerfile"
-
-      elif [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
-        DOCKER_IMAGE_TAG="latest"
-        DOCKERFILE_PATH="docker/production/Dockerfile"
 
       else
         echo "Branch or tag not allowed"
@@ -83,10 +75,6 @@ docker-push-hub:
     - if: '$CI_COMMIT_BRANCH == "staging"'
       when: on_success
 
-    # Production
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: on_success
-
     - when: never
 
   before_script:
@@ -96,9 +84,6 @@ docker-push-hub:
 
       elif [[ "$CI_COMMIT_BRANCH" == "staging" ]]; then
         TAG="staging"
-
-      elif [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
-        TAG="latest"
 
       else
         echo "Invalid ref"
