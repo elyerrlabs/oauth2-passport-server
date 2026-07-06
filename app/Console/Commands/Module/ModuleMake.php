@@ -43,7 +43,7 @@ class ModuleMake extends Command
      *
      * @var string
      */
-    protected $signature = 'make:module
+    protected $signature = 'module:make
     {name : Module name}
     {--dev : Use local development template first, then Packagist dev if not found}
     {--elymod-version= : Elymod version to install}';
