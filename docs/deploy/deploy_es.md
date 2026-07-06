@@ -134,13 +134,13 @@ Ejecuta el despliegue con:
 - para produccion
 
 ```bash
-./deploy-prod.sh
+./production --deploy
 ```
 
 - para staging
 
 ```bash
-./deploy-staging.sh
+./staging --deploy
 ```
 
 Este script se encarga de:
@@ -154,11 +154,20 @@ Este script se encarga de:
 
 ## 🚀 Script de Ejecución en Contenedores
 
-| Comando        | Descripción                                                               |
-| -------------- | ------------------------------------------------------------------------- |
-| `./dev`        | Abre una terminal o ejecuta comandos dentro del contenedor de desarrollo. |
-| `./staging`    | Abre una terminal o ejecuta comandos dentro del contenedor de staging.    |
-| `./production` | Abre una terminal o ejecuta comandos dentro del contenedor de producción. |
+| Comando                 | Descripción                                                               |
+| ----------------------- | ------------------------------------------------------------------------- |
+| `./dev --deploy`        | Despliega el entorno de desarrollo.                                       |
+| `./dev --stop`          | Detiene los contenedores de desarrollo.                                   |
+| `./dev --root bash`     | Abre una terminal root en el contenedor de desarrollo.                    |
+| `./dev bash`            | Abre una terminal con el usuario del entorno de desarrollo.               |
+| `./staging --deploy`    | Despliega el entorno de staging.                                          |
+| `./staging --stop`      | Detiene los contenedores de staging.                                      |
+| `./staging --root bash` | Abre una terminal root en el contenedor de staging.                       |
+| `./staging bash`        | Abre una terminal con el usuario del entorno de staging.                  |
+| `./production --deploy` | Despliega el entorno de producción.                                       |
+| `./production --stop`   | Detiene los contenedores de producción.                                   |
+| `./production --root bash` | Abre una terminal root en el contenedor de producción.                 |
+| `./production bash`     | Abre una terminal con el usuario del entorno de producción.               |
 
 ### Acceso Root
 
@@ -223,7 +232,7 @@ Para actualizar el sistema en producción:
 
 ```bash
 git pull origin main
-./deploy-prod.sh
+./production --deploy
 ```
 
 ---
@@ -303,7 +312,7 @@ Esto habilita:
 - Ejecución eficiente de tareas
 
 > 💡 Sin Redis correctamente configurado, Horizon no podrá procesar las colas.
-> Nota: si todo esta configurado correctamenta y horizon no detecta los cambios al momento, espera unos 30 minutos si aún sigue sin reiniciarse , la forma mas sencilla es reiniciar el contendor eso no toma ni 1 minuto con el scrip `./deploy-prod.sh` o `./deploy-staging.sh` sea el caso, esto hara que todos los cambios sean refrescados.
+> Nota: si todo está configurado correctamente y Horizon no detecta los cambios al momento, espera unos 30 minutos. Si aún sigue sin reiniciarse, la forma más sencilla es reiniciar el contenedor con `./production --deploy` o `./staging --deploy`, según el caso. Esto hará que todos los cambios sean refrescados.
 
 ---
 
@@ -341,27 +350,6 @@ server {
 ```bash
 php artisan passport:keys --force
 ```
-
----
-
-## 💳 Métodos de Pago
-
-### Stripe
-
-- **Webhook (POST):** `https://domain.com/webhook/stripe`
-- Eventos soportados:
-    - `checkout.session.completed`
-    - `payment_intent.payment_failed`
-    - `checkout.session.expired`
-    - `charge.succeeded`
-    - `charge.refund.updated` (Pronto disponible)
-
----
-
-### Pagos Offline
-
-- Compatible con pagos manuales
-- La renovación automática está deshabilitada para pagos offline
 
 ---
 

@@ -174,9 +174,9 @@ Con esta configuración, **Horizon podrá despachar y procesar todas las colas u
 
 ## 🐳 Despliegue en Desarrollo
 
-El proyecto incluye un script que automatiza completamente el despliegue en DEV.
+El proyecto incluye la opción `--deploy` dentro del script `dev` para automatizar completamente el despliegue en DEV.
 
-### ¿Qué hace `deploy-dev.sh`?
+### ¿Qué hace `./dev --deploy`?
 
 Este script:
 
@@ -191,7 +191,7 @@ Este script:
 ### Levantar los servicios
 
 ```sh
-./deploy-dev.sh
+./dev --deploy
 ```
 
 ---
@@ -242,7 +242,7 @@ Si modificas archivos del proyecto como `root`, estos quedarán con permisos de 
 
 Para trabajar con el código, ejecutar Artisan, Composer o NPM, **debes usar el usuario del host (UID/GID)**.
 
-Durante el despliegue (`deploy-dev.sh`) se genera automáticamente un helper local llamado `ops`, que ya maneja esto correctamente.
+Durante el despliegue (`./dev --deploy`) se genera automáticamente un helper local llamado `ops`, que ya maneja esto correctamente.
 
 ```sh
 ./dev bash
@@ -259,7 +259,7 @@ Ejemplos:
 ```sh
 ./dev php artisan
 ./dev composer install
-./dev npm run watch
+./dev npm run dev
 ```
 
 ---
@@ -284,7 +284,7 @@ Ejemplos:
 ./dev composer install
 ```
 
-> ⚠️ Normalmente esto ya lo ejecuta `deploy-dev.sh`.
+> ⚠️ Normalmente esto ya lo ejecuta `./dev --deploy`.
 
 ### Instalar dependencias JavaScript
 
@@ -295,28 +295,19 @@ Ejemplos:
 ### Compilar assets y escuchar cambios
 
 ```sh
-./dev npm run watch
+./dev npm run dev
 ```
 
 > 💡 Ideal para desarrollo frontend con hot-reload.
 
 ---
 
-## 💳 Pagos Recurrentes y Procesos en Background
+## ⚙️ Colas y Procesos en Background
 
 Los siguientes servicios ya están **gestionados por Supervisor** dentro del contenedor:
 
 - Laravel Horizon
 - Workers de colas
-- Pagos recurrentes
-
-El comando de pagos recurrentes:
-
-```sh
-php artisan payment:charge-recurring
-```
-
-👉 **Ya se ejecuta automáticamente**, no necesitas lanzarlo manualmente.
 
 ### Ver estado de Supervisor
 
@@ -339,7 +330,7 @@ php artisan payment:charge-recurring
 
 1. Clonar el repo
 2. Configurar `.env`
-3. Ejecutar `./deploy-dev.sh`
+3. Ejecutar `./dev --deploy`
 4. Abrir [http://localhost:8001](http://localhost:8001)
 5. Programar 🚀
 

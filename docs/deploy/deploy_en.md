@@ -143,13 +143,13 @@ Run the deployment script:
 - Production
 
 ```bash
-./deploy-prod.sh
+./production --deploy
 ```
 
 - Staging
 
 ```bash
-./deploy-staging.sh
+./staging --deploy
 ```
 
 This script is responsible for:
@@ -163,11 +163,20 @@ This script is responsible for:
 
 ## 🚀 Container Execution Script
 
-| Command        | Description                                                        |
-| -------------- | ------------------------------------------------------------------ |
-| `./dev`        | Open a shell or execute commands inside the development container. |
-| `./staging`    | Open a shell or execute commands inside the staging container.     |
-| `./production` | Open a shell or execute commands inside the production container.  |
+| Command                    | Description                                                        |
+| -------------------------- | ------------------------------------------------------------------ |
+| `./dev --deploy`           | Deploy the development environment.                                |
+| `./dev --stop`             | Stop the development containers.                                   |
+| `./dev --root bash`        | Open a root shell in the development container.                    |
+| `./dev bash`               | Open a shell with the development environment user.                |
+| `./staging --deploy`       | Deploy the staging environment.                                    |
+| `./staging --stop`         | Stop the staging containers.                                       |
+| `./staging --root bash`    | Open a root shell in the staging container.                        |
+| `./staging bash`           | Open a shell with the staging environment user.                    |
+| `./production --deploy`    | Deploy the production environment.                                 |
+| `./production --stop`      | Stop the production containers.                                    |
+| `./production --root bash` | Open a root shell in the production container.                     |
+| `./production bash`        | Open a shell with the production environment user.                 |
 
 ### Root Access
 
@@ -232,7 +241,7 @@ To update the system in production:
 
 ```bash
 git pull origin main
-./deploy-prod.sh
+./production --deploy
 ```
 
 ---
@@ -317,13 +326,13 @@ This enables:
 > If it still does not restart automatically, the simplest solution is restarting the container using:
 >
 > ```bash
-> ./deploy-prod.sh
+> ./production --deploy
 > ```
 >
 > or:
 >
 > ```bash
-> ./deploy-staging.sh
+> ./staging --deploy
 > ```
 >
 > depending on the environment.  
@@ -365,29 +374,6 @@ server {
 ```bash
 php artisan passport:keys --force
 ```
-
----
-
-## 💳 Payment Methods
-
-### Stripe
-
-- **Webhook (POST):** `https://domain.com/webhook/stripe`
-
-Supported events:
-
-- `checkout.session.completed`
-- `payment_intent.payment_failed`
-- `checkout.session.expired`
-- `charge.succeeded`
-- `charge.refund.updated` (Coming soon)
-
----
-
-### Offline Payments
-
-- Compatible with manual payments
-- Automatic renewal is disabled for offline payments
 
 ---
 

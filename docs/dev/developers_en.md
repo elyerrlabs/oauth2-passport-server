@@ -175,9 +175,9 @@ With this setup, **Horizon will dispatch and process all queues using Redis**, m
 
 ## 🐳 Development Deployment
 
-The project includes a script that fully automates the DEV deployment.
+The project includes the `--deploy` option inside the `dev` script to fully automate the DEV deployment.
 
-### What does `deploy-dev.sh` do?
+### What does `./dev --deploy` do?
 
 This script:
 
@@ -192,7 +192,7 @@ This script:
 ### Start the services
 
 ```sh
-./deploy-dev.sh
+./dev --deploy
 ```
 
 ---
@@ -243,7 +243,7 @@ If you modify project files as `root`, they will be owned by root and **cannot b
 
 To work with the code, run Artisan, Composer, or NPM, you **must use the host user (UID/GID)**.
 
-During deployment (`deploy-dev.sh`), a local helper called `ops` is automatically generated and handles this correctly.
+During deployment (`./dev --deploy`), a local helper called `ops` is automatically generated and handles this correctly.
 
 ```sh
 ./dev bash
@@ -260,7 +260,7 @@ Examples:
 ```sh
 ./dev php artisan
 ./dev composer install
-./dev npm run watch
+./dev npm run dev
 ```
 
 ---
@@ -285,7 +285,7 @@ Examples:
 ./dev composer install
 ```
 
-> ⚠️ This is usually already handled by `deploy-dev.sh`.
+> ⚠️ This is usually already handled by `./dev --deploy`.
 
 ### Install JavaScript dependencies
 
@@ -296,28 +296,19 @@ Examples:
 ### Compile assets and watch for changes
 
 ```sh
-./dev npm run watch
+./dev npm run dev
 ```
 
 > 💡 Ideal for frontend development with hot reload.
 
 ---
 
-## 💳 Recurring Payments and Background Processes
+## ⚙️ Queues and Background Processes
 
 The following services are already **managed by Supervisor** inside the container:
 
 - Laravel Horizon
 - Queue workers
-- Recurring payments
-
-Recurring payments command:
-
-```sh
-php artisan payment:charge-recurring
-```
-
-👉 **This runs automatically**, you do not need to execute it manually.
 
 ### Check Supervisor status
 
@@ -340,7 +331,7 @@ php artisan payment:charge-recurring
 
 1. Clone the repository
 2. Configure `.env`
-3. Run `./deploy-dev.sh`
+3. Run `./dev --deploy`
 4. Open [http://localhost:8001](http://localhost:8001)
 5. Start coding 🚀
 
