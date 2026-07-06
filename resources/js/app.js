@@ -27,7 +27,6 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { setupI18n, __ } from "@/config/locale.js";
 import { $notify } from "@/config/notify.js";
-import "@/config/editor.js";
 import { errors } from "@/config/helpers.js"
 
 //import { $echo } from "./config/echo.js";

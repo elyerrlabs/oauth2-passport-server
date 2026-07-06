@@ -1,11 +1,8 @@
 @import 'tailwindcss';
-@import "flatpickr";
-@import '@fortawesome/fontawesome-free/css/all.min.css';
+@import "flatpickr"; 
 @import "@mdi/font/css/materialdesignicons.css"; 
 @import "notyf/notyf.min.css";
-@import "jodit/es2021/jodit.min.css";
-@import "monaco-editor/min/vs/style.css";
-
+ 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";

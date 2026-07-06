@@ -5,7 +5,6 @@ import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import fs from 'fs';
-import monacoEditorEsmPlugin from 'vite-plugin-monaco-editor-esm'
 import tailwindcss from '@tailwindcss/vite'
 
 function loadAliasCore() {
@@ -76,7 +75,6 @@ export default defineConfig({
         }),
         tailwindcss(),
         vue(),
-        monacoEditorEsmPlugin(),
         inertia({
             ssr: false,
         })

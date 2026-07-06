@@ -26,7 +26,6 @@ import flatpickr from "flatpickr";
 import { $notify } from "@/config/notify.js";
 import { setupI18n, __ } from "@/config/locale.js";
 import { $server } from "@/config/axios.js";
-import "@/config/editor.js";
 import $ from 'jquery';
 
 window.$notify = $notify;
