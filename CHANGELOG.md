@@ -48,6 +48,16 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Rename pages table to content_pages
 - Remove unsed npm packages
 
+### refactor: introduce JSON-based module registry
+
+- replace database module registry with modules.json
+- refactor ModuleRepository around manifest storage
+- update all module commands to use the new registry
+- remove direct dependency on the modules table
+- register and discover modules through the registry service
+- stop scanning third-party directories for installed modules
+- add deprecated module:migration command to migrate existing database records to modules.json
+
 ### Refactor deployment scripts
 
 - Consolidated deployment scripts into environment-specific executables:
