@@ -3,9 +3,9 @@
 namespace App\Console\Commands\Module;
 
 use Illuminate\Console\Command;
+use App\Services\ModuleService;
 use App\Services\SettingService;
 use Illuminate\Support\Facades\File;
-use App\Repositories\ModuleRepository;
 use App\Repositories\SettingRepository;
 
 /**
@@ -168,9 +168,10 @@ class ModuleDelete extends Command
         | Remove module registry entry
         |--------------------------------------------------------------------------
         */
-        $module = app(ModuleRepository::class)->findByName($name);
+        $module = app(ModuleService::class)->findByName($name);
+    
         if (!empty($module)) {
-            $module->delete();
+            app(ModuleService::class)->delete($module->getId());
         }
 
         $this->newLine();

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Module;
 
-use App\Repositories\ModuleRepository;
+use App\Services\ModuleService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -87,7 +87,7 @@ class ModuleMake extends Command
             return self::FAILURE;
         }
 
-        if (app(ModuleRepository::class)->query()->where('name', $name)->first()) {
+        if (app(ModuleService::class)->findByName($name)) {
             $this->error("The module '{$name}' already registered in the database.");
             return self::FAILURE;
         }
@@ -115,7 +115,7 @@ class ModuleMake extends Command
                 throw new \RuntimeException('Failed to create the module project.');
             }
 
-            app(ModuleRepository::class)->create([
+            app(ModuleService::class)->create([
                 'name' => $name,
                 'provider' => 'local',
                 'source' => $source,
@@ -271,7 +271,11 @@ class ModuleMake extends Command
             $this->warn("Removed module directory: {$modulePath}");
         }
 
-        app(ModuleRepository::class)->query()->where('name', $name)->delete();
+        $module = app(ModuleService::class)->findByName($name);
+
+        if (!empty($module)) {
+            app(ModuleService::class)->delete($module->getId());
+        }
     }
 
 

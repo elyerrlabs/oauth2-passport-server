@@ -27,10 +27,10 @@ namespace App\Providers;
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use App\Services\ModuleService;
 use Composer\Autoload\ClassLoader;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
 class ThirdPartyServiceProvider extends ServiceProvider
@@ -40,19 +40,17 @@ class ThirdPartyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $modulesPath = base_path('third-party');
+        $modules = app(ModuleService::class)->all();
 
         // Read all directories
-        foreach (File::directories($modulesPath) as $modulePath) {
+        foreach ($modules as $module) {
 
-            $moduleName = $this->moduleName(basename($modulePath));
-
-            if (!$this->moduleIsActive($moduleName)) {
+            if (!$module->isEnabled()) {
                 continue;
             }
 
-            if (is_dir($modulePath . '/lang')) {
-                $this->loadTranslationsFrom($modulePath . '/lang', Str::studly($moduleName));
+            if (is_dir($module->getPath() . '/lang')) {
+                $this->loadTranslationsFrom($module->getPath() . '/lang', Str::studly($module->getName()));
             }
 
             /**
@@ -64,7 +62,7 @@ class ThirdPartyServiceProvider extends ServiceProvider
                 continue;
             }
 
-            $composerPath = $modulesPath . "/{$moduleName}/composer.json";
+            $composerPath = $module->getPath() . "/composer.json";
 
             if (!file_exists($composerPath)) {
                 continue;
@@ -85,7 +83,7 @@ class ThirdPartyServiceProvider extends ServiceProvider
                 if (class_exists($provider)) {
                     $this->app->register($provider);
                 } else {
-                    Log::warning("Provider $provider cannot be found for module $moduleName");
+                    Log::warning("Provider $provider cannot be found for module $module->getName()");
                 }
             }
         }
@@ -109,24 +107,5 @@ class ThirdPartyServiceProvider extends ServiceProvider
         }
 
         return null;
-    }
-
-    /**
-     * Module name
-     * @param mixed $name
-     * @return ''|string
-     */
-    public function moduleName($name)
-    {
-        return Str::kebab($name);
-    }
-
-    /**
-     * Module active
-     * @param string $name
-     */
-    public function moduleIsActive(string $name)
-    {
-        return (bool) settingItem("module.third-party.$name.module_enabled", true);
     }
 }

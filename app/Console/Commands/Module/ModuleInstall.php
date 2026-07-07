@@ -4,6 +4,7 @@ namespace App\Console\Commands\Module;
 
 use Illuminate\Console\Command;
 use App\Repositories\SettingRepository;
+use App\Services\ModuleService;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -131,12 +132,7 @@ class ModuleInstall extends Command
         }
 
         // Check if the module is already registered
-        if (
-            app(\App\Repositories\ModuleRepository::class)
-            ->query()
-            ->where('name', $name)
-            ->exists()
-        ) {
+        if (app(ModuleService::class)->findByName($name)) {
             $this->error("Module '{$name}' already registered in database.");
             return self::FAILURE;
         }
@@ -294,8 +290,7 @@ class ModuleInstall extends Command
             }
 
             // Register module
-            app(\App\Repositories\ModuleRepository::class)
-                ->create($data);
+            app(ModuleService::class)->create($data);
 
             $settingRepository->add("module.third-party.{$name}.module_enabled", 1);
 
@@ -594,7 +589,7 @@ class ModuleInstall extends Command
 
             $this->warn(
                 'Unable to fetch repository versions: '
-                    . $th->getMessage()
+                . $th->getMessage()
             );
 
             return [];
