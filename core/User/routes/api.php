@@ -25,7 +25,6 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-use App\Http\Controllers\Web\Admin\File\FileController;
 use Core\User\Http\Controllers\Api\Admin\GroupController;
 use Core\User\Http\Controllers\Api\Admin\RoleController;
 use Core\User\Http\Controllers\Api\Admin\ScopeController;
@@ -42,18 +41,15 @@ Route::group([
     Route::resource('roles', RoleController::class)->only('index');
     Route::resource('groups', GroupController::class)->only('index');
     Route::resource('services', ServiceController::class)->only('index');
-    Route::resource('scopes', ScopeController::class)->only('index'); 
+    Route::resource('scopes', ScopeController::class)->only('index');
 });
 
 Route::group([
     'as' => 'user.',
     'prefix' => 'user',
     'middleware' => ['throttle:core:user:api_users']
-], function () {
-
-    Route::get('/files/{id}/owner/{owner_id}', [FileController::class, 'show'])->name('files.show');
-    Route::delete('/files/{id}/owner/{owner_id}', [FileController::class, 'destroy'])->name('files.delete');
-
+], function () { 
+    
     Route::prefix('notifications')
         ->as('notification.')
         ->group(function () {
