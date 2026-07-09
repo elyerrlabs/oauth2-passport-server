@@ -47,6 +47,8 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Remove File resurces ( service, repositories and directories)
 - Rename pages table to content_pages
 - Remove unsed npm packages
+- Add custom cache driver support for rate limit with fallback handling
+- Update log user interface
 
 ### refactor: introduce JSON-based module registry
 
