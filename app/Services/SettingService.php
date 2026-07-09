@@ -123,7 +123,10 @@ class SettingService
                 Config::set($key, $value);
             }
         } catch (\Throwable $th) {
-            Log::error('Error loading config : ' . $th->getMessage(), $th->getTrace());
+            // Try to clean cache configuration
+            $this->resetConfigKeys();
+            // Log
+            throw new ReportError($th->getMessage(), $th->getTrace());
         }
     }
 
