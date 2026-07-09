@@ -58,6 +58,15 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - stop scanning third-party directories for installed modules
 - add deprecated module:migration command to migrate existing database records to modules.json
 
+### refactor: redesign module management
+
+- replace database module registry with module.json manifests
+- add module manager service
+- update module repository
+- add module management controller
+- implement GUI for managing modules
+- add new coomand `module:migration` to migrate modules to modules.json from database table
+
 ### Refactor deployment scripts
 
 - Consolidated deployment scripts into environment-specific executables:
