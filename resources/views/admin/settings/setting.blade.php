@@ -34,7 +34,6 @@
                 'admin.settings.filesystem' => ['icon' => 'mdi-folder-outline', 'label' => __('Filesystem')],
                 'admin.settings.rate_limit' => ['icon' => 'mdi-traffic-light', 'label' => __('Rate Limit')],
                 'admin.settings.security' => ['icon' => 'mdi-shield-outline', 'label' => __('Security')],
-                'admin.settings.modules' => ['icon' => 'mdi-view-module', 'label' => __('Modules')],
             ];
         @endphp
 

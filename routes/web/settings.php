@@ -43,7 +43,6 @@ Route::group([
     Route::get('/session', [SettingController::class, 'session'])->name('session');
     Route::get('/security', [SettingController::class, 'security'])->name('security');
     Route::get('/rate_limit', [SettingController::class, 'rateLimit'])->name('rate_limit');
-    Route::get('/modules', [SettingController::class, 'modules'])->name('modules');
     Route::get('/scout', [SettingController::class, 'scout'])->name('scout');
     Route::get('/horizon', [SettingController::class, 'horizon'])->name('horizon');
     Route::get('/seo', [SettingController::class, 'seo'])->name('seo');
