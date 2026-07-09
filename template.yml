@@ -34,7 +34,7 @@ services:
             - .env:/root/.env
             - env:/var/www/env
             - app-secrets:/var/www/secrets
-        #    - files:/var/www/storage/app # Only for content modoule
+            - files:/var/www/storage/app
         #    - sitemaps:/var/www/public/sitemaps # Only for content modoule
             - logs:/var/www/storage/logs
             - third-party:/var/www/third-party
