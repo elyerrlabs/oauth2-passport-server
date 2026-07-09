@@ -298,54 +298,6 @@
         ]
       },
       {
-        "name": "plan",
-        "description": "Service to manage resource of the plans",
-        "actions": [
-          {
-            "name": "full",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "view",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "create",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "update",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "destroy",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "revoke",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          },
-          {
-            "name": "history",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          }
-        ]
-      },
-      {
         "name": "settings",
         "description": "Service to manage application settings",
         "actions": [
@@ -478,18 +430,6 @@
         ]
       },
       {
-        "name": "lang",
-        "description": "Manages lang creation",
-        "actions": [
-          {
-            "name": "full",
-            "public": 0,
-            "active": 1,
-            "api_key": 0
-          }
-        ]
-      },
-      {
         "name": "horizon",
         "description": "Horizon allows you to easily monitor key metrics of your queue system such as job throughput, runtime, and job failures.",
         "actions": [
@@ -508,6 +448,42 @@
         "actions": [
           {
             "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          }
+        ]
+      },
+      {
+        "name": "Modules",
+        "description": "Service to manage resource of the scopes",
+        "actions": [
+          {
+            "name": "full",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "view",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "install",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "update",
+            "public": 0,
+            "active": 1,
+            "api_key": 0
+          },
+          {
+            "name": "uninstall",
             "public": 0,
             "active": 1,
             "api_key": 0

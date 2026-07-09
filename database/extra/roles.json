@@ -102,5 +102,13 @@
   {
     "name": "review",
     "description": "Enables a user or group to review and assess configurations, data, or resources for correctness and quality."
+  },
+  {
+    "name": "install",
+    "description": "Install the module and its dependencies."
+  },
+  {
+    "name": "uninstall",
+    "description": "Uninstall the module and its dependencies."
   }
 ]
