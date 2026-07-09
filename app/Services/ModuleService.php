@@ -3,6 +3,11 @@
 namespace App\Services;
 
 use App\Repositories\ModuleRepository;
+use Elyerr\ApiResponse\Exceptions\ReportError;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+
+use function Content\Vendor\throw_if;
 
 final class ModuleService
 {
@@ -15,9 +20,33 @@ final class ModuleService
     {
     }
 
+    /**
+     * All
+     * @return \Illuminate\Support\Collection
+     */
     public function all()
     {
         return $this->moduleRepository->query();
+    }
+
+    /**
+     * search
+     * @param Request $request
+     * @return \Illuminate\Support\Collection
+     */
+    public function search(Request $request)
+    {
+        $query = $this->all();
+
+        if ($request->filled('name')) {
+            $name = strtolower($request->name);
+
+            $query = $query->filter(function ($module) use ($name) {
+                return Str::contains(strtolower($module->name), $name);
+            });
+        }
+
+        return $query;
     }
 
     /**
@@ -59,6 +88,44 @@ final class ModuleService
     public function update(string $id, array $data)
     {
         return $this->moduleRepository->update($id, $data);
+    }
+
+    /**
+     * Enabled
+     * @param string $id
+     * @throws ReportError
+     * @return \App\Models\Module|null
+     */
+    public function enabled(string $id)
+    {
+        $module = $this->find($id);
+
+        throw_if(empty($module), fn() => throw new ReportError(__('Module can not be found'), 404));
+
+        throw_if($module->isEnabled(), fn() => throw new ReportError(__('Module is already enabled'), 403));
+
+        return $this->moduleRepository->update($id, [
+            'enabled' => true
+        ]);
+    }
+
+    /**
+     * Enabled
+     * @param string $id
+     * @throws ReportError
+     * @return \App\Models\Module|null
+     */
+    public function disabled(string $id)
+    {
+        $module = $this->find($id);
+
+        throw_if(empty($module), fn() => throw new ReportError(__('Module can not be found'), 404));
+
+        throw_if(!$module->isEnabled(), fn() => throw new ReportError(__('Module is already stopped'), 403));
+
+        return $this->moduleRepository->update($id, [
+            'enabled' => false
+        ]);
     }
 
     /**

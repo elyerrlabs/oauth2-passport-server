@@ -53,11 +53,11 @@ return [
                 "icon" => "mdi mdi-poll",
                 "service" => "developer:horizon"
             ],
-            "langs" => [
-                "name" => "Lang",
-                "route" => "admin.langs.index",
-                "icon" => "mdi mdi-translate",
-                "service" => "developer:lang"
+            "modules" => [
+                "name" => "Modules",
+                "route" => "admin.modules.index",
+                "icon" => "mdi mdi-view-module",
+                "service" => "developer:modules:view",
             ],
             "logs" => [
                 "name" => "Logs",

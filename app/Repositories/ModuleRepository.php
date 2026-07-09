@@ -95,7 +95,7 @@ final class ModuleRepository
         /** @var Module|null $module */
         $module = $modules->first(fn(Module $module) => $module->getId() === $id);
 
-        if ($module === null) {
+        if (empty($module)) {
             return null;
         }
 
@@ -143,7 +143,7 @@ final class ModuleRepository
             $modules
                 ->map(fn(Module $module) => $module->toArray())
                 ->values()
-                ->query()
+                ->all()
         );
 
         return $module;

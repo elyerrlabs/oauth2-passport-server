@@ -38,12 +38,13 @@ use Laravel\Passport\Passport;
 use App\Models\OAuth\RefreshToken;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Cache; 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 use App\Repositories\SettingRepository;
 use Illuminate\Database\QueryException;
 use Elyerr\ApiResponse\Exceptions\ReportError;
+use Throwable;
 
 class SettingService
 {
@@ -396,7 +397,11 @@ class SettingService
             $scopes += $dbScopes;
 
             Passport::tokensCan($scopes);
-        } catch (QueryException $th) {
+        } catch (Throwable $th) {
+            if ($th instanceof \RedisException) {
+                $this->resetConfigKeys();
+            }
+
             Log::error($th->getMessage(), $th->getTrace());
         }
 
