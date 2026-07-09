@@ -27,6 +27,7 @@
 
 use App\Support\Translation\ModuleTranslation;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
 
 if (!function_exists('redirectToHome')) {
 
@@ -363,5 +364,30 @@ if (!function_exists('settingItem')) {
     function settingItem(string $key, $deafult)
     {
         return app(\App\Repositories\SettingRepository::class)->getKey($key, $deafult);
+    }
+}
+
+if (!function_exists('rateLimitCache')) {
+
+    /**
+     * User a custom driver for cache configuration
+     * @param string $driver
+     * @return Illuminate\Contracts\Cache\Repository
+     */
+    function cacheCustomDriver(string $driver = 'rate_limit')
+    {
+        try {
+            // Connection 
+            $connection = Cache::store($driver);
+
+            // Check connection 
+            $connection->has('connection');
+
+            // use connection
+            return $connection;
+        } catch (Throwable $e) {
+            // Use default driver 
+            return Cache::store(config('cache.default'));
+        }
     }
 }

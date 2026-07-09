@@ -77,24 +77,24 @@ class RateLimitProvider extends ServiceProvider
                             $cacheKey = "rate-limit:{$module}_{$group}_{$key}:$user";
 
                             // Check if user is already blocked
-                            if (Cache::has($cacheKey . ':blocked')) {
+                            if (cacheCustomDriver()->has($cacheKey . ':blocked')) {
 
-                                $last_remaining = Cache::get($cacheKey . ':remaining_minutes', 1);
+                                $last_remaining = cacheCustomDriver()->get($cacheKey . ':remaining_minutes', 1);
 
                                 // Increase time to block user
                                 $new_remaining_time = $last_remaining->addMinutes(filter_var($value['block_time'], FILTER_VALIDATE_INT));
 
                                 // Clean current cache keys
-                                Cache::forget($cacheKey . '::blocked');
-                                Cache::forget($cacheKey . ':remaining_minutes');
+                                cacheCustomDriver()->forget($cacheKey . '::blocked');
+                                cacheCustomDriver()->forget($cacheKey . ':remaining_minutes');
 
                                 // Update new keys
-                                Cache::put(
+                                cacheCustomDriver()->put(
                                     $cacheKey . ':blocked',
                                     true,
                                     $new_remaining_time
                                 );
-                                Cache::put(
+                                cacheCustomDriver()->put(
                                     $cacheKey . ':remaining_minutes',
                                     $new_remaining_time,
                                     $new_remaining_time
@@ -110,8 +110,8 @@ class RateLimitProvider extends ServiceProvider
 
                                 $unlock_time = now()->addMinutes(filter_var($value['block_time'], FILTER_VALIDATE_INT));
 
-                                Cache::put($cacheKey . ':blocked', true, $unlock_time);
-                                Cache::put($cacheKey . ':remaining_minutes', $unlock_time, $unlock_time);
+                                cacheCustomDriver()->put($cacheKey . ':blocked', true, $unlock_time);
+                                cacheCustomDriver()->put($cacheKey . ':remaining_minutes', $unlock_time, $unlock_time);
 
                                 throw new ReportError("Too many attempts. Your access is temporarily blocked until {$unlock_time} (UTC).", 429);
                             });

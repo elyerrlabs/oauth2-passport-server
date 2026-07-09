@@ -187,8 +187,92 @@
                         </span>
                     </div>
                 </div>
-            </div> 
+            </div>
 
+
+            <!-- Redis Cache Connection -->
+            <div
+                class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700">
+                <div class="flex items-center mb-4">
+                    <div
+                        class="flex items-center justify-center w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
+                        <i class="mdi mdi-cached text-blue-500 dark:text-blue-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+                        {{ __('Redis Rate Limit Connection') }}
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- URL -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">URL</label>
+                        <input type="text" name="database[redis][rate_limit][url]"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                            placeholder="Enter Redis cache URL"
+                            value="{{ config('database.redis.rate_limit.url', '') }}">
+                    </div>
+
+                    <!-- Host -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Host</label>
+                        <input type="text" name="database[redis][rate_limit][host]"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                            placeholder="Enter Redis cache host"
+                            value="{{ config('database.redis.rate_limit.host', '127.0.0.1') }}">
+                    </div>
+
+                    <!-- Username -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Username</label>
+                        <input type="text" name="database[redis][rate_limit][username]"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                            placeholder="Enter Redis cache username"
+                            value="{{ config('database.redis.rate_limit.username', '') }}">
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Password</label>
+                        <input type="password" name="database[redis][rate_limit][password]"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                            placeholder="Enter Redis cache password"
+                            value="{{ config('database.redis.rate_limit.password', '') }}">
+                    </div>
+
+                    <!-- Port -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Port <span
+                                class="text-gray-500 dark:text-gray-400">*</span></label>
+                        <input type="number" name="database[redis][rate_limit][port]"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                            placeholder="6379" min="0"
+                            value="{{ config('database.redis.rate_limit.port', 6379) }}">
+                    </div>
+
+                    <!-- Database -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-800 dark:text-white mb-2">Database <span
+                                class="text-gray-500 dark:text-gray-400">*</span></label>
+                        <input type="number" name="database[redis][rate_limit][database]"
+                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-600 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/20 transition-colors duration-300"
+                            placeholder="1" min="0" max="15"
+                            value="{{ config('database.redis.rate_limit.database', 2) }}">
+                        <small class="block mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            {{ __('Recommended: Use database 2 for cache to separate from default') }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                    <div class="flex items-center">
+                        <i class="mdi mdi-information-outline text-blue-500 dark:text-blue-400 mr-2"></i>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ __('Dedicated connection for application caching. Recommended to use a separate database.') }}
+                        </span>
+                    </div>
+                </div>
+            </div>
             <!-- Recommended Configuration -->
             <div
                 class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700">
