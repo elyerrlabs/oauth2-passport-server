@@ -7,8 +7,6 @@ use Elyerr\ApiResponse\Exceptions\ReportError;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
-use function Content\Vendor\throw_if;
-
 final class ModuleService
 {
 
