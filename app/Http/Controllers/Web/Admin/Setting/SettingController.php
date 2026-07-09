@@ -190,15 +190,6 @@ class SettingController extends WebController
      * Summary of security
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function modules()
-    {
-        return view('admin.settings.section.modules');
-    }
-
-    /**
-     * Summary of security
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
     public function scout()
     {
         return view('admin.settings.section.scout');

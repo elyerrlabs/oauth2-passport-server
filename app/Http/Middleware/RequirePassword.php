@@ -52,7 +52,7 @@ class RequirePassword extends \Illuminate\Auth\Middleware\RequirePassword
         if ($this->shouldConfirmPassword($request, $passwordTimeoutSeconds)) {
             if ($request->expectsJson()) {
                 return $this->responseFactory->json([
-                    'message' => 'Password confirmation required.',
+                    'message' => __('Password confirmation required.'),
                 ], 423);
             }
 

@@ -46,9 +46,9 @@ class CreateNewUser implements CreatesNewUsers
                 },
             ],
         ], [
-            'email.required' => 'The credentials provided are invalid.',
-            'email.email' => 'The credentials provided are invalid.',
-            'email.unique' => 'The credentials provided are invalid.',
+            'email.required' => __('The credentials provided are invalid.'),
+            'email.email' => __('The credentials provided are invalid.'),
+            'email.unique' => __('The credentials provided are invalid.'),
         ])->validate();
 
         return app(UserService::class)->registerCustomer($input);

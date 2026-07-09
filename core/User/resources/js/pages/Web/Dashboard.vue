@@ -18,7 +18,7 @@
                             </div>
                             <span
                                 class="text-sm font-semibold text-slate-700 dark:text-slate-200 hidden sm:block"
-                                >Dashboard</span
+                                >{{ __('Dashboard') }}</span
                             >
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                                     class="text-[10px] font-medium px-2.5 py-0.5 rounded-full border"
                                     :class="section.badge.class"
                                 >
-                                    {{ __(section.badge.text) }}
+                                    {{ __(section.badge.text) }} 
                                 </span>
                             </div>
                             <span
@@ -149,7 +149,7 @@
                         <div class="grid gap-4" :class="section.gridClass">
                             <a
                                 v-for="item in section.items"
-                                :key="item.id || item.name"
+                                :key="item.id"
                                 :href="item.route"
                                 class="group bg-white dark:bg-slate-900/80 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 transition-all duration-300 relative"
                                 :class="section.itemClass"
@@ -190,10 +190,10 @@
                                         v-html="
                                             searchTerm
                                                 ? highlightMatch(
-                                                      item.name,
+                                                      __(item.name),
                                                       section.colorName,
                                                   )
-                                                : item.name
+                                                : __(item.name)
                                         "
                                     >
                                     </span>
@@ -224,10 +224,10 @@
                                             v-html="
                                                 searchTerm
                                                     ? highlightMatch(
-                                                          item.name,
+                                                          __(item.name),
                                                           section.colorName,
                                                       )
-                                                    : item.name
+                                                    : __(item.name)
                                             "
                                         >
                                         </span>

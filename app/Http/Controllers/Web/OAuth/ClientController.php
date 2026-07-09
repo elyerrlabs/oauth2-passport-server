@@ -102,6 +102,6 @@ class ClientController extends WebController
     {
         $this->oauthClientService->deleteClientForUser($request, $clientId);
 
-        return redirect()->route('passport.clients.index')->with('status', "OAuth client deleted successfully");
+        return redirect()->route('passport.clients.index')->with('status', __("OAuth client deleted successfully"));
     }
 }
