@@ -266,6 +266,7 @@ class ModuleInstall extends Command
             'token' => $token,
             'passphrase' => $passphrase,
             'current_version' => $currentVersion,
+            'enabled' => true
         ];
 
         $this->info('Module configuration validated successfully.');

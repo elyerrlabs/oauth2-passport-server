@@ -123,6 +123,7 @@ class ModuleMake extends Command
                 'current_version' => $useDev ? 'dev' : 'stable',
                 'last_version' => null,
                 'new_version' => null,
+                'enabled' => true
             ]);
 
             if (!$this->ensureModulePublicSymlink($modulePath)) {
