@@ -1,13 +1,15 @@
 {
-    "The :attribute must contain at least one letter.": "The :attribute must contain at least one letter.",
-    "The :attribute must contain at least one number.": "The :attribute must contain at least one number.",
-    "The :attribute must contain at least one symbol.": "The :attribute must contain at least one symbol.",
-    "The :attribute must contain at least one uppercase and one lowercase letter.": "The :attribute must contain at least one uppercase and one lowercase letter.",
-    "The given :attribute has appeared in a data leak. Please choose a different :attribute.": "The given :attribute has appeared in a data leak. Please choose a different :attribute.",
-    "Resource registered": "Resource has been regitered!.",
-    "Cannot update": "This resource cannot updated!.",
-    "Cannot remove": "Cannot Remove this resource!",
-    "Email Not found": "we cannot find an email for  this user",
-    "Password Updated": "Your Pasword was updated successfully",
-    "Submit" : "Enviar Peticion"
+  "The :attribute must contain at least one letter.": "The :attribute must contain at least one letter.",
+  "The :attribute must contain at least one number.": "The :attribute must contain at least one number.",
+  "The :attribute must contain at least one symbol.": "The :attribute must contain at least one symbol.",
+  "The :attribute must contain at least one uppercase and one lowercase letter.": "The :attribute must contain at least one uppercase and one lowercase letter.",
+  "The given :attribute has appeared in a data leak. Please choose a different :attribute.": "The given :attribute has appeared in a data leak. Please choose a different :attribute.",
+  "Resource registered": "Resource has been regitered!.",
+  "Cannot update": "This resource cannot updated!.",
+  "Cannot remove": "Cannot Remove this resource!",
+  "Email Not found": "we cannot find an email for  this user",
+  "Password Updated": "Your Pasword was updated successfully",
+  "allowed_registration_domains": "Allowed Registration Domains",
+  "allowed_registration_domains_description": "Only users with email addresses from these domains will be allowed to register. Enter one domain per line. Leave this field empty to allow registrations from any domain.",
+  "validation.allowed_domain": "Registration using this email domain is not allowed."
 }

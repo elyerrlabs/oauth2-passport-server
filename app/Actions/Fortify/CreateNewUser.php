@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Rules\AllowedDomains;
 use Core\User\Services\UserService;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -25,10 +26,12 @@ class CreateNewUser implements CreatesNewUsers
             ? 'email:rfc,dns'
             : 'email:rfc';
 
+
+
         Validator::make($input, [
-            'name' => ['required', 'regex:/^[A-Za-z\s]+$/', 'min:3', 'max:100'],
-            'last_name' => ['required', 'regex:/^[A-Za-z\s]+$/', 'min:3', 'max:100'],
-            'email' => ['required', $emailValidation, 'unique:users,email'],
+            'name' => ['required', 'regex:/^[\p{L}]+(?:[\p{L}\s\'-]*[\p{L}])?$/u', 'min:3', 'max:100'],
+            'last_name' => ['required', 'regex:/^[\p{L}]+(?:[\p{L}\s\'-]*[\p{L}])?$/u', 'min:3', 'max:100'],
+            'email' => ['required', $emailValidation, 'unique:users,email', new AllowedDomains()],
             'password' => ['required', 'confirmed', 'min:8', 'max:60'],
             'birthday' => [
                 Rule::requiredIf(fn() => filter_var(config('system.birthday.active', false), FILTER_VALIDATE_BOOL)),

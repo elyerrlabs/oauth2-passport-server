@@ -1048,5 +1048,8 @@
   "Top level service for admin users": "Servicio de nivel superior para usuarios administradores",
   "Collection of paid services including cloud computing, VPN, and other premium infrastructure solutions.": "Colección de servicios pagos que incluyen computación en la nube, VPN y otras soluciones de infraestructura premium.",
   "Exclusive services designed for businesses, providing advanced cloud solutions, dedicated infrastructure, and enterprise-grade security.": "Servicios exclusivos diseñados para empresas, que proporcionan soluciones avanzadas en la nube, infraestructura dedicada y seguridad de nivel empresarial.",
-  "Tailored for businesses and individuals looking to resell services, this plan offers full white-label capabilities, scalable resources": "Adaptado para empresas y personas que buscan revender servicios, este plan ofrece capacidades completas de marca blanca, recursos escalables"
+  "Tailored for businesses and individuals looking to resell services, this plan offers full white-label capabilities, scalable resources": "Adaptado para empresas y personas que buscan revender servicios, este plan ofrece capacidades completas de marca blanca, recursos escalables",
+  "allowed_registration_domains": "Dominios permitidos para el registro",
+  "allowed_registration_domains_description": "Solo los usuarios con direcciones de correo electrónico pertenecientes a estos dominios podrán registrarse. Introduzca un dominio por línea. Deje este campo vacío para permitir el registro desde cualquier dominio.",
+  "validation.allowed_domain": "No se permite el registro utilizando este dominio de correo electrónico."
 }

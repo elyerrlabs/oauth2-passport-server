@@ -78,6 +78,25 @@
                         </div>
                     </div>
 
+                    {{-- Allowed registration domains --}}
+                    <div class="md:col-span-2">
+                        <div
+                            class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors duration-300">
+
+                            <label class="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">
+                                {{ __('allowed_registration_domains') }}
+                            </label>
+
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                {{ __('allowed_registration_domains_description') }}
+                            </p>
+
+                            <textarea name="system[registration_allowed_domains]" rows="6"
+                                placeholder="example.com,company.com,university.edu"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors duration-300">{{ config('system.registration_allowed_domains') }}</textarea>
+                        </div>
+                    </div>
+
                     {{-- Disable User Creation by Command --}}
                     <div class="md:col-span-2">
                         <div
@@ -224,7 +243,8 @@
                         <div class="flex flex-col gap-2 w-full md:w-64">
                             <select name="system[demo][domain][enabled]"
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors duration-300">
-                                <option value="1" {{ config('system.demo.domain.enabled', false) ? 'selected' : '' }}>
+                                <option value="1"
+                                    {{ config('system.demo.domain.enabled', false) ? 'selected' : '' }}>
                                     {{ __('Enabled') }}
                                 </option>
                                 <option value="0"
