@@ -67,6 +67,7 @@
                 </div>
             @endif
 
+            <x-lang-selector />
             <!-- Login Form -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
                 <form action="{{ route('login.store') }}" method="POST" class="space-y-5" id="login-form">

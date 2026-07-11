@@ -151,4 +151,22 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+
+    'langs' => [
+        'es' => [
+            'flag' => '🇪🇸',
+            'title' => 'lang.es',
+        ],
+
+        'en' => [
+            'flag' => '🇺🇸',
+            'title' => 'lang.en',
+        ],
+
+        'fr' => [
+            'flag' => '🇫🇷',
+            'title' => 'lang.fr',
+        ],
+    ],
 ];

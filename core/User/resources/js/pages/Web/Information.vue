@@ -282,28 +282,18 @@ const is_dark = ref(false);
 const countries = ref([]);
 const loading = ref(false);
 
-const langs = [
-    {
-        name: __("English"),
-        id: "en",
-    },
-    {
-        name: __("Spanish"),
-        id: "es",
-    },
-];
+const langs = ref({});
 
 onMounted(() => {
     Object.assign(form, page.props.user);
 
     getDialCode();
-    isDark();
-    window.addEventListener("theme-change", isDark);
-});
 
-const isDark = () => {
-    is_dark.value = localStorage.getItem("theme") == "light" ? false : true;
-};
+    langs.value = Object.entries(page.props.langs).map(([id, item]) => ({
+        id,
+        name: __(item.title),
+    }));
+});
 
 //
 const getDialCode = async () => {

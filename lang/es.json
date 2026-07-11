@@ -1051,5 +1051,8 @@
   "Tailored for businesses and individuals looking to resell services, this plan offers full white-label capabilities, scalable resources": "Adaptado para empresas y personas que buscan revender servicios, este plan ofrece capacidades completas de marca blanca, recursos escalables",
   "allowed_registration_domains": "Dominios permitidos para el registro",
   "allowed_registration_domains_description": "Solo los usuarios con direcciones de correo electrónico pertenecientes a estos dominios podrán registrarse. Introduzca un dominio por línea. Deje este campo vacío para permitir el registro desde cualquier dominio.",
-  "validation.allowed_domain": "No se permite el registro utilizando este dominio de correo electrónico."
+  "validation.allowed_domain": "No se permite el registro utilizando este dominio de correo electrónico.",
+  "lang.es": "Español",
+  "lang.en": "Ingles",
+  "lang.fr": "Francés"
 }

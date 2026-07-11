@@ -29,7 +29,7 @@
                     {{ __('Enter your email to receive a reset link') }}
                 </p>
             </div>
-
+            <x-lang-selector />
             <!-- Reset Form -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
                 <form action="{{ route('password.email') }}" method="POST" class="space-y-6">

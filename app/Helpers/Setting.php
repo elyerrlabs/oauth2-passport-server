@@ -25,6 +25,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use App\Contracts\Translatable;
 use App\Support\Translation\ModuleTranslation;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
@@ -388,6 +389,48 @@ if (!function_exists('rateLimitCache')) {
         } catch (Throwable $e) {
             // Use default driver 
             return Cache::store(config('cache.default'));
+        }
+    }
+}
+
+
+if (!function_exists('syncTranslations')) {
+    /**
+     * Update or save translatables keys
+     * @param Translatable $translatable
+     * @param array $arrtibutes
+     * @return void
+     */
+    function syncTranslations(Translatable $translatable, array $arrtibutes)
+    {
+        $items = [];
+
+        // Filter translatable keys
+        foreach ($translatable->getTranslatableAttributes() as $attribute) {
+            foreach ($arrtibutes as $key => $value) {
+                if (!str_starts_with($key, $attribute . '_')) {
+                    unset($arrtibutes[$key]);
+                }
+            }
+        }
+
+        // Generate trasnlatable item
+        foreach ($arrtibutes as $key => $value) {
+            $keys = explode('_', $key);
+
+            $items[] = [
+                'locale' => $keys[1],
+                'attribute' => $keys[0],
+                'value' => $value
+            ];
+        }
+
+        // Save translatable items
+        foreach ($items as $item) {
+            $translatable->translations()->updateOrCreate([
+                'locale' => $item['locale'],
+                'attribute' => $item['attribute'],
+            ], $item);
         }
     }
 }

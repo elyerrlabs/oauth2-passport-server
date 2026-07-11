@@ -20,7 +20,7 @@
                     {{ __('Join our secure platform') }}
                 </p>
             </div>
-
+            <x-lang-selector />
             <!-- Registration Form -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8">
                 <form action="{{ route('register') }}" method="POST" enctype="multipart/form-data" class="space-y-5">

@@ -41,20 +41,16 @@ class Lang
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
+        $user = $request->user() ?? null;
 
-        // No Auth user
-        if (!auth()->check()) {
-            app()->setLocale($locale ?? 'en');
-        } else {// Only auth user 
+        $locale = $request->filled('lang') ? $request->lang : substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
 
-            // Detect system language for demo user
-            if (auth()->user()->email == config("system.demo.email")) {
-                app()->setLocale($locale ?? 'en');
-            } else { // No demo user
-                app()->setLocale(auth()->user()->lang);
-            }
+        if (!empty($user)) {
+            $locale = $user->lang ?? "en";
         }
+
+        app()->setLocale($locale);
+
         return $next($request);
     }
 }
