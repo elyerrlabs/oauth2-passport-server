@@ -174,7 +174,7 @@ Example:
 ```php
 return [
 
-    "content_posts" => \Content\App\Models\Post::class,
+    "content_posts" => "\Content\App\Models\Post",
 
 ];
 ```
@@ -184,7 +184,7 @@ or
 ```php
 return [
 
-    "user_users" => \Core\User\Model\User::class,
+    "user_users" => "\Core\User\Model\User",
 
 ];
 ```
@@ -230,8 +230,8 @@ Instead, register unique aliases:
 ```php
 return [
 
-    "content_posts" => \Content\App\Models\Post::class,
-    "blog_posts" => \Blog\App\Models\Post::class,
+    "content_posts" => "\Content\App\Models\Post",
+    "blog_posts" => "\Blog\App\Models\Post",
 
 ];
 ```
