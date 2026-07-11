@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
-# Unreleased
+## [v9.0.0]
 
 > **Note:** The removed components are being extracted from the core to make the framework more modular and maintainable. They will be available as independent modules, allowing optional installation, easier maintenance, and a smaller core.
 
