@@ -35,7 +35,7 @@
             <div v-for="(item, index) in items" :key="index">
                 <!-- Main menu item (not clickable if it has submenus) -->
                 <div
-                    class="group w-full flex items-center justify-between cursor-pointer gap-3 py-2 px-2 text-sm rounded-xl transition-all duration-300 text-slate-700 dark:text-slate-300 hover:bg-dlinear-to-r hover:from-indigo-50/50 hover:to-transparent dark:hover:from-indigo-950/30 dark:hover:to-transparent"
+                    class="group w-full flex items-center justify-between cursor-pointer gap-2 py-2 px-2 text-sm rounded-xl transition-all duration-300 text-slate-700 dark:text-slate-300 hover:bg-dlinear-to-r hover:from-indigo-50/50 hover:to-transparent dark:hover:from-indigo-950/30 dark:hover:to-transparent"
                     :class="{
                         'bg-dlinear-to-r from-indigo-50/80 to-transparent dark:from-indigo-950/40 dark:to-transparent text-indigo-700 dark:text-indigo-300 shadow-sm':
                             isActive(item) || hasActiveSubmenu(item),
@@ -43,11 +43,11 @@
                 >
                     <!-- Left side: icon and name -->
                     <button
-                        class="flex-1 flex items-center gap-3 cursor-pointer"
+                        class="flex-1 flex items-center gap-2 cursor-pointer min-w-0"
                         @click="handleMenuClick(item)"
                     >
                         <div
-                            class="w-9 h-9 flex items-center justify-center rounded-xl bg-dlinear-to-br from-slate-100 to-slate-200/50 dark:from-slate-700/50 dark:to-slate-800/50 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:from-indigo-100 group-hover:to-indigo-200/50 dark:group-hover:from-indigo-900/30 dark:group-hover:to-indigo-800/30"
+                            class="w-9 h-9 flex items-center justify-center rounded-xl bg-dlinear-to-br from-slate-100 to-slate-200/50 dark:from-slate-700/50 dark:to-slate-800/50 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:from-indigo-100 group-hover:to-indigo-200/50 dark:group-hover:from-indigo-900/30 dark:group-hover:to-indigo-800/30 shrink-0"
                             :class="{
                                 'from-indigo-100 to-indigo-200/50 dark:from-indigo-900/30 dark:to-indigo-800/30 shadow-md':
                                     isActive(item) || hasActiveSubmenu(item),
@@ -65,7 +65,7 @@
                                 ]"
                             ></i>
                         </div>
-                        <span class="text-sm font-medium">{{
+                        <span class="text-sm font-medium truncate">{{
                             __(item.name)
                         }}</span>
                     </button>
@@ -98,14 +98,14 @@
                         v-for="(submenu, subIndex) in item.menus"
                         :key="`${index}-${subIndex}`"
                         @click="open(submenu)"
-                        class="group w-full flex items-center cursor-pointer gap-3 py-1.5 px-2 text-sm rounded-lg transition-all duration-300 text-slate-600 dark:text-slate-400 hover:bg-dlinear-to-r hover:from-indigo-50/30 hover:to-transparent dark:hover:from-indigo-950/20 dark:hover:to-transparent"
+                        class="group w-full flex items-center cursor-pointer gap-2 py-1.5 px-2 text-sm rounded-lg transition-all duration-300 text-slate-600 dark:text-slate-400 hover:bg-dlinear-to-r hover:from-indigo-50/30 hover:to-transparent dark:hover:from-indigo-950/20 dark:hover:to-transparent"
                         :class="{
                             'bg-dlinear-to-r from-indigo-50/50 to-transparent dark:from-indigo-950/30 dark:to-transparent text-indigo-700 dark:text-indigo-300 shadow-sm':
                                 isActive(submenu),
                         }"
                     >
                         <div
-                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-dlinear-to-br from-slate-100 to-slate-200/50 dark:from-slate-700/50 dark:to-slate-800/50 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:from-indigo-100 group-hover:to-indigo-200/50 dark:group-hover:from-indigo-900/30 dark:group-hover:to-indigo-800/30"
+                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-dlinear-to-br from-slate-100 to-slate-200/50 dark:from-slate-700/50 dark:to-slate-800/50 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:from-indigo-100 group-hover:to-indigo-200/50 dark:group-hover:from-indigo-900/30 dark:group-hover:to-indigo-800/30 shrink-0"
                             :class="{
                                 'from-indigo-100 to-indigo-200/50 dark:from-indigo-900/30 dark:to-indigo-800/30 shadow-md':
                                     isActive(submenu),
@@ -122,7 +122,9 @@
                                 ]"
                             ></i>
                         </div>
-                        <span class="text-sm">{{ __(submenu.name) }}</span>
+                        <span class="text-sm truncate text-left">{{
+                            __(submenu.name)
+                        }}</span>
                     </button>
                 </div>
             </div>
