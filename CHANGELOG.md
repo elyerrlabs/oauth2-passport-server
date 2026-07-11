@@ -49,6 +49,9 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Remove unsed npm packages
 - Add custom cache driver support for rate limit with fallback handling
 - Update log user interface
+- Support allowed email domains for user registration
+- Implement multilingual support with localized routing, language switching, and translation infrastructure
+- Documantion updated
 
 ### refactor: introduce JSON-based module registry
 
