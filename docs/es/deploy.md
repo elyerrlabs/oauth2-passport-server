@@ -1,28 +1,3 @@
-<!--
-OAuth2 Passport Server — a centralized, modular authorization server
-implementing OAuth 2.0 and OpenID Connect specifications.
-
-Copyright (c) 2026 Elvis Yerel Roman Concha
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-
-Author: Elvis Yerel Roman Concha
-Contact: yerel9212@yahoo.es
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 # OAuth2 Passport Server
 
 **Guía de Despliegue en Producción**
@@ -154,20 +129,20 @@ Este script se encarga de:
 
 ## 🚀 Script de Ejecución en Contenedores
 
-| Comando                 | Descripción                                                               |
-| ----------------------- | ------------------------------------------------------------------------- |
-| `./dev --deploy`        | Despliega el entorno de desarrollo.                                       |
-| `./dev --stop`          | Detiene los contenedores de desarrollo.                                   |
-| `./dev --root bash`     | Abre una terminal root en el contenedor de desarrollo.                    |
-| `./dev bash`            | Abre una terminal con el usuario del entorno de desarrollo.               |
-| `./staging --deploy`    | Despliega el entorno de staging.                                          |
-| `./staging --stop`      | Detiene los contenedores de staging.                                      |
-| `./staging --root bash` | Abre una terminal root en el contenedor de staging.                       |
-| `./staging bash`        | Abre una terminal con el usuario del entorno de staging.                  |
-| `./production --deploy` | Despliega el entorno de producción.                                       |
-| `./production --stop`   | Detiene los contenedores de producción.                                   |
-| `./production --root bash` | Abre una terminal root en el contenedor de producción.                 |
-| `./production bash`     | Abre una terminal con el usuario del entorno de producción.               |
+| Comando                    | Descripción                                                 |
+| -------------------------- | ----------------------------------------------------------- |
+| `./dev --deploy`           | Despliega el entorno de desarrollo.                         |
+| `./dev --stop`             | Detiene los contenedores de desarrollo.                     |
+| `./dev --root bash`        | Abre una terminal root en el contenedor de desarrollo.      |
+| `./dev bash`               | Abre una terminal con el usuario del entorno de desarrollo. |
+| `./staging --deploy`       | Despliega el entorno de staging.                            |
+| `./staging --stop`         | Detiene los contenedores de staging.                        |
+| `./staging --root bash`    | Abre una terminal root en el contenedor de staging.         |
+| `./staging bash`           | Abre una terminal con el usuario del entorno de staging.    |
+| `./production --deploy`    | Despliega el entorno de producción.                         |
+| `./production --stop`      | Detiene los contenedores de producción.                     |
+| `./production --root bash` | Abre una terminal root en el contenedor de producción.      |
+| `./production bash`        | Abre una terminal con el usuario del entorno de producción. |
 
 ### Acceso Root
 
@@ -182,7 +157,7 @@ Utilice la opción `--root` para ejecutar comandos como usuario root dentro del 
 Se ha creado estos scripts para facilitar la ejecución de comandos dentro del contenedor de la aplicación sin necesidad de escribir manualmente `docker exec`.
 
 El script ejecuta los comandos como el usuario `www-data`, asegurando permisos correctos en el entorno.
- 
+
 ---
 
 ## 👤 Configuración del Primer Usuario
@@ -226,14 +201,35 @@ En entornos productivos normalmente solo necesitarás ejecutar comandos usando l
 
 ---
 
-## 🔄 Actualización a una Nueva Versión
+## 🔄 Actualizar a una nueva versión
 
-Para actualizar el sistema en producción:
+Se recomienda **actualizar siempre utilizando una versión estable (tag)** en lugar de la rama `main`.
+
+La rama `main` contiene los cambios más recientes del proyecto y, aunque normalmente son estables, puede incluir nuevas funcionalidades o cambios incompatibles con versiones anteriores. Actualizar directamente desde `main` podría requerir migraciones adicionales o cambios en la configuración de tu proyecto.
+
+La práctica recomendada es actualizar **de una versión estable a la siguiente**, revisando siempre las notas de la versión (_Release Notes_) antes de continuar.
+
+Por ejemplo, si actualmente utilizas la versión `8.0.0`, primero actualiza a `8.0.1` y, posteriormente, a `9.0.0`, en lugar de saltar directamente a la última versión disponible.
+
+### 1. Descargar las últimas referencias del repositorio
 
 ```bash
-git pull origin main
+git fetch --all --tags
+```
+
+### 2. Cambiar a la versión deseada
+
+```bash
+git checkout v9.0.0
+```
+
+### 3. Desplegar la actualización
+
+```bash
 ./production --deploy
 ```
+
+> **Importante:** Evita utilizar `git pull origin main` en servidores de producción. Siempre que sea posible, despliega una versión estable identificada mediante un **tag**, ya que esto garantiza que el código ejecutado corresponde exactamente a una versión publicada y facilita volver a una versión anterior en caso de ser necesario.
 
 ---
 
