@@ -3,9 +3,9 @@
 namespace App\Console\Commands\Module;
 
 use App\Repositories\ModuleRepository;
+use App\Services\ModuleService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Process;
 
@@ -55,7 +55,7 @@ class ModuleUpdate extends Command
 
     public function handle(): int
     {
-        $moduleNames = $this->moduleRepository->query()->pluck('name', 'name')->toArray();
+        $moduleNames = app(ModuleService::class)->all()->pluck('name', 'name')->toArray();
 
         if (empty($moduleNames)) {
             $this->error('No modules found in the database.');
@@ -70,9 +70,7 @@ class ModuleUpdate extends Command
 
         // List modules from database if no name provided
         if (!$name) {
-            $modules = DB::table('modules')
-                ->select('name', 'current_version', 'last_version', 'new_version', 'provider')
-                ->get();
+            $modules = app(ModuleService::class)->all();
 
             if ($modules->isEmpty()) {
                 $this->error('No modules registered in the database.');
@@ -109,7 +107,7 @@ class ModuleUpdate extends Command
         $name = normalizeModuleName($name);
 
         // Find the module in database
-        $module = DB::table('modules')->where('name', $name)->first();
+        $module = app(ModuleService::class)->findByName($name);
 
         if (!$module) {
             $this->error("Module '{$name}' not found in database.");
@@ -222,33 +220,27 @@ class ModuleUpdate extends Command
         $previousVersion = $module->current_version;
 
         // Step 1: Update new_version in database before git operations
-        DB::table('modules')
-            ->where('name', $name)
-            ->update([
-                'new_version' => $version
-            ]);
+        app(ModuleService::class)->update($module->getId(), [
+            'new_version' => $version
+        ]);
+
 
         // Step 2: Pull/Checkout target version
         if (!$this->checkoutVersion($modulePath, $version)) {
-            // Restore previous state
-            DB::table('modules')
-                ->where('name', $name)
-                ->update([
-                    'new_version' => null
-                ]);
+            app(ModuleService::class)->update($module->getId(), [
+                'new_version' => null
+            ]);
 
             $this->error('Update failed: Git checkout failed');
             return self::FAILURE;
         }
 
         // Step 3: Update current_version and last_version in database
-        DB::table('modules')
-            ->where('name', $name)
-            ->update([
-                'last_version' => $previousVersion,
-                'current_version' => $version,
-                'new_version' => null
-            ]);
+        app(ModuleService::class)->update($module->getId(), [
+            'last_version' => $previousVersion,
+            'current_version' => $version,
+            'new_version' => null
+        ]);
 
         // Step 4: Install/Update dependencies
         if (!$this->runComposerUpdate($modulePath, $environment)) {
@@ -375,7 +367,7 @@ class ModuleUpdate extends Command
                             $branch
                         );
 
-                        $versions[] = "🌿 {$branch}";
+                        $versions[] = "{$branch}";
                     }
                 }
 
@@ -403,7 +395,7 @@ class ModuleUpdate extends Command
                         $tag = trim($tag);
 
                         if (!empty($tag)) {
-                            $versions[] = "🏷️ {$tag}";
+                            $versions[] = "{$tag}";
                         }
                     }
                 }
