@@ -29,6 +29,32 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to Semantic Versioning.
 
+## Unreleased
+
+### Added
+
+- Added the `extractTranslationsFields()` helper for extracting translated input fields.
+- Added the `UniqueTranslation` validation rule for validating translated fields.
+- Added the `getMorphClassIdentifier()` method to the `Translatable` contract to resolve the configured morph tag or fallback class name.
+- Added a migration to remove obsolete module tables.
+
+### Changed
+
+- Improved module repository update functionality.
+- Updated the project documentation.
+
+### Fixed
+
+- Fixed translation synchronization (`syncTranslations`) behavior.
+- Fixed polymorphic (morph) class support.
+- Fixed the `module:update` command.
+
+### Removed
+
+- Removed the unused `module:migration` command.
+
+---
+
 ## [v9.0.0]
 
 > **Note:** The removed components are being extracted from the core to make the framework more modular and maintainable. They will be available as independent modules, allowing optional installation, easier maintenance, and a smaller core.
