@@ -99,45 +99,16 @@ final class ModuleRepository
             return null;
         }
 
-        if (isset($data['name'])) {
-            $module->setName($data['name']);
-        }
-
-        if (isset($data['provider'])) {
-            $module->setProvider($data['provider']);
-        }
-
-        if (isset($data['source'])) {
-            $module->setSource($data['source']);
-        }
-
-        if (isset($data['path'])) {
-            $module->setPath($data['path']);
-        }
-
-        if (isset($data['username'])) {
-            $module->setUsername($data['username']);
-        }
-
-        if (isset($data['token'])) {
-            $module->setToken($data['token']);
-        }
-
-        if (isset($data['current_version'])) {
-            $module->setCurrentVersion($data['current_version']);
-        }
-
-        if (isset($data['last_version'])) {
-            $module->setLastVersion($data['last_version']);
-        }
-
-        if (isset($data['new_version'])) {
-            $module->setNewVersion($data['new_version']);
-        }
-
-        if (isset($data['enabled'])) {
-            $module->setEnabled($data['enabled']);
-        }
+        $module->setName($data['name']);
+        $module->setProvider($data['provider']);
+        $module->setSource($data['source']);
+        $module->setPath($data['path']);
+        $module->setUsername($data['username']);
+        $module->setToken($data['token']);
+        $module->setCurrentVersion($data['current_version']);
+        $module->setLastVersion($data['last_version']);
+        $module->setNewVersion($data['new_version']);
+        $module->setEnabled($data['enabled']);
 
         $this->write(
             $modules
