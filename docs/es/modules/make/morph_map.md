@@ -14,8 +14,8 @@ Por defecto, Laravel almacena el nombre completo de la clase en los campos polim
 
 Por ejemplo:
 
-```text
-Content\App\Models\Post
+```php
+\Content\App\Models\Post::class
 ```
 
 Si en el futuro ocurre alguno de estos cambios:
@@ -65,7 +65,7 @@ Su estructura es la siguiente:
 
 return [
 
-    // "module_table" => "\Module\App\Models\Model",
+     "module_table" => \Module\App\Models\Model::class,
 
 ];
 ```
@@ -75,8 +75,8 @@ Por ejemplo:
 ```php
 return [
 
-    "content_posts" => "\Content\App\Models\Post",
-    "content_categories" => "\Content\App\Models\Category",
+    "content_posts" => \Content\App\Models\Post::class,
+    "content_categories" => \Content\App\Models\Category::class,
 
 ];
 ```
@@ -86,8 +86,8 @@ o
 ```php
 return [
 
-    "user_users" => "\Core\User\Model\User",
-    "user_roles" => "\Core\User\Model\Role",
+    "users" => \Core\User\Model\User::class,
+    "roles" => \Core\User\Model\Role::class,
 
 ];
 ```
@@ -124,13 +124,13 @@ Supongamos que tu aplicación instala dos módulos distintos.
 **Módulo Content**
 
 ```php
-Content\App\Models\Post
+\Content\App\Models\Post::class
 ```
 
 **Módulo Blog**
 
 ```php
-Blog\App\Models\Post
+\Blog\App\Models\Post::class
 ```
 
 Si ambos registran el mismo alias:
@@ -146,8 +146,8 @@ En cambio, utilizando el nombre del módulo como prefijo:
 ```php
 return [
 
-    "content_posts" => "\Content\App\Models\Post",
-    "blog_posts" => "\Blog\App\Models\Post",
+    "content_posts" => \Content\App\Models\Post::class,
+    "blog_posts" => \Blog\App\Models\Post::class,
 
 ];
 ```
@@ -202,14 +202,14 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    "content_posts" => "\Content\App\Models\Post",
-    "content_categories" => "\Content\App\Models\Category",
+    "content_posts" => \Content\App\Models\Post::class,
+    "content_categories" => \Content\App\Models\Category::class,
 
-    "user_users" => "\Core\User\Model\User",
-    "user_roles" => "\Core\User\Model\Role",
+    "users" => \Core\User\Model\User::class,
+    "user_roles" => \Core\User\Model\Role::class,
 
-    "cms_pages" => "\Cms\App\Models\Page",
-    "cms_menus" => "\Cms\App\Models\Menu",
+    "cms_pages" => \Cms\App\Models\Page::class,
+    "cms_menus" => \Cms\App\Models\Menu::class,
 
 ];
 ```

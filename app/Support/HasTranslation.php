@@ -62,4 +62,20 @@ trait HasTranslation
 
         return $this;
     }
+
+    /**
+     * get indetifier class
+     */
+    public function getMorphClassIdentifier(): string
+    {
+        $class = static::class;
+
+        foreach (config('morph') as $key => $value) {
+            if (app($value) instanceof $class) {
+                return $key;
+            }
+        }
+
+        return $class;
+    }
 }

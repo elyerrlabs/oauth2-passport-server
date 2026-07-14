@@ -38,6 +38,12 @@ interface Translatable
      * Relación polimórfica con las traducciones.
      */
     public function translations(): MorphMany;
+
+    /**
+     * Set morph class identifier
+     * @return string
+     */
+    public function getMorphClassIdentifier(): string;
 }
 ```
 
@@ -117,6 +123,59 @@ Donde:
 
 ---
 
+## Extraer campos traducibles
+
+Si deseas personalizar las traducciones o generar campos calculados que no provienen directamente de la entrada del usuario, puedes utilizar la función:
+
+```php
+extractTranslationsFields(
+    Translatable $translatable,
+    array $inputs,
+    bool $langs = false
+)
+```
+
+Esta función extrae todos los campos traducibles definidos por el modelo que implementa la interfaz `Translatable`.
+
+### Parámetros
+
+- **`$translatable`**: Instancia del modelo que implementa la interfaz `Translatable`.
+- **`$inputs`**: Arreglo con los datos de entrada, normalmente obtenido del request.
+- **`$langs`** _(opcional)_: Por defecto es `false`. Si se establece en `true`, la función agregará una clave adicional llamada **`langs`**, la cual contendrá un arreglo con todos los idiomas detectados en los campos traducibles.
+
+### Ejemplo
+
+```php
+$translations = extractTranslationsFields(
+    $page,
+    $request->all(),
+    true
+);
+```
+
+El resultado incluirá todos los campos traducibles encontrados y, si `$langs` es `true`, también devolverá:
+
+```php
+[
+    'langs' => ['es', 'fr'],
+]
+```
+
+### Casos de uso
+
+Esta función resulta especialmente útil cuando necesitas generar valores traducidos de forma automática para campos que **no son enviados desde el formulario**, sino que son calculados por la aplicación.
+
+Por ejemplo, puedes utilizarla para generar las traducciones de campos como:
+
+- `slug`
+- `path`
+- Metadatos SEO
+- Cualquier otro atributo personalizado
+
+Gracias al arreglo `langs`, podrás conocer qué idiomas fueron enviados en la solicitud y generar automáticamente la variante correspondiente para cada uno antes de llamar a `syncTranslations()`.
+
+---
+
 # Formato de la solicitud
 
 El idioma principal siempre se almacena en el atributo original del modelo.
@@ -174,7 +233,7 @@ Ejemplo:
 ```php
 return [
 
-    "content_posts" => "\Content\App\Models\Post",
+    "content_posts" => \Content\App\Models\Post::class,
 
 ];
 ```
@@ -184,7 +243,7 @@ o
 ```php
 return [
 
-    "user_users" => "\Core\User\Model\User",
+    "user_users" => \Core\User\Model\User::class,
 
 ];
 ```
@@ -230,8 +289,8 @@ En cambio, utilizando el prefijo del módulo:
 ```php
 return [
 
-    "content_posts" => "\Content\App\Models\Post",
-    "blog_posts" => "\Blog\App\Models\Post",
+    "content_posts" => \Content\App\Models\Post::class,
+    "blog_posts" => \Blog\App\Models\Post::class,
 
 ];
 ```

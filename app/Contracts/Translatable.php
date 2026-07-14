@@ -19,4 +19,11 @@ interface Translatable
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function translations(): MorphMany;
+
+
+    /**
+     * Set morph class identifier
+     * @return string
+     */
+    public function getMorphClassIdentifier(): string;
 }

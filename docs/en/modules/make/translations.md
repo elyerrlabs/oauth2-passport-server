@@ -38,6 +38,13 @@ interface Translatable
      * Polymorphic relationship with translations.
      */
     public function translations(): MorphMany;
+
+
+    /**
+     * Set morph class identifier
+     * @return string
+     */
+    public function getMorphClassIdentifier(): string;
 }
 ```
 
@@ -72,9 +79,9 @@ Example:
 
 ```json
 {
-  "about": "This is me",
-  "about_es": "Este soy yo",
-  "about_fr": "Je suis moi"
+    "about": "This is me",
+    "about_es": "Este soy yo",
+    "about_fr": "Je suis moi"
 }
 ```
 
@@ -117,6 +124,59 @@ Where:
 
 ---
 
+## Extract Translatable Fields
+
+If you need to customize translations or generate additional computed fields, you can use the helper:
+
+```php
+extractTranslationsFields(
+    Translatable $translatable,
+    array $inputs,
+    bool $langs = false
+)
+```
+
+This helper extracts all translatable input fields defined by the model.
+
+### Parameters
+
+- **`$translatable`** — The model instance that implements the `Translatable` contract.
+- **`$inputs`** — The input data to process, typically the request data.
+- **`$langs`** _(optional)_ — Defaults to `false`. When set to `true`, the returned array includes an additional `langs` key containing all detected language codes.
+
+### Example
+
+```php
+$translations = extractTranslationsFields(
+    $page,
+    $request->all(),
+    true
+);
+```
+
+The returned array will include all detected translatable fields, and when `$langs` is enabled, it will also contain:
+
+```php
+[
+    'langs' => ['es', 'fr'],
+]
+```
+
+### Use Cases
+
+This helper is especially useful when you need to generate translated values that are **not submitted directly by the user**.
+
+For example, you may want to automatically generate translated versions of fields such as:
+
+- `path`
+- `slug`
+- SEO metadata
+- Any custom computed attribute
+
+By using the detected languages, you can generate and synchronize these additional values for every available translation before calling `syncTranslations()`.
+
+---
+
 # Request Format
 
 The primary language is always stored in the model's original attribute.
@@ -155,11 +215,11 @@ Example:
 
 ```json
 {
-  "id": 1,
-  "name": "John Doe",
-  "about": "This is me",
-  "about_es": "Este soy yo",
-  "about_fr": "Je suis moi"
+    "id": 1,
+    "name": "John Doe",
+    "about": "This is me",
+    "about_es": "Este soy yo",
+    "about_fr": "Je suis moi"
 }
 ```
 
@@ -174,7 +234,7 @@ Example:
 ```php
 return [
 
-    "content_posts" => "\Content\App\Models\Post",
+    "content_posts" => \Content\App\Models\Post::class,
 
 ];
 ```
@@ -184,7 +244,7 @@ or
 ```php
 return [
 
-    "user_users" => "\Core\User\Model\User",
+    "user" => \Core\User\Model\User::class,
 
 ];
 ```
@@ -230,8 +290,8 @@ Instead, using the module prefix:
 ```php
 return [
 
-    "content_posts" => "\Content\App\Models\Post",
-    "blog_posts" => "\Blog\App\Models\Post",
+    "content_posts" => \Content\App\Models\Post::class,
+    "blog_posts" => \Blog\App\Models\Post::class,
 
 ];
 ```
@@ -244,8 +304,8 @@ Laravel stores the model type (`translatable_type`) in the `translations` table.
 
 If a Morph Map is not used, Laravel will store the full class name, for example:
 
-```text
-Content\App\Models\Post
+```php
+Content\App\Models\Post::class
 ```
 
 This can cause problems if in the future you:
@@ -277,9 +337,9 @@ Example:
 
 ```json
 {
-  "about": "This is me",
-  "about_es": "Este soy yo",
-  "about_fr": "Je suis moi"
+    "about": "This is me",
+    "about_es": "Este soy yo",
+    "about_fr": "Je suis moi"
 }
 ```
 
@@ -305,7 +365,7 @@ For example, if the current language is **es**, the result will be:
 
 ```json
 {
-  "about": "Este soy yo"
+    "about": "Este soy yo"
 }
 ```
 

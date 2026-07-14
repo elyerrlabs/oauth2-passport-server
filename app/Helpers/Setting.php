@@ -406,16 +406,10 @@ if (!function_exists('syncTranslations')) {
         $items = [];
 
         // Filter translatable keys
-        foreach ($translatable->getTranslatableAttributes() as $attribute) {
-            foreach ($arrtibutes as $key => $value) {
-                if (!str_starts_with($key, $attribute . '_')) {
-                    unset($arrtibutes[$key]);
-                }
-            }
-        }
+        $filterAttributes = extractTranslationsFields($translatable, $arrtibutes);
 
         // Generate trasnlatable item
-        foreach ($arrtibutes as $key => $value) {
+        foreach ($filterAttributes as $key => $value) {
             $keys = explode('_', $key);
 
             $items[] = [
@@ -432,5 +426,40 @@ if (!function_exists('syncTranslations')) {
                 'attribute' => $item['attribute'],
             ], $item);
         }
+    }
+}
+
+
+if (!function_exists('extractTranslationsFields')) {
+
+    /**
+     * Extract the tranlatable fields and langs available
+     * @param Translatable $translatable
+     * @param array $inputs
+     * @return array
+     */
+    function extractTranslationsFields(Translatable $translatable, array $inputs, bool $langs = false): array
+    {
+        // Create new item
+        $items = [];
+
+        // Filer translatable items
+        foreach ($translatable->getTranslatableAttributes() as $attribute) {
+            foreach ($inputs as $key => $value) {
+                if (str_starts_with($key, $attribute . '_')) {
+                    $items[$key] = $value;
+                    if ($langs) {
+                        $items['langs'][] = explode('_', $key)[1];
+                    }
+                }
+            }
+        }
+
+        // Remove duplicated langs
+        if ($langs) {
+            $items['langs'] = collect($items['langs'])->unique()->values()->toArray();
+        }
+
+        return $items;
     }
 }

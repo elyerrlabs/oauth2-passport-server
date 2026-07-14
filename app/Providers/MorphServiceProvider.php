@@ -45,13 +45,6 @@ class MorphServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $morph = [
-            (new \Core\User\Model\User())->tag => \Core\User\Model\User::class,
-        ];
-
-        Relation::morphMap(array_merge(
-            config('morph'),
-            $morph
-        ));
+        Relation::morphMap(config('morph'));
     }
 }
