@@ -33,13 +33,7 @@ class UniqueTranslation implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $query = Translation::query()
-            ->where(
-                'translatable_type',
-                $this->translatable->getMorphClassIdentifier()
-            );
-
-        $errors = [];
+        $fieldsReppited = [];
 
         $inputs = extractTranslationsFields($this->translatable, request()->toArray());
 
@@ -47,19 +41,32 @@ class UniqueTranslation implements ValidationRule
 
             [$key, $locale] = explode('_', $field);
 
-            $attr = $query->where('locale', $locale)
+            $attr = Translation::query()
+                ->where(
+                    'translatable_type',
+                    $this->translatable->getMorphClassIdentifier()
+                )
+                ->where('locale', $locale)
                 ->whereRaw(
                     "LOWER(attribute) = ?",
                     [strtolower($key)]
+                )->whereRaw(
+                    "LOWER(value) = ?",
+                    [mb_strtolower($value)]
                 )->first();
 
+
             if (!empty($attr)) {
-                $errors[] = [$field => $value];
+                $fieldsReppited[] = $field;
             }
         }
 
-
-        //   dd($errors);
-        // debo buscar en en la tabla 
+        if (!empty($fieldsReppited)) {
+            $fail(
+                __('translations.errors.fields_in_use', [
+                    'fields' => implode(', ', $fieldsReppited),
+                ])
+            );
+        }
     }
 }

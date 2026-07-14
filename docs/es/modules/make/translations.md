@@ -176,6 +176,73 @@ Gracias al arreglo `langs`, podrás conocer qué idiomas fueron enviados en la s
 
 ---
 
+## Regla de validación `UniqueTranslation`
+
+La regla `UniqueTranslation` valida la unicidad de **todos los campos traducidos** definidos por un modelo que implemente la interfaz `Translatable`.
+
+A diferencia de una regla de validación tradicional, solo es necesario registrarla **una vez**. La regla detecta automáticamente todos los campos traducibles enviados en la solicitud y verifica que sus valores no existan previamente en la tabla de traducciones.
+
+### Uso básico
+
+```php
+use App\Rules\UniqueTranslation;
+use Content\App\Models\Page;
+
+$this->validate($request, [
+    'name' => [
+        'required',
+        new UniqueTranslation(new Page()),
+    ],
+]);
+```
+
+En este ejemplo, la regla se aplica únicamente al campo `name`, pero validará automáticamente todos los campos traducibles definidos por el modelo.
+
+Si el modelo define:
+
+```php
+public function getTranslatableAttributes(): array
+{
+    return [
+        'name',
+        'slug',
+        'path',
+    ];
+}
+```
+
+Y la solicitud contiene:
+
+```php
+[
+    'name' => 'Home',
+    'name_es' => 'Inicio',
+    'name_fr' => 'Accueil',
+    'slug_es' => 'inicio',
+    'path_fr' => 'accueil',
+]
+```
+
+Todos los campos traducidos serán validados automáticamente.
+
+### Errores de validación
+
+Si se detectan traducciones duplicadas, la validación fallará y mostrará un mensaje similar a:
+
+```text
+Los siguientes campos de traducción ya están en uso: name_es, slug_fr.
+```
+
+El mensaje se asociará al campo donde fue registrada la regla (generalmente el campo principal, como `name`).
+
+### Validaciones personalizadas
+
+Si tu proyecto requiere un comportamiento diferente, por ejemplo mostrar el error debajo de cada campo traducido, puedes crear tu propia regla de validación o implementar una validación personalizada utilizando las herramientas de Laravel, como `Validator::after()`.
+
+`UniqueTranslation` está diseñada para ofrecer una solución simple y automática para la mayoría de los casos de uso, reduciendo la configuración necesaria y evitando registrar una regla para cada idioma o atributo traducible.
+
+---
+
 # Formato de la solicitud
 
 El idioma principal siempre se almacena en el atributo original del modelo.

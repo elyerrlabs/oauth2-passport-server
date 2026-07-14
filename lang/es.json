@@ -1054,5 +1054,6 @@
   "validation.allowed_domain": "No se permite el registro utilizando este dominio de correo electrónico.",
   "lang.es": "Español",
   "lang.en": "Ingles",
-  "lang.fr": "Francés"
+  "lang.fr": "Francés",
+  "translations.errors.fields_in_use": "Los siguientes campos de traducción ya están en uso: :fields."
 }

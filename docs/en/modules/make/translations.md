@@ -177,6 +177,73 @@ By using the detected languages, you can generate and synchronize these addition
 
 ---
 
+## UniqueTranslation Validation Rule
+
+The `UniqueTranslation` rule validates the uniqueness of **all translated fields** defined by a model implementing the `Translatable` contract.
+
+Unlike traditional validation rules, this rule only needs to be applied **once**. It automatically detects every translated field submitted in the request and validates them against the translations table.
+
+### Basic Usage
+
+```php
+use App\Rules\UniqueTranslation;
+use Content\App\Models\Page;
+
+$this->validate($request, [
+    'name' => [
+        'required',
+        new UniqueTranslation(new Page()),
+    ],
+]);
+```
+
+In this example, the rule is only attached to the `name` field, but it will automatically validate every translated field defined by the model.
+
+If the model declares the following translatable attributes:
+
+```php
+public function getTranslatableAttributes(): array
+{
+    return [
+        'name',
+        'slug',
+        'path',
+    ];
+}
+```
+
+And the request contains:
+
+```php
+[
+    'name' => 'Home',
+    'name_es' => 'Inicio',
+    'name_fr' => 'Accueil',
+    'slug_es' => 'inicio',
+    'path_fr' => 'accueil',
+]
+```
+
+All translated fields will be validated automatically.
+
+### Validation Errors
+
+If duplicated translations are found, the validation will fail and return a message similar to:
+
+```text
+The following translation fields are already in use: name_es, slug_fr.
+```
+
+The error is attached to the field where the rule was registered (typically the primary field, such as `name`).
+
+### Custom Validation
+
+If your project requires a different validation strategy—for example, displaying errors under each translated input—you can implement your own custom validation rule or use Laravel's validation hooks (`Validator::after()`).
+
+`UniqueTranslation` is intended to provide a simple, automatic solution for the most common use cases while keeping the validation API clean and easy to use.
+
+---
+
 # Request Format
 
 The primary language is always stored in the model's original attribute.

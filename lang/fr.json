@@ -1064,5 +1064,6 @@
   "validation.allowed_domain": "validation.domaine_autorise",
   "lang.es": "Espagnol",
   "lang.en": "Anglais",
-  "lang.fr": "Français"
+  "lang.fr": "Français",
+  "translations.errors.fields_in_use": "Les champs de traduction suivants sont déjà utilisés : :fields."
 }
