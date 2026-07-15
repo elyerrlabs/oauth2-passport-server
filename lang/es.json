@@ -1055,5 +1055,6 @@
   "lang.es": "Español",
   "lang.en": "Ingles",
   "lang.fr": "Francés",
-  "translations.errors.fields_in_use": "Los siguientes campos de traducción ya están en uso: :fields."
+  "translations.errors.fields_in_use": "Los siguientes campos de traducción ya están en uso: :fields.",
+  "translations.errors.fields_are_empty": "Los siguientes campos de traducción son obligatorios: :fields."
 }

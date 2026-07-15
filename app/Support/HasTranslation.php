@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait HasTranslation
 {
-    protected bool $localized = false;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -23,8 +22,6 @@ trait HasTranslation
      */
     public function localize(?string $locale = null): static
     {
-        $this->localized = true;
-
         $locale ??= app()->getLocale();
 
         foreach ($this->translations as $translation) {
@@ -38,8 +35,6 @@ trait HasTranslation
                 $translation->value
             );
         }
-
-        $this->unsetRelation('translations');
 
         return $this;
     }

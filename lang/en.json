@@ -1065,5 +1065,6 @@
   "lang.es": "Español",
   "lang.en": "Ingles",
   "lang.fr": "Francés",
-  "translations.errors.fields_in_use": "The following translation fields are already in use: :fields."
+  "translations.errors.fields_in_use": "The following translation fields are already in use: :fields.",
+  "translations.errors.fields_are_empty": "The following translation fields are required: :fields."
 }

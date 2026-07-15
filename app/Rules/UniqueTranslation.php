@@ -34,8 +34,25 @@ class UniqueTranslation implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $fieldsReppited = [];
+        $fieldsEmpty = [];
 
         $inputs = extractTranslationsFields($this->translatable, request()->toArray());
+        foreach ($inputs as $field => $value) {
+
+            [$key, $locale] = explode('_', $field);
+
+            if (empty($value)) {
+                $fieldsEmpty[] = $field;
+            }
+        }
+
+        if (!empty($fieldsEmpty)) {
+            $fail(
+                __('translations.errors.fields_are_empty', [
+                    'fields' => implode(', ', $fieldsEmpty),
+                ])
+            );
+        }
 
         foreach ($inputs as $field => $value) {
 
