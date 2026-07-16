@@ -18,12 +18,19 @@ class UniqueTranslation implements ValidationRule
     protected $translatable;
 
     /**
+     * Resource id
+     * @var string
+     */
+    protected $id;
+
+    /**
      * Construct
      * @param App\Contracts\Translatable $translatable
      */
-    public function __construct(Translatable $translatable)
+    public function __construct(Translatable $translatable, string $id = '')
     {
         $this->translatable = $translatable;
+        $this->id = $id;
     }
 
     /**
@@ -36,7 +43,10 @@ class UniqueTranslation implements ValidationRule
         $fieldsReppited = [];
         $fieldsEmpty = [];
 
+        // Extract translatable fields
         $inputs = extractTranslationsFields($this->translatable, request()->toArray());
+
+        // Verification incomming fields empty
         foreach ($inputs as $field => $value) {
 
             [$key, $locale] = explode('_', $field);
@@ -54,6 +64,7 @@ class UniqueTranslation implements ValidationRule
             );
         }
 
+        // Verification fields in use
         foreach ($inputs as $field => $value) {
 
             [$key, $locale] = explode('_', $field);
@@ -72,6 +83,15 @@ class UniqueTranslation implements ValidationRule
                     [mb_strtolower($value)]
                 )->first();
 
+            // except verification for the same id and instance 
+            if (
+                !empty($attr) &&
+                !empty($this->id) &&
+                $attr->translatable instanceof $this->translatable &&
+                $attr->translatable->id == $this->id
+            ) {
+                continue;
+            }
 
             if (!empty($attr)) {
                 $fieldsReppited[] = $field;
