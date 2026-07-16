@@ -48,6 +48,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Fixed translation synchronization (`syncTranslations`) behavior.
 - Fixed polymorphic (morph) class support.
 - Fixed the `module:update` command.
+- Update trasnlation support on HasTranslation Trait and UniqueTranslation rule.
 
 ### Removed
 
