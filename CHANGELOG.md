@@ -37,6 +37,7 @@ The format is based on [Keep a Changelog], and this project adheres to Semantic 
 - Added the `UniqueTranslation` validation rule for validating translated fields.
 - Added the `getMorphClassIdentifier()` method to the `Translatable` contract to resolve the configured morph tag or fallback class name.
 - Added a migration to remove obsolete module tables.
+- Add release version automation script
 
 ### Changed
 
