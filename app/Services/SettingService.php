@@ -168,47 +168,22 @@ class SettingService
 
         $this->settingRepository->load('auth.password_timeout', 10800);
 
-        //------------------------REDIS CONFIGURATION-------------------//
-        //redis default settings
-        $this->settingRepository->load('database.redis.default.url', null);
-        $this->settingRepository->load('database.redis.default.host', '127.0.0.1');
-        $this->settingRepository->load('database.redis.default.username', null);
-        $this->settingRepository->load('database.redis.default.password', null);
-        $this->settingRepository->load('database.redis.default.port', '6379');
-        $this->settingRepository->load('database.redis.default.database', 0);
-
-        //redis cache settings
-        $this->settingRepository->load('database.redis.cache.url', null);
-        $this->settingRepository->load('database.redis.cache.host', '127.0.0.1');
-        $this->settingRepository->load('database.redis.cache.username', null);
-        $this->settingRepository->load('database.redis.cache.password', null);
-        $this->settingRepository->load('database.redis.cache.port', '6379');
-        $this->settingRepository->load('database.redis.cache.database', 1);
-        //------------------------END REDIS CONFIGURATION-------------------//
-
         //------------------------CACHE CONFIGURATION-------------------//
         $this->settingRepository->load('cache.default', 'file');
         $this->settingRepository->load('cache.expires', 30);
         $this->settingRepository->load('cache.prefix', Str::slug((string) env('APP_NAME', 'laravel')) . '-cache-');
 
-        $this->settingRepository->load('cache.stores.database.connection', null);
         $this->settingRepository->load('cache.stores.database.table', 'cache');
 
         $this->settingRepository->load('cache.stores.redis.connection', 'cache');
         $this->settingRepository->load('cache.stores.redis.lock_connection', 'default');
 
-        $this->settingRepository->load('cache.stores.memcached.persistent_id', null);
-        $this->settingRepository->load('cache.stores.memcached.sasl.username', null);
-        $this->settingRepository->load('cache.stores.memcached.sasl.password', null);
         $this->settingRepository->load('cache.stores.memcached.servers.0.host', '127.0.0.1');
         $this->settingRepository->load('cache.stores.memcached.servers.0.port', 11211);
         $this->settingRepository->load('cache.stores.memcached.servers.0.weight', 100);
 
-        $this->settingRepository->load('cache.stores.dynamodb.key', null);
-        $this->settingRepository->load('cache.stores.dynamodb.secret', null);
         $this->settingRepository->load('cache.stores.dynamodb.region', 'us-east-1');
         $this->settingRepository->load('cache.stores.dynamodb.table', 'cache');
-        $this->settingRepository->load('cache.stores.dynamodb.endpoint', null);
         //------------------------END CACHE CONFIGURATION-------------------//
 
 
@@ -216,18 +191,13 @@ class SettingService
         //default queues
         $this->settingRepository->load('queue.default', 'database');
 
-        //Sync setting
-        //$this->settingRepository->load('queue.connections.sync.driver', 'sync');
-
-        //Database settings
-        //$this->settingRepository->load('queue.connections.database.driver', 'database');
+        //Database settings 
         $this->settingRepository->load('queue.connections.database.table', 'jobs');
         $this->settingRepository->load('queue.connections.database.queue', 'default');
         $this->settingRepository->load('queue.connections.database.retry_after', 90);
         $this->settingRepository->load('queue.connections.database.after_commit', false);
 
-        //beanstalkd Settings
-        //$this->settingRepository->load('queue.connections.beanstalkd.driver', 'beanstalkd');
+        //beanstalkd Settings 
         $this->settingRepository->load('queue.connections.beanstalkd.host', 'localhost');
         $this->settingRepository->load('queue.connections.beanstalkd.queue', 'default');
         $this->settingRepository->load('queue.connections.beanstalkd.retry_after', 90);
@@ -236,11 +206,8 @@ class SettingService
 
         //AWS settings
         //$this->settingRepository->load('queue.connections.sqs.driver', 'sqs');
-        $this->settingRepository->load('queue.connections.sqs.key', null);
-        $this->settingRepository->load('queue.connections.sqs.secret', null);
         $this->settingRepository->load('queue.connections.sqs.prefix', 'https://sqs.us-east-1.amazonaws.com/your-account-id');
         $this->settingRepository->load('queue.connections.sqs.queue', 'default');
-        $this->settingRepository->load('queue.connections.sqs.suffix', null);
         $this->settingRepository->load('queue.connections.sqs.region', 'us-east-1');
         $this->settingRepository->load('queue.connections.sqs.after_commit', false);
 
@@ -249,13 +216,7 @@ class SettingService
         $this->settingRepository->load('queue.connections.redis.connection', 'default');
         $this->settingRepository->load('queue.connections.redis.queue', 'default');
         $this->settingRepository->load('queue.connections.redis.retry_after', 90);
-        $this->settingRepository->load('queue.connections.redis.block_for', null);
         $this->settingRepository->load('queue.connections.redis.after_commit', false);
-
-        //Fail queue settings
-        //$this->settingRepository->load('queue.failed.driver', 'database-uuids');
-        //$this->settingRepository->load('queue.failed.database', 'pgsql');
-        //$this->settingRepository->load('queue.failed.table', 'failed_jobs');
         //---------------------END QUEUES CONFIG--------------------///
 
         //----------FILESYSTEM SETTINGS------------------------------------------
@@ -264,19 +225,11 @@ class SettingService
         $this->settingRepository->load('filesystems.disks.local.root', storage_path('app'));
         $this->settingRepository->load('filesystems.disks.local.throw', false);
 
-        //$this->settingRepository->load('filesystems.disks.public.driver', 'local');
         $this->settingRepository->load('filesystems.disks.public.root', storage_path('app/public'));
         $this->settingRepository->load('filesystems.disks.public.url', config('app.url', null) . '/storage');
         $this->settingRepository->load('filesystems.disks.public.visibility', 'public');
         $this->settingRepository->load('filesystems.disks.public.throw', false);
 
-        //$this->settingRepository->load('filesystems.disks.s3.driver', 's3');
-        $this->settingRepository->load('filesystems.disks.s3.key', null);
-        $this->settingRepository->load('filesystems.disks.s3.secret', null);
-        $this->settingRepository->load('filesystems.disks.s3.region', null);
-        $this->settingRepository->load('filesystems.disks.s3.bucket', null);
-        $this->settingRepository->load('filesystems.disks.s3.url', null);
-        $this->settingRepository->load('filesystems.disks.s3.endpoint', null);
         $this->settingRepository->load('filesystems.disks.s3.use_path_style_endpoint', false);
         $this->settingRepository->load('filesystems.disks.s3.throw', false);
 
@@ -291,68 +244,28 @@ class SettingService
         $this->settingRepository->load('mail.mailers.smtp.host', 'smtp.mailgun.org');
         $this->settingRepository->load('mail.mailers.smtp.port', 587);
         $this->settingRepository->load('mail.mailers.smtp.encryption', 'tls');
-        $this->settingRepository->load('mail.mailers.smtp.username', null);
-        $this->settingRepository->load('mail.mailers.smtp.password', null);
-        $this->settingRepository->load('mail.mailers.smtp.timeout', null);
-        $this->settingRepository->load('mail.mailers.smtp.local_domain', null);
-
-        //$this->settingRepository->load('mail.mailers.ses.transport', 'ses');
-        //$this->settingRepository->load('mail.mailers.mailgun.transport', 'mailgun');
-        //$this->settingRepository->load('mail.mailers.postmark.transport', 'postmark');
-
-        //$this->settingRepository->load('mail.mailers.sendmail.transport', 'sendmail');
-
-        //$this->settingRepository->load('mail.mailers.log.transport', 'log');
-        //$this->settingRepository->load('mail.mailers.log.channel', 'MAIL_LOG_CHANNEL');
-
-        //$this->settingRepository->load('mail.mailers.array.transport', 'array');
-
-        //$this->settingRepository->load('mail.mailers.failover.transport', 'failover');
-        //$this->settingRepository->load('mail.mailers.failover.mailers', ['smtp', 'log']);
-
         $this->settingRepository->load('mail.from.address', 'hello@example.com');
         $this->settingRepository->load('mail.from.name', 'Example');
 
         //---------Setting services ---------------
-        $this->settingRepository->load('services.mailgun.domain', null);
-        $this->settingRepository->load('services.mailgun.secret', null);
         $this->settingRepository->load('services.mailgun.endpoint', 'api.mailgun.net');
         $this->settingRepository->load('services.mailgun.scheme', 'https');
-
-        $this->settingRepository->load('services.passport.token', null);
-
-        $this->settingRepository->load('services.ses.key', null);
-        $this->settingRepository->load('services.ses.secret', null);
-        $this->settingRepository->load('services.ses.region', null);
-
         $this->settingRepository->load('services.captcha.driver', "hcaptcha");
         $this->settingRepository->load('services.captcha.enabled', false);
-
         $this->settingRepository->load('services.captcha.providers.turnstile.api', 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
-        $this->settingRepository->load('services.captcha.providers.turnstile.secret', null);
-        $this->settingRepository->load('services.captcha.providers.turnstile.sitekey', null);
-
         $this->settingRepository->load('services.captcha.providers.hcaptcha.api', 'https://hcaptcha.com/siteverify');
-        $this->settingRepository->load('services.captcha.providers.hcaptcha.secret', null);
-        $this->settingRepository->load('services.captcha.providers.hcaptcha.sitekey', null);
 
         //System settings 
-        $this->settingRepository->load('system.cookie_name', "oauth2_server");
-        $this->settingRepository->load('system.passport_token_services', null);
+        $this->settingRepository->load('system.cookie_name', "oauth2_server"); 
         $this->settingRepository->load('system.verify_account_time', 5);
         $this->settingRepository->load('system.disable_create_user_by_command', false);
         $this->settingRepository->load('system.destroy_user_after', 30);
         $this->settingRepository->load('system.csp_enabled', false);
         $this->settingRepository->load('system.birthday.active', false);
         $this->settingRepository->load('system.birthday.limit', 18);
-        $this->settingRepository->load('system.demo.enabled', false);
-        $this->settingRepository->load('system.demo.email', null);
-        $this->settingRepository->load('system.demo.password', null);
+        $this->settingRepository->load('system.demo.enabled', false); 
 
-
-
-        //Session settings
-        //$this->settingRepository->load('session.driver', 'database');
+        //Session settings 
         $this->settingRepository->load('session.lifetime', 7200);
         $this->settingRepository->load('session.expire_on_close', false);
         $this->settingRepository->load('session.encrypt', false);
