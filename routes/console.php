@@ -13,6 +13,4 @@ use Illuminate\Support\Facades\Schedule;
 |
 */
 
-Schedule::command('passport:purge')->withoutOverlapping();
-
-Schedule::command('clean:tmp-files')->daily()->withoutOverlapping();
+Schedule::command('passport:purge')->everySixHours()->withoutOverlapping();
