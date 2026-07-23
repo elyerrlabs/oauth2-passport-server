@@ -39,7 +39,7 @@ Route::group([
     Route::get('/cache', [SettingController::class, 'cache'])->name('cache');
     Route::get('/redis', [SettingController::class, 'redis'])->name('redis');
     Route::get('/queues', [SettingController::class, 'queues'])->name('queues');
-   // Route::get('/filesystem', [SettingController::class, 'filesystem'])->name('filesystem');
+    Route::get('/filesystem', [SettingController::class, 'filesystem'])->name('filesystem');
     Route::get('/session', [SettingController::class, 'session'])->name('session');
     Route::get('/security', [SettingController::class, 'security'])->name('security');
     Route::get('/rate_limit', [SettingController::class, 'rateLimit'])->name('rate_limit');
