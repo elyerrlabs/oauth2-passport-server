@@ -256,14 +256,14 @@ class SettingService
         $this->settingRepository->load('services.captcha.providers.hcaptcha.api', 'https://hcaptcha.com/siteverify');
 
         //System settings 
-        $this->settingRepository->load('system.cookie_name', "oauth2_server"); 
+        $this->settingRepository->load('system.cookie_name', "oauth2_server");
         $this->settingRepository->load('system.verify_account_time', 5);
         $this->settingRepository->load('system.disable_create_user_by_command', false);
         $this->settingRepository->load('system.destroy_user_after', 30);
         $this->settingRepository->load('system.csp_enabled', false);
         $this->settingRepository->load('system.birthday.active', false);
         $this->settingRepository->load('system.birthday.limit', 18);
-        $this->settingRepository->load('system.demo.enabled', false); 
+        $this->settingRepository->load('system.demo.enabled', false);
 
         //Session settings 
         $this->settingRepository->load('session.lifetime', 7200);
@@ -337,11 +337,12 @@ class SettingService
      */
     public function update(Request $request)
     {
-        $data = $request->except('_method', '_token', 'current_route');
+        $useModuele = (bool) $request->input('use_module', 1);
+        $data = $request->except('_method', '_token', 'current_route', 'use_module');
         $route = Route::getRoutes()->getByName($request->current_route)?->action;
         $moduleConfigKey = null;
 
-        if (isset($route['config_key']) && $route['config_key']) {
+        if (isset($route['config_key']) && !empty($route['config_key']) && $useModuele) {
             $moduleConfigKey = $route['config_key'];
         }
 

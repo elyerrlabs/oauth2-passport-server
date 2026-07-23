@@ -60,8 +60,8 @@ class SettingController extends WebController
 
     /**
      * Update settings
-     * @param \Illuminate\Http\Request $request
-     * @return
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request)
     {
@@ -73,9 +73,8 @@ class SettingController extends WebController
     }
 
     /**
-     * Reload cache for settings
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Setting\Setting $setting
+     * Reload cache
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function reloadCache(Request $request)
