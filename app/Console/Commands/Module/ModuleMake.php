@@ -62,20 +62,6 @@ class ModuleMake extends Command
     {
         $name = Str::kebab($this->argument('name'));
         $useDev = (bool) $this->option('dev');
-        $version = null;
-
-        if (!$useDev) {
-            $version = $this->option('elymod-version');
-
-            if (!$version) {
-                $version = $this->askForVersion();
-            }
-
-            if (!$this->validateVersion($version)) {
-                return;
-            }
-        }
-
 
         $root = base_path();
         $thirdPartyPath = $root . DIRECTORY_SEPARATOR . 'third-party';
@@ -109,7 +95,7 @@ class ModuleMake extends Command
         try {
             $source = $useDev
                 ? $this->createDevModuleProject($name, $thirdPartyPath, $localTemplatePath)
-                : $this->createStableModuleProject($name, $thirdPartyPath, $version);
+                : $this->createStableModuleProject($name, $thirdPartyPath);
 
             if ($source === null) {
                 throw new \RuntimeException('Failed to create the module project.');
@@ -156,27 +142,15 @@ class ModuleMake extends Command
     protected function createStableModuleProject(
         string $name,
         string $thirdPartyPath,
-        ?string $version = '',
     ): ?string {
-        $version = $version
-            ? ltrim($version, 'v')
-            : null;
 
-        $this->info(
-            $version
-            ? "Using Elymod version {$version}."
-            : 'Using latest stable Elymod template.'
-        );
-
-        $package = $version
-            ? "elyerr/elymod:{$version}"
-            : 'elyerr/elymod';
+        $this->info('Using latest stable Elymod template.');
 
         $process = $this->runCreateProjectProcess(
             [
                 'composer',
                 'create-project',
-                $package,
+                'elyerr/elymod',
                 $name,
             ],
             $thirdPartyPath
@@ -277,96 +251,5 @@ class ModuleMake extends Command
         if (!empty($module)) {
             app(ModuleService::class)->delete($module->getId());
         }
-    }
-
-
-    protected function getAvailableVersions(int $limit = 10): array
-    {
-        $process = new Process([
-            'composer',
-            'show',
-            'elyerr/elymod',
-            '--all',
-            '--format=json',
-        ]);
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            return [];
-        }
-
-        $data = json_decode($process->getOutput(), true);
-
-        if (!isset($data['versions'])) {
-            return [];
-        }
-
-        $versions = collect($data['versions'])
-            ->filter(function ($version) {
-                if (!preg_match('/^v?\d+\.\d+\.\d+$/', $version)) {
-                    return false;
-                }
-
-                return version_compare(ltrim($version, 'v'), ltrim($this->minVersion(), 'v'), '>=');
-            })
-            ->unique()
-            ->values()
-            ->all();
-
-        usort($versions, static function ($a, $b) {
-            return version_compare(
-                ltrim($b, 'v'),
-                ltrim($a, 'v')
-            );
-        });
-
-        return array_slice($versions, 0, $limit);
-    }
-
-    protected function askForVersion(): ?string
-    {
-        $versions = $this->getAvailableVersions();
-
-        if (empty($versions)) {
-
-            $this->warn('Unable to retrieve Elymod versions from Packagist.');
-
-            return $this->ask('Enter Elymod version manually');
-        }
-
-        $versions[] = 'Custom version';
-
-        $selected = $this->choice('Select Elymod version', $versions, 0);
-
-        if ($selected === 'Custom version') {
-
-            return $this->ask('Enter Elymod version', $this->minVersion());
-        }
-
-        return $selected;
-    }
-
-    /**
-     * Min version for elymod
-     * @return string
-     */
-    private function minVersion()
-    {
-        return "v3.0.2";
-    }
-
-    /**
-     * Version validation
-     * @param string $version
-     * @return bool
-     */
-    private function validateVersion(string $version): bool
-    {
-        if (version_compare(ltrim($version, 'v'), ltrim($this->minVersion(), 'v'), '<')) {
-            $this->error("This version is not supported. Minimum version required: {$this->minVersion()}");
-            return false;
-        }
-        return true;
     }
 }
